@@ -123,6 +123,7 @@ class PhoneSource(Latest):
         ip = host or os.environ.get("PARENTING_AGENT_HOST") or lan_ip()
         self.server = ThreadingHTTPServer((ip, port), self._handler())
         self.server.daemon_threads = True
+        port = self.server.server_address[1]  # port 0 picks a free one
         if ip == "127.0.0.1":
             self.url = f"http://{ip}:{port}/"
         else:
