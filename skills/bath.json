@@ -1,0 +1,16 @@
+{
+  "name": "bath",
+  "concepts": {"hand": "hand", "baby": "baby"},
+  "contact": {"min_overlap": 0.3, "min_hand_area": 0.012, "off_frames_to_alert": 1},
+  "alarm": {"voice_hold_s": 0.6, "clear_after_on_s": 0.5, "voice_text": "hand"},
+  "phases": ["filling", "in water", "washing", "towel"],
+  "confirm": {"provider": "none"},
+  "reasoning": {"provider": "none"},
+  "house": {
+    "allowed": {},
+    "on_armed": ["hold_notifications"],
+    "on_voice": ["call_partner"],
+    "on_closed": ["restore_notifications"]
+  },
+  "tracking": {"provider": "baby_buddy", "on_closed": "bath"}
+}
