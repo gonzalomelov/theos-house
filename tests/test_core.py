@@ -174,7 +174,9 @@ class SkillLifecycle(unittest.TestCase):
         import numpy as np
         bus = Bus()
         cfg = config_mod.load("skills/changing-table.json")
-        skill = Skill(cfg, bus, FakeReflex(["on", "off", "off", "off"]), tracker=Tracker({"on_closed": "change"}, bus))
+        from parenting_agent.confirm import NoConfirm
+        skill = Skill(cfg, bus, FakeReflex(["on", "off", "off", "off"]), confirm_detector=NoConfirm(),
+                      tracker=Tracker({"on_closed": "change"}, bus))
         skill.arm()
         frame = np.zeros((360, 640, 3), np.uint8)
         for t in (0.0, 0.5, 1.0, 1.8):
@@ -185,7 +187,8 @@ class SkillLifecycle(unittest.TestCase):
         self.assertEqual(k[-1], "skill_closed")
         self.assertEqual(bus.count("chime"), 1)
         self.assertEqual(bus.count("voice"), 1)
-        self.assertEqual(bus.count("ask_parent"), 3)  # house actions not mapped to real devices yet
+        self.assertEqual(bus.count("ask_parent"), 0)  # every on_armed and on_closed action maps to a device
+        self.assertEqual(bus.count("house_dry"), 3)  # no Home Assistant token in tests, so it runs dry
         self.assertEqual(bus.count("track_dry"), 1)
 
 

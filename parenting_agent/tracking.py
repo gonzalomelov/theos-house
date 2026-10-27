@@ -4,7 +4,7 @@ A closed changing-table skill becomes a diaper change with its start and end, a 
 voice entries ("bottle 120 ml", "dirty", "asleep") become feedings, changes and sleep. Baby Buddy rejects
 times in the future, so entries are logged at or after the event.
 
-BABY_BUDDY_URL and BABY_BUDDY_TOKEN come from the environment (LAN or Tailscale only, never public).
+BABY_BUDDY_URL and BABY_BUDDY_TOKEN (or BABYBUDDY_URL and BABYBUDDY_TOKEN) come from the environment (LAN or Tailscale only, never public).
 Without them the tracker runs dry and only publishes what it would log.
 """
 import datetime
@@ -48,8 +48,10 @@ def parse_voice(text):
 class Tracker:
     def __init__(self, config, bus, client=None):
         self.cfg, self.bus = config, bus
-        if client is None and os.environ.get("BABY_BUDDY_URL") and os.environ.get("BABY_BUDDY_TOKEN"):
-            client = BabyBuddy(os.environ["BABY_BUDDY_URL"], os.environ["BABY_BUDDY_TOKEN"])
+        url = os.environ.get("BABY_BUDDY_URL") or os.environ.get("BABYBUDDY_URL")
+        token = os.environ.get("BABY_BUDDY_TOKEN") or os.environ.get("BABYBUDDY_TOKEN")
+        if client is None and url and token:
+            client = BabyBuddy(url, token)
         self.client, self.child = client, config.get("child_id", 1)
 
     def log(self, path, data):

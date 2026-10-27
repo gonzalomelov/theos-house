@@ -37,6 +37,9 @@ class ModuleConfirm:
     def judge(self, frame_bgr):
         return self.impl.judge(frame_bgr)
 
+    def close(self):
+        getattr(self.impl, "close", lambda: None)()
+
 
 def build(config):
     provider = config.get("provider", "none")
@@ -80,3 +83,4 @@ class ConfirmStage:
     def close(self):
         self.pool.shutdown(wait=True)
         self.collect()
+        getattr(self.detector, "close", lambda: None)()
