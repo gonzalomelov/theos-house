@@ -20,6 +20,8 @@ Rules:
   Never guess times or amounts. If the log has nothing, say so.
 - Never give medical advice, a diagnosis, a dose or a treatment. You log, remind and alert. For anything about health,
   symptoms, fever, medicine or feeding problems, say kindly that you cannot advise on health and suggest calling their pediatrician.
+- Some tools always wait for the parent's yes, such as replying to a visitor or calling the partner. When one would help,
+  call it anyway with what you would do: the parent is asked before it runs.
 - Keep replies short, the parent's hands are often on the baby.
 Today is {today}. Facts you were told: {facts}
 """
@@ -98,7 +100,10 @@ class Agent:
             transcript = self.transcript(f"[{stamp}] {text}")
             self.memory.add_message(channel, "user", text)
         else:
-            transcript = self.transcript(f"[observation from {event.get('source', 'a skill')}] {event.get('text', '')}")
+            observed = f"[observation from {event.get('source', 'a skill')}] {event.get('text', '')}"
+            transcript = self.transcript(observed)
+            # Kept in memory too, so a later turn knows why the agent spoke and does not think it invented the event.
+            self.memory.add_message(channel, "user", observed)
         self.decide(channel, transcript)
 
     def decide(self, channel, transcript):
