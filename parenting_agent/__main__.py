@@ -1,55 +1,57 @@
-"""Run a skill on a source.
+"""Run the persistent parenting agent.
 
-    python -m parenting_agent --skill skills/changing-table.json --source loop.mp4 --minutes 2
-    python -m parenting_agent --skill skills/changing-table.json --source phone   # head camera page
-    python -m parenting_agent --skill skills/changing-table.json --source 0       # a camera index
+    python -m parenting_agent --check                       # load everything, print skills and tools, exit
+    python -m parenting_agent                               # run until stopped (Ctrl+C)
+    python -m parenting_agent --config config/agent.json
 
-Events (numbers and states only) go to runs/<timestamp>/events.jsonl.
+The camera skill runner lives in parenting_agent.vision_run until the skills move onto this core.
 """
 import argparse
-import datetime
 import json
-from pathlib import Path
+import signal
+import threading
 
-from . import config as config_mod
-from .bus import Bus
-from .reflex import MediaPipeReflex
-from .skill import Skill, watch
-from .sources import PhoneSource, open_source
-from .speaker import Speaker
+from .agent import build
+from .agent import config as config_mod
 
 
 def main(argv=None):
     parser = argparse.ArgumentParser(prog="parenting_agent")
-    parser.add_argument("--skill", required=True)
-    parser.add_argument("--source", required=True)
-    parser.add_argument("--minutes", type=float, default=None)
-    parser.add_argument("--out", default=None)
-    parser.add_argument("--quiet", action="store_true", help="do not play sounds on this machine")
+    parser.add_argument("--config", default="config/agent.json")
+    parser.add_argument("--check", action="store_true", help="load everything, print what was loaded, exit")
     args = parser.parse_args(argv)
 
-    skill_cfg = config_mod.load(args.skill)
-    out = Path(args.out or f"runs/{datetime.datetime.now():%Y%m%d-%H%M%S}")
-    out.mkdir(parents=True, exist_ok=True)
-    bus = Bus(out / "events.jsonl")
-    source = open_source(args.source)
-    if isinstance(source, PhoneSource):
-        print(f"head camera page: {source.url}", flush=True)
-    speaker = Speaker(source, quiet=args.quiet)
-    bus.subscribe(speaker.on_event, ["chime", "voice"])
-    skill = Skill(skill_cfg, bus, MediaPipeReflex(skill_cfg["contact"]))
-    skill.arm()
-    try:
-        watch(skill, source, minutes=args.minutes)
-    except KeyboardInterrupt:
-        pass
-    finally:
-        skill.close()
-        source.close()
-        bus.close()
-    summary = {k: sum(1 for e in bus.history if e["kind"] == k) for k in ("frame", "chime", "voice", "voice_dropped", "ask_parent")}
-    print(json.dumps({"events": str(out / "events.jsonl"), **summary}))
+    config = config_mod.load(args.config)
+    agent = build(config)
+    loaded = {
+        "brain": {"provider": agent.brain.name, "model": agent.brain.model, "destination": agent.brain.destination},
+        "plugins": [p.name for p in agent.plugins],
+        "skills": [p.name for p in agent.plugins if getattr(p, "kind", "channel") == "skill"],
+        "tools": agent.tools.names(),
+        "allowed_tools": sorted(agent.tools.allowed),
+        "baby_log": agent.baby_log.name,
+        "data_dir": config["data_dir"],
+    }
+    print(json.dumps(loaded, indent=2), flush=True)
+    if args.check:
+        agent.close()
+        return 0
+
+    stopped = threading.Event()
+    signal.signal(signal.SIGINT, lambda *_: stopped.set())
+    signal.signal(signal.SIGTERM, lambda *_: stopped.set())
+    agent.start()
+    for plugin in agent.plugins:
+        plugin.start()
+    agent.bus.publish("agent_started", brain=agent.brain.name, destination=agent.brain.destination)
+    stopped.wait()
+    for plugin in agent.plugins:
+        plugin.stop()
+    agent.stop()
+    agent.bus.publish("agent_stopped")
+    agent.close()
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

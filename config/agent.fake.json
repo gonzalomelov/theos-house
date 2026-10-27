@@ -1,0 +1,8 @@
+{
+  "data_dir": "data-fake",
+  "env_file": ".env",
+  "brain": {"provider": "fake"},
+  "allowed_tools": ["log_baby_event", "read_baby_log", "remember", "current_time"],
+  "plugins": ["parenting_agent.agent.console:Console"],
+  "max_steps": 6
+}
