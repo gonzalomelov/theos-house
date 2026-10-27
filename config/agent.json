@@ -17,10 +17,18 @@
     "read_baby_log",
     "baby_summary",
     "remember",
-    "current_time"
+    "current_time",
+    "start_changing_table",
+    "finish_changing_table"
   ],
   "plugins": [
-    "parenting_agent.agent.console:Console"
+    "parenting_agent.agent.console:Console",
+    "parenting_agent.changing_table:ChangingTable"
   ],
-  "max_steps": 6
+  "max_steps": 6,
+  "changing_table": {
+    "skill": "skills/changing-table.json",
+    "source": "phone",
+    "arm": "command"
+  }
 }

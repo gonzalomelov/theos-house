@@ -4,7 +4,7 @@
     python -m parenting_agent                               # run until stopped (Ctrl+C)
     python -m parenting_agent --config config/agent.json
 
-The camera skill runner lives in parenting_agent.vision_run until the skills move onto this core.
+The changing-table skill runs as a plug-in (parenting_agent.changing_table). parenting_agent.vision_run still runs a skill alone on a source.
 """
 import argparse
 import json
