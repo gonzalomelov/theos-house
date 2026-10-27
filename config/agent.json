@@ -1,8 +1,27 @@
 {
   "data_dir": "data",
   "env_file": "~/.parenting-agent.env",
-  "brain": {"provider": "claude", "model": "claude-haiku-5-5", "max_tokens": 800},
-  "allowed_tools": ["log_baby_event", "read_baby_log", "remember", "current_time"],
-  "plugins": ["parenting_agent.agent.console:Console"],
-  "max_steps": 6
+  "brain": {
+    "provider": "claude",
+    "model": "claude-haiku-5-5",
+    "max_tokens": 800
+  },
+  "allowed_tools": [
+    "log_baby_event",
+    "read_baby_log",
+    "remember",
+    "current_time",
+    "start_changing_table",
+    "finish_changing_table"
+  ],
+  "plugins": [
+    "parenting_agent.agent.console:Console",
+    "parenting_agent.changing_table:ChangingTable"
+  ],
+  "max_steps": 6,
+  "changing_table": {
+    "skill": "skills/changing-table.json",
+    "source": "phone",
+    "arm": "command"
+  }
 }

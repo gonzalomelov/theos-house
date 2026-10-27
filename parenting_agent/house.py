@@ -2,7 +2,7 @@
 
 Skill config house.allowed maps an action name to the Home Assistant service and entity it runs, for
 example {"hold_notifications": {"service": "input_boolean.turn_on", "entity_id": "input_boolean.baby_focus",
-"expect": "on"}}. house.on_armed, on_voice and on_closed list action names per moment. A name that is not
+"expect": "on"}}, with an optional "data" dict for extra service fields. house.on_armed, on_voice and on_closed list action names per moment. A name that is not
 in the allowed list is published as ask_parent and never runs. After each call the state is read back a
 few times, because Home Assistant can report done before the device changes.
 
@@ -29,9 +29,9 @@ class HomeAssistant:
         with urllib.request.urlopen(request, timeout=10) as response:
             return json.loads(response.read() or b"null")
 
-    def service(self, service, entity_id):
+    def service(self, service, entity_id, data=None):
         domain, name = service.split(".", 1)
-        self._call(f"/api/services/{domain}/{name}", {"entity_id": entity_id})
+        self._call(f"/api/services/{domain}/{name}", {"entity_id": entity_id, **(data or {})})
 
     def state(self, entity_id):
         return self._call(f"/api/states/{entity_id}").get("state")
@@ -64,7 +64,10 @@ class House:
     def _execute(self, name, spec, moment):
         started = time.monotonic()
         try:
-            self.client.service(spec["service"], spec["entity_id"])
+            if spec.get("data"):
+                self.client.service(spec["service"], spec["entity_id"], spec["data"])
+            else:
+                self.client.service(spec["service"], spec["entity_id"])
             state = None
             for _ in range(spec.get("read_back_tries", 6)):
                 state = self.client.state(spec["entity_id"])

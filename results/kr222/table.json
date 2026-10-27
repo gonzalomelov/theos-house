@@ -1,0 +1,195 @@
+{
+  "generated_at": "2026-10-27T17:04:38-03:00",
+  "source": "live_stream",
+  "skill": "changing-table",
+  "confirm": "sam3_local",
+  "passes": 5,
+  "loop_s": 24.0,
+  "clips": [
+    {
+      "clip_id": "table-handsoff-01",
+      "kind": "both_hands_off",
+      "cue_s": 3.2
+    },
+    {
+      "clip_id": "table-handsoff-02",
+      "kind": "both_hands_off",
+      "cue_s": 2.2
+    },
+    {
+      "clip_id": "table-handsoff-03",
+      "kind": "both_hands_off",
+      "cue_s": 1.5
+    },
+    {
+      "clip_id": "table-onehand-01",
+      "kind": "one_hand",
+      "cue_s": 2.2
+    }
+  ],
+  "summary": {
+    "both_hands_off_spoken": "15 of 15",
+    "max_latency_s": 1.684,
+    "one_hand_spoken": 0,
+    "frames": 3031,
+    "chimes": 30,
+    "voices": 20,
+    "confirms": 20,
+    "diaper_logged": [
+      {
+        "kind": "tracked",
+        "t": 128.405,
+        "ts": "2026-10-27T17:04:38-03:00",
+        "entry": "changes",
+        "id": 119
+      }
+    ],
+    "house": [
+      "house_dry:hold_notifications",
+      "house_dry:mute_media",
+      "house_dry:restore_notifications"
+    ]
+  },
+  "moments": [
+    {
+      "clip_id": "table-handsoff-01",
+      "kind": "both_hands_off",
+      "pass": 1,
+      "spoken": true,
+      "latency_s": 0.911
+    },
+    {
+      "clip_id": "table-handsoff-02",
+      "kind": "both_hands_off",
+      "pass": 1,
+      "spoken": true,
+      "latency_s": 1.552
+    },
+    {
+      "clip_id": "table-handsoff-03",
+      "kind": "both_hands_off",
+      "pass": 1,
+      "spoken": true,
+      "latency_s": 1.684
+    },
+    {
+      "clip_id": "table-onehand-01",
+      "kind": "one_hand",
+      "pass": 1,
+      "spoken": false,
+      "latency_s": null
+    },
+    {
+      "clip_id": "table-handsoff-01",
+      "kind": "both_hands_off",
+      "pass": 2,
+      "spoken": true,
+      "latency_s": 0.921
+    },
+    {
+      "clip_id": "table-handsoff-02",
+      "kind": "both_hands_off",
+      "pass": 2,
+      "spoken": true,
+      "latency_s": 1.517
+    },
+    {
+      "clip_id": "table-handsoff-03",
+      "kind": "both_hands_off",
+      "pass": 2,
+      "spoken": true,
+      "latency_s": 1.636
+    },
+    {
+      "clip_id": "table-onehand-01",
+      "kind": "one_hand",
+      "pass": 2,
+      "spoken": false,
+      "latency_s": null
+    },
+    {
+      "clip_id": "table-handsoff-01",
+      "kind": "both_hands_off",
+      "pass": 3,
+      "spoken": true,
+      "latency_s": 0.906
+    },
+    {
+      "clip_id": "table-handsoff-02",
+      "kind": "both_hands_off",
+      "pass": 3,
+      "spoken": true,
+      "latency_s": 1.548
+    },
+    {
+      "clip_id": "table-handsoff-03",
+      "kind": "both_hands_off",
+      "pass": 3,
+      "spoken": true,
+      "latency_s": 1.637
+    },
+    {
+      "clip_id": "table-onehand-01",
+      "kind": "one_hand",
+      "pass": 3,
+      "spoken": false,
+      "latency_s": null
+    },
+    {
+      "clip_id": "table-handsoff-01",
+      "kind": "both_hands_off",
+      "pass": 4,
+      "spoken": true,
+      "latency_s": 0.895
+    },
+    {
+      "clip_id": "table-handsoff-02",
+      "kind": "both_hands_off",
+      "pass": 4,
+      "spoken": true,
+      "latency_s": 1.55
+    },
+    {
+      "clip_id": "table-handsoff-03",
+      "kind": "both_hands_off",
+      "pass": 4,
+      "spoken": true,
+      "latency_s": 1.681
+    },
+    {
+      "clip_id": "table-onehand-01",
+      "kind": "one_hand",
+      "pass": 4,
+      "spoken": false,
+      "latency_s": null
+    },
+    {
+      "clip_id": "table-handsoff-01",
+      "kind": "both_hands_off",
+      "pass": 5,
+      "spoken": true,
+      "latency_s": 0.898
+    },
+    {
+      "clip_id": "table-handsoff-02",
+      "kind": "both_hands_off",
+      "pass": 5,
+      "spoken": true,
+      "latency_s": 1.517
+    },
+    {
+      "clip_id": "table-handsoff-03",
+      "kind": "both_hands_off",
+      "pass": 5,
+      "spoken": true,
+      "latency_s": 1.673
+    },
+    {
+      "clip_id": "table-onehand-01",
+      "kind": "one_hand",
+      "pass": 5,
+      "spoken": false,
+      "latency_s": null
+    }
+  ]
+}
