@@ -11,11 +11,12 @@ its destination host so the agent can log where data went.
 """
 import json
 import os
-import re
 import time
 import urllib.error
 import urllib.parse
 import urllib.request
+
+from . import rules
 
 
 class BrainError(Exception):
@@ -39,13 +40,17 @@ def post_json(url, headers, body, timeout):
 
 
 class FakeBrain:
-    """Logs feeds, diapers and naps it hears, answers questions from the baby log. Enough to test the loop."""
+    """Logs feeds, diapers, sleep and baths it hears, answers from the baby log, refuses health questions. No network."""
     name, model, destination = "fake", "rules", "none (local)"
-    ML = re.compile(r"(\d+)\s*ml", re.I)
 
     def step(self, system, transcript, tools):
         last = transcript[-1]
         if last["role"] == "tool":
+            if isinstance(last["result"], str) and "failed" in last["result"]:
+                return Reply("I could not do that: " + last["result"])
+            if last["name"] == "baby_summary":
+                question = next((t["text"] for t in reversed(transcript) if t["role"] == "user"), "")
+                return Reply(rules.answer(question, last["result"]) or "I could not find that in the log.")
             if last["name"] == "read_baby_log":
                 feeds = [e for e in last["result"] if e["kind"] == "feeding"]
                 if not feeds:
@@ -53,13 +58,15 @@ class FakeBrain:
                 parts = [f"{e['details'].get('amount_ml', '?')} ml at {e['ts'][11:16]}" for e in feeds]
                 return Reply("Logged feeds: " + ", ".join(parts) + ".")
             return Reply("Done, logged.")
-        text = last["text"]
-        if "?" in text:
-            return Reply(tool_calls=[{"id": "fake-read", "name": "read_baby_log", "arguments": {"kind": "feeding"}}])
-        amount = self.ML.search(text)
-        if amount:
-            return Reply(tool_calls=[{"id": "fake-log", "name": "log_baby_event",
-                                      "arguments": {"kind": "feeding", "details": {"amount_ml": int(amount.group(1)), "text": text}}}])
+        text = last["text"].split("] ", 1)[-1]
+        if rules.is_medical(text):
+            return Reply(rules.REFUSAL)
+        if rules.is_question(text):
+            return Reply(tool_calls=[{"id": "fake-summary", "name": "baby_summary", "arguments": {}}])
+        parsed = rules.parse_note(text)
+        if parsed:
+            kind, details = parsed
+            return Reply(tool_calls=[{"id": "fake-log", "name": "log_baby_event", "arguments": {"kind": kind, "details": details}}])
         return Reply("Noted.")
 
 

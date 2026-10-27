@@ -49,6 +49,14 @@ Keys are read from a git-ignored `.env` (path in `config/agent.json`). Baby Budd
 ssh -f -N -L 127.0.0.1:18790:127.0.0.1:8790 vostro   # see docs/deploy-babybuddy.md
 ```
 
+## Baby log in Baby Buddy (issue #2)
+
+Notes like "bottle, 120 ml", "wet and dirty diaper", "she napped from 14:00 to 15:00" or "just gave her a bath" become Baby Buddy entries. Questions like "when was the last dirty diaper?" or "how much did she drink today?" are answered from Baby Buddy through the `baby_summary` and `read_baby_log` tools. Health questions get a kind refusal and a suggestion to call the pediatrician. Notes arrive as text for now, the channels issue adds speech to text.
+
+- `parenting_agent/agent/babybuddy.py`: Baby Buddy as the baby log. Baths are notes that start with "Bath". "Asleep" starts a timer and "awake" turns it into a sleep record. Entries are never timed in the future. A feed whose estimated start overlaps the previous feed starts right after it.
+- `config/agent.json` and `config/agent.muse-baseten.json` use Baby Buddy (`baby_log.provider: babybuddy`, URL and token from the env file, reached through the tunnel in `docs/deploy-babybuddy.md`). `config/agent.fake.json` keeps the offline log in the agent's memory file.
+- `scripts/voice_log_run.py`: the real run for a usage goal check 2. It sends notes through the agent and the brain, reads each record back from Baby Buddy by id and writes `results/kr222/voice-log.json`.
+
 Changing-table skill on generated clips streamed in real time:
 
 ```bash
@@ -58,11 +66,12 @@ python scripts/kr222_table.py --clips ~/Engineering/gonza/meta-hackathon-2026-sy
 
 Simulated baby week and daily rhythm: see `docs/simulated-week.md` and `docs/daily-rhythm.md`.
 
-Tests:
+## Tests
 
 ```bash
 python -m unittest discover -s tests             # fake brain, no network
 PA_LIVE=1 python -m unittest tests.test_agent    # also runs the same conversation with Claude
+PA_LIVE=1 PYTHONPATH=tests python -m unittest tests.test_voice_log   # notes, questions and the safety check with Claude
 ```
 
 ## Built during the Meta Global AI Developer Hackathon (Oct 26 to Nov 4 2026)
@@ -77,10 +86,11 @@ Everything in this repo was written during the event. The repo was created on Oc
 | Simulated first-weeks baby week for Baby Buddy | #13 | #23 | 86f0bcd |
 | Daily rhythm, unusual-day notes, fair night shifts | #7 | #24 | 3f6078b |
 | Changing-table skill on the core, SAM 3.1 confirm on the Mac GPU | #6 | #25 | c0d7b5d |
-| README and architecture | #18 | this PR | |
+| README and architecture | #18 | #26 | 66780c2 |
+| Voice log and answers from Baby Buddy | #2 | #27 | 6571481 |
 
 The first commits of Oct 26 (4f1898a to 90ca5a3) are an early skeleton that the issues above reviewed and partly rewrote.
 
-**Planned, not built yet:** voice log and answers through Baby Buddy (#2), Telegram channel (#3), Muse Spark Open live on Baseten (#4), channel picking (#8), live Home Assistant actions (#9, dry run today), bath skill (#10), house sounds (#14), always on on the family server (#15), sitter handover (#16), simulated full day (#17), demo and submission (#11).
+**Planned, not built yet:** Telegram channel (#3), Muse Spark Open live on Baseten (#4), channel picking (#8), live Home Assistant actions (#9, dry run today), bath skill (#10), house sounds (#14), always on on the family server (#15), sitter handover (#16), simulated full day (#17), demo and submission (#11).
 
 **Public open-source tools used, not written by us:** Meta SAM 3.1 weights and code, MediaPipe hand landmarker, OpenCV, NumPy, Baby Buddy (BSD-2-Clause), Home Assistant.

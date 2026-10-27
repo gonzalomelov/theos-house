@@ -10,7 +10,8 @@ DEFAULTS = {
     "data_dir": "data",
     "env_file": ".env",
     "brain": {"provider": "fake"},
-    "allowed_tools": ["log_baby_event", "read_baby_log", "remember", "current_time"],
+    "allowed_tools": ["log_baby_event", "read_baby_log", "baby_summary", "remember", "current_time"],
+    "baby_log": {"provider": "local"},
     "plugins": [],
     "max_steps": 6,
 }

@@ -1,0 +1,85 @@
+{
+  "generated_at": "2026-10-27T17:12:49-03:00",
+  "brain": {
+    "provider": "claude",
+    "model": "claude-haiku-5-5",
+    "destination": "api.anthropic.com"
+  },
+  "baby_log": "babybuddy",
+  "entries": [
+    {
+      "utterance": "bottle, 120 ml",
+      "expected_type": "feeding",
+      "spoken_at": "2026-10-27T17:12:30-03:00",
+      "reply": "Logged: bottle, 120 ml at 17:12.",
+      "babybuddy": {
+        "id": 145,
+        "type": "feeding",
+        "time": "2026-10-27T17:12:00-03:00",
+        "details": {
+          "amount_ml": 120.0,
+          "type": "formula",
+          "method": "bottle",
+          "start": "2026-10-27T16:57:00-03:00",
+          "duration_min": 15
+        }
+      }
+    },
+    {
+      "utterance": "wet and dirty diaper",
+      "expected_type": "diaper",
+      "spoken_at": "2026-10-27T17:12:33-03:00",
+      "reply": "Logged: wet and dirty diaper at 17:12.",
+      "babybuddy": {
+        "id": 125,
+        "type": "diaper",
+        "time": "2026-10-27T17:12:34-03:00",
+        "details": {
+          "wet": true,
+          "solid": true,
+          "color": null
+        }
+      }
+    },
+    {
+      "utterance": "just gave her a bath",
+      "expected_type": "bath",
+      "spoken_at": "2026-10-27T17:12:37-03:00",
+      "reply": "Logged: bath at 17:12. 🛁",
+      "babybuddy": {
+        "id": 65,
+        "type": "bath",
+        "time": "2026-10-27T17:12:38-03:00",
+        "details": {
+          "text": "Bath. Baby had a bath"
+        }
+      }
+    },
+    {
+      "utterance": "wet diaper",
+      "expected_type": "diaper",
+      "spoken_at": "2026-10-27T17:12:40-03:00",
+      "reply": "Logged: wet diaper at 17:12.",
+      "babybuddy": {
+        "id": 126,
+        "type": "diaper",
+        "time": "2026-10-27T17:12:00-03:00",
+        "details": {
+          "wet": true,
+          "solid": false,
+          "color": null
+        }
+      }
+    }
+  ],
+  "answers": [
+    {
+      "question": "How much did she drink today?",
+      "answer": "She's had **1 feed today: 120 ml** by bottle, the last one at 17:12."
+    },
+    {
+      "question": "When was the last dirty diaper?",
+      "answer": "The last dirty diaper was today at 17:12."
+    }
+  ]
+}
