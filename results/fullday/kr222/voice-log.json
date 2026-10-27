@@ -1,0 +1,60 @@
+{
+  "generated_at": "2026-10-27T17:30:35-03:00",
+  "brain": {
+    "provider": "claude",
+    "model": "claude-haiku-5-5",
+    "destination": "api.anthropic.com"
+  },
+  "baby_log": "babybuddy",
+  "entries": [
+    {
+      "utterance": "bottle, 120 ml",
+      "expected_type": "feeding",
+      "spoken_at": "2026-10-27T17:29:26-03:00",
+      "babybuddy": {
+        "id": 156,
+        "type": "feeding",
+        "time": "2026-10-27T17:29:00-03:00",
+        "details": {
+          "amount_ml": 120.0,
+          "type": "formula",
+          "method": "bottle",
+          "start": "2026-10-27T17:14:00-03:00",
+          "duration_min": 15
+        }
+      }
+    },
+    {
+      "utterance": "that was a dirty diaper",
+      "expected_type": "diaper",
+      "spoken_at": "2026-10-27T17:30:06-03:00",
+      "babybuddy": {
+        "id": 131,
+        "type": "diaper",
+        "time": "2026-10-27T17:30:00-03:00",
+        "details": {
+          "wet": false,
+          "solid": true,
+          "color": null
+        }
+      }
+    },
+    {
+      "utterance": "night feed, 90 ml bottle",
+      "expected_type": "feeding",
+      "spoken_at": "2026-10-27T17:30:27-03:00",
+      "babybuddy": {
+        "id": 157,
+        "type": "feeding",
+        "time": "2026-10-27T17:30:29-03:00",
+        "details": {
+          "amount_ml": 90.0,
+          "type": "formula",
+          "method": "bottle",
+          "start": "2026-10-27T17:29:01-03:00",
+          "duration_min": 1
+        }
+      }
+    }
+  ]
+}

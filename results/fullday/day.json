@@ -1,0 +1,160 @@
+{
+  "generated_at": "2026-10-27T17:30:35-03:00",
+  "brain": {
+    "provider": "claude",
+    "model": "claude-haiku-5-5",
+    "destination": "api.anthropic.com"
+  },
+  "tag": "full-day-sim",
+  "steps": [
+    {
+      "sim_time": "06:10",
+      "step": "Bottle by voice",
+      "status": "pass",
+      "real_ts": "2026-10-27T17:29:26-03:00",
+      "seconds": 2.9,
+      "channel": "ear",
+      "input": "voice: bottle, 120 ml",
+      "action": "logged a 120 ml bottle in Baby Buddy",
+      "reply": "Logged: bottle, 120 ml at 17:29.",
+      "dry": [
+        "delivery logged only: Telegram, ear and speakers are pending (#3, #8)"
+      ],
+      "evidence": {
+        "records": [
+          {
+            "id": 156,
+            "kind": "feeding",
+            "ts": "2026-10-27T17:29:00-03:00"
+          }
+        ]
+      }
+    },
+    {
+      "sim_time": "06:40",
+      "step": "Changing table",
+      "status": "pass",
+      "real_ts": "2026-10-27T17:29:29-03:00",
+      "seconds": 41.4,
+      "channel": "ear",
+      "input": "head camera: the changing-table clips streamed live, then voice: that was a dirty diaper",
+      "action": "hand spoken 3 of 3, one hand silent 1 of 1, dirty diaper logged",
+      "reply": "Logged: dirty diaper at 17:30.",
+      "dry": [
+        "Home Assistant dry run: the token is pending (#9), nothing was switched (house_dry:hold_notifications, house_dry:mute_media, house_dry:restore_notifications)",
+        "delivery logged only: Telegram, ear and speakers are pending (#3, #8)"
+      ],
+      "evidence": {
+        "max_latency_s": 1.657,
+        "confirm": "sam3_local",
+        "diaper": {
+          "id": 131,
+          "ts": "2026-10-27T17:30:00-03:00"
+        }
+      }
+    },
+    {
+      "sim_time": "09:15",
+      "step": "Doorbell during a change",
+      "status": "pass",
+      "real_ts": "2026-10-27T17:30:11-03:00",
+      "seconds": 3.2,
+      "channel": "speaker and ear",
+      "input": "sound: doorbell during a change",
+      "action": "announced \"One moment please, we'll be right with you.\"; asked the parent before replying to the visitor",
+      "reply": "The courier is at the door. I've tried a \"one moment please\" on the front door speaker, but the announcement didn't go through (the system reported a dry run, so nothing was played). The reply to the courier is waiting for your yes. Should I send \"Hello, one moment please, we'll be right with you to sign for the package\"?",
+      "dry": [
+        "scripted sound event: the house sound detector is pending (#14)",
+        "Home Assistant dry run: the token is pending (#9), nothing was switched",
+        "delivery logged only: Telegram, ear and speakers are pending (#3, #8)"
+      ],
+      "evidence": {
+        "tools": [
+          "announce",
+          "reply_to_visitor"
+        ],
+        "ask_parent": [
+          "reply_to_visitor"
+        ]
+      }
+    },
+    {
+      "sim_time": "13:00",
+      "step": "Unusual nap note",
+      "status": "pass",
+      "real_ts": "2026-10-27T17:30:14-03:00",
+      "seconds": 1.3,
+      "channel": "telegram",
+      "input": "nap logged, 131 min",
+      "action": "Today's nap was 131 min, about 40 min longer than the usual 91 min. Just a note.",
+      "reply": "Today's nap was 131 min, about 40 min longer than the usual 91 min. Just a note.",
+      "dry": [
+        "delivery logged only: Telegram, ear and speakers are pending (#3, #8)"
+      ],
+      "evidence": {
+        "usual_nap_min": 91,
+        "sleep_id": 140
+      }
+    },
+    {
+      "sim_time": "18:30",
+      "step": "Bath",
+      "status": "pass",
+      "real_ts": "2026-10-27T17:30:15-03:00",
+      "seconds": 6.5,
+      "channel": "ear and partner phone",
+      "input": "head camera: the bath clip streamed live",
+      "action": "chime 0.284 s and hand 0.908 s after both hands left, calling the partner waits for a yes",
+      "reply": "hand",
+      "dry": [
+        "Home Assistant dry run: the token is pending (#9), nothing was switched (ask_parent:call_partner, ask_parent:hold_notifications, ask_parent:restore_notifications)",
+        "delivery logged only: Telegram, ear and speakers are pending (#3, #8)"
+      ],
+      "evidence": {
+        "chime_s": 0.284,
+        "voice_s": 0.908,
+        "bath_note": [
+          76
+        ],
+        "new_agent_records": 0
+      }
+    },
+    {
+      "sim_time": "20:00",
+      "step": "Question answered from the log",
+      "status": "pass",
+      "real_ts": "2026-10-27T17:30:22-03:00",
+      "seconds": 2.3,
+      "channel": "telegram",
+      "input": "question: When was the last dirty diaper?",
+      "action": "answered from Baby Buddy, expected 17:30",
+      "reply": "The last dirty diaper was logged at 17:30, just now.\n\nAlso, I need to correct my last message: I said the nap was 131 min and compared it to a usual 91 min, but I didn't check the log for that, and I shouldn't have stated it. I can look up the actual sleep entries if you'd like.",
+      "dry": [
+        "delivery logged only: Telegram, ear and speakers are pending (#3, #8)"
+      ],
+      "evidence": {
+        "tools": []
+      }
+    },
+    {
+      "sim_time": "02:30",
+      "step": "Night feed and night shift",
+      "status": "pass",
+      "real_ts": "2026-10-27T17:30:24-03:00",
+      "seconds": 10.7,
+      "channel": "ear",
+      "input": "night feed starts, then voice: night feed, 90 ml bottle",
+      "action": "dimmed the nursery lights; Logged 90 ml. Next feed around 04:50, feeds have been about 140 min apart. Next night wake-up: Parent B.",
+      "reply": "I tried to dim the nursery lights, but the system reported a dry run and nothing was switched. The lights are still on full. You may need to dim them by hand.\n\nThe courier's doorbell reply is still waiting for your yes. / Logged: night feed, bottle, 90 ml at 17:30.",
+      "dry": [
+        "Home Assistant dry run: the token is pending (#9), nothing was switched",
+        "delivery logged only: Telegram, ear and speakers are pending (#3, #8)"
+      ],
+      "evidence": {
+        "on_duty": "Parent B",
+        "next_feed_day_clock": "04:50",
+        "gap_min": 140
+      }
+    }
+  ]
+}
