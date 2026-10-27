@@ -23,3 +23,7 @@ The agent core (issue #1) is standard library only. It keeps its memory in `data
 python -m unittest discover -s tests             # fake brain, no network
 PA_LIVE=1 python -m unittest tests.test_agent    # also runs the same conversation with Claude
 ```
+
+## Daily rhythm (issue #7)
+
+The agent speaks first from the baby log: next-feed warnings, notes on unusual days, a night summary and fair night shifts. See `docs/daily-rhythm.md`.

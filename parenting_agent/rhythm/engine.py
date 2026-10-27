@@ -1,0 +1,98 @@
+"""The daily rhythm: the agent speaks first, from the baby log, without being asked.
+
+tick(now) looks at the log and returns the reminders that are due right now: the next-feed warning a few
+minutes before the estimated feed, a note when a full day differed from the rest, and the night summary
+in the morning. Each reminder fires once. Rhythm runs it as a plug-in on the agent: it reads the log on a
+timer, speaks through the agent on the configured channel, and publishes a "proactive" event with what it
+was computed from. Real delivery on Telegram, the ear or the speakers comes with the channel issues.
+"""
+import datetime
+import threading
+
+from ..agent.plugins import Plugin
+from . import patterns
+from .log import BabyBuddyLog, FixtureLog
+
+CHANNELS = ("ear", "speaker", "telegram", "partner_phone")
+DEFAULTS = {"source": "babybuddy", "fixture": "tests/fixtures/simweek.json", "child": "Test",
+            "channel": "telegram", "lead_min": 20, "summary_at": "07:30", "notes_at": "20:00",
+            "parents": ["Parent A", "Parent B"], "poll_s": 60, "utc_offset_h": -3}
+
+
+class Rhythm:
+    def __init__(self, log, settings=None):
+        self.log = log
+        self.s = {**DEFAULTS, **(settings or {})}
+        if self.s["channel"] not in CHANNELS:
+            raise ValueError(f"channel must be one of {CHANNELS}")
+        self.tz = datetime.timezone(datetime.timedelta(hours=self.s["utc_offset_h"]))
+        self.sent = set()
+
+    def _at(self, now, hhmm):
+        h, m = map(int, hhmm.split(":"))
+        return now.astimezone(self.tz).replace(hour=h, minute=m, second=0, microsecond=0)
+
+    def _reminder(self, key, kind, text, computed_from):
+        if key in self.sent or not computed_from or not patterns.no_advice(text):
+            return None
+        self.sent.add(key)
+        return {"kind": kind, "text": text, "computed_from": computed_from, "channel": self.s["channel"]}
+
+    def tick(self, now):
+        entries = self.log.entries()
+        due = []
+        nxt = patterns.next_feed(entries, now)
+        if nxt:
+            lead = datetime.timedelta(minutes=self.s["lead_min"])
+            if nxt["at"] - lead <= now < nxt["at"] + lead:
+                minutes = max(0, round((nxt["at"] - now).total_seconds() / 60))
+                text = (f"Next feed in about {minutes} min, around {patterns.hhmm(nxt['at'].astimezone(self.tz))}. "
+                        f"Feeds have been about {nxt['gap_min']} min apart.")
+                due.append(self._reminder(("feed", nxt["computed_from"][-1]), "next_feed", text, nxt["computed_from"]))
+        if now >= self._at(now, self.s["summary_at"]):
+            summary = patterns.night_summary(entries, now, self.tz, self.s["parents"])
+            day = now.astimezone(self.tz).date()
+            due.append(self._reminder(("summary", day), "night_summary", summary["text"], summary["computed_from"]))
+        if now >= self._at(now, self.s["notes_at"]):
+            for note in patterns.unusual_notes([e for e in entries if patterns.when(e) <= now], self.tz):
+                due.append(self._reminder(("note", note["day"], note["text"]), "unusual_day", note["text"],
+                                          note["computed_from"]))
+        return [r for r in due if r]
+
+
+def make_log(settings, env):
+    if settings.get("source") == "fixture":
+        return FixtureLog(settings["fixture"])
+    return BabyBuddyLog(env["BABYBUDDY_URL"], env["BABYBUDDY_TOKEN"], settings.get("child", "Test"), settings.get("tag"))
+
+
+class RhythmPlugin(Plugin):
+    """Agent plug-in: config "plugins": ["parenting_agent.rhythm.engine:RhythmPlugin"], settings under "rhythm"."""
+    name = "rhythm"
+
+    def start(self):
+        import os
+        settings = {**DEFAULTS, **self.config.get("rhythm", {})}
+        self.rhythm = Rhythm(make_log(settings, os.environ), settings)
+        self.stopped = threading.Event()
+        self.thread = threading.Thread(target=self.run, name="rhythm", daemon=True)
+        self.thread.start()
+
+    def run(self):
+        while not self.stopped.is_set():
+            try:
+                for reminder in self.rhythm.tick(datetime.datetime.now().astimezone()):
+                    deliver(self.agent, reminder)
+            except Exception as error:  # a bad read must not stop the agent
+                self.agent.bus.publish("rhythm_error", error=str(error)[:300])
+            self.stopped.wait(self.rhythm.s["poll_s"])
+
+    def stop(self):
+        self.stopped.set()
+
+
+def deliver(agent, reminder):
+    """Speak a reminder through the agent on its channel and record it on the bus. Returns the delivery event."""
+    agent.say(reminder["channel"], reminder["text"])
+    return agent.bus.publish("proactive", channel=reminder["channel"], reminder=reminder["kind"],
+                             text=reminder["text"], computed_from=reminder["computed_from"], asked=False)
