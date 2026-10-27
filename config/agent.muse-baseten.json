@@ -1,9 +1,28 @@
 {
   "data_dir": "data",
   "env_file": "~/.parenting-agent.env",
-  "brain": {"provider": "openai_compatible", "model": "meta-models/muse-spark-open-1026",
-            "base_url": "https://inference.baseten.co/v1", "key_env": "BASETEN_API_KEY", "max_tokens": 800},
-  "allowed_tools": ["log_baby_event", "read_baby_log", "remember", "current_time"],
-  "plugins": ["parenting_agent.agent.console:Console"],
+  "brain": {
+    "provider": "openai_compatible",
+    "model": "meta-models/muse-spark-open-1026",
+    "base_url": "https://inference.baseten.co/v1",
+    "key_env": "BASETEN_API_KEY",
+    "max_tokens": 800
+  },
+  "baby_log": {
+    "provider": "babybuddy",
+    "url_env": "BABYBUDDY_URL",
+    "token_env": "BABYBUDDY_TOKEN",
+    "child": "test-baby"
+  },
+  "allowed_tools": [
+    "log_baby_event",
+    "read_baby_log",
+    "baby_summary",
+    "remember",
+    "current_time"
+  ],
+  "plugins": [
+    "parenting_agent.agent.console:Console"
+  ],
   "max_steps": 6
 }
