@@ -1,0 +1,2359 @@
+[
+ {
+  "kind": "feeding",
+  "start": "2026-10-20T00:20:00-03:00",
+  "end": "2026-10-20T00:47:00-03:00",
+  "type": "breast milk",
+  "method": "both breasts",
+  "notes": "Night feed",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "note",
+  "time": "2026-10-20T00:20:00-03:00",
+  "note": "[simulated] Night wake-up handled by Parent A",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "change",
+  "time": "2026-10-20T00:49:00-03:00",
+  "wet": true,
+  "solid": false,
+  "color": "",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-20T01:06:00-03:00",
+  "end": "2026-10-20T02:45:00-03:00",
+  "nap": false,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-20T02:48:00-03:00",
+  "end": "2026-10-20T03:09:00-03:00",
+  "type": "breast milk",
+  "method": "left breast",
+  "notes": "Night feed",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "note",
+  "time": "2026-10-20T02:48:00-03:00",
+  "note": "[simulated] Night wake-up handled by Parent B",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "change",
+  "time": "2026-10-20T03:11:00-03:00",
+  "wet": true,
+  "solid": true,
+  "color": "yellow",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-20T03:25:00-03:00",
+  "end": "2026-10-20T05:25:00-03:00",
+  "nap": false,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-20T05:28:00-03:00",
+  "end": "2026-10-20T05:46:00-03:00",
+  "type": "breast milk",
+  "method": "left breast",
+  "notes": "Night feed",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "note",
+  "time": "2026-10-20T05:28:00-03:00",
+  "note": "[simulated] Night wake-up handled by Parent A",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "change",
+  "time": "2026-10-20T05:53:00-03:00",
+  "wet": true,
+  "solid": false,
+  "color": "",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-20T06:10:00-03:00",
+  "end": "2026-10-20T08:00:00-03:00",
+  "nap": false,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-20T08:09:00-03:00",
+  "end": "2026-10-20T08:19:00-03:00",
+  "type": "breast milk",
+  "method": "bottle",
+  "amount": 70,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "change",
+  "time": "2026-10-20T08:23:00-03:00",
+  "wet": true,
+  "solid": false,
+  "color": "",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-20T08:52:00-03:00",
+  "end": "2026-10-20T10:45:00-03:00",
+  "nap": true,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-20T10:50:00-03:00",
+  "end": "2026-10-20T11:10:00-03:00",
+  "type": "breast milk",
+  "method": "bottle",
+  "amount": 100,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "change",
+  "time": "2026-10-20T11:14:00-03:00",
+  "wet": true,
+  "solid": false,
+  "color": "",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-20T11:35:00-03:00",
+  "end": "2026-10-20T13:25:00-03:00",
+  "nap": true,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-20T13:31:00-03:00",
+  "end": "2026-10-20T14:03:00-03:00",
+  "type": "breast milk",
+  "method": "right breast",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "change",
+  "time": "2026-10-20T14:11:00-03:00",
+  "wet": true,
+  "solid": false,
+  "color": "",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-20T14:42:00-03:00",
+  "end": "2026-10-20T15:58:00-03:00",
+  "nap": true,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-20T16:05:00-03:00",
+  "end": "2026-10-20T16:18:00-03:00",
+  "type": "breast milk",
+  "method": "bottle",
+  "amount": 70,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "change",
+  "time": "2026-10-20T16:24:00-03:00",
+  "wet": true,
+  "solid": false,
+  "color": "",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-20T16:58:00-03:00",
+  "end": "2026-10-20T18:24:00-03:00",
+  "nap": true,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "note",
+  "time": "2026-10-20T18:24:00-03:00",
+  "note": "[simulated] Bath",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-20T18:31:00-03:00",
+  "end": "2026-10-20T18:48:00-03:00",
+  "type": "breast milk",
+  "method": "left breast",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "change",
+  "time": "2026-10-20T18:54:00-03:00",
+  "wet": true,
+  "solid": false,
+  "color": "",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-20T19:29:00-03:00",
+  "end": "2026-10-20T20:36:00-03:00",
+  "nap": false,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-20T20:45:00-03:00",
+  "end": "2026-10-20T20:56:00-03:00",
+  "type": "formula",
+  "method": "bottle",
+  "amount": 110,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "change",
+  "time": "2026-10-20T21:00:00-03:00",
+  "wet": true,
+  "solid": false,
+  "color": "",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-20T21:34:00-03:00",
+  "end": "2026-10-20T23:23:00-03:00",
+  "nap": false,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-20T23:27:00-03:00",
+  "end": "2026-10-20T23:50:00-03:00",
+  "type": "breast milk",
+  "method": "right breast",
+  "notes": "Night feed",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "note",
+  "time": "2026-10-20T23:27:00-03:00",
+  "note": "[simulated] Night wake-up handled by Parent B",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "change",
+  "time": "2026-10-20T23:57:00-03:00",
+  "wet": true,
+  "solid": true,
+  "color": "yellow",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-21T00:14:00-03:00",
+  "end": "2026-10-21T02:03:00-03:00",
+  "nap": false,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-21T02:13:00-03:00",
+  "end": "2026-10-21T02:33:00-03:00",
+  "type": "formula",
+  "method": "bottle",
+  "amount": 90,
+  "notes": "Night feed",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "note",
+  "time": "2026-10-21T02:13:00-03:00",
+  "note": "[simulated] Night wake-up handled by Parent A",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-21T02:45:00-03:00",
+  "end": "2026-10-21T04:36:00-03:00",
+  "nap": false,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-21T04:40:00-03:00",
+  "end": "2026-10-21T05:01:00-03:00",
+  "type": "breast milk",
+  "method": "right breast",
+  "notes": "Night feed",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "note",
+  "time": "2026-10-21T04:40:00-03:00",
+  "note": "[simulated] Night wake-up handled by Parent B",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "change",
+  "time": "2026-10-21T05:04:00-03:00",
+  "wet": true,
+  "solid": true,
+  "color": "green",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-21T05:14:00-03:00",
+  "end": "2026-10-21T06:40:00-03:00",
+  "nap": false,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-21T06:50:00-03:00",
+  "end": "2026-10-21T07:13:00-03:00",
+  "type": "breast milk",
+  "method": "left breast",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "change",
+  "time": "2026-10-21T07:21:00-03:00",
+  "wet": true,
+  "solid": false,
+  "color": "",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-21T07:54:00-03:00",
+  "end": "2026-10-21T09:32:00-03:00",
+  "nap": true,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-21T09:40:00-03:00",
+  "end": "2026-10-21T10:07:00-03:00",
+  "type": "breast milk",
+  "method": "left breast",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "change",
+  "time": "2026-10-21T10:10:00-03:00",
+  "wet": true,
+  "solid": true,
+  "color": "yellow",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-21T10:45:00-03:00",
+  "end": "2026-10-21T11:40:00-03:00",
+  "nap": true,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-21T11:45:00-03:00",
+  "end": "2026-10-21T11:57:00-03:00",
+  "type": "formula",
+  "method": "bottle",
+  "amount": 60,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "change",
+  "time": "2026-10-21T12:03:00-03:00",
+  "wet": true,
+  "solid": false,
+  "color": "",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-21T12:39:00-03:00",
+  "end": "2026-10-21T13:55:00-03:00",
+  "nap": true,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-21T13:58:00-03:00",
+  "end": "2026-10-21T14:30:00-03:00",
+  "type": "breast milk",
+  "method": "right breast",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "change",
+  "time": "2026-10-21T14:35:00-03:00",
+  "wet": true,
+  "solid": true,
+  "color": "green",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-21T15:01:00-03:00",
+  "end": "2026-10-21T16:02:00-03:00",
+  "nap": true,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-21T16:06:00-03:00",
+  "end": "2026-10-21T16:35:00-03:00",
+  "type": "breast milk",
+  "method": "left breast",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "change",
+  "time": "2026-10-21T16:37:00-03:00",
+  "wet": true,
+  "solid": true,
+  "color": "yellow",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-21T17:01:00-03:00",
+  "end": "2026-10-21T18:43:00-03:00",
+  "nap": true,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "note",
+  "time": "2026-10-21T18:41:00-03:00",
+  "note": "[simulated] Bath",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-21T18:47:00-03:00",
+  "end": "2026-10-21T19:21:00-03:00",
+  "type": "breast milk",
+  "method": "left breast",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-21T19:55:00-03:00",
+  "end": "2026-10-21T21:26:00-03:00",
+  "nap": false,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-21T21:31:00-03:00",
+  "end": "2026-10-21T21:57:00-03:00",
+  "type": "breast milk",
+  "method": "both breasts",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "change",
+  "time": "2026-10-21T22:01:00-03:00",
+  "wet": true,
+  "solid": true,
+  "color": "green",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-21T22:36:00-03:00",
+  "end": "2026-10-21T23:55:00-03:00",
+  "nap": false,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-22T00:05:00-03:00",
+  "end": "2026-10-22T00:16:00-03:00",
+  "type": "formula",
+  "method": "bottle",
+  "amount": 70,
+  "notes": "Night feed",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "note",
+  "time": "2026-10-22T00:05:00-03:00",
+  "note": "[simulated] Night wake-up handled by Parent A",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "change",
+  "time": "2026-10-22T00:23:00-03:00",
+  "wet": true,
+  "solid": false,
+  "color": "",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-22T00:39:00-03:00",
+  "end": "2026-10-22T02:17:00-03:00",
+  "nap": false,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-22T02:20:00-03:00",
+  "end": "2026-10-22T02:35:00-03:00",
+  "type": "breast milk",
+  "method": "bottle",
+  "amount": 100,
+  "notes": "Night feed",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "note",
+  "time": "2026-10-22T02:20:00-03:00",
+  "note": "[simulated] Night wake-up handled by Parent B",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "change",
+  "time": "2026-10-22T02:42:00-03:00",
+  "wet": true,
+  "solid": true,
+  "color": "brown",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-22T03:00:00-03:00",
+  "end": "2026-10-22T04:40:00-03:00",
+  "nap": false,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-22T04:44:00-03:00",
+  "end": "2026-10-22T05:07:00-03:00",
+  "type": "breast milk",
+  "method": "both breasts",
+  "notes": "Night feed",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "note",
+  "time": "2026-10-22T04:44:00-03:00",
+  "note": "[simulated] Night wake-up handled by Parent A",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-22T05:31:00-03:00",
+  "end": "2026-10-22T07:05:00-03:00",
+  "nap": false,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-22T07:11:00-03:00",
+  "end": "2026-10-22T07:42:00-03:00",
+  "type": "breast milk",
+  "method": "right breast",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "change",
+  "time": "2026-10-22T07:49:00-03:00",
+  "wet": true,
+  "solid": false,
+  "color": "",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-22T08:15:00-03:00",
+  "end": "2026-10-22T09:58:00-03:00",
+  "nap": true,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-22T10:04:00-03:00",
+  "end": "2026-10-22T10:26:00-03:00",
+  "type": "breast milk",
+  "method": "left breast",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "change",
+  "time": "2026-10-22T10:32:00-03:00",
+  "wet": true,
+  "solid": false,
+  "color": "",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-22T11:00:00-03:00",
+  "end": "2026-10-22T12:00:00-03:00",
+  "nap": true,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-22T12:10:00-03:00",
+  "end": "2026-10-22T12:29:00-03:00",
+  "type": "formula",
+  "method": "bottle",
+  "amount": 110,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "change",
+  "time": "2026-10-22T12:34:00-03:00",
+  "wet": true,
+  "solid": false,
+  "color": "",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-22T13:05:00-03:00",
+  "end": "2026-10-22T14:33:00-03:00",
+  "nap": true,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-22T14:37:00-03:00",
+  "end": "2026-10-22T14:54:00-03:00",
+  "type": "breast milk",
+  "method": "bottle",
+  "amount": 70,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "change",
+  "time": "2026-10-22T14:58:00-03:00",
+  "wet": true,
+  "solid": false,
+  "color": "",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-22T15:18:00-03:00",
+  "end": "2026-10-22T17:11:00-03:00",
+  "nap": true,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-22T17:21:00-03:00",
+  "end": "2026-10-22T17:47:00-03:00",
+  "type": "breast milk",
+  "method": "both breasts",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "change",
+  "time": "2026-10-22T17:49:00-03:00",
+  "wet": true,
+  "solid": true,
+  "color": "green",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-22T18:15:00-03:00",
+  "end": "2026-10-22T20:06:00-03:00",
+  "nap": true,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-22T20:16:00-03:00",
+  "end": "2026-10-22T20:44:00-03:00",
+  "type": "breast milk",
+  "method": "both breasts",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "change",
+  "time": "2026-10-22T20:48:00-03:00",
+  "wet": true,
+  "solid": false,
+  "color": "",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-22T21:20:00-03:00",
+  "end": "2026-10-22T22:57:00-03:00",
+  "nap": false,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-22T23:07:00-03:00",
+  "end": "2026-10-22T23:24:00-03:00",
+  "type": "breast milk",
+  "method": "both breasts",
+  "notes": "Night feed",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "note",
+  "time": "2026-10-22T23:07:00-03:00",
+  "note": "[simulated] Night wake-up handled by Parent B",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "change",
+  "time": "2026-10-22T23:27:00-03:00",
+  "wet": true,
+  "solid": true,
+  "color": "yellow",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-22T23:42:00-03:00",
+  "end": "2026-10-23T01:44:00-03:00",
+  "nap": false,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-23T01:49:00-03:00",
+  "end": "2026-10-23T02:23:00-03:00",
+  "type": "breast milk",
+  "method": "right breast",
+  "notes": "Night feed",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "note",
+  "time": "2026-10-23T01:49:00-03:00",
+  "note": "[simulated] Night wake-up handled by Parent A",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-23T02:46:00-03:00",
+  "end": "2026-10-23T03:58:00-03:00",
+  "nap": false,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-23T04:03:00-03:00",
+  "end": "2026-10-23T04:23:00-03:00",
+  "type": "breast milk",
+  "method": "bottle",
+  "amount": 110,
+  "notes": "Night feed",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "note",
+  "time": "2026-10-23T04:03:00-03:00",
+  "note": "[simulated] Night wake-up handled by Parent B",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "change",
+  "time": "2026-10-23T04:29:00-03:00",
+  "wet": true,
+  "solid": true,
+  "color": "yellow",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-23T04:37:00-03:00",
+  "end": "2026-10-23T06:14:00-03:00",
+  "nap": false,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-23T06:21:00-03:00",
+  "end": "2026-10-23T06:34:00-03:00",
+  "type": "formula",
+  "method": "bottle",
+  "amount": 100,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "change",
+  "time": "2026-10-23T06:38:00-03:00",
+  "wet": true,
+  "solid": false,
+  "color": "",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-23T07:09:00-03:00",
+  "end": "2026-10-23T08:19:00-03:00",
+  "nap": true,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-23T08:29:00-03:00",
+  "end": "2026-10-23T09:00:00-03:00",
+  "type": "breast milk",
+  "method": "right breast",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-23T09:32:00-03:00",
+  "end": "2026-10-23T11:01:00-03:00",
+  "nap": true,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-23T11:06:00-03:00",
+  "end": "2026-10-23T11:21:00-03:00",
+  "type": "breast milk",
+  "method": "right breast",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "change",
+  "time": "2026-10-23T11:29:00-03:00",
+  "wet": true,
+  "solid": true,
+  "color": "yellow",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-23T11:53:00-03:00",
+  "end": "2026-10-23T13:12:00-03:00",
+  "nap": true,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-23T13:22:00-03:00",
+  "end": "2026-10-23T13:40:00-03:00",
+  "type": "breast milk",
+  "method": "both breasts",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "change",
+  "time": "2026-10-23T13:42:00-03:00",
+  "wet": true,
+  "solid": false,
+  "color": "",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-23T14:17:00-03:00",
+  "end": "2026-10-23T15:58:00-03:00",
+  "nap": true,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-23T16:02:00-03:00",
+  "end": "2026-10-23T16:18:00-03:00",
+  "type": "breast milk",
+  "method": "left breast",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "change",
+  "time": "2026-10-23T16:21:00-03:00",
+  "wet": true,
+  "solid": false,
+  "color": "",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-23T16:55:00-03:00",
+  "end": "2026-10-23T18:36:00-03:00",
+  "nap": true,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "note",
+  "time": "2026-10-23T18:37:00-03:00",
+  "note": "[simulated] Bath",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-23T18:39:00-03:00",
+  "end": "2026-10-23T18:56:00-03:00",
+  "type": "breast milk",
+  "method": "right breast",
+  "notes": "Cluster feeding in the evening",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "change",
+  "time": "2026-10-23T19:00:00-03:00",
+  "wet": true,
+  "solid": false,
+  "color": "",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-23T19:50:00-03:00",
+  "end": "2026-10-23T20:22:00-03:00",
+  "type": "breast milk",
+  "method": "right breast",
+  "notes": "Cluster feeding in the evening",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "note",
+  "time": "2026-10-23T21:00:00-03:00",
+  "note": "[simulated] Unusual day: evening cluster feeding",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-23T21:07:00-03:00",
+  "end": "2026-10-23T21:28:00-03:00",
+  "type": "breast milk",
+  "method": "right breast",
+  "notes": "Cluster feeding in the evening",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "change",
+  "time": "2026-10-23T21:31:00-03:00",
+  "wet": true,
+  "solid": true,
+  "color": "yellow",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-23T22:04:00-03:00",
+  "end": "2026-10-23T22:18:00-03:00",
+  "type": "breast milk",
+  "method": "bottle",
+  "amount": 110,
+  "notes": "Night feed",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "note",
+  "time": "2026-10-23T22:04:00-03:00",
+  "note": "[simulated] Night wake-up handled by Parent A",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "change",
+  "time": "2026-10-23T22:26:00-03:00",
+  "wet": true,
+  "solid": false,
+  "color": "",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-23T22:39:00-03:00",
+  "end": "2026-10-24T00:46:00-03:00",
+  "nap": false,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-24T00:51:00-03:00",
+  "end": "2026-10-24T01:08:00-03:00",
+  "type": "breast milk",
+  "method": "bottle",
+  "amount": 70,
+  "notes": "Night feed",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "note",
+  "time": "2026-10-24T00:51:00-03:00",
+  "note": "[simulated] Night wake-up handled by Parent B",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-24T01:30:00-03:00",
+  "end": "2026-10-24T03:16:00-03:00",
+  "nap": false,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-24T03:21:00-03:00",
+  "end": "2026-10-24T03:43:00-03:00",
+  "type": "breast milk",
+  "method": "left breast",
+  "notes": "Night feed",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "note",
+  "time": "2026-10-24T03:21:00-03:00",
+  "note": "[simulated] Night wake-up handled by Parent A",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "change",
+  "time": "2026-10-24T03:50:00-03:00",
+  "wet": true,
+  "solid": false,
+  "color": "",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-24T04:04:00-03:00",
+  "end": "2026-10-24T05:41:00-03:00",
+  "nap": false,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-24T05:47:00-03:00",
+  "end": "2026-10-24T06:04:00-03:00",
+  "type": "breast milk",
+  "method": "both breasts",
+  "notes": "Night feed",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "note",
+  "time": "2026-10-24T05:47:00-03:00",
+  "note": "[simulated] Night wake-up handled by Parent B",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "change",
+  "time": "2026-10-24T06:08:00-03:00",
+  "wet": true,
+  "solid": false,
+  "color": "",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-24T06:28:00-03:00",
+  "end": "2026-10-24T08:11:00-03:00",
+  "nap": false,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-24T08:20:00-03:00",
+  "end": "2026-10-24T08:34:00-03:00",
+  "type": "breast milk",
+  "method": "bottle",
+  "amount": 100,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-24T09:03:00-03:00",
+  "end": "2026-10-24T11:11:00-03:00",
+  "nap": true,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-24T11:15:00-03:00",
+  "end": "2026-10-24T11:25:00-03:00",
+  "type": "breast milk",
+  "method": "bottle",
+  "amount": 80,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "change",
+  "time": "2026-10-24T11:29:00-03:00",
+  "wet": true,
+  "solid": false,
+  "color": "",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-24T11:57:00-03:00",
+  "end": "2026-10-24T13:54:00-03:00",
+  "nap": true,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-24T14:03:00-03:00",
+  "end": "2026-10-24T14:22:00-03:00",
+  "type": "formula",
+  "method": "bottle",
+  "amount": 100,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "change",
+  "time": "2026-10-24T14:29:00-03:00",
+  "wet": true,
+  "solid": true,
+  "color": "yellow",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-24T14:51:00-03:00",
+  "end": "2026-10-24T16:28:00-03:00",
+  "nap": true,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-24T16:35:00-03:00",
+  "end": "2026-10-24T17:10:00-03:00",
+  "type": "breast milk",
+  "method": "left breast",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "change",
+  "time": "2026-10-24T17:18:00-03:00",
+  "wet": true,
+  "solid": false,
+  "color": "",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-24T17:40:00-03:00",
+  "end": "2026-10-24T18:47:00-03:00",
+  "nap": true,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "note",
+  "time": "2026-10-24T18:39:00-03:00",
+  "note": "[simulated] Bath",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-24T18:54:00-03:00",
+  "end": "2026-10-24T19:23:00-03:00",
+  "type": "breast milk",
+  "method": "left breast",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-24T19:55:00-03:00",
+  "end": "2026-10-24T21:20:00-03:00",
+  "nap": false,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-24T21:25:00-03:00",
+  "end": "2026-10-24T21:38:00-03:00",
+  "type": "breast milk",
+  "method": "bottle",
+  "amount": 110,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "change",
+  "time": "2026-10-24T21:41:00-03:00",
+  "wet": true,
+  "solid": true,
+  "color": "yellow",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-24T22:10:00-03:00",
+  "end": "2026-10-25T00:04:00-03:00",
+  "nap": false,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-25T00:10:00-03:00",
+  "end": "2026-10-25T00:30:00-03:00",
+  "type": "breast milk",
+  "method": "bottle",
+  "amount": 100,
+  "notes": "Night feed",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "note",
+  "time": "2026-10-25T00:10:00-03:00",
+  "note": "[simulated] Night wake-up handled by Parent A",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "change",
+  "time": "2026-10-25T00:34:00-03:00",
+  "wet": true,
+  "solid": true,
+  "color": "yellow",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-25T00:42:00-03:00",
+  "end": "2026-10-25T01:34:00-03:00",
+  "nap": false,
+  "notes": "Short, fussy sleep",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-25T01:37:00-03:00",
+  "end": "2026-10-25T02:09:00-03:00",
+  "type": "breast milk",
+  "method": "left breast",
+  "notes": "Night feed",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "note",
+  "time": "2026-10-25T01:37:00-03:00",
+  "note": "[simulated] Night wake-up handled by Parent B",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "change",
+  "time": "2026-10-25T02:15:00-03:00",
+  "wet": true,
+  "solid": false,
+  "color": "",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-25T02:33:00-03:00",
+  "end": "2026-10-25T02:59:00-03:00",
+  "nap": false,
+  "notes": "Short, fussy sleep",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-25T03:08:00-03:00",
+  "end": "2026-10-25T03:40:00-03:00",
+  "type": "breast milk",
+  "method": "right breast",
+  "notes": "Night feed",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "note",
+  "time": "2026-10-25T03:08:00-03:00",
+  "note": "[simulated] Night wake-up handled by Parent A",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "change",
+  "time": "2026-10-25T03:46:00-03:00",
+  "wet": true,
+  "solid": true,
+  "color": "yellow",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-25T03:57:00-03:00",
+  "end": "2026-10-25T04:49:00-03:00",
+  "nap": false,
+  "notes": "Short, fussy sleep",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-25T04:54:00-03:00",
+  "end": "2026-10-25T05:20:00-03:00",
+  "type": "breast milk",
+  "method": "left breast",
+  "notes": "Night feed",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "note",
+  "time": "2026-10-25T04:54:00-03:00",
+  "note": "[simulated] Night wake-up handled by Parent B",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "change",
+  "time": "2026-10-25T05:28:00-03:00",
+  "wet": true,
+  "solid": true,
+  "color": "yellow",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-25T05:38:00-03:00",
+  "end": "2026-10-25T06:43:00-03:00",
+  "nap": false,
+  "notes": "Short, fussy sleep",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-25T06:46:00-03:00",
+  "end": "2026-10-25T07:04:00-03:00",
+  "type": "formula",
+  "method": "bottle",
+  "amount": 90,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "change",
+  "time": "2026-10-25T07:10:00-03:00",
+  "wet": true,
+  "solid": true,
+  "color": "green",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-25T07:35:00-03:00",
+  "end": "2026-10-25T08:55:00-03:00",
+  "nap": true,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-25T09:02:00-03:00",
+  "end": "2026-10-25T09:25:00-03:00",
+  "type": "breast milk",
+  "method": "right breast",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-25T09:59:00-03:00",
+  "end": "2026-10-25T11:36:00-03:00",
+  "nap": true,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-25T11:42:00-03:00",
+  "end": "2026-10-25T11:55:00-03:00",
+  "type": "formula",
+  "method": "bottle",
+  "amount": 80,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "change",
+  "time": "2026-10-25T11:58:00-03:00",
+  "wet": true,
+  "solid": true,
+  "color": "green",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-25T12:34:00-03:00",
+  "end": "2026-10-25T13:58:00-03:00",
+  "nap": true,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-25T14:04:00-03:00",
+  "end": "2026-10-25T14:15:00-03:00",
+  "type": "formula",
+  "method": "bottle",
+  "amount": 60,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "change",
+  "time": "2026-10-25T14:23:00-03:00",
+  "wet": true,
+  "solid": true,
+  "color": "yellow",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-25T14:43:00-03:00",
+  "end": "2026-10-25T16:27:00-03:00",
+  "nap": true,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-25T16:34:00-03:00",
+  "end": "2026-10-25T16:45:00-03:00",
+  "type": "breast milk",
+  "method": "bottle",
+  "amount": 70,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-25T17:31:00-03:00",
+  "end": "2026-10-25T19:20:00-03:00",
+  "nap": true,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-25T19:29:00-03:00",
+  "end": "2026-10-25T19:59:00-03:00",
+  "type": "breast milk",
+  "method": "left breast",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "change",
+  "time": "2026-10-25T20:03:00-03:00",
+  "wet": true,
+  "solid": false,
+  "color": "",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-25T20:39:00-03:00",
+  "end": "2026-10-25T21:27:00-03:00",
+  "nap": false,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-25T21:36:00-03:00",
+  "end": "2026-10-25T22:07:00-03:00",
+  "type": "breast milk",
+  "method": "left breast",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "change",
+  "time": "2026-10-25T22:13:00-03:00",
+  "wet": true,
+  "solid": false,
+  "color": "",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-25T22:31:00-03:00",
+  "end": "2026-10-25T23:36:00-03:00",
+  "nap": false,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "note",
+  "time": "2026-10-25T23:00:00-03:00",
+  "note": "[simulated] Unusual night: short, fussy sleep",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-25T23:42:00-03:00",
+  "end": "2026-10-25T23:54:00-03:00",
+  "type": "formula",
+  "method": "bottle",
+  "amount": 60,
+  "notes": "Night feed",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "note",
+  "time": "2026-10-25T23:42:00-03:00",
+  "note": "[simulated] Night wake-up handled by Parent A",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "change",
+  "time": "2026-10-25T23:56:00-03:00",
+  "wet": true,
+  "solid": false,
+  "color": "",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-26T00:14:00-03:00",
+  "end": "2026-10-26T01:07:00-03:00",
+  "nap": false,
+  "notes": "Short, fussy sleep",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-26T01:10:00-03:00",
+  "end": "2026-10-26T01:32:00-03:00",
+  "type": "breast milk",
+  "method": "right breast",
+  "notes": "Night feed",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "note",
+  "time": "2026-10-26T01:10:00-03:00",
+  "note": "[simulated] Night wake-up handled by Parent B",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "change",
+  "time": "2026-10-26T01:36:00-03:00",
+  "wet": true,
+  "solid": false,
+  "color": "",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-26T01:52:00-03:00",
+  "end": "2026-10-26T03:58:00-03:00",
+  "nap": false,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-26T04:02:00-03:00",
+  "end": "2026-10-26T04:19:00-03:00",
+  "type": "breast milk",
+  "method": "both breasts",
+  "notes": "Night feed",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "note",
+  "time": "2026-10-26T04:02:00-03:00",
+  "note": "[simulated] Night wake-up handled by Parent A",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "change",
+  "time": "2026-10-26T04:26:00-03:00",
+  "wet": true,
+  "solid": false,
+  "color": "",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-26T04:37:00-03:00",
+  "end": "2026-10-26T06:17:00-03:00",
+  "nap": false,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-26T06:23:00-03:00",
+  "end": "2026-10-26T06:40:00-03:00",
+  "type": "formula",
+  "method": "bottle",
+  "amount": 110,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "change",
+  "time": "2026-10-26T06:48:00-03:00",
+  "wet": true,
+  "solid": false,
+  "color": "",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-26T07:17:00-03:00",
+  "end": "2026-10-26T09:08:00-03:00",
+  "nap": true,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-26T09:11:00-03:00",
+  "end": "2026-10-26T09:46:00-03:00",
+  "type": "breast milk",
+  "method": "left breast",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "change",
+  "time": "2026-10-26T09:48:00-03:00",
+  "wet": true,
+  "solid": true,
+  "color": "yellow",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-26T10:26:00-03:00",
+  "end": "2026-10-26T11:50:00-03:00",
+  "nap": true,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-26T11:55:00-03:00",
+  "end": "2026-10-26T12:12:00-03:00",
+  "type": "formula",
+  "method": "bottle",
+  "amount": 60,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "change",
+  "time": "2026-10-26T12:19:00-03:00",
+  "wet": true,
+  "solid": true,
+  "color": "green",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-26T12:55:00-03:00",
+  "end": "2026-10-26T14:11:00-03:00",
+  "nap": true,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-26T14:18:00-03:00",
+  "end": "2026-10-26T14:47:00-03:00",
+  "type": "breast milk",
+  "method": "left breast",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "change",
+  "time": "2026-10-26T14:53:00-03:00",
+  "wet": true,
+  "solid": false,
+  "color": "",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-26T15:13:00-03:00",
+  "end": "2026-10-26T16:46:00-03:00",
+  "nap": true,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-26T16:53:00-03:00",
+  "end": "2026-10-26T17:24:00-03:00",
+  "type": "breast milk",
+  "method": "right breast",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "change",
+  "time": "2026-10-26T17:28:00-03:00",
+  "wet": true,
+  "solid": false,
+  "color": "",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-26T17:50:00-03:00",
+  "end": "2026-10-26T19:07:00-03:00",
+  "nap": true,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "note",
+  "time": "2026-10-26T18:35:00-03:00",
+  "note": "[simulated] Bath",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-26T19:11:00-03:00",
+  "end": "2026-10-26T19:25:00-03:00",
+  "type": "formula",
+  "method": "bottle",
+  "amount": 100,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "change",
+  "time": "2026-10-26T19:28:00-03:00",
+  "wet": true,
+  "solid": false,
+  "color": "",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-26T19:51:00-03:00",
+  "end": "2026-10-26T21:25:00-03:00",
+  "nap": false,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "feeding",
+  "start": "2026-10-26T21:33:00-03:00",
+  "end": "2026-10-26T21:49:00-03:00",
+  "type": "breast milk",
+  "method": "bottle",
+  "amount": 90,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "change",
+  "time": "2026-10-26T21:52:00-03:00",
+  "wet": true,
+  "solid": false,
+  "color": "",
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "sleep",
+  "start": "2026-10-26T22:24:00-03:00",
+  "end": "2026-10-26T23:59:00-03:00",
+  "nap": false,
+  "notes": "",
+  "tags": [
+   "simulated-week"
+  ]
+ }
+]
