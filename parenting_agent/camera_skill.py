@@ -8,7 +8,7 @@ Each skill file carries an "agent" block that names its two tools and what they 
     "bath done" -> finish_bath: log the bath to Baby Buddy, read it back, tell the agent with an observation
 
 While armed it runs the same core as the changing table: the local reflex chimes at once when both hands
-leave the baby, SAM 3.1 confirms touch versus hover, the voice prompt plays when it is real. The skill only
+leave the baby, SAM 3.1 confirms or cancels, the voice prompt plays when it is real. The skill only
 listens for the parent's hands. It never watches the baby in the parent's place, and every text it speaks
 is checked at start so it never says or implies the baby can be left alone.
 """

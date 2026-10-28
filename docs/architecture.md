@@ -23,7 +23,7 @@ flowchart LR
   cam -->|frames, in memory only| reflex
   reflex -->|alert| skills
   skills -->|frame to confirm| sam
-  sam -->|touch or hover| skills
+  sam -->|confirm or cancel| skills
   mic -.->|labels only| bus
   skills --> bus
   rhythm --> bus
@@ -47,7 +47,7 @@ flowchart LR
 | Brain | `parenting_agent/agent/brain.py` | Fake, Claude stand-in, or any OpenAI-compatible endpoint (Muse Spark Open on Baseten) |
 | Changing-table skill | `parenting_agent/changing_table.py`, `reflex.py`, `alarm.py`, `skill.py` | Arms, holds notifications, chimes then says "hand", logs the change |
 | Camera skills from config | `parenting_agent/camera_skill.py`, `skills/bath.json` | A skill file with an agent block becomes tools, arm and finish phrases, reminders and prompt facts. The bath is the first, see `docs/bath.md` |
-| SAM 3.1 confirm | `parenting_agent/sam3_local.py`, `sam3_worker.py` | Touch versus hover, locally, see `docs/sam3-local.md` |
+| SAM 3.1 confirm | `parenting_agent/sam3_local.py`, `sam3_worker.py` | Confirms or cancels the hand alarm, locally. Touch versus a 2 to 5 cm hover is not solved yet, see `results/hover/README.md` and `docs/sam3-local.md` |
 | Car seat coach | `parenting_agent/carseat/`, `sam3_prompts_worker.py`, `skills/car-seat.json` | Seat belt install coached by voice, SAM 3.1 checks the belt path, level line and handle, hand checks asked and logged, see `docs/car-seat-coach.md` |
 | Head camera | `parenting_agent/sources.py`, `phone.html` | iPhone page streaming frames to the Mac over Tailscale |
 | Daily rhythm | `parenting_agent/rhythm/` | Next feed, unusual days, night summary, night shifts |
@@ -66,7 +66,7 @@ flowchart LR
 | Flow | From | To | Leaves the house? |
 |---|---|---|---|
 | Camera frames | Head camera | Reflex and SAM 3.1 on the Mac | No. In memory only, never saved |
-| Touch or hover result | SAM 3.1 | Skill, then bus | No |
+| Confirm or cancel | SAM 3.1 | Skill, then bus | No |
 | Baby log entries | Agent core | Baby Buddy on the family server | No |
 | Rhythm reads | Baby Buddy | Daily rhythm | No |
 | Conversation and tool results | Agent core | Brain | **Yes, the only flow that does.** Baseten for Muse Spark Open, Anthropic for the stand-in. Each call logs its host as a `brain_call` event |

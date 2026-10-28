@@ -55,6 +55,8 @@ def validate(skill):
         raise ConfigError("contact.off_frames_to_alert must be >= 1")
     if alarm["voice_hold_s"] < 0 or alarm["clear_after_on_s"] < 0:
         raise ConfigError("alarm times must be >= 0")
+    if alarm.get("confirm_wait_s") is not None and not alarm["voice_hold_s"] <= alarm["confirm_wait_s"] <= 2.5:
+        raise ConfigError("alarm.confirm_wait_s must be between voice_hold_s and 2.5 s")
     house = skill["house"]
     for event in ("on_armed", "on_voice", "on_closed"):
         if not isinstance(house.get(event, []), list):

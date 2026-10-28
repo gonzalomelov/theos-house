@@ -1,6 +1,6 @@
 # SAM 3.1 on this Mac
 
-The changing-table skill asks Meta's SAM 3.1 whether a hand really touches the baby or only hovers above it. SAM 3.1 runs here from Meta's open weights, on the Mac's GPU, so frames never leave the house.
+The changing-table and bath skills ask Meta's SAM 3.1 to confirm or cancel the alarm the local reflex raised. The aim was to tell a hand touching the baby from one hovering above it. The Oct 28 ablation (`results/hover/README.md`, during the event) shows it does not do that yet for a 2 to 5 cm hover: 0 of 24 rendered hovers were caught with or without SAM 3.1, because the reflex reads a hovering hand as on, and asked directly SAM 3.1 also read every changing-table hover as on (in the bath it read touches and hovers alike as off). With hands well above the baby both get it right. The pre-event number (21 of 21 hovers, Oct 23 and 24) came from one clip with the forearm far above the baby and is not used as evidence. SAM 3.1 runs here from Meta's open weights, on the Mac's GPU, so frames never leave the house.
 
 ## Setup, once
 
@@ -12,6 +12,6 @@ scripts/sam3-setup.sh          # default location ~/Engineering/gonza/sam3-nativ
 
 ## How the skill uses it
 
-`parenting_agent/sam3_local.py` starts `parenting_agent/sam3_worker.py` in that environment once, when the skill arms. The worker loads SAM 3.1 (about 7 s), then answers one frame at a time through a local pipe: about 1.5 s per frame on an M3 Max. It finds the hands and the baby by text, and a hand counts as on the baby when enough of the ring of pixels around it is baby. If the environment or the token is missing, the skill fails at start with a clear reason, never in the middle of a change.
+`parenting_agent/sam3_local.py` starts `parenting_agent/sam3_worker.py` in that environment once, when the skill arms. The worker loads SAM 3.1 (about 7 s), then answers one frame at a time through a local pipe: about 1.5 s per frame on an M3 Max, and 2.2 to 3.2 s in the Oct 28 ablation. It finds the hands and the baby by text, and a hand counts as on the baby when enough of the ring of pixels around it is baby. If the environment or the token is missing, the skill fails at start with a clear reason, never in the middle of a change.
 
-The local reflex still raises the alert first, in well under a second. SAM 3.1 then confirms or cancels it.
+The local reflex still raises the alert first, in well under a second, and the chime plays at once. SAM 3.1 then confirms or cancels it. Because SAM 3.1 is slower than the 1.2 s voice hold, the changing table sets `alarm.confirm_wait_s` to 2.3 s: when the reflex raises on a near reading (off, but a hand box still over the baby box) the voice waits for SAM 3.1 up to 2.3 s, so a cancel can land before the word. The value was picked on the dev split of the ablation.

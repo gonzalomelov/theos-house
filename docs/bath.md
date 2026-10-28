@@ -7,7 +7,7 @@ Issue #10. The second camera skill, on the same core as the changing table. The 
 | Moment | What happens |
 |---|---|
 | The parent says "bath time" | The phrase arms the skill at once, without waiting for the brain. The routine reminder goes to the ear: water ready, towel within reach, nothing left on in the kitchen, keep a hand on the baby the whole bath. Notifications are held |
-| Both hands leave the baby | The local reflex chimes within a second. SAM 3.1 on the Mac GPU confirms touch versus hover. "hand" is spoken within 2.5 s. Calling the partner waits for the parent's yes |
+| Both hands leave the baby | The local reflex chimes within a second. SAM 3.1 on the Mac GPU confirms or cancels. It does not tell a 2 to 5 cm hover from a touch yet (`results/hover/README.md`, Oct 28). "hand" is spoken within 2.5 s. Calling the partner waits for the parent's yes |
 | One hand stays on | Silent |
 | The door, the phone, a timer, a forgotten towel | While the bath is on, a fact in the agent's prompt says never to suggest stepping away and never to offer to watch the baby. The agent offers "one moment" on the house speaker, holding notifications or calling the partner. If the parent must go, the baby comes out of the water with them |
 | The parent says "bath done" | The bath is logged in Baby Buddy as a note that starts with "Bath", read back by id, and notifications are restored |
