@@ -1,0 +1,15 @@
+{
+ "generated_at": "2026-10-28T15:53:51-03:00",
+ "camera": "Tapo C200 living room, RTSP audio track only, labels only",
+ "seconds_heard": 20,
+ "wall_s": 20.4,
+ "error": null,
+ "median_dbfs": -72.3,
+ "seconds_fired": {
+  "cry": 0,
+  "dog": 0,
+  "doorbell": 0,
+  "splash": 0
+ },
+ "events": []
+}

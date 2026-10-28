@@ -6,7 +6,7 @@ One persistent agent. Every part publishes to and listens on one event bus. Part
 flowchart LR
   subgraph House["Inside the house"]
     cam["Head camera<br/>iPhone page over Tailscale"]
-    mic["Camera microphones<br/>(planned #14)"]
+    mic["Camera microphone<br/>PANNs labels #14"]
     reflex["Local reflex<br/>MediaPipe hands"]
     sam["SAM 3.1 open weights<br/>Mac GPU"]
     bus(("Event bus"))
@@ -52,6 +52,7 @@ flowchart LR
 | Channels | `parenting_agent/channels/` | Messaging adapter interface, Telegram long polling with a family allowlist, router for ear, speaker, Telegram or partner |
 | House | `parenting_agent/house.py` | Home Assistant actions behind the allowed list, dry run today |
 | Always on | `deploy/`, `parenting_agent/agent/heartbeat.py` | The agent in a walled-off container on the Vostro, see `docs/deploy-agent.md` |
+| House sounds | `parenting_agent/hearing.py`, `house_sounds.py`, `cry_reason.py`, `white_noise.py` | Cry, doorbell and dog as events, a likely reason for a cry from the log, simulated white noise, see `docs/house-sounds.md` |
 | Simulated week | `simweek/` | A realistic tagged week in Baby Buddy for tests and demos |
 
 ## Data flows
@@ -64,7 +65,7 @@ flowchart LR
 | Rhythm reads | Baby Buddy | Daily rhythm | No |
 | Conversation and tool results | Agent core | Brain | **Yes, the only flow that does.** Baseten for Muse Spark Open, Anthropic for the stand-in. Each call logs its host as a `brain_call` event |
 | House actions | Agent core | Home Assistant on the family server | No. Dry run today |
-| House sound labels (planned) | Camera microphones | Bus | No. Audio never saved |
+| House sound labels | Camera microphone | Bus | No. Audio stays in memory, never saved |
 | Messages to parents | Agent core, router | Ear, kitchen speaker, Telegram | Telegram messages go through Telegram's servers. The ear and the speaker stay in the house |
 
 ## Rules the code keeps

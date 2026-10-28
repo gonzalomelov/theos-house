@@ -1,0 +1,98 @@
+{
+ "ten": {
+  "right": 9,
+  "of": 10,
+  "cases": [
+   {
+    "at": "2026-10-20T21:30:00-03:00",
+    "truth": "tired",
+    "guess": "tired",
+    "right": true,
+    "text": "Probably tired: awake 54 min, he usually sleeps again after about 1 h. Next feed expected around 23:05.",
+    "resolved_by": "sleep@2026-10-20T21:34:00-03:00#30"
+   },
+   {
+    "at": "2026-10-21T02:04:00-03:00",
+    "truth": "hungry",
+    "guess": "hungry",
+    "right": true,
+    "text": "Probably hungry: last feed 2 h 37 min ago, he eats about every 2 h 28 min.",
+    "resolved_by": "feeding@2026-10-21T02:13:00-03:00#35"
+   },
+   {
+    "at": "2026-10-21T05:02:00-03:00",
+    "truth": "diaper",
+    "guess": "diaper",
+    "right": true,
+    "text": "Probably a diaper: no diaper change since the 04:40 feed, a change usually follows each feed. Next feed expected around 07:16.",
+    "resolved_by": "change@2026-10-21T05:04:00-03:00#40"
+   },
+   {
+    "at": "2026-10-22T10:02:00-03:00",
+    "truth": "hungry",
+    "guess": "hungry",
+    "right": true,
+    "text": "Probably hungry: last feed 2 h 51 min ago, he eats about every 2 h 26 min.",
+    "resolved_by": "feeding@2026-10-22T10:04:00-03:00#77"
+   },
+   {
+    "at": "2026-10-23T06:37:00-03:00",
+    "truth": "diaper",
+    "guess": "diaper",
+    "right": true,
+    "text": "Probably a diaper: no diaper change since the 06:21 feed, a change usually follows each feed. Next feed expected around 08:37.",
+    "resolved_by": "change@2026-10-23T06:38:00-03:00#104"
+   },
+   {
+    "at": "2026-10-24T03:57:00-03:00",
+    "truth": "tired",
+    "guess": "tired",
+    "right": true,
+    "text": "Probably tired: awake 41 min, he usually sleeps again after about 45 min. Next feed expected around 05:59.",
+    "resolved_by": "sleep@2026-10-24T04:04:00-03:00#134"
+   },
+   {
+    "at": "2026-10-24T13:54:00-03:00",
+    "truth": "hungry",
+    "guess": "hungry",
+    "right": true,
+    "text": "Probably hungry: last feed 2 h 39 min ago, he eats about every 2 h 44 min.",
+    "resolved_by": "feeding@2026-10-24T14:03:00-03:00#144"
+   },
+   {
+    "at": "2026-10-25T02:14:00-03:00",
+    "truth": "diaper",
+    "guess": "tired",
+    "right": false,
+    "text": "Probably tired: awake 40 min, he usually sleeps again after about 44 min. Next guess: diaper, no diaper change since the 01:37 feed, a change usually follows each feed. Next feed expected around 03:43.",
+    "resolved_by": "change@2026-10-25T02:15:00-03:00#162"
+   },
+   {
+    "at": "2026-10-25T08:52:00-03:00",
+    "truth": "hungry",
+    "guess": "hungry",
+    "right": true,
+    "text": "Probably hungry: last feed 2 h 6 min ago, he eats about every 1 h 49 min.",
+    "resolved_by": "feeding@2026-10-25T09:02:00-03:00#175"
+   },
+   {
+    "at": "2026-10-25T22:24:00-03:00",
+    "truth": "tired",
+    "guess": "tired",
+    "right": true,
+    "text": "Probably tired: awake 57 min, he usually sleeps again after about 58 min. Next feed expected around 00:07.",
+    "resolved_by": "sleep@2026-10-25T22:31:00-03:00#190"
+   }
+  ]
+ },
+ "whole_week": {
+  "right": 166,
+  "of": 184,
+  "per_reason": {
+   "hungry": "60 of 66",
+   "diaper": "51 of 55",
+   "tired": "55 of 63"
+  }
+ },
+ "how": "simweek/cries.py: the truth is what the simulated week does next (feed, diaper change, sleep), the cry is 1 to 12 min before it, the reasoner reads only the log up to the cry"
+}
