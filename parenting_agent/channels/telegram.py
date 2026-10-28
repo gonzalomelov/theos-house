@@ -46,9 +46,15 @@ class TelegramMessenger(Messenger):
         for update in updates:
             message = update.get("message") or {}
             sender = message.get("from") or {}
-            out.append(Incoming(update["update_id"], str(message.get("chat", {}).get("id", "")),
-                                message.get("text") or "", sender.get("username") or sender.get("first_name") or ""))
+            chat = message.get("chat") or {}
+            out.append(Incoming(update["update_id"], str(chat.get("id", "")),
+                                message.get("text") or "", sender.get("username") or sender.get("first_name") or "",
+                                str(sender.get("id", "")), chat.get("type") or ""))
         return out
+
+    def me(self):
+        """The bot's own username, from getMe. Never the token."""
+        return self._call("getMe", {}, timeout=15).get("username") or ""
 
     def send(self, chat_id, text):
         return self._call("sendMessage", {"chat_id": chat_id, "text": text}, timeout=15)["message_id"]
