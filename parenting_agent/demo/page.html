@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="data:,">
+<title>Parenting Agent Demo</title>
+<style>
+:root {
+  --bg: #f6f3ee; --card: #ffffff; --ink: #1f2328; --muted: #6b6f76; --line: #e6e0d6;
+  --accent: #2f6f5e; --accent-ink: #ffffff; --me: #2f6f5e; --sim: #8a5a00; --sim-bg: #fff4dc;
+  --ask: #6a3fb3; --ask-bg: #f1eafd; --warn-bg: #fdecec; --warn: #9b2c2c;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #15171a; --card: #1e2125; --ink: #eceae6; --muted: #9aa0a6; --line: #2c3036;
+          --accent: #5fb39b; --accent-ink: #0d1412; --me: #3d8a75; --sim: #f0c36b; --sim-bg: #2e2715;
+          --ask: #c3a6f5; --ask-bg: #271f36; --warn-bg: #361c1c; --warn: #f2a3a3; }
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body { background: var(--bg); color: var(--ink); font: 16px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+       display: flex; flex-direction: column; max-width: 560px; margin: 0 auto; }
+header { padding: 14px 16px 8px; }
+h1 { font-size: 20px; margin: 0; display: flex; align-items: center; gap: 8px; }
+.badge { font-size: 11px; font-weight: 600; letter-spacing: .02em; color: var(--sim); background: var(--sim-bg);
+         padding: 3px 7px; border-radius: 999px; }
+.sub { color: var(--muted); font-size: 13px; margin: 4px 0 0; }
+.cards { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 6px 16px 4px; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 10px 12px; min-width: 0; }
+.card.wide { grid-column: 1 / -1; }
+.label { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600; }
+.big { font-size: 26px; font-weight: 700; margin-top: 2px; }
+.small { font-size: 13px; color: var(--muted); }
+.night { font-size: 13px; margin-top: 4px; }
+details { padding: 0 16px; }
+summary { font-size: 13px; color: var(--muted); cursor: pointer; padding: 6px 0; }
+.log { list-style: none; margin: 0 0 6px; padding: 0; font-size: 13px; }
+.log li { padding: 4px 0; border-bottom: 1px solid var(--line); display: flex; gap: 8px; }
+.log time { color: var(--muted); font-variant-numeric: tabular-nums; min-width: 42px; }
+#thread { flex: 1; overflow-y: auto; padding: 8px 16px; display: flex; flex-direction: column; gap: 8px; }
+.msg { max-width: 86%; padding: 9px 12px; border-radius: 16px; white-space: pre-wrap; word-wrap: break-word; }
+.agent { background: var(--card); border: 1px solid var(--line); align-self: flex-start; border-bottom-left-radius: 4px; }
+.me { background: var(--me); color: #fff; align-self: flex-end; border-bottom-right-radius: 4px; }
+.note { align-self: center; font-size: 13px; color: var(--warn); background: var(--warn-bg); border-radius: 10px; padding: 6px 10px; }
+.acts { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.act { font-size: 12px; border-radius: 8px; padding: 4px 8px; color: var(--sim); background: var(--sim-bg); }
+.act.ask { color: var(--ask); background: var(--ask-bg); }
+.chips { display: flex; gap: 6px; overflow-x: auto; padding: 4px 16px 6px; scrollbar-width: none; }
+.chips::-webkit-scrollbar { display: none; }
+.chip { flex: none; border: 1px solid var(--line); background: var(--card); color: var(--ink); border-radius: 999px;
+        padding: 7px 12px; font-size: 14px; cursor: pointer; }
+form { display: flex; gap: 8px; padding: 6px 16px calc(8px + env(safe-area-inset-bottom)); background: var(--bg); }
+#text { flex: 1; min-width: 0; font: inherit; padding: 11px 14px; border-radius: 999px; border: 1px solid var(--line);
+        background: var(--card); color: var(--ink); }
+button.send { font: inherit; font-weight: 600; border: 0; border-radius: 999px; padding: 0 18px; background: var(--accent); color: var(--accent-ink); }
+button:disabled { opacity: .5; }
+footer { font-size: 11px; color: var(--muted); padding: 0 16px 10px; display: flex; justify-content: space-between; gap: 8px; }
+footer button { font: inherit; background: none; border: 0; color: var(--muted); text-decoration: underline; padding: 0; cursor: pointer; }
+.typing { color: var(--muted); font-size: 13px; align-self: flex-start; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Demo Baby <span class="badge">SIMULATED</span></h1>
+  <p class="sub">Talk to a persistent agent for new parents. The baby, her week and the house are simulated. Your copy is only yours.</p>
+</header>
+<section class="cards" aria-label="What the agent says first">
+  <div class="card"><div class="label">Next feed</div><div class="big" id="nf-at">--:--</div><div class="small" id="nf-in"></div></div>
+  <div class="card"><div class="label">Next night on duty</div><div class="big" id="duty" style="font-size:20px">-</div><div class="small">fair split of wake-ups</div></div>
+  <div class="card wide"><div class="label">Night summary, said in the morning</div><div class="night" id="night">Loading...</div></div>
+</section>
+<details><summary>Latest in the log</summary><ul class="log" id="log"></ul></details>
+<main id="thread" aria-live="polite">
+  <div class="msg agent">Hi, I keep Demo Baby's log and speak first when it helps. Ask me about her day, or tell me what just happened, like "bottle 120 ml".</div>
+</main>
+<div class="chips" id="chips">
+  <button class="chip">When did she last eat?</button>
+  <button class="chip">Bottle 120 ml</button>
+  <button class="chip">How much did she drink today?</button>
+  <button class="chip">She just fell asleep</button>
+  <button class="chip">Wet and dirty diaper</button>
+  <button class="chip">Night feed now, it's dark</button>
+</div>
+<form id="form" autocomplete="off">
+  <input id="text" maxlength="300" placeholder="Type to the agent" aria-label="Message">
+  <button class="send" id="send">Send</button>
+</form>
+<footer><span id="left">Logs, reminds and alerts. Never medical advice.</span><button id="reset" type="button">Fresh demo baby</button></footer>
+<script>
+const $ = (id) => document.getElementById(id);
+const NAMES = { dim_lights: "Dim lights", hold_notifications: "Hold notifications", pause_vacuum: "Pause vacuum",
+                announce: "Speaker", call_partner: "Call partner" };
+let busy = false;
+
+function bubble(cls, text) {
+  const el = document.createElement("div");
+  el.className = "msg " + cls;
+  el.textContent = text;
+  $("thread").appendChild(el);
+  $("thread").scrollTop = $("thread").scrollHeight;
+  return el;
+}
+
+function actions(el, list) {
+  if (!list || !list.length) return;
+  const box = document.createElement("div");
+  box.className = "acts";
+  for (const a of list) {
+    const chip = document.createElement("span");
+    const ask = a.status !== "simulated";
+    chip.className = "act" + (ask ? " ask" : "");
+    const args = Object.values(a.arguments || {}).filter((v) => typeof v !== "object").join(", ");
+    chip.textContent = (ask ? "Waits for your yes: " : "Simulated house: ") + (NAMES[a.action] || a.action) + (args ? " (" + args + ")" : "");
+    box.appendChild(chip);
+  }
+  el.appendChild(box);
+  $("thread").scrollTop = $("thread").scrollHeight;
+}
+
+function render(state) {
+  const p = state.proactive || {};
+  if (p.next_feed) {
+    $("nf-at").textContent = p.next_feed.at;
+    $("nf-in").textContent = p.next_feed.in_min >= 0 ? "in about " + p.next_feed.in_min + " min, every ~" + p.next_feed.gap_min + " min"
+                                                     : "expected " + (-p.next_feed.in_min) + " min ago";
+  }
+  if (p.night_summary) {
+    $("night").textContent = p.night_summary.text;
+    $("duty").textContent = p.night_summary.on_duty;
+  }
+  const log = $("log");
+  log.textContent = "";
+  for (const e of state.recent || []) {
+    const li = document.createElement("li");
+    const t = document.createElement("time");
+    t.textContent = e.at;
+    const d = e.details || {};
+    let what = e.kind;
+    if (e.kind === "feeding") what = "Feed, " + (d.amount_ml ? d.amount_ml + " ml " : "") + (d.method || "");
+    if (e.kind === "diaper") what = "Diaper, " + [d.wet ? "wet" : "", d.solid ? "dirty" : ""].filter(Boolean).join(" and ");
+    if (e.kind === "sleep") what = "Sleep, " + (d.duration_min || "?") + " min";
+    if (e.kind === "bath" || e.kind === "note") what = d.text || e.kind;
+    li.append(t, document.createTextNode(what));
+    log.appendChild(li);
+  }
+  if (state.remaining !== undefined && state.remaining !== null) {
+    $("left").textContent = state.remaining + " messages left. Never medical advice.";
+  }
+  if (state.max_input) $("text").maxLength = state.max_input;
+  if (state.resting) bubble("note", "The demo is resting for today. Please come back tomorrow.");
+}
+
+async function api(path, body) {
+  const res = await fetch(path, body === undefined ? {} : {
+    method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+  let data = {};
+  try { data = await res.json(); } catch (e) {}
+  return { ok: res.ok, data };
+}
+
+async function send(text) {
+  text = text.trim();
+  if (!text || busy) return;
+  busy = true; $("send").disabled = true;
+  bubble("me", text);
+  $("text").value = "";
+  const typing = document.createElement("div");
+  typing.className = "typing"; typing.textContent = "thinking...";
+  $("thread").appendChild(typing);
+  try {
+    const { ok, data } = await api("/api/message", { text });
+    typing.remove();
+    if (ok) {
+      const el = bubble("agent", data.reply);
+      actions(el, data.actions);
+      render(data);
+    } else {
+      bubble("note", data.reply || "Something went wrong. Please try again.");
+      if (data.remaining !== undefined && data.remaining !== null) $("left").textContent = data.remaining + " messages left.";
+    }
+  } catch (e) {
+    typing.remove();
+    bubble("note", "Could not reach the demo. Please try again.");
+  }
+  busy = false; $("send").disabled = false;
+}
+
+$("form").addEventListener("submit", (e) => { e.preventDefault(); send($("text").value); });
+$("chips").addEventListener("click", (e) => { if (e.target.classList.contains("chip")) send(e.target.textContent); });
+$("reset").addEventListener("click", async () => {
+  const { data } = await api("/api/reset", {});
+  $("thread").textContent = "";
+  bubble("agent", "A fresh copy of Demo Baby's week is ready. What would you like to know?");
+  render(data);
+});
+api("/api/state").then(({ data }) => render(data));
+</script>
+</body>
+</html>

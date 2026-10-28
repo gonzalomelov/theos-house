@@ -24,8 +24,10 @@ class BrainError(Exception):
 
 
 class Reply:
-    def __init__(self, text="", tool_calls=None):
-        self.text, self.tool_calls = text, tool_calls or []
+    """usage is {"input_tokens", "output_tokens"} when the provider reports it, else None (the fake brain)."""
+
+    def __init__(self, text="", tool_calls=None, usage=None):
+        self.text, self.tool_calls, self.usage = text, tool_calls or [], usage
 
 
 def post_json(url, headers, body, timeout):
@@ -110,7 +112,9 @@ class ClaudeBrain:
         text = "".join(b.get("text", "") for b in reply.get("content", []) if b.get("type") == "text")
         calls = [{"id": b["id"], "name": b["name"], "arguments": b.get("input") or {}}
                  for b in reply.get("content", []) if b.get("type") == "tool_use"]
-        return Reply(text.strip(), calls)
+        usage = reply.get("usage") or {}
+        return Reply(text.strip(), calls, {"input_tokens": usage.get("input_tokens", 0) + usage.get("cache_creation_input_tokens", 0)
+                                           + usage.get("cache_read_input_tokens", 0), "output_tokens": usage.get("output_tokens", 0)})
 
 
 class OpenAICompatibleBrain:
@@ -153,7 +157,9 @@ class OpenAICompatibleBrain:
             except json.JSONDecodeError:
                 arguments = {}
             calls.append({"id": call.get("id"), "name": function.get("name"), "arguments": arguments})
-        return Reply((message.get("content") or "").strip(), calls)
+        usage = reply.get("usage") or {}
+        return Reply((message.get("content") or "").strip(), calls,
+                     {"input_tokens": usage.get("prompt_tokens", 0), "output_tokens": usage.get("completion_tokens", 0)})
 
     def step(self, system, transcript, tools):
         body = {"model": self.model, "max_tokens": self.max_tokens, "messages": self.messages(system, transcript),
