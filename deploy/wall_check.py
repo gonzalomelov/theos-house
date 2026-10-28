@@ -22,6 +22,8 @@ def http(url, handler):
         with opener.open(url, timeout=8) as response:
             return True, f"HTTP {response.status}"
     except urllib.error.HTTPError as error:
+        if (error.headers.get("Server") or "").startswith("tinyproxy"):
+            return False, f"refused by the egress proxy, HTTP {error.code}"
         return True, f"HTTP {error.code}"
     except Exception as error:  # every failure to connect is the expected answer for a blocked target
         return False, type(error).__name__ + ": " + str(getattr(error, "reason", error))[:60]
