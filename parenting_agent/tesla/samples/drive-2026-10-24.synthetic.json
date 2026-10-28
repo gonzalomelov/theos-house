@@ -1,0 +1,493 @@
+{
+ "label": "SYNTHETIC drive sample, not recorded from a real car",
+ "synthetic": true,
+ "made": "2026-10-28, by hand for issue #31, before the Model 3 arrives on Nov 5",
+ "shape": "One reading a minute, as the tesla_fleet entities report it: sensor.<car>_shift_state (p, d, r, n or null when the car sleeps), sensor.<car>_speed, device_tracker.<car>_location latitude and longitude, sensor.<car>_battery_level.",
+ "story": "Parked from 14:00, driving 14:05 to 14:40 between two public places in Montevideo (Plaza Independencia to Parque Batlle), stopped at lights at 14:09, 14:27 and 14:33, a one minute stop in P at 14:20, parked again from 14:40. No home address.",
+ "expected_drives": [
+  {
+   "start": "2026-10-24T14:05:00-03:00",
+   "end": "2026-10-24T14:40:00-03:00"
+  }
+ ],
+ "device_name": "Model 3",
+ "rows": [
+  {
+   "t": "2026-10-24T14:00:00-03:00",
+   "shift_state": null,
+   "speed_kmh": 0,
+   "latitude": -34.0000,
+   "longitude": -56.099,
+   "zone": "not_home",
+   "battery": 78.0
+  },
+  {
+   "t": "2026-10-24T14:01:00-03:00",
+   "shift_state": null,
+   "speed_kmh": 0,
+   "latitude": -34.0000,
+   "longitude": -56.099,
+   "zone": "not_home",
+   "battery": 78.0
+  },
+  {
+   "t": "2026-10-24T14:02:00-03:00",
+   "shift_state": null,
+   "speed_kmh": 0,
+   "latitude": -34.0000,
+   "longitude": -56.099,
+   "zone": "not_home",
+   "battery": 78.0
+  },
+  {
+   "t": "2026-10-24T14:03:00-03:00",
+   "shift_state": "p",
+   "speed_kmh": 0,
+   "latitude": -34.0000,
+   "longitude": -56.099,
+   "zone": "not_home",
+   "battery": 78.0
+  },
+  {
+   "t": "2026-10-24T14:04:00-03:00",
+   "shift_state": "p",
+   "speed_kmh": 0,
+   "latitude": -34.0000,
+   "longitude": -56.099,
+   "zone": "not_home",
+   "battery": 78.0
+  },
+  {
+   "t": "2026-10-24T14:05:00-03:00",
+   "shift_state": "d",
+   "speed_kmh": 49,
+   "latitude": -34.0000,
+   "longitude": -56.099,
+   "zone": "not_home",
+   "battery": 78.0
+  },
+  {
+   "t": "2026-10-24T14:06:00-03:00",
+   "shift_state": "d",
+   "speed_kmh": 46,
+   "latitude": -34.00609,
+   "longitude": -56.09774,
+   "zone": "not_home",
+   "battery": 77.9
+  },
+  {
+   "t": "2026-10-24T14:07:00-03:00",
+   "shift_state": "d",
+   "speed_kmh": 39,
+   "latitude": -34.00579,
+   "longitude": -56.09647,
+   "zone": "not_home",
+   "battery": 77.8
+  },
+  {
+   "t": "2026-10-24T14:08:00-03:00",
+   "shift_state": "d",
+   "speed_kmh": 32,
+   "latitude": -34.00548,
+   "longitude": -56.09521,
+   "zone": "not_home",
+   "battery": 77.6
+  },
+  {
+   "t": "2026-10-24T14:09:00-03:00",
+   "shift_state": "d",
+   "speed_kmh": 0,
+   "latitude": -34.00518,
+   "longitude": -56.09394,
+   "zone": "not_home",
+   "battery": 77.5
+  },
+  {
+   "t": "2026-10-24T14:10:00-03:00",
+   "shift_state": "d",
+   "speed_kmh": 28,
+   "latitude": -34.00487,
+   "longitude": -56.09268,
+   "zone": "not_home",
+   "battery": 77.4
+  },
+  {
+   "t": "2026-10-24T14:11:00-03:00",
+   "shift_state": "d",
+   "speed_kmh": 33,
+   "latitude": -34.00456,
+   "longitude": -56.09141,
+   "zone": "not_home",
+   "battery": 77.3
+  },
+  {
+   "t": "2026-10-24T14:12:00-03:00",
+   "shift_state": "d",
+   "speed_kmh": 40,
+   "latitude": -34.00426,
+   "longitude": -56.09015,
+   "zone": "not_home",
+   "battery": 77.2
+  },
+  {
+   "t": "2026-10-24T14:13:00-03:00",
+   "shift_state": "d",
+   "speed_kmh": 46,
+   "latitude": -34.00395,
+   "longitude": -56.08888,
+   "zone": "not_home",
+   "battery": 77.0
+  },
+  {
+   "t": "2026-10-24T14:14:00-03:00",
+   "shift_state": "d",
+   "speed_kmh": 49,
+   "latitude": -34.00365,
+   "longitude": -56.08762,
+   "zone": "not_home",
+   "battery": 76.9
+  },
+  {
+   "t": "2026-10-24T14:15:00-03:00",
+   "shift_state": "d",
+   "speed_kmh": 48,
+   "latitude": -34.00334,
+   "longitude": -56.08635,
+   "zone": "not_home",
+   "battery": 76.8
+  },
+  {
+   "t": "2026-10-24T14:16:00-03:00",
+   "shift_state": "d",
+   "speed_kmh": 42,
+   "latitude": -34.00304,
+   "longitude": -56.08509,
+   "zone": "not_home",
+   "battery": 76.7
+  },
+  {
+   "t": "2026-10-24T14:17:00-03:00",
+   "shift_state": "d",
+   "speed_kmh": 35,
+   "latitude": -34.00273,
+   "longitude": -56.08382,
+   "zone": "not_home",
+   "battery": 76.6
+  },
+  {
+   "t": "2026-10-24T14:18:00-03:00",
+   "shift_state": "d",
+   "speed_kmh": 29,
+   "latitude": -34.00242,
+   "longitude": -56.08256,
+   "zone": "not_home",
+   "battery": 76.4
+  },
+  {
+   "t": "2026-10-24T14:19:00-03:00",
+   "shift_state": "d",
+   "speed_kmh": 28,
+   "latitude": -34.00212,
+   "longitude": -56.08129,
+   "zone": "not_home",
+   "battery": 76.3
+  },
+  {
+   "t": "2026-10-24T14:20:00-03:00",
+   "shift_state": "p",
+   "speed_kmh": 0,
+   "latitude": -34.00181,
+   "longitude": -56.08003,
+   "zone": "not_home",
+   "battery": 76.2
+  },
+  {
+   "t": "2026-10-24T14:21:00-03:00",
+   "shift_state": "d",
+   "speed_kmh": 37,
+   "latitude": -34.00151,
+   "longitude": -56.07876,
+   "zone": "not_home",
+   "battery": 76.1
+  },
+  {
+   "t": "2026-10-24T14:22:00-03:00",
+   "shift_state": "d",
+   "speed_kmh": 44,
+   "latitude": -34.0012,
+   "longitude": -56.0775,
+   "zone": "not_home",
+   "battery": 76.0
+  },
+  {
+   "t": "2026-10-24T14:23:00-03:00",
+   "shift_state": "d",
+   "speed_kmh": 49,
+   "latitude": -34.00089,
+   "longitude": -56.07624,
+   "zone": "not_home",
+   "battery": 75.8
+  },
+  {
+   "t": "2026-10-24T14:24:00-03:00",
+   "shift_state": "d",
+   "speed_kmh": 49,
+   "latitude": -34.00059,
+   "longitude": -56.07497,
+   "zone": "not_home",
+   "battery": 75.7
+  },
+  {
+   "t": "2026-10-24T14:25:00-03:00",
+   "shift_state": "d",
+   "speed_kmh": 45,
+   "latitude": -34.00028,
+   "longitude": -56.07371,
+   "zone": "not_home",
+   "battery": 75.6
+  },
+  {
+   "t": "2026-10-24T14:26:00-03:00",
+   "shift_state": "d",
+   "speed_kmh": 38,
+   "latitude": -34.09998,
+   "longitude": -56.07244,
+   "zone": "not_home",
+   "battery": 75.5
+  },
+  {
+   "t": "2026-10-24T14:27:00-03:00",
+   "shift_state": "d",
+   "speed_kmh": 0,
+   "latitude": -34.09967,
+   "longitude": -56.07118,
+   "zone": "not_home",
+   "battery": 75.4
+  },
+  {
+   "t": "2026-10-24T14:28:00-03:00",
+   "shift_state": "d",
+   "speed_kmh": 28,
+   "latitude": -34.09936,
+   "longitude": -56.06991,
+   "zone": "not_home",
+   "battery": 75.2
+  },
+  {
+   "t": "2026-10-24T14:29:00-03:00",
+   "shift_state": "d",
+   "speed_kmh": 29,
+   "latitude": -34.09906,
+   "longitude": -56.06865,
+   "zone": "not_home",
+   "battery": 75.1
+  },
+  {
+   "t": "2026-10-24T14:30:00-03:00",
+   "shift_state": "d",
+   "speed_kmh": 34,
+   "latitude": -34.09875,
+   "longitude": -56.06738,
+   "zone": "not_home",
+   "battery": 75.0
+  },
+  {
+   "t": "2026-10-24T14:31:00-03:00",
+   "shift_state": "d",
+   "speed_kmh": 41,
+   "latitude": -34.09845,
+   "longitude": -56.06612,
+   "zone": "not_home",
+   "battery": 74.9
+  },
+  {
+   "t": "2026-10-24T14:32:00-03:00",
+   "shift_state": "d",
+   "speed_kmh": 47,
+   "latitude": -34.09814,
+   "longitude": -56.06485,
+   "zone": "not_home",
+   "battery": 74.8
+  },
+  {
+   "t": "2026-10-24T14:33:00-03:00",
+   "shift_state": "d",
+   "speed_kmh": 0,
+   "latitude": -34.09784,
+   "longitude": -56.06359,
+   "zone": "not_home",
+   "battery": 74.6
+  },
+  {
+   "t": "2026-10-24T14:34:00-03:00",
+   "shift_state": "d",
+   "speed_kmh": 47,
+   "latitude": -34.09753,
+   "longitude": -56.06232,
+   "zone": "not_home",
+   "battery": 74.5
+  },
+  {
+   "t": "2026-10-24T14:35:00-03:00",
+   "shift_state": "d",
+   "speed_kmh": 41,
+   "latitude": -34.09722,
+   "longitude": -56.06106,
+   "zone": "not_home",
+   "battery": 74.4
+  },
+  {
+   "t": "2026-10-24T14:36:00-03:00",
+   "shift_state": "d",
+   "speed_kmh": 34,
+   "latitude": -34.09692,
+   "longitude": -56.05979,
+   "zone": "not_home",
+   "battery": 74.3
+  },
+  {
+   "t": "2026-10-24T14:37:00-03:00",
+   "shift_state": "d",
+   "speed_kmh": 29,
+   "latitude": -34.09661,
+   "longitude": -56.05853,
+   "zone": "not_home",
+   "battery": 74.2
+  },
+  {
+   "t": "2026-10-24T14:38:00-03:00",
+   "shift_state": "d",
+   "speed_kmh": 28,
+   "latitude": -34.09631,
+   "longitude": -56.05726,
+   "zone": "not_home",
+   "battery": 74.0
+  },
+  {
+   "t": "2026-10-24T14:39:00-03:00",
+   "shift_state": "d",
+   "speed_kmh": 31,
+   "latitude": -34.096,
+   "longitude": -56.056,
+   "zone": "not_home",
+   "battery": 73.9
+  },
+  {
+   "t": "2026-10-24T14:40:00-03:00",
+   "shift_state": "p",
+   "speed_kmh": 0,
+   "latitude": -34.096,
+   "longitude": -56.056,
+   "zone": "not_home",
+   "battery": 73.8
+  },
+  {
+   "t": "2026-10-24T14:41:00-03:00",
+   "shift_state": "p",
+   "speed_kmh": 0,
+   "latitude": -34.096,
+   "longitude": -56.056,
+   "zone": "not_home",
+   "battery": 73.8
+  },
+  {
+   "t": "2026-10-24T14:42:00-03:00",
+   "shift_state": "p",
+   "speed_kmh": 0,
+   "latitude": -34.096,
+   "longitude": -56.056,
+   "zone": "not_home",
+   "battery": 73.8
+  },
+  {
+   "t": "2026-10-24T14:43:00-03:00",
+   "shift_state": "p",
+   "speed_kmh": 0,
+   "latitude": -34.096,
+   "longitude": -56.056,
+   "zone": "not_home",
+   "battery": 73.8
+  },
+  {
+   "t": "2026-10-24T14:44:00-03:00",
+   "shift_state": "p",
+   "speed_kmh": 0,
+   "latitude": -34.096,
+   "longitude": -56.056,
+   "zone": "not_home",
+   "battery": 73.8
+  },
+  {
+   "t": "2026-10-24T14:45:00-03:00",
+   "shift_state": "p",
+   "speed_kmh": 0,
+   "latitude": -34.096,
+   "longitude": -56.056,
+   "zone": "not_home",
+   "battery": 73.8
+  },
+  {
+   "t": "2026-10-24T14:46:00-03:00",
+   "shift_state": "p",
+   "speed_kmh": 0,
+   "latitude": -34.096,
+   "longitude": -56.056,
+   "zone": "not_home",
+   "battery": 73.8
+  },
+  {
+   "t": "2026-10-24T14:47:00-03:00",
+   "shift_state": "p",
+   "speed_kmh": 0,
+   "latitude": -34.096,
+   "longitude": -56.056,
+   "zone": "not_home",
+   "battery": 73.8
+  },
+  {
+   "t": "2026-10-24T14:48:00-03:00",
+   "shift_state": "p",
+   "speed_kmh": 0,
+   "latitude": -34.096,
+   "longitude": -56.056,
+   "zone": "not_home",
+   "battery": 73.8
+  },
+  {
+   "t": "2026-10-24T14:49:00-03:00",
+   "shift_state": "p",
+   "speed_kmh": 0,
+   "latitude": -34.096,
+   "longitude": -56.056,
+   "zone": "not_home",
+   "battery": 73.8
+  },
+  {
+   "t": "2026-10-24T14:50:00-03:00",
+   "shift_state": null,
+   "speed_kmh": 0,
+   "latitude": -34.096,
+   "longitude": -56.056,
+   "zone": "not_home",
+   "battery": 73.8
+  },
+  {
+   "t": "2026-10-24T14:51:00-03:00",
+   "shift_state": null,
+   "speed_kmh": 0,
+   "latitude": -34.096,
+   "longitude": -56.056,
+   "zone": "not_home",
+   "battery": 73.8
+  },
+  {
+   "t": "2026-10-24T14:52:00-03:00",
+   "shift_state": null,
+   "speed_kmh": 0,
+   "latitude": -34.096,
+   "longitude": -56.056,
+   "zone": "not_home",
+   "battery": 73.8
+  }
+ ]
+}

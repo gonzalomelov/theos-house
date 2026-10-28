@@ -126,6 +126,14 @@ python -m parenting_agent.families run --keys-env FILE     # the bot, needs TELE
 python -m parenting_agent.families.export_sessions         # session rows for the scorer, kind family
 ```
 
+## The Tesla, simulated until Nov 5 (issue #31)
+
+The family's Model 3 arrives on Nov 5, so today the agent drives a simulated Model 3 with the same entity ids and services as Home Assistant's official `tesla_fleet` integration. Cabin ready before a trip with the baby ("we leave in 15" or a calendar entry, target from the outside temperature, the parent's yes first), car naps (a drive with the baby becomes a proposed sleep entry, logged only on the parent's yes) and a Child Left Alone Detection check. Everything about the car says "simulated Tesla". On Nov 5 `car.backend` switches to `home_assistant`, commands stay dry until Gonza's OK. See `docs/tesla.md`.
+
+```bash
+python -m parenting_agent.tesla   # one trip with the baby on the simulated car, synthetic drive data
+```
+
 ## Tests
 
 ```bash
@@ -156,6 +164,7 @@ Everything in this repo was written during the event. The repo was created on Oc
 | Sitter handover, time-boxed guest role, summary after | #16 | see PR | see PR |
 | Invited families on Telegram, one private log per family, walled off | #40 | see PR | see PR |
 | Bath skill, camera skills from config | #10 | #42 | see PR |
+| Simulated Tesla: cabin ready, car naps, Child Left Alone Detection check | #31 | #43 | see PR |
 | Daily house plan: vacuum around naps, shopping list, fast dinners, white noise | #29, #32 | #44 | see PR |
 
 The first commits of Oct 26 (4f1898a to 90ca5a3) are an early skeleton that the issues above reviewed and partly rewrote.

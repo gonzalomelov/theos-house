@@ -1,0 +1,66 @@
+{
+  "label": "SIMULATED Tesla Model 3 and a SYNTHETIC drive sample, no real car",
+  "car": "simulated Tesla Model 3",
+  "drive_sample": "SYNTHETIC drive sample, not recorded from a real car",
+  "transcript": [
+    {
+      "who": "parent",
+      "text": "we leave in 15"
+    },
+    {
+      "who": "agent",
+      "text": "Leaving in 15 min with the baby. The simulated Tesla Model 3 is 12 C inside and it is 9 C outside. Warm the cabin to 22 C now, ready by 14:00? The seat under the car seat stays off. Child Left Alone Detection is on (simulated flag). Say yes to start."
+    },
+    {
+      "who": "parent",
+      "text": "yes"
+    },
+    {
+      "who": "agent",
+      "text": "Done. precondition_car: The simulated Tesla Model 3 is heading to 22 C."
+    },
+    {
+      "who": "agent",
+      "text": "Parked (simulated Tesla Model 3). Check the back seat before you walk away. Did the baby sleep on the drive, 14:05 to 14:40? Say yes and I will log it as a nap. If the times were different, tell me."
+    },
+    {
+      "who": "parent",
+      "text": "yes"
+    },
+    {
+      "who": "agent",
+      "text": "Done. log_car_nap: Nap logged, 14:05 to 14:40."
+    }
+  ],
+  "commands": [
+    {
+      "service": "climate.set_temperature",
+      "entity_id": "climate.model_3_climate",
+      "data": {
+        "temperature": 22.0
+      }
+    },
+    {
+      "service": "climate.turn_on",
+      "entity_id": "climate.model_3_climate",
+      "data": {}
+    },
+    {
+      "service": "select.select_option",
+      "entity_id": "select.model_3_seat_heater_rear_center",
+      "data": {
+        "option": "off"
+      }
+    }
+  ],
+  "naps_logged": [
+    {
+      "ts": "2026-10-24T14:40:00-03:00",
+      "kind": "sleep",
+      "details": {
+        "start": "2026-10-24T14:05-03:00",
+        "end": "2026-10-24T14:40-03:00"
+      }
+    }
+  ]
+}

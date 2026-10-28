@@ -1,0 +1,142 @@
+{
+  "source": "https://github.com/home-assistant/core/blob/ff2c6d4649cbe631251c1c65810fb2a244121a0d/homeassistant/components/tesla_fleet/strings.json",
+  "note": "Verbatim excerpt of entity names (and states where listed) used by parenting_agent/tesla. Copied Oct 28 2026, read only.",
+  "entity": {
+    "device_tracker": {
+      "location": {
+        "name": "Location"
+      },
+      "route": {
+        "name": "Route"
+      }
+    },
+    "climate": {
+      "driver_temp": {
+        "name": "[%key:component::climate::title%]",
+        "state_attributes": {
+          "preset_mode": {
+            "state": {
+              "camp": "Camp mode",
+              "dog": "Pet mode",
+              "keep": "Keep mode",
+              "off": "[%key:common::state::normal%]"
+            }
+          }
+        }
+      }
+    },
+    "sensor": {
+      "climate_state_inside_temp": {
+        "name": "Inside temperature"
+      },
+      "climate_state_outside_temp": {
+        "name": "Outside temperature"
+      },
+      "climate_state_driver_temp_setting": {
+        "name": "Driver temperature setting"
+      },
+      "drive_state_shift_state": {
+        "name": "Shift state",
+        "state": {
+          "d": "Drive",
+          "n": "Neutral",
+          "p": "Park",
+          "r": "Reverse"
+        }
+      },
+      "drive_state_speed": {
+        "name": "Speed"
+      },
+      "charge_state_battery_level": {
+        "name": "Battery level"
+      },
+      "charge_state_battery_range": {
+        "name": "Battery range"
+      },
+      "charge_state_charging_state": {
+        "name": "Charging",
+        "state": {
+          "charging": "[%key:common::state::charging%]",
+          "complete": "Complete",
+          "disconnected": "[%key:common::state::disconnected%]",
+          "no_power": "No power",
+          "starting": "Starting",
+          "stopped": "[%key:common::state::stopped%]"
+        }
+      }
+    },
+    "binary_sensor": {
+      "climate_state_is_preconditioning": {
+        "name": "Preconditioning"
+      },
+      "state": {
+        "name": "Status"
+      }
+    },
+    "button": {
+      "wake": {
+        "name": "Wake"
+      }
+    },
+    "switch": {
+      "climate_state_defrost_mode": {
+        "name": "Defrost"
+      }
+    },
+    "select": {
+      "climate_state_steering_wheel_heat_level": {
+        "name": "Steering wheel heater",
+        "state": {
+          "high": "[%key:common::state::high%]",
+          "low": "[%key:common::state::low%]",
+          "off": "[%key:common::state::off%]"
+        }
+      },
+      "climate_state_seat_heater_left": {
+        "name": "Seat heater front left",
+        "state": {
+          "high": "[%key:common::state::high%]",
+          "low": "[%key:common::state::low%]",
+          "medium": "[%key:common::state::medium%]",
+          "off": "[%key:common::state::off%]"
+        }
+      },
+      "climate_state_seat_heater_right": {
+        "name": "Seat heater front right",
+        "state": {
+          "high": "[%key:common::state::high%]",
+          "low": "[%key:common::state::low%]",
+          "medium": "[%key:common::state::medium%]",
+          "off": "[%key:common::state::off%]"
+        }
+      },
+      "climate_state_seat_heater_rear_left": {
+        "name": "Seat heater rear left",
+        "state": {
+          "high": "[%key:common::state::high%]",
+          "low": "[%key:common::state::low%]",
+          "medium": "[%key:common::state::medium%]",
+          "off": "[%key:common::state::off%]"
+        }
+      },
+      "climate_state_seat_heater_rear_center": {
+        "name": "Seat heater rear center",
+        "state": {
+          "high": "[%key:common::state::high%]",
+          "low": "[%key:common::state::low%]",
+          "medium": "[%key:common::state::medium%]",
+          "off": "[%key:common::state::off%]"
+        }
+      },
+      "climate_state_seat_heater_rear_right": {
+        "name": "Seat heater rear right",
+        "state": {
+          "high": "[%key:common::state::high%]",
+          "low": "[%key:common::state::low%]",
+          "medium": "[%key:common::state::medium%]",
+          "off": "[%key:common::state::off%]"
+        }
+      }
+    }
+  }
+}
