@@ -14,6 +14,7 @@ import os
 import threading
 import time
 import urllib.error
+import urllib.parse
 import urllib.request
 
 
@@ -38,6 +39,10 @@ class HomeAssistant:
 
     def attributes(self, entity_id):
         return self._call(f"/api/states/{entity_id}").get("attributes") or {}
+
+    def calendar_events(self, entity_id, start, end):
+        query = urllib.parse.urlencode({"start": start.isoformat(), "end": end.isoformat()})
+        return self._call(f"/api/calendars/{entity_id}?{query}") or []
 
 
 class House:
