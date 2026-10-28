@@ -14,7 +14,7 @@ One long-running agent sits in the middle. Everything it sees, hears and does go
 - **Brain.** A model with tools decides what to do: log a feed, answer a question from the log, arm a skill, act on the house. Anything outside the allowed list waits for a parent's yes.
 - **Skills.** The changing-table and bath skills watch through a head-worn camera. A local hand detector raises the alarm in under a second when both hands leave the baby, and Meta's SAM 3.1 confirms whether a hand really touches the baby or only hovers above it.
 - **Daily rhythm.** From the log it learns the baby's patterns and speaks first: the next feed, unusual days, a night summary and a fair split of the night between two parents.
-- **House.** Home Assistant is its hands: lights, notifications, speakers, the robot vacuum, the TV. Today it runs dry, it publishes what it would do and touches nothing.
+- **House.** Home Assistant is its hands: lights, notifications, speakers, the robot vacuum, the TV, as tools behind the action policy (`parenting_agent/house_tools.py`). It runs dry until `house.live` is true in the agent config, and only Gonza turns that on.
 
 ## Meta models
 

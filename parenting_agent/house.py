@@ -11,11 +11,37 @@ the house runs dry: it publishes what it would do and touches nothing.
 """
 import json
 import os
+import re
 import threading
 import time
 import urllib.error
 import urllib.parse
 import urllib.request
+
+# The "never" list from docs/home-assistant-inventory.md. No config, tool or brain answer can run a service on these.
+NEVER_ENTITIES = {"switch.shellyplusplugit_bathroom": "the bathroom Shelly plug has its own safety cut automation"}
+NEVER_PATTERNS = (
+    (r"^siren\.", "sirens"),
+    (r"privacy", "camera privacy switches"),
+    (r"record", "camera recording settings"),
+    (r"tamper|alarm", "tamper and alarm triggers"),
+    (r"shellyplusplugit_bathroom", "the bathroom Shelly plug"),
+    (r"refrigerator", "the refrigerator settings"),
+    (r"^(backup|update)\.", "backups and updates"),
+    (r"scale", "the body scale"),
+)
+
+
+def never_reason(entity_id):
+    """Why this entity is on the never list, or None when it is not."""
+    if not entity_id:
+        return None
+    if entity_id in NEVER_ENTITIES:
+        return NEVER_ENTITIES[entity_id]
+    for pattern, reason in NEVER_PATTERNS:
+        if re.search(pattern, entity_id):
+            return reason
+    return None
 
 
 class HomeAssistant:
@@ -31,8 +57,10 @@ class HomeAssistant:
             return json.loads(response.read() or b"null")
 
     def service(self, service, entity_id, data=None):
+        """entity_id None calls a service without a target, for example notify.mobile_app_gonzas_iphone."""
         domain, name = service.split(".", 1)
-        return self._call(f"/api/services/{domain}/{name}", {"entity_id": entity_id, **(data or {})})
+        target = {"entity_id": entity_id} if entity_id is not None else {}
+        return self._call(f"/api/services/{domain}/{name}", {**target, **(data or {})})
 
     def state(self, entity_id):
         return self._call(f"/api/states/{entity_id}").get("state")
@@ -61,6 +89,10 @@ class House:
         spec = self.cfg["allowed"].get(name)
         if spec is None:
             self.bus.publish("ask_parent", action=name, moment=moment)
+            return
+        reason = never_reason(spec.get("entity_id"))
+        if reason:
+            self.bus.publish("house_refused", action=name, moment=moment, entity=spec.get("entity_id"), reason=reason)
             return
         if self.client is None:
             self.bus.publish("house_dry", action=name, moment=moment, service=spec.get("service"))
