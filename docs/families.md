@@ -7,9 +7,9 @@ It is a separate service, walled off like the public demo. Other families never 
 ## For parents: your data in 1 minute
 
 - **What is stored.** Your baby's name or nickname and birth date. What you log: feeds, diapers, sleep, baths and notes. Our conversation. Your Telegram chat id, so the bot can answer you. To count real use, one row per message with the time and a scrambled id (a hash of your Telegram id), never the text.
-- **Where.** One private file for your family on a small server in Gonza's home in Uruguay. No other family can see it, and it is not mixed with Gonza's own family data.
-- **Who else sees the text.** To answer, the conversation text goes to an AI model: Anthropic's Claude for now, Meta's Muse Spark Open later. Neither keeps it or trains on it. Telegram carries the messages, like any Telegram chat.
-- **What it never does.** It never gives medical advice. Health questions get a kind refusal and a suggestion to call your pediatrician.
+- **Where.** One private file for your family on Gonza's home server in Uruguay. No other family can see it, and it is not mixed with Gonza's own family data.
+- **Who else sees the text.** To write replies, the conversation text is sent to Anthropic's API (Claude). Anthropic does not train on API data by default and keeps it for a limited time under its policy: https://www.anthropic.com/legal/privacy. Telegram carries the messages, like any Telegram chat.
+- **What it never does.** It never gives medical advice. Health questions get a kind refusal and a suggestion to call your pediatrician, or emergency services (911 in Uruguay) if it is urgent.
 - **How to delete.** Send `/deletemydata`, then `DELETE`. Your family's file, the conversation, the counting rows and both parents' access are removed at once. The other parent gets a message that it happened.
 
 The bot sends the same text when a parent sends `/privacy`.
@@ -17,9 +17,9 @@ The bot sends the same text when a parent sends `/privacy`.
 ## Para las familias: tus datos en 1 minuto
 
 - **Qué se guarda.** El nombre o apodo de tu bebé y su fecha de nacimiento. Lo que anotás: tomas, pañales, sueño, baños y notas. Nuestra conversación. Tu id de chat de Telegram, para que el bot te pueda responder. Para contar el uso real, una fila por mensaje con la hora y un id mezclado (un hash de tu id de Telegram), nunca el texto.
-- **Dónde.** Un archivo privado para tu familia en un servidor chico en la casa de Gonza, en Uruguay. Ninguna otra familia lo puede ver, y no se mezcla con los datos de la familia de Gonza.
-- **Quién más ve el texto.** Para responderte, el texto de la conversación va a un modelo de IA: Claude de Anthropic por ahora, Muse Spark Open de Meta más adelante. Ninguno lo guarda ni entrena con él. Telegram lleva los mensajes, como en cualquier chat de Telegram.
-- **Lo que nunca hace.** Nunca da consejos médicos. Si preguntás algo de salud, te responde con cariño que no puede y te sugiere llamar a tu pediatra.
+- **Dónde.** Un archivo privado para tu familia en el servidor de la casa de Gonza, en Uruguay. Ninguna otra familia lo puede ver, y no se mezcla con los datos de la familia de Gonza.
+- **Quién más ve el texto.** Para escribir las respuestas, el texto de la conversación se manda a la API de Anthropic (Claude). Anthropic no entrena con los datos de su API por defecto y los guarda un tiempo limitado según su política: https://www.anthropic.com/legal/privacy. Telegram lleva los mensajes, como en cualquier chat de Telegram.
+- **Lo que nunca hace.** Nunca da consejos médicos. Si preguntás algo de salud, te responde con cariño que no puede y te sugiere llamar a tu pediatra, o al 911 si es urgente.
 - **Cómo borrar todo.** Mandá `/borrarmisdatos` y después `BORRAR`. Se borran de una el archivo de tu familia, la conversación, las filas de conteo y el acceso de los dos. Al otro papá o mamá le llega un mensaje avisando.
 
 El bot manda este mismo texto cuando alguien manda `/privacidad`.
@@ -52,7 +52,11 @@ For Gonza's own test accounts: `invite --internal` makes a code whose parent, an
 |---|---|
 | `bottle 120 ml`, `left breast 15 min`, `wet and dirty diaper`, `she fell asleep`, `she woke up`, `bath done` | A log entry in the family's own file, never timed in the future |
 | `when did she last eat?`, `how much did she drink today?` | Answered from the family's log through `baby_summary` and `read_baby_log` |
-| Health questions | The existing kind refusal, without a brain call |
+| `perdón eran 100 no 120`, `la de la 1 y media fue 80, corregila`, `la mandé 2 veces sin querer`, `borrá la última` | The entry is changed or removed, and the reply says exactly what changed: "Corregí la mamadera de las 01:30: 120 ml → 100 ml." |
+| `¿a qué hora le toca?`, `when is the next feed?` | The brain calls `next_feed`, the same rhythm answer as `/next`, given as a time from the family's own log |
+| `no para de llorar, ¿por qué?` | The likely reason from the log (the cry reason from #32), a guess and never a diagnosis, without a brain call |
+| Red flags: not breathing, blue lips, limp, choking, won't wake, a fall, a hit to the head, a seizure, and the Spanish forms | "Call emergency services now" with 911 for Uruguay, at once, without a brain call |
+| Health questions | The kind refusal, with "if it is urgent, call emergency services", without a brain call |
 | `/summary` | Today so far, computed from the log, no brain call |
 | `/next` | The next feed from the rhythm engine (`patterns.next_feed`) |
 | `/invite` | A code for the other parent |
@@ -62,7 +66,7 @@ For Gonza's own test accounts: `invite --internal` makes a code whose parent, an
 | `/borrarmisdatos` then `BORRAR` | The same in Spanish |
 | `/idioma`, `/language` | Spanish or English for the whole family |
 
-The bot speaks first twice: a next feed reminder about 10 minutes before the feed the rhythm engine expects, sent once per feed to every parent, only when the last feed is less than 8 hours old. And a daily summary at 20:00 local time, once a day, only when something was logged that day. Both pass the rhythm engine's `no_advice` check.
+The bot speaks first twice: a next feed reminder about 10 minutes before the feed the rhythm engine expects ("Según tu registro, la próxima toma sería cerca de las 15:55"), sent once per feed to every parent, only when the last feed is less than 8 hours old. And a daily summary at 20:00 local time, once a day, only when something was logged that day. Both pass the rhythm engine's `no_advice` check.
 
 ## One message, one entry
 
@@ -86,6 +90,21 @@ With the real brain, a burst of notes such as "mamadera 120 ml", "pañal sucio",
 
 On the same 150 notes after the fix: 0 false "logged" and every note logged once. The brain needed the second ask on 65 of them. Tests: `tests/test_no_false_logged.py`.
 
+## Corrections, double sends and nothing made up
+
+The real-new-parent judge ran 3 Spanish days with the real brain on Oct 28 and found that the log could not be corrected: "perdón eran 100 no 120" kept the 120 and the bot said "Listo", a bottle sent twice by mistake stayed twice, and the totals were wrong from then on. Now:
+
+- `edit_baby_event` and `delete_baby_event` change or remove an entry, named by id, by kind and local time ("01:30") or as the last one. They are in the shared tools for any baby log that can change entries (the family log). Totals, `/resumen` and the evening summary read the log, so they follow.
+- The reply for a change is built from the log, not from the brain: "Corregí la mamadera de las 01:30: 120 ml → 100 ml." or "Borré el pañal de las 03:30."
+- The no-false-logged guard covers corrections. Until an edit or delete ran, no new entry is logged for a correction and no "Listo" is sent. The brain is asked once more, and if it still did not change anything the parent hears "No pude cambiar el registro". A log that cannot change entries (the demo) says so and adds nothing.
+- The same bottle (same amount and method) from a new message within 3 minutes is not logged. The bot asks "¿La mandaste dos veces o fueron dos mamaderas?". "la mandé 2 veces sin querer" keeps one, "fueron dos" logs the second at its own time, anything else goes to the brain as a normal message.
+- A log call keeps only what the parent said: no breast side ("teta 10 min" is a breast feed, side unknown), no milk type (a bottle with no type is logged with the type unknown, never breast milk), no duration, amount, diaper color or time the parent did not say. A feed is logged at the message time, and starts earlier only when the parent said how long it lasted.
+- The brain is told never to talk about its own bookkeeping ("no reporta nada nuevo", "ahora sí quedó registrada", apologies for answers the parent never saw), and the guard's own check message says the same.
+- The next feed is a time from the family's log, never advice. A feed due in the last 30 minutes is "más o menos ahora". When none was logged for longer, the bot says "No anotaste ninguna toma desde las 12:10. ¿Comió Tomi?", and only when the last feed is less than 8 hours old. Older than that it only says when the last feed was, and the evening summary leaves it out.
+- A health message is never answered with "No pude anotarlo, ¿me lo repetís?". "le doy la mamadera, 120 ml" is a bottle, not a health question.
+
+Measured with `scripts/families_3day_run.py`: 34 Spanish messages over 3 simulated days, two parents, Claude Haiku 5.5. Before the fix 10 of 29 checks passed, with 10 replies of bookkeeping talk and 8 "se esperaba" texts. After, three runs passed 29, 28 and 27 of 29 with none of either. Each miss was the brain not calling a tool ("teta 10 min" once, "borrá la última" once), and the parent got the honest "No pude anotarlo" or "No pude cambiar el registro", never a false "Listo". Transcripts in `results/families/three-day-before.md` and `results/families/three-day-after.md` (plus `-2` and `-3`). Tests: `tests/test_log_edit.py`.
+
 ## How it is built
 
 | Part | Code |
@@ -100,7 +119,7 @@ On the same 150 notes after the fix: 0 false "logged" and every note logged once
 | Docker files and the wall check | `deploy/families/` |
 | Deploy, check, rollback, backups | `deploy/public.sh`, `deploy/backup.sh` |
 
-Each family gets its own agent with its own bus and its own file, `family-<id>.sqlite` in the data folder, opened by nothing else. The tools are only `log_baby_event`, `read_baby_log`, `baby_summary`, `remember` and `current_time`. There is no Baby Buddy client, no Home Assistant client, no house tool, no channel router and no sitter role in the service. The Telegram adapter is the one from `parenting_agent/channels/telegram.py`, standard library only, so no new package was added.
+Each family gets its own agent with its own bus and its own file, `family-<id>.sqlite` in the data folder, opened by nothing else. The tools are only `log_baby_event`, `edit_baby_event`, `delete_baby_event`, `read_baby_log`, `baby_summary`, `next_feed`, `remember` and `current_time`. There is no Baby Buddy client, no Home Assistant client, no house tool, no channel router and no sitter role in the service. The Telegram adapter is the one from `parenting_agent/channels/telegram.py`, standard library only, so no new package was added.
 
 ## Walled off
 

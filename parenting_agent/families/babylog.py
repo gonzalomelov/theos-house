@@ -11,7 +11,8 @@ from pathlib import Path
 
 from ..agent.memory import LOG_KINDS, BabyLog, Memory, parse_time
 
-DEFAULT_FEED_MINUTES = 15
+HHMM = re.compile(r"^(\d{1,2})[:.h](\d{2})$")
+FEEDING_FIELDS = ("amount_ml", "method", "type", "duration_min")
 FAMILY_ID = re.compile(r"^[0-9a-f]{16}$")
 
 
@@ -65,15 +66,7 @@ class FamilyBabyLog(BabyLog):
         details = dict(details or {})
         when = self.at_or_before_now(ts or details.get("end") or details.get("time"))
         if kind == "feeding":
-            method = details.get("method") or "bottle"
-            length = float(details.get("duration_min") or DEFAULT_FEED_MINUTES)
-            start = (self.at_or_before_now(details["start"]) if details.get("start")
-                     else when - datetime.timedelta(minutes=length))
-            out = {"method": method, "type": details.get("type") or ("breast milk" if "breast" in method else "formula"),
-                   "start": start.isoformat(timespec="seconds"), "duration_min": round((when - start).total_seconds() / 60)}
-            if details.get("amount_ml") is not None:
-                out["amount_ml"] = float(details["amount_ml"])
-            return self._store("feeding", when, out)
+            return self._store("feeding", when, self._feeding(details, when))
         if kind == "diaper":
             wet, solid = bool(details.get("wet")), bool(details.get("solid"))
             return self._store("diaper", when, {"wet": wet or not solid, "solid": solid, "color": details.get("color") or None})
@@ -83,6 +76,92 @@ class FamilyBabyLog(BabyLog):
         if kind == "bath" and not text.lower().startswith("bath"):
             text = f"Bath. {text}".strip()
         return self._store(kind, when, {"text": text or kind.capitalize()})
+
+    def _feeding(self, details, when):
+        """A feed at the time the parent logged it. Its start is earlier only when the parent said how long it lasted
+        or when it started, and a bottle with no milk type named keeps the type unknown: nothing is made up."""
+        method = details.get("method") or "bottle"
+        if details.get("start"):
+            start = self.at_or_before_now(details["start"])
+        elif details.get("duration_min"):
+            start = when - datetime.timedelta(minutes=float(details["duration_min"]))
+        else:
+            start = when
+        out = {"method": method, "type": details.get("type") or ("breast milk" if "breast" in method else "unknown"),
+               "start": start.isoformat(timespec="seconds"), "duration_min": round((when - start).total_seconds() / 60)}
+        if details.get("amount_ml") is not None:
+            out["amount_ml"] = float(details["amount_ml"])
+        return out
+
+    def get(self, entry_id):
+        with self.memory.lock:
+            row = self.memory.db.execute("select id, ts, kind, details from baby_log where id = ?", (int(entry_id),)).fetchone()
+        return {"id": row[0], "ts": row[1], "kind": row[2], "details": json.loads(row[3])} if row else None
+
+    def find(self, entry_id=None, kind=None, at=None, last=None):
+        """One entry, by id, by kind and local time (HH:MM, the most recent one at that time), or the last one."""
+        if entry_id is not None:
+            entry = self.get(entry_id)
+            if entry is None:
+                raise ValueError(f"no entry with id {entry_id}")
+            return entry
+        items = self.entries(kind, None, 100_000)
+        if at:
+            match = HHMM.match(str(at).strip())
+            if not match:
+                raise ValueError("at must be a local time like 01:30")
+            wanted = f"{int(match.group(1)):02d}:{match.group(2)}"
+            items = [e for e in items if wanted in (e["ts"][11:16], str(e["details"].get("start") or "")[11:16])]
+        elif not last:
+            raise ValueError("name the entry by id, by kind and at, or by last")
+        if not items:
+            raise ValueError("no such entry in the log")
+        return items[-1]
+
+    def update(self, entry_id, details=None, ts=None):
+        """Change an entry in place. Returns the entry before and after, so the reply can say exactly what changed."""
+        before = self.get(entry_id)
+        if before is None:
+            raise ValueError(f"no entry with id {entry_id}")
+        new = dict(details or {})
+        when = self.at_or_before_now(ts) if ts else parse_time(before["ts"])
+        d = dict(before["details"])
+        if before["kind"] == "feeding":
+            shift = when - parse_time(before["ts"])
+            merged = {k: d.get(k) for k in FEEDING_FIELDS if d.get(k) is not None}
+            if "method" in new and "type" not in new and d.get("type") == ("breast milk" if "breast" in str(d.get("method")) else "unknown"):
+                merged.pop("type", None)
+            merged.update({k: v for k, v in new.items() if k in FEEDING_FIELDS and v is not None})
+            if "duration_min" not in new and d.get("start"):
+                merged["start"] = (parse_time(d["start"]) + shift).isoformat(timespec="seconds")
+                merged.pop("duration_min", None)
+            after = self._feeding(merged, when)
+        elif before["kind"] == "diaper":
+            wet, solid = bool(new.get("wet", d.get("wet"))), bool(new.get("solid", d.get("solid")))
+            after = {"wet": wet or not solid, "solid": solid, "color": new.get("color", d.get("color"))}
+        elif before["kind"] == "sleep":
+            start = self.at_or_before_now(new["start"]) if new.get("start") else parse_time(d["start"])
+            if new.get("end"):
+                when = self.at_or_before_now(new["end"])
+            if when <= start:
+                raise ValueError("a sleep must end after it starts")
+            after = {**d, "start": start.isoformat(timespec="seconds"), "duration_min": round((when - start).total_seconds() / 60)}
+        else:
+            after = {"text": str(new.get("text") or new.get("note") or d.get("text") or "").strip()[:300]}
+        stamp = when.isoformat(timespec="seconds")
+        with self.memory.lock:
+            self.memory.db.execute("update baby_log set ts = ?, details = ? where id = ?", (stamp, json.dumps(after), before["id"]))
+            self.memory.db.commit()
+        return {"before": before, "after": {"id": before["id"], "ts": stamp, "kind": before["kind"], "details": after}}
+
+    def delete(self, entry_id):
+        before = self.get(entry_id)
+        if before is None:
+            raise ValueError(f"no entry with id {entry_id}")
+        with self.memory.lock:
+            self.memory.db.execute("delete from baby_log where id = ?", (before["id"],))
+            self.memory.db.commit()
+        return {"deleted": before}
 
     def _sleep(self, details, when):
         action = details.get("action")

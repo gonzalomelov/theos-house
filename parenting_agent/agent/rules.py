@@ -12,7 +12,47 @@ MINUTES = re.compile(r"(\d+)\s*(?:min|minutes)", re.I)
 SPAN = re.compile(r"from\s+(\d{1,2})[:.](\d{2})\s+(?:to|until)\s+(\d{1,2})[:.](\d{2})", re.I)
 MEDICAL = re.compile(r"\b(fever|temperature|medicine|medication|dose|dosage|paracetamol|ibuprofen|rash|vomit|sick|"
                      r"diagnos|should i give|is it normal|cough|infection|antibiotic)", re.I)
-QUESTION_START = re.compile(r"^(when|how|what|did|has|have|is|was)\b", re.I)
+QUESTION_START = re.compile(r"^(when|how|what|did|has|have|is|was|why|cu[aá]nd[oa]|cu[aá]nt[oa]s?|qu[eé]|a qu[eé]|c[oó]mo|"
+                            r"d[oó]nde|por qu[eé]|para cu[aá]ndo)\b", re.I)
+# Health words in Spanish, on top of the English ones in MEDICAL. A bottle the parent gives ("le doy la mamadera") is
+# not one of them, only a question about what to give ("le puedo dar").
+MEDICAL_ES = re.compile(r"\b(fiebre|temperatura|medicamento|medicina|remedio|dosis|paracetamol|ibuprofeno|sarpullido|"
+                        r"erupci|v[oó]mit|enferm|diagn[oó]s|tos\b|infecci|antibi[oó]tic|es normal|le puedo dar|puedo darle|"
+                        r"c[oó]lico|gotas para)", re.I)
+# Red flags: an answer in no time, with no brain call, that says to call emergency services. Fussing and crying are
+# not on the list, they get the likely reason from the log instead.
+EMERGENCY = re.compile(
+    r"\b(not breathing|stopped breathing|isn'?t breathing|can'?t breathe|cannot breathe|struggling to breathe|"
+    r"(blue|purple|gr[ae]y) (lips|face)|lips (are |look |turned |turning )?(blue|purple|gr[ae]y)|turn(ed|ing|s)? (blue|purple)|"
+    r"limp|floppy|chok(e|es|ed|ing)|won'?t wake|wont wake|can'?t wake|cannot wake|not waking|unresponsive|"
+    r"fell (off|from|down|out of)|had a fall|dropped (him|her|the baby)|hit (his|her|the|its) head|head injury|seizure|convuls\w*|"
+    r"no respira|dej[oó] de respirar|le cuesta respirar|no puede respirar|morad[oa]s?|labios azules|se puso azul|"
+    r"se (est[aá] )?ahog\w*|atragant\w*|no se despierta|no reacciona|no responde|"
+    r"se (me )?cay[oó](?! (el|la) (chupete|mamadera|biber[oó]n|tete|juguete))|"
+    r"se golpe[oó]|golpe en la cabeza|convulsi\w*)", re.I)
+# Health and feeding-safety talk. Never a log request, so the not-logged check never answers it with "send it again".
+HEALTH = re.compile(r"\b(can i|could i|should i|is it ok|is it safe|safe to|puedo|debo|deber[ií]a|es seguro|"
+                    r"cereal|honey|miel|water|agua|not (pooped|peed|eaten)|hasn'?t (pooped|peed|eaten)|"
+                    r"no (hizo|ha hecho) (caca|pis)|in \d+ days|\d+ d[ií]as sin|hace \d+ d[ií]as)\b", re.I)
+# A message that corrects or removes an entry already in the log.
+EDIT = re.compile(r"\b(perd[oó]n|correg\w*|corrij\w*|cambi[aá](la|lo)?|borr[aá](la|lo)?|elimin[aá](la|lo)?|sac[aá](la|lo)|"
+                  r"me equivoqu[eé]|no eran?|eran? \d+ no|fue de \d+|fue \d+|(dos|2) veces|sin querer|duplicad\w*|repetid\w*|"
+                  r"(it|that) was \d+|was \d+ not|not \d+|delete|remove|undo|wrong|mistake|sent (it )?twice|twice by|"
+                  r"correct (it|that)|fix (it|that)|change (it|that))\b", re.I)
+# The parent's answer to "did you send it twice or were there two bottles?"
+DOUBLE_ONCE = re.compile(r"(dos|2) veces|sin querer|repet|duplic|una sola|era una|fue una|la misma|me equivoqu|error|"
+                         r"twice|by mistake|same (one|bottle)|just one|only one|\bonce\b", re.I)
+DOUBLE_TWO = re.compile(r"(dos|2) mamaderas|fueron (dos|2)|son (dos|2)|\botra\b|segunda|two bottles|another|second|"
+                        r"there were two|were two|both", re.I)
+CRY = re.compile(r"\b(cry|crying|cries|cried|fussy|fussing|screaming|llor\w*|berrinche|molest[oa])\b", re.I)
+SIDE_SAID = re.compile(r"izquierd|derech|ambos|los dos|las dos|left|right|both", re.I)
+TYPE_SAID = {"formula": re.compile(r"f[oó]rmula|formula|leche de f", re.I),
+             "breast milk": re.compile(r"leche materna|materna|extra[ií]da|sacada|breast ?milk|pumped|expressed", re.I)}
+TIME_SAID = re.compile(r"\d{1,2}[:.h]\d{2}|\d{1,2}\s*(am|pm|hs?)\b|\ba las?\s+\d|\bat \d|\bhace\b|\bago\b|y media|y cuarto|"
+                       r"menos cuarto|anoche|esta ma[ñn]ana|madrugada|this morning|last night|earlier|\bantes\b|from \d|"
+                       r"de \d{1,2} a \d{1,2}|\bayer\b|yesterday|\bla de la", re.I)
+MINUTES_SAID = re.compile(r"\d+\s*(min|minutos|minutes|mins)\b|\d+\s*m\b|media hora|half an hour", re.I)
+COLOR_SAID = re.compile(r"amarill|verde|marr[oó]n|negr|roj|yellow|green|brown|black|red", re.I)
 
 # Spanish note words to the English ones parse_note knows, so "mamadera 120 ml" or "pañal sucio" read as notes too.
 NOTE_WORDS_ES = [
@@ -26,12 +66,73 @@ SPANISH = re.compile(r"[ñáéíóú¿¡]|\b(se|le|la|el|de|del|un|una|y|con|ya|
 # A reply that says something went into the log. "Noted" and "OK" are not claims, so small talk is never one.
 CLAIMS_LOGGED = re.compile(r"\b(logged|recorded|added (it )?to the log|anot[eé]|anotad[oa]s?|registr[eé]|registrad[oa]s?)\b", re.I)
 
-REFUSAL = ("I can't give medical advice. Please call your pediatrician about that. "
-           "I can log what you see so you have it ready for the call.")
+REFUSAL = ("I can't give medical advice. Please call your pediatrician about that. If it is urgent, call emergency "
+           "services (911 in Uruguay, or your local emergency number). I can log what you see so you have it ready for the call.")
+EMERGENCY_REPLY = {
+    "en": "This may be an emergency. Call emergency services now: 911 in Uruguay, or your local emergency number.",
+    "es": "Puede ser una emergencia. Llamá ya al 911 (emergencias en Uruguay) y contales lo que ves.",
+}
 
 
 def is_medical(text):
     return bool(MEDICAL.search(text))
+
+
+def is_emergency(text):
+    return bool(EMERGENCY.search(text or ""))
+
+
+def is_medical_es(text):
+    return bool(MEDICAL_ES.search(text or ""))
+
+
+def is_health(text):
+    """Any health, safety or emergency talk, in English or Spanish. Never treated as a note to log."""
+    return is_medical(text) or is_medical_es(text) or is_emergency(text) or bool(HEALTH.search(text or ""))
+
+
+def is_edit_request(text):
+    return bool(EDIT.search(text or "")) and not is_health(text)
+
+
+def double_answer(text):
+    """"once" when the parent sent the same note twice by mistake, "two" when there were two, None when unclear."""
+    if DOUBLE_ONCE.search(text or ""):
+        return "once"
+    if DOUBLE_TWO.search(text or ""):
+        return "two"
+    return None
+
+
+def is_cry_question(text):
+    return bool(CRY.search(text or "")) and not is_emergency(text)
+
+
+def said_only(request, kind, details, ts=None):
+    """The log call's details and time, without anything the parent did not say: no breast side, milk type, duration,
+    amount, diaper color or time the brain made up. Returns (details, ts)."""
+    details = dict(details or {}) if isinstance(details, dict) else {}
+    request = request or ""
+    timed = bool(TIME_SAID.search(request))
+    if not timed:
+        ts = None
+        if kind != "sleep":
+            for name in ("start", "end", "time"):
+                details.pop(name, None)
+    if kind == "feeding":
+        method = str(details.get("method") or "")
+        if "breast" in method.lower() and not SIDE_SAID.search(request):
+            details["method"] = "breast"
+        milk = details.get("type")
+        if milk and not any(pattern.search(request) for pattern in TYPE_SAID.values()):
+            details.pop("type", None)
+        if details.get("duration_min") is not None and not MINUTES_SAID.search(request):
+            details.pop("duration_min", None)
+        if details.get("amount_ml") is not None and not re.search(r"\d", request):
+            details.pop("amount_ml", None)
+    if kind == "diaper" and details.get("color") and not COLOR_SAID.search(request):
+        details.pop("color", None)
+    return details, ts
 
 
 def is_question(text):
@@ -92,7 +193,7 @@ def log_kind(text):
     """The kind of log entry a parent's message reports (feeding, diaper, sleep, bath, note), in English or Spanish.
     None for questions, health questions and anything that is not a note about the baby."""
     english = note_to_english(text)
-    if is_question(text) or is_question(english) or is_medical(text):
+    if is_question(text) or is_question(english) or is_health(text):
         return None
     parsed = parse_note(text) or parse_note(english)
     return parsed[0] if parsed else None

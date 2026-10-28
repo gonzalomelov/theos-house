@@ -415,8 +415,8 @@ class Caps(unittest.TestCase):
         brain = CountingBrain(tokens=(1_000_000, 0))  # $0.10 a call at Haiku prices
         app = make(self, brain=brain, PA_FAMILIES_BRAIN="claude", PA_FAMILIES_FAMILY_USD="0.25")
         onboard(app, "111")
-        for _ in range(5):
-            app.handle("111", "111", "bottle 100 ml")
+        for i in range(5):
+            app.handle("111", "111", f"bottle {100 + 10 * i} ml")  # different bottles, a repeat minutes later is asked about
         self.assertEqual(brain.calls, 3)
         self.assertAlmostEqual(app.store.spent_today(family_of(app, "111")), 0.30)
         # The counting brain never calls the log tool. The first bottle gets the honest "could not log" after one more
