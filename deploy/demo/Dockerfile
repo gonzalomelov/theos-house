@@ -1,6 +1,6 @@
 # The public demo. Standard library only: no pip install, no extra packages.
-# Pin this base by digest at deploy time (docker buildx imagetools inspect python:3.11-slim-bookworm).
-FROM python:3.11-slim-bookworm
+# python:3.12-slim-bookworm pinned by digest (2026-10-28), the same base as the family agent. Bump deliberately.
+FROM python@sha256:e697c81897302a4c4333bade000d98038fbb21eb064f8ee1fd42d02ebcd9d337
 ENV PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1 TZ=America/Montevideo \
     PA_DEMO_HOST=0.0.0.0 PA_DEMO_PORT=8765 PA_DEMO_DATA_DIR=/data PA_DEMO_SECURE_COOKIE=1
 WORKDIR /app

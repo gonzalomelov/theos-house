@@ -1,0 +1,7 @@
+# Installed as a user unit by sh deploy/public.sh backup install. Needs loginctl enable-linger for the user.
+[Unit]
+Description=Daily backup of the parenting agent demo and families data
+
+[Service]
+Type=oneshot
+ExecStart=/bin/sh %h/apps/pa-backup/backup.sh

@@ -1,4 +1,4 @@
-# Parenting agent public demo, for the Vostro later. NOT deployed: Gonza says "OK public" first.
+# Parenting agent public demo on the Vostro, at https://baby.bygmv.com. Deployed by deploy/public.sh demo deploy.
 #
 #   docker network create --internal --ipv6=false \
 #     -o com.docker.network.bridge.gateway_mode_ipv4=isolated pa-demo-internal
@@ -22,7 +22,7 @@ x-hardened: &hardened
 services:
   demo:
     <<: *hardened
-    image: pa-demo:latest
+    image: pa-demo:${APP_TAG:-latest}
     build:
       context: ../..
       dockerfile: deploy/demo/Dockerfile
@@ -38,6 +38,12 @@ services:
     volumes:
       - ${PA_DEMO_DATA:-${HOME}/apps/pa-demo-data}:/data
     tmpfs: ["/tmp:rw,size=16m"]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8765/healthz', timeout=3)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
     mem_limit: 256m
     memswap_limit: 256m
     cpus: 1
@@ -45,7 +51,7 @@ services:
 
   egress:
     <<: *hardened
-    image: pa-demo-egress:latest
+    image: pa-demo-egress:${APP_TAG:-latest}
     build: { context: ./egress }
     container_name: pa-demo-egress
     networks: [internal, egress]
@@ -55,8 +61,9 @@ services:
 
   edge:
     <<: *hardened
-    # A tiny TCP relay so the internal network never gets a published port. Pin by digest at deploy time.
-    image: alpine/socat:1.8.0.0
+    # A tiny TCP relay so the internal network never gets a published port.
+    # alpine/socat:1.8.0.0 pinned by digest (2026-10-28). Bump deliberately.
+    image: alpine/socat@sha256:a6be4c0262b339c53ddad723cdd178a1a13271e1137c65e27f90a08c16de02b8
     container_name: pa-demo-edge
     command: ["TCP-LISTEN:8080,fork,reuseaddr", "TCP:pa-demo:8765"]
     networks: [internal, edge]
