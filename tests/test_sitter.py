@@ -312,9 +312,16 @@ class ParentDelivery(unittest.TestCase):
 
     def test_without_a_sitter_adapter_nothing_is_sent(self):
         plugin = sitter.SitterHandover(self.agent, self.config, clock=lambda: NOW)
+        self.assertIn("no handover draft", plugin.send_to_sitter())
         plugin.prepare("Grandma", "19:00", "23:00")
-        with self.assertRaises(RuntimeError):
-            plugin.send_to_sitter()
+        self.assertIn("not switched on", plugin.send_to_sitter())
+        # Through the agent too: the yes runs the tool outside the loop's error handling, so it must not raise.
+        self.agent.tools.items[sitter.SEND_TOOL] = sitter.Tool(sitter.SEND_TOOL, "", sitter.schema({}), plugin.send_to_sitter)
+        self.agent.brain = ScriptBrain([call(sitter.SEND_TOOL), Reply("Asked.")])
+        message(self.agent, "send it to her")
+        message(self.agent, "yes")
+        self.assertIn("not switched on", self.replies[-1]["text"])
+        self.assertEqual(self.messenger.sent, [])
 
     def test_window_ends_and_the_parents_get_a_summary(self):
         self.ask_for_brief()

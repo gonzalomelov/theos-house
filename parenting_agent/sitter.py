@@ -406,14 +406,18 @@ class SitterHandover(Plugin):
                 f"{patterns.hhmm(a)} to {patterns.hhmm(b)}.")
 
     def send_to_sitter(self):
-        """Runs only after the parent's yes (the tool is never on the allowed list). One send per yes."""
+        """Runs only after the parent's yes (the tool is never on the allowed list). One send per yes.
+
+        It returns a sentence instead of raising, because the agent runs approved tools outside its error handling.
+        """
         with self.lock:
             draft = self.draft
         if draft is None:
-            raise ValueError("there is no handover draft yet")
+            return "There is no handover draft yet."
         chat = self.contacts.get(draft["sitter"])
         if self.sitter_messenger is None or chat is None:
-            raise RuntimeError(f"sending to {draft['sitter']} is not switched on in this build, forward the draft yourself")
+            self.agent.bus.publish("sitter_not_sent", sitter=draft["sitter"], reason="no sitter adapter in this build")
+            return f"Sending to {draft['sitter']} is not switched on yet. Please forward the draft yourself."
         sent = self.sitter_messenger.send(chat, draft["text"])
         self.agent.bus.publish("sitter_sent", sitter=draft["sitter"], message_id=sent)
         return f"Sent to {draft['sitter']}."
