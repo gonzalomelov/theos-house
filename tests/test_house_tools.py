@@ -197,6 +197,20 @@ class AskFirst(unittest.TestCase):
             agent.close()
 
 
+class SharesTheAgent(unittest.TestCase):
+    def test_a_tool_another_plugin_registered_first_is_kept(self):
+        from parenting_agent.agent.tools import Tool, schema
+        with tempfile.TemporaryDirectory() as tmp:
+            config = config_mod.load()
+            config.update({"data_dir": tmp, "env_file": "/nonexistent"})
+            agent = build(config)
+            agent.tools.add(Tool("vacuum_dock", "the house plan's dock", schema({}), lambda: "house plan docked"))
+            HouseTools(agent, config, client=FakeHA())
+            self.assertEqual(agent.tools.items["vacuum_dock"].handler(), "house plan docked")
+            self.assertIn("study_light", agent.tools.names())
+            agent.close()
+
+
 class NeverRefused(unittest.TestCase):
     def test_never_entities_are_named(self):
         for entity in NEVER:

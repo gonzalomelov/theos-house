@@ -13,6 +13,7 @@ Reading states (house_status) changes nothing and runs whenever a token is there
 failed, is published as a "house_call" event, so it lands in data/events.jsonl.
 
 Add "parenting_agent.house_tools:HouseTools" to the agent config plugins. Settings live under "house", see DEFAULTS.
+A tool name another plug-in registered first is left to that plug-in (the house plan's vacuum tools, #29).
 """
 import os
 import threading
@@ -69,7 +70,12 @@ class HouseTools(Plugin):
                 agent.bus.publish("house_warning", error=f"{name} removed from the allowed list, it always waits for a yes")
         on = {"type": "boolean"}
         tv = {"type": "string", "enum": list(TVS)}
-        add = agent.tools.add
+        def add(tool):
+            # A tool another plug-in already gave the agent wins, for example the house plan's vacuum_dock (#29).
+            if tool.name in agent.tools.items:
+                agent.bus.publish("house_warning", error=f"{tool.name} is already a tool, the house tools keep the other one")
+                return
+            agent.tools.add(tool)
         add(Tool("study_light", "Turn the study light on or off. For a night feed use on with warm true and a low brightness_pct.",
                  schema({"on": on, "brightness_pct": {"type": "integer", "minimum": 1, "maximum": 100}, "warm": on}, ["on"]),
                  self.study_light))
