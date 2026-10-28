@@ -22,13 +22,14 @@ HOUSE_VALUES = re.compile(r"(babybuddy|homeassistant|home-assistant|:8123\b|:879
 
 BRAINS = {
     "claude": {"provider": "claude", "model": "claude-haiku-5-5", "max_tokens": 400},
-    "baseten": {"provider": "openai_compatible", "model": "meta-models/muse-spark-open-1026",
-                "base_url": "https://inference.baseten.co/v1", "key_env": "BASETEN_API_KEY", "max_tokens": 400},
+    "baseten": {"provider": "openai_compatible", "model": "meta-models/muse-spark-open",
+                "base_url": "https://inference.baseten.co/v1", "key_env": "BASETEN_API_KEY", "max_tokens": 1200,
+                "reasoning_effort": "low"},
     "fake": {"provider": "fake"},
 }
 # USD per million tokens, input and output. Claude Haiku 5.5 from the Anthropic pricing page, read 2026-10-28.
-# Baseten is unknown until the partner credits land, so it is priced high on purpose until then.
-PRICES = {"claude": (0.10, 0.50), "baseten": (1.00, 3.00), "fake": (0.0, 0.0)}
+# Muse Spark Open from the Baseten model library page, read 2026-10-28. It always reasons, so output runs long.
+PRICES = {"claude": (0.10, 0.50), "baseten": (1.25, 4.25), "fake": (0.0, 0.0)}
 # Charged when a provider reports no usage, so a missing number never makes a call free.
 FALLBACK_TOKENS = (4000, 400)
 

@@ -137,12 +137,15 @@ class ClaudeBrain:
 class OpenAICompatibleBrain:
     name = "openai_compatible"
 
-    def __init__(self, model, base_url, key_env, max_tokens=800, timeout=30):
+    def __init__(self, model, base_url, key_env, max_tokens=800, timeout=30, reasoning_effort=None):
+        self.url = base_url.rstrip("/") + "/chat/completions"
         key = os.environ.get(key_env)
         if not key:
-            raise BrainError(f"openai_compatible: {key_env} is not set")
+            raise BrainError(f"openai_compatible: {key_env} is not set. Put {key_env}=... in the git-ignored env file "
+                             f"named by env_file to run {model} on {urllib.parse.urlparse(self.url).hostname}")
         self.model, self.max_tokens, self.timeout = model, max_tokens, timeout
-        self.url = base_url.rstrip("/") + "/chat/completions"
+        # Muse Spark Open on Baseten always reasons, xhigh by default, and reasoning counts against max_tokens.
+        self.reasoning_effort = reasoning_effort
         self.headers = {"Authorization": f"Bearer {key}", "Content-Type": "application/json"}
         self.destination = urllib.parse.urlparse(self.url).hostname
 
@@ -165,7 +168,11 @@ class OpenAICompatibleBrain:
 
     @staticmethod
     def parse(reply):
-        message = (reply.get("choices") or [{}])[0].get("message") or {}
+        choice = (reply.get("choices") or [{}])[0]
+        message = choice.get("message") or {}
+        if choice.get("finish_reason") == "length" and not message.get("content") and not message.get("tool_calls"):
+            raise BrainError("openai_compatible: max_tokens ran out before an answer, raise brain.max_tokens "
+                             "or lower brain.reasoning_effort")
         calls = []
         for call in message.get("tool_calls") or []:
             function = call.get("function", {})
@@ -181,6 +188,8 @@ class OpenAICompatibleBrain:
     def step(self, system, transcript, tools):
         body = {"model": self.model, "max_tokens": self.max_tokens, "messages": self.messages(system, transcript),
                 "tools": [{"type": "function", "function": t} for t in tools]}
+        if self.reasoning_effort:
+            body["reasoning_effort"] = self.reasoning_effort
         return self.parse(post_json(self.url, self.headers, body, self.timeout))
 
 
@@ -191,7 +200,8 @@ def build(config):
     if provider == "claude":
         return ClaudeBrain(config.get("model", "claude-haiku-5-5"), config.get("max_tokens", 800), config.get("thinking"))
     if provider == "openai_compatible":
-        return OpenAICompatibleBrain(config["model"], config["base_url"], config["key_env"], config.get("max_tokens", 800))
+        return OpenAICompatibleBrain(config["model"], config["base_url"], config["key_env"], config.get("max_tokens", 800),
+                                     reasoning_effort=config.get("reasoning_effort"))
     raise BrainError(f"unknown brain provider {provider}")
 
 
