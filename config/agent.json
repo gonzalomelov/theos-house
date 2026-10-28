@@ -21,14 +21,17 @@
     "start_changing_table",
     "finish_changing_table",
     "start_bath",
-    "finish_bath"
+    "finish_bath",
+    "cabin_ready",
+    "car_status"
   ],
   "plugins": [
     "parenting_agent.agent.console:Console",
     "parenting_agent.changing_table:ChangingTable",
     "parenting_agent.camera_skill:CameraSkills",
     "parenting_agent.channels.telegram:Telegram",
-    "parenting_agent.channels.router:Router"
+    "parenting_agent.channels.router:Router",
+    "parenting_agent.tesla.trips:CarTrips"
   ],
   "max_steps": 6,
   "changing_table": {
@@ -55,5 +58,13 @@
       "volume": 0.2,
       "restore_after_s": 10
     }
+  },
+  "car": {
+    "backend": "simulated",
+    "device_name": "Model 3",
+    "live_commands": false,
+    "parent_channel": "telegram",
+    "car_seat": "rear_center",
+    "trip_calendar": null
   }
 }

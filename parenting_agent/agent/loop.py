@@ -78,6 +78,15 @@ class Agent:
         items.append({"role": "user", "text": new_text})
         return items
 
+    def propose(self, channel, name, arguments, text=None):
+        """A plug-in asks the parent before one of its tools runs: the parent's next yes runs it, like a brain call
+        that was not on the allowed list. A newer proposal for the same tool replaces the older one."""
+        self.pending = [call for call in self.pending if call["name"] != name]
+        self.pending.append({"id": f"proposal-{name}", "name": name, "arguments": dict(arguments)})
+        self.bus.publish("ask_parent", channel=channel, name=name, arguments=arguments, source="plugin")
+        if text:
+            self.say(channel, text)
+
     def approve_pending(self, channel):
         results = []
         for call in self.pending:
