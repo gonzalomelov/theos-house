@@ -58,7 +58,19 @@ walled() {
   # shellcheck disable=SC2046
   docker exec -i "$APP" python - $(host_addresses) < "$DIR/deploy/wall_check.py"
 }
+# One Home Assistant request before any other. Home Assistant bans an IP after a few failed logins,
+# so a rejected token (probe exit 3) stops the check here instead of trying again.
+ha_token_ok() {
+  echo "== Home Assistant token, one request from inside the container"
+  RC=0
+  docker exec -i "$APP" python - token < "$DIR/deploy/probe.py" || RC=$?
+  [ "$RC" != 3 ] && return 0
+  echo "Home Assistant rejected HA_MCP_TOKEN (401 or 403). Stopping before any other Home Assistant call to avoid an IP ban." >&2
+  echo "Fix HA_MCP_TOKEN in the source .env, run sh deploy/agent.sh push-env, then deploy or check again." >&2
+  return 1
+}
 checks() {
+  ha_token_ok || fail "deploy check aborted: Home Assistant token rejected"
   echo "== health: $(docker inspect "$APP" --format "{{.State.Health.Status}}")"
   echo "== python -m parenting_agent --check (inside the container)"
   docker exec "$APP" python -m parenting_agent --check --config config/agent.vostro.json
@@ -121,6 +133,8 @@ PREVIOUS="\$(cat "\$CURRENT_FILE" 2>/dev/null || true)"
 APP_TAG="\$SHA" compose build --quiet
 run() { APP_TAG="\$1" compose up -d --no-build --force-recreate --remove-orphans; }
 run "\$SHA"
+# A rejected token is the same for every image, so a rollback would not help: stop the agent and abort.
+ha_token_ok || { docker stop "\$APP" >/dev/null 2>&1 || true; fail "deploy aborted: Home Assistant token rejected, the agent is stopped"; }
 if healthy && checks; then
   if [ -n "\$PREVIOUS" ] && [ "\$PREVIOUS" != "\$SHA" ]; then echo "\$PREVIOUS" > "\$PREVIOUS_FILE"; fi
   echo "\$SHA" > "\$CURRENT_FILE"
