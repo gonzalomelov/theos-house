@@ -1,6 +1,6 @@
 # Families: invited parents on Telegram
 
-Invited parents log their own baby on Telegram, through a second bot, each family in its own private log. Built during the Meta hackathon. Issue #40. **Not deployed yet.**
+Invited parents log their own baby on Telegram, through a second bot, each family in its own private log. Built during the Meta hackathon. Issue #40. Deployed on the Vostro on Oct 28 2026, invite only.
 
 It is a separate service, walled off like the public demo. Other families never reach Gonza's family agent, his Baby Buddy, his Home Assistant or his LAN.
 
@@ -52,7 +52,8 @@ The bot speaks first twice: a next feed reminder about 10 minutes before the fee
 | Telegram long polling and the reminder clock | `parenting_agent/families/bot.py` |
 | `run`, `invite`, `check` | `parenting_agent/families/__main__.py` |
 | Session export for the scorer | `parenting_agent/families/export_sessions.py` |
-| Docker files, not deployed | `deploy/families/` |
+| Docker files and the wall check | `deploy/families/` |
+| Deploy, check, rollback, backups | `deploy/public.sh`, `deploy/backup.sh` |
 
 Each family gets its own agent with its own bus and its own file, `family-<id>.sqlite` in the data folder, opened by nothing else. The tools are only `log_baby_event`, `read_baby_log`, `baby_summary`, `remember` and `current_time`. There is no Baby Buddy client, no Home Assistant client, no house tool, no channel router and no sitter role in the service. The Telegram adapter is the one from `parenting_agent/channels/telegram.py`, standard library only, so no new package was added.
 
@@ -98,21 +99,23 @@ KR222_EXPORT_CMD='ssh vostro "docker exec pa-demo python -m parenting_agent.demo
   your-scorer.sh
 ```
 
-Checked on Oct 28 with a simulated export: 3 parents on 3 days, 1 parent on 2 days and 1 internal parent scored "parents 2/3", the internal rows were not counted, and the chained demo and families exports scored together. The scorer's default command names the container `parenting-demo` while `deploy/demo/compose.yml` names it `pa-demo`, so set `KR222_EXPORT_CMD` as above until the scorer is updated.
+Checked on Oct 28 with a simulated export: 3 parents on 3 days, 1 parent on 2 days and 1 internal parent scored "parents 2/3", the internal rows were not counted, and the chained demo and families exports scored together. The scorer's default command now chains both exports like this.
 
-## Deploy, when Gonza says go
+## On the Vostro
 
-Not done in issue #40. Run from the Mac in a clean checkout of main.
+Deployed on Oct 28 2026 with `deploy/public.sh`, from the Mac in a clean checkout. Two containers in the compose project `pa-families`: `pa-families` (only on `pa-families-internal`, isolated gateway, nothing published) and `pa-families-egress` (HTTPS to the brain and api.telegram.org only).
 
-1. Create the second bot with @BotFather (Gonza's assistant does this). Keep the token only in the env file below. Send `/setjoingroups` to BotFather and pick Disable, so the bot cannot be added to groups.
-2. Write `~/apps/pa-families.env` on the Vostro, mode 600, with only these names: `ANTHROPIC_API_KEY`, `TELEGRAM_FAMILIES_BOT_TOKEN`, `PA_FAMILIES_BOT_USERNAME`, `PA_FAMILIES_INTERNAL_USERS`. Never print the values. See `deploy/families/env.example`.
-3. Pin the three base images in `deploy/families/` by digest.
-4. `mkdir -m 700 ~/apps/pa-families-data` and create the network:
-   `docker network create --internal --ipv6=false -o com.docker.network.bridge.gateway_mode_ipv4=isolated pa-families-internal`
-5. `docker compose --env-file ~/apps/pa-families.env -f deploy/families/compose.yml up -d --build`
-6. `deploy/families/check-wall.sh <HA host:port> <Baby Buddy host:port> <Vostro LAN ip>:22`. Every target must say blocked and the proxy must refuse everything but the brain and Telegram.
-7. `docker exec pa-families python -m parenting_agent.families check`
-8. One internal run: `invite --internal`, onboard from Gonza's phone, log a bottle, ask a question, `/deletemydata`.
-9. Gonza makes the invites and sends them himself.
+- Env file `~/apps/pa-families.env`, mode 600, written by `push-env` with only `ANTHROPIC_API_KEY`, `TELEGRAM_FAMILIES_BOT_TOKEN`, `PA_FAMILIES_BOT_USERNAME` and `PA_FAMILIES_INTERNAL_USERS` (Gonza's Telegram user id, taken from `TELEGRAM_CHAT_ID`).
+- Data `~/apps/pa-families-data`, owned by the container user (uid 10002), mode 700. Backed up daily with the demo (see `docs/demo-app.md`).
+- Health: the container runs with no restarts and its log says `families: polling started`, then `families check` inside.
 
-Logs: `docker logs pa-families` shows counts and error types only, never message text or tokens. Stop: `docker compose -f deploy/families/compose.yml down`. The data stays in `~/apps/pa-families-data`.
+```bash
+sh deploy/public.sh families push-env
+WALL_EXTRA_TARGETS="192.0.2.10:80 192.0.2.10:22" sh deploy/public.sh families deploy
+sh deploy/public.sh families check | status | logs 200 | stop | start
+docker exec pa-families python -m parenting_agent.families invite --count 3    # on the Vostro
+```
+
+On Oct 28 the wall check passed with 110 probes blocked or refused, and the proxy allowed only the brain and Telegram.
+
+Still open: send `/setjoingroups` to @BotFather and pick Disable, so the bot cannot be added to groups (it already answers groups with "please message me directly").

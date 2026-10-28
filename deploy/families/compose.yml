@@ -1,4 +1,4 @@
-# Parenting agent for invited families, for the Vostro. NOT deployed yet: see docs/families.md.
+# Parenting agent for invited families on the Vostro. Deployed by deploy/public.sh families deploy, see docs/families.md.
 #
 #   docker network create --internal --ipv6=false \
 #     -o com.docker.network.bridge.gateway_mode_ipv4=isolated pa-families-internal
@@ -22,7 +22,7 @@ x-hardened: &hardened
 services:
   families:
     <<: *hardened
-    image: pa-families:latest
+    image: pa-families:${APP_TAG:-latest}
     build:
       context: ../..
       dockerfile: deploy/families/Dockerfile
@@ -49,7 +49,7 @@ services:
 
   egress:
     <<: *hardened
-    image: pa-families-egress:latest
+    image: pa-families-egress:${APP_TAG:-latest}
     build: { context: ./egress }
     container_name: pa-families-egress
     networks: [internal, egress]

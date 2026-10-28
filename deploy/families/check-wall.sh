@@ -23,8 +23,11 @@ via_proxy api.telegram.org:443 allow || fail=1
 via_proxy api.anthropic.com:443 allow || fail=1
 via_proxy example.com:443 refuse || fail=1
 via_proxy babybuddy:8000 refuse || fail=1
+for target in "$@"; do via_proxy "$target" refuse || fail=1; done
 docker exec pa-families python -c "import os,sys
-keep={'ANTHROPIC_API_KEY','BASETEN_API_KEY','TELEGRAM_FAMILIES_BOT_TOKEN'}
+# GPG_KEY is set by the python base image: the fingerprint that signs the Python release, public, not a secret.
+keep={'ANTHROPIC_API_KEY','BASETEN_API_KEY','TELEGRAM_FAMILIES_BOT_TOKEN','GPG_KEY'}
 bad=[k for k in os.environ if k not in keep and any(w in k for w in ('HA_','BABYBUDDY','TELEGRAM','TOKEN','_KEY','SECRET'))]
 print('env ok' if not bad else 'FORBIDDEN '+','.join(bad)); sys.exit(1 if bad else 0)" || fail=1
+if [ "$fail" = 0 ]; then echo "wall holds"; else echo "WALL BROKEN" >&2; fi
 exit $fail

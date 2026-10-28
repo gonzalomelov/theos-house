@@ -1,6 +1,6 @@
 # Public demo app
 
-A phone-first web chat where a visitor talks to the real agent core about Demo Baby, a simulated baby. Built during the Meta hackathon. It runs locally only. It goes public only after Gonza says "OK public".
+A phone-first web chat where a visitor talks to the real agent core about Demo Baby, a simulated baby. Built during the Meta hackathon. Live at https://baby.bygmv.com since Oct 28 2026.
 
 ![The demo at 390x844](../results/demo-app/demo-390x844.png)
 
@@ -21,7 +21,8 @@ A phone-first web chat where a visitor talks to the real agent core about Demo B
 | One agent per visitor, spend cap, caps, simulated house tools | `parenting_agent/demo/app.py` |
 | Web server and page, standard library only | `parenting_agent/demo/server.py`, `page.html` |
 | Session records and the export | `parenting_agent/demo/records.py`, `export_sessions.py` |
-| Docker files for the Vostro later, not deployed | `deploy/demo/` |
+| Docker files and the wall check | `deploy/demo/` |
+| Deploy, check, rollback, backups | `deploy/public.sh`, `deploy/backup.sh` |
 
 Each visitor gets their own agent with its own bus, an in-memory memory file and a fresh copy of the simulated week (`simweek.generate`, seed 7), with the last day placed on today and nothing in the future. Visitors never share state. "Fresh demo baby" gives the visitor a new copy. Idle visitors are dropped from memory after 6 hours.
 
@@ -70,8 +71,20 @@ PA_DEMO_BRAIN=baseten python -m parenting_agent.demo --brain-env ...            
 
 Then open http://127.0.0.1:8765 on a phone-sized window. Local visits count as internal.
 
-## Before it goes public
+## On the Vostro
 
-- Gonza says "OK public".
-- Pin the base images in `deploy/demo/` by digest, create the internal network, deploy on the Vostro, run `check-wall.sh` with the Home Assistant and Baby Buddy addresses.
-- Point a hostname at the relay through the Cloudflare tunnel, and set `PA_DEMO_SECURE_COOKIE=1` (the Dockerfile already does).
+Deployed on Oct 28 2026. Three containers in the compose project `pa-demo`: `pa-demo` (only on the internal network `pa-demo-internal`, isolated gateway, no host address), `pa-demo-egress` (tinyproxy, HTTPS to the brain hosts only) and `pa-demo-edge` (socat, published on 127.0.0.1:4820 only). The Cloudflare tunnel sends `baby.bygmv.com` to that port. Base images are pinned by digest and the images are tagged with the git commit.
+
+- Env file `~/apps/pa-demo.env`, mode 600, one name: `ANTHROPIC_API_KEY`.
+- Data `~/apps/pa-demo-data`, owned by the container user (uid 10001), mode 700.
+- Backups: `pa-backup.timer` (systemd user unit) copies every SQLite file of the demo and the families service daily at about 04:40 into `~/backups/parenting-agent-public`, keeps 7 days.
+- Mark your own browser as internal before testing: visit https://baby.bygmv.com/internal once.
+
+```bash
+sh deploy/public.sh demo push-env     # only ANTHROPIC_API_KEY, from the meta-hackathon-2026 .env
+WALL_EXTRA_TARGETS="192.0.2.10:80 192.0.2.10:22" sh deploy/public.sh demo deploy
+sh deploy/public.sh demo check | status | logs 200 | stop | start
+sh deploy/public.sh backup install | run
+```
+
+A deploy fails, stops the demo and starts the previous commit again when the health check or the wall check fails. The wall check probes every address of the Vostro on ports 22, 80, 8123 and 8790, the family agent's relay, the router, the Mac and the internet, directly and through the proxy, and checks the env holds no secret but the brain key. On Oct 28 all 103 probes were blocked or refused.
