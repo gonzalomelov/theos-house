@@ -64,6 +64,17 @@ For Gonza's own test accounts: `invite --internal` makes a code whose parent, an
 
 The bot speaks first twice: a next feed reminder about 10 minutes before the feed the rhythm engine expects, sent once per feed to every parent, only when the last feed is less than 8 hours old. And a daily summary at 20:00 local time, once a day, only when something was logged that day. Both pass the rhythm engine's `no_advice` check.
 
+## One message, one entry
+
+On Oct 28 an internal round trip logged "mamadera 120 ml" as 2 feeds of 120 ml. The brain failed after the log tool had run, the parent got "please try again", and the conversation kept the message with no answer, so the next turn logged it a second time. Now:
+
+- If the brain fails after something was logged, the parent gets what was kept ("I could not finish my answer, but I logged a feed of 120 ml. No need to send it again.") and that answer stays in the conversation. A failure before anything was logged is kept as answered too.
+- Within one message, the same entry (kind, amount or diaper contents, method and the time named) is logged once, however often the brain repeats the call. Two feeds at different times in one message are both logged.
+- The same Telegram update id is handled once.
+- The brain is told to log only what the newest message says.
+
+The fix is in the shared decide loop, so the demo and the family agent get it too. Tests: `tests/test_one_message_one_entry.py`.
+
 ## How it is built
 
 | Part | Code |
