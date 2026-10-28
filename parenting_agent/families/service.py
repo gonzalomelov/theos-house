@@ -78,6 +78,9 @@ class FamilyAgent(Agent):
         return (base + FAMILY_NOTE.format(name=facts.get("baby_name", "the baby"), born=facts.get("birth_date", "recently"))
                 + LANGUAGE_NOTE.get(lang, LANGUAGE_NOTE["en"]))
 
+    def not_logged(self, request):
+        return t(self.memory.facts().get("_lang", {}).get("value") or "en", "NOT_LOGGED")
+
     def saved_before_fail(self, entries):
         lang = self.memory.facts().get("_lang", {}).get("value") or "en"
         words = []
