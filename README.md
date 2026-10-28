@@ -21,7 +21,7 @@ One long-running agent sits in the middle. Everything it sees, hears and does go
 | Job | Model | Where it runs |
 |---|---|---|
 | Touch versus hover at the changing table and in the bath | **SAM 3.1**, Meta's open weights | On the Mac's GPU, about 1.5 s per frame. Frames never leave the house |
-| The agent's brain | **Muse Spark Open**, Meta's open weights | Baseten, with no data kept and no training on it (`config/agent.muse-baseten.json`, waiting for the partner credits) |
+| The agent's brain | **Muse Spark Open**, Meta's open weights | Baseten, data terms still to be checked (`config/agent.muse-baseten.json`, waiting for the partner credits) |
 | Stand-in brain until then | Claude | Anthropic API, temporary only (`config/agent.json`) |
 
 ## Private by design
@@ -122,7 +122,7 @@ python -m parenting_agent.demo.export_sessions                                  
 
 ## Invited families on Telegram (issue #40)
 
-Invited parents log their own baby through a second Telegram bot, each family in its own SQLite file, walled off from the family agent, Baby Buddy, Home Assistant and the LAN like the demo. Gonza makes an invite code, the parent sends `/start <code>`, answers 3 questions and is logging. Logs by text, answers from the family's log, next feed reminders, an evening summary, `/deletemydata`, caps per family and for the day. Not deployed yet. See `docs/families.md`, which also holds the privacy note for parents.
+Invited parents log their own baby through a second Telegram bot, each family in its own SQLite file, walled off from the family agent, Baby Buddy, Home Assistant and the LAN like the demo. Gonza makes an invite code, the parent sends `/start <code>`, answers 3 questions and is logging. Logs by text, answers from the family's log, next feed reminders, an evening summary, `/deletemydata`, caps per family and for the day. Deployed on the Vostro on Oct 28 2026, invite only. See `docs/families.md`, which also holds the privacy note for parents.
 
 ```bash
 python -m parenting_agent.families invite --count 3        # codes for new families

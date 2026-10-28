@@ -43,9 +43,11 @@ class Memory:
         with self.lock:
             self.db.executescript(SCHEMA)
 
-    def add_message(self, channel, role, text):
+    def add_message(self, channel, role, text, ts=None):
+        """ts is the agent's own clock, so a simulated or family clock and the conversation agree."""
+        stamp = ts.isoformat(timespec="seconds") if isinstance(ts, datetime.datetime) else (ts or now())
         with self.lock:
-            self.db.execute("insert into messages (ts, channel, role, text) values (?, ?, ?, ?)", (now(), channel, role, text))
+            self.db.execute("insert into messages (ts, channel, role, text) values (?, ?, ?, ?)", (stamp, channel, role, text))
             self.db.commit()
 
     def recent_messages(self, limit=20):
@@ -72,6 +74,9 @@ class Memory:
 class BabyLog:
     """What every baby log offers the agent: add, entries and a summary computed from the entries."""
     name = "abstract"
+
+    def now(self):
+        return parse_time(now())
 
     def add(self, kind, details, ts=None):
         raise NotImplementedError

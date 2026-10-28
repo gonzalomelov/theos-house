@@ -14,10 +14,11 @@ import threading
 import time
 import zoneinfo
 
+from .. import cry_reason
 from ..agent import brain as brain_mod
 from ..agent import rules
 from ..agent.loop import SYSTEM, Agent
-from ..agent.tools import core_tools
+from ..agent.tools import Tool, core_tools, schema
 from ..bus import Bus
 from ..rhythm import patterns
 from . import babylog
@@ -25,7 +26,8 @@ from . import texts
 from .texts import t
 from .store import Store, visitor_id
 
-ALLOWED = ["log_baby_event", "read_baby_log", "baby_summary", "remember", "current_time"]
+ALLOWED = ["log_baby_event", "edit_baby_event", "delete_baby_event", "read_baby_log", "baby_summary", "next_feed",
+           "remember", "current_time"]
 CHANNEL = "telegram"
 MAX_PARENTS = 4
 DELETE_WINDOW_S = 600
@@ -78,8 +80,15 @@ class FamilyAgent(Agent):
         return (base + FAMILY_NOTE.format(name=facts.get("baby_name", "the baby"), born=facts.get("birth_date", "recently"))
                 + LANGUAGE_NOTE.get(lang, LANGUAGE_NOTE["en"]))
 
+    def lang(self, request=None):
+        lang = self.memory.facts().get("_lang", {}).get("value") or "en"
+        return lang if lang in texts.LANGS else "en"
+
     def not_logged(self, request):
-        return t(self.memory.facts().get("_lang", {}).get("value") or "en", "NOT_LOGGED")
+        return t(self.lang(), "NOT_LOGGED")
+
+    def emergency(self, request):
+        return t(self.lang(), "EMERGENCY")
 
     def saved_before_fail(self, entries):
         lang = self.memory.facts().get("_lang", {}).get("value") or "en"
@@ -161,7 +170,8 @@ def day_summary(lang, name, s):
         total = t(lang, "FEEDS_TOTAL", ml=feeds["total_ml"]) if feeds["total_ml"] else ""
         parts.append(t(lang, "FEEDS", feeds=texts.plural(lang, feeds["count"], "FEED"), total=total, last=feeds["last_at"]))
     if diapers["count"]:
-        parts.append(t(lang, "DIAPERS", diapers=texts.plural(lang, diapers["count"], "DIAPER"), wet=diapers["wet"], dirty=diapers["dirty"]))
+        parts.append(t(lang, "DIAPERS", diapers=texts.plural(lang, diapers["count"], "DIAPER"),
+                              wet=texts.plural(lang, diapers["wet"], "WET"), dirty=texts.plural(lang, diapers["dirty"], "DIRTY")))
     if sleep["count"]:
         parts.append(t(lang, "SLEEP", time=_hm(sleep["total_min"]), sleeps=texts.plural(lang, sleep["count"], "SLEEP_ONE")))
     if baths["count"]:
@@ -180,6 +190,10 @@ class Family:
         self.log = babylog.FamilyBabyLog(self.memory, service.now)
         self.bus = Bus(None)
         tools = core_tools(self.memory, self.log, ALLOWED)
+        tools.add(Tool("next_feed", "When the next feed is expected, from the rhythm of this family's own log, the same as "
+                       "/proxima. Use it for 'a qué hora le toca?' or 'when is the next feed?' and answer with its text.",
+                       schema({}), lambda: service.next_feed(self)["text"]))
+        self.service = service
         self.agent = FamilyAgent(self.bus, self.memory, self.log, tools, FamilyBrain(service, family_id, lambda: self.lang),
                                  max_steps=service.s["max_steps"], history=service.s["history"])
         self.replies = collections.deque()
@@ -201,10 +215,15 @@ class Family:
         return self.fact("baby_name", "tu bebé" if self.lang == "es" else "your baby")
 
     def talk(self, text):
+        """Red flags go straight to the emergency line (inside the agent), other health questions to the refusal,
+        "why is she crying?" to the likely reason from the log, all three with no brain call."""
         self.replies.clear()
-        if texts.is_medical(text):
-            self.memory.add_message(CHANNEL, "user", text)
+        if texts.is_medical(text) and not rules.is_emergency(text):
+            self.memory.add_message(CHANNEL, "user", text, ts=self.log.now())
             self.agent.say(CHANNEL, self.t("REFUSAL"))
+        elif rules.is_cry_question(text) and not texts.is_medical(text) and not rules.is_log_request(text):
+            self.memory.add_message(CHANNEL, "user", text, ts=self.log.now())
+            self.agent.say(CHANNEL, self.service.cry_text(self))
         else:
             self.agent.handle({"kind": "message", "channel": CHANNEL, "text": text})
         return " ".join(e["text"] for e in self.replies) or self.t("OK")
@@ -420,15 +439,58 @@ class Families:
     # What the agent says first
 
     def next_feed(self, f, now=None):
+        """The next feed from the rhythm engine, as a time from the family's own log. kind is next (still ahead),
+        now (due in the last 30 minutes), missing (no feed logged for a while, worth asking) or old (the last feed is
+        too long ago to guess, likely just not logged), or None before two feeds."""
         now = now or self.now()
         nxt = patterns.next_feed(f.log.rhythm_rows(), now)
         if not nxt:
-            return {"text": f.t("NEED_TWO_FEEDS", name=f.name), "at": None}
+            return {"text": f.t("NEED_TWO_FEEDS", name=f.name), "at": None, "kind": None}
         minutes = round((nxt["at"] - now).total_seconds() / 60)
         when = patterns.hhmm(nxt["at"].astimezone(self.tz))
-        text = (f.t("NEXT_FEED", name=f.name, when=when, minutes=minutes, gap=_hm(nxt["gap_min"]))
-                if minutes >= 0 else f.t("FEED_LATE", name=f.name, when=when, ago=_hm(-minutes)))
-        return {"text": text, "at": nxt["at"], "last": nxt["computed_from"][-1]}
+        out = {"at": nxt["at"], "last": nxt["computed_from"][-1]}
+        if minutes >= 0:
+            return {**out, "kind": "next", "text": f.t("NEXT_FEED", name=f.name, when=when, minutes=minutes, gap=_hm(nxt["gap_min"]))}
+        if minutes >= -30:
+            return {**out, "kind": "now", "text": f.t("NEXT_FEED_NOW", name=f.name, when=when)}
+        feeds = f.log.entries("feeding", None, 100_000)
+        last = datetime.datetime.fromisoformat(feeds[-1]["ts"]).astimezone(self.tz)
+        at = f.t("AT_TODAY", at=patterns.hhmm(last)) if last.date() == now.date() else (
+            f.t("AT_YESTERDAY", at=patterns.hhmm(last)) if last.date() == now.date() - datetime.timedelta(days=1)
+            else f.t("AT_DAY", day=last.strftime("%d/%m"), at=patterns.hhmm(last)))
+        if now - last <= datetime.timedelta(hours=self.s["reminder_max_gap_h"]):
+            return {**out, "kind": "missing", "text": f.t("NO_FEED_SINCE", name=f.name, since=at)}
+        return {**out, "kind": "old", "text": f.t("LAST_FEED_AT", name=f.name, since=at)}
+
+    def cry_text(self, f, now=None):
+        """Why the baby may be crying, from the log only (the cry reason from issue #32), in the family's language.
+        A guess from the log, never a diagnosis, and never the emergency line."""
+        now = now or self.now()
+        rows = f.log.rhythm_rows()
+        ctx = cry_reason.context(rows, now, self.tz)
+        if "last_feed" not in ctx and "last_change" not in ctx:
+            return f.t("CRY_NOT_ENOUGH", name=f.name)
+        ranked = sorted(((round(score, 3), reason) for reason, (score, _) in cry_reason.scores(ctx).items()),
+                        key=lambda r: (-r[0], cry_reason.REASONS.index(r[1])))
+        if f.lang == "en":
+            text = cry_reason.explain(rows, now, self.tz, pronoun=f.name)["text"]
+            return text + " " + f.t("CRY_GUESS")
+        evidence = {}
+        if "since_feed_min" in ctx and "feed_gap_min" in ctx:
+            evidence["hungry"] = f.t("CRY_HUNGRY", ago=_hm(ctx["since_feed_min"]), gap=_hm(ctx["feed_gap_min"]))
+        if "awake_min" in ctx and "usual_awake_min" in ctx:
+            evidence["tired"] = f.t("CRY_TIRED", ago=_hm(ctx["awake_min"]), usual=_hm(ctx["usual_awake_min"]))
+        if "since_change_min" in ctx:
+            unchanged = "last_feed" in ctx and ctx["last_change"] < ctx["last_feed"] and ctx.get("feed_ended", True)
+            evidence["diaper"] = (f.t("CRY_DIAPER_SINCE_FEED", at=patterns.hhmm(ctx["last_feed"].astimezone(self.tz))) if unchanged
+                                  else f.t("CRY_DIAPER", ago=_hm(ctx["since_change_min"])))
+        evidence["comfort"] = f.t("CRY_COMFORT")
+        top = ranked[0][1]
+        text = (f.t("CRY_NO_REASON", evidence=evidence["comfort"]) if top == "comfort"
+                else f.t("CRY_PROBABLY", reason=f.t(f"CRY_{top.upper()}_WORD"), evidence=evidence[top]))
+        if len(ranked) > 1 and ranked[1][1] != "comfort" and ranked[1][0] >= 0.4:
+            text += " " + f.t("CRY_NEXT", reason=f.t(f"CRY_{ranked[1][1].upper()}_WORD"), evidence=evidence[ranked[1][1]])
+        return text + " " + f.t("CRY_GUESS")
 
     def summary_text(self, f, now=None, quiet=False):
         """Today so far for the family. With quiet, "" when nothing was logged instead of saying so."""
@@ -438,7 +500,7 @@ class Families:
         if not text:
             return "" if quiet else f.t("NOTHING_TODAY", name=f.name)
         nxt = self.next_feed(f, now)
-        return text + (" " + nxt["text"] if nxt["at"] is not None else "")
+        return text + (" " + nxt["text"] if nxt["kind"] in ("next", "now", "missing") else "")
 
     def tick(self, now=None):
         """Reminders and summaries due now, as (chat_id, text). Each is sent once."""
@@ -459,7 +521,7 @@ class Families:
         texts_due = []
         if f.fact("_reminders", "on") != "off":
             nxt = self.next_feed(f, now)
-            if nxt["at"] is not None:
+            if nxt["kind"] in ("next", "now"):
                 lead = datetime.timedelta(minutes=self.s["reminder_lead_min"])
                 recent = now - self.last_feed_start(f) <= datetime.timedelta(hours=self.s["reminder_max_gap_h"])
                 in_window = nxt["at"] - lead <= now <= nxt["at"] + datetime.timedelta(minutes=30)

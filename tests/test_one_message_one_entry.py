@@ -178,11 +178,12 @@ class SharedLoop(unittest.TestCase):
         self.assertEqual(len(baby_log.entries("feeding")), 1)
 
     def test_demo_logs_one_feed_per_message(self):
-        app = DemoApp(test_demo.settings(), brain=ScriptedBrain(REPEATS["feeding"], [[log("feeding", BOTTLE)], FAIL]))
+        second = {**BOTTLE, "amount_ml": 130}  # the same bottle again within 3 minutes is asked about, not logged
+        app = DemoApp(test_demo.settings(), brain=ScriptedBrain(REPEATS["feeding"], [[log("feeding", second)], FAIL]))
         self.addCleanup(app.close)
         before = len(app.visitor("v").baby_log.entries("feeding", limit=100_000))
         self.assertEqual(app.message("v", False, "bottle 120 ml")[0], 200)
-        self.assertEqual(app.message("v", False, "bottle 120 ml")[0], 200)
+        self.assertEqual(app.message("v", False, "bottle 130 ml")[0], 200)
         self.assertEqual(len(app.visitor("v").baby_log.entries("feeding", limit=100_000)), before + 2)
 
 
