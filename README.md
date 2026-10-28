@@ -76,6 +76,15 @@ python -m parenting_agent.fullday --wipe-only  # remove the entries earlier runs
 
 It replays the plan page day through the real agent: a bottle by voice, the changing table on the clips with a dirty diaper said aloud, a doorbell during the change, a long-nap note, the bath on its clip, a question answered from the log, and the night feed with the next feed and the next parent on duty. It writes `results/fullday/day.md`, `day.json` and the KR files in `results/fullday/kr222/`. What is not built yet shows as dry run in the report: Home Assistant actions (#9), delivery on Telegram, the ear and the speakers (#3, #8) and the house sound detector (#14). See `docs/full-day.md`.
 
+## Public demo app
+
+A phone-first web chat where anyone can talk to the real agent core about Demo Baby, a simulated baby on the simulated week, with a simulated house. Each visitor gets their own copy, health questions get the kind refusal, and the process carries only the brain key. Local only until Gonza says "OK public". See `docs/demo-app.md`.
+
+```bash
+python -m parenting_agent.demo --brain-env ~/.parenting-agent.env   # http://127.0.0.1:8765
+python -m parenting_agent.demo.export_sessions                                                     # session rows for the scorer
+```
+
 ## Tests
 
 ```bash
