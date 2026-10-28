@@ -53,6 +53,7 @@ flowchart LR
 | House | `parenting_agent/house.py` | Home Assistant actions behind the allowed list, dry run today |
 | Always on | `deploy/`, `parenting_agent/agent/heartbeat.py` | The agent in a walled-off container on the Vostro, see `docs/deploy-agent.md` |
 | House sounds | `parenting_agent/hearing.py`, `house_sounds.py`, `cry_reason.py`, `white_noise.py` | Cry, doorbell and dog as events, a likely reason for a cry from the log, simulated white noise, see `docs/house-sounds.md` |
+| Sitter handover | `parenting_agent/sitter.py` | Handover brief from the log, parent approves first, time-boxed guest role, summary after, see `docs/sitter-handover.md` |
 | Simulated week | `simweek/` | A realistic tagged week in Baby Buddy for tests and demos |
 
 ## Data flows

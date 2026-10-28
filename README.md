@@ -70,6 +70,8 @@ python scripts/kr222_table.py --clips ~/Engineering/gonza/meta-hackathon-2026-sy
 
 Simulated baby week and daily rhythm: see `docs/simulated-week.md` and `docs/daily-rhythm.md`.
 
+Sitter handover: one message briefs a grandparent or a sitter from the log, the parent approves it first, and a time-boxed guest role logs feeds and diapers. See `docs/sitter-handover.md`.
+
 Simulated full day, 06:10 to 02:30 (issue #17), the demo rehearsal in one command:
 
 ```bash
@@ -127,9 +129,10 @@ Everything in this repo was written during the event. The repo was created on Oc
 | Always on: the agent in a walled-off container on the Vostro | #15 | #35 | see PR |
 | Telegram channel and channel picking | #3, #8 | #36 | see PR |
 | House sounds, why is he crying, white noise | #14, #32 | see PR | see PR |
+| Sitter handover, time-boxed guest role, summary after | #16 | see PR | see PR |
 
 The first commits of Oct 26 (4f1898a to 90ca5a3) are an early skeleton that the issues above reviewed and partly rewrote.
 
-**Planned, not built yet:** Muse Spark Open live on Baseten (#4), live Home Assistant actions (#9, dry run today), bath skill (#10), sitter handover (#16), demo and submission (#11).
+**Planned, not built yet:** Muse Spark Open live on Baseten (#4), live Home Assistant actions (#9, dry run today), bath skill (#10), demo and submission (#11).
 
 **Public open-source tools used, not written by us:** Meta SAM 3.1 weights and code, PANNs CNN14 (code MIT, weights CC BY 4.0), MediaPipe hand landmarker, OpenCV, NumPy, Baby Buddy (BSD-2-Clause), Home Assistant.
