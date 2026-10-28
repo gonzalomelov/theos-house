@@ -62,6 +62,11 @@ class HomeAssistant:
         target = {"entity_id": entity_id} if entity_id is not None else {}
         return self._call(f"/api/services/{domain}/{name}", {**target, **(data or {})})
 
+    def response(self, service, entity_id, data=None):
+        """A read service that returns data, such as todo.get_items."""
+        domain, name = service.split(".", 1)
+        return self._call(f"/api/services/{domain}/{name}?return_response", {"entity_id": entity_id, **(data or {})})
+
     def state(self, entity_id):
         return self._call(f"/api/states/{entity_id}").get("state")
 

@@ -88,6 +88,14 @@ python -m parenting_agent.fullday --wipe-only  # remove the entries earlier runs
 
 It replays the plan page day through the real agent: a bottle by voice, the changing table on the clips with a dirty diaper said aloud, a doorbell during the change, a long-nap note, the bath on its clip, a question answered from the log, and the night feed with the next feed and the next parent on duty. It writes `results/fullday/day.md`, `day.json` and the KR files in `results/fullday/kr222/`. What is not built yet shows as dry run in the report: Home Assistant actions (#9), delivery on Telegram, the ear and the speakers (#3, #8) and the house sound detector (#14). See `docs/full-day.md`.
 
+## Daily house plan: vacuum, shopping list, dinner and white noise (issues #29 and #32)
+
+The vacuum pauses and goes home when a nap starts and never starts when the run would reach a predicted nap. It starts alone only when nobody is home or the baby is out, otherwise it asks. "Clean under the high chair" is a room clean, there is one daily run at the quietest awake time, diapers go on `todo.shopping_list` before they run out, a bad night gives a draft of fast Thermomix dinners from Cookidoo (read only, through home-agents), a reminder says when to start dinner, and white noise follows the rhythm under the 50 dB cap. The Thermomix is never controlled. See `docs/house-plan.md`.
+
+```bash
+python scripts/house_plan_check.py   # live and safe: reads the vacuum, dry runs pause and home, one test list item added and removed
+```
+
 ## Telegram and channel picking (issues #3 and #8)
 
 The agent hears and speaks on Telegram through @home_agent_example_bot, with long polling over plain HTTPS, so nothing is exposed. Only the family's chat ids (`TELEGRAM_CHAT_ID` in the env file, comma separated) are accepted. Other senders are ignored and logged as `channel_ignored` with their chat id only. Messages reach the same agent and the same memory as every other channel.
@@ -156,7 +164,8 @@ Everything in this repo was written during the event. The repo was created on Oc
 | Sitter handover, time-boxed guest role, summary after | #16 | see PR | see PR |
 | Invited families on Telegram, one private log per family, walled off | #40 | see PR | see PR |
 | Bath skill, camera skills from config | #10 | #42 | see PR |
-| Simulated Tesla: cabin ready, car naps, Child Left Alone Detection check | #31 | see PR | see PR |
+| Simulated Tesla: cabin ready, car naps, Child Left Alone Detection check | #31 | #43 | see PR |
+| Daily house plan: vacuum around naps, shopping list, fast dinners, white noise | #29, #32 | #44 | see PR |
 
 The first commits of Oct 26 (4f1898a to 90ca5a3) are an early skeleton that the issues above reviewed and partly rewrote.
 
