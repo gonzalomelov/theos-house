@@ -2,7 +2,7 @@
 
 Add "parenting_agent.house_sounds:HouseSounds" to the agent config plugins, with an optional "house_sounds" block:
     {"source": "camera" | "none", "listener": {"python": ..., "model_dir": ...}, "pronoun": "he",
-     "white_noise": {"bedtime": "20:30", "timer_min": 30, "calibration": [[1.0, 70.0]]}, "poll_s": 30}
+     "white_noise": {"bedtime": "20:30", "timer_min": 30, "calibration": [[1.0, 70.0]]}, "poll_s": 60}
 The log is read the way the daily rhythm reads it (the "rhythm" block: Baby Buddy or the simulated-week fixture).
 
 - Doorbell: during an armed skill (hands on the baby) it publishes a "notify" that the channel router sends to the
@@ -27,7 +27,7 @@ from .rhythm.engine import DEFAULTS as RHYTHM_DEFAULTS
 from .rhythm.engine import make_log
 from .white_noise import SimulatedWhiteNoise, WhiteNoisePlan
 
-DEFAULTS = {"source": "none", "listener": {}, "pronoun": "he", "white_noise": {}, "poll_s": 30, "tell_agent": True}
+DEFAULTS = {"source": "none", "listener": {}, "pronoun": "he", "white_noise": {}, "poll_s": 60, "tell_agent": True}
 
 
 def active_skill(agent):
