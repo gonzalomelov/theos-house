@@ -1,0 +1,55 @@
+{
+ "seat": "Joie i-Snug 2",
+ "today": "2026-10-27",
+ "heads_up_weeks": 4,
+ "weight": {
+  "latest": 4.38,
+  "measured": "2026-10-26",
+  "limit": 13.0,
+  "per_day": 0.03,
+  "days_left": 286,
+  "date": "2027-08-09"
+ },
+ "height": {
+  "latest": 54.8,
+  "measured": "2026-10-26",
+  "limit": 75,
+  "per_day": 0.1333,
+  "days_left": 150,
+  "date": "2027-03-26"
+ },
+ "status": "ok",
+ "first_limit": "height",
+ "text": "Test Baby is at 4.38 kg, 54.8 cm. At the recent pace the height limit of Joie i-Snug 2, 75 cm, comes first, in about 21 weeks.",
+ "source": "Baby Buddy on the family server, simulated week growth entries (tag simulated-week), read through the tunnel",
+ "entries": {
+  "weight": [
+   [
+    "2026-10-20",
+    4.2
+   ],
+   [
+    "2026-10-23",
+    4.29
+   ],
+   [
+    "2026-10-26",
+    4.38
+   ]
+  ],
+  "height": [
+   [
+    "2026-10-20",
+    54.0
+   ],
+   [
+    "2026-10-23",
+    54.4
+   ],
+   [
+    "2026-10-26",
+    54.8
+   ]
+  ]
+ }
+}

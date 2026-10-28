@@ -1,0 +1,56 @@
+[
+ {
+  "kind": "weight",
+  "date": "2026-10-20",
+  "weight": 4.2,
+  "notes": "[simulated] growth",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "height",
+  "date": "2026-10-20",
+  "height": 54.0,
+  "notes": "[simulated] growth",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "weight",
+  "date": "2026-10-23",
+  "weight": 4.29,
+  "notes": "[simulated] growth",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "height",
+  "date": "2026-10-23",
+  "height": 54.4,
+  "notes": "[simulated] growth",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "weight",
+  "date": "2026-10-26",
+  "weight": 4.38,
+  "notes": "[simulated] growth",
+  "tags": [
+   "simulated-week"
+  ]
+ },
+ {
+  "kind": "height",
+  "date": "2026-10-26",
+  "height": 54.8,
+  "notes": "[simulated] growth",
+  "tags": [
+   "simulated-week"
+  ]
+ }
+]

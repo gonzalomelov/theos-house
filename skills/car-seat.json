@@ -1,0 +1,19 @@
+{
+ "name": "car-seat",
+ "seat_profile": "skills/carseat/joie-i-snug-2.json",
+ "car_profile": "skills/carseat/tesla-model-3.json",
+ "prompts": {"belt": "strap", "guide": "blue clip", "handle": "handle", "level": "green line"},
+ "step_timeout_s": 8.0,
+ "checks": {},
+ "sam3": {"device": "mps", "confidence": 0.1},
+ "hand_checks": [
+  {"id": "belt_path_movement",
+   "ask": "Hold the carrier where the belt goes through the guides and pull side to side and front to back. Does it move less than 2.5 centimeters? Say yes or no.",
+   "source": "NHTSA car seat install check, the 1 inch test at the belt path"},
+  {"id": "harness_pinch",
+   "ask": "With the doll or baby buckled in, pinch the harness strap at the collarbone. Can you pinch any slack webbing? Say yes if you can pinch it, no if you cannot.",
+   "pass_answer": "no",
+   "source": "NHTSA harness pinch test"}
+ ],
+ "technician": "Before the first real trip, book one check by a certified child passenger safety technician. Cybex offers a free virtual check, and Fundacion Gonzalo Rodriguez runs check days in Montevideo."
+}

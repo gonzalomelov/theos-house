@@ -1,0 +1,2462 @@
+{
+ "summary": {
+  "wrong_clips": 12,
+  "flagged": 11,
+  "correct_clips": 12,
+  "false_alarms": 1,
+  "unseen_clips": 4,
+  "abstained": 4,
+  "by_error": {
+   "outside_guide": {
+    "clips": 3,
+    "flagged": 3
+   },
+   "twisted": {
+    "clips": 3,
+    "flagged": 3
+   },
+   "recline": {
+    "clips": 3,
+    "flagged": 3
+   },
+   "handle": {
+    "clips": 3,
+    "flagged": 2
+   }
+  },
+  "latency": {
+   "steps": 116,
+   "median_s": 1.69,
+   "max_s": 4.11,
+   "within_2s": 100
+  },
+  "said_safe": 0,
+  "hand_checks_logged_every_clip": true
+ },
+ "sam3": {
+  "ready": true,
+  "repo": "facebook/sam3.1",
+  "device": "mps",
+  "missing_share": 0.0035
+ },
+ "clips": [
+  {
+   "clip": "test-01-correct.mp4",
+   "error": null,
+   "visible_s": 1.2,
+   "results": {
+    "car_position": "pass",
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "fail",
+    "belt_path_movement": "pass",
+    "harness_pinch": "pass"
+   },
+   "details": {
+    "lap_guides": {
+     "result": "pass",
+     "coverage": [
+      0.207,
+      0.369
+     ],
+     "between": 1.0,
+     "missed": [],
+     "step_started_s": 0.004,
+     "frame_s": 1.533,
+     "spoken_s": 3.22
+    },
+    "shoulder_guide": {
+     "result": "pass",
+     "coverage": 0.223,
+     "step_started_s": 3.22,
+     "frame_s": 3.267,
+     "spoken_s": 4.929
+    },
+    "no_twist": {
+     "result": "pass",
+     "ratio": 0.897,
+     "step_started_s": 4.929,
+     "frame_s": 4.933,
+     "spoken_s": 6.573
+    },
+    "level_line": {
+     "result": "pass",
+     "angle_deg": 5.7,
+     "step_started_s": 6.573,
+     "frame_s": 6.6,
+     "spoken_s": 7.955
+    },
+    "handle": {
+     "result": "fail",
+     "deg_from_vertical": 43.8,
+     "score": 0.234,
+     "step_started_s": 7.955,
+     "frame_s": 8.0,
+     "spoken_s": 9.873
+    }
+   },
+   "flagged": true,
+   "abstained": false,
+   "latency_s": {
+    "lap_guides": 2.02,
+    "shoulder_guide": 1.709,
+    "no_twist": 1.644,
+    "level_line": 1.382,
+    "handle": 1.918
+   },
+   "hand_checks_logged": [
+    "belt_path_movement",
+    "car_position",
+    "harness_pinch"
+   ],
+   "spoken": [
+    "Coaching the Joie i-Snug 2 in the Tesla Model 3 (2027), installed with the seat belt and no base. Put the carrier on a rear seat, facing the back of the car. Never put a rear-facing seat in the front passenger seat while the airbag is on. Is the carrier on a rear seat, facing the back? Say yes or no.",
+    "Slide the lap belt into both side guides of the carrier, then show me the belt path from the door.",
+    "I can see the lap belt in both side guides.",
+    "Slide the shoulder belt into the rear guide behind the carrier's head end.",
+    "I can see the shoulder belt in the rear guide.",
+    "Pull the shoulder belt tight and keep the belt flat, with no twist.",
+    "The lap belt looks flat across the carrier.",
+    "Show me the level line on the side of the carrier, with the phone held level.",
+    "The level line looks level.",
+    "Put the handle upright, in position 1, the car position.",
+    "The handle is not upright. Move it to position 1.",
+    "Hold the carrier where the belt goes through the guides and pull side to side and front to back. Does it move less than 2.5 centimeters? Say yes or no.",
+    "With the doll or baby buckled in, pinch the harness strap at the collarbone. Can you pinch any slack webbing? Say yes if you can pinch it, no if you cannot.",
+    "Visible checks that passed: lap belt in both side guides, shoulder belt in the rear guide, no twist in the lap belt, level line level. Visible checks that failed: handle upright. Hand checks you confirmed: carrier on a rear seat facing back, less than 2.5 centimeters of movement at the belt path, no slack in the harness pinch test. This is not a verdict on the install. Before the first real trip, book one check by a certified child passenger safety technician. Cybex offers a free virtual check, and Fundacion Gonzalo Rodriguez runs check days in Montevideo."
+   ],
+   "sam_frames": 6
+  },
+  {
+   "clip": "test-02-correct.mp4",
+   "error": null,
+   "visible_s": 1.2,
+   "results": {
+    "car_position": "pass",
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass",
+    "belt_path_movement": "pass",
+    "harness_pinch": "pass"
+   },
+   "details": {
+    "lap_guides": {
+     "result": "pass",
+     "coverage": [
+      0.2,
+      0.211
+     ],
+     "between": 1.0,
+     "missed": [],
+     "step_started_s": 0.006,
+     "frame_s": 1.6,
+     "spoken_s": 3.319
+    },
+    "shoulder_guide": {
+     "result": "pass",
+     "coverage": 0.223,
+     "step_started_s": 3.319,
+     "frame_s": 3.333,
+     "spoken_s": 5.13
+    },
+    "no_twist": {
+     "result": "pass",
+     "ratio": 0.867,
+     "step_started_s": 5.13,
+     "frame_s": 5.133,
+     "spoken_s": 6.972
+    },
+    "level_line": {
+     "result": "pass",
+     "angle_deg": -3.3,
+     "step_started_s": 6.972,
+     "frame_s": 7.0,
+     "spoken_s": 8.386
+    },
+    "handle": {
+     "result": "pass",
+     "deg_from_vertical": 4.1,
+     "score": 0.15,
+     "step_started_s": 8.386,
+     "frame_s": 8.4,
+     "spoken_s": 10.808
+    }
+   },
+   "flagged": false,
+   "abstained": false,
+   "latency_s": {
+    "lap_guides": 2.119,
+    "shoulder_guide": 1.811,
+    "no_twist": 1.842,
+    "level_line": 1.414,
+    "handle": 2.422
+   },
+   "hand_checks_logged": [
+    "belt_path_movement",
+    "car_position",
+    "harness_pinch"
+   ],
+   "spoken": [
+    "Coaching the Joie i-Snug 2 in the Tesla Model 3 (2027), installed with the seat belt and no base. Put the carrier on a rear seat, facing the back of the car. Never put a rear-facing seat in the front passenger seat while the airbag is on. Is the carrier on a rear seat, facing the back? Say yes or no.",
+    "Slide the lap belt into both side guides of the carrier, then show me the belt path from the door.",
+    "I can see the lap belt in both side guides.",
+    "Slide the shoulder belt into the rear guide behind the carrier's head end.",
+    "I can see the shoulder belt in the rear guide.",
+    "Pull the shoulder belt tight and keep the belt flat, with no twist.",
+    "The lap belt looks flat across the carrier.",
+    "Show me the level line on the side of the carrier, with the phone held level.",
+    "The level line looks level.",
+    "Put the handle upright, in position 1, the car position.",
+    "The handle is upright.",
+    "Hold the carrier where the belt goes through the guides and pull side to side and front to back. Does it move less than 2.5 centimeters? Say yes or no.",
+    "With the doll or baby buckled in, pinch the harness strap at the collarbone. Can you pinch any slack webbing? Say yes if you can pinch it, no if you cannot.",
+    "Visible checks that passed: lap belt in both side guides, shoulder belt in the rear guide, no twist in the lap belt, level line level, handle upright. Hand checks you confirmed: carrier on a rear seat facing back, less than 2.5 centimeters of movement at the belt path, no slack in the harness pinch test. This is not a verdict on the install. Before the first real trip, book one check by a certified child passenger safety technician. Cybex offers a free virtual check, and Fundacion Gonzalo Rodriguez runs check days in Montevideo."
+   ],
+   "sam_frames": 6
+  },
+  {
+   "clip": "test-03-correct.mp4",
+   "error": null,
+   "visible_s": 1.2,
+   "results": {
+    "car_position": "pass",
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass",
+    "belt_path_movement": "pass",
+    "harness_pinch": "pass"
+   },
+   "details": {
+    "lap_guides": {
+     "result": "pass",
+     "coverage": [
+      0.205,
+      0.249
+     ],
+     "between": 1.0,
+     "missed": [],
+     "step_started_s": 0.005,
+     "frame_s": 1.667,
+     "spoken_s": 3.423
+    },
+    "shoulder_guide": {
+     "result": "pass",
+     "coverage": 0.233,
+     "step_started_s": 3.423,
+     "frame_s": 3.467,
+     "spoken_s": 5.096
+    },
+    "no_twist": {
+     "result": "pass",
+     "ratio": 0.862,
+     "step_started_s": 5.096,
+     "frame_s": 5.133,
+     "spoken_s": 6.869
+    },
+    "level_line": {
+     "result": "pass",
+     "angle_deg": 1.1,
+     "step_started_s": 6.869,
+     "frame_s": 6.867,
+     "spoken_s": 8.23
+    },
+    "handle": {
+     "result": "pass",
+     "deg_from_vertical": 1.8,
+     "score": 0.254,
+     "step_started_s": 8.23,
+     "frame_s": 8.267,
+     "spoken_s": 10.161
+    }
+   },
+   "flagged": false,
+   "abstained": false,
+   "latency_s": {
+    "lap_guides": 2.223,
+    "shoulder_guide": 1.673,
+    "no_twist": 1.773,
+    "level_line": 1.361,
+    "handle": 1.931
+   },
+   "hand_checks_logged": [
+    "belt_path_movement",
+    "car_position",
+    "harness_pinch"
+   ],
+   "spoken": [
+    "Coaching the Joie i-Snug 2 in the Tesla Model 3 (2027), installed with the seat belt and no base. Put the carrier on a rear seat, facing the back of the car. Never put a rear-facing seat in the front passenger seat while the airbag is on. Is the carrier on a rear seat, facing the back? Say yes or no.",
+    "Slide the lap belt into both side guides of the carrier, then show me the belt path from the door.",
+    "I can see the lap belt in both side guides.",
+    "Slide the shoulder belt into the rear guide behind the carrier's head end.",
+    "I can see the shoulder belt in the rear guide.",
+    "Pull the shoulder belt tight and keep the belt flat, with no twist.",
+    "The lap belt looks flat across the carrier.",
+    "Show me the level line on the side of the carrier, with the phone held level.",
+    "The level line looks level.",
+    "Put the handle upright, in position 1, the car position.",
+    "The handle is upright.",
+    "Hold the carrier where the belt goes through the guides and pull side to side and front to back. Does it move less than 2.5 centimeters? Say yes or no.",
+    "With the doll or baby buckled in, pinch the harness strap at the collarbone. Can you pinch any slack webbing? Say yes if you can pinch it, no if you cannot.",
+    "Visible checks that passed: lap belt in both side guides, shoulder belt in the rear guide, no twist in the lap belt, level line level, handle upright. Hand checks you confirmed: carrier on a rear seat facing back, less than 2.5 centimeters of movement at the belt path, no slack in the harness pinch test. This is not a verdict on the install. Before the first real trip, book one check by a certified child passenger safety technician. Cybex offers a free virtual check, and Fundacion Gonzalo Rodriguez runs check days in Montevideo."
+   ],
+   "sam_frames": 6
+  },
+  {
+   "clip": "test-04-correct.mp4",
+   "error": null,
+   "visible_s": 1.2,
+   "results": {
+    "car_position": "pass",
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass",
+    "belt_path_movement": "pass",
+    "harness_pinch": "pass"
+   },
+   "details": {
+    "lap_guides": {
+     "result": "pass",
+     "coverage": [
+      0.205,
+      0.21
+     ],
+     "between": 1.0,
+     "missed": [],
+     "step_started_s": 0.006,
+     "frame_s": 1.6,
+     "spoken_s": 3.352
+    },
+    "shoulder_guide": {
+     "result": "pass",
+     "coverage": 0.254,
+     "step_started_s": 3.352,
+     "frame_s": 3.4,
+     "spoken_s": 5.025
+    },
+    "no_twist": {
+     "result": "pass",
+     "ratio": 0.931,
+     "step_started_s": 5.026,
+     "frame_s": 5.067,
+     "spoken_s": 6.676
+    },
+    "level_line": {
+     "result": "pass",
+     "angle_deg": -1.7,
+     "step_started_s": 6.676,
+     "frame_s": 6.667,
+     "spoken_s": 8.039
+    },
+    "handle": {
+     "result": "pass",
+     "deg_from_vertical": 3.0,
+     "score": 0.381,
+     "step_started_s": 8.039,
+     "frame_s": 8.067,
+     "spoken_s": 10.065
+    }
+   },
+   "flagged": false,
+   "abstained": false,
+   "latency_s": {
+    "lap_guides": 2.152,
+    "shoulder_guide": 1.673,
+    "no_twist": 1.65,
+    "level_line": 1.363,
+    "handle": 2.026
+   },
+   "hand_checks_logged": [
+    "belt_path_movement",
+    "car_position",
+    "harness_pinch"
+   ],
+   "spoken": [
+    "Coaching the Joie i-Snug 2 in the Tesla Model 3 (2027), installed with the seat belt and no base. Put the carrier on a rear seat, facing the back of the car. Never put a rear-facing seat in the front passenger seat while the airbag is on. Is the carrier on a rear seat, facing the back? Say yes or no.",
+    "Slide the lap belt into both side guides of the carrier, then show me the belt path from the door.",
+    "I can see the lap belt in both side guides.",
+    "Slide the shoulder belt into the rear guide behind the carrier's head end.",
+    "I can see the shoulder belt in the rear guide.",
+    "Pull the shoulder belt tight and keep the belt flat, with no twist.",
+    "The lap belt looks flat across the carrier.",
+    "Show me the level line on the side of the carrier, with the phone held level.",
+    "The level line looks level.",
+    "Put the handle upright, in position 1, the car position.",
+    "The handle is upright.",
+    "Hold the carrier where the belt goes through the guides and pull side to side and front to back. Does it move less than 2.5 centimeters? Say yes or no.",
+    "With the doll or baby buckled in, pinch the harness strap at the collarbone. Can you pinch any slack webbing? Say yes if you can pinch it, no if you cannot.",
+    "Visible checks that passed: lap belt in both side guides, shoulder belt in the rear guide, no twist in the lap belt, level line level, handle upright. Hand checks you confirmed: carrier on a rear seat facing back, less than 2.5 centimeters of movement at the belt path, no slack in the harness pinch test. This is not a verdict on the install. Before the first real trip, book one check by a certified child passenger safety technician. Cybex offers a free virtual check, and Fundacion Gonzalo Rodriguez runs check days in Montevideo."
+   ],
+   "sam_frames": 6
+  },
+  {
+   "clip": "test-05-correct.mp4",
+   "error": null,
+   "visible_s": 1.2,
+   "results": {
+    "car_position": "pass",
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass",
+    "belt_path_movement": "pass",
+    "harness_pinch": "pass"
+   },
+   "details": {
+    "lap_guides": {
+     "result": "pass",
+     "coverage": [
+      0.206,
+      0.26
+     ],
+     "between": 1.0,
+     "missed": [],
+     "step_started_s": 0.004,
+     "frame_s": 1.6,
+     "spoken_s": 3.297
+    },
+    "shoulder_guide": {
+     "result": "pass",
+     "coverage": 0.268,
+     "step_started_s": 3.297,
+     "frame_s": 3.333,
+     "spoken_s": 5.094
+    },
+    "no_twist": {
+     "result": "pass",
+     "ratio": 0.909,
+     "step_started_s": 5.094,
+     "frame_s": 5.133,
+     "spoken_s": 6.716
+    },
+    "level_line": {
+     "result": "pass",
+     "angle_deg": -1.2,
+     "step_started_s": 6.716,
+     "frame_s": 6.733,
+     "spoken_s": 8.226
+    },
+    "handle": {
+     "result": "pass",
+     "deg_from_vertical": 0.4,
+     "score": 0.247,
+     "step_started_s": 8.226,
+     "frame_s": 8.267,
+     "spoken_s": 10.11
+    }
+   },
+   "flagged": false,
+   "abstained": false,
+   "latency_s": {
+    "lap_guides": 2.097,
+    "shoulder_guide": 1.797,
+    "no_twist": 1.622,
+    "level_line": 1.51,
+    "handle": 1.884
+   },
+   "hand_checks_logged": [
+    "belt_path_movement",
+    "car_position",
+    "harness_pinch"
+   ],
+   "spoken": [
+    "Coaching the Joie i-Snug 2 in the Tesla Model 3 (2027), installed with the seat belt and no base. Put the carrier on a rear seat, facing the back of the car. Never put a rear-facing seat in the front passenger seat while the airbag is on. Is the carrier on a rear seat, facing the back? Say yes or no.",
+    "Slide the lap belt into both side guides of the carrier, then show me the belt path from the door.",
+    "I can see the lap belt in both side guides.",
+    "Slide the shoulder belt into the rear guide behind the carrier's head end.",
+    "I can see the shoulder belt in the rear guide.",
+    "Pull the shoulder belt tight and keep the belt flat, with no twist.",
+    "The lap belt looks flat across the carrier.",
+    "Show me the level line on the side of the carrier, with the phone held level.",
+    "The level line looks level.",
+    "Put the handle upright, in position 1, the car position.",
+    "The handle is upright.",
+    "Hold the carrier where the belt goes through the guides and pull side to side and front to back. Does it move less than 2.5 centimeters? Say yes or no.",
+    "With the doll or baby buckled in, pinch the harness strap at the collarbone. Can you pinch any slack webbing? Say yes if you can pinch it, no if you cannot.",
+    "Visible checks that passed: lap belt in both side guides, shoulder belt in the rear guide, no twist in the lap belt, level line level, handle upright. Hand checks you confirmed: carrier on a rear seat facing back, less than 2.5 centimeters of movement at the belt path, no slack in the harness pinch test. This is not a verdict on the install. Before the first real trip, book one check by a certified child passenger safety technician. Cybex offers a free virtual check, and Fundacion Gonzalo Rodriguez runs check days in Montevideo."
+   ],
+   "sam_frames": 6
+  },
+  {
+   "clip": "test-06-correct.mp4",
+   "error": null,
+   "visible_s": 1.2,
+   "results": {
+    "car_position": "pass",
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass",
+    "belt_path_movement": "pass",
+    "harness_pinch": "pass"
+   },
+   "details": {
+    "lap_guides": {
+     "result": "pass",
+     "coverage": [
+      0.21,
+      0.247
+     ],
+     "between": 1.0,
+     "missed": [],
+     "step_started_s": 0.006,
+     "frame_s": 1.533,
+     "spoken_s": 3.198
+    },
+    "shoulder_guide": {
+     "result": "pass",
+     "coverage": 0.435,
+     "step_started_s": 3.198,
+     "frame_s": 3.2,
+     "spoken_s": 4.797
+    },
+    "no_twist": {
+     "result": "pass",
+     "ratio": 0.906,
+     "step_started_s": 4.797,
+     "frame_s": 4.8,
+     "spoken_s": 6.424
+    },
+    "level_line": {
+     "result": "pass",
+     "angle_deg": -0.9,
+     "step_started_s": 6.424,
+     "frame_s": 6.467,
+     "spoken_s": 7.747
+    },
+    "handle": {
+     "result": "pass",
+     "deg_from_vertical": 0.6,
+     "score": 0.19,
+     "step_started_s": 7.747,
+     "frame_s": 7.8,
+     "spoken_s": 9.601
+    }
+   },
+   "flagged": false,
+   "abstained": false,
+   "latency_s": {
+    "lap_guides": 1.998,
+    "shoulder_guide": 1.599,
+    "no_twist": 1.627,
+    "level_line": 1.323,
+    "handle": 1.854
+   },
+   "hand_checks_logged": [
+    "belt_path_movement",
+    "car_position",
+    "harness_pinch"
+   ],
+   "spoken": [
+    "Coaching the Joie i-Snug 2 in the Tesla Model 3 (2027), installed with the seat belt and no base. Put the carrier on a rear seat, facing the back of the car. Never put a rear-facing seat in the front passenger seat while the airbag is on. Is the carrier on a rear seat, facing the back? Say yes or no.",
+    "Slide the lap belt into both side guides of the carrier, then show me the belt path from the door.",
+    "I can see the lap belt in both side guides.",
+    "Slide the shoulder belt into the rear guide behind the carrier's head end.",
+    "I can see the shoulder belt in the rear guide.",
+    "Pull the shoulder belt tight and keep the belt flat, with no twist.",
+    "The lap belt looks flat across the carrier.",
+    "Show me the level line on the side of the carrier, with the phone held level.",
+    "The level line looks level.",
+    "Put the handle upright, in position 1, the car position.",
+    "The handle is upright.",
+    "Hold the carrier where the belt goes through the guides and pull side to side and front to back. Does it move less than 2.5 centimeters? Say yes or no.",
+    "With the doll or baby buckled in, pinch the harness strap at the collarbone. Can you pinch any slack webbing? Say yes if you can pinch it, no if you cannot.",
+    "Visible checks that passed: lap belt in both side guides, shoulder belt in the rear guide, no twist in the lap belt, level line level, handle upright. Hand checks you confirmed: carrier on a rear seat facing back, less than 2.5 centimeters of movement at the belt path, no slack in the harness pinch test. This is not a verdict on the install. Before the first real trip, book one check by a certified child passenger safety technician. Cybex offers a free virtual check, and Fundacion Gonzalo Rodriguez runs check days in Montevideo."
+   ],
+   "sam_frames": 6
+  },
+  {
+   "clip": "test-07-correct.mp4",
+   "error": null,
+   "visible_s": 1.2,
+   "results": {
+    "car_position": "pass",
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass",
+    "belt_path_movement": "pass",
+    "harness_pinch": "pass"
+   },
+   "details": {
+    "lap_guides": {
+     "result": "pass",
+     "coverage": [
+      0.206,
+      0.214
+     ],
+     "between": 1.0,
+     "missed": [],
+     "step_started_s": 0.003,
+     "frame_s": 1.533,
+     "spoken_s": 3.207
+    },
+    "shoulder_guide": {
+     "result": "pass",
+     "coverage": 0.288,
+     "step_started_s": 3.207,
+     "frame_s": 3.267,
+     "spoken_s": 4.792
+    },
+    "no_twist": {
+     "result": "pass",
+     "ratio": 0.879,
+     "step_started_s": 4.792,
+     "frame_s": 4.8,
+     "spoken_s": 6.364
+    },
+    "level_line": {
+     "result": "pass",
+     "angle_deg": -1.6,
+     "step_started_s": 6.364,
+     "frame_s": 6.4,
+     "spoken_s": 8.154
+    },
+    "handle": {
+     "result": "pass",
+     "deg_from_vertical": 0.4,
+     "score": 0.171,
+     "step_started_s": 8.154,
+     "frame_s": 10.467,
+     "spoken_s": 12.263
+    }
+   },
+   "flagged": false,
+   "abstained": false,
+   "latency_s": {
+    "lap_guides": 2.007,
+    "shoulder_guide": 1.585,
+    "no_twist": 1.572,
+    "level_line": 1.79,
+    "handle": 4.109
+   },
+   "hand_checks_logged": [
+    "belt_path_movement",
+    "car_position",
+    "harness_pinch"
+   ],
+   "spoken": [
+    "Coaching the Joie i-Snug 2 in the Tesla Model 3 (2027), installed with the seat belt and no base. Put the carrier on a rear seat, facing the back of the car. Never put a rear-facing seat in the front passenger seat while the airbag is on. Is the carrier on a rear seat, facing the back? Say yes or no.",
+    "Slide the lap belt into both side guides of the carrier, then show me the belt path from the door.",
+    "I can see the lap belt in both side guides.",
+    "Slide the shoulder belt into the rear guide behind the carrier's head end.",
+    "I can see the shoulder belt in the rear guide.",
+    "Pull the shoulder belt tight and keep the belt flat, with no twist.",
+    "The lap belt looks flat across the carrier.",
+    "Show me the level line on the side of the carrier, with the phone held level.",
+    "The level line looks level.",
+    "Put the handle upright, in position 1, the car position.",
+    "The handle is upright.",
+    "Hold the carrier where the belt goes through the guides and pull side to side and front to back. Does it move less than 2.5 centimeters? Say yes or no.",
+    "With the doll or baby buckled in, pinch the harness strap at the collarbone. Can you pinch any slack webbing? Say yes if you can pinch it, no if you cannot.",
+    "Visible checks that passed: lap belt in both side guides, shoulder belt in the rear guide, no twist in the lap belt, level line level, handle upright. Hand checks you confirmed: carrier on a rear seat facing back, less than 2.5 centimeters of movement at the belt path, no slack in the harness pinch test. This is not a verdict on the install. Before the first real trip, book one check by a certified child passenger safety technician. Cybex offers a free virtual check, and Fundacion Gonzalo Rodriguez runs check days in Montevideo."
+   ],
+   "sam_frames": 7
+  },
+  {
+   "clip": "test-08-correct.mp4",
+   "error": null,
+   "visible_s": 1.2,
+   "results": {
+    "car_position": "pass",
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass",
+    "belt_path_movement": "pass",
+    "harness_pinch": "pass"
+   },
+   "details": {
+    "lap_guides": {
+     "result": "pass",
+     "coverage": [
+      0.21,
+      0.317
+     ],
+     "between": 1.0,
+     "missed": [],
+     "step_started_s": 0.006,
+     "frame_s": 1.533,
+     "spoken_s": 3.158
+    },
+    "shoulder_guide": {
+     "result": "pass",
+     "coverage": 0.249,
+     "step_started_s": 3.158,
+     "frame_s": 3.2,
+     "spoken_s": 5.11
+    },
+    "no_twist": {
+     "result": "pass",
+     "ratio": 0.867,
+     "step_started_s": 5.11,
+     "frame_s": 5.133,
+     "spoken_s": 6.736
+    },
+    "level_line": {
+     "result": "pass",
+     "angle_deg": 1.2,
+     "step_started_s": 6.736,
+     "frame_s": 6.733,
+     "spoken_s": 8.703
+    },
+    "handle": {
+     "result": "pass",
+     "deg_from_vertical": 0.2,
+     "score": 0.341,
+     "step_started_s": 8.703,
+     "frame_s": 8.733,
+     "spoken_s": 11.712
+    }
+   },
+   "flagged": false,
+   "abstained": false,
+   "latency_s": {
+    "lap_guides": 1.958,
+    "shoulder_guide": 1.952,
+    "no_twist": 1.626,
+    "level_line": 1.967,
+    "handle": 3.009
+   },
+   "hand_checks_logged": [
+    "belt_path_movement",
+    "car_position",
+    "harness_pinch"
+   ],
+   "spoken": [
+    "Coaching the Joie i-Snug 2 in the Tesla Model 3 (2027), installed with the seat belt and no base. Put the carrier on a rear seat, facing the back of the car. Never put a rear-facing seat in the front passenger seat while the airbag is on. Is the carrier on a rear seat, facing the back? Say yes or no.",
+    "Slide the lap belt into both side guides of the carrier, then show me the belt path from the door.",
+    "I can see the lap belt in both side guides.",
+    "Slide the shoulder belt into the rear guide behind the carrier's head end.",
+    "I can see the shoulder belt in the rear guide.",
+    "Pull the shoulder belt tight and keep the belt flat, with no twist.",
+    "The lap belt looks flat across the carrier.",
+    "Show me the level line on the side of the carrier, with the phone held level.",
+    "The level line looks level.",
+    "Put the handle upright, in position 1, the car position.",
+    "The handle is upright.",
+    "Hold the carrier where the belt goes through the guides and pull side to side and front to back. Does it move less than 2.5 centimeters? Say yes or no.",
+    "With the doll or baby buckled in, pinch the harness strap at the collarbone. Can you pinch any slack webbing? Say yes if you can pinch it, no if you cannot.",
+    "Visible checks that passed: lap belt in both side guides, shoulder belt in the rear guide, no twist in the lap belt, level line level, handle upright. Hand checks you confirmed: carrier on a rear seat facing back, less than 2.5 centimeters of movement at the belt path, no slack in the harness pinch test. This is not a verdict on the install. Before the first real trip, book one check by a certified child passenger safety technician. Cybex offers a free virtual check, and Fundacion Gonzalo Rodriguez runs check days in Montevideo."
+   ],
+   "sam_frames": 6
+  },
+  {
+   "clip": "test-09-correct.mp4",
+   "error": null,
+   "visible_s": 1.2,
+   "results": {
+    "car_position": "pass",
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass",
+    "belt_path_movement": "pass",
+    "harness_pinch": "pass"
+   },
+   "details": {
+    "lap_guides": {
+     "result": "pass",
+     "coverage": [
+      0.207,
+      0.635
+     ],
+     "between": 1.0,
+     "missed": [],
+     "step_started_s": 0.006,
+     "frame_s": 2.0,
+     "spoken_s": 3.741
+    },
+    "shoulder_guide": {
+     "result": "pass",
+     "coverage": 0.26,
+     "step_started_s": 3.741,
+     "frame_s": 3.8,
+     "spoken_s": 5.453
+    },
+    "no_twist": {
+     "result": "pass",
+     "ratio": 0.862,
+     "step_started_s": 5.453,
+     "frame_s": 5.467,
+     "spoken_s": 6.956
+    },
+    "level_line": {
+     "result": "pass",
+     "angle_deg": -0.4,
+     "step_started_s": 6.956,
+     "frame_s": 7.0,
+     "spoken_s": 8.289
+    },
+    "handle": {
+     "result": "pass",
+     "deg_from_vertical": 2.3,
+     "score": 0.397,
+     "step_started_s": 8.289,
+     "frame_s": 8.333,
+     "spoken_s": 10.082
+    }
+   },
+   "flagged": false,
+   "abstained": false,
+   "latency_s": {
+    "lap_guides": 2.541,
+    "shoulder_guide": 1.712,
+    "no_twist": 1.503,
+    "level_line": 1.333,
+    "handle": 1.793
+   },
+   "hand_checks_logged": [
+    "belt_path_movement",
+    "car_position",
+    "harness_pinch"
+   ],
+   "spoken": [
+    "Coaching the Joie i-Snug 2 in the Tesla Model 3 (2027), installed with the seat belt and no base. Put the carrier on a rear seat, facing the back of the car. Never put a rear-facing seat in the front passenger seat while the airbag is on. Is the carrier on a rear seat, facing the back? Say yes or no.",
+    "Slide the lap belt into both side guides of the carrier, then show me the belt path from the door.",
+    "I can see the lap belt in both side guides.",
+    "Slide the shoulder belt into the rear guide behind the carrier's head end.",
+    "I can see the shoulder belt in the rear guide.",
+    "Pull the shoulder belt tight and keep the belt flat, with no twist.",
+    "The lap belt looks flat across the carrier.",
+    "Show me the level line on the side of the carrier, with the phone held level.",
+    "The level line looks level.",
+    "Put the handle upright, in position 1, the car position.",
+    "The handle is upright.",
+    "Hold the carrier where the belt goes through the guides and pull side to side and front to back. Does it move less than 2.5 centimeters? Say yes or no.",
+    "With the doll or baby buckled in, pinch the harness strap at the collarbone. Can you pinch any slack webbing? Say yes if you can pinch it, no if you cannot.",
+    "Visible checks that passed: lap belt in both side guides, shoulder belt in the rear guide, no twist in the lap belt, level line level, handle upright. Hand checks you confirmed: carrier on a rear seat facing back, less than 2.5 centimeters of movement at the belt path, no slack in the harness pinch test. This is not a verdict on the install. Before the first real trip, book one check by a certified child passenger safety technician. Cybex offers a free virtual check, and Fundacion Gonzalo Rodriguez runs check days in Montevideo."
+   ],
+   "sam_frames": 6
+  },
+  {
+   "clip": "test-10-correct.mp4",
+   "error": null,
+   "visible_s": 1.2,
+   "results": {
+    "car_position": "pass",
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass",
+    "belt_path_movement": "pass",
+    "harness_pinch": "pass"
+   },
+   "details": {
+    "lap_guides": {
+     "result": "pass",
+     "coverage": [
+      0.215,
+      0.309
+     ],
+     "between": 1.0,
+     "missed": [],
+     "step_started_s": 0.005,
+     "frame_s": 1.533,
+     "spoken_s": 3.17
+    },
+    "shoulder_guide": {
+     "result": "pass",
+     "coverage": 0.318,
+     "step_started_s": 3.17,
+     "frame_s": 3.2,
+     "spoken_s": 4.75
+    },
+    "no_twist": {
+     "result": "pass",
+     "ratio": 0.897,
+     "step_started_s": 4.75,
+     "frame_s": 4.8,
+     "spoken_s": 6.384
+    },
+    "level_line": {
+     "result": "pass",
+     "angle_deg": -1.2,
+     "step_started_s": 6.384,
+     "frame_s": 6.4,
+     "spoken_s": 7.648
+    },
+    "handle": {
+     "result": "pass",
+     "deg_from_vertical": 9.4,
+     "score": 0.288,
+     "step_started_s": 7.648,
+     "frame_s": 7.667,
+     "spoken_s": 9.439
+    }
+   },
+   "flagged": false,
+   "abstained": false,
+   "latency_s": {
+    "lap_guides": 1.97,
+    "shoulder_guide": 1.58,
+    "no_twist": 1.634,
+    "level_line": 1.264,
+    "handle": 1.791
+   },
+   "hand_checks_logged": [
+    "belt_path_movement",
+    "car_position",
+    "harness_pinch"
+   ],
+   "spoken": [
+    "Coaching the Joie i-Snug 2 in the Tesla Model 3 (2027), installed with the seat belt and no base. Put the carrier on a rear seat, facing the back of the car. Never put a rear-facing seat in the front passenger seat while the airbag is on. Is the carrier on a rear seat, facing the back? Say yes or no.",
+    "Slide the lap belt into both side guides of the carrier, then show me the belt path from the door.",
+    "I can see the lap belt in both side guides.",
+    "Slide the shoulder belt into the rear guide behind the carrier's head end.",
+    "I can see the shoulder belt in the rear guide.",
+    "Pull the shoulder belt tight and keep the belt flat, with no twist.",
+    "The lap belt looks flat across the carrier.",
+    "Show me the level line on the side of the carrier, with the phone held level.",
+    "The level line looks level.",
+    "Put the handle upright, in position 1, the car position.",
+    "The handle is upright.",
+    "Hold the carrier where the belt goes through the guides and pull side to side and front to back. Does it move less than 2.5 centimeters? Say yes or no.",
+    "With the doll or baby buckled in, pinch the harness strap at the collarbone. Can you pinch any slack webbing? Say yes if you can pinch it, no if you cannot.",
+    "Visible checks that passed: lap belt in both side guides, shoulder belt in the rear guide, no twist in the lap belt, level line level, handle upright. Hand checks you confirmed: carrier on a rear seat facing back, less than 2.5 centimeters of movement at the belt path, no slack in the harness pinch test. This is not a verdict on the install. Before the first real trip, book one check by a certified child passenger safety technician. Cybex offers a free virtual check, and Fundacion Gonzalo Rodriguez runs check days in Montevideo."
+   ],
+   "sam_frames": 6
+  },
+  {
+   "clip": "test-11-correct.mp4",
+   "error": null,
+   "visible_s": 1.2,
+   "results": {
+    "car_position": "pass",
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass",
+    "belt_path_movement": "pass",
+    "harness_pinch": "pass"
+   },
+   "details": {
+    "lap_guides": {
+     "result": "pass",
+     "coverage": [
+      0.21,
+      0.243
+     ],
+     "between": 1.0,
+     "missed": [],
+     "step_started_s": 0.004,
+     "frame_s": 1.467,
+     "spoken_s": 3.024
+    },
+    "shoulder_guide": {
+     "result": "pass",
+     "coverage": 0.412,
+     "step_started_s": 3.024,
+     "frame_s": 3.067,
+     "spoken_s": 4.597
+    },
+    "no_twist": {
+     "result": "pass",
+     "ratio": 0.938,
+     "step_started_s": 4.597,
+     "frame_s": 4.6,
+     "spoken_s": 6.134
+    },
+    "level_line": {
+     "result": "pass",
+     "angle_deg": -3.8,
+     "step_started_s": 6.134,
+     "frame_s": 6.133,
+     "spoken_s": 7.419
+    },
+    "handle": {
+     "result": "pass",
+     "deg_from_vertical": 5.6,
+     "score": 0.191,
+     "step_started_s": 7.419,
+     "frame_s": 7.467,
+     "spoken_s": 9.202
+    }
+   },
+   "flagged": false,
+   "abstained": false,
+   "latency_s": {
+    "lap_guides": 1.824,
+    "shoulder_guide": 1.573,
+    "no_twist": 1.537,
+    "level_line": 1.285,
+    "handle": 1.783
+   },
+   "hand_checks_logged": [
+    "belt_path_movement",
+    "car_position",
+    "harness_pinch"
+   ],
+   "spoken": [
+    "Coaching the Joie i-Snug 2 in the Tesla Model 3 (2027), installed with the seat belt and no base. Put the carrier on a rear seat, facing the back of the car. Never put a rear-facing seat in the front passenger seat while the airbag is on. Is the carrier on a rear seat, facing the back? Say yes or no.",
+    "Slide the lap belt into both side guides of the carrier, then show me the belt path from the door.",
+    "I can see the lap belt in both side guides.",
+    "Slide the shoulder belt into the rear guide behind the carrier's head end.",
+    "I can see the shoulder belt in the rear guide.",
+    "Pull the shoulder belt tight and keep the belt flat, with no twist.",
+    "The lap belt looks flat across the carrier.",
+    "Show me the level line on the side of the carrier, with the phone held level.",
+    "The level line looks level.",
+    "Put the handle upright, in position 1, the car position.",
+    "The handle is upright.",
+    "Hold the carrier where the belt goes through the guides and pull side to side and front to back. Does it move less than 2.5 centimeters? Say yes or no.",
+    "With the doll or baby buckled in, pinch the harness strap at the collarbone. Can you pinch any slack webbing? Say yes if you can pinch it, no if you cannot.",
+    "Visible checks that passed: lap belt in both side guides, shoulder belt in the rear guide, no twist in the lap belt, level line level, handle upright. Hand checks you confirmed: carrier on a rear seat facing back, less than 2.5 centimeters of movement at the belt path, no slack in the harness pinch test. This is not a verdict on the install. Before the first real trip, book one check by a certified child passenger safety technician. Cybex offers a free virtual check, and Fundacion Gonzalo Rodriguez runs check days in Montevideo."
+   ],
+   "sam_frames": 6
+  },
+  {
+   "clip": "test-12-correct.mp4",
+   "error": null,
+   "visible_s": 1.2,
+   "results": {
+    "car_position": "pass",
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass",
+    "belt_path_movement": "pass",
+    "harness_pinch": "pass"
+   },
+   "details": {
+    "lap_guides": {
+     "result": "pass",
+     "coverage": [
+      0.217,
+      0.488
+     ],
+     "between": 1.0,
+     "missed": [],
+     "step_started_s": 0.006,
+     "frame_s": 1.533,
+     "spoken_s": 3.069
+    },
+    "shoulder_guide": {
+     "result": "pass",
+     "coverage": 0.301,
+     "step_started_s": 3.069,
+     "frame_s": 3.067,
+     "spoken_s": 4.624
+    },
+    "no_twist": {
+     "result": "pass",
+     "ratio": 0.862,
+     "step_started_s": 4.624,
+     "frame_s": 4.667,
+     "spoken_s": 6.173
+    },
+    "level_line": {
+     "result": "pass",
+     "angle_deg": -6.0,
+     "step_started_s": 6.173,
+     "frame_s": 6.2,
+     "spoken_s": 7.531
+    },
+    "handle": {
+     "result": "pass",
+     "deg_from_vertical": 8.6,
+     "score": 0.363,
+     "step_started_s": 7.531,
+     "frame_s": 7.533,
+     "spoken_s": 9.27
+    }
+   },
+   "flagged": false,
+   "abstained": false,
+   "latency_s": {
+    "lap_guides": 1.869,
+    "shoulder_guide": 1.555,
+    "no_twist": 1.549,
+    "level_line": 1.358,
+    "handle": 1.739
+   },
+   "hand_checks_logged": [
+    "belt_path_movement",
+    "car_position",
+    "harness_pinch"
+   ],
+   "spoken": [
+    "Coaching the Joie i-Snug 2 in the Tesla Model 3 (2027), installed with the seat belt and no base. Put the carrier on a rear seat, facing the back of the car. Never put a rear-facing seat in the front passenger seat while the airbag is on. Is the carrier on a rear seat, facing the back? Say yes or no.",
+    "Slide the lap belt into both side guides of the carrier, then show me the belt path from the door.",
+    "I can see the lap belt in both side guides.",
+    "Slide the shoulder belt into the rear guide behind the carrier's head end.",
+    "I can see the shoulder belt in the rear guide.",
+    "Pull the shoulder belt tight and keep the belt flat, with no twist.",
+    "The lap belt looks flat across the carrier.",
+    "Show me the level line on the side of the carrier, with the phone held level.",
+    "The level line looks level.",
+    "Put the handle upright, in position 1, the car position.",
+    "The handle is upright.",
+    "Hold the carrier where the belt goes through the guides and pull side to side and front to back. Does it move less than 2.5 centimeters? Say yes or no.",
+    "With the doll or baby buckled in, pinch the harness strap at the collarbone. Can you pinch any slack webbing? Say yes if you can pinch it, no if you cannot.",
+    "Visible checks that passed: lap belt in both side guides, shoulder belt in the rear guide, no twist in the lap belt, level line level, handle upright. Hand checks you confirmed: carrier on a rear seat facing back, less than 2.5 centimeters of movement at the belt path, no slack in the harness pinch test. This is not a verdict on the install. Before the first real trip, book one check by a certified child passenger safety technician. Cybex offers a free virtual check, and Fundacion Gonzalo Rodriguez runs check days in Montevideo."
+   ],
+   "sam_frames": 6
+  },
+  {
+   "clip": "test-13-outside_guide.mp4",
+   "error": "outside_guide",
+   "visible_s": 1.2,
+   "results": {
+    "car_position": "pass",
+    "lap_guides": "pass",
+    "shoulder_guide": "fail",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass",
+    "belt_path_movement": "pass",
+    "harness_pinch": "pass"
+   },
+   "details": {
+    "lap_guides": {
+     "result": "pass",
+     "coverage": [
+      0.203,
+      0.191
+     ],
+     "between": 1.0,
+     "missed": [],
+     "step_started_s": 0.006,
+     "frame_s": 1.467,
+     "spoken_s": 3.106
+    },
+    "shoulder_guide": {
+     "result": "fail",
+     "coverage": 0.0,
+     "step_started_s": 3.106,
+     "frame_s": 3.133,
+     "spoken_s": 4.66
+    },
+    "no_twist": {
+     "result": "pass",
+     "ratio": 0.806,
+     "step_started_s": 4.66,
+     "frame_s": 4.667,
+     "spoken_s": 6.213
+    },
+    "level_line": {
+     "result": "pass",
+     "angle_deg": 4.3,
+     "step_started_s": 6.213,
+     "frame_s": 6.267,
+     "spoken_s": 7.54
+    },
+    "handle": {
+     "result": "pass",
+     "deg_from_vertical": 0.2,
+     "score": 0.2,
+     "step_started_s": 7.54,
+     "frame_s": 7.6,
+     "spoken_s": 9.377
+    }
+   },
+   "flagged": true,
+   "abstained": false,
+   "latency_s": {
+    "lap_guides": 1.906,
+    "shoulder_guide": 1.554,
+    "no_twist": 1.553,
+    "level_line": 1.327,
+    "handle": 1.837
+   },
+   "hand_checks_logged": [
+    "belt_path_movement",
+    "car_position",
+    "harness_pinch"
+   ],
+   "spoken": [
+    "Coaching the Joie i-Snug 2 in the Tesla Model 3 (2027), installed with the seat belt and no base. Put the carrier on a rear seat, facing the back of the car. Never put a rear-facing seat in the front passenger seat while the airbag is on. Is the carrier on a rear seat, facing the back? Say yes or no.",
+    "Slide the lap belt into both side guides of the carrier, then show me the belt path from the door.",
+    "I can see the lap belt in both side guides.",
+    "Slide the shoulder belt into the rear guide behind the carrier's head end.",
+    "The shoulder belt is not in the rear guide.",
+    "Pull the shoulder belt tight and keep the belt flat, with no twist.",
+    "The lap belt looks flat across the carrier.",
+    "Show me the level line on the side of the carrier, with the phone held level.",
+    "The level line looks level.",
+    "Put the handle upright, in position 1, the car position.",
+    "The handle is upright.",
+    "Hold the carrier where the belt goes through the guides and pull side to side and front to back. Does it move less than 2.5 centimeters? Say yes or no.",
+    "With the doll or baby buckled in, pinch the harness strap at the collarbone. Can you pinch any slack webbing? Say yes if you can pinch it, no if you cannot.",
+    "Visible checks that passed: lap belt in both side guides, no twist in the lap belt, level line level, handle upright. Visible checks that failed: shoulder belt in the rear guide. Hand checks you confirmed: carrier on a rear seat facing back, less than 2.5 centimeters of movement at the belt path, no slack in the harness pinch test. This is not a verdict on the install. Before the first real trip, book one check by a certified child passenger safety technician. Cybex offers a free virtual check, and Fundacion Gonzalo Rodriguez runs check days in Montevideo."
+   ],
+   "sam_frames": 6
+  },
+  {
+   "clip": "test-14-outside_guide.mp4",
+   "error": "outside_guide",
+   "visible_s": 1.133,
+   "results": {
+    "car_position": "pass",
+    "lap_guides": "fail",
+    "shoulder_guide": "pass",
+    "no_twist": "unseen",
+    "level_line": "pass",
+    "handle": "unseen",
+    "belt_path_movement": "pass",
+    "harness_pinch": "pass"
+   },
+   "details": {
+    "lap_guides": {
+     "result": "fail",
+     "coverage": [
+      0.0,
+      0.0
+     ],
+     "between": 0.0,
+     "missed": [
+      "near",
+      "far"
+     ],
+     "step_started_s": 0.006,
+     "frame_s": 1.667,
+     "spoken_s": 3.369
+    },
+    "shoulder_guide": {
+     "result": "pass",
+     "coverage": 0.244,
+     "step_started_s": 3.369,
+     "frame_s": 3.4,
+     "spoken_s": 5.032
+    },
+    "no_twist": {
+     "result": "unseen",
+     "step_started_s": 5.032,
+     "frame_s": null,
+     "spoken_s": 14.178
+    },
+    "level_line": {
+     "result": "pass",
+     "angle_deg": 1.1,
+     "step_started_s": 14.178,
+     "frame_s": 14.2,
+     "spoken_s": 15.466
+    },
+    "handle": {
+     "result": "unseen",
+     "step_started_s": 15.466,
+     "frame_s": null,
+     "spoken_s": 19.019
+    }
+   },
+   "flagged": true,
+   "abstained": false,
+   "latency_s": {
+    "lap_guides": 2.236,
+    "shoulder_guide": 1.663,
+    "level_line": 1.288
+   },
+   "hand_checks_logged": [
+    "belt_path_movement",
+    "car_position",
+    "harness_pinch"
+   ],
+   "spoken": [
+    "Coaching the Joie i-Snug 2 in the Tesla Model 3 (2027), installed with the seat belt and no base. Put the carrier on a rear seat, facing the back of the car. Never put a rear-facing seat in the front passenger seat while the airbag is on. Is the carrier on a rear seat, facing the back? Say yes or no.",
+    "Slide the lap belt into both side guides of the carrier, then show me the belt path from the door.",
+    "The lap belt is not in the near and far side guides.",
+    "Slide the shoulder belt into the rear guide behind the carrier's head end.",
+    "I can see the shoulder belt in the rear guide.",
+    "Pull the shoulder belt tight and keep the belt flat, with no twist.",
+    "I could not see the lap belt well enough to check for a twist. I am listing it as not checked.",
+    "Show me the level line on the side of the carrier, with the phone held level.",
+    "The level line looks level.",
+    "Put the handle upright, in position 1, the car position.",
+    "I could not see the handle. I am listing it as not checked.",
+    "Hold the carrier where the belt goes through the guides and pull side to side and front to back. Does it move less than 2.5 centimeters? Say yes or no.",
+    "With the doll or baby buckled in, pinch the harness strap at the collarbone. Can you pinch any slack webbing? Say yes if you can pinch it, no if you cannot.",
+    "Visible checks that passed: shoulder belt in the rear guide, level line level. Visible checks that failed: lap belt in both side guides. Visible checks I could not see: no twist in the lap belt, handle upright. Hand checks you confirmed: carrier on a rear seat facing back, less than 2.5 centimeters of movement at the belt path, no slack in the harness pinch test. This is not a verdict on the install. Before the first real trip, book one check by a certified child passenger safety technician. Cybex offers a free virtual check, and Fundacion Gonzalo Rodriguez runs check days in Montevideo."
+   ],
+   "sam_frames": 12
+  },
+  {
+   "clip": "test-15-outside_guide.mp4",
+   "error": "outside_guide",
+   "visible_s": 1.2,
+   "results": {
+    "car_position": "pass",
+    "lap_guides": "pass",
+    "shoulder_guide": "fail",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "unseen",
+    "belt_path_movement": "pass",
+    "harness_pinch": "pass"
+   },
+   "details": {
+    "lap_guides": {
+     "result": "pass",
+     "coverage": [
+      0.213,
+      0.201
+     ],
+     "between": 1.0,
+     "missed": [],
+     "step_started_s": 0.007,
+     "frame_s": 1.467,
+     "spoken_s": 3.099
+    },
+    "shoulder_guide": {
+     "result": "fail",
+     "coverage": 0.0,
+     "step_started_s": 3.099,
+     "frame_s": 3.133,
+     "spoken_s": 4.655
+    },
+    "no_twist": {
+     "result": "pass",
+     "ratio": 0.871,
+     "step_started_s": 4.655,
+     "frame_s": 4.667,
+     "spoken_s": 6.219
+    },
+    "level_line": {
+     "result": "pass",
+     "angle_deg": 3.4,
+     "step_started_s": 6.219,
+     "frame_s": 6.267,
+     "spoken_s": 7.562
+    },
+    "handle": {
+     "result": "unseen",
+     "step_started_s": 7.562,
+     "frame_s": null,
+     "spoken_s": 16.571
+    }
+   },
+   "flagged": true,
+   "abstained": false,
+   "latency_s": {
+    "lap_guides": 1.899,
+    "shoulder_guide": 1.556,
+    "no_twist": 1.564,
+    "level_line": 1.343
+   },
+   "hand_checks_logged": [
+    "belt_path_movement",
+    "car_position",
+    "harness_pinch"
+   ],
+   "spoken": [
+    "Coaching the Joie i-Snug 2 in the Tesla Model 3 (2027), installed with the seat belt and no base. Put the carrier on a rear seat, facing the back of the car. Never put a rear-facing seat in the front passenger seat while the airbag is on. Is the carrier on a rear seat, facing the back? Say yes or no.",
+    "Slide the lap belt into both side guides of the carrier, then show me the belt path from the door.",
+    "I can see the lap belt in both side guides.",
+    "Slide the shoulder belt into the rear guide behind the carrier's head end.",
+    "The shoulder belt is not in the rear guide.",
+    "Pull the shoulder belt tight and keep the belt flat, with no twist.",
+    "The lap belt looks flat across the carrier.",
+    "Show me the level line on the side of the carrier, with the phone held level.",
+    "The level line looks level.",
+    "Put the handle upright, in position 1, the car position.",
+    "I could not see the handle. I am listing it as not checked.",
+    "Hold the carrier where the belt goes through the guides and pull side to side and front to back. Does it move less than 2.5 centimeters? Say yes or no.",
+    "With the doll or baby buckled in, pinch the harness strap at the collarbone. Can you pinch any slack webbing? Say yes if you can pinch it, no if you cannot.",
+    "Visible checks that passed: lap belt in both side guides, no twist in the lap belt, level line level. Visible checks that failed: shoulder belt in the rear guide. Visible checks I could not see: handle upright. Hand checks you confirmed: carrier on a rear seat facing back, less than 2.5 centimeters of movement at the belt path, no slack in the harness pinch test. This is not a verdict on the install. Before the first real trip, book one check by a certified child passenger safety technician. Cybex offers a free virtual check, and Fundacion Gonzalo Rodriguez runs check days in Montevideo."
+   ],
+   "sam_frames": 10
+  },
+  {
+   "clip": "test-16-twisted.mp4",
+   "error": "twisted",
+   "visible_s": 1.133,
+   "results": {
+    "car_position": "pass",
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "fail",
+    "level_line": "pass",
+    "handle": "pass",
+    "belt_path_movement": "pass",
+    "harness_pinch": "pass"
+   },
+   "details": {
+    "lap_guides": {
+     "result": "pass",
+     "coverage": [
+      0.208,
+      0.136
+     ],
+     "between": 1.0,
+     "missed": [],
+     "step_started_s": 0.007,
+     "frame_s": 1.467,
+     "spoken_s": 3.069
+    },
+    "shoulder_guide": {
+     "result": "pass",
+     "coverage": 0.236,
+     "step_started_s": 3.069,
+     "frame_s": 3.067,
+     "spoken_s": 4.616
+    },
+    "no_twist": {
+     "result": "fail",
+     "ratio": 0.138,
+     "step_started_s": 4.616,
+     "frame_s": 4.667,
+     "spoken_s": 6.197
+    },
+    "level_line": {
+     "result": "pass",
+     "angle_deg": 0.1,
+     "step_started_s": 6.197,
+     "frame_s": 6.2,
+     "spoken_s": 7.482
+    },
+    "handle": {
+     "result": "pass",
+     "deg_from_vertical": 1.0,
+     "score": 0.232,
+     "step_started_s": 7.482,
+     "frame_s": 7.533,
+     "spoken_s": 9.294
+    }
+   },
+   "flagged": true,
+   "abstained": false,
+   "latency_s": {
+    "lap_guides": 1.936,
+    "shoulder_guide": 1.547,
+    "no_twist": 1.581,
+    "level_line": 1.285,
+    "handle": 1.812
+   },
+   "hand_checks_logged": [
+    "belt_path_movement",
+    "car_position",
+    "harness_pinch"
+   ],
+   "spoken": [
+    "Coaching the Joie i-Snug 2 in the Tesla Model 3 (2027), installed with the seat belt and no base. Put the carrier on a rear seat, facing the back of the car. Never put a rear-facing seat in the front passenger seat while the airbag is on. Is the carrier on a rear seat, facing the back? Say yes or no.",
+    "Slide the lap belt into both side guides of the carrier, then show me the belt path from the door.",
+    "I can see the lap belt in both side guides.",
+    "Slide the shoulder belt into the rear guide behind the carrier's head end.",
+    "I can see the shoulder belt in the rear guide.",
+    "Pull the shoulder belt tight and keep the belt flat, with no twist.",
+    "The lap belt looks twisted across the carrier.",
+    "Show me the level line on the side of the carrier, with the phone held level.",
+    "The level line looks level.",
+    "Put the handle upright, in position 1, the car position.",
+    "The handle is upright.",
+    "Hold the carrier where the belt goes through the guides and pull side to side and front to back. Does it move less than 2.5 centimeters? Say yes or no.",
+    "With the doll or baby buckled in, pinch the harness strap at the collarbone. Can you pinch any slack webbing? Say yes if you can pinch it, no if you cannot.",
+    "Visible checks that passed: lap belt in both side guides, shoulder belt in the rear guide, level line level, handle upright. Visible checks that failed: no twist in the lap belt. Hand checks you confirmed: carrier on a rear seat facing back, less than 2.5 centimeters of movement at the belt path, no slack in the harness pinch test. This is not a verdict on the install. Before the first real trip, book one check by a certified child passenger safety technician. Cybex offers a free virtual check, and Fundacion Gonzalo Rodriguez runs check days in Montevideo."
+   ],
+   "sam_frames": 6
+  },
+  {
+   "clip": "test-17-twisted.mp4",
+   "error": "twisted",
+   "visible_s": 1.2,
+   "results": {
+    "car_position": "pass",
+    "lap_guides": "fail",
+    "shoulder_guide": "pass",
+    "no_twist": "fail",
+    "level_line": "pass",
+    "handle": "pass",
+    "belt_path_movement": "pass",
+    "harness_pinch": "pass"
+   },
+   "details": {
+    "lap_guides": {
+     "result": "fail",
+     "coverage": [
+      0.209,
+      0.114
+     ],
+     "between": 1.0,
+     "missed": [
+      "far"
+     ],
+     "step_started_s": 0.004,
+     "frame_s": 1.533,
+     "spoken_s": 3.124
+    },
+    "shoulder_guide": {
+     "result": "pass",
+     "coverage": 0.429,
+     "step_started_s": 3.124,
+     "frame_s": 3.133,
+     "spoken_s": 4.707
+    },
+    "no_twist": {
+     "result": "fail",
+     "ratio": 0.172,
+     "step_started_s": 4.707,
+     "frame_s": 4.733,
+     "spoken_s": 6.291
+    },
+    "level_line": {
+     "result": "pass",
+     "angle_deg": -2.2,
+     "step_started_s": 6.291,
+     "frame_s": 6.333,
+     "spoken_s": 7.592
+    },
+    "handle": {
+     "result": "pass",
+     "deg_from_vertical": 0.8,
+     "score": 0.226,
+     "step_started_s": 7.592,
+     "frame_s": 7.6,
+     "spoken_s": 9.441
+    }
+   },
+   "flagged": true,
+   "abstained": false,
+   "latency_s": {
+    "lap_guides": 1.924,
+    "shoulder_guide": 1.583,
+    "no_twist": 1.584,
+    "level_line": 1.301,
+    "handle": 1.849
+   },
+   "hand_checks_logged": [
+    "belt_path_movement",
+    "car_position",
+    "harness_pinch"
+   ],
+   "spoken": [
+    "Coaching the Joie i-Snug 2 in the Tesla Model 3 (2027), installed with the seat belt and no base. Put the carrier on a rear seat, facing the back of the car. Never put a rear-facing seat in the front passenger seat while the airbag is on. Is the carrier on a rear seat, facing the back? Say yes or no.",
+    "Slide the lap belt into both side guides of the carrier, then show me the belt path from the door.",
+    "The lap belt is not in the far side guide.",
+    "Slide the shoulder belt into the rear guide behind the carrier's head end.",
+    "I can see the shoulder belt in the rear guide.",
+    "Pull the shoulder belt tight and keep the belt flat, with no twist.",
+    "The lap belt looks twisted across the carrier.",
+    "Show me the level line on the side of the carrier, with the phone held level.",
+    "The level line looks level.",
+    "Put the handle upright, in position 1, the car position.",
+    "The handle is upright.",
+    "Hold the carrier where the belt goes through the guides and pull side to side and front to back. Does it move less than 2.5 centimeters? Say yes or no.",
+    "With the doll or baby buckled in, pinch the harness strap at the collarbone. Can you pinch any slack webbing? Say yes if you can pinch it, no if you cannot.",
+    "Visible checks that passed: shoulder belt in the rear guide, level line level, handle upright. Visible checks that failed: lap belt in both side guides, no twist in the lap belt. Hand checks you confirmed: carrier on a rear seat facing back, less than 2.5 centimeters of movement at the belt path, no slack in the harness pinch test. This is not a verdict on the install. Before the first real trip, book one check by a certified child passenger safety technician. Cybex offers a free virtual check, and Fundacion Gonzalo Rodriguez runs check days in Montevideo."
+   ],
+   "sam_frames": 6
+  },
+  {
+   "clip": "test-18-twisted.mp4",
+   "error": "twisted",
+   "visible_s": 1.2,
+   "results": {
+    "car_position": "pass",
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "fail",
+    "level_line": "pass",
+    "handle": "pass",
+    "belt_path_movement": "pass",
+    "harness_pinch": "pass"
+   },
+   "details": {
+    "lap_guides": {
+     "result": "pass",
+     "coverage": [
+      0.204,
+      0.344
+     ],
+     "between": 1.0,
+     "missed": [],
+     "step_started_s": 0.005,
+     "frame_s": 1.533,
+     "spoken_s": 3.144
+    },
+    "shoulder_guide": {
+     "result": "pass",
+     "coverage": 0.388,
+     "step_started_s": 3.144,
+     "frame_s": 3.133,
+     "spoken_s": 4.746
+    },
+    "no_twist": {
+     "result": "fail",
+     "ratio": 0.154,
+     "step_started_s": 4.746,
+     "frame_s": 4.8,
+     "spoken_s": 6.339
+    },
+    "level_line": {
+     "result": "pass",
+     "angle_deg": 0.6,
+     "step_started_s": 6.339,
+     "frame_s": 6.333,
+     "spoken_s": 7.653
+    },
+    "handle": {
+     "result": "pass",
+     "deg_from_vertical": 3.2,
+     "score": 0.278,
+     "step_started_s": 7.653,
+     "frame_s": 7.667,
+     "spoken_s": 9.514
+    }
+   },
+   "flagged": true,
+   "abstained": false,
+   "latency_s": {
+    "lap_guides": 1.944,
+    "shoulder_guide": 1.602,
+    "no_twist": 1.593,
+    "level_line": 1.314,
+    "handle": 1.861
+   },
+   "hand_checks_logged": [
+    "belt_path_movement",
+    "car_position",
+    "harness_pinch"
+   ],
+   "spoken": [
+    "Coaching the Joie i-Snug 2 in the Tesla Model 3 (2027), installed with the seat belt and no base. Put the carrier on a rear seat, facing the back of the car. Never put a rear-facing seat in the front passenger seat while the airbag is on. Is the carrier on a rear seat, facing the back? Say yes or no.",
+    "Slide the lap belt into both side guides of the carrier, then show me the belt path from the door.",
+    "I can see the lap belt in both side guides.",
+    "Slide the shoulder belt into the rear guide behind the carrier's head end.",
+    "I can see the shoulder belt in the rear guide.",
+    "Pull the shoulder belt tight and keep the belt flat, with no twist.",
+    "The lap belt looks twisted across the carrier.",
+    "Show me the level line on the side of the carrier, with the phone held level.",
+    "The level line looks level.",
+    "Put the handle upright, in position 1, the car position.",
+    "The handle is upright.",
+    "Hold the carrier where the belt goes through the guides and pull side to side and front to back. Does it move less than 2.5 centimeters? Say yes or no.",
+    "With the doll or baby buckled in, pinch the harness strap at the collarbone. Can you pinch any slack webbing? Say yes if you can pinch it, no if you cannot.",
+    "Visible checks that passed: lap belt in both side guides, shoulder belt in the rear guide, level line level, handle upright. Visible checks that failed: no twist in the lap belt. Hand checks you confirmed: carrier on a rear seat facing back, less than 2.5 centimeters of movement at the belt path, no slack in the harness pinch test. This is not a verdict on the install. Before the first real trip, book one check by a certified child passenger safety technician. Cybex offers a free virtual check, and Fundacion Gonzalo Rodriguez runs check days in Montevideo."
+   ],
+   "sam_frames": 6
+  },
+  {
+   "clip": "test-19-recline.mp4",
+   "error": "recline",
+   "visible_s": 1.2,
+   "results": {
+    "car_position": "pass",
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "fail",
+    "handle": "pass",
+    "belt_path_movement": "pass",
+    "harness_pinch": "pass"
+   },
+   "details": {
+    "lap_guides": {
+     "result": "pass",
+     "coverage": [
+      0.181,
+      0.164
+     ],
+     "between": 1.0,
+     "missed": [],
+     "step_started_s": 0.005,
+     "frame_s": 1.533,
+     "spoken_s": 3.147
+    },
+    "shoulder_guide": {
+     "result": "pass",
+     "coverage": 0.431,
+     "step_started_s": 3.147,
+     "frame_s": 3.2,
+     "spoken_s": 4.769
+    },
+    "no_twist": {
+     "result": "pass",
+     "ratio": 0.92,
+     "step_started_s": 4.769,
+     "frame_s": 4.8,
+     "spoken_s": 6.373
+    },
+    "level_line": {
+     "result": "fail",
+     "angle_deg": -14.7,
+     "step_started_s": 6.373,
+     "frame_s": 6.4,
+     "spoken_s": 7.744
+    },
+    "handle": {
+     "result": "pass",
+     "deg_from_vertical": 11.6,
+     "score": 0.384,
+     "step_started_s": 7.744,
+     "frame_s": 7.8,
+     "spoken_s": 9.611
+    }
+   },
+   "flagged": true,
+   "abstained": false,
+   "latency_s": {
+    "lap_guides": 1.947,
+    "shoulder_guide": 1.622,
+    "no_twist": 1.604,
+    "level_line": 1.371,
+    "handle": 1.867
+   },
+   "hand_checks_logged": [
+    "belt_path_movement",
+    "car_position",
+    "harness_pinch"
+   ],
+   "spoken": [
+    "Coaching the Joie i-Snug 2 in the Tesla Model 3 (2027), installed with the seat belt and no base. Put the carrier on a rear seat, facing the back of the car. Never put a rear-facing seat in the front passenger seat while the airbag is on. Is the carrier on a rear seat, facing the back? Say yes or no.",
+    "Slide the lap belt into both side guides of the carrier, then show me the belt path from the door.",
+    "I can see the lap belt in both side guides.",
+    "Slide the shoulder belt into the rear guide behind the carrier's head end.",
+    "I can see the shoulder belt in the rear guide.",
+    "Pull the shoulder belt tight and keep the belt flat, with no twist.",
+    "The lap belt looks flat across the carrier.",
+    "Show me the level line on the side of the carrier, with the phone held level.",
+    "The level line is tilted about 15 degrees. The manual says it must be level to the ground.",
+    "Put the handle upright, in position 1, the car position.",
+    "The handle is upright.",
+    "Hold the carrier where the belt goes through the guides and pull side to side and front to back. Does it move less than 2.5 centimeters? Say yes or no.",
+    "With the doll or baby buckled in, pinch the harness strap at the collarbone. Can you pinch any slack webbing? Say yes if you can pinch it, no if you cannot.",
+    "Visible checks that passed: lap belt in both side guides, shoulder belt in the rear guide, no twist in the lap belt, handle upright. Visible checks that failed: level line level. Hand checks you confirmed: carrier on a rear seat facing back, less than 2.5 centimeters of movement at the belt path, no slack in the harness pinch test. This is not a verdict on the install. Before the first real trip, book one check by a certified child passenger safety technician. Cybex offers a free virtual check, and Fundacion Gonzalo Rodriguez runs check days in Montevideo."
+   ],
+   "sam_frames": 6
+  },
+  {
+   "clip": "test-20-recline.mp4",
+   "error": "recline",
+   "visible_s": 1.2,
+   "results": {
+    "car_position": "pass",
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "fail",
+    "handle": "pass",
+    "belt_path_movement": "pass",
+    "harness_pinch": "pass"
+   },
+   "details": {
+    "lap_guides": {
+     "result": "pass",
+     "coverage": [
+      0.239,
+      0.361
+     ],
+     "between": 1.0,
+     "missed": [],
+     "step_started_s": 0.006,
+     "frame_s": 1.533,
+     "spoken_s": 3.187
+    },
+    "shoulder_guide": {
+     "result": "pass",
+     "coverage": 0.421,
+     "step_started_s": 3.187,
+     "frame_s": 3.2,
+     "spoken_s": 4.805
+    },
+    "no_twist": {
+     "result": "pass",
+     "ratio": 0.906,
+     "step_started_s": 4.805,
+     "frame_s": 4.8,
+     "spoken_s": 6.415
+    },
+    "level_line": {
+     "result": "fail",
+     "angle_deg": 14.1,
+     "step_started_s": 6.415,
+     "frame_s": 6.467,
+     "spoken_s": 7.814
+    },
+    "handle": {
+     "result": "pass",
+     "deg_from_vertical": 9.7,
+     "score": 0.339,
+     "step_started_s": 7.814,
+     "frame_s": 7.867,
+     "spoken_s": 9.81
+    }
+   },
+   "flagged": true,
+   "abstained": false,
+   "latency_s": {
+    "lap_guides": 1.987,
+    "shoulder_guide": 1.618,
+    "no_twist": 1.61,
+    "level_line": 1.399,
+    "handle": 1.996
+   },
+   "hand_checks_logged": [
+    "belt_path_movement",
+    "car_position",
+    "harness_pinch"
+   ],
+   "spoken": [
+    "Coaching the Joie i-Snug 2 in the Tesla Model 3 (2027), installed with the seat belt and no base. Put the carrier on a rear seat, facing the back of the car. Never put a rear-facing seat in the front passenger seat while the airbag is on. Is the carrier on a rear seat, facing the back? Say yes or no.",
+    "Slide the lap belt into both side guides of the carrier, then show me the belt path from the door.",
+    "I can see the lap belt in both side guides.",
+    "Slide the shoulder belt into the rear guide behind the carrier's head end.",
+    "I can see the shoulder belt in the rear guide.",
+    "Pull the shoulder belt tight and keep the belt flat, with no twist.",
+    "The lap belt looks flat across the carrier.",
+    "Show me the level line on the side of the carrier, with the phone held level.",
+    "The level line is tilted about 14 degrees. The manual says it must be level to the ground.",
+    "Put the handle upright, in position 1, the car position.",
+    "The handle is upright.",
+    "Hold the carrier where the belt goes through the guides and pull side to side and front to back. Does it move less than 2.5 centimeters? Say yes or no.",
+    "With the doll or baby buckled in, pinch the harness strap at the collarbone. Can you pinch any slack webbing? Say yes if you can pinch it, no if you cannot.",
+    "Visible checks that passed: lap belt in both side guides, shoulder belt in the rear guide, no twist in the lap belt, handle upright. Visible checks that failed: level line level. Hand checks you confirmed: carrier on a rear seat facing back, less than 2.5 centimeters of movement at the belt path, no slack in the harness pinch test. This is not a verdict on the install. Before the first real trip, book one check by a certified child passenger safety technician. Cybex offers a free virtual check, and Fundacion Gonzalo Rodriguez runs check days in Montevideo."
+   ],
+   "sam_frames": 6
+  },
+  {
+   "clip": "test-21-recline.mp4",
+   "error": "recline",
+   "visible_s": 1.2,
+   "results": {
+    "car_position": "pass",
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "fail",
+    "handle": "pass",
+    "belt_path_movement": "pass",
+    "harness_pinch": "pass"
+   },
+   "details": {
+    "lap_guides": {
+     "result": "pass",
+     "coverage": [
+      0.233,
+      0.512
+     ],
+     "between": 1.0,
+     "missed": [],
+     "step_started_s": 0.006,
+     "frame_s": 1.667,
+     "spoken_s": 3.31
+    },
+    "shoulder_guide": {
+     "result": "pass",
+     "coverage": 0.46,
+     "step_started_s": 3.31,
+     "frame_s": 3.333,
+     "spoken_s": 5.064
+    },
+    "no_twist": {
+     "result": "pass",
+     "ratio": 0.9,
+     "step_started_s": 5.064,
+     "frame_s": 5.067,
+     "spoken_s": 6.74
+    },
+    "level_line": {
+     "result": "fail",
+     "angle_deg": 17.8,
+     "step_started_s": 6.74,
+     "frame_s": 6.733,
+     "spoken_s": 8.098
+    },
+    "handle": {
+     "result": "pass",
+     "deg_from_vertical": 13.1,
+     "score": 0.278,
+     "step_started_s": 8.098,
+     "frame_s": 8.133,
+     "spoken_s": 10.037
+    }
+   },
+   "flagged": true,
+   "abstained": false,
+   "latency_s": {
+    "lap_guides": 2.11,
+    "shoulder_guide": 1.754,
+    "no_twist": 1.676,
+    "level_line": 1.358,
+    "handle": 1.939
+   },
+   "hand_checks_logged": [
+    "belt_path_movement",
+    "car_position",
+    "harness_pinch"
+   ],
+   "spoken": [
+    "Coaching the Joie i-Snug 2 in the Tesla Model 3 (2027), installed with the seat belt and no base. Put the carrier on a rear seat, facing the back of the car. Never put a rear-facing seat in the front passenger seat while the airbag is on. Is the carrier on a rear seat, facing the back? Say yes or no.",
+    "Slide the lap belt into both side guides of the carrier, then show me the belt path from the door.",
+    "I can see the lap belt in both side guides.",
+    "Slide the shoulder belt into the rear guide behind the carrier's head end.",
+    "I can see the shoulder belt in the rear guide.",
+    "Pull the shoulder belt tight and keep the belt flat, with no twist.",
+    "The lap belt looks flat across the carrier.",
+    "Show me the level line on the side of the carrier, with the phone held level.",
+    "The level line is tilted about 18 degrees. The manual says it must be level to the ground.",
+    "Put the handle upright, in position 1, the car position.",
+    "The handle is upright.",
+    "Hold the carrier where the belt goes through the guides and pull side to side and front to back. Does it move less than 2.5 centimeters? Say yes or no.",
+    "With the doll or baby buckled in, pinch the harness strap at the collarbone. Can you pinch any slack webbing? Say yes if you can pinch it, no if you cannot.",
+    "Visible checks that passed: lap belt in both side guides, shoulder belt in the rear guide, no twist in the lap belt, handle upright. Visible checks that failed: level line level. Hand checks you confirmed: carrier on a rear seat facing back, less than 2.5 centimeters of movement at the belt path, no slack in the harness pinch test. This is not a verdict on the install. Before the first real trip, book one check by a certified child passenger safety technician. Cybex offers a free virtual check, and Fundacion Gonzalo Rodriguez runs check days in Montevideo."
+   ],
+   "sam_frames": 6
+  },
+  {
+   "clip": "test-22-handle.mp4",
+   "error": "handle",
+   "visible_s": 1.2,
+   "results": {
+    "car_position": "pass",
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "fail",
+    "belt_path_movement": "pass",
+    "harness_pinch": "pass"
+   },
+   "details": {
+    "lap_guides": {
+     "result": "pass",
+     "coverage": [
+      0.212,
+      0.221
+     ],
+     "between": 1.0,
+     "missed": [],
+     "step_started_s": 0.004,
+     "frame_s": 1.6,
+     "spoken_s": 3.313
+    },
+    "shoulder_guide": {
+     "result": "pass",
+     "coverage": 0.399,
+     "step_started_s": 3.313,
+     "frame_s": 3.333,
+     "spoken_s": 4.97
+    },
+    "no_twist": {
+     "result": "pass",
+     "ratio": 0.906,
+     "step_started_s": 4.97,
+     "frame_s": 5.0,
+     "spoken_s": 6.645
+    },
+    "level_line": {
+     "result": "pass",
+     "angle_deg": -5.4,
+     "step_started_s": 6.645,
+     "frame_s": 6.667,
+     "spoken_s": 8.055
+    },
+    "handle": {
+     "result": "fail",
+     "deg_from_vertical": 70.7,
+     "score": 0.256,
+     "step_started_s": 8.055,
+     "frame_s": 8.067,
+     "spoken_s": 10.027
+    }
+   },
+   "flagged": true,
+   "abstained": false,
+   "latency_s": {
+    "lap_guides": 2.113,
+    "shoulder_guide": 1.657,
+    "no_twist": 1.675,
+    "level_line": 1.41,
+    "handle": 1.972
+   },
+   "hand_checks_logged": [
+    "belt_path_movement",
+    "car_position",
+    "harness_pinch"
+   ],
+   "spoken": [
+    "Coaching the Joie i-Snug 2 in the Tesla Model 3 (2027), installed with the seat belt and no base. Put the carrier on a rear seat, facing the back of the car. Never put a rear-facing seat in the front passenger seat while the airbag is on. Is the carrier on a rear seat, facing the back? Say yes or no.",
+    "Slide the lap belt into both side guides of the carrier, then show me the belt path from the door.",
+    "I can see the lap belt in both side guides.",
+    "Slide the shoulder belt into the rear guide behind the carrier's head end.",
+    "I can see the shoulder belt in the rear guide.",
+    "Pull the shoulder belt tight and keep the belt flat, with no twist.",
+    "The lap belt looks flat across the carrier.",
+    "Show me the level line on the side of the carrier, with the phone held level.",
+    "The level line looks level.",
+    "Put the handle upright, in position 1, the car position.",
+    "The handle is not upright. Move it to position 1.",
+    "Hold the carrier where the belt goes through the guides and pull side to side and front to back. Does it move less than 2.5 centimeters? Say yes or no.",
+    "With the doll or baby buckled in, pinch the harness strap at the collarbone. Can you pinch any slack webbing? Say yes if you can pinch it, no if you cannot.",
+    "Visible checks that passed: lap belt in both side guides, shoulder belt in the rear guide, no twist in the lap belt, level line level. Visible checks that failed: handle upright. Hand checks you confirmed: carrier on a rear seat facing back, less than 2.5 centimeters of movement at the belt path, no slack in the harness pinch test. This is not a verdict on the install. Before the first real trip, book one check by a certified child passenger safety technician. Cybex offers a free virtual check, and Fundacion Gonzalo Rodriguez runs check days in Montevideo."
+   ],
+   "sam_frames": 6
+  },
+  {
+   "clip": "test-23-handle.mp4",
+   "error": "handle",
+   "visible_s": 1.2,
+   "results": {
+    "car_position": "pass",
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "fail",
+    "belt_path_movement": "pass",
+    "harness_pinch": "pass"
+   },
+   "details": {
+    "lap_guides": {
+     "result": "pass",
+     "coverage": [
+      0.201,
+      0.191
+     ],
+     "between": 1.0,
+     "missed": [],
+     "step_started_s": 0.005,
+     "frame_s": 1.667,
+     "spoken_s": 3.347
+    },
+    "shoulder_guide": {
+     "result": "pass",
+     "coverage": 0.222,
+     "step_started_s": 3.347,
+     "frame_s": 3.4,
+     "spoken_s": 5.04
+    },
+    "no_twist": {
+     "result": "pass",
+     "ratio": 0.844,
+     "step_started_s": 5.04,
+     "frame_s": 5.067,
+     "spoken_s": 6.767
+    },
+    "level_line": {
+     "result": "pass",
+     "angle_deg": 2.4,
+     "step_started_s": 6.767,
+     "frame_s": 6.8,
+     "spoken_s": 8.191
+    },
+    "handle": {
+     "result": "fail",
+     "deg_from_vertical": 86.4,
+     "score": 0.345,
+     "step_started_s": 8.192,
+     "frame_s": 8.2,
+     "spoken_s": 10.174
+    }
+   },
+   "flagged": true,
+   "abstained": false,
+   "latency_s": {
+    "lap_guides": 2.147,
+    "shoulder_guide": 1.693,
+    "no_twist": 1.727,
+    "level_line": 1.424,
+    "handle": 1.982
+   },
+   "hand_checks_logged": [
+    "belt_path_movement",
+    "car_position",
+    "harness_pinch"
+   ],
+   "spoken": [
+    "Coaching the Joie i-Snug 2 in the Tesla Model 3 (2027), installed with the seat belt and no base. Put the carrier on a rear seat, facing the back of the car. Never put a rear-facing seat in the front passenger seat while the airbag is on. Is the carrier on a rear seat, facing the back? Say yes or no.",
+    "Slide the lap belt into both side guides of the carrier, then show me the belt path from the door.",
+    "I can see the lap belt in both side guides.",
+    "Slide the shoulder belt into the rear guide behind the carrier's head end.",
+    "I can see the shoulder belt in the rear guide.",
+    "Pull the shoulder belt tight and keep the belt flat, with no twist.",
+    "The lap belt looks flat across the carrier.",
+    "Show me the level line on the side of the carrier, with the phone held level.",
+    "The level line looks level.",
+    "Put the handle upright, in position 1, the car position.",
+    "The handle is not upright. Move it to position 1.",
+    "Hold the carrier where the belt goes through the guides and pull side to side and front to back. Does it move less than 2.5 centimeters? Say yes or no.",
+    "With the doll or baby buckled in, pinch the harness strap at the collarbone. Can you pinch any slack webbing? Say yes if you can pinch it, no if you cannot.",
+    "Visible checks that passed: lap belt in both side guides, shoulder belt in the rear guide, no twist in the lap belt, level line level. Visible checks that failed: handle upright. Hand checks you confirmed: carrier on a rear seat facing back, less than 2.5 centimeters of movement at the belt path, no slack in the harness pinch test. This is not a verdict on the install. Before the first real trip, book one check by a certified child passenger safety technician. Cybex offers a free virtual check, and Fundacion Gonzalo Rodriguez runs check days in Montevideo."
+   ],
+   "sam_frames": 6
+  },
+  {
+   "clip": "test-24-handle.mp4",
+   "error": "handle",
+   "visible_s": 1.2,
+   "results": {
+    "car_position": "pass",
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "unseen",
+    "belt_path_movement": "pass",
+    "harness_pinch": "pass"
+   },
+   "details": {
+    "lap_guides": {
+     "result": "pass",
+     "coverage": [
+      0.197,
+      0.186
+     ],
+     "between": 1.0,
+     "missed": [],
+     "step_started_s": 0.004,
+     "frame_s": 1.6,
+     "spoken_s": 3.604
+    },
+    "shoulder_guide": {
+     "result": "pass",
+     "coverage": 0.184,
+     "step_started_s": 3.604,
+     "frame_s": 3.6,
+     "spoken_s": 5.297
+    },
+    "no_twist": {
+     "result": "pass",
+     "ratio": 0.815,
+     "step_started_s": 5.297,
+     "frame_s": 5.333,
+     "spoken_s": 6.993
+    },
+    "level_line": {
+     "result": "pass",
+     "angle_deg": 3.4,
+     "step_started_s": 6.993,
+     "frame_s": 7.0,
+     "spoken_s": 8.452
+    },
+    "handle": {
+     "result": "unseen",
+     "step_started_s": 8.452,
+     "frame_s": null,
+     "spoken_s": 18.313
+    }
+   },
+   "flagged": false,
+   "abstained": false,
+   "latency_s": {
+    "lap_guides": 2.404,
+    "shoulder_guide": 1.693,
+    "no_twist": 1.696,
+    "level_line": 1.459
+   },
+   "hand_checks_logged": [
+    "belt_path_movement",
+    "car_position",
+    "harness_pinch"
+   ],
+   "spoken": [
+    "Coaching the Joie i-Snug 2 in the Tesla Model 3 (2027), installed with the seat belt and no base. Put the carrier on a rear seat, facing the back of the car. Never put a rear-facing seat in the front passenger seat while the airbag is on. Is the carrier on a rear seat, facing the back? Say yes or no.",
+    "Slide the lap belt into both side guides of the carrier, then show me the belt path from the door.",
+    "I can see the lap belt in both side guides.",
+    "Slide the shoulder belt into the rear guide behind the carrier's head end.",
+    "I can see the shoulder belt in the rear guide.",
+    "Pull the shoulder belt tight and keep the belt flat, with no twist.",
+    "The lap belt looks flat across the carrier.",
+    "Show me the level line on the side of the carrier, with the phone held level.",
+    "The level line looks level.",
+    "Put the handle upright, in position 1, the car position.",
+    "I could not see the handle. I am listing it as not checked.",
+    "Hold the carrier where the belt goes through the guides and pull side to side and front to back. Does it move less than 2.5 centimeters? Say yes or no.",
+    "With the doll or baby buckled in, pinch the harness strap at the collarbone. Can you pinch any slack webbing? Say yes if you can pinch it, no if you cannot.",
+    "Visible checks that passed: lap belt in both side guides, shoulder belt in the rear guide, no twist in the lap belt, level line level. Visible checks I could not see: handle upright. Hand checks you confirmed: carrier on a rear seat facing back, less than 2.5 centimeters of movement at the belt path, no slack in the harness pinch test. This is not a verdict on the install. Before the first real trip, book one check by a certified child passenger safety technician. Cybex offers a free virtual check, and Fundacion Gonzalo Rodriguez runs check days in Montevideo."
+   ],
+   "sam_frames": 10
+  },
+  {
+   "clip": "test-25-unseen.mp4",
+   "error": "unseen",
+   "visible_s": null,
+   "results": {
+    "car_position": "pass",
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "unseen",
+    "handle": "unseen",
+    "belt_path_movement": "pass",
+    "harness_pinch": "pass"
+   },
+   "details": {
+    "lap_guides": {
+     "result": "unseen",
+     "step_started_s": 0.004,
+     "frame_s": null,
+     "spoken_s": 8.494
+    },
+    "shoulder_guide": {
+     "result": "unseen",
+     "step_started_s": 8.494,
+     "frame_s": null,
+     "spoken_s": 17.325
+    },
+    "no_twist": {
+     "result": "unseen",
+     "step_started_s": 17.325,
+     "frame_s": null,
+     "spoken_s": 17.325
+    },
+    "level_line": {
+     "result": "unseen",
+     "step_started_s": 17.325,
+     "frame_s": null,
+     "spoken_s": 17.325
+    },
+    "handle": {
+     "result": "unseen",
+     "step_started_s": 17.325,
+     "frame_s": null,
+     "spoken_s": 17.325
+    }
+   },
+   "flagged": false,
+   "abstained": true,
+   "latency_s": {},
+   "hand_checks_logged": [
+    "belt_path_movement",
+    "car_position",
+    "harness_pinch"
+   ],
+   "spoken": [
+    "Coaching the Joie i-Snug 2 in the Tesla Model 3 (2027), installed with the seat belt and no base. Put the carrier on a rear seat, facing the back of the car. Never put a rear-facing seat in the front passenger seat while the airbag is on. Is the carrier on a rear seat, facing the back? Say yes or no.",
+    "Slide the lap belt into both side guides of the carrier, then show me the belt path from the door.",
+    "I could not see the lap belt and both side guides. I am listing it as not checked.",
+    "Slide the shoulder belt into the rear guide behind the carrier's head end.",
+    "I could not see the rear guide. I am listing it as not checked.",
+    "Pull the shoulder belt tight and keep the belt flat, with no twist.",
+    "I could not see the lap belt well enough to check for a twist. I am listing it as not checked.",
+    "Show me the level line on the side of the carrier, with the phone held level.",
+    "I could not see the level line. I am listing it as not checked.",
+    "Put the handle upright, in position 1, the car position.",
+    "I could not see the handle. I am listing it as not checked.",
+    "Hold the carrier where the belt goes through the guides and pull side to side and front to back. Does it move less than 2.5 centimeters? Say yes or no.",
+    "With the doll or baby buckled in, pinch the harness strap at the collarbone. Can you pinch any slack webbing? Say yes if you can pinch it, no if you cannot.",
+    "Visible checks I could not see: lap belt in both side guides, shoulder belt in the rear guide, no twist in the lap belt, level line level, handle upright. Hand checks you confirmed: carrier on a rear seat facing back, less than 2.5 centimeters of movement at the belt path, no slack in the harness pinch test. This is not a verdict on the install. Before the first real trip, book one check by a certified child passenger safety technician. Cybex offers a free virtual check, and Fundacion Gonzalo Rodriguez runs check days in Montevideo."
+   ],
+   "sam_frames": 10
+  },
+  {
+   "clip": "test-26-unseen.mp4",
+   "error": "unseen",
+   "visible_s": null,
+   "results": {
+    "car_position": "pass",
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "unseen",
+    "handle": "unseen",
+    "belt_path_movement": "pass",
+    "harness_pinch": "pass"
+   },
+   "details": {
+    "lap_guides": {
+     "result": "unseen",
+     "step_started_s": 0.004,
+     "frame_s": null,
+     "spoken_s": 8.841
+    },
+    "shoulder_guide": {
+     "result": "unseen",
+     "step_started_s": 8.841,
+     "frame_s": null,
+     "spoken_s": 17.509
+    },
+    "no_twist": {
+     "result": "unseen",
+     "step_started_s": 17.509,
+     "frame_s": null,
+     "spoken_s": 17.509
+    },
+    "level_line": {
+     "result": "unseen",
+     "step_started_s": 17.509,
+     "frame_s": null,
+     "spoken_s": 17.509
+    },
+    "handle": {
+     "result": "unseen",
+     "step_started_s": 17.509,
+     "frame_s": null,
+     "spoken_s": 17.509
+    }
+   },
+   "flagged": false,
+   "abstained": true,
+   "latency_s": {},
+   "hand_checks_logged": [
+    "belt_path_movement",
+    "car_position",
+    "harness_pinch"
+   ],
+   "spoken": [
+    "Coaching the Joie i-Snug 2 in the Tesla Model 3 (2027), installed with the seat belt and no base. Put the carrier on a rear seat, facing the back of the car. Never put a rear-facing seat in the front passenger seat while the airbag is on. Is the carrier on a rear seat, facing the back? Say yes or no.",
+    "Slide the lap belt into both side guides of the carrier, then show me the belt path from the door.",
+    "I could not see the lap belt and both side guides. I am listing it as not checked.",
+    "Slide the shoulder belt into the rear guide behind the carrier's head end.",
+    "I could not see the rear guide. I am listing it as not checked.",
+    "Pull the shoulder belt tight and keep the belt flat, with no twist.",
+    "I could not see the lap belt well enough to check for a twist. I am listing it as not checked.",
+    "Show me the level line on the side of the carrier, with the phone held level.",
+    "I could not see the level line. I am listing it as not checked.",
+    "Put the handle upright, in position 1, the car position.",
+    "I could not see the handle. I am listing it as not checked.",
+    "Hold the carrier where the belt goes through the guides and pull side to side and front to back. Does it move less than 2.5 centimeters? Say yes or no.",
+    "With the doll or baby buckled in, pinch the harness strap at the collarbone. Can you pinch any slack webbing? Say yes if you can pinch it, no if you cannot.",
+    "Visible checks I could not see: lap belt in both side guides, shoulder belt in the rear guide, no twist in the lap belt, level line level, handle upright. Hand checks you confirmed: carrier on a rear seat facing back, less than 2.5 centimeters of movement at the belt path, no slack in the harness pinch test. This is not a verdict on the install. Before the first real trip, book one check by a certified child passenger safety technician. Cybex offers a free virtual check, and Fundacion Gonzalo Rodriguez runs check days in Montevideo."
+   ],
+   "sam_frames": 10
+  },
+  {
+   "clip": "test-27-unseen.mp4",
+   "error": "unseen",
+   "visible_s": null,
+   "results": {
+    "car_position": "pass",
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "unseen",
+    "handle": "unseen",
+    "belt_path_movement": "pass",
+    "harness_pinch": "pass"
+   },
+   "details": {
+    "lap_guides": {
+     "result": "unseen",
+     "step_started_s": 0.004,
+     "frame_s": null,
+     "spoken_s": 8.821
+    },
+    "shoulder_guide": {
+     "result": "unseen",
+     "step_started_s": 8.822,
+     "frame_s": null,
+     "spoken_s": 17.605
+    },
+    "no_twist": {
+     "result": "unseen",
+     "step_started_s": 17.605,
+     "frame_s": null,
+     "spoken_s": 17.605
+    },
+    "level_line": {
+     "result": "unseen",
+     "step_started_s": 17.605,
+     "frame_s": null,
+     "spoken_s": 17.605
+    },
+    "handle": {
+     "result": "unseen",
+     "step_started_s": 17.605,
+     "frame_s": null,
+     "spoken_s": 17.605
+    }
+   },
+   "flagged": false,
+   "abstained": true,
+   "latency_s": {},
+   "hand_checks_logged": [
+    "belt_path_movement",
+    "car_position",
+    "harness_pinch"
+   ],
+   "spoken": [
+    "Coaching the Joie i-Snug 2 in the Tesla Model 3 (2027), installed with the seat belt and no base. Put the carrier on a rear seat, facing the back of the car. Never put a rear-facing seat in the front passenger seat while the airbag is on. Is the carrier on a rear seat, facing the back? Say yes or no.",
+    "Slide the lap belt into both side guides of the carrier, then show me the belt path from the door.",
+    "I could not see the lap belt and both side guides. I am listing it as not checked.",
+    "Slide the shoulder belt into the rear guide behind the carrier's head end.",
+    "I could not see the rear guide. I am listing it as not checked.",
+    "Pull the shoulder belt tight and keep the belt flat, with no twist.",
+    "I could not see the lap belt well enough to check for a twist. I am listing it as not checked.",
+    "Show me the level line on the side of the carrier, with the phone held level.",
+    "I could not see the level line. I am listing it as not checked.",
+    "Put the handle upright, in position 1, the car position.",
+    "I could not see the handle. I am listing it as not checked.",
+    "Hold the carrier where the belt goes through the guides and pull side to side and front to back. Does it move less than 2.5 centimeters? Say yes or no.",
+    "With the doll or baby buckled in, pinch the harness strap at the collarbone. Can you pinch any slack webbing? Say yes if you can pinch it, no if you cannot.",
+    "Visible checks I could not see: lap belt in both side guides, shoulder belt in the rear guide, no twist in the lap belt, level line level, handle upright. Hand checks you confirmed: carrier on a rear seat facing back, less than 2.5 centimeters of movement at the belt path, no slack in the harness pinch test. This is not a verdict on the install. Before the first real trip, book one check by a certified child passenger safety technician. Cybex offers a free virtual check, and Fundacion Gonzalo Rodriguez runs check days in Montevideo."
+   ],
+   "sam_frames": 10
+  },
+  {
+   "clip": "test-28-unseen.mp4",
+   "error": "unseen",
+   "visible_s": null,
+   "results": {
+    "car_position": "pass",
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "unseen",
+    "handle": "unseen",
+    "belt_path_movement": "pass",
+    "harness_pinch": "pass"
+   },
+   "details": {
+    "lap_guides": {
+     "result": "unseen",
+     "step_started_s": 0.003,
+     "frame_s": null,
+     "spoken_s": 9.26
+    },
+    "shoulder_guide": {
+     "result": "unseen",
+     "step_started_s": 9.261,
+     "frame_s": null,
+     "spoken_s": 18.103
+    },
+    "no_twist": {
+     "result": "unseen",
+     "step_started_s": 18.103,
+     "frame_s": null,
+     "spoken_s": 18.103
+    },
+    "level_line": {
+     "result": "unseen",
+     "step_started_s": 18.103,
+     "frame_s": null,
+     "spoken_s": 18.103
+    },
+    "handle": {
+     "result": "unseen",
+     "step_started_s": 18.103,
+     "frame_s": null,
+     "spoken_s": 18.103
+    }
+   },
+   "flagged": false,
+   "abstained": true,
+   "latency_s": {},
+   "hand_checks_logged": [
+    "belt_path_movement",
+    "car_position",
+    "harness_pinch"
+   ],
+   "spoken": [
+    "Coaching the Joie i-Snug 2 in the Tesla Model 3 (2027), installed with the seat belt and no base. Put the carrier on a rear seat, facing the back of the car. Never put a rear-facing seat in the front passenger seat while the airbag is on. Is the carrier on a rear seat, facing the back? Say yes or no.",
+    "Slide the lap belt into both side guides of the carrier, then show me the belt path from the door.",
+    "I could not see the lap belt and both side guides. I am listing it as not checked.",
+    "Slide the shoulder belt into the rear guide behind the carrier's head end.",
+    "I could not see the rear guide. I am listing it as not checked.",
+    "Pull the shoulder belt tight and keep the belt flat, with no twist.",
+    "I could not see the lap belt well enough to check for a twist. I am listing it as not checked.",
+    "Show me the level line on the side of the carrier, with the phone held level.",
+    "I could not see the level line. I am listing it as not checked.",
+    "Put the handle upright, in position 1, the car position.",
+    "I could not see the handle. I am listing it as not checked.",
+    "Hold the carrier where the belt goes through the guides and pull side to side and front to back. Does it move less than 2.5 centimeters? Say yes or no.",
+    "With the doll or baby buckled in, pinch the harness strap at the collarbone. Can you pinch any slack webbing? Say yes if you can pinch it, no if you cannot.",
+    "Visible checks I could not see: lap belt in both side guides, shoulder belt in the rear guide, no twist in the lap belt, level line level, handle upright. Hand checks you confirmed: carrier on a rear seat facing back, less than 2.5 centimeters of movement at the belt path, no slack in the harness pinch test. This is not a verdict on the install. Before the first real trip, book one check by a certified child passenger safety technician. Cybex offers a free virtual check, and Fundacion Gonzalo Rodriguez runs check days in Montevideo."
+   ],
+   "sam_frames": 10
+  }
+ ]
+}
