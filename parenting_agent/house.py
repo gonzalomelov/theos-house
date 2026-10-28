@@ -31,10 +31,13 @@ class HomeAssistant:
 
     def service(self, service, entity_id, data=None):
         domain, name = service.split(".", 1)
-        self._call(f"/api/services/{domain}/{name}", {"entity_id": entity_id, **(data or {})})
+        return self._call(f"/api/services/{domain}/{name}", {"entity_id": entity_id, **(data or {})})
 
     def state(self, entity_id):
         return self._call(f"/api/states/{entity_id}").get("state")
+
+    def attributes(self, entity_id):
+        return self._call(f"/api/states/{entity_id}").get("attributes") or {}
 
 
 class House:

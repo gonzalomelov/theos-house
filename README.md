@@ -76,6 +76,17 @@ python -m parenting_agent.fullday --wipe-only  # remove the entries earlier runs
 
 It replays the plan page day through the real agent: a bottle by voice, the changing table on the clips with a dirty diaper said aloud, a doorbell during the change, a long-nap note, the bath on its clip, a question answered from the log, and the night feed with the next feed and the next parent on duty. It writes `results/fullday/day.md`, `day.json` and the KR files in `results/fullday/kr222/`. What is not built yet shows as dry run in the report: Home Assistant actions (#9), delivery on Telegram, the ear and the speakers (#3, #8) and the house sound detector (#14). See `docs/full-day.md`.
 
+## Telegram and channel picking (issues #3 and #8)
+
+The agent hears and speaks on Telegram through @home_agent_example_bot, with long polling over plain HTTPS, so nothing is exposed. Only the family's chat ids (`TELEGRAM_CHAT_ID` in the env file, comma separated) are accepted. Other senders are ignored and logged as `channel_ignored` with their chat id only. Messages reach the same agent and the same memory as every other channel.
+
+- `parenting_agent/channels/messaging.py`: one messaging adapter interface and the channel plug-in that runs it. WhatsApp later is a new adapter only.
+- `parenting_agent/channels/telegram.py`: the Telegram adapter. Text for now, voice notes later.
+- `parenting_agent/channels/router.py`: picks one channel for each `notify` event and each agent reply on the channel `auto`. Help needed goes to the partner (a stub, Ceci has no phone channel yet). Away or unknown presence goes to Telegram. At home with a skill armed, or with the baby asleep, it goes to the ear (the Mac speaker for now). At home with hands free it goes to the kitchen Echo at low volume, and the volume is put back after. Presence comes from `person.gonza`, then `device_tracker.gonzas_iphone`.
+- `scripts/channels_check.py`: the real checks, a Telegram round trip, one Echo announce and a reminder routed with presence simulated as away. Results in `results/channels/check.json`.
+
+Home Assistant is reached through `ssh -f -N -L 127.0.0.1:18123:127.0.0.1:8123 vostro`, token `HA_MCP_TOKEN`.
+
 ## Tests
 
 ```bash
@@ -98,10 +109,11 @@ Everything in this repo was written during the event. The repo was created on Oc
 | Changing-table skill on the core, SAM 3.1 confirm on the Mac GPU | #6 | #25 | c0d7b5d |
 | README and architecture | #18 | #26 | 66780c2 |
 | Voice log and answers from Baby Buddy | #2 | #27 | 6571481 |
-| Simulated full day 06:10 to 02:30, one-command demo rehearsal | #17 | #28 | see PR |
+| Simulated full day 06:10 to 02:30, one-command demo rehearsal | #17 | #28 | be7ba04 |
+| Telegram channel and channel picking | #3, #8 | see PR | see PR |
 
 The first commits of Oct 26 (4f1898a to 90ca5a3) are an early skeleton that the issues above reviewed and partly rewrote.
 
-**Planned, not built yet:** Telegram channel (#3), Muse Spark Open live on Baseten (#4), channel picking (#8), live Home Assistant actions (#9, dry run today), bath skill (#10), house sounds (#14), always on on the family server (#15), sitter handover (#16), demo and submission (#11).
+**Planned, not built yet:** Muse Spark Open live on Baseten (#4), live Home Assistant actions (#9, dry run today), bath skill (#10), house sounds (#14), always on on the family server (#15), sitter handover (#16), demo and submission (#11).
 
 **Public open-source tools used, not written by us:** Meta SAM 3.1 weights and code, MediaPipe hand landmarker, OpenCV, NumPy, Baby Buddy (BSD-2-Clause), Home Assistant.

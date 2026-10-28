@@ -23,12 +23,31 @@
   ],
   "plugins": [
     "parenting_agent.agent.console:Console",
-    "parenting_agent.changing_table:ChangingTable"
+    "parenting_agent.changing_table:ChangingTable",
+    "parenting_agent.channels.telegram:Telegram",
+    "parenting_agent.channels.router:Router"
   ],
   "max_steps": 6,
   "changing_table": {
     "skill": "skills/changing-table.json",
     "source": "phone",
     "arm": "command"
+  },
+  "telegram": {
+    "token_env": "TELEGRAM_BOT_TOKEN",
+    "allowed_chat_ids_env": "TELEGRAM_CHAT_ID",
+    "poll_timeout_s": 25
+  },
+  "router": {
+    "person": "person.gonza",
+    "tracker": "device_tracker.gonzas_iphone",
+    "ha_url": "http://127.0.0.1:18123",
+    "ha_token_env": "HA_MCP_TOKEN",
+    "speaker": {
+      "notify": "notify.gonza_s_echo_dot_announce",
+      "media_player": "media_player.gonza_s_echo_dot",
+      "volume": 0.2,
+      "restore_after_s": 10
+    }
   }
 }
