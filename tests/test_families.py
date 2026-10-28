@@ -25,11 +25,13 @@ from parenting_agent.families import settings as settings_mod
 from parenting_agent.families.bot import FamiliesBot
 from parenting_agent.families.service import Families
 from parenting_agent.families.store import visitor_id
+from parenting_agent.families.texts import EN, ES
 
 ROOT = Path(__file__).resolve().parent.parent
 FAMILIES_DIR = ROOT / "parenting_agent" / "families"
 DEPLOY_DIR = ROOT / "deploy" / "families"
 TZ = zoneinfo.ZoneInfo("America/Montevideo")
+WELCOME = EN["WELCOME"] + EN["ASK_NAME"]
 
 
 def settings(**extra):
@@ -82,28 +84,28 @@ class InviteGate(unittest.TestCase):
     def test_no_code_gets_a_polite_reply_and_nothing_else(self):
         app = make(self)
         for message in ("hello", "/start", "bottle 120 ml", "/summary"):
-            self.assertEqual(app.handle("111", "111", message), [("111", service_mod.NO_CODE)])
+            self.assertEqual(app.handle("111", "111", message), [("111", EN["NO_CODE"])])
         self.assert_nothing_stored(app)
 
     def test_wrong_used_and_expired_codes_are_refused(self):
         clock = [datetime.datetime(2026, 10, 28, 10, 0, tzinfo=TZ)]
         app = make(self, clock=lambda: clock[0])
-        self.assertEqual(text(app.handle("111", "111", "/start AAAAAAAA")), service_mod.BAD_CODE)
+        self.assertEqual(text(app.handle("111", "111", "/start AAAAAAAA")), EN["BAD_CODE"])
         old = app.store.create_invite(days=7)
         clock[0] += datetime.timedelta(days=8)
-        self.assertEqual(text(app.handle("111", "111", f"/start {old}")), service_mod.BAD_CODE)
+        self.assertEqual(text(app.handle("111", "111", f"/start {old}")), EN["BAD_CODE"])
         self.assert_nothing_stored(app)
         code = app.store.create_invite()
-        self.assertEqual(text(app.handle("222", "222", f"/start {code.lower()}")), service_mod.WELCOME)
-        self.assertEqual(text(app.handle("333", "333", f"/start {code}")), service_mod.BAD_CODE)
+        self.assertEqual(text(app.handle("222", "222", f"/start {code.lower()}")), WELCOME)
+        self.assertEqual(text(app.handle("333", "333", f"/start {code}")), EN["BAD_CODE"])
         self.assertIsNone(app.store.parent(visitor_id("333")))
 
     def test_guessing_codes_stops_after_the_daily_limit(self):
         app = make(self)
         for _ in range(app.s["max_bad_codes_per_day"]):
-            self.assertEqual(text(app.handle("111", "111", "/start BBBBBBBB")), service_mod.BAD_CODE)
+            self.assertEqual(text(app.handle("111", "111", "/start BBBBBBBB")), EN["BAD_CODE"])
         code = app.store.create_invite()
-        self.assertEqual(text(app.handle("111", "111", f"/start {code}")), service_mod.TOO_MANY)
+        self.assertEqual(text(app.handle("111", "111", f"/start {code}")), EN["TOO_MANY"])
         self.assert_nothing_stored(app)
 
     def test_codes_are_stored_only_as_hashes(self):
@@ -114,14 +116,14 @@ class InviteGate(unittest.TestCase):
     def test_group_chats_are_refused(self):
         app = make(self)
         code = app.store.create_invite()
-        self.assertEqual(app.handle("111", "-100", f"/start {code}", chat_type="group"), [("-100", service_mod.GROUP)])
+        self.assertEqual(app.handle("111", "-100", f"/start {code}", chat_type="group"), [("-100", EN["GROUP"])])
         self.assert_nothing_stored(app)
 
     def test_the_beta_has_a_family_limit(self):
         app = make(self, PA_FAMILIES_MAX_FAMILIES="1")
         onboard(app, "111")
         code = app.store.create_invite()
-        self.assertEqual(text(app.handle("222", "222", f"/start {code}")), service_mod.FULL)
+        self.assertEqual(text(app.handle("222", "222", f"/start {code}")), EN["FULL"])
 
 
 class Onboarding(unittest.TestCase):
@@ -129,7 +131,7 @@ class Onboarding(unittest.TestCase):
         app = make(self)
         started = time.monotonic()
         replies = onboard(app, "111", name="Mia")
-        self.assertEqual(text(replies[0]), service_mod.WELCOME)
+        self.assertEqual(text(replies[0]), WELCOME)
         self.assertIn("When was Mia born?", text(replies[1]))
         self.assertIn("3 of 3", text(replies[2]))
         self.assertIn("All set for Mia", text(replies[3]))
@@ -147,7 +149,7 @@ class Onboarding(unittest.TestCase):
         app.handle("111", "111", f"/start {code}")
         app.handle("111", "111", "Leo")
         for bad in ("next tuesday", "2030-01-01", "1990-01-01"):
-            self.assertEqual(text(app.handle("111", "111", bad)), service_mod.BAD_BORN)
+            self.assertEqual(text(app.handle("111", "111", bad)), EN["BAD_BORN"])
         self.assertIn("3 of 3", text(app.handle("111", "111", "12/10/2026")))
 
     def test_the_other_parent_joins_the_same_log(self):
@@ -361,13 +363,13 @@ class DeleteMyData(unittest.TestCase):
         self.assertTrue(path.exists())
         self.assertIn("Send DELETE to confirm", text(app.handle("111", "111", "/deletemydata")))
         out = app.handle("111", "111", "DELETE")
-        self.assertEqual(out, [("111", service_mod.DELETED), ("222", service_mod.DELETED_OTHER)])
+        self.assertEqual(out, [("111", EN["DELETED"]), ("222", EN["DELETED_OTHER"])])
         self.assertFalse(path.exists())
         self.assertIsNone(app.store.parent(visitor_id("111")))
         self.assertIsNone(app.store.parent(visitor_id("222")))
         self.assertEqual({r["family_id"] for r in app.store.rows()}, {family_of(app, "333")})
         self.assertNotIn(family, app.store.family_ids())
-        self.assertEqual(text(app.handle("111", "111", "bottle 90 ml")), service_mod.NO_CODE)
+        self.assertEqual(text(app.handle("111", "111", "bottle 90 ml")), EN["NO_CODE"])
         self.assertEqual(app.family(family_of(app, "333")).fact("baby_name"), "Other")
 
     def test_anything_but_delete_cancels(self):
@@ -375,16 +377,16 @@ class DeleteMyData(unittest.TestCase):
         onboard(app, "111")
         app.handle("111", "111", "bottle 120 ml")
         app.handle("111", "111", "/deletemydata")
-        self.assertEqual(text(app.handle("111", "111", "no wait")), service_mod.DELETE_CANCELLED)
+        self.assertEqual(text(app.handle("111", "111", "no wait")), EN["DELETE_CANCELLED"])
         self.assertEqual(len(app.family(family_of(app, "111")).log.entries("feeding")), 1)
-        self.assertNotEqual(text(app.handle("111", "111", "DELETE")), service_mod.DELETED)
+        self.assertNotEqual(text(app.handle("111", "111", "DELETE")), EN["DELETED"])
 
     def test_delete_works_during_onboarding(self):
         app = make(self)
         code = app.store.create_invite()
         app.handle("111", "111", f"/start {code}")
         app.handle("111", "111", "/deletemydata")
-        self.assertEqual(text(app.handle("111", "111", "delete")), service_mod.DELETED)
+        self.assertEqual(text(app.handle("111", "111", "delete")), EN["DELETED"])
         self.assertEqual(app.store.family_count(), 0)
         self.assertEqual(app.store.rows(), [])
 
@@ -405,7 +407,7 @@ class Caps(unittest.TestCase):
         onboard(app, "111")
         app.handle("111", "111", "bottle 100 ml")
         app.handle("111", "111", "bottle 110 ml")
-        self.assertEqual(text(app.handle("111", "111", "bottle 120 ml")), service_mod.FAMILY_LIMIT)
+        self.assertEqual(text(app.handle("111", "111", "bottle 120 ml")), EN["FAMILY_LIMIT"])
         self.assertEqual(len(app.store.rows()), 6)
         self.assertEqual(len(app.family(family_of(app, "111")).log.entries("feeding")), 2)
 
@@ -531,8 +533,8 @@ class Bot(unittest.TestCase):
         self.assertEqual(bot.read_offset(), 12)
         bot.poll_once()
         self.assertEqual(fake.offsets, [0, 12])
-        self.assertEqual([t for _, t in fake.sent], [service_mod.WELCOME, service_mod.NO_CODE,
-                                                     service_mod.ASK_BORN.format(name="Mia")])
+        self.assertEqual([t for _, t in fake.sent], [WELCOME, EN["NO_CODE"],
+                                                     EN["ASK_BORN"].format(name="Mia")])
 
     def test_a_failed_send_does_not_stop_the_bot(self):
         app = make(self)

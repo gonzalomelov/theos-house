@@ -53,7 +53,7 @@ SQLite at `data/demo_sessions.sqlite`, table `sessions(ts TEXT ISO8601 UTC, visi
 - One row per visitor message the demo takes in: answered, refused, resting or busy. Empty, too long and over-the-limit messages write no row.
 - `ts` is UTC like `2026-10-28T18:34:17+00:00`. `channel` is `web`. `kind` is `demo`.
 - `visitor_id` is the sha256 of a random first-party cookie `pa_vid`. Never an IP, and no IP is logged anywhere.
-- `internal` is 1 when the browser has the cookie `pa_internal=1` (visit `/internal` once) or the request comes from localhost with no proxy headers. A request that came through a proxy (`X-Forwarded-For`, `CF-Connecting-IP`, `Forwarded`, `X-Real-IP`) is not treated as localhost.
+- `internal` is 1 when the browser has the internal cookie (visit `/internal/<secret>` once) or the request comes from localhost with no proxy headers. The secret is `PA_DEMO_INTERNAL_SECRET`, and the cookie holds a signature of it, never the secret, so a cookie made by hand does not count and a new secret unmarks every browser. Plain `/internal`, a wrong secret and any other `/internal/...` address answer a 404. With the secret unset or shorter than 32 characters, every `/internal` address is a 404. A request that came through a proxy (`X-Forwarded-For`, `CF-Connecting-IP`, `Forwarded`, `X-Real-IP`) is not treated as localhost.
 - No message text is stored. The same file also holds a `spend` table that the scorer ignores.
 
 ```bash
@@ -75,16 +75,17 @@ Then open http://127.0.0.1:8765 on a phone-sized window. Local visits count as i
 
 Deployed on Oct 28 2026. Three containers in the compose project `pa-demo`: `pa-demo` (only on the internal network `pa-demo-internal`, isolated gateway, no host address), `pa-demo-egress` (tinyproxy, HTTPS to the brain hosts only) and `pa-demo-edge` (socat, published on 127.0.0.1:4820 only). The Cloudflare tunnel sends `baby.bygmv.com` to that port. Base images are pinned by digest and the images are tagged with the git commit.
 
-- Env file `~/apps/pa-demo.env`, mode 600, one name: `ANTHROPIC_API_KEY`.
+- Env file `~/apps/pa-demo.env`, mode 600, two names: `ANTHROPIC_API_KEY` and `PA_DEMO_INTERNAL_SECRET`. `push-env` makes the secret on the Vostro the first time (32 random bytes, hex) and keeps it on later pushes.
 - Data `~/apps/pa-demo-data`, owned by the container user (uid 10001), mode 700.
 - Backups: `pa-backup.timer` (systemd user unit) copies every SQLite file of the demo and the families service daily at about 04:40 into `~/backups/parenting-agent-public`, keeps 7 days.
-- Mark your own browser as internal before testing: visit https://baby.bygmv.com/internal once.
+- Mark your own browser as internal before testing: open the address in `~/Engineering/gonza/meta-hackathon-2026/internal-url.txt` once. `sh deploy/public.sh demo internal-url FILE` writes it there (mode 600) without printing it. That file is excluded from git like `invites.txt`. Browsers marked with the old `/internal` address before Oct 28 evening are no longer internal.
 
 ```bash
-sh deploy/public.sh demo push-env     # only ANTHROPIC_API_KEY, from the meta-hackathon-2026 .env
+sh deploy/public.sh demo push-env     # ANTHROPIC_API_KEY from the meta-hackathon-2026 .env, the internal secret kept or made
+sh deploy/public.sh demo internal-url ~/Engineering/gonza/meta-hackathon-2026/internal-url.txt
 WALL_EXTRA_TARGETS="192.0.2.10:80 192.0.2.10:22" sh deploy/public.sh demo deploy
 sh deploy/public.sh demo check | status | logs 200 | stop | start
 sh deploy/public.sh backup install | run
 ```
 
-A deploy fails, stops the demo and starts the previous commit again when the health check or the wall check fails. The wall check probes every address of the Vostro on ports 22, 80, 8123 and 8790, the family agent's relay, the router, the Mac and the internet, directly and through the proxy, and checks the env holds no secret but the brain key. On Oct 28 all 103 probes were blocked or refused.
+A deploy fails, stops the demo and starts the previous commit again when the health check or the wall check fails. The wall check probes every address of the Vostro on ports 22, 80, 8123 and 8790, the family agent's relay, the router, the Mac and the internet, directly and through the proxy, and checks the env holds no secret but the brain key and the internal secret. On Oct 28 all 103 probes were blocked or refused.

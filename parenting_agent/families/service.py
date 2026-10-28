@@ -21,13 +21,15 @@ from ..agent.tools import core_tools
 from ..bus import Bus
 from ..rhythm import patterns
 from . import babylog
+from . import texts
+from .texts import t
 from .store import Store, visitor_id
 
 ALLOWED = ["log_baby_event", "read_baby_log", "baby_summary", "remember", "current_time"]
 CHANNEL = "telegram"
 MAX_PARENTS = 4
 DELETE_WINDOW_S = 600
-YES = {"yes", "y", "si", "sí", "s", "ok", "dale", "sure", "yes please"}
+YES = {"yes", "y", "si", "sí", "s", "ok", "dale", "sure", "yes please", "claro", "obvio", "sí, dale", "si dale"}
 START = re.compile(r"^/start(?:@\w+)?(?:\s+(\S+))?\s*$", re.I)
 COMMAND = re.compile(r"^/(\w+)(?:@\w+)?\s*(.*)$", re.S)
 DATE_FORMATS = ("%Y-%m-%d", "%d/%m/%Y", "%d-%m-%Y", "%d.%m.%Y", "%d/%m/%y")
@@ -37,53 +39,11 @@ This is one family's private log on Telegram. The baby is {name}, born {born}. C
 There are no house tools here and you cannot act in the house, never offer to. Never ask for or repeat personal details
 such as addresses or phone numbers.
 """
-
-NO_CODE = ("Hi. This bot is a private beta for invited families. If someone gave you an invite code, "
-           "send /start followed by the code, for example /start K7QM3XPA.")
-BAD_CODE = "That invite code is not valid or was already used. Please check it, or ask the person who invited you for a new one."
-TOO_MANY = "Too many codes tried today. Please try again tomorrow."
-FULL = "The beta is full right now. Thank you for your interest."
-GROUP = "I only work in a private chat. Please message me directly."
-ALREADY = "You are already set up. Send /help to see what I can do."
-TOO_LONG = "Please keep it under {n} characters."
-FAMILY_LIMIT = "Your family reached today's message limit. I will be back tomorrow. Nothing was logged from this message."
-THINK_FAIL = "I could not think that through just now. Please try again."
-
-WELCOME = ("Welcome. I keep a private log of your baby's feeds, diapers, sleep and baths, answer questions from it, "
-           "remind you of the next feed and send a short summary each evening. I never give medical advice. "
-           "Three quick questions and you are logging. Send /privacy to read what I store.\n\n"
-           "1 of 3. What is your baby's name or nickname?")
-ASK_BORN = "2 of 3. When was {name} born? For example 2026-10-12 or 12/10/2026."
-BAD_BORN = "I could not read that date. Please write it like 2026-10-12 or 12/10/2026. It cannot be in the future."
-ASK_PARTNER = ("3 of 3. Should the other parent log too? Reply yes and I will make an invite code for them, "
-               "or no. You can also send /invite later.")
-READY = ("All set for {name}. Just write what happened, for example:\n"
-         "bottle 120 ml\nleft breast 15 min\nwet and dirty diaper\n{name} fell asleep\n{name} woke up\nbath done\n\n"
-         "Or ask: when did {name} last eat? How much did {name} drink today?\n\n"
-         "/summary today so far, /next next feed, /invite the other parent, /reminders off or on, "
-         "/privacy what I store, /deletemydata delete everything.")
-PARTNER_CODE = ("Here is the invite for the other parent, valid for {days} days and for one person:\n{code}\n{link}"
-                "They send /start {code} to this bot and join {name}'s log.")
-PARTNER_WELCOME = ("Welcome. You joined {name}'s log. You and the other parent see and add to the same private log. "
-                   "I never give medical advice. Send /privacy to read what I store.\n\n")
-PRIVACY = ("What I store: your baby's name and birth date, what you log (feeds, diapers, sleep, baths, notes), "
-           "our conversation, and your Telegram chat id so I can answer you. For counting real use I keep one row per "
-           "message with the time and a scrambled id, never the text.\n"
-           "Where: one private file for your family on a small server in Gonza's home in Uruguay. Other families "
-           "cannot see it. To answer, the text of the conversation goes to an AI model (Anthropic Claude now, "
-           "Meta's Muse Spark later), which does not keep it or train on it. Telegram carries the messages.\n"
-           "Delete: send /deletemydata. It removes your family's file, the conversation, the rows and both parents' access, at once.")
-DELETE_ASK = ("This deletes {name}'s whole log, our conversation and access for everyone in your family. It cannot be undone. "
-              "Send DELETE to confirm. Anything else cancels.")
-DELETE_CANCELLED = "Not deleted. Everything is still here."
-DELETED = "Done. Everything about your family is deleted. Send /start with a new invite code if you ever want to come back."
-DELETED_OTHER = "The other parent deleted your family's data. Everything is gone. Thank you for trying the agent."
-HELP = READY
-
-
-def _n(count, word):
-    return f"{count} {word}" + ("" if count == 1 else "s")
-
+LANGUAGE_NOTE = {
+    "en": "Always reply in English, even when the parent writes in another language.\n",
+    "es": ("Always reply in Rioplatense Spanish with voseo (vos escribís, mandá, querés), warm, short and in plain words, "
+           "even when the parent writes in English. Log entries keep their English field values.\n"),
+}
 
 def _hm(minutes):
     h, m = divmod(int(round(minutes)), 60)
@@ -109,18 +69,21 @@ def parse_birth(text, today):
 
 class FamilyAgent(Agent):
     def system_prompt(self):
-        """The core prompt with the family's own facts only. Keys starting with _ are the service's bookkeeping."""
+        """The core prompt with the family's own facts only, and the family's language. Keys starting with _ are the
+        service's bookkeeping."""
         facts = {k: v["value"] for k, v in self.memory.facts().items() if not k.startswith("_")}
         base = SYSTEM.format(today=datetime.date.today().isoformat(), facts=json.dumps(facts or "none yet", ensure_ascii=False))
-        return base + FAMILY_NOTE.format(name=facts.get("baby_name", "the baby"), born=facts.get("birth_date", "recently"))
+        lang = self.memory.facts().get("_lang", {}).get("value") or "en"
+        return (base + FAMILY_NOTE.format(name=facts.get("baby_name", "the baby"), born=facts.get("birth_date", "recently"))
+                + LANGUAGE_NOTE.get(lang, LANGUAGE_NOTE["en"]))
 
 
 class FamilyBrain:
     """The real brain behind the caps: once the family's or the whole service's spend for today is at its cap,
-    the free rule-based brain takes over so logging and simple questions keep working."""
+    the free rule-based brain takes over so logging and simple questions keep working, in the family's language."""
 
-    def __init__(self, service, family_id, fallback_tokens=(4000, 400)):
-        self.service, self.family_id, self.fallback = service, family_id, fallback_tokens
+    def __init__(self, service, family_id, lang=lambda: "en", fallback_tokens=(4000, 400)):
+        self.service, self.family_id, self.lang, self.fallback = service, family_id, lang, fallback_tokens
         self.real, self.rules = service.brain, brain_mod.FakeBrain()
         self.name, self.model, self.destination = self.real.name, self.real.model, self.real.destination
 
@@ -138,11 +101,56 @@ class FamilyBrain:
     def step(self, system, transcript, tools):
         if self.real.name == "fake" or self.capped():
             self.name, self.destination = "fake", self.rules.destination
+            if self.lang() == "es":
+                return self.rules_in_spanish(system, transcript, tools)
             return self.rules.step(system, transcript, tools)
         self.name, self.destination = self.real.name, self.real.destination
         reply = self.real.step(system, transcript, tools)
         self.service.store.add_spend(self.family_id, self.cost(reply.usage))
         return reply
+
+    def rules_in_spanish(self, system, transcript, tools):
+        """The rule-based brain reads English notes and writes English replies. Here a Spanish note is read through
+        its English words and every reply comes back in Spanish, so no English text reaches a Spanish family."""
+        last = transcript[-1]
+        if last["role"] == "user":
+            head, sep, note = last["text"].rpartition("] ")
+            transcript = transcript[:-1] + [{**last, "text": head + sep + texts.note_to_english(note)}]
+        reply = self.rules.step(system, transcript, tools)
+        if reply.tool_calls or last["role"] != "tool":
+            if not reply.tool_calls:
+                reply.text = t("es", "NOTED")
+            return reply
+        result = last["result"]
+        if isinstance(result, str) and "failed" in result:
+            reply.text = t("es", "NOT_DONE")
+        elif last["name"] == "baby_summary":
+            reply.text = day_summary("es", "", result) or t("es", "NOTHING_YET")
+        elif last["name"] == "read_baby_log":
+            feeds = [e for e in result if e["kind"] == "feeding"]
+            reply.text = (t("es", "LOGGED_FEEDS", feeds=", ".join(t("es", "FEED_AT", ml=e["details"].get("amount_ml", "?"), at=e["ts"][11:16])
+                                                                   for e in feeds)) if feeds else t("es", "NOTHING_YET"))
+        else:
+            reply.text = t("es", "LOGGED")
+        return reply
+
+
+def day_summary(lang, name, s):
+    """Today's feeds, diapers, sleep and baths from a baby_summary result, or "" when nothing was logged."""
+    feeds, diapers, sleep, baths = s["feedings"], s["diapers"], s["sleep"], s["baths"]
+    if not (feeds["count"] or diapers["count"] or sleep["count"] or baths["count"]):
+        return ""
+    parts = [t(lang, "TODAY", name=name)] if name else []
+    if feeds["count"]:
+        total = t(lang, "FEEDS_TOTAL", ml=feeds["total_ml"]) if feeds["total_ml"] else ""
+        parts.append(t(lang, "FEEDS", feeds=texts.plural(lang, feeds["count"], "FEED"), total=total, last=feeds["last_at"]))
+    if diapers["count"]:
+        parts.append(t(lang, "DIAPERS", diapers=texts.plural(lang, diapers["count"], "DIAPER"), wet=diapers["wet"], dirty=diapers["dirty"]))
+    if sleep["count"]:
+        parts.append(t(lang, "SLEEP", time=_hm(sleep["total_min"]), sleeps=texts.plural(lang, sleep["count"], "SLEEP_ONE")))
+    if baths["count"]:
+        parts.append(t(lang, "BATH", last=baths["last_at"]))
+    return " ".join(parts)
 
 
 class Family:
@@ -156,7 +164,7 @@ class Family:
         self.log = babylog.FamilyBabyLog(self.memory, service.now)
         self.bus = Bus(None)
         tools = core_tools(self.memory, self.log, ALLOWED)
-        self.agent = FamilyAgent(self.bus, self.memory, self.log, tools, FamilyBrain(service, family_id),
+        self.agent = FamilyAgent(self.bus, self.memory, self.log, tools, FamilyBrain(service, family_id, lambda: self.lang),
                                  max_steps=service.s["max_steps"], history=service.s["history"])
         self.replies = collections.deque()
         self.bus.subscribe(self.replies.append, ["reply"])
@@ -165,17 +173,25 @@ class Family:
         return self.memory.facts().get(key, {}).get("value") or default
 
     @property
+    def lang(self):
+        lang = self.fact("_lang", "en")
+        return lang if lang in texts.LANGS else "en"
+
+    def t(self, key, **values):
+        return t(self.lang, key, **values)
+
+    @property
     def name(self):
-        return self.fact("baby_name", "your baby")
+        return self.fact("baby_name", "tu bebé" if self.lang == "es" else "your baby")
 
     def talk(self, text):
         self.replies.clear()
-        if rules.is_medical(text):
+        if texts.is_medical(text):
             self.memory.add_message(CHANNEL, "user", text)
-            self.agent.say(CHANNEL, rules.REFUSAL)
+            self.agent.say(CHANNEL, self.t("REFUSAL"))
         else:
             self.agent.handle({"kind": "message", "channel": CHANNEL, "text": text})
-        return " ".join(e["text"] for e in self.replies) or "OK."
+        return " ".join(e["text"] for e in self.replies) or self.t("OK")
 
     def close(self):
         self.memory.close()
@@ -221,30 +237,33 @@ class Families:
 
     # One message in
 
-    def handle(self, user_id, chat_id, text, chat_type="private"):
+    def handle(self, user_id, chat_id, text, chat_type="private", language_code=""):
+        """language_code is the sender's Telegram app language. It picks the language for strangers and for a new
+        family. A family that exists keeps its own language until a parent sends /idioma or /language."""
         text = (text or "").strip()
+        app_lang = texts.lang_for(language_code)
         if chat_type and chat_type != "private":
-            return [(chat_id, GROUP)]
+            return [(chat_id, t(app_lang, "GROUP"))]
         if not user_id or not text:
             return []
         vid = visitor_id(user_id)
         parent = self.store.parent(vid)
         if parent is None:
-            return [(chat_id, self.gate(vid, str(user_id), chat_id, text))]
-        if len(text) > self.s["max_input_chars"]:
-            return [(chat_id, TOO_LONG.format(n=self.s["max_input_chars"]))]
+            return [(chat_id, self.gate(vid, str(user_id), chat_id, text, app_lang))]
         family_id = parent["family_id"]
-        if self.store.family_messages_today(family_id) >= self.s["max_messages_per_family_day"]:
-            return [(chat_id, FAMILY_LIMIT)]
-        self.store.add_message(vid, family_id, parent["internal"])
         f = self.family(family_id)
+        if len(text) > self.s["max_input_chars"]:
+            return [(chat_id, f.t("TOO_LONG", n=self.s["max_input_chars"]))]
+        if self.store.family_messages_today(family_id) >= self.s["max_messages_per_family_day"]:
+            return [(chat_id, f.t("FAMILY_LIMIT"))]
+        self.store.add_message(vid, family_id, parent["internal"])
         with f.lock:
             pending_delete = f.fact("_delete_asked")
             if pending_delete:
                 f.memory.remember("_delete_asked", "")
-                if text.strip(" .!").upper() == "DELETE" and time.time() - float(pending_delete) <= DELETE_WINDOW_S:
+                if text.strip(" .!¡").upper() == f.t("DELETE_WORD") and time.time() - float(pending_delete) <= DELETE_WINDOW_S:
                     return self.delete(family_id, chat_id)
-                return [(chat_id, DELETE_CANCELLED)]
+                return [(chat_id, f.t("DELETE_CANCELLED"))]
             command = COMMAND.match(text)
             if command:
                 return [(chat_id, self.command(f, parent, command.group(1).lower(), command.group(2).strip()))]
@@ -254,77 +273,84 @@ class Families:
                 return [(chat_id, f.talk(text))]
             except brain_mod.BrainError as error:
                 f.bus.publish("agent_error", error=str(error)[:300])
-                return [(chat_id, THINK_FAIL)]
+                return [(chat_id, f.t("THINK_FAIL"))]
 
-    def gate(self, vid, user_id, chat_id, text):
+    def gate(self, vid, user_id, chat_id, text, lang="en"):
         """Strangers: only a valid invite code gets in. Nothing about a stranger is stored on disk."""
         start = START.match(text)
         if not start or not start.group(1):
-            return NO_CODE
+            return t(lang, "NO_CODE")
         day = self.store.today()
         if self.bad_codes[(vid, day)] >= self.s["max_bad_codes_per_day"]:
-            return TOO_MANY
+            return t(lang, "TOO_MANY")
         code = start.group(1)
         invite = self.store.invite(code)
         if invite is None:
             self.bad_codes[(vid, day)] += 1
-            return BAD_CODE
+            return t(lang, "BAD_CODE")
         family_id = invite["family_id"]
         if family_id is None and self.store.family_count() >= self.s["max_families"]:
-            return FULL
+            return t(lang, "FULL")
         if family_id is not None and len(self.store.parents_of(family_id)) >= MAX_PARENTS:
-            return BAD_CODE
+            return t(lang, "BAD_CODE")
         if not self.store.use_invite(code, vid):
-            return BAD_CODE
+            return t(lang, "BAD_CODE")
         internal = invite["internal"] or user_id in self.s["internal_user_ids"]
         if family_id is None:
             family_id = self.store.create_family()
             self.store.add_parent(vid, chat_id, family_id, "baby_name", internal)
             self.store.add_message(vid, family_id, internal)
-            self.family(family_id)
-            return WELCOME
+            self.family(family_id).memory.remember("_lang", lang)
+            return t(lang, "WELCOME") + t(lang, "ASK_NAME")
         self.store.add_parent(vid, chat_id, family_id, "ready", internal)
         self.store.add_message(vid, family_id, internal)
-        name = self.family(family_id).name
-        return PARTNER_WELCOME.format(name=name) + READY.format(name=name)
+        f = self.family(family_id)
+        return f.t("PARTNER_WELCOME", name=f.name) + f.t("READY", name=f.name)
 
     def onboard(self, f, parent, text):
         step, vid = parent["step"], parent["visitor_id"]
         if step == "baby_name":
             name = " ".join(text.split())[:40].strip(" .!")
             if not name:
-                return WELCOME.rsplit("\n\n", 1)[-1]
+                return f.t("ASK_NAME")
             f.memory.remember("baby_name", name)
             self.store.set_step(vid, "birth_date")
-            return ASK_BORN.format(name=name)
+            return f.t("ASK_BORN", name=name)
         if step == "birth_date":
             born = parse_birth(text, self.now().date())
             if born is None:
-                return BAD_BORN
+                return f.t("BAD_BORN")
             f.memory.remember("birth_date", born.isoformat())
             self.store.set_step(vid, "partner")
-            return ASK_PARTNER
+            return f.t("ASK_PARTNER")
         self.store.set_step(vid, "ready")
-        ready = READY.format(name=f.name)
-        if text.lower().strip(" .!") in YES:
+        ready = f.t("READY", name=f.name)
+        if text.lower().strip(" .!¡") in YES:
             return self.partner_invite(f, parent) + "\n\n" + ready
         return ready
 
     def partner_invite(self, f, parent):
         if len(self.store.parents_of(f.family_id)) >= MAX_PARENTS:
-            return f"{f.name}'s log already has {MAX_PARENTS} people, the most it can have."
+            return f.t("PARTNER_MAX", name=f.name, n=MAX_PARENTS)
         code = self.store.create_invite(f.family_id, self.s["invite_days"], internal=parent["internal"])
-        return PARTNER_CODE.format(code=code, link=self.invite_link(code), days=self.s["invite_days"], name=f.name)
+        return f.t("PARTNER_CODE", code=code, link=self.invite_link(code), days=self.s["invite_days"], name=f.name)
 
-    def command(self, f, parent, name, arg):
-        ready = parent["step"] == "ready"
+    def command(self, f, parent, typed, arg):
+        """typed is the command as sent, in either language: /resumen and /summary are the same command."""
+        name, ready = texts.COMMANDS.get(typed, typed), parent["step"] == "ready"
         if name == "start":
-            return ALREADY if ready else self.onboard_prompt(f, parent)
+            return f.t("ALREADY") if ready else self.onboard_prompt(f, parent)
         if name == "privacy":
-            return PRIVACY
+            return f.t("PRIVACY")
         if name == "deletemydata":
             f.memory.remember("_delete_asked", str(time.time()))
-            return DELETE_ASK.format(name=f.name)
+            return f.t("DELETE_ASK", name=f.name)
+        if name == "language":
+            # /idioma alone means Spanish, /language alone means English, or name one: /idioma en, /language es.
+            wanted = texts.LANGUAGE_ARGS.get(arg.lower().split(" ")[0] if arg else "")
+            f.memory.remember("_lang", wanted or ("es" if typed == "idioma" else "en"))
+            note = f.t("LANG_SET")
+            return note if ready else note + "\n\n" + self.onboard_prompt(f, parent)
         if not ready:
             return self.onboard_prompt(f, parent)
         if name == "summary":
@@ -334,25 +360,27 @@ class Families:
         if name == "invite":
             return self.partner_invite(f, parent)
         if name == "reminders":
-            off = arg.lower() == "off"
+            off = arg.lower() in ("off", "apagar", "no")
             f.memory.remember("_reminders", "off" if off else "on")
-            return "Feed reminders are off. Send /reminders on to turn them back on." if off else "Feed reminders are on."
-        return HELP.format(name=f.name)
+            return f.t("REMINDERS_OFF") if off else f.t("REMINDERS_ON")
+        return f.t("READY", name=f.name)
 
     def onboard_prompt(self, f, parent):
         step = parent["step"]
         if step == "baby_name":
-            return WELCOME.rsplit("\n\n", 1)[-1]
+            return f.t("ASK_NAME")
         if step == "birth_date":
-            return ASK_BORN.format(name=f.name)
-        return ASK_PARTNER
+            return f.t("ASK_BORN", name=f.name)
+        return f.t("ASK_PARTNER")
 
     def delete(self, family_id, chat_id):
+        f = self.family(family_id)
+        done, other_done = f.t("DELETED"), f.t("DELETED_OTHER")
         others = [p["chat_id"] for p in self.store.parents_of(family_id) if p["chat_id"] != str(chat_id)]
         self.forget(family_id)
         babylog.wipe(self.s["data_dir"], family_id)
         self.store.delete_family(family_id)
-        return [(chat_id, DELETED)] + [(other, DELETED_OTHER) for other in others]
+        return [(chat_id, done)] + [(other, other_done) for other in others]
 
     # What the agent says first
 
@@ -360,34 +388,22 @@ class Families:
         now = now or self.now()
         nxt = patterns.next_feed(f.log.rhythm_rows(), now)
         if not nxt:
-            return {"text": f"I need two feeds in {f.name}'s log before I can tell the next one.", "at": None}
+            return {"text": f.t("NEED_TWO_FEEDS", name=f.name), "at": None}
         minutes = round((nxt["at"] - now).total_seconds() / 60)
         when = patterns.hhmm(nxt["at"].astimezone(self.tz))
-        text = (f"Next feed for {f.name} around {when}, in about {minutes} min. Feeds have been about {_hm(nxt['gap_min'])} apart."
-                if minutes >= 0 else f"A feed for {f.name} was expected around {when}, {_hm(-minutes)} ago.")
+        text = (f.t("NEXT_FEED", name=f.name, when=when, minutes=minutes, gap=_hm(nxt["gap_min"]))
+                if minutes >= 0 else f.t("FEED_LATE", name=f.name, when=when, ago=_hm(-minutes)))
         return {"text": text, "at": nxt["at"], "last": nxt["computed_from"][-1]}
 
-    def summary_text(self, f, now=None):
+    def summary_text(self, f, now=None, quiet=False):
+        """Today so far for the family. With quiet, "" when nothing was logged instead of saying so."""
         now = now or self.now()
         midnight = now.replace(hour=0, minute=0, second=0, microsecond=0)
-        s = f.log.summary(midnight.isoformat(timespec="seconds"))
-        feeds, diapers, sleep, baths = s["feedings"], s["diapers"], s["sleep"], s["baths"]
-        if not (feeds["count"] or diapers["count"] or sleep["count"] or baths["count"]):
-            return f"Nothing logged for {f.name} today yet."
-        parts = [f"Today for {f.name}:"]
-        if feeds["count"]:
-            parts.append(_n(feeds["count"], "feed") + (f", {feeds['total_ml']} ml in total" if feeds["total_ml"] else "")
-                         + f", the last at {feeds['last_at']}.")
-        if diapers["count"]:
-            parts.append(f"{_n(diapers['count'], 'diaper')}, {diapers['wet']} wet and {diapers['dirty']} dirty.")
-        if sleep["count"]:
-            parts.append(f"{_hm(sleep['total_min'])} of sleep over {_n(sleep['count'], 'sleep')}.")
-        if baths["count"]:
-            parts.append(f"Bath at {baths['last_at']}.")
+        text = day_summary(f.lang, f.name, f.log.summary(midnight.isoformat(timespec="seconds")))
+        if not text:
+            return "" if quiet else f.t("NOTHING_TODAY", name=f.name)
         nxt = self.next_feed(f, now)
-        if nxt["at"] is not None:
-            parts.append(nxt["text"])
-        return " ".join(parts)
+        return text + (" " + nxt["text"] if nxt["at"] is not None else "")
 
     def tick(self, now=None):
         """Reminders and summaries due now, as (chat_id, text). Each is sent once."""
@@ -400,12 +416,12 @@ class Families:
             f = self.family(family_id)
             with f.lock:
                 for text in self.due(f, now):
-                    if patterns.no_advice(text):
+                    if patterns.no_advice(text) and texts.no_advice_es(text):
                         out += [(chat, text) for chat in chats]
         return out
 
     def due(self, f, now):
-        texts = []
+        texts_due = []
         if f.fact("_reminders", "on") != "off":
             nxt = self.next_feed(f, now)
             if nxt["at"] is not None:
@@ -414,14 +430,14 @@ class Families:
                 in_window = nxt["at"] - lead <= now <= nxt["at"] + datetime.timedelta(minutes=30)
                 if recent and in_window and f.fact("_reminded_for") != nxt["last"]:
                     f.memory.remember("_reminded_for", nxt["last"])
-                    texts.append(nxt["text"])
+                    texts_due.append(nxt["text"])
         day = now.date().isoformat()
         if now.hour >= self.s["summary_hour"] and f.fact("_summary_day") != day:
-            text = self.summary_text(f, now)
-            if not text.startswith("Nothing logged"):
+            text = self.summary_text(f, now, quiet=True)
+            if text:
                 f.memory.remember("_summary_day", day)
-                texts.append(text)
-        return texts
+                texts_due.append(text)
+        return texts_due
 
     def last_feed_start(self, f):
         rows = patterns.feeds(f.log.rhythm_rows())

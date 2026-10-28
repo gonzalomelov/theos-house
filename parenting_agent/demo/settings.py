@@ -72,6 +72,12 @@ def read_brain_key(path, environ=None):
     return read
 
 
+# The secret in the address /internal/<secret> that marks a browser as Gonza's own. Shorter than this, the
+# feature is off and every /internal address is a 404.
+INTERNAL_SECRET = "PA_DEMO_INTERNAL_SECRET"
+INTERNAL_SECRET_MIN = 32
+
+
 def _number(environ, name, default, cast=float):
     raw = environ.get(name)
     return cast(raw) if raw not in (None, "") else default
@@ -94,6 +100,7 @@ def load(environ=None):
         "host": environ.get("PA_DEMO_HOST", "127.0.0.1"),
         "port": _number(environ, "PA_DEMO_PORT", 8765, int),
         "secure_cookie": environ.get("PA_DEMO_SECURE_COOKIE", "0") == "1",
+        "internal_secret": secret if len(secret := environ.get(INTERNAL_SECRET, "").strip()) >= INTERNAL_SECRET_MIN else "",
         "max_messages_per_visitor": _number(environ, "PA_DEMO_MAX_MESSAGES", 25, int),
         "max_messages_per_day": _number(environ, "PA_DEMO_MAX_DAILY_MESSAGES", 1500, int),
         "daily_usd_cap": _number(environ, "PA_DEMO_DAILY_USD", 2.0),

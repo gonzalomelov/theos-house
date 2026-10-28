@@ -23,6 +23,7 @@ class Incoming:
     sender: str = ""
     user_id: str = ""
     chat_type: str = ""
+    language_code: str = ""
 
 
 class MessagingError(Exception):

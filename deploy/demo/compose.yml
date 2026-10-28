@@ -6,8 +6,8 @@
 #
 # The wall: `demo` sits only on an internal network with no gateway and no host address. It can reach the
 # egress proxy and the edge, nothing else: not the host, not Home Assistant, not Baby Buddy, not the LAN.
-# The proxy allows HTTPS CONNECT only to the brain hosts in egress/filter. The env file holds one line,
-# ANTHROPIC_API_KEY (or BASETEN_API_KEY), and nothing else. No host networking, ever.
+# The proxy allows HTTPS CONNECT only to the brain hosts in egress/filter. The env file holds two lines,
+# ANTHROPIC_API_KEY (or BASETEN_API_KEY) and PA_DEMO_INTERNAL_SECRET, and nothing else. No host networking, ever.
 name: pa-demo
 
 x-hardened: &hardened
@@ -33,6 +33,7 @@ services:
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:?set ANTHROPIC_API_KEY in the env file}
       PA_DEMO_BRAIN: ${PA_DEMO_BRAIN:-claude}
       PA_DEMO_DAILY_USD: ${PA_DEMO_DAILY_USD:-2}
+      PA_DEMO_INTERNAL_SECRET: ${PA_DEMO_INTERNAL_SECRET:?set PA_DEMO_INTERNAL_SECRET in the env file}
       HTTPS_PROXY: http://egress:8888
       NO_PROXY: localhost,127.0.0.1
     volumes:
