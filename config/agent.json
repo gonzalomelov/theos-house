@@ -23,7 +23,16 @@
     "start_bath",
     "finish_bath",
     "cabin_ready",
-    "car_status"
+    "car_status",
+    "study_light",
+    "echo_do_not_disturb",
+    "announce_kitchen",
+    "tv_mute",
+    "vacuum_pause",
+    "vacuum_dock",
+    "push_gonza",
+    "add_to_list",
+    "house_status"
   ],
   "plugins": [
     "parenting_agent.agent.console:Console",
@@ -31,7 +40,8 @@
     "parenting_agent.camera_skill:CameraSkills",
     "parenting_agent.channels.telegram:Telegram",
     "parenting_agent.channels.router:Router",
-    "parenting_agent.tesla.trips:CarTrips"
+    "parenting_agent.tesla.trips:CarTrips",
+    "parenting_agent.house_tools:HouseTools"
   ],
   "max_steps": 6,
   "changing_table": {
@@ -58,6 +68,11 @@
       "volume": 0.2,
       "restore_after_s": 10
     }
+  },
+  "house": {
+    "live": false,
+    "ha_url": "http://127.0.0.1:18123",
+    "ha_token_env": "HA_MCP_TOKEN"
   },
   "car": {
     "backend": "simulated",
