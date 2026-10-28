@@ -155,7 +155,7 @@ docker network inspect "$NETWORK" >/dev/null 2>&1 || docker network create --int
   -o com.docker.network.bridge.gateway_mode_ipv4=isolated "$NETWORK" >/dev/null
 network_is_walled
 # The data folder belongs to the user inside the container only.
-[ -d "$DATA" ] || sudo -n install -d -m 700 -o "$UID_IN" -g "$UID_IN" "$DATA"
+[ -d "$DATA" ] || { sudo -n install -d -m 700 "$DATA" && sudo -n chown "$UID_IN:$UID_IN" "$DATA"; }
 
 PREVIOUS="$(cat "$CURRENT_FILE" 2>/dev/null || true)"
 APP_TAG="$SHA" compose build --quiet
