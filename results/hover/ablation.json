@@ -1,0 +1,2229 @@
+{
+  "date": "2026-10-28, during the Meta hackathon (Oct 27 to Nov 4)",
+  "issues": [
+    "#6 changing table",
+    "#10 bath"
+  ],
+  "machine": "Apple M3 Max, SAM 3.1 facebook/sam3.1 on MPS, MediaPipe hand landmarker and EfficientDet lite0 on CPU",
+  "set": {
+    "where": "~/Engineering/gonza/meta-hackathon-2026-synthetic/hover/set, not in git",
+    "made_by": "scripts/hover_render.py from the generated changing-table and bath clips (generated baby and a doll, never a real child). fal was not used: no new generation was needed and the Oct 23 balance (about 0.28 USD) does not cover a video clip",
+    "labels": "by eye before any model ran (labels.json in the set). hover: no hand touches the baby, the voice must speak within 2.5 s. touch: a hand rests on the baby, the voice must stay silent",
+    "test": {
+      "changing_table": {
+        "hover": 13,
+        "touch": 8
+      },
+      "bath": {
+        "hover": 13,
+        "touch": 8
+      }
+    },
+    "dev": {
+      "changing_table": {
+        "hover": 19,
+        "touch": 12
+      }
+    },
+    "rendered_hover": "the resting hands lifted 2, 3.5 or 5 cm: perspective growth for a camera 45 cm above, and a shadow on the baby. 24 of the 26 test hovers",
+    "natural_hover": "2 test hovers already in the generated clips, hands held well above the baby (more than 5 cm)",
+    "split": "by source stretch. dev: the first 1.8 s and 2.4 to 3.2 s of grok-handsoff and the first 1.2 s of kling-handsoff. test: grok-onehand 2.6 to 4.8 s, hover 2.0 to 3.6 s, the bath clips. Every source also mirrored"
+  },
+  "design_change": {
+    "what": "alarm.confirm_wait_s: when the reflex raises on a near reading (off, but a hand box still overlaps the baby box) and SAM 3.1 runs, the voice waits for SAM up to confirm_wait_s instead of voice_hold_s. The chime stays instant. A clear off reading or an unsure answer goes back to voice_hold_s",
+    "picked_on": "dev only. 1.6 and 2.0 s left the one dev false voice. 2.3 s removed it with SAM, the reflex-only control at 2.3 s did not. 2.3 s is the most the 2.5 s spoken target allows",
+    "enabled": "skills/changing-table.json. Not in skills/bath.json: there SAM 3.1 read 6 of 8 touch frames as off, so waiting for it cannot cancel anything"
+  },
+  "test_results": [
+    {
+      "config": "reflex only (confirm.provider none)",
+      "generated_at": "2026-10-28T20:25:53-03:00",
+      "all": {
+        "hover_moments": 26,
+        "hover_spoken_within_2_5_s": 2,
+        "hover_missed": 24,
+        "touch_moments": 16,
+        "touch_false_voices": 0,
+        "touch_chimes": 0,
+        "cancels": 0,
+        "latency_median_s": 1.653,
+        "latency_max_s": 1.653
+      },
+      "changing_table": {
+        "hover_moments": 13,
+        "hover_spoken_within_2_5_s": 1,
+        "hover_missed": 12,
+        "touch_moments": 8,
+        "touch_false_voices": 0,
+        "touch_chimes": 0,
+        "cancels": 0,
+        "latency_median_s": 1.653,
+        "latency_max_s": 1.653
+      },
+      "bath": {
+        "hover_moments": 13,
+        "hover_spoken_within_2_5_s": 1,
+        "hover_missed": 12,
+        "touch_moments": 8,
+        "touch_false_voices": 0,
+        "touch_chimes": 0,
+        "cancels": 0,
+        "latency_median_s": 1.581,
+        "latency_max_s": 1.581
+      },
+      "moments": [
+        {
+          "id": "table-a-touch-p0",
+          "kind": "touch",
+          "lift_cm": 0.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-a-touch-p33",
+          "kind": "touch",
+          "lift_cm": 0.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-a-hover-2cm",
+          "kind": "hover",
+          "lift_cm": 2.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-a-hover-3.5cm",
+          "kind": "hover",
+          "lift_cm": 3.5,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-a-hover-5cm",
+          "kind": "hover",
+          "lift_cm": 5.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-a-m-touch-p0",
+          "kind": "touch",
+          "lift_cm": 0.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-a-m-touch-p33",
+          "kind": "touch",
+          "lift_cm": 0.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-a-m-hover-2cm",
+          "kind": "hover",
+          "lift_cm": 2.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-a-m-hover-3.5cm",
+          "kind": "hover",
+          "lift_cm": 3.5,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-a-m-hover-5cm",
+          "kind": "hover",
+          "lift_cm": 5.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-b-touch-p0",
+          "kind": "touch",
+          "lift_cm": 0.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-b-touch-p24",
+          "kind": "touch",
+          "lift_cm": 0.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-b-hover-2cm",
+          "kind": "hover",
+          "lift_cm": 2.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-b-hover-3.5cm",
+          "kind": "hover",
+          "lift_cm": 3.5,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-b-hover-5cm",
+          "kind": "hover",
+          "lift_cm": 5.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-b-m-touch-p0",
+          "kind": "touch",
+          "lift_cm": 0.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-b-m-touch-p24",
+          "kind": "touch",
+          "lift_cm": 0.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-b-m-hover-2cm",
+          "kind": "hover",
+          "lift_cm": 2.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-b-m-hover-3.5cm",
+          "kind": "hover",
+          "lift_cm": 3.5,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-b-m-hover-5cm",
+          "kind": "hover",
+          "lift_cm": 5.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-a-touch-p0",
+          "kind": "touch",
+          "lift_cm": 0.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-a-touch-p51",
+          "kind": "touch",
+          "lift_cm": 0.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-a-hover-2cm",
+          "kind": "hover",
+          "lift_cm": 2.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-a-hover-3.5cm",
+          "kind": "hover",
+          "lift_cm": 3.5,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-a-hover-5cm",
+          "kind": "hover",
+          "lift_cm": 5.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-a-m-touch-p0",
+          "kind": "touch",
+          "lift_cm": 0.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-a-m-touch-p51",
+          "kind": "touch",
+          "lift_cm": 0.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-a-m-hover-2cm",
+          "kind": "hover",
+          "lift_cm": 2.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-a-m-hover-3.5cm",
+          "kind": "hover",
+          "lift_cm": 3.5,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-a-m-hover-5cm",
+          "kind": "hover",
+          "lift_cm": 5.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-b-touch-p0",
+          "kind": "touch",
+          "lift_cm": 0.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-b-touch-p111",
+          "kind": "touch",
+          "lift_cm": 0.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-b-hover-2cm",
+          "kind": "hover",
+          "lift_cm": 2.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-b-hover-3.5cm",
+          "kind": "hover",
+          "lift_cm": 3.5,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-b-hover-5cm",
+          "kind": "hover",
+          "lift_cm": 5.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-b-m-touch-p0",
+          "kind": "touch",
+          "lift_cm": 0.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-b-m-touch-p111",
+          "kind": "touch",
+          "lift_cm": 0.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-b-m-hover-2cm",
+          "kind": "hover",
+          "lift_cm": 2.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-b-m-hover-3.5cm",
+          "kind": "hover",
+          "lift_cm": 3.5,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-b-m-hover-5cm",
+          "kind": "hover",
+          "lift_cm": 5.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "natural-table-b",
+          "kind": "hover",
+          "lift_cm": null,
+          "spoken": true,
+          "latency_s": 1.653,
+          "chimes": 1,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": [
+            "hold"
+          ]
+        },
+        {
+          "id": "natural-bath-a",
+          "kind": "hover",
+          "lift_cm": null,
+          "spoken": true,
+          "latency_s": 1.581,
+          "chimes": 2,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": [
+            "hold"
+          ]
+        }
+      ]
+    },
+    {
+      "config": "reflex only, voice waits 2.3 s on a near reading (control)",
+      "generated_at": "2026-10-28T20:30:53-03:00",
+      "all": {
+        "hover_moments": 26,
+        "hover_spoken_within_2_5_s": 2,
+        "hover_missed": 24,
+        "touch_moments": 16,
+        "touch_false_voices": 0,
+        "touch_chimes": 0,
+        "cancels": 0,
+        "latency_median_s": 1.62,
+        "latency_max_s": 1.62
+      },
+      "changing_table": {
+        "hover_moments": 13,
+        "hover_spoken_within_2_5_s": 1,
+        "hover_missed": 12,
+        "touch_moments": 8,
+        "touch_false_voices": 0,
+        "touch_chimes": 0,
+        "cancels": 0,
+        "latency_median_s": 1.62,
+        "latency_max_s": 1.62
+      },
+      "bath": {
+        "hover_moments": 13,
+        "hover_spoken_within_2_5_s": 1,
+        "hover_missed": 12,
+        "touch_moments": 8,
+        "touch_false_voices": 0,
+        "touch_chimes": 0,
+        "cancels": 0,
+        "latency_median_s": 1.501,
+        "latency_max_s": 1.501
+      },
+      "moments": [
+        {
+          "id": "table-a-touch-p0",
+          "kind": "touch",
+          "lift_cm": 0.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-a-touch-p33",
+          "kind": "touch",
+          "lift_cm": 0.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-a-hover-2cm",
+          "kind": "hover",
+          "lift_cm": 2.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-a-hover-3.5cm",
+          "kind": "hover",
+          "lift_cm": 3.5,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-a-hover-5cm",
+          "kind": "hover",
+          "lift_cm": 5.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-a-m-touch-p0",
+          "kind": "touch",
+          "lift_cm": 0.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-a-m-touch-p33",
+          "kind": "touch",
+          "lift_cm": 0.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-a-m-hover-2cm",
+          "kind": "hover",
+          "lift_cm": 2.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-a-m-hover-3.5cm",
+          "kind": "hover",
+          "lift_cm": 3.5,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-a-m-hover-5cm",
+          "kind": "hover",
+          "lift_cm": 5.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-b-touch-p0",
+          "kind": "touch",
+          "lift_cm": 0.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-b-touch-p24",
+          "kind": "touch",
+          "lift_cm": 0.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-b-hover-2cm",
+          "kind": "hover",
+          "lift_cm": 2.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-b-hover-3.5cm",
+          "kind": "hover",
+          "lift_cm": 3.5,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-b-hover-5cm",
+          "kind": "hover",
+          "lift_cm": 5.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-b-m-touch-p0",
+          "kind": "touch",
+          "lift_cm": 0.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-b-m-touch-p24",
+          "kind": "touch",
+          "lift_cm": 0.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-b-m-hover-2cm",
+          "kind": "hover",
+          "lift_cm": 2.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-b-m-hover-3.5cm",
+          "kind": "hover",
+          "lift_cm": 3.5,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-b-m-hover-5cm",
+          "kind": "hover",
+          "lift_cm": 5.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-a-touch-p0",
+          "kind": "touch",
+          "lift_cm": 0.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-a-touch-p51",
+          "kind": "touch",
+          "lift_cm": 0.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-a-hover-2cm",
+          "kind": "hover",
+          "lift_cm": 2.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-a-hover-3.5cm",
+          "kind": "hover",
+          "lift_cm": 3.5,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-a-hover-5cm",
+          "kind": "hover",
+          "lift_cm": 5.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-a-m-touch-p0",
+          "kind": "touch",
+          "lift_cm": 0.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-a-m-touch-p51",
+          "kind": "touch",
+          "lift_cm": 0.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-a-m-hover-2cm",
+          "kind": "hover",
+          "lift_cm": 2.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-a-m-hover-3.5cm",
+          "kind": "hover",
+          "lift_cm": 3.5,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-a-m-hover-5cm",
+          "kind": "hover",
+          "lift_cm": 5.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-b-touch-p0",
+          "kind": "touch",
+          "lift_cm": 0.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-b-touch-p111",
+          "kind": "touch",
+          "lift_cm": 0.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-b-hover-2cm",
+          "kind": "hover",
+          "lift_cm": 2.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-b-hover-3.5cm",
+          "kind": "hover",
+          "lift_cm": 3.5,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-b-hover-5cm",
+          "kind": "hover",
+          "lift_cm": 5.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-b-m-touch-p0",
+          "kind": "touch",
+          "lift_cm": 0.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-b-m-touch-p111",
+          "kind": "touch",
+          "lift_cm": 0.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-b-m-hover-2cm",
+          "kind": "hover",
+          "lift_cm": 2.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-b-m-hover-3.5cm",
+          "kind": "hover",
+          "lift_cm": 3.5,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-b-m-hover-5cm",
+          "kind": "hover",
+          "lift_cm": 5.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "natural-table-b",
+          "kind": "hover",
+          "lift_cm": null,
+          "spoken": true,
+          "latency_s": 1.62,
+          "chimes": 1,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": [
+            "hold"
+          ]
+        },
+        {
+          "id": "natural-bath-a",
+          "kind": "hover",
+          "lift_cm": null,
+          "spoken": true,
+          "latency_s": 1.501,
+          "chimes": 2,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": [
+            "hold"
+          ]
+        }
+      ]
+    },
+    {
+      "config": "reflex + SAM 3.1 (sam3_local), voice hold 1.2 s, as before",
+      "generated_at": "2026-10-28T20:36:03-03:00",
+      "all": {
+        "hover_moments": 26,
+        "hover_spoken_within_2_5_s": 2,
+        "hover_missed": 24,
+        "touch_moments": 16,
+        "touch_false_voices": 0,
+        "touch_chimes": 0,
+        "cancels": 0,
+        "latency_median_s": 1.617,
+        "latency_max_s": 1.617
+      },
+      "changing_table": {
+        "hover_moments": 13,
+        "hover_spoken_within_2_5_s": 1,
+        "hover_missed": 12,
+        "touch_moments": 8,
+        "touch_false_voices": 0,
+        "touch_chimes": 0,
+        "cancels": 0,
+        "latency_median_s": 1.617,
+        "latency_max_s": 1.617
+      },
+      "bath": {
+        "hover_moments": 13,
+        "hover_spoken_within_2_5_s": 1,
+        "hover_missed": 12,
+        "touch_moments": 8,
+        "touch_false_voices": 0,
+        "touch_chimes": 0,
+        "cancels": 0,
+        "latency_median_s": 1.479,
+        "latency_max_s": 1.479
+      },
+      "moments": [
+        {
+          "id": "table-a-touch-p0",
+          "kind": "touch",
+          "lift_cm": 0.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-a-touch-p33",
+          "kind": "touch",
+          "lift_cm": 0.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-a-hover-2cm",
+          "kind": "hover",
+          "lift_cm": 2.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-a-hover-3.5cm",
+          "kind": "hover",
+          "lift_cm": 3.5,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-a-hover-5cm",
+          "kind": "hover",
+          "lift_cm": 5.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-a-m-touch-p0",
+          "kind": "touch",
+          "lift_cm": 0.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-a-m-touch-p33",
+          "kind": "touch",
+          "lift_cm": 0.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-a-m-hover-2cm",
+          "kind": "hover",
+          "lift_cm": 2.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-a-m-hover-3.5cm",
+          "kind": "hover",
+          "lift_cm": 3.5,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-a-m-hover-5cm",
+          "kind": "hover",
+          "lift_cm": 5.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-b-touch-p0",
+          "kind": "touch",
+          "lift_cm": 0.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-b-touch-p24",
+          "kind": "touch",
+          "lift_cm": 0.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-b-hover-2cm",
+          "kind": "hover",
+          "lift_cm": 2.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-b-hover-3.5cm",
+          "kind": "hover",
+          "lift_cm": 3.5,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-b-hover-5cm",
+          "kind": "hover",
+          "lift_cm": 5.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-b-m-touch-p0",
+          "kind": "touch",
+          "lift_cm": 0.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-b-m-touch-p24",
+          "kind": "touch",
+          "lift_cm": 0.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-b-m-hover-2cm",
+          "kind": "hover",
+          "lift_cm": 2.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-b-m-hover-3.5cm",
+          "kind": "hover",
+          "lift_cm": 3.5,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-b-m-hover-5cm",
+          "kind": "hover",
+          "lift_cm": 5.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-a-touch-p0",
+          "kind": "touch",
+          "lift_cm": 0.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-a-touch-p51",
+          "kind": "touch",
+          "lift_cm": 0.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-a-hover-2cm",
+          "kind": "hover",
+          "lift_cm": 2.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-a-hover-3.5cm",
+          "kind": "hover",
+          "lift_cm": 3.5,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-a-hover-5cm",
+          "kind": "hover",
+          "lift_cm": 5.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-a-m-touch-p0",
+          "kind": "touch",
+          "lift_cm": 0.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-a-m-touch-p51",
+          "kind": "touch",
+          "lift_cm": 0.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-a-m-hover-2cm",
+          "kind": "hover",
+          "lift_cm": 2.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-a-m-hover-3.5cm",
+          "kind": "hover",
+          "lift_cm": 3.5,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-a-m-hover-5cm",
+          "kind": "hover",
+          "lift_cm": 5.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-b-touch-p0",
+          "kind": "touch",
+          "lift_cm": 0.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-b-touch-p111",
+          "kind": "touch",
+          "lift_cm": 0.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-b-hover-2cm",
+          "kind": "hover",
+          "lift_cm": 2.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-b-hover-3.5cm",
+          "kind": "hover",
+          "lift_cm": 3.5,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-b-hover-5cm",
+          "kind": "hover",
+          "lift_cm": 5.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-b-m-touch-p0",
+          "kind": "touch",
+          "lift_cm": 0.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-b-m-touch-p111",
+          "kind": "touch",
+          "lift_cm": 0.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-b-m-hover-2cm",
+          "kind": "hover",
+          "lift_cm": 2.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-b-m-hover-3.5cm",
+          "kind": "hover",
+          "lift_cm": 3.5,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-b-m-hover-5cm",
+          "kind": "hover",
+          "lift_cm": 5.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "natural-table-b",
+          "kind": "hover",
+          "lift_cm": null,
+          "spoken": true,
+          "latency_s": 1.617,
+          "chimes": 1,
+          "cancels": 0,
+          "confirms": [
+            "off"
+          ],
+          "voice_reasons": [
+            "hold"
+          ]
+        },
+        {
+          "id": "natural-bath-a",
+          "kind": "hover",
+          "lift_cm": null,
+          "spoken": true,
+          "latency_s": 1.479,
+          "chimes": 2,
+          "cancels": 0,
+          "confirms": [
+            "off",
+            "off"
+          ],
+          "voice_reasons": [
+            "hold"
+          ]
+        }
+      ]
+    },
+    {
+      "config": "reflex + SAM 3.1, voice waits for SAM up to 2.3 s on a near reading (new)",
+      "generated_at": "2026-10-28T20:41:12-03:00",
+      "all": {
+        "hover_moments": 26,
+        "hover_spoken_within_2_5_s": 2,
+        "hover_missed": 24,
+        "touch_moments": 16,
+        "touch_false_voices": 0,
+        "touch_chimes": 0,
+        "cancels": 0,
+        "latency_median_s": 1.64,
+        "latency_max_s": 1.64
+      },
+      "changing_table": {
+        "hover_moments": 13,
+        "hover_spoken_within_2_5_s": 1,
+        "hover_missed": 12,
+        "touch_moments": 8,
+        "touch_false_voices": 0,
+        "touch_chimes": 0,
+        "cancels": 0,
+        "latency_median_s": 1.64,
+        "latency_max_s": 1.64
+      },
+      "bath": {
+        "hover_moments": 13,
+        "hover_spoken_within_2_5_s": 1,
+        "hover_missed": 12,
+        "touch_moments": 8,
+        "touch_false_voices": 0,
+        "touch_chimes": 0,
+        "cancels": 0,
+        "latency_median_s": 1.491,
+        "latency_max_s": 1.491
+      },
+      "moments": [
+        {
+          "id": "table-a-touch-p0",
+          "kind": "touch",
+          "lift_cm": 0.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-a-touch-p33",
+          "kind": "touch",
+          "lift_cm": 0.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-a-hover-2cm",
+          "kind": "hover",
+          "lift_cm": 2.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-a-hover-3.5cm",
+          "kind": "hover",
+          "lift_cm": 3.5,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-a-hover-5cm",
+          "kind": "hover",
+          "lift_cm": 5.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-a-m-touch-p0",
+          "kind": "touch",
+          "lift_cm": 0.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-a-m-touch-p33",
+          "kind": "touch",
+          "lift_cm": 0.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-a-m-hover-2cm",
+          "kind": "hover",
+          "lift_cm": 2.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-a-m-hover-3.5cm",
+          "kind": "hover",
+          "lift_cm": 3.5,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-a-m-hover-5cm",
+          "kind": "hover",
+          "lift_cm": 5.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-b-touch-p0",
+          "kind": "touch",
+          "lift_cm": 0.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-b-touch-p24",
+          "kind": "touch",
+          "lift_cm": 0.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-b-hover-2cm",
+          "kind": "hover",
+          "lift_cm": 2.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-b-hover-3.5cm",
+          "kind": "hover",
+          "lift_cm": 3.5,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-b-hover-5cm",
+          "kind": "hover",
+          "lift_cm": 5.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-b-m-touch-p0",
+          "kind": "touch",
+          "lift_cm": 0.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-b-m-touch-p24",
+          "kind": "touch",
+          "lift_cm": 0.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-b-m-hover-2cm",
+          "kind": "hover",
+          "lift_cm": 2.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-b-m-hover-3.5cm",
+          "kind": "hover",
+          "lift_cm": 3.5,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "table-b-m-hover-5cm",
+          "kind": "hover",
+          "lift_cm": 5.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-a-touch-p0",
+          "kind": "touch",
+          "lift_cm": 0.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-a-touch-p51",
+          "kind": "touch",
+          "lift_cm": 0.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-a-hover-2cm",
+          "kind": "hover",
+          "lift_cm": 2.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-a-hover-3.5cm",
+          "kind": "hover",
+          "lift_cm": 3.5,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-a-hover-5cm",
+          "kind": "hover",
+          "lift_cm": 5.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-a-m-touch-p0",
+          "kind": "touch",
+          "lift_cm": 0.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-a-m-touch-p51",
+          "kind": "touch",
+          "lift_cm": 0.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-a-m-hover-2cm",
+          "kind": "hover",
+          "lift_cm": 2.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-a-m-hover-3.5cm",
+          "kind": "hover",
+          "lift_cm": 3.5,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-a-m-hover-5cm",
+          "kind": "hover",
+          "lift_cm": 5.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-b-touch-p0",
+          "kind": "touch",
+          "lift_cm": 0.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-b-touch-p111",
+          "kind": "touch",
+          "lift_cm": 0.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-b-hover-2cm",
+          "kind": "hover",
+          "lift_cm": 2.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-b-hover-3.5cm",
+          "kind": "hover",
+          "lift_cm": 3.5,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-b-hover-5cm",
+          "kind": "hover",
+          "lift_cm": 5.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-b-m-touch-p0",
+          "kind": "touch",
+          "lift_cm": 0.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-b-m-touch-p111",
+          "kind": "touch",
+          "lift_cm": 0.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-b-m-hover-2cm",
+          "kind": "hover",
+          "lift_cm": 2.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-b-m-hover-3.5cm",
+          "kind": "hover",
+          "lift_cm": 3.5,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "bath-b-m-hover-5cm",
+          "kind": "hover",
+          "lift_cm": 5.0,
+          "spoken": false,
+          "latency_s": null,
+          "chimes": 0,
+          "cancels": 0,
+          "confirms": [],
+          "voice_reasons": []
+        },
+        {
+          "id": "natural-table-b",
+          "kind": "hover",
+          "lift_cm": null,
+          "spoken": true,
+          "latency_s": 1.64,
+          "chimes": 1,
+          "cancels": 0,
+          "confirms": [
+            "off"
+          ],
+          "voice_reasons": [
+            "hold"
+          ]
+        },
+        {
+          "id": "natural-bath-a",
+          "kind": "hover",
+          "lift_cm": null,
+          "spoken": true,
+          "latency_s": 1.491,
+          "chimes": 2,
+          "cancels": 0,
+          "confirms": [
+            "off",
+            "off"
+          ],
+          "voice_reasons": [
+            "hold"
+          ]
+        }
+      ]
+    }
+  ],
+  "dev_sweep": [
+    {
+      "config": "reflex only",
+      "hover_moments": 19,
+      "hover_spoken_within_2_5_s": 2,
+      "hover_missed": 17,
+      "touch_moments": 12,
+      "touch_false_voices": 1,
+      "touch_chimes": 20,
+      "cancels": 0,
+      "latency_median_s": 0.628,
+      "latency_max_s": 0.628
+    },
+    {
+      "config": "reflex only, wait 1.6",
+      "hover_moments": 19,
+      "hover_spoken_within_2_5_s": 2,
+      "hover_missed": 17,
+      "touch_moments": 12,
+      "touch_false_voices": 1,
+      "touch_chimes": 20,
+      "cancels": 0,
+      "latency_median_s": 0.616,
+      "latency_max_s": 0.616
+    },
+    {
+      "config": "reflex only, wait 2.0",
+      "hover_moments": 19,
+      "hover_spoken_within_2_5_s": 2,
+      "hover_missed": 17,
+      "touch_moments": 12,
+      "touch_false_voices": 1,
+      "touch_chimes": 20,
+      "cancels": 0,
+      "latency_median_s": 0.652,
+      "latency_max_s": 0.652
+    },
+    {
+      "config": "reflex only, wait 2.3",
+      "hover_moments": 19,
+      "hover_spoken_within_2_5_s": 2,
+      "hover_missed": 17,
+      "touch_moments": 12,
+      "touch_false_voices": 1,
+      "touch_chimes": 20,
+      "cancels": 0,
+      "latency_median_s": 0.646,
+      "latency_max_s": 0.646
+    },
+    {
+      "config": "SAM 3.1, hold 1.2",
+      "hover_moments": 19,
+      "hover_spoken_within_2_5_s": 2,
+      "hover_missed": 17,
+      "touch_moments": 12,
+      "touch_false_voices": 1,
+      "touch_chimes": 20,
+      "cancels": 7,
+      "latency_median_s": 0.625,
+      "latency_max_s": 0.625
+    },
+    {
+      "config": "SAM 3.1, wait 1.6",
+      "hover_moments": 19,
+      "hover_spoken_within_2_5_s": 2,
+      "hover_missed": 17,
+      "touch_moments": 12,
+      "touch_false_voices": 1,
+      "touch_chimes": 20,
+      "cancels": 8,
+      "latency_median_s": 0.624,
+      "latency_max_s": 0.624
+    },
+    {
+      "config": "SAM 3.1, wait 2.0",
+      "hover_moments": 19,
+      "hover_spoken_within_2_5_s": 3,
+      "hover_missed": 16,
+      "touch_moments": 12,
+      "touch_false_voices": 1,
+      "touch_chimes": 20,
+      "cancels": 8,
+      "latency_median_s": 0.62,
+      "latency_max_s": 2.097
+    },
+    {
+      "config": "SAM 3.1, wait 2.3",
+      "hover_moments": 19,
+      "hover_spoken_within_2_5_s": 2,
+      "hover_missed": 17,
+      "touch_moments": 12,
+      "touch_false_voices": 0,
+      "touch_chimes": 20,
+      "cancels": 8,
+      "latency_median_s": 0.635,
+      "latency_max_s": 0.635
+    }
+  ],
+  "frame_check": {
+    "what": "one frame per moment 1.5 s after the cue, asked directly to the reflex and to SAM 3.1 (scripts/hover_frames.py), whatever the alarm does. Measurement only, nothing was tuned on it",
+    "groups": {
+      "test/changing_table/touch": {
+        "n": 8,
+        "reflex_off": 0,
+        "sam3_off": 0
+      },
+      "test/changing_table/hover_rendered_2_to_5_cm": {
+        "n": 12,
+        "reflex_off": 0,
+        "sam3_off": 0
+      },
+      "dev/changing_table/touch": {
+        "n": 12,
+        "reflex_off": 1,
+        "sam3_off": 0
+      },
+      "dev/changing_table/hover_rendered_2_to_5_cm": {
+        "n": 18,
+        "reflex_off": 3,
+        "sam3_off": 0
+      },
+      "test/bath/touch": {
+        "n": 8,
+        "reflex_off": 0,
+        "sam3_off": 6
+      },
+      "test/bath/hover_rendered_2_to_5_cm": {
+        "n": 12,
+        "reflex_off": 0,
+        "sam3_off": 11
+      },
+      "dev/changing_table/hover_natural": {
+        "n": 1,
+        "reflex_off": 1,
+        "sam3_off": 1
+      },
+      "test/changing_table/hover_natural": {
+        "n": 1,
+        "reflex_off": 1,
+        "sam3_off": 1
+      },
+      "test/bath/hover_natural": {
+        "n": 1,
+        "reflex_off": 1,
+        "sam3_off": 1
+      }
+    },
+    "sam3_seconds_per_frame": {
+      "median": 2.539,
+      "max": 3.222
+    }
+  },
+  "findings": [
+    "Neither the reflex nor SAM 3.1 tells a 2 to 5 cm hover from a touch on this set. All 24 rendered test hovers were missed by all four configurations",
+    "The reflex reads a hovering hand as on, because its box still covers the baby, so it never raises the alarm and SAM 3.1 is never asked",
+    "Asked directly, SAM 3.1 read 0 of 12 rendered changing-table hovers as off. In the bath it read 11 of 12 hovers off but also 6 of 8 touches off, so it does not separate them there either",
+    "Both natural hovers (hands well above the baby) were spoken by every configuration, within 1.5 to 1.7 s. SAM 3.1 agreed (off) but answered after the voice hold had already spoken",
+    "No test touch raised a chime, so there was nothing for SAM 3.1 to cancel on test. On dev, SAM 3.1 cancelled 7 or 8 alarms. Its answer took 2.2 to 3.2 s per frame, so with the 1.2 s hold the voice spoke first and 1 dev touch got a false voice. Waiting up to 2.3 s on near readings removed it",
+    "The Oct 23 and 24 number (21 of 21 hovers) came from one Kling clip with the forearm far above the baby. It is pre-event and does not carry over to 2 to 5 cm"
+  ]
+}

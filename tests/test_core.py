@@ -9,7 +9,7 @@ from parenting_agent.alarm import Alarm
 from parenting_agent.bus import Bus
 from parenting_agent.house import House
 from parenting_agent.reasoning import parse
-from parenting_agent.reflex import contact_state
+from parenting_agent.reflex import contact_state, near
 from parenting_agent.skill import Skill
 from parenting_agent.tracking import Tracker, parse_voice
 
@@ -82,6 +82,77 @@ class AlarmFlow(unittest.TestCase):
     def test_unknown_alerts_like_off(self):
         self.alarm.on_reflex("unknown", 0.5)
         self.assertEqual(self.bus.count("chime"), 1)
+
+
+class ConfirmWait(unittest.TestCase):
+    """On a near reading the voice waits for the confirm detector, up to confirm_wait_s. The chime never waits."""
+
+    def setUp(self):
+        self.bus = Bus()
+        self.alarm = Alarm(self.bus, CONTACT, {**ALARM, "confirm_wait_s": 2.0}, waits_for_confirm=True)
+
+    def test_near_reading_holds_voice_until_the_bound(self):
+        self.alarm.on_reflex("off", 1.0, near=True)
+        self.assertEqual(self.bus.count("chime"), 1)
+        self.alarm.on_reflex("off", 2.3, near=True)
+        self.assertEqual(self.bus.count("voice"), 0)
+        self.alarm.on_reflex("off", 3.0, near=True)
+        self.assertEqual(self.bus.count("voice"), 1)
+
+    def test_confirm_on_during_the_wait_cancels_before_any_voice(self):
+        self.alarm.on_reflex("off", 1.0, near=True)
+        self.alarm.on_reflex("off", 2.5, near=True)
+        self.alarm.on_confirm(1, "on", 1.0)
+        self.alarm.on_reflex("off", 3.5, near=True)
+        self.assertEqual(self.bus.count("voice"), 0)
+        self.assertIn("voice_dropped", kinds(self.bus))
+
+    def test_confirm_off_speaks_at_once(self):
+        self.alarm.on_reflex("off", 1.0, near=True)
+        self.alarm.on_confirm(1, "off", 1.0)
+        self.assertEqual(self.bus.history[-1]["reason"], "confirm")
+
+    def test_clear_off_reading_drops_back_to_the_hold(self):
+        self.alarm.on_reflex("off", 1.0, near=True)
+        self.alarm.on_reflex("off", 2.2, near=False)
+        self.assertEqual(self.bus.count("voice"), 1)
+
+    def test_unsure_ends_the_wait(self):
+        self.alarm.on_reflex("off", 1.0, near=True)
+        self.alarm.on_confirm(1, "unsure", 1.0)
+        self.alarm.on_reflex("off", 2.2, near=True)
+        self.assertEqual(self.bus.count("voice"), 1)
+
+    def test_clear_reading_at_raise_keeps_the_hold(self):
+        self.alarm.on_reflex("off", 1.0, near=False)
+        self.alarm.on_reflex("off", 2.2, near=False)
+        self.assertEqual(self.bus.count("voice"), 1)
+
+    def test_no_confirm_detector_never_waits(self):
+        alarm = Alarm(self.bus, CONTACT, {**ALARM, "confirm_wait_s": 2.0}, waits_for_confirm=False)
+        alarm.on_reflex("off", 1.0, near=True)
+        alarm.on_reflex("off", 2.2, near=True)
+        self.assertEqual(self.bus.count("voice"), 1)
+
+    def test_without_confirm_wait_s_the_hold_is_unchanged(self):
+        alarm = Alarm(self.bus, CONTACT, ALARM, waits_for_confirm=True)
+        alarm.on_reflex("off", 1.0, near=True)
+        alarm.on_reflex("off", 2.2, near=True)
+        self.assertEqual(self.bus.count("voice"), 1)
+
+    def test_near_rule(self):
+        sliver = [0.75, 0.4, 0.95, 0.7]  # a quarter of the hand box over the baby box, reads off
+        self.assertEqual(contact_state([sliver], BABY, CONTACT), "off")
+        self.assertTrue(near([sliver], BABY, CONTACT))
+        self.assertFalse(near([[0.85, 0.1, 0.99, 0.4]], BABY, CONTACT))
+        self.assertFalse(near([[0.4, 0.4, 0.55, 0.7]], None, CONTACT))
+
+    def test_bound_is_checked(self):
+        for wait in (1.0, 3.0):
+            with tempfile.NamedTemporaryFile("w", suffix=".json", delete=False) as f:
+                json.dump({"name": "x", "alarm": {"confirm_wait_s": wait}}, f)
+            with self.assertRaises(config_mod.ConfigError):
+                config_mod.load(f.name)
 
 
 class Config(unittest.TestCase):

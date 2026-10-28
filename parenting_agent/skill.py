@@ -16,8 +16,9 @@ from .tracking import Tracker
 class Skill:
     def __init__(self, config, bus, reflex, confirm_detector=None, house=None, tracker=None):
         self.cfg, self.bus, self.reflex = config, bus, reflex
-        self.alarm = Alarm(bus, config["contact"], config["alarm"])
-        self.confirm = confirm_mod.ConfirmStage(confirm_detector or confirm_mod.build(config["confirm"]), bus, self.alarm)
+        detector = confirm_detector or confirm_mod.build(config["confirm"])
+        self.alarm = Alarm(bus, config["contact"], config["alarm"], waits_for_confirm=not isinstance(detector, confirm_mod.NoConfirm))
+        self.confirm = confirm_mod.ConfirmStage(detector, bus, self.alarm)
         self.house = house or House(config["house"], bus)
         self.tracker = tracker or Tracker(config["tracking"], bus)
         self.bus.subscribe(self._on_voice, ["voice"])
@@ -40,7 +41,7 @@ class Skill:
         self.frames += 1
         self.bus.publish("frame", stream_s=round(stream_s, 3), state=state, hands=hands, seconds=round(seconds, 4))
         before = self.alarm.episode
-        self.alarm.on_reflex(state, round(stream_s, 3))
+        self.alarm.on_reflex(state, round(stream_s, 3), near=getattr(self.reflex, "near", False))
         if self.alarm.episode != before:
             self.confirm.request(self.alarm.episode, frame_bgr, round(stream_s, 3))
         self.confirm.collect()
