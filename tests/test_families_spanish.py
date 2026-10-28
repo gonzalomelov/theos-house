@@ -122,7 +122,7 @@ class NoEnglishLeak(unittest.TestCase):
         f.log.add("feeding", {"amount_ml": 100, "start": "2026-10-28T06:00:00-03:00"}, "2026-10-28T06:15:00-03:00")
         f.log.add("feeding", {"amount_ml": 100, "start": "2026-10-28T09:00:00-03:00"}, "2026-10-28T09:15:00-03:00")
         nxt = say("/proxima")
-        self.assertIn("Próxima toma de Mia", nxt)
+        self.assertIn("la próxima toma de Mia", nxt)
         self.assertIn("Hoy para Mia:", say("/resumen"))
         hour, minute = (int(n) for n in re.search(r"las (\d\d):(\d\d)", nxt).groups())
         clock[0] = datetime.datetime(2026, 10, 28, hour, minute, tzinfo=TZ) - datetime.timedelta(minutes=5)

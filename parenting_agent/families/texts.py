@@ -48,9 +48,10 @@ EN = {
     "PRIVACY": ("What I store: your baby's name and birth date, what you log (feeds, diapers, sleep, baths, notes), "
                 "our conversation, and your Telegram chat id so I can answer you. For counting real use I keep one row per "
                 "message with the time and a scrambled id, never the text.\n"
-                "Where: one private file for your family on a small server in Gonza's home in Uruguay. Other families "
-                "cannot see it. To answer, the text of the conversation goes to an AI model (Anthropic Claude now, "
-                "Meta's Muse Spark later), which does not keep it or train on it. Telegram carries the messages.\n"
+                "Where: one private file for your family on Gonza's home server in Uruguay. Other families cannot see it. "
+                "To write replies, the conversation text is sent to Anthropic's API (Claude). Anthropic does not train on "
+                "API data by default and keeps it for a limited time under its policy: https://www.anthropic.com/legal/privacy. "
+                "Telegram carries the messages.\n"
                 "Delete: send /deletemydata. It removes your family's file, the conversation, the rows and both parents' access, at once."),
     "DELETE_WORD": "DELETE",
     "DELETE_ASK": ("This deletes {name}'s whole log, our conversation and access for everyone in your family. It cannot be undone. "
@@ -59,17 +60,34 @@ EN = {
     "DELETED": "Done. Everything about your family is deleted. Send /start with a new invite code if you ever want to come back.",
     "DELETED_OTHER": "The other parent deleted your family's data. Everything is gone. Thank you for trying the agent.",
     "REFUSAL": rules.REFUSAL,
+    "EMERGENCY": rules.EMERGENCY_REPLY["en"],
     "REMINDERS_OFF": "Feed reminders are off. Send /reminders on to turn them back on.",
     "REMINDERS_ON": "Feed reminders are on.",
     "LANG_SET": "OK, from now on I write in English, to everyone in your family. Para español mandá /idioma.",
     "NEED_TWO_FEEDS": "I need two feeds in {name}'s log before I can tell the next one.",
-    "NEXT_FEED": "Next feed for {name} around {when}, in about {minutes} min. Feeds have been about {gap} apart.",
-    "FEED_LATE": "A feed for {name} was expected around {when}, {ago} ago.",
+    "NEXT_FEED": "From your log, the next feed for {name} would be around {when}, in about {minutes} min. Feeds have been about {gap} apart.",
+    "NEXT_FEED_NOW": "From your log, the next feed for {name} would be about now, around {when}.",
+    "NO_FEED_SINCE": "You have not logged a feed since {since}. Did {name} eat?",
+    "LAST_FEED_AT": "The last feed in {name}'s log is {since}.",
+    "AT_TODAY": "{at}", "AT_YESTERDAY": "yesterday at {at}", "AT_DAY": "{day} at {at}",
+    "CRY_NOT_ENOUGH": "There is not enough in {name}'s log yet to guess why. This is never a diagnosis.",
+    "CRY_GUESS": "This is only a guess from the log, never a diagnosis.",
+    "CRY_PROBABLY": "From the log, probably {reason}: {evidence}.",
+    "CRY_NO_REASON": "No clear reason in the log: {evidence}.",
+    "CRY_NEXT": "If not, {reason}: {evidence}.",
+    "CRY_HUNGRY": "the last feed was {ago} ago and feeds come about every {gap}",
+    "CRY_TIRED": "awake for {ago}, sleep usually comes again after about {usual}",
+    "CRY_DIAPER": "the last diaper change was {ago} ago",
+    "CRY_DIAPER_SINCE_FEED": "no diaper change logged since the {at} feed",
+    "CRY_COMFORT": "fed, changed and rested recently by the log, maybe just wants to be held",
+    "CRY_HUNGRY_WORD": "hungry", "CRY_TIRED_WORD": "tired", "CRY_DIAPER_WORD": "a diaper",
     "NOTHING_TODAY": "Nothing logged for {name} today yet.",
     "TODAY": "Today for {name}:",
     "FEEDS": "{feeds}{total}, the last at {last}.",
     "FEEDS_TOTAL": ", {ml} ml in total",
-    "DIAPERS": "{diapers}, {wet} wet and {dirty} dirty.",
+    "DIAPERS": "{diapers}, {wet} and {dirty}.",
+    "WET": ("wet", "wet"),
+    "DIRTY": ("dirty", "dirty"),
     "SLEEP": "{time} of sleep over {sleeps}.",
     "BATH": "Bath at {last}.",
     "FEED": ("feed", "feeds"),
@@ -122,9 +140,10 @@ ES = {
     "PRIVACY": ("Qué guardo: el nombre y la fecha de nacimiento de tu bebé, lo que anotás (tomas, pañales, sueño, baños, notas), "
                 "nuestra conversación y tu id de chat de Telegram para poder responderte. Para contar el uso real guardo una "
                 "fila por mensaje con la hora y un id mezclado, nunca el texto.\n"
-                "Dónde: un archivo privado para tu familia en un servidor chico en la casa de Gonza, en Uruguay. Otras "
-                "familias no lo pueden ver. Para responderte, el texto de la conversación va a un modelo de IA (Claude de "
-                "Anthropic hoy, Muse Spark de Meta más adelante), que no lo guarda ni entrena con él. Telegram lleva los mensajes.\n"
+                "Dónde: un archivo privado para tu familia en el servidor de la casa de Gonza, en Uruguay. Otras familias "
+                "no lo pueden ver. Para escribir las respuestas, el texto de la conversación se manda a la API de Anthropic "
+                "(Claude). Anthropic no entrena con los datos de su API por defecto y los guarda un tiempo limitado según su "
+                "política: https://www.anthropic.com/legal/privacy. Telegram lleva los mensajes.\n"
                 "Borrar: mandá /borrarmisdatos. Borra el archivo de tu familia, la conversación, las filas y el acceso de los dos, de una."),
     "DELETE_WORD": "BORRAR",
     "DELETE_ASK": ("Esto borra todo el registro de {name}, nuestra conversación y el acceso de todos en tu familia. No se puede "
@@ -132,19 +151,37 @@ ES = {
     "DELETE_CANCELLED": "No borré nada. Todo sigue acá.",
     "DELETED": "Listo. Borré todo lo de tu familia. Si algún día querés volver, mandá /start con un código nuevo.",
     "DELETED_OTHER": "El otro papá o mamá borró los datos de tu familia. No queda nada. Gracias por probar el agente.",
-    "REFUSAL": ("No puedo dar consejos médicos. Por eso llamá a tu pediatra. "
+    "REFUSAL": ("No puedo dar consejos médicos. Para eso, mejor llamá a tu pediatra. Si es urgente, llamá al 911. "
                 "Si querés, anoto lo que ves así lo tenés a mano para la llamada."),
+    "EMERGENCY": rules.EMERGENCY_REPLY["es"],
     "REMINDERS_OFF": "Apagué los avisos de toma. Mandá /avisos on para prenderlos de nuevo.",
     "REMINDERS_ON": "Los avisos de toma están prendidos.",
     "LANG_SET": "Dale, desde ahora escribo en español, a todos en tu familia. For English send /language.",
     "NEED_TWO_FEEDS": "Necesito dos tomas en el registro de {name} para decirte la próxima.",
-    "NEXT_FEED": "Próxima toma de {name} cerca de las {when}, en unos {minutes} min. Las tomas vienen cada {gap} más o menos.",
-    "FEED_LATE": "La toma de {name} se esperaba cerca de las {when}, hace {ago}.",
+    "NEXT_FEED": ("Según tu registro, la próxima toma de {name} sería cerca de las {when}, en unos {minutes} min. "
+                  "Las tomas vienen cada {gap} más o menos."),
+    "NEXT_FEED_NOW": "Según tu registro, la próxima toma de {name} sería más o menos ahora, cerca de las {when}.",
+    "NO_FEED_SINCE": "No anotaste ninguna toma desde {since}. ¿Comió {name}?",
+    "LAST_FEED_AT": "La última toma anotada de {name} es de {since}.",
+    "AT_TODAY": "las {at}", "AT_YESTERDAY": "ayer a las {at}", "AT_DAY": "el {day} a las {at}",
+    "CRY_NOT_ENOUGH": "Todavía no hay suficiente en el registro de {name} para adivinar por qué llora. No es un diagnóstico.",
+    "CRY_GUESS": "Es solo una pista del registro, nunca un diagnóstico.",
+    "CRY_PROBABLY": "Por el registro, capaz que es {reason}: {evidence}.",
+    "CRY_NO_REASON": "En el registro no veo una razón clara: {evidence}.",
+    "CRY_NEXT": "Si no, {reason}: {evidence}.",
+    "CRY_HUNGRY": "la última toma fue hace {ago} y suele comer cada {gap}",
+    "CRY_TIRED": "se despertó hace {ago} y suele volver a dormirse después de unos {usual}",
+    "CRY_DIAPER": "el último cambio de pañal fue hace {ago}",
+    "CRY_DIAPER_SINCE_FEED": "no hay cambio de pañal anotado desde la toma de las {at}",
+    "CRY_COMFORT": "comió, le cambiaron el pañal y descansó hace poco, capaz que solo quiere brazos",
+    "CRY_HUNGRY_WORD": "hambre", "CRY_TIRED_WORD": "sueño", "CRY_DIAPER_WORD": "el pañal",
     "NOTHING_TODAY": "Todavía no hay nada anotado hoy para {name}.",
     "TODAY": "Hoy para {name}:",
     "FEEDS": "{feeds}{total}, la última a las {last}.",
     "FEEDS_TOTAL": ", {ml} ml en total",
-    "DIAPERS": "{diapers}, {wet} mojados y {dirty} sucios.",
+    "DIAPERS": "{diapers}, {wet} y {dirty}.",
+    "WET": ("mojado", "mojados"),
+    "DIRTY": ("sucio", "sucios"),
     "SLEEP": "{time} de sueño en {sleeps}.",
     "BATH": "Baño a las {last}.",
     "FEED": ("toma", "tomas"),
@@ -171,9 +208,7 @@ LANGUAGE_ARGS = {"es": "es", "español": "es", "espanol": "es", "spanish": "es",
                  "en": "en", "english": "en", "inglés": "en", "ingles": "en"}
 
 # Health words in Spanish, on top of the English ones in rules.MEDICAL. Either list sends the kind refusal.
-MEDICAL_ES = re.compile(r"\b(fiebre|temperatura|medicamento|medicina|remedio|dosis|paracetamol|ibuprofeno|sarpullido|"
-                        r"erupci|v[oó]mit|enferm|diagn[oó]s|tos\b|infecci|antibi[oó]tic|es normal|le doy|le puedo dar|"
-                        r"c[oó]lico|gotas para)", re.I)
+MEDICAL_ES = rules.MEDICAL_ES
 # Advice words in Spanish, on top of patterns.no_advice: a reminder or summary with one of them is never sent.
 ADVICE_ES = re.compile(r"\b(deber[ií]as|ten[eé]s que|prob[aá]|recomiend\w*|m[eé]dic\w*|pediatra|normal|preocup\w*|"
                        r"fiebre|enferm\w*|remedio|dosis|consult\w*)\b", re.I)

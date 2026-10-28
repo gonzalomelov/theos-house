@@ -52,13 +52,19 @@ def core_tools(memory, baby_log, allowed):
     tools = Tools(allowed)
     tools.add(Tool(
         "log_baby_event", f"Record something about the baby in the baby log. kind is one of: {', '.join(LOG_KINDS)}. details by kind: "
-        "feeding: amount_ml (number), method (bottle, left breast, right breast, both breasts), type (breast milk, formula), duration_min. "
+        "feeding: amount_ml (number), method (bottle, breast when the side was not said, left breast, right breast, both breasts), "
+        "type (breast milk, formula) only when the parent said it, duration_min only when the parent said it. "
         "diaper: wet (true or false), solid (true for a dirty or poopy diaper), color. "
         "sleep: action start when the baby falls asleep, action end when she wakes, or start and end ISO times for a past nap. "
-        "bath: text. note: text, for anything else worth keeping. Omit ts unless the parent named a past time, entries are never in the future.",
+        "bath: text. note: text, for anything else worth keeping. Never add a detail the parent did not say. "
+        "Omit ts unless the parent named a past time, entries are never in the future. "
+        "A correction of an earlier entry is never a new entry: use edit_baby_event or delete_baby_event.",
         schema({"kind": {"type": "string", "enum": list(LOG_KINDS)}, "details": {"type": "object"},
                 "ts": {"type": "string", "description": "ISO time if the parent named a past time, else omit"}}, ["kind", "details"]),
         lambda kind, details, ts=None: baby_log.add(kind, details, ts)))
+    if hasattr(baby_log, "update") and hasattr(baby_log, "delete"):
+        for tool in edit_tools(baby_log):
+            tools.add(tool)
     tools.add(Tool(
         "read_baby_log", "Read the baby log entries, newest last. Optional kind filter, an ISO since time and a limit.",
         schema({"kind": {"type": "string", "enum": list(LOG_KINDS)}, "since": {"type": "string"}, "limit": {"type": "integer"}}),
@@ -76,3 +82,27 @@ def core_tools(memory, baby_log, allowed):
         "current_time", "The current local date and time.", schema({}),
         lambda: datetime.datetime.now().astimezone().isoformat(timespec="minutes")))
     return tools
+
+
+WHICH = {"id": {"type": "integer", "description": "the entry id from read_baby_log"},
+         "kind": {"type": "string", "enum": list(LOG_KINDS)},
+         "at": {"type": "string", "description": "the entry's local time as HH:MM, for example 01:30 for 'la de la 1 y media'"},
+         "last": {"type": "boolean", "description": "true for the most recent entry, of kind if given"}}
+
+
+def edit_tools(baby_log):
+    """Change or remove an entry already in the log. The entry is named by id, by kind and local time, or as the last."""
+    return [
+        Tool("edit_baby_event",
+             "Change an entry already in the baby log when the parent corrects it, for example 'perdón eran 100 no 120' or "
+             "'la de la 1 y media fue 80'. Name the entry by id, by kind and at, or by last. details holds only the fields "
+             "that change, with the same names as log_baby_event. ts moves the entry to another time.",
+             schema({**WHICH, "details": {"type": "object"}, "ts": {"type": "string", "description": "new ISO time, only if the parent named one"}}),
+             lambda id=None, kind=None, at=None, last=None, details=None, ts=None:
+             baby_log.update(baby_log.find(id, kind, at, last)["id"], details, ts)),
+        Tool("delete_baby_event",
+             "Remove an entry from the baby log when the parent sent it twice by mistake or asks to delete it, for example "
+             "'la mandé 2 veces sin querer' or 'borrá la última'. Name the entry by id, by kind and at, or by last.",
+             schema(WHICH),
+             lambda id=None, kind=None, at=None, last=None: baby_log.delete(baby_log.find(id, kind, at, last)["id"])),
+    ]
