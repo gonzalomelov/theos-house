@@ -21,6 +21,8 @@ class Incoming:
     chat_id: str
     text: str
     sender: str = ""
+    user_id: str = ""
+    chat_type: str = ""
 
 
 class MessagingError(Exception):
@@ -65,6 +67,8 @@ class MessagingChannel(Plugin):
     def start(self):
         self.thread = threading.Thread(target=self.run, name=self.name, daemon=True)
         self.thread.start()
+        self.agent.bus.publish("channel_started", channel=self.name, allowed_chats=len(self.allowed))
+        print(f"{self.name}: polling started for {len(self.allowed)} family chat(s)", flush=True)
 
     def stop(self):
         self.stopped.set()

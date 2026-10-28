@@ -1,0 +1,10 @@
+[Unit]
+Description=Daily backup of the parenting agent demo and families data
+
+[Timer]
+OnCalendar=*-*-* 04:40:00
+RandomizedDelaySec=10m
+Persistent=true
+
+[Install]
+WantedBy=timers.target

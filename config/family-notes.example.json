@@ -1,0 +1,21 @@
+{
+  "baby_name": "Theo",
+  "pronoun": "he",
+  "handover": {
+    "where_things_are": [
+      "Bottles and formula: kitchen, the shelf above the kettle",
+      "Diapers and wipes: the changing table in his room, top drawer",
+      "Spare clothes and sleep bags: his room, second drawer",
+      "Pacifier: on the nightstand next to his crib"
+    ],
+    "contacts": [
+      {"name": "Gonza", "phone": "+598 9X XXX XXX"},
+      {"name": "Ceci", "phone": "+598 9X XXX XXX"}
+    ],
+    "pediatrician": {"name": "his pediatrician", "phone": "+598 2X XX XX XX"},
+    "emergency": "911"
+  },
+  "private": {
+    "note": "Anything here stays with the parents. The brief and the guest only ever read the handover block."
+  }
+}

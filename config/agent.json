@@ -19,13 +19,29 @@
     "remember",
     "current_time",
     "start_changing_table",
-    "finish_changing_table"
+    "finish_changing_table",
+    "start_bath",
+    "finish_bath",
+    "cabin_ready",
+    "car_status",
+    "study_light",
+    "echo_do_not_disturb",
+    "announce_kitchen",
+    "tv_mute",
+    "vacuum_pause",
+    "vacuum_dock",
+    "push_gonza",
+    "add_to_list",
+    "house_status"
   ],
   "plugins": [
     "parenting_agent.agent.console:Console",
     "parenting_agent.changing_table:ChangingTable",
+    "parenting_agent.camera_skill:CameraSkills",
     "parenting_agent.channels.telegram:Telegram",
-    "parenting_agent.channels.router:Router"
+    "parenting_agent.channels.router:Router",
+    "parenting_agent.tesla.trips:CarTrips",
+    "parenting_agent.house_tools:HouseTools"
   ],
   "max_steps": 6,
   "changing_table": {
@@ -33,6 +49,9 @@
     "source": "phone",
     "arm": "command"
   },
+  "camera_skills": [
+    {"skill": "skills/bath.json", "source": "phone"}
+  ],
   "telegram": {
     "token_env": "TELEGRAM_BOT_TOKEN",
     "allowed_chat_ids_env": "TELEGRAM_CHAT_ID",
@@ -49,5 +68,18 @@
       "volume": 0.2,
       "restore_after_s": 10
     }
+  },
+  "house": {
+    "live": false,
+    "ha_url": "http://127.0.0.1:18123",
+    "ha_token_env": "HA_MCP_TOKEN"
+  },
+  "car": {
+    "backend": "simulated",
+    "device_name": "Model 3",
+    "live_commands": false,
+    "parent_channel": "telegram",
+    "car_seat": "rear_center",
+    "trip_calendar": null
   }
 }

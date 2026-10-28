@@ -28,21 +28,42 @@ class FakeReflex:
 
 
 class FakeSource(Latest):
+    """Frames step seconds apart in stream time, handed over one at a time: the next frame is only put once the
+    watcher took the last one, so a slow machine never drops frames and the reflex sees them all in order.
+    drained is set once the watcher took the last frame."""
+
     def __init__(self, frames, step):
         super().__init__()
+        import threading
         import numpy as np
         self.frames, self.step = frames, step
         self.blank = np.zeros((360, 640, 3), np.uint8)
         self.started = time.monotonic()
-        import threading
+        self.taken = threading.Condition()
+        self.taken_seq = 0
+        self.drained = threading.Event()
+        if frames == 0:
+            self.drained.set()
         threading.Thread(target=self._feed, daemon=True).start()
+
+    def latest(self, after_seq):
+        got = super().latest(after_seq)
+        if got is not None:
+            with self.taken:
+                self.taken_seq = got[1]
+                self.taken.notify_all()
+            if got[1] == self.frames:
+                self.drained.set()
+        return got
 
     def _feed(self):
         for n in range(self.frames):
+            with self.taken:
+                while self.taken_seq < self.seq and not self.stopped:
+                    self.taken.wait(0.05)
             if self.stopped:
                 return
             self.put(self.blank, n * self.step)
-            time.sleep(0.005)
 
 
 def agent_with_skill(tmp, reflex, source):
@@ -61,7 +82,7 @@ class ChangingTablePlugin(unittest.TestCase):
             agent, plugin = agent_with_skill(tmp, FakeReflex(on_frames=4), FakeSource(frames=12, step=0.2))
             self.assertIn("start_changing_table", agent.tools.names())
             self.assertEqual(plugin.arm(), "watching the changing table")
-            time.sleep(0.4)
+            self.assertTrue(plugin._source.drained.wait(30), "the watcher never took every frame")
             self.assertEqual(plugin.finish(), "diaper change logged")
             kinds = [e["kind"] for e in agent.bus.history]
             self.assertIn("skill_armed", kinds)
@@ -74,7 +95,7 @@ class ChangingTablePlugin(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             agent, plugin = agent_with_skill(tmp, FakeReflex(on_frames=100), FakeSource(frames=12, step=0.2))
             plugin.arm()
-            time.sleep(0.4)
+            self.assertTrue(plugin._source.drained.wait(30), "the watcher never took every frame")
             plugin.finish()
             self.assertEqual(agent.bus.count("chime"), 0)
             self.assertEqual(agent.bus.count("voice"), 0)

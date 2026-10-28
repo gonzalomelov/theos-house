@@ -17,7 +17,14 @@ Three containers in the compose project `parenting-agent` (`deploy/compose.yml`)
 - Health check: the heartbeat plug-in (`parenting_agent/agent/heartbeat.py`) writes `/data/heartbeat.json` every 30 s while the decide-act loop is alive. Docker marks the container unhealthy when the file is older than 90 s. If the loop thread dies, the plug-in ends the process with exit code 1 so the restart policy brings it back.
 - Data: `~/apps/parenting-agent-data` on the Vostro, mounted at `/data`: `memory.sqlite`, `events.jsonl`, `heartbeat.json`.
 - Logs: Docker's json-file driver, 10 MB per file, 3 files.
-- Plug-ins on the Vostro: the heartbeat only. No console (no terminal there) and no changing table (vision runs on the Mac). The Telegram channel (#3) adds its plug-in to `config/agent.vostro.json`.
+- Plug-ins on the Vostro: the heartbeat and the Telegram channel (#3). No console (no terminal there) and no changing table (vision runs on the Mac).
+- No channel router on the Vostro. Replies to a Telegram message go back to Telegram. The router picks the home speaker when the parent is home, and on the Vostro that would be a live house action, so it stays on the Mac until #9.
+
+### Telegram
+
+The agent long-polls the Bot API through the egress proxy, so nothing listens and nothing is on the tunnel. Only the chat ids in `TELEGRAM_CHAT_ID` are answered, other senders are ignored and logged by chat id. The log shows `telegram: polling started` at boot. The read position is kept in `/data/telegram.offset`, so a restart does not answer a message twice.
+
+Telegram allows one poller per bot. While the Vostro agent runs, do not run `python -m parenting_agent` with `config/agent.json` or `scripts/channels_check.py` on the Mac, or the two will steal each other's messages. Stop the Vostro agent first (`sh deploy/agent.sh stop`) and start it again after.
 
 ### Why a container and not a systemd service
 

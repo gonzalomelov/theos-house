@@ -12,15 +12,15 @@ One long-running agent sits in the middle. Everything it sees, hears and does go
 
 - **Memory.** The baby's log lives in Baby Buddy, an open-source baby tracker running on the family's own server. The agent's own notes and conversation live in a local SQLite file.
 - **Brain.** A model with tools decides what to do: log a feed, answer a question from the log, arm a skill, act on the house. Anything outside the allowed list waits for a parent's yes.
-- **Skills.** The changing-table skill watches through a head-worn camera. A local hand detector raises the alarm in under a second when both hands leave the baby, and Meta's SAM 3.1 confirms whether a hand really touches the baby or only hovers above it.
+- **Skills.** The changing-table and bath skills watch through a head-worn camera. A local hand detector raises the alarm in under a second when both hands leave the baby, and Meta's SAM 3.1 confirms whether a hand really touches the baby or only hovers above it.
 - **Daily rhythm.** From the log it learns the baby's patterns and speaks first: the next feed, unusual days, a night summary and a fair split of the night between two parents.
-- **House.** Home Assistant is its hands: lights, notifications, speakers, the robot vacuum, the TV. Today it runs dry, it publishes what it would do and touches nothing.
+- **House.** Home Assistant is its hands: lights, notifications, speakers, the robot vacuum, the TV, as tools behind the action policy (`parenting_agent/house_tools.py`). It runs dry until `house.live` is true in the agent config, and only Gonza turns that on.
 
 ## Meta models
 
 | Job | Model | Where it runs |
 |---|---|---|
-| Touch versus hover at the changing table | **SAM 3.1**, Meta's open weights | On the Mac's GPU, about 1.5 s per frame. Frames never leave the house |
+| Touch versus hover at the changing table and in the bath | **SAM 3.1**, Meta's open weights | On the Mac's GPU, about 1.5 s per frame. Frames never leave the house |
 | The agent's brain | **Muse Spark Open**, Meta's open weights | Baseten, with no data kept and no training on it (`config/agent.muse-baseten.json`, waiting for the partner credits) |
 | Stand-in brain until then | Claude | Anthropic API, temporary only (`config/agent.json`) |
 
@@ -29,7 +29,7 @@ One long-running agent sits in the middle. Everything it sees, hears and does go
 | Data | Where it goes |
 |---|---|
 | Camera frames | Stay in memory on the Mac. SAM 3.1 and the hand detector run locally. Nothing is saved, only numbers and states in `runs/` |
-| House audio | Planned (#14): labelled locally, never saved |
+| House audio | Labelled on the Mac by PANNs, never saved, only labels and numbers in `results/` (see `docs/house-sounds.md`) |
 | The baby's log | Baby Buddy on the family's server, reachable only on that server (see `docs/deploy-babybuddy.md`) |
 | The agent's memory | `data/memory.sqlite` and `data/events.jsonl` on the machine that runs it, on the Vostro in `~/apps/parenting-agent-data` |
 | **What leaves the house** | Only the brain call: the conversation text and tool results go to the configured brain (Baseten for Muse Spark Open, Anthropic for the stand-in). Every call logs its destination host as a `brain_call` event |
@@ -68,7 +68,15 @@ scripts/sam3-setup.sh   # once, SAM 3.1 on the Mac GPU, see docs/sam3-local.md
 python scripts/kr222_table.py --clips ~/Engineering/gonza/meta-hackathon-2026-synthetic/kt/clips --passes 5
 ```
 
+Bath skill (issue #10), armed by "bath time" and logged by "bath done", the second camera skill and config only (`skills/bath.json`). See `docs/bath.md`.
+
+```bash
+python scripts/bath_run.py --baths 10   # bath clips streamed live, Claude brain, Baby Buddy, SAM 3.1
+```
+
 Simulated baby week and daily rhythm: see `docs/simulated-week.md` and `docs/daily-rhythm.md`.
+
+Sitter handover: one message briefs a grandparent or a sitter from the log, the parent approves it first, and a time-boxed guest role logs feeds and diapers. See `docs/sitter-handover.md`.
 
 Simulated full day, 06:10 to 02:30 (issue #17), the demo rehearsal in one command:
 
@@ -79,6 +87,14 @@ python -m parenting_agent.fullday --wipe-only  # remove the entries earlier runs
 ```
 
 It replays the plan page day through the real agent: a bottle by voice, the changing table on the clips with a dirty diaper said aloud, a doorbell during the change, a long-nap note, the bath on its clip, a question answered from the log, and the night feed with the next feed and the next parent on duty. It writes `results/fullday/day.md`, `day.json` and the KR files in `results/fullday/kr222/`. What is not built yet shows as dry run in the report: Home Assistant actions (#9), delivery on Telegram, the ear and the speakers (#3, #8) and the house sound detector (#14). See `docs/full-day.md`.
+
+## Daily house plan: vacuum, shopping list, dinner and white noise (issues #29 and #32)
+
+The vacuum pauses and goes home when a nap starts and never starts when the run would reach a predicted nap. It starts alone only when nobody is home or the baby is out, otherwise it asks. "Clean under the high chair" is a room clean, there is one daily run at the quietest awake time, diapers go on `todo.shopping_list` before they run out, a bad night gives a draft of fast Thermomix dinners from Cookidoo (read only, through home-agents), a reminder says when to start dinner, and white noise follows the rhythm under the 50 dB cap. The Thermomix is never controlled. See `docs/house-plan.md`.
+
+```bash
+python scripts/house_plan_check.py   # live and safe: reads the vacuum, dry runs pause and home, one test list item added and removed
+```
 
 ## Telegram and channel picking (issues #3 and #8)
 
@@ -102,6 +118,24 @@ A phone-first web chat where anyone can talk to the real agent core about Demo B
 ```bash
 python -m parenting_agent.demo --brain-env ~/.parenting-agent.env   # http://127.0.0.1:8765
 python -m parenting_agent.demo.export_sessions                                                     # session rows for the scorer
+```
+
+## Invited families on Telegram (issue #40)
+
+Invited parents log their own baby through a second Telegram bot, each family in its own SQLite file, walled off from the family agent, Baby Buddy, Home Assistant and the LAN like the demo. Gonza makes an invite code, the parent sends `/start <code>`, answers 3 questions and is logging. Logs by text, answers from the family's log, next feed reminders, an evening summary, `/deletemydata`, caps per family and for the day. Not deployed yet. See `docs/families.md`, which also holds the privacy note for parents.
+
+```bash
+python -m parenting_agent.families invite --count 3        # codes for new families
+python -m parenting_agent.families run --keys-env FILE     # the bot, needs TELEGRAM_FAMILIES_BOT_TOKEN
+python -m parenting_agent.families.export_sessions         # session rows for the scorer, kind family
+```
+
+## The Tesla, simulated until Nov 5 (issue #31)
+
+The family's Model 3 arrives on Nov 5, so today the agent drives a simulated Model 3 with the same entity ids and services as Home Assistant's official `tesla_fleet` integration. Cabin ready before a trip with the baby ("we leave in 15" or a calendar entry, target from the outside temperature, the parent's yes first), car naps (a drive with the baby becomes a proposed sleep entry, logged only on the parent's yes) and a Child Left Alone Detection check. Everything about the car says "simulated Tesla". On Nov 5 `car.backend` switches to `home_assistant`, commands stay dry until Gonza's OK. See `docs/tesla.md`.
+
+```bash
+python -m parenting_agent.tesla   # one trip with the baby on the simulated car, synthetic drive data
 ```
 
 ## Tests
@@ -130,10 +164,16 @@ Everything in this repo was written during the event. The repo was created on Oc
 | Public demo app with a simulated baby, local only | #33 | #34 | see PR |
 | Always on: the agent in a walled-off container on the Vostro | #15 | #35 | see PR |
 | Telegram channel and channel picking | #3, #8 | #36 | see PR |
-| Car seat coach: manual to steps, SAM 3.1 visible checks, hand checks, outgrow watch, rendered test clips | #30 | see PR | see PR |
+| House sounds, why is he crying, white noise | #14, #32 | see PR | see PR |
+| Sitter handover, time-boxed guest role, summary after | #16 | see PR | see PR |
+| Invited families on Telegram, one private log per family, walled off | #40 | see PR | see PR |
+| Bath skill, camera skills from config | #10 | #42 | see PR |
+| Simulated Tesla: cabin ready, car naps, Child Left Alone Detection check | #31 | #43 | see PR |
+| Daily house plan: vacuum around naps, shopping list, fast dinners, white noise | #29, #32 | #44 | see PR |
+| Car seat coach: manual to steps, SAM 3.1 visible checks, hand checks, outgrow watch, rendered test clips | #30 | #47 | see PR |
 
 The first commits of Oct 26 (4f1898a to 90ca5a3) are an early skeleton that the issues above reviewed and partly rewrote.
 
-**Planned, not built yet:** Muse Spark Open live on Baseten (#4), live Home Assistant actions (#9, dry run today), bath skill (#10), house sounds (#14), sitter handover (#16), demo and submission (#11).
+**Planned, not built yet:** Muse Spark Open live on Baseten (#4), live Home Assistant actions (#9, dry run today), demo and submission (#11).
 
-**Public open-source tools used, not written by us:** Meta SAM 3.1 weights and code, MediaPipe hand landmarker, OpenCV, NumPy, Baby Buddy (BSD-2-Clause), Home Assistant.
+**Public open-source tools used, not written by us:** Meta SAM 3.1 weights and code, PANNs CNN14 (code MIT, weights CC BY 4.0), MediaPipe hand landmarker, OpenCV, NumPy, Baby Buddy (BSD-2-Clause), Home Assistant.

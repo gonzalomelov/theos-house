@@ -254,8 +254,11 @@ class Day:
         if not self.video:
             return {"channel": "ear", "input": "head camera", "status": "pending", "dry": [],
                     "action": "skipped, run without --no-video to stream the clip"}
-        clip = self.clips_dir / "bath-handoff-01.mp4"
-        cues = json.loads((self.clips_dir / "cues.json").read_text())
+        # The bath clips folder (docs/bath.md) holds the clip with the scene going on after the hands leave.
+        bath_dir = self.clips_dir.parent.parent / "bath" / "clips"
+        bath_dir = bath_dir if (bath_dir / "cues.json").exists() else self.clips_dir
+        clip = bath_dir / "bath-handoff-01.mp4"
+        cues = json.loads((bath_dir / "cues.json").read_text())
         if not clip.exists() or "bath-handoff-01" not in cues:
             return {"channel": "ear", "input": "bath clip", "status": "pending", "passed": False, "dry": [],
                     "action": "no generated bath clip, bath skill pending #10"}
