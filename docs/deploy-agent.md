@@ -48,6 +48,22 @@ The internal network is created with `--internal` and the isolated gateway mode 
 
 The house layer (`parenting_agent/house.py`) acts only when `HA_TOKEN` is set. The Vostro env file carries the Home Assistant token as `HA_MCP_TOKEN`, so the agent can read Home Assistant and every house action stays dry run. The deploy refuses an env file that sets `HA_TOKEN`. Turning live actions on is issue #9, under the action policy in `docs/home-assistant-inventory.md`.
 
+## Home Assistant bans after failed logins
+
+Home Assistant on the Vostro has `ip_ban_enabled`, so a few requests with a wrong token ban the sender's IP. On Oct 28 between 15:31 and 15:45 it banned the relay (192.0.2.10) after four 401s from `deploy/probe.py`, run by `agent.sh` checks while the env file did not yet hold the right `HA_MCP_TOKEN`. Docker can later hand a banned IP to another container, so a failed login must not repeat.
+
+- Every Home Assistant client goes through `HomeAssistant` in `parenting_agent/house.py`. After the first 401 or 403 it logs `Home Assistant rejected the token, not retrying to avoid an IP ban` and makes no other call for the rest of the process.
+- `agent.sh` checks the token with one request (`probe.py token`) before any other Home Assistant call. On 401 or 403 it aborts the check. On a deploy it also stops the new agent, because a rollback would use the same token.
+
+To clear a ban (Gonza does this):
+
+1. Open a shell in Home Assistant: `docker exec -it homeassistant sh`
+2. Back up the ban list: `cp /config/ip_bans.yaml /config/ip_bans.yaml.bak`
+3. Empty it: `: > /config/ip_bans.yaml`
+4. Restart Home Assistant: `docker restart homeassistant`
+
+Fix the token first (`push-env`), or the next check bans the relay again.
+
 ## Commands
 
 Run from the Mac, in a clean checkout. Only committed files are deployed.

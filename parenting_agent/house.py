@@ -12,6 +12,7 @@ the house runs dry: it publishes what it would do and touches nothing.
 import json
 import os
 import re
+import sys
 import threading
 import time
 import urllib.error
@@ -44,17 +45,56 @@ def never_reason(entity_id):
     return None
 
 
+REJECTED_MESSAGE = "Home Assistant rejected the token, not retrying to avoid an IP ban"
+
+
+class TokenRejected(urllib.error.URLError):
+    """Home Assistant answered 401 or 403. A URLError, so every caller that handles a network error handles this."""
+
+    def __init__(self, code):
+        super().__init__(f"HTTP {code}: {REJECTED_MESSAGE}")
+        self.code = code
+
+
+# Home Assistant bans an IP after a few failed logins (ip_ban_enabled), and Docker can later hand that IP to
+# another container. So after the first 401 or 403 no client in this process calls Home Assistant again.
+_rejected = {"code": None}
+_rejected_lock = threading.Lock()
+
+
+def token_rejected():
+    """The 401 or 403 code Home Assistant answered in this process, or None."""
+    return _rejected["code"]
+
+
 class HomeAssistant:
     def __init__(self, url, token):
         self.url, self.token = url.rstrip("/"), token
 
     def _call(self, path, data=None):
+        if _rejected["code"] is not None:
+            raise TokenRejected(_rejected["code"])
         request = urllib.request.Request(
             self.url + path, data=json.dumps(data).encode() if data is not None else None,
             headers={"Authorization": f"Bearer {self.token}", "Content-Type": "application/json"},
             method="POST" if data is not None else "GET")
-        with urllib.request.urlopen(request, timeout=10) as response:
-            return json.loads(response.read() or b"null")
+        try:
+            with urllib.request.urlopen(request, timeout=10) as response:
+                return json.loads(response.read() or b"null")
+        except urllib.error.HTTPError as error:
+            if error.code in (401, 403):
+                with _rejected_lock:
+                    first = _rejected["code"] is None
+                    if first:
+                        _rejected["code"] = error.code
+                if first:
+                    print(REJECTED_MESSAGE, file=sys.stderr, flush=True)
+                raise TokenRejected(error.code) from None
+            raise
+
+    def ping(self):
+        """GET /api/, the cheapest call that proves the token."""
+        return self._call("/api/")
 
     def service(self, service, entity_id, data=None):
         """entity_id None calls a service without a target, for example notify.mobile_app_gonzas_iphone."""
