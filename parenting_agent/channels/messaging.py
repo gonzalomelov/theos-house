@@ -21,6 +21,8 @@ class Incoming:
     chat_id: str
     text: str
     sender: str = ""
+    user_id: str = ""
+    chat_type: str = ""
 
 
 class MessagingError(Exception):
