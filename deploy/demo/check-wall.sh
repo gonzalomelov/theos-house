@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Run after a deploy: from inside the demo container, the house and the family agent must be unreachable,
-# the proxy must refuse anything but the brain, and the env must hold no secret but the brain key.
+# the proxy must refuse anything but the brain, and the env must hold no secret but the brain key and the
+# secret of the /internal/<secret> address, which opens nothing but the internal cookie.
 # Usage: deploy/demo/check-wall.sh HA_HOST:PORT BABYBUDDY_HOST:PORT [MORE_HOST:PORT ...]
 set -euo pipefail
 probe() {
@@ -26,7 +27,7 @@ via_proxy babybuddy:8000 refuse || fail=1
 for target in "$@"; do via_proxy "$target" refuse || fail=1; done
 docker exec pa-demo python -c "import os,sys
 # GPG_KEY is set by the python base image: the fingerprint that signs the Python release, public, not a secret.
-keep={'ANTHROPIC_API_KEY','BASETEN_API_KEY','GPG_KEY'}
+keep={'ANTHROPIC_API_KEY','BASETEN_API_KEY','GPG_KEY','PA_DEMO_INTERNAL_SECRET'}
 bad=[k for k in os.environ if k not in keep and any(w in k for w in ('HA_','BABYBUDDY','TELEGRAM','TOKEN','_KEY','SECRET'))]
 print('env ok' if not bad else 'FORBIDDEN '+','.join(bad)); sys.exit(1 if bad else 0)" || fail=1
 if [ "$fail" = 0 ]; then echo "wall holds"; else echo "WALL BROKEN" >&2; fi

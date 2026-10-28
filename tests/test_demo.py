@@ -21,8 +21,10 @@ from parenting_agent.demo import settings as settings_mod
 from parenting_agent.demo.app import RESTING, DemoApp
 from parenting_agent.demo.babylog import DemoBabyLog
 from parenting_agent.demo.records import Records, visitor_id
+from parenting_agent.demo import server as server_mod
 from parenting_agent.demo.server import serve
 
+SECRET = "test-secret-0123456789abcdef0123456789abcdef"
 DEMO_DIR = Path(__file__).resolve().parent.parent / "parenting_agent" / "demo"
 
 
@@ -230,7 +232,7 @@ class SessionsContract(unittest.TestCase):
 
 class Http(unittest.TestCase):
     def setUp(self):
-        self.s = settings(PA_DEMO_MAX_MESSAGES="2", PA_DEMO_HOST="127.0.0.1")
+        self.s = settings(PA_DEMO_MAX_MESSAGES="2", PA_DEMO_HOST="127.0.0.1", PA_DEMO_INTERNAL_SECRET=SECRET)
         self.app = DemoApp(self.s)
         self.server = serve(self.app, self.s)
         self.port = self.server.server_address[1]
@@ -274,14 +276,51 @@ class Http(unittest.TestCase):
         self.assertEqual(rows[-1]["internal"], 0)  # forwarded through a proxy, so not localhost
         self.assertNotIn("203.0.113.9", json.dumps(rows))
 
-    def test_localhost_and_internal_cookie_mark_internal(self):
+    def test_localhost_and_the_secret_internal_path_mark_internal(self):
         self.request("POST", "/api/message", {"text": "bottle 90 ml"})
-        res, _ = self.request("GET", "/internal", headers={"X-Forwarded-For": "203.0.113.9"})
-        self.assertEqual(self.cookie(res, "pa_internal"), "1")
+        res, _ = self.request("GET", f"/internal/{SECRET}", headers={"X-Forwarded-For": "203.0.113.9"})
+        self.assertEqual(res.status, 200)
+        marker = self.cookie(res, "pa_internal")
+        self.assertEqual(marker, server_mod.internal_marker(SECRET))
+        self.assertNotIn(SECRET, res.headers.get("Set-Cookie"))
         self.request("POST", "/api/message", {"text": "bottle 90 ml"},
-                     {"Cookie": "pa_internal=1", "X-Forwarded-For": "203.0.113.9"})
+                     {"Cookie": f"pa_internal={marker}", "X-Forwarded-For": "203.0.113.9"})
         self.request("POST", "/api/message", {"text": "bottle 90 ml"}, {"X-Forwarded-For": "203.0.113.9"})
         self.assertEqual([r["internal"] for r in self.app.records.rows()], [1, 1, 0])
+
+    def test_plain_internal_and_wrong_secrets_are_404(self):
+        for path in ("/internal", "/internal/", f"/internal/{SECRET[:-1]}", f"/internal/{SECRET}x", f"/internal/{SECRET}/",
+                     "/internal/1", f"/INTERNAL/{SECRET}"):
+            res, _ = self.request("GET", path, headers={"X-Forwarded-For": "203.0.113.9"})
+            self.assertEqual(res.status, 404, path)
+            self.assertIsNone(self.cookie(res, "pa_internal"), path)
+        res, _ = self.request("POST", f"/internal/{SECRET}", {"text": "hi"})
+        self.assertEqual(res.status, 404)
+
+    def test_a_hand_made_internal_cookie_does_not_count(self):
+        for value in ("1", "true", server_mod.internal_marker("another secret that is long enough to be used ok")):
+            self.request("POST", "/api/message", {"text": "bottle 90 ml"},
+                         {"Cookie": f"pa_internal={value}", "X-Forwarded-For": "203.0.113.9"})
+        self.assertEqual([r["internal"] for r in self.app.records.rows()], [0, 0, 0])
+
+    def test_without_a_secret_every_internal_address_is_404(self):
+        for value in ("", "short"):
+            s = settings(PA_DEMO_INTERNAL_SECRET=value)
+            self.assertEqual(s["internal_secret"], "")
+            handler = server_mod.make_handler(self.app, s)
+            server = server_mod.http.server.ThreadingHTTPServer(("127.0.0.1", 0), handler)
+            threading.Thread(target=server.serve_forever, daemon=True).start()
+            try:
+                for path in ("/internal", "/internal/", f"/internal/{value}"):
+                    conn = http.client.HTTPConnection("127.0.0.1", server.server_address[1], timeout=10)
+                    conn.request("GET", path)
+                    res = conn.getresponse()
+                    res.read()
+                    conn.close()
+                    self.assertEqual(res.status, 404, (value, path))
+            finally:
+                server.shutdown()
+                server.server_close()
 
     def test_no_uploads_and_small_json_only(self):
         res, _ = self.request("POST", "/api/message", b"--x\r\nContent-Disposition: form-data; name=file\r\n\r\nabc\r\n--x--",

@@ -49,7 +49,7 @@ class TelegramMessenger(Messenger):
             chat = message.get("chat") or {}
             out.append(Incoming(update["update_id"], str(chat.get("id", "")),
                                 message.get("text") or "", sender.get("username") or sender.get("first_name") or "",
-                                str(sender.get("id", "")), chat.get("type") or ""))
+                                str(sender.get("id", "")), chat.get("type") or "", sender.get("language_code") or ""))
         return out
 
     def me(self):

@@ -9,6 +9,7 @@
 #   sh deploy/public.sh demo|families status     containers, health, deployed commit
 #   sh deploy/public.sh demo|families logs [n]   the service's last n log lines (default 100)
 #   sh deploy/public.sh demo|families stop|start
+#   sh deploy/public.sh demo internal-url FILE   write https://baby.bygmv.com/internal/<secret> to FILE (mode 600), never printed
 #   sh deploy/public.sh backup install           the daily backup of both data folders (deploy/backup.sh, systemd user timer)
 #   sh deploy/public.sh backup run               one backup now
 #
@@ -23,11 +24,12 @@ SERVICE="${1:-}"
 COMMAND="${2:-}"
 
 remote() { ssh "$HOST" "$@"; }
-usage() { sed -n '3,17p' "$0" | sed 's/^# \{0,1\}//' >&2; exit 2; }
+usage() { sed -n '3,18p' "$0" | sed 's/^# \{0,1\}//' >&2; exit 2; }
 
 case "$SERVICE" in
-  demo)     UID_IN=10001; REQUIRED_NAMES="ANTHROPIC_API_KEY" ;;
-  families) UID_IN=10002; REQUIRED_NAMES="ANTHROPIC_API_KEY TELEGRAM_FAMILIES_BOT_TOKEN PA_FAMILIES_INTERNAL_USERS" ;;
+  demo)     UID_IN=10001; SOURCE_NAMES="ANTHROPIC_API_KEY"; REQUIRED_NAMES="ANTHROPIC_API_KEY PA_DEMO_INTERNAL_SECRET" ;;
+  families) UID_IN=10002; SOURCE_NAMES="ANTHROPIC_API_KEY TELEGRAM_FAMILIES_BOT_TOKEN PA_FAMILIES_INTERNAL_USERS"
+            REQUIRED_NAMES="$SOURCE_NAMES" ;;
   backup)   ;;
   *)        usage ;;
 esac
@@ -127,18 +129,35 @@ push_env() {
 PA_FAMILIES_BOT_USERNAME=bygmv_parenting_families_bot
 $(sed -n 's/^TELEGRAM_CHAT_ID=/PA_FAMILIES_INTERNAL_USERS=/p' "$SOURCE_ENV")"
   fi
-  for NAME in $REQUIRED_NAMES; do
+  for NAME in $SOURCE_NAMES; do
     printf '%s\n' "$LINES" | grep -Eq "^$NAME=.+" || { echo "$SOURCE_ENV has no value for $NAME" >&2; exit 1; }
   done
-  # Only these lines travel, over ssh, into a file created with mode 600. Nothing is echoed.
-  printf '%s\n' "$LINES" | remote "
+  # Only these lines travel, over ssh, into a file created with mode 600. Nothing is echoed. The demo's internal
+  # secret is made on the Vostro the first time and kept on every later push, so marked browsers stay marked.
+  printf '%s\n' "$LINES" | remote "SERVICE=$SERVICE sh -c '
     set -eu
     umask 077
-    F=~/apps/pa-$SERVICE.env
+    F=\$HOME/apps/pa-\$SERVICE.env
+    SECRET=\$(sed -n \"s/^PA_DEMO_INTERNAL_SECRET=//p\" \"\$F\" 2>/dev/null || true)
     cat > \"\$F.tmp\"
+    if [ \"\$SERVICE\" = demo ]; then
+      [ \${#SECRET} -ge 32 ] || SECRET=\$(od -An -tx1 -N32 /dev/urandom | tr -d \" \\n\")
+      printf \"PA_DEMO_INTERNAL_SECRET=%s\\n\" \"\$SECRET\" >> \"\$F.tmp\"
+    fi
     chmod 600 \"\$F.tmp\"
     mv \"\$F.tmp\" \"\$F\"
-    echo \"wrote \$F, mode \$(stat -c %a \"\$F\"), names: \$(cut -d= -f1 \"\$F\" | tr '\n' ' ')\""
+    echo \"wrote \$F, mode \$(stat -c %a \"\$F\"), names: \$(cut -d= -f1 \"\$F\" | tr \"\\n\" \" \")\"'"
+}
+
+internal_url() {
+  [ "$SERVICE" = demo ] || usage
+  OUT="${3:-}"
+  [ -n "$OUT" ] || usage
+  # The secret goes from the Vostro straight into a mode 600 file. It is never printed.
+  SECRET="$(remote 'sed -n "s/^PA_DEMO_INTERNAL_SECRET=//p" ~/apps/pa-demo.env')"
+  [ "${#SECRET}" -ge 32 ] || { echo "no internal secret on $HOST: run sh deploy/public.sh demo push-env" >&2; exit 1; }
+  ( umask 077 && printf 'https://baby.bygmv.com/internal/%s\n' "$SECRET" > "$OUT.tmp" && chmod 600 "$OUT.tmp" && mv "$OUT.tmp" "$OUT" )
+  echo "wrote $OUT, mode $(stat -f %Lp "$OUT" 2>/dev/null || stat -c %a "$OUT")"
 }
 
 deploy() {
@@ -200,6 +219,7 @@ case "$SERVICE:$COMMAND" in
   backup:*)    backup ;;
   *:push-env)  push_env ;;
   *:deploy)    deploy ;;
+  *:internal-url) internal_url "$@" ;;
   *:check)     run_remote 'checks' ;;
   *:status)    run_remote 'docker ps -a --filter "name=^$APP" --format "{{.Names}}  {{.Status}}  {{.Ports}}"
 echo "deployed: $(cat "$CURRENT_FILE" 2>/dev/null || echo none), previous: $(cat "$PREVIOUS_FILE" 2>/dev/null || echo none)"' ;;

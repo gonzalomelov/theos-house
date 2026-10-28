@@ -14,6 +14,27 @@ It is a separate service, walled off like the public demo. Other families never 
 
 The bot sends the same text when a parent sends `/privacy`.
 
+## Para las familias: tus datos en 1 minuto
+
+- **Qué se guarda.** El nombre o apodo de tu bebé y su fecha de nacimiento. Lo que anotás: tomas, pañales, sueño, baños y notas. Nuestra conversación. Tu id de chat de Telegram, para que el bot te pueda responder. Para contar el uso real, una fila por mensaje con la hora y un id mezclado (un hash de tu id de Telegram), nunca el texto.
+- **Dónde.** Un archivo privado para tu familia en un servidor chico en la casa de Gonza, en Uruguay. Ninguna otra familia lo puede ver, y no se mezcla con los datos de la familia de Gonza.
+- **Quién más ve el texto.** Para responderte, el texto de la conversación va a un modelo de IA: Claude de Anthropic por ahora, Muse Spark Open de Meta más adelante. Ninguno lo guarda ni entrena con él. Telegram lleva los mensajes, como en cualquier chat de Telegram.
+- **Lo que nunca hace.** Nunca da consejos médicos. Si preguntás algo de salud, te responde con cariño que no puede y te sugiere llamar a tu pediatra.
+- **Cómo borrar todo.** Mandá `/borrarmisdatos` y después `BORRAR`. Se borran de una el archivo de tu familia, la conversación, las filas de conteo y el acceso de los dos. Al otro papá o mamá le llega un mensaje avisando.
+
+El bot manda este mismo texto cuando alguien manda `/privacidad`.
+
+## Languages
+
+The bot speaks Rioplatense Spanish with voseo and English. Every fixed message is in `parenting_agent/families/texts.py`, one table per language with the same keys.
+
+- A stranger gets the language of their Telegram app (`language_code`): Spanish when it starts with `es`, English otherwise. Nothing about a stranger is stored.
+- A new family starts in the language of the parent who used the invite. It is kept as the fact `_lang` in the family's own file, so both parents, reminders and the evening summary use it. The partner joins in the family's language, whatever their app says.
+- `/idioma` switches the family to Spanish and `/language` to English. Both also take a name: `/idioma en`, `/language es`.
+- Every command works in both languages: `/resumen` or `/summary`, `/proxima` or `/next`, `/invitar` or `/invite`, `/avisos` or `/reminders`, `/privacidad` or `/privacy`, `/ayuda` or `/help`, `/borrarmisdatos` or `/deletemydata`. The confirmation word follows the family's language: `BORRAR` in Spanish, `DELETE` in English.
+- The brain is told the family's language in the system prompt. Over a spend cap the free rule-based brain reads Spanish notes ("mamadera 120 ml", "pañal sucio") through their English words and answers in Spanish.
+- Spanish health words (fiebre, dosis, vómito, tos and more) get the Spanish refusal without a brain call, and a reminder or summary with a Spanish advice word is never sent.
+
 ## The invite flow
 
 1. Gonza makes a code on the server: `docker exec pa-families python -m parenting_agent.families invite --count 3`. Each code is 8 characters, single use, valid 7 days, and only its hash is stored. With `PA_FAMILIES_BOT_USERNAME` set, each line also has a `https://t.me/<bot>?start=<code>` link that opens the bot with the code filled in.
@@ -38,6 +59,8 @@ For Gonza's own test accounts: `invite --internal` makes a code whose parent, an
 | `/reminders off`, `/reminders on` | Next feed reminders |
 | `/privacy` | The privacy note above |
 | `/deletemydata` then `DELETE` | Wipes the family. Anything else cancels, and the confirmation expires after 10 minutes |
+| `/borrarmisdatos` then `BORRAR` | The same in Spanish |
+| `/idioma`, `/language` | Spanish or English for the whole family |
 
 The bot speaks first twice: a next feed reminder about 10 minutes before the feed the rhythm engine expects, sent once per feed to every parent, only when the last feed is less than 8 hours old. And a daily summary at 20:00 local time, once a day, only when something was logged that day. Both pass the rhythm engine's `no_advice` check.
 

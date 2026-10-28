@@ -1,9 +1,13 @@
 """The demo's web server: one phone-first page and a small JSON API, on the standard library only.
 
-Routes: GET / (the page), GET /internal (marks this browser as internal), GET /api/state, POST /api/message,
-POST /api/reset, GET /healthz. Every visitor gets a random first-party cookie pa_vid, and only its sha256 is kept.
+Routes: GET / (the page), GET /internal/<secret> (marks this browser as internal), GET /api/state, POST /api/message,
+POST /api/reset, GET /healthz. The secret is PA_DEMO_INTERNAL_SECRET. Any other /internal address is a plain 404,
+and the internal cookie is a signature of the secret, so a hand-made cookie does not count and a new secret unmarks
+every browser. Every visitor gets a random first-party cookie pa_vid, and only its sha256 is kept.
 Requests must be small JSON. There is no upload route and multipart bodies are refused.
 """
+import hashlib
+import hmac
 import http.server
 import ipaddress
 import json
@@ -38,8 +42,16 @@ def is_loopback(address):
         return False
 
 
+def internal_marker(secret):
+    """The internal cookie's value: a signature of the secret, never the secret itself. "" when the feature is off."""
+    return hmac.new(secret.encode(), b"pa-demo-internal-v1", hashlib.sha256).hexdigest() if secret else ""
+
+
 def make_handler(app, settings):
     secure = "; Secure" if settings["secure_cookie"] else ""
+    secret = settings.get("internal_secret", "")
+    marker = internal_marker(secret)
+    internal_path = f"/internal/{secret}".encode() if secret else b""
 
     class Handler(http.server.BaseHTTPRequestHandler):
         server_version = "demo"
@@ -64,7 +76,8 @@ def make_handler(app, settings):
                 token = secrets.token_urlsafe(32)
                 headers.append(f"{COOKIE}={token}; Path=/; Max-Age={YEAR}; HttpOnly; SameSite=Lax{secure}")
             local = is_loopback(self.client_address[0]) and not any(self.headers.get(h) for h in FORWARDED)
-            return visitor_id(token), jar.get(INTERNAL_COOKIE) == "1" or local, headers
+            marked = bool(marker) and hmac.compare_digest(jar.get(INTERNAL_COOKIE, "").encode(), marker.encode())
+            return visitor_id(token), marked or local, headers
 
         def send(self, status, body, content_type="application/json; charset=utf-8", cookies=()):
             data = body if isinstance(body, bytes) else dumps(body)
@@ -86,8 +99,8 @@ def make_handler(app, settings):
             vid, internal, cookies = self.visitor()
             if path == "/":
                 return self.send(200, PAGE.read_bytes(), "text/html; charset=utf-8", cookies)
-            if path == "/internal":
-                cookies = list(cookies) + [f"{INTERNAL_COOKIE}=1; Path=/; Max-Age={YEAR}; HttpOnly; SameSite=Lax{secure}"]
+            if internal_path and hmac.compare_digest(path.encode(), internal_path):
+                cookies = list(cookies) + [f"{INTERNAL_COOKIE}={marker}; Path=/; Max-Age={YEAR}; HttpOnly; SameSite=Lax{secure}"]
                 page = b"<!doctype html><meta name=viewport content='width=device-width'><p>This browser is marked as internal. " \
                        b"Its messages are not counted as strangers.</p><p><a href='/'>Open the demo</a></p>"
                 return self.send(200, page, "text/html; charset=utf-8", cookies)

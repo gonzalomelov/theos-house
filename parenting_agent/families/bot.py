@@ -52,7 +52,8 @@ class FamiliesBot:
         sent = 0
         for item in batch:
             self.save_offset(item.update_id + 1)
-            sent += self.send(self.service.handle(item.user_id, item.chat_id, item.text, item.chat_type or "private"))
+            sent += self.send(self.service.handle(item.user_id, item.chat_id, item.text, item.chat_type or "private",
+                                                  getattr(item, "language_code", "")))
         return sent
 
     def tick_once(self, now=None):
