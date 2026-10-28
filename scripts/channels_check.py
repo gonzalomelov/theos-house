@@ -81,7 +81,7 @@ def check_away(agent, router):
     sent = queue.Queue()
     agent.bus.subscribe(sent.put, ["channel_sent", "channel_error"])
     router._presence = lambda: "away"
-    agent.bus.publish("notify", text="Test: reminder, the next feed is due in about 30 minutes.")
+    agent.bus.publish("notify", text="reminder, the next feed is due in about 30 minutes.")
     event = sent.get(timeout=20)
     routed = next(e for e in reversed(agent.bus.history) if e["kind"] == "routed")
     return {"passed": routed["channel"] == "telegram" and event["kind"] == "channel_sent", "simulated_presence": "away",

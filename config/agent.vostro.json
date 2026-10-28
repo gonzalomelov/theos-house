@@ -20,10 +20,16 @@
     "current_time"
   ],
   "plugins": [
-    "parenting_agent.agent.heartbeat:Heartbeat"
+    "parenting_agent.agent.heartbeat:Heartbeat",
+    "parenting_agent.channels.telegram:Telegram"
   ],
   "heartbeat": {
     "interval_s": 30
   },
-  "max_steps": 6
+  "max_steps": 6,
+  "telegram": {
+    "token_env": "TELEGRAM_BOT_TOKEN",
+    "allowed_chat_ids_env": "TELEGRAM_CHAT_ID",
+    "poll_timeout_s": 25
+  }
 }
