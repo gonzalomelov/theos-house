@@ -102,6 +102,16 @@ python -m parenting_agent.demo --brain-env ~/.parenting-agent.env   # http://127
 python -m parenting_agent.demo.export_sessions                                                     # session rows for the scorer
 ```
 
+## Invited families on Telegram (issue #40)
+
+Invited parents log their own baby through a second Telegram bot, each family in its own SQLite file, walled off from the family agent, Baby Buddy, Home Assistant and the LAN like the demo. Gonza makes an invite code, the parent sends `/start <code>`, answers 3 questions and is logging. Logs by text, answers from the family's log, next feed reminders, an evening summary, `/deletemydata`, caps per family and for the day. Not deployed yet. See `docs/families.md`, which also holds the privacy note for parents.
+
+```bash
+python -m parenting_agent.families invite --count 3        # codes for new families
+python -m parenting_agent.families run --keys-env FILE     # the bot, needs TELEGRAM_FAMILIES_BOT_TOKEN
+python -m parenting_agent.families.export_sessions         # session rows for the scorer, kind family
+```
+
 ## Tests
 
 ```bash
@@ -130,6 +140,7 @@ Everything in this repo was written during the event. The repo was created on Oc
 | Telegram channel and channel picking | #3, #8 | #36 | see PR |
 | House sounds, why is he crying, white noise | #14, #32 | see PR | see PR |
 | Sitter handover, time-boxed guest role, summary after | #16 | see PR | see PR |
+| Invited families on Telegram, one private log per family, walled off | #40 | see PR | see PR |
 
 The first commits of Oct 26 (4f1898a to 90ca5a3) are an early skeleton that the issues above reviewed and partly rewrote.
 
