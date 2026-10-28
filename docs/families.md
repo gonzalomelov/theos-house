@@ -75,6 +75,17 @@ On Oct 28 an internal round trip logged "mamadera 120 ml" as 2 feeds of 120 ml. 
 
 The fix is in the shared decide loop, so the demo and the family agent get it too. Tests: `tests/test_one_message_one_entry.py`.
 
+## Never "logged" when nothing was saved
+
+With the real brain, a burst of notes such as "mamadera 120 ml", "pañal sucio", "se durmió" often got "Anotado" or "Logged" with no log tool call. The conversation keeps only the answers' text, so the brain copied its earlier "Anotado". On Oct 28 that was 71 of 150 notes (47 of 90 in Spanish, 24 of 60 in English). The fix is in the shared decide loop, so the demo and the family agent get it too:
+
+- When the parent's message reports something to log (the rule parser in `parenting_agent/agent/rules.py`, Spanish words included) and no log call ran, the brain's answer is never sent. The same holds when its answer says it logged, or when a log call failed.
+- The brain is asked once more, with the parent's message quoted, to call `log_baby_event` for that one message. After that ask only one entry of the kind the message reports can run, so earlier messages are not logged again.
+- If it still does not log, the parent gets "No pude anotarlo, ¿me lo repetís?" or "I could not log that. Could you send it again?", and that answer stays in the conversation.
+- Questions, small talk, a plug-in phrase such as "bath time" and a call waiting for the parent's yes are left alone.
+
+On the same 150 notes after the fix: 0 false "logged" and every note logged once. The brain needed the second ask on 65 of them. Tests: `tests/test_no_false_logged.py`.
+
 ## How it is built
 
 | Part | Code |

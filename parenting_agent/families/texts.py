@@ -21,6 +21,7 @@ EN = {
     "TOO_LONG": "Please keep it under {n} characters.",
     "FAMILY_LIMIT": "Your family reached today's message limit. I will be back tomorrow. Nothing was logged from this message.",
     "THINK_FAIL": "I could not think that through just now. Please try again.",
+    "NOT_LOGGED": "I could not log that. Could you send it again?",
     "SAVED_BEFORE_FAIL": "I could not finish my answer, but I logged {entries}. No need to send it again.",
     "ENTRY_FEEDING": "a feed", "ENTRY_FEEDING_ML": "a feed of {ml} ml", "ENTRY_DIAPER": "a diaper",
     "ENTRY_SLEEP": "sleep", "ENTRY_BATH": "a bath", "ENTRY_NOTE": "a note",
@@ -94,6 +95,7 @@ ES = {
     "TOO_LONG": "Escribí menos de {n} caracteres, por favor.",
     "FAMILY_LIMIT": "Tu familia llegó al límite de mensajes de hoy. Vuelvo mañana. No anoté nada de este mensaje.",
     "THINK_FAIL": "No pude pensarlo recién. Probá de nuevo.",
+    "NOT_LOGGED": "No pude anotarlo, ¿me lo repetís?",
     "SAVED_BEFORE_FAIL": "No pude terminar la respuesta, pero ya anoté {entries}. No hace falta que lo mandes de nuevo.",
     "ENTRY_FEEDING": "una toma", "ENTRY_FEEDING_ML": "una toma de {ml} ml", "ENTRY_DIAPER": "un pañal",
     "ENTRY_SLEEP": "el sueño", "ENTRY_BATH": "un baño", "ENTRY_NOTE": "una nota",
@@ -149,7 +151,7 @@ ES = {
     "DIAPER": ("pañal", "pañales"),
     "SLEEP_ONE": ("siesta", "siestas"),
     "LOGGED": "Listo, anotado.",
-    "NOTED": "Anotado.",
+    "NOTED": "Entendido.",
     "NOT_DONE": "No pude hacerlo recién.",
     "NOT_FOUND": "No encontré eso en el registro.",
     "LOGGED_FEEDS": "Tomas anotadas: {feeds}.",
@@ -176,15 +178,9 @@ MEDICAL_ES = re.compile(r"\b(fiebre|temperatura|medicamento|medicina|remedio|dos
 ADVICE_ES = re.compile(r"\b(deber[ií]as|ten[eé]s que|prob[aá]|recomiend\w*|m[eé]dic\w*|pediatra|normal|preocup\w*|"
                        r"fiebre|enferm\w*|remedio|dosis|consult\w*)\b", re.I)
 
-# The free rule-based brain over a spend cap understands English notes. These Spanish words become the English
-# ones it knows, so "mamadera 120 ml" or "pañal sucio" keep working in Spanish mode.
-NOTE_WORDS_ES = [
-    (r"pa[ñn]al(es)?", "diaper"), (r"sucio|caca", "dirty"), (r"mojado|pis|pich[ií]", "wet"),
-    (r"se ba[ñn][oó]|ba[ñn]o|ba[ñn]ad[oa]", "bath"), (r"se durmi[oó]|dormid[oa]|se qued[oó] dormid[oa]", "fell asleep"),
-    (r"se despert[oó]|despiert[oa]", "woke"), (r"teta|pecho", "breast"), (r"izquierd[oa]", "left"),
-    (r"derech[oa]", "right"), (r"mamadera|biber[oó]n", "bottle"), (r"tom[oó]|comi[oó]", "drank"),
-    (r"cu[aá]nto", "how much"), (r"cu[aá]ndo", "when"), (r"cu[aá]ntos|cu[aá]ntas", "how many"),
-]
+# The free rule-based brain over a spend cap understands English notes. rules.NOTE_WORDS_ES turns Spanish words into
+# the English ones it knows, so "mamadera 120 ml" or "pañal sucio" keep working in Spanish mode.
+NOTE_WORDS_ES = rules.NOTE_WORDS_ES
 
 
 def lang_for(language_code):
@@ -210,7 +206,4 @@ def no_advice_es(text):
 
 
 def note_to_english(text):
-    out = text
-    for pattern, word in NOTE_WORDS_ES:
-        out = re.sub(rf"\b(?:{pattern})\b", word, out, flags=re.I)
-    return out
+    return rules.note_to_english(text)

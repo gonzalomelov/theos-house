@@ -14,6 +14,18 @@ MEDICAL = re.compile(r"\b(fever|temperature|medicine|medication|dose|dosage|para
                      r"diagnos|should i give|is it normal|cough|infection|antibiotic)", re.I)
 QUESTION_START = re.compile(r"^(when|how|what|did|has|have|is|was)\b", re.I)
 
+# Spanish note words to the English ones parse_note knows, so "mamadera 120 ml" or "pañal sucio" read as notes too.
+NOTE_WORDS_ES = [
+    (r"pa[ñn]al(es)?", "diaper"), (r"sucio|caca", "dirty"), (r"mojado|pis|pich[ií]", "wet"),
+    (r"se ba[ñn][oó]|ba[ñn]o|ba[ñn]ad[oa]", "bath"), (r"se durmi[oó]|dormid[oa]|se qued[oó] dormid[oa]", "fell asleep"),
+    (r"se despert[oó]|despiert[oa]", "woke"), (r"teta|pecho", "breast"), (r"izquierd[oa]", "left"),
+    (r"derech[oa]", "right"), (r"mamadera|biber[oó]n", "bottle"), (r"tom[oó]|comi[oó]", "drank"),
+    (r"cu[aá]nto", "how much"), (r"cu[aá]ndo", "when"), (r"cu[aá]ntos|cu[aá]ntas", "how many"),
+]
+SPANISH = re.compile(r"[ñáéíóú¿¡]|\b(se|le|la|el|de|del|un|una|y|con|ya|reci[eé]n|hoy)\b", re.I)
+# A reply that says something went into the log. "Noted" and "OK" are not claims, so small talk is never one.
+CLAIMS_LOGGED = re.compile(r"\b(logged|recorded|added (it )?to the log|anot[eé]|anotad[oa]s?|registr[eé]|registrad[oa]s?)\b", re.I)
+
 REFUSAL = ("I can't give medical advice. Please call your pediatrician about that. "
            "I can log what you see so you have it ready for the call.")
 
@@ -67,6 +79,35 @@ def parse_note(text):
     if any(w in low for w in ("smiled", "rolled", "laughed", "first time", "milestone")):
         return "note", {"text": text}
     return None
+
+
+def note_to_english(text):
+    out = text
+    for pattern, word in NOTE_WORDS_ES:
+        out = re.sub(rf"\b(?:{pattern})\b", word, out, flags=re.I)
+    return out
+
+
+def log_kind(text):
+    """The kind of log entry a parent's message reports (feeding, diaper, sleep, bath, note), in English or Spanish.
+    None for questions, health questions and anything that is not a note about the baby."""
+    english = note_to_english(text)
+    if is_question(text) or is_question(english) or is_medical(text):
+        return None
+    parsed = parse_note(text) or parse_note(english)
+    return parsed[0] if parsed else None
+
+
+def is_log_request(text):
+    return log_kind(text) is not None
+
+
+def claims_logged(text):
+    return bool(CLAIMS_LOGGED.search(text or ""))
+
+
+def looks_spanish(text):
+    return note_to_english(text) != text or bool(SPANISH.search(text))
 
 
 def answer(question, summary):

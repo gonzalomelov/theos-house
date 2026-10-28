@@ -11,6 +11,7 @@ import queue
 import threading
 
 from . import brain as brain_mod
+from . import rules
 
 SYSTEM = """You are a persistent agent built for new parents. You know their baby from the log and the facts below,
 you speak first when it helps, and you act in the home only through your tools.
@@ -31,6 +32,13 @@ Today is {today}. Facts you were told: {facts}
 YES = {"yes", "si", "sí", "ok", "dale", "go ahead", "do it"}
 ENTRY_WORDS = {"feeding": "a feed", "diaper": "a diaper", "sleep": "sleep", "bath": "a bath", "note": "a note"}
 SAVED_BEFORE_FAIL = "I could not finish my answer, but I logged {entries}. No need to send it again."
+NOT_LOGGED = {"en": "I could not log that. Could you send it again?", "es": "No pude anotarlo, ¿me lo repetís?"}
+LOG_CHECK = ("[check from the agent, not the parent] The parent's newest message, \"{request}\", is not in the log: "
+             "your answer came without a log_baby_event call that ran. Earlier messages were already handled, never log "
+             "them again. If this one message reports something about the baby, call log_baby_event once for it now. "
+             "Never say something is logged unless log_baby_event ran for it in this turn.")
+READ_TOOLS = {"read_baby_log", "baby_summary", "current_time"}
+ONE_AFTER_CHECK = "not logged: after the check only the newest message is logged, once. Earlier messages were already handled."
 
 
 def _number(value):
@@ -141,6 +149,8 @@ class Agent:
             stamp = datetime.datetime.now().strftime("%H:%M")
             transcript = self.transcript(f"[{stamp}] {text}")
             self.memory.add_message(channel, "user", text)
+            self.decide(channel, transcript, request=text)
+            return
         else:
             observed = f"[observation from {event.get('source', 'a skill')}] {event.get('text', '')}"
             transcript = self.transcript(observed)
@@ -158,12 +168,37 @@ class Agent:
             words.append(f"{word} of {float(ml):g} ml" if entry.get("kind") == "feeding" and _number(ml) else word)
         return SAVED_BEFORE_FAIL.format(entries=", ".join(words))
 
-    def decide(self, channel, transcript):
+    def not_logged(self, request):
+        """The honest answer when a parent's note was not saved. Kept in memory like any answer, so the next turn
+        sees that nothing was logged."""
+        return NOT_LOGGED["es" if rules.looks_spanish(request) else "en"]
+
+    @staticmethod
+    def needs_log(request, text, failed, acted):
+        """True when the brain's answer to a parent's message must not go out as it is, because no log call ran: a log
+        call failed, or nothing acted on the message although it reports something to log or the answer says it
+        logged. A plug-in tool that ran, such as finish_bath on "bath done", acted on it, and a call waiting for the
+        parent's yes is never held."""
+        if request is None or acted == "ask_parent":
+            return False
+        if failed:
+            return True
+        if acted:
+            return False
+        return rules.is_log_request(request) or (rules.claims_logged(text) and not rules.is_question(request))
+
+    def decide(self, channel, transcript, request=None):
         """One incoming message or observation, through the brain and the tools, until the brain answers. Within it a
         log entry is written once, whatever the brain repeats. If the brain fails after something was logged, the agent
-        still answers with what it kept."""
+        still answers with what it kept.
+
+        request is the parent's message. When it reports something to log and the brain answers without a log call
+        that ran, its answer is never sent, so a parent is never told "logged" when nothing was saved. The brain is
+        asked once more to call the tool, and if it still does not, the parent hears that it could not be logged."""
         system, specs = self.system_prompt(), self.tools.specs()
         logged, kept = {}, []
+        failed, acted, checked = False, None, False
+        wanted = rules.log_kind(request) if request is not None else None
         for _ in range(self.max_steps):
             try:
                 reply, seconds = brain_mod.timed(self.brain, system, transcript, specs)
@@ -176,11 +211,27 @@ class Agent:
             self.bus.publish("brain_call", provider=self.brain.name, model=self.brain.model,
                              destination=self.brain.destination, seconds=seconds, tool_calls=len(reply.tool_calls))
             if not reply.tool_calls:
+                if not kept and self.needs_log(request, reply.text, failed, acted):
+                    if not checked:
+                        checked = True
+                        self.bus.publish("guard", status="asked_to_log", failed=failed)
+                        transcript.append({"role": "assistant", "text": reply.text or "(no answer)"})
+                        transcript.append({"role": "user", "text": LOG_CHECK.format(request=request.replace('"', "'"))})
+                        continue
+                    self.bus.publish("guard", status="not_logged", failed=failed)
+                    self.say(channel, self.not_logged(request))
+                    return
                 self.say(channel, reply.text or "OK.")
                 return
             transcript.append({"role": "assistant", "text": reply.text, "tool_calls": reply.tool_calls})
             for call in reply.tool_calls:
                 key = entry_key(call["arguments"] or {}) if call["name"] == "log_baby_event" else None
+                if key is not None and checked and (kept or (wanted and call["arguments"].get("kind") != wanted)):
+                    # Asked to log the newest message, a brain can try to log earlier ones too. Only one entry of the
+                    # kind the message reports runs.
+                    self.bus.publish("tool", name=call["name"], status="held")
+                    transcript.append({"role": "tool", "id": call["id"], "name": call["name"], "result": ONE_AFTER_CHECK})
+                    continue
                 if key is not None and key in logged:
                     self.bus.publish("tool", name=call["name"], status="duplicate")
                     transcript.append({"role": "tool", "id": call["id"], "name": call["name"],
@@ -188,6 +239,11 @@ class Agent:
                     continue
                 status, result = self.tools.run(call["name"], call["arguments"])
                 self.bus.publish("tool", name=call["name"], status=status)
+                failed = failed or (key is not None and status == "error")
+                if status == "ask_parent":
+                    acted = "ask_parent"
+                elif status == "ran" and call["name"] not in READ_TOOLS and acted is None:
+                    acted = call["name"]
                 if key is not None and status == "ran":
                     logged[key] = result
                     kept.append(call["arguments"])

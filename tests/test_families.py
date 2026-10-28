@@ -419,7 +419,9 @@ class Caps(unittest.TestCase):
             app.handle("111", "111", "bottle 100 ml")
         self.assertEqual(brain.calls, 3)
         self.assertAlmostEqual(app.store.spent_today(family_of(app, "111")), 0.30)
-        self.assertEqual(len(app.family(family_of(app, "111")).log.entries("feeding")), 2)
+        # The counting brain never calls the log tool. The first bottle gets the honest "could not log" after one more
+        # ask. On the second the cap is hit at the ask, so the free rules log it, and they log the 3 after the cap.
+        self.assertEqual(len(app.family(family_of(app, "111")).log.entries("feeding")), 4)
         onboard(app, "222")
         app.handle("222", "222", "hello")
         self.assertEqual(brain.calls, 4)
