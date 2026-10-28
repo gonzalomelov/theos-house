@@ -2,12 +2,42 @@
   "name": "bath",
   "concepts": {"hand": "hand", "baby": "baby"},
   "contact": {"min_overlap": 0.3, "min_hand_area": 0.012, "off_frames_to_alert": 1},
-  "alarm": {"voice_hold_s": 0.6, "clear_after_on_s": 0.5, "voice_text": "hand"},
-  "phases": ["filling", "in water", "washing", "towel"],
-  "confirm": {"provider": "none"},
+  "alarm": {"voice_hold_s": 1.2, "clear_after_on_s": 0.5, "voice_text": "hand"},
+  "phases": ["water ready", "towel within reach", "in water", "washing", "out and wrapped"],
+  "confirm": {
+    "provider": "sam3_local",
+    "module": "parenting_agent.sam3_local",
+    "device": "mps",
+    "hand_word": "hand",
+    "baby_word": "baby",
+    "ring_px": 6,
+    "ring_min": 0.35,
+    "min_hand_area": 0.012
+  },
   "reasoning": {"provider": "none"},
+  "agent": {
+    "start_phrases": ["bath time", "time for the bath", "starting the bath"],
+    "finish_phrases": ["bath done", "bath is done", "bath over", "done with the bath"],
+    "start_tool": "start_bath",
+    "start_description": "Start the bath helper when the parent says \"bath time\". It listens through the head camera for the parent's hands and chimes when both hands leave the baby. It does not watch the baby for the parent.",
+    "finish_tool": "finish_bath",
+    "finish_description": "Stop the bath helper and log the bath in the baby log, when the parent says \"bath done\".",
+    "armed_result": "Bath started. The head camera listens for the parent's hands and chimes if both hands leave the baby. The parent keeps a hand on the baby the whole bath, the camera never replaces that. If anything needs the parent during the bath, such as the doorbell, do not suggest stepping away: say one moment on the house speaker or offer to call the partner.",
+    "already_armed": "the bath helper is on, the head camera listens for the parent's hands",
+    "not_armed": "the bath helper was not on",
+    "finished_result": "bath logged",
+    "armed_fact": "A bath is in progress. The parent keeps a hand on the baby the whole bath. Never suggest stepping away from the bath, not even for a second, and never offer to watch the baby. If the parent must go, the baby comes out of the water with them, wrapped in the towel. For the door, the phone, a timer or a forgotten towel, offer to say one moment on the house speaker, hold notifications or call the partner.",
+    "idle_fact": "No bath in progress.",
+    "closed_observation": "A bath just finished and was logged in the baby log. Hand alerts spoken: {voices}."
+  },
+  "reminders": {
+    "on_armed": "Bath time. Water ready, towel within reach, nothing left on in the kitchen. Keep a hand on the baby the whole bath."
+  },
   "house": {
-    "allowed": {},
+    "allowed": {
+      "hold_notifications": {"service": "switch.turn_on", "entity_id": "switch.gonza_s_echo_dot_do_not_disturb", "expect": "on"},
+      "restore_notifications": {"service": "switch.turn_off", "entity_id": "switch.gonza_s_echo_dot_do_not_disturb", "expect": "off"}
+    },
     "on_armed": ["hold_notifications"],
     "on_voice": ["call_partner"],
     "on_closed": ["restore_notifications"]

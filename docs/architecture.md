@@ -14,7 +14,7 @@ flowchart LR
     mem["Agent memory<br/>SQLite + event log"]
     bb["Baby Buddy<br/>family server, localhost"]
     rhythm["Daily rhythm<br/>patterns, night shifts"]
-    skills["Skills<br/>changing table, bath (planned #10)"]
+    skills["Skills<br/>changing table, bath"]
     ha["Home Assistant<br/>dry run today (#9)"]
     chan["Channels<br/>console, Telegram, ear, kitchen speaker<br/>router picks one (#3 #8)"]
   end
@@ -46,6 +46,7 @@ flowchart LR
 | Baby Buddy | `docs/deploy-babybuddy.md` | The baby's log on the family server, only on localhost there |
 | Brain | `parenting_agent/agent/brain.py` | Fake, Claude stand-in, or any OpenAI-compatible endpoint (Muse Spark Open on Baseten) |
 | Changing-table skill | `parenting_agent/changing_table.py`, `reflex.py`, `alarm.py`, `skill.py` | Arms, holds notifications, chimes then says "hand", logs the change |
+| Camera skills from config | `parenting_agent/camera_skill.py`, `skills/bath.json` | A skill file with an agent block becomes tools, arm and finish phrases, reminders and prompt facts. The bath is the first, see `docs/bath.md` |
 | SAM 3.1 confirm | `parenting_agent/sam3_local.py`, `sam3_worker.py` | Touch versus hover, locally, see `docs/sam3-local.md` |
 | Head camera | `parenting_agent/sources.py`, `phone.html` | iPhone page streaming frames to the Mac over Tailscale |
 | Daily rhythm | `parenting_agent/rhythm/` | Next feed, unusual days, night summary, night shifts |
@@ -75,3 +76,4 @@ flowchart LR
 - Anything not on the allowed list waits for a parent's yes.
 - No medical advice and no diagnosis in anything the agent says.
 - Baby log entries are never timed in the future.
+- A camera skill never says or implies the baby can be left alone, and never offers to watch the baby in the parent's place. Checked when the skill loads.

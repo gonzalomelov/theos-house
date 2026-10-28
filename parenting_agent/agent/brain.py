@@ -11,6 +11,7 @@ its destination host so the agent can log where data went.
 """
 import json
 import os
+import re
 import time
 import urllib.error
 import urllib.parse
@@ -41,12 +42,23 @@ def post_json(url, headers, body, timeout):
         raise BrainError(str(error)) from error
 
 
+def trigger(text, tools):
+    """The tool whose description says the parent says exactly this phrase, for example "bath time"."""
+    said = text.lower().strip(" .!")
+    for tool in tools:
+        if said in (p.lower() for p in re.findall(r'says? "([^"]+)"', tool["description"])):
+            return tool["name"]
+    return None
+
+
 class FakeBrain:
     """Logs feeds, diapers, sleep and baths it hears, answers from the baby log, refuses health questions. No network."""
     name, model, destination = "fake", "rules", "none (local)"
 
     def step(self, system, transcript, tools):
         last = transcript[-1]
+        if last["role"] == "tool" and last.get("id") == "fake-trigger":
+            return Reply(str(last["result"]).split(". ")[0].rstrip(".") + ".")
         if last["role"] == "tool":
             if isinstance(last["result"], str) and "failed" in last["result"]:
                 return Reply("I could not do that: " + last["result"])
@@ -60,9 +72,14 @@ class FakeBrain:
                 parts = [f"{e['details'].get('amount_ml', '?')} ml at {e['ts'][11:16]}" for e in feeds]
                 return Reply("Logged feeds: " + ", ".join(parts) + ".")
             return Reply("Done, logged.")
+        if last["text"].startswith("[observation from"):
+            return Reply("Noted.")  # a skill reports what it already logged, nothing to log again
         text = last["text"].split("] ", 1)[-1]
         if rules.is_medical(text):
             return Reply(rules.REFUSAL)
+        named = trigger(text, tools)
+        if named:
+            return Reply(tool_calls=[{"id": "fake-trigger", "name": named, "arguments": {}}])
         if rules.is_question(text):
             return Reply(tool_calls=[{"id": "fake-summary", "name": "baby_summary", "arguments": {}}])
         parsed = rules.parse_note(text)
