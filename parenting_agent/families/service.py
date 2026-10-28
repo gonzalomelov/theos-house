@@ -29,6 +29,7 @@ ALLOWED = ["log_baby_event", "read_baby_log", "baby_summary", "remember", "curre
 CHANNEL = "telegram"
 MAX_PARENTS = 4
 DELETE_WINDOW_S = 600
+SEEN_MESSAGES = 1000
 YES = {"yes", "y", "si", "sí", "s", "ok", "dale", "sure", "yes please", "claro", "obvio", "sí, dale", "si dale"}
 START = re.compile(r"^/start(?:@\w+)?(?:\s+(\S+))?\s*$", re.I)
 COMMAND = re.compile(r"^/(\w+)(?:@\w+)?\s*(.*)$", re.S)
@@ -76,6 +77,18 @@ class FamilyAgent(Agent):
         lang = self.memory.facts().get("_lang", {}).get("value") or "en"
         return (base + FAMILY_NOTE.format(name=facts.get("baby_name", "the baby"), born=facts.get("birth_date", "recently"))
                 + LANGUAGE_NOTE.get(lang, LANGUAGE_NOTE["en"]))
+
+    def saved_before_fail(self, entries):
+        lang = self.memory.facts().get("_lang", {}).get("value") or "en"
+        words = []
+        for entry in entries:
+            kind = str(entry.get("kind") or "note").upper()
+            ml = (entry.get("details") or {}).get("amount_ml")
+            if kind == "FEEDING" and isinstance(ml, (int, float)) and ml > 0:
+                words.append(t(lang, "ENTRY_FEEDING_ML", ml=f"{float(ml):g}"))
+            else:
+                words.append(t(lang, f"ENTRY_{kind}") if f"ENTRY_{kind}" in texts.TEXTS.get(lang, texts.EN) else t(lang, "ENTRY_NOTE"))
+        return t(lang, "SAVED_BEFORE_FAIL", entries=", ".join(words))
 
 
 class FamilyBrain:
@@ -208,6 +221,7 @@ class Families:
         self.families = collections.OrderedDict()
         self.lock = threading.Lock()
         self.bad_codes = collections.Counter()
+        self.seen = collections.OrderedDict()
 
     def now(self):
         return self.clock().astimezone(self.tz)
@@ -237,9 +251,25 @@ class Families:
 
     # One message in
 
-    def handle(self, user_id, chat_id, text, chat_type="private", language_code=""):
+    def first_time(self, user_id, message_id):
+        """False when this incoming message was already handled, for example Telegram delivering one update twice."""
+        if message_id is None:
+            return True
+        key = (str(user_id), str(message_id))
+        with self.lock:
+            if key in self.seen:
+                return False
+            self.seen[key] = True
+            while len(self.seen) > SEEN_MESSAGES:
+                self.seen.popitem(last=False)
+        return True
+
+    def handle(self, user_id, chat_id, text, chat_type="private", language_code="", message_id=None):
         """language_code is the sender's Telegram app language. It picks the language for strangers and for a new
-        family. A family that exists keeps its own language until a parent sends /idioma or /language."""
+        family. A family that exists keeps its own language until a parent sends /idioma or /language. message_id is
+        the Telegram update id: the same id twice is handled once, so one message never logs twice."""
+        if not self.first_time(user_id, message_id):
+            return []
         text = (text or "").strip()
         app_lang = texts.lang_for(language_code)
         if chat_type and chat_type != "private":
@@ -272,7 +302,9 @@ class Families:
             try:
                 return [(chat_id, f.talk(text))]
             except brain_mod.BrainError as error:
+                # Kept in the conversation, so the next turn sees this message was answered and does not log it then.
                 f.bus.publish("agent_error", error=str(error)[:300])
+                f.memory.add_message(CHANNEL, "assistant", f.t("THINK_FAIL"))
                 return [(chat_id, f.t("THINK_FAIL"))]
 
     def gate(self, vid, user_id, chat_id, text, lang="en"):

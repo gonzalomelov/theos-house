@@ -21,6 +21,9 @@ EN = {
     "TOO_LONG": "Please keep it under {n} characters.",
     "FAMILY_LIMIT": "Your family reached today's message limit. I will be back tomorrow. Nothing was logged from this message.",
     "THINK_FAIL": "I could not think that through just now. Please try again.",
+    "SAVED_BEFORE_FAIL": "I could not finish my answer, but I logged {entries}. No need to send it again.",
+    "ENTRY_FEEDING": "a feed", "ENTRY_FEEDING_ML": "a feed of {ml} ml", "ENTRY_DIAPER": "a diaper",
+    "ENTRY_SLEEP": "sleep", "ENTRY_BATH": "a bath", "ENTRY_NOTE": "a note",
     "OK": "OK.",
     "ASK_NAME": "1 of 3. What is your baby's name or nickname?",
     "WELCOME": ("Welcome. I keep a private log of your baby's feeds, diapers, sleep and baths, answer questions from it, "
@@ -91,6 +94,9 @@ ES = {
     "TOO_LONG": "Escribí menos de {n} caracteres, por favor.",
     "FAMILY_LIMIT": "Tu familia llegó al límite de mensajes de hoy. Vuelvo mañana. No anoté nada de este mensaje.",
     "THINK_FAIL": "No pude pensarlo recién. Probá de nuevo.",
+    "SAVED_BEFORE_FAIL": "No pude terminar la respuesta, pero ya anoté {entries}. No hace falta que lo mandes de nuevo.",
+    "ENTRY_FEEDING": "una toma", "ENTRY_FEEDING_ML": "una toma de {ml} ml", "ENTRY_DIAPER": "un pañal",
+    "ENTRY_SLEEP": "el sueño", "ENTRY_BATH": "un baño", "ENTRY_NOTE": "una nota",
     "OK": "Listo.",
     "ASK_NAME": "1 de 3. ¿Cómo se llama tu bebé, o cómo le dicen?",
     "WELCOME": ("Te doy la bienvenida. Llevo un registro privado de las tomas, pañales, sueño y baños de tu bebé, respondo lo que "

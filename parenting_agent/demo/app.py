@@ -213,9 +213,11 @@ class DemoApp:
                 try:
                     reply, actions = v.talk(text)
                 except SpendCapReached:
+                    v.memory.add_message("demo", "assistant", RESTING)
                     return 503, {"error": "resting", "reply": RESTING, "remaining": self.remaining(vid, internal)}
                 except brain_mod.BrainError as error:
                     v.bus.publish("agent_error", error=str(error)[:300])
+                    v.memory.add_message("demo", "assistant", THINK_FAIL)
                     return 502, {"error": "brain", "reply": THINK_FAIL, "remaining": self.remaining(vid, internal)}
             return 200, {"reply": reply, "actions": actions, "proactive": v.proactive(), "recent": v.recent(),
                          "remaining": self.remaining(vid, internal)}

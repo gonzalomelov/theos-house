@@ -16,6 +16,7 @@ SYSTEM = """You are a persistent agent built for new parents. You know their bab
 you speak first when it helps, and you act in the home only through your tools.
 Rules:
 - Log what the parent tells you about the baby with log_baby_event, one call per event, then confirm in a few words.
+  Log only what the newest message says. Earlier messages in the conversation were already handled, never log them again.
 - Answer questions from the baby log: use baby_summary for how much, how many and when was the last, read_baby_log for details.
   Never guess times or amounts. If the log has nothing, say so.
 - Never give medical advice, a diagnosis, a dose or a treatment. You log, remind and alert. For anything about health,
@@ -27,6 +28,37 @@ Today is {today}. Facts you were told: {facts}
 """
 
 YES = {"yes", "si", "sí", "ok", "dale", "go ahead", "do it"}
+ENTRY_WORDS = {"feeding": "a feed", "diaper": "a diaper", "sleep": "sleep", "bath": "a bath", "note": "a note"}
+SAVED_BEFORE_FAIL = "I could not finish my answer, but I logged {entries}. No need to send it again."
+
+
+def _number(value):
+    try:
+        return float(value) > 0
+    except (TypeError, ValueError):
+        return False
+
+
+def entry_key(arguments):
+    """What makes two log calls the same entry: the kind, the amount or the diaper's contents, and the time the
+    parent named. A brain that repeats a call for one message, with or without extra fields, logs one entry."""
+    details = arguments.get("details") or {}
+    if not isinstance(details, dict):
+        details = {}
+    when = arguments.get("ts") or details.get("time") or details.get("start") or details.get("end")
+    fields = {"feeding": ("amount_ml", "duration_min", "method"), "diaper": ("wet", "solid"),
+              "sleep": ("action",), "bath": ()}.get(arguments.get("kind"), ("text", "note"))
+    values = []
+    for name in fields:
+        value = details.get(name)
+        if name == "method":
+            value = "breast" if "breast" in str(value or "").lower() else "bottle"
+        elif isinstance(value, (int, float)) and not isinstance(value, bool):
+            value = float(value)
+        elif isinstance(value, str):
+            value = value.strip().lower()
+        values.append(value)
+    return (arguments.get("kind"), when, *values)
 
 
 class Agent:
@@ -115,10 +147,31 @@ class Agent:
             self.memory.add_message(channel, "user", observed)
         self.decide(channel, transcript)
 
+    def saved_before_fail(self, entries):
+        """The reply when the brain fails after the log already changed: it says what was kept, so the parent does not
+        send it again, and the memory holds an answer, so the next turn does not log the same message a second time."""
+        words = []
+        for entry in entries:
+            word = ENTRY_WORDS.get(entry.get("kind"), "an entry")
+            ml = (entry.get("details") or {}).get("amount_ml")
+            words.append(f"{word} of {float(ml):g} ml" if entry.get("kind") == "feeding" and _number(ml) else word)
+        return SAVED_BEFORE_FAIL.format(entries=", ".join(words))
+
     def decide(self, channel, transcript):
+        """One incoming message or observation, through the brain and the tools, until the brain answers. Within it a
+        log entry is written once, whatever the brain repeats. If the brain fails after something was logged, the agent
+        still answers with what it kept."""
         system, specs = self.system_prompt(), self.tools.specs()
+        logged, kept = {}, []
         for _ in range(self.max_steps):
-            reply, seconds = brain_mod.timed(self.brain, system, transcript, specs)
+            try:
+                reply, seconds = brain_mod.timed(self.brain, system, transcript, specs)
+            except brain_mod.BrainError as error:
+                if not kept:
+                    raise
+                self.bus.publish("agent_error", error=str(error)[:300])
+                self.say(channel, self.saved_before_fail(kept))
+                return
             self.bus.publish("brain_call", provider=self.brain.name, model=self.brain.model,
                              destination=self.brain.destination, seconds=seconds, tool_calls=len(reply.tool_calls))
             if not reply.tool_calls:
@@ -126,8 +179,17 @@ class Agent:
                 return
             transcript.append({"role": "assistant", "text": reply.text, "tool_calls": reply.tool_calls})
             for call in reply.tool_calls:
+                key = entry_key(call["arguments"] or {}) if call["name"] == "log_baby_event" else None
+                if key is not None and key in logged:
+                    self.bus.publish("tool", name=call["name"], status="duplicate")
+                    transcript.append({"role": "tool", "id": call["id"], "name": call["name"],
+                                       "result": {"already_logged": logged[key], "note": "already logged for this message, not logged again"}})
+                    continue
                 status, result = self.tools.run(call["name"], call["arguments"])
                 self.bus.publish("tool", name=call["name"], status=status)
+                if key is not None and status == "ran":
+                    logged[key] = result
+                    kept.append(call["arguments"])
                 if status == "ask_parent":
                     self.pending.append(call)
                     self.bus.publish("ask_parent", channel=channel, name=call["name"], arguments=call["arguments"])
