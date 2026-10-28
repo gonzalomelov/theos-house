@@ -1,0 +1,106 @@
+# The family's private agent on the Vostro (issue #15). Started by deploy/agent.sh:
+#
+#   docker compose --env-file ~/apps/parenting-agent.env -f compose.yml up -d
+#
+# The wall: the agent sits only on an internal network with no gateway and no host address. From there it
+# reaches two small containers and nothing else:
+#   relay   nginx on the Baby Buddy and Home Assistant networks, forwarding to exactly those two services
+#   egress  tinyproxy, HTTPS tunnels only, to the brain and Telegram hosts in egress/filter
+# Nothing is published on the host, not even on 127.0.0.1. Nothing is on the Cloudflare tunnel.
+# The internal network is created once by agent.sh:
+#
+#   docker network create --internal --ipv6=false \
+#     -o com.docker.network.bridge.gateway_mode_ipv4=isolated parenting-agent-internal
+name: parenting-agent
+
+x-logging: &logging
+  driver: json-file
+  options: { max-size: 10m, max-file: "3" }
+
+x-hardened: &hardened
+  restart: unless-stopped
+  read_only: true
+  cap_drop: [ALL]
+  security_opt: ["no-new-privileges:true"]
+  logging: *logging
+
+services:
+  agent:
+    <<: *hardened
+    image: parenting-agent:${APP_TAG:-latest}
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    container_name: parenting-agent
+    networks: [internal]
+    depends_on:
+      relay: { condition: service_started }
+      egress: { condition: service_started }
+    # Secrets come from this file only (see env.example). No value is written here.
+    env_file:
+      - ${AGENT_ENV_FILE:-${HOME}/apps/parenting-agent.env}
+    environment:
+      TZ: America/Montevideo
+      BABYBUDDY_URL: http://relay:8790
+      HA_URL: http://relay:8123
+      # The brain and Telegram are reached only through the egress proxy. Python's urllib reads these.
+      HTTPS_PROXY: http://egress:8888
+      HTTP_PROXY: http://egress:8888
+      NO_PROXY: relay,localhost,127.0.0.1
+    volumes:
+      - ${AGENT_DATA_DIR:-${HOME}/apps/parenting-agent-data}:/data
+    tmpfs:
+      - /tmp:rw,size=16m
+    mem_limit: 256m
+    memswap_limit: 256m
+    cpus: 0.5
+    pids_limit: 64
+    healthcheck:
+      # The heartbeat plug-in writes this file only while the decide-act loop is alive.
+      test: ["CMD", "python", "-m", "parenting_agent.agent.heartbeat", "/data/heartbeat.json", "90"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+  relay:
+    <<: *hardened
+    # nginxinc/nginx-unprivileged:1.29-alpine pinned by digest (2026-10-11), the same image as the chat's edge.
+    image: nginxinc/nginx-unprivileged@sha256:0c79d56aee561a1d81c63f00eee5fb5fe29279560cdc55e91425133104c7fbe6
+    container_name: parenting-agent-relay
+    networks: [internal, babybuddy, homeassistant]
+    volumes:
+      - ./relay/nginx.conf:/etc/nginx/nginx.conf:ro
+    tmpfs:
+      - /tmp:rw,size=8m
+    mem_limit: 64m
+    memswap_limit: 64m
+    pids_limit: 32
+
+  egress:
+    <<: *hardened
+    image: parenting-agent-egress:${APP_TAG:-latest}
+    build:
+      context: ./egress
+    container_name: parenting-agent-egress
+    networks: [internal, egress]
+    tmpfs:
+      - /tmp:rw,size=8m
+      - /run/tinyproxy:rw,size=1m,uid=100,gid=101
+    mem_limit: 64m
+    memswap_limit: 64m
+    pids_limit: 32
+
+networks:
+  internal:
+    external: true
+    name: parenting-agent-internal
+  egress:
+    driver: bridge
+  # Joined, never changed: Baby Buddy and Home Assistant keep running as they are.
+  babybuddy:
+    external: true
+    name: babybuddy-net
+  homeassistant:
+    external: true
+    name: home-assistant_default

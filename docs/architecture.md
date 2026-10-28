@@ -51,6 +51,7 @@ flowchart LR
 | Daily rhythm | `parenting_agent/rhythm/` | Next feed, unusual days, night summary, night shifts |
 | Channels | `parenting_agent/channels/` | Messaging adapter interface, Telegram long polling with a family allowlist, router for ear, speaker, Telegram or partner |
 | House | `parenting_agent/house.py` | Home Assistant actions behind the allowed list, dry run today |
+| Always on | `deploy/`, `parenting_agent/agent/heartbeat.py` | The agent in a walled-off container on the Vostro, see `docs/deploy-agent.md` |
 | Simulated week | `simweek/` | A realistic tagged week in Baby Buddy for tests and demos |
 
 ## Data flows

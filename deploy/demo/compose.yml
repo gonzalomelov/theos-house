@@ -1,0 +1,74 @@
+# Parenting agent public demo, for the Vostro later. NOT deployed: Gonza says "OK public" first.
+#
+#   docker network create --internal --ipv6=false \
+#     -o com.docker.network.bridge.gateway_mode_ipv4=isolated pa-demo-internal
+#   docker compose --env-file ~/apps/pa-demo.env -f deploy/demo/compose.yml up -d --build
+#
+# The wall: `demo` sits only on an internal network with no gateway and no host address. It can reach the
+# egress proxy and the edge, nothing else: not the host, not Home Assistant, not Baby Buddy, not the LAN.
+# The proxy allows HTTPS CONNECT only to the brain hosts in egress/filter. The env file holds one line,
+# ANTHROPIC_API_KEY (or BASETEN_API_KEY), and nothing else. No host networking, ever.
+name: pa-demo
+
+x-hardened: &hardened
+  restart: unless-stopped
+  read_only: true
+  cap_drop: [ALL]
+  security_opt: ["no-new-privileges:true"]
+  logging:
+    driver: json-file
+    options: { max-size: 10m, max-file: "3" }
+
+services:
+  demo:
+    <<: *hardened
+    image: pa-demo:latest
+    build:
+      context: ../..
+      dockerfile: deploy/demo/Dockerfile
+    container_name: pa-demo
+    networks: [internal]
+    depends_on: [egress]
+    environment:
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:?set ANTHROPIC_API_KEY in the env file}
+      PA_DEMO_BRAIN: ${PA_DEMO_BRAIN:-claude}
+      PA_DEMO_DAILY_USD: ${PA_DEMO_DAILY_USD:-2}
+      HTTPS_PROXY: http://egress:8888
+      NO_PROXY: localhost,127.0.0.1
+    volumes:
+      - ${PA_DEMO_DATA:-${HOME}/apps/pa-demo-data}:/data
+    tmpfs: ["/tmp:rw,size=16m"]
+    mem_limit: 256m
+    memswap_limit: 256m
+    cpus: 1
+    pids_limit: 128
+
+  egress:
+    <<: *hardened
+    image: pa-demo-egress:latest
+    build: { context: ./egress }
+    container_name: pa-demo-egress
+    networks: [internal, egress]
+    tmpfs: ["/tmp:rw,size=8m", "/run/tinyproxy:rw,size=1m,uid=100,gid=101"]
+    mem_limit: 64m
+    pids_limit: 64
+
+  edge:
+    <<: *hardened
+    # A tiny TCP relay so the internal network never gets a published port. Pin by digest at deploy time.
+    image: alpine/socat:1.8.0.0
+    container_name: pa-demo-edge
+    command: ["TCP-LISTEN:8080,fork,reuseaddr", "TCP:pa-demo:8765"]
+    networks: [internal, edge]
+    ports: ["127.0.0.1:${PA_DEMO_EDGE_PORT:-4820}:8080"]
+    mem_limit: 32m
+    pids_limit: 64
+
+networks:
+  internal:
+    external: true
+    name: pa-demo-internal
+  egress:
+    driver: bridge
+  edge:
+    driver: bridge

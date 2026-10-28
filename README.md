@@ -31,7 +31,7 @@ One long-running agent sits in the middle. Everything it sees, hears and does go
 | Camera frames | Stay in memory on the Mac. SAM 3.1 and the hand detector run locally. Nothing is saved, only numbers and states in `runs/` |
 | House audio | Planned (#14): labelled locally, never saved |
 | The baby's log | Baby Buddy on the family's server, reachable only on that server (see `docs/deploy-babybuddy.md`) |
-| The agent's memory | `data/memory.sqlite` and `data/events.jsonl` on the machine that runs it |
+| The agent's memory | `data/memory.sqlite` and `data/events.jsonl` on the machine that runs it, on the Vostro in `~/apps/parenting-agent-data` |
 | **What leaves the house** | Only the brain call: the conversation text and tool results go to the configured brain (Baseten for Muse Spark Open, Anthropic for the stand-in). Every call logs its destination host as a `brain_call` event |
 
 ## Run it
@@ -48,6 +48,10 @@ Keys are read from a git-ignored `.env` (path in `config/agent.json`). Baby Budd
 ```bash
 ssh -f -N -L 127.0.0.1:18790:127.0.0.1:8790 vostro   # see docs/deploy-babybuddy.md
 ```
+
+## Always on, on the family server (issue #15)
+
+The agent runs 24/7 on the Vostro in its own walled-off container: it reaches Baby Buddy and Home Assistant through a relay and the brain and Telegram through an allowlisting proxy, and nothing else. It restarts on its own, keeps its data in a volume, and house actions stay dry run. Deploy, update, logs, stop and rollback with `sh deploy/agent.sh`, see `docs/deploy-agent.md`.
 
 ## Baby log in Baby Buddy (issue #2)
 
@@ -87,6 +91,15 @@ The agent hears and speaks on Telegram through @home_agent_example_bot, with lon
 
 Home Assistant is reached through `ssh -f -N -L 127.0.0.1:18123:127.0.0.1:8123 vostro`, token `HA_MCP_TOKEN`.
 
+## Public demo app
+
+A phone-first web chat where anyone can talk to the real agent core about Demo Baby, a simulated baby on the simulated week, with a simulated house. Each visitor gets their own copy, health questions get the kind refusal, and the process carries only the brain key. Local only until Gonza says "OK public". See `docs/demo-app.md`.
+
+```bash
+python -m parenting_agent.demo --brain-env ~/.parenting-agent.env   # http://127.0.0.1:8765
+python -m parenting_agent.demo.export_sessions                                                     # session rows for the scorer
+```
+
 ## Tests
 
 ```bash
@@ -110,10 +123,12 @@ Everything in this repo was written during the event. The repo was created on Oc
 | README and architecture | #18 | #26 | 66780c2 |
 | Voice log and answers from Baby Buddy | #2 | #27 | 6571481 |
 | Simulated full day 06:10 to 02:30, one-command demo rehearsal | #17 | #28 | be7ba04 |
-| Telegram channel and channel picking | #3, #8 | see PR | see PR |
+| Public demo app with a simulated baby, local only | #33 | #34 | see PR |
+| Always on: the agent in a walled-off container on the Vostro | #15 | #35 | see PR |
+| Telegram channel and channel picking | #3, #8 | #36 | see PR |
 
 The first commits of Oct 26 (4f1898a to 90ca5a3) are an early skeleton that the issues above reviewed and partly rewrote.
 
-**Planned, not built yet:** Muse Spark Open live on Baseten (#4), live Home Assistant actions (#9, dry run today), bath skill (#10), house sounds (#14), always on on the family server (#15), sitter handover (#16), demo and submission (#11).
+**Planned, not built yet:** Muse Spark Open live on Baseten (#4), live Home Assistant actions (#9, dry run today), bath skill (#10), house sounds (#14), sitter handover (#16), demo and submission (#11).
 
 **Public open-source tools used, not written by us:** Meta SAM 3.1 weights and code, MediaPipe hand landmarker, OpenCV, NumPy, Baby Buddy (BSD-2-Clause), Home Assistant.
