@@ -16,7 +16,7 @@ flowchart LR
     rhythm["Daily rhythm<br/>patterns, night shifts"]
     skills["Skills<br/>changing table, bath (planned #10)"]
     ha["Home Assistant<br/>dry run today (#9)"]
-    chan["Channels<br/>console today, ear, speakers, Telegram (planned #3 #8)"]
+    chan["Channels<br/>console, Telegram, ear, kitchen speaker<br/>router picks one (#3 #8)"]
   end
   brain["Brain<br/>Muse Spark Open on Baseten<br/>Claude stand-in"]
 
@@ -49,6 +49,7 @@ flowchart LR
 | SAM 3.1 confirm | `parenting_agent/sam3_local.py`, `sam3_worker.py` | Touch versus hover, locally, see `docs/sam3-local.md` |
 | Head camera | `parenting_agent/sources.py`, `phone.html` | iPhone page streaming frames to the Mac over Tailscale |
 | Daily rhythm | `parenting_agent/rhythm/` | Next feed, unusual days, night summary, night shifts |
+| Channels | `parenting_agent/channels/` | Messaging adapter interface, Telegram long polling with a family allowlist, router for ear, speaker, Telegram or partner |
 | House | `parenting_agent/house.py` | Home Assistant actions behind the allowed list, dry run today |
 | Always on | `deploy/`, `parenting_agent/agent/heartbeat.py` | The agent in a walled-off container on the Vostro, see `docs/deploy-agent.md` |
 | Simulated week | `simweek/` | A realistic tagged week in Baby Buddy for tests and demos |
@@ -64,7 +65,7 @@ flowchart LR
 | Conversation and tool results | Agent core | Brain | **Yes, the only flow that does.** Baseten for Muse Spark Open, Anthropic for the stand-in. Each call logs its host as a `brain_call` event |
 | House actions | Agent core | Home Assistant on the family server | No. Dry run today |
 | House sound labels (planned) | Camera microphones | Bus | No. Audio never saved |
-| Messages to parents (planned) | Agent core | Ear, speakers, Telegram | Telegram messages go through Telegram's servers when that channel ships |
+| Messages to parents | Agent core, router | Ear, kitchen speaker, Telegram | Telegram messages go through Telegram's servers. The ear and the speaker stay in the house |
 
 ## Rules the code keeps
 

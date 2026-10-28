@@ -1,0 +1,121 @@
+"""One messaging adapter interface, so WhatsApp later is a new adapter only.
+
+An adapter knows how to fetch new messages and send a text to a chat. MessagingChannel is the plug-in
+that runs any adapter: it polls in its own thread, keeps only the family's chats (the allowlist), puts
+each message on the bus as a "message" event on its channel, and sends the agent's replies on that
+channel back to the chat that spoke last, or to the family's default chat for messages the agent starts.
+The agent and its memory are the same for every channel. Other senders are ignored and logged as
+"channel_ignored" with their chat id only, never their text.
+"""
+import os
+import threading
+from dataclasses import dataclass
+from pathlib import Path
+
+from ..agent.plugins import Plugin
+
+
+@dataclass
+class Incoming:
+    update_id: int
+    chat_id: str
+    text: str
+    sender: str = ""
+
+
+class MessagingError(Exception):
+    pass
+
+
+class Messenger:
+    """The adapter interface. poll() blocks up to timeout seconds and returns new messages after offset."""
+    name = "messenger"
+
+    def poll(self, offset, timeout):
+        raise NotImplementedError
+
+    def send(self, chat_id, text):
+        raise NotImplementedError
+
+
+class MessagingChannel(Plugin):
+    """Runs a Messenger as an agent channel. Subclasses set name and build the adapter in make_messenger()."""
+    name = "messaging"
+    kind = "channel"
+
+    def __init__(self, agent, config, messenger=None):
+        super().__init__(agent, config)
+        self.cfg = {"poll_timeout_s": 25, "prefix": "", **config.get(self.name, {})}
+        self.messenger = messenger or self.make_messenger()
+        self.allowed = {str(c) for c in self.cfg.get("allowed_chat_ids", [])} | self.env_chat_ids()
+        self.default_chat = str(self.cfg.get("default_chat_id") or next(iter(sorted(self.env_chat_ids())), "")) or None
+        self.last_chat = None
+        self.offset_path = Path(config.get("data_dir", "data")) / f"{self.name}.offset"
+        self.stopped = threading.Event()
+        self.thread = None
+        agent.bus.subscribe(self.speak, ["reply", "ask_parent"])
+
+    def make_messenger(self):
+        raise NotImplementedError
+
+    def env_chat_ids(self):
+        raw = os.environ.get(self.cfg.get("allowed_chat_ids_env", ""), "")
+        return {c.strip() for c in raw.split(",") if c.strip()}
+
+    def start(self):
+        self.thread = threading.Thread(target=self.run, name=self.name, daemon=True)
+        self.thread.start()
+
+    def stop(self):
+        self.stopped.set()
+        if self.thread:
+            self.thread.join(timeout=self.cfg["poll_timeout_s"] + 5)
+
+    def read_offset(self):
+        try:
+            return int(self.offset_path.read_text().strip())
+        except (OSError, ValueError):
+            return 0
+
+    def save_offset(self, offset):
+        self.offset_path.parent.mkdir(parents=True, exist_ok=True)
+        self.offset_path.write_text(str(offset))
+
+    def run(self):
+        while not self.stopped.is_set():
+            self.poll_once()
+
+    def poll_once(self, timeout=None):
+        """Fetch one batch, hand the family's messages to the agent. Returns the accepted messages."""
+        try:
+            batch = self.messenger.poll(self.read_offset(), self.cfg["poll_timeout_s"] if timeout is None else timeout)
+        except MessagingError as error:
+            self.agent.bus.publish("channel_error", channel=self.name, error=str(error)[:200])
+            self.stopped.wait(5)
+            return []
+        accepted = []
+        for item in batch:
+            self.save_offset(item.update_id + 1)
+            if item.chat_id not in self.allowed:
+                self.agent.bus.publish("channel_ignored", channel=self.name, chat_id=item.chat_id)
+                continue
+            if not item.text.strip():
+                continue
+            self.last_chat = item.chat_id
+            self.agent.bus.publish("message", channel=self.name, text=item.text.strip(), chat_id=item.chat_id)
+            accepted.append(item)
+        return accepted
+
+    def speak(self, event):
+        if event.get("channel") != self.name:
+            return
+        chat = event.get("chat_id") or self.last_chat or self.default_chat
+        if chat is None:
+            self.agent.bus.publish("channel_error", channel=self.name, error="no family chat to send to")
+            return
+        text = event["text"] if event["kind"] == "reply" else f"I want to use {event['name']}. Say yes to let me."
+        try:
+            sent = self.messenger.send(chat, self.cfg["prefix"] + text)
+            self.agent.bus.publish("channel_sent", channel=self.name, chat_id=chat, message_id=sent)
+        except MessagingError as error:
+            self.agent.bus.publish("channel_error", channel=self.name, error=str(error)[:200])

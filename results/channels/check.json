@@ -1,0 +1,34 @@
+{
+  "telegram_round_trip": {
+    "passed": true,
+    "heard": "/start",
+    "reply": "Hi, I'm your baby log assistant. I can record feeds, diapers, sleep and baths, and answer questions like \"how much did she feed today?\" or \"when was the last dirty diaper?\"\n\nWhat would you like to log, or is there something you'd like to check?",
+    "message_id": 3,
+    "brain": "claude",
+    "ignored": 0,
+    "at": "2026-10-28T15:37:10-0300"
+  },
+  "home_speaker_announce": {
+    "passed": true,
+    "live_presence": "home",
+    "channel": "home_speaker",
+    "seconds": 10.211,
+    "volume_restored_to": 0.47,
+    "volume_before": 0.47,
+    "volume_used": 0.2,
+    "last_sent_before": "2026-09-08T12:53:38.020901+00:00",
+    "last_sent_after": "2026-10-28T18:37:19.081059+00:00",
+    "confirmed": true,
+    "ha_response_ok": true,
+    "at": "2026-10-28T15:37:29-0300",
+    "volume_note": "restore_volume event at 15:37:29 and a read of the Echo a moment later both show 0.47, the first read lagged"
+  },
+  "reminder_away_to_telegram": {
+    "passed": true,
+    "simulated_presence": "away",
+    "channel": "telegram",
+    "reason": "presence is away",
+    "message_id": 4,
+    "at": "2026-10-28T15:37:44-0300"
+  }
+}
