@@ -71,7 +71,7 @@ On Oct 28 an internal round trip logged "mamadera 120 ml" as 2 feeds of 120 ml. 
 - If the brain fails after something was logged, the parent gets what was kept ("I could not finish my answer, but I logged a feed of 120 ml. No need to send it again.") and that answer stays in the conversation. A failure before anything was logged is kept as answered too.
 - Within one message, the same entry (kind, amount or diaper contents, method and the time named) is logged once, however often the brain repeats the call. Two feeds at different times in one message are both logged.
 - The same Telegram update id is handled once.
-- The brain is told to log only what the newest message says.
+- The brain is told to log only what the newest message says, and that a new message is a new event even when it repeats an earlier one. With the real brain a second "mamadera 120 ml" or "bottle 120 ml" 1 to 20 minutes later was logged in 17 of 18 runs, against 6 of 12 with the old prompt.
 
 The fix is in the shared decide loop, so the demo and the family agent get it too. Tests: `tests/test_one_message_one_entry.py`.
 
