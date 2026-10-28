@@ -108,6 +108,7 @@ Everything in this repo was written during the event. The repo was created on Oc
 | README and architecture | #18 | #26 | 66780c2 |
 | Voice log and answers from Baby Buddy | #2 | #27 | 6571481 |
 | Simulated full day 06:10 to 02:30, one-command demo rehearsal | #17 | #28 | see PR |
+| Public demo app with a simulated baby, local only | #33 | #34 | see PR |
 
 The first commits of Oct 26 (4f1898a to 90ca5a3) are an early skeleton that the issues above reviewed and partly rewrote.
 
