@@ -1,0 +1,32 @@
+{
+ "seat": "Joie i-Snug 2",
+ "method": "vehicle 3-point belt, rear facing, no base",
+ "manual": {
+  "url": "https://dl.joiebaby.com/Instruction_Manual/GL/i-Snug-2/Joie-carseat-i-snug-2-instruction-manual.pdf",
+  "sha256": "b4819badcb64b5f04ddb99cd74c21c843efe012e474947026e446f374034b2ef",
+  "section": "Installation without base"
+ },
+ "limits": {
+  "height_cm": [
+   40,
+   75
+  ],
+  "max_weight_kg": 13.0,
+  "max_age_months": 12
+ },
+ "steps": [
+  "Place the infant carrier module onto the vehicle seat where you wish to put it. Pull the vehicle safety belt out and lock it into the vehicle buckle, sliding the vehicle lap belt into the side guides of the infant carrier module.",
+  "Slide diagonal belt into the rear guide.",
+  "Pull the vehicle shoulder belt to fasten the infant carrier module tightly and securely.",
+  "Level line on infant carrier module must be level to the ground when the infant carrier module is installed."
+ ],
+ "warnings": [
+  "DO NOT install this infant carrier module on vehicle seats with Lap Belts.",
+  "This infant carrier module is suitable for vehicle seats with a 3-point Retractor Safety Belt only.",
+  "The infant carrier module can not be used if the vehicle safety belt buckle (female buckle end) is too long to anchor the infant carrier module securely.",
+  "Tension the vehicle safety belt as much as possible, checking that it is not loose or twisted.",
+  "After installing the infant carrier module, always check that the vehicle belts are routed correctly and securely fastened into the vehicle buckle."
+ ],
+ "handle_car_position": 1,
+ "level_indicator": "Level line on infant carrier module must be level to the ground when the infant carrier module is installed."
+}

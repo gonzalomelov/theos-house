@@ -91,6 +91,10 @@ The agent hears and speaks on Telegram through @home_agent_example_bot, with lon
 
 Home Assistant is reached through `ssh -f -N -L 127.0.0.1:18123:127.0.0.1:8123 vostro`, token `HA_MCP_TOKEN`.
 
+## Car seat coach (issue #30)
+
+The agent coaches an infant carrier install with the car's seat belt, one step at a time by voice. SAM 3.1 on the Mac checks what the head camera can see: the lap belt in both side guides, the shoulder belt in the rear guide, no twist, the level line, the handle upright. The movement test at the belt path and the harness pinch test are asked and logged. It never says "safe", it lists what passed and what remains and suggests one check by a certified technician. The steps and limits come from the maker's manual (Joie i-Snug 2), the car rules from the Tesla Model 3 manual. An outgrow watch compares Baby Buddy weight and height with the seat's limits. Tested on 3D-rendered clips with planted mistakes, see `docs/car-seat-coach.md` and `results/carseat/`.
+
 ## Public demo app
 
 A phone-first web chat where anyone can talk to the real agent core about Demo Baby, a simulated baby on the simulated week, with a simulated house. Each visitor gets their own copy, health questions get the kind refusal, and the process carries only the brain key. Local only until Gonza says "OK public". See `docs/demo-app.md`.
@@ -126,6 +130,7 @@ Everything in this repo was written during the event. The repo was created on Oc
 | Public demo app with a simulated baby, local only | #33 | #34 | see PR |
 | Always on: the agent in a walled-off container on the Vostro | #15 | #35 | see PR |
 | Telegram channel and channel picking | #3, #8 | #36 | see PR |
+| Car seat coach: manual to steps, SAM 3.1 visible checks, hand checks, outgrow watch, rendered test clips | #30 | see PR | see PR |
 
 The first commits of Oct 26 (4f1898a to 90ca5a3) are an early skeleton that the issues above reviewed and partly rewrote.
 

@@ -1,0 +1,15 @@
+{
+ "car": "Tesla Model 3 (2027)",
+ "source": {
+  "manual": "Tesla Model 3 Owner's Manual, Child Safety Seats",
+  "url": "https://www.tesla.com/ownersmanual/model3/en_eu/GUID-BD88652C-E641-4889-B7DF-6A4E32727388.html",
+  "note": "Tesla's site refused automated downloads on 2026-10-28, so these rules come from the issue and Tesla's published child seat pages. Check them against the printed manual in the car when it arrives on Nov 5."
+ },
+ "rules": [
+  {"id": "no_front_airbag", "text": "Never put a rear-facing seat in the front passenger seat while the airbag is on."},
+  {"id": "isofix_outboard", "text": "ISOFIX anchors are on the two outer rear seats only."},
+  {"id": "center_belt_only", "text": "The rear center seat takes a seat installed with the seat belt only."}
+ ],
+ "belt_positions": ["rear left", "rear center", "rear right"],
+ "isofix_positions": ["rear left", "rear right"]
+}
