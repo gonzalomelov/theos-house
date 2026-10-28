@@ -16,8 +16,15 @@ PROXY = urllib.request.ProxyHandler()  # reads HTTPS_PROXY, HTTP_PROXY and NO_PR
 DIRECT = urllib.request.ProxyHandler({})
 
 
+class NoRedirect(urllib.request.HTTPRedirectHandler):
+    """A redirect is an answer from the target itself. Following it would test another host."""
+
+    def redirect_request(self, *args, **kwargs):
+        return None
+
+
 def http(url, handler):
-    opener = urllib.request.build_opener(handler)
+    opener = urllib.request.build_opener(handler, NoRedirect)
     try:
         with opener.open(url, timeout=8) as response:
             return True, f"HTTP {response.status}"
@@ -43,7 +50,7 @@ def main(hosts):
         ("Home Assistant through the relay", lambda: http("http://relay:8123/api/", DIRECT)),
         ("Anthropic through the egress proxy", lambda: http("https://api.anthropic.com/v1/models", PROXY)),
         ("Baseten through the egress proxy", lambda: http("https://inference.baseten.co/v1/models", PROXY)),
-        ("Telegram through the egress proxy", lambda: http("https://api.telegram.org/", PROXY)),
+        ("Telegram through the egress proxy", lambda: http("https://api.telegram.org/bot0/getMe", PROXY)),
     ]
     must_fail = [
         ("Anthropic, direct", lambda: http("https://api.anthropic.com/v1/models", DIRECT)),
