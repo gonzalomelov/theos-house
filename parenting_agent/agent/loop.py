@@ -194,6 +194,8 @@ class Agent:
         self.double = None
         self.thread = None
         self.stopped = threading.Event()
+        self.current_event = None
+        self.said = 0
         bus.subscribe(self.inbox.put, ["message", "observation"])
 
     def start(self):
@@ -215,11 +217,23 @@ class Agent:
             event = self.inbox.get()
             if event is None:
                 break
+            self.current_event, said = event, self.said
             try:
                 self.handle(event)
             except brain_mod.BrainError as error:
                 self.bus.publish("agent_error", error=str(error)[:300])
                 self.say(event.get("channel", "console"), "I could not think that through just now. Please try again.")
+            finally:
+                self.current_event = None
+                if event.get("kind") == "message":
+                    self.turn(event, answered=self.said > said)
+
+    def turn(self, event, answered):
+        """One "turn" event per message: who spoke, on which channel, and whether the agent answered. The KR scorer
+        counts a person's day from these. A message that starts with "Test:" is a test."""
+        text = str(event.get("text") or "")
+        self.bus.publish("turn", channel=event.get("channel"), person=event.get("person"), answered=answered,
+                         test=text.strip().lower().startswith("test:"), chars=len(text))
 
     def now(self):
         """The baby log's clock: the family's time zone in the families bot, local time elsewhere."""
@@ -235,8 +249,12 @@ class Agent:
         return TEXTS[self.lang(request)][key].format(**values)
 
     def say(self, channel, text):
+        self.said += 1
         self.memory.add_message(channel, "assistant", text, ts=self.now())
-        self.bus.publish("reply", channel=channel, text=text)
+        # The answer goes back to the chat that asked, so two parents on one channel each get their own answer.
+        event = self.current_event or {}
+        to = {"chat_id": event["chat_id"]} if event.get("channel") == channel and event.get("chat_id") else {}
+        self.bus.publish("reply", channel=channel, text=text, **to)
 
     def system_prompt(self):
         facts = {key: item["value"] for key, item in self.memory.facts().items()} or "none yet"

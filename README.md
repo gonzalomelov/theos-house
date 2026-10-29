@@ -107,6 +107,10 @@ The agent hears and speaks on Telegram through @home_agent_example_bot, with lon
 
 Home Assistant is reached through `ssh -f -N -L 127.0.0.1:18123:127.0.0.1:8123 vostro`, token `HA_MCP_TOKEN`.
 
+## Before he arrives (issue #56)
+
+Theo is not born yet, so the family agent helps get ready: prep lists for the nursery (from the home twin's measured plan), the hospital bag, the car seat and the white noise machine, appointments, a countdown to the due date, and one short morning nudge to Gonza on Telegram. Logistics only, never medical. Every message is a `turn` event with the person who sent it, so the daily-use KR is scored from the agent's own log. See `docs/before-he-arrives.md`.
+
 ## Car seat coach (issue #30)
 
 The agent coaches an infant carrier install with the car's seat belt, one step at a time by voice. SAM 3.1 on the Mac checks what the head camera can see: the lap belt in both side guides, the shoulder belt in the rear guide, no twist, the level line, the handle upright. The movement test at the belt path and the harness pinch test are asked and logged. It never says "safe", it lists what passed and what remains and suggests one check by a certified technician. The steps and limits come from the maker's manual (Joie i-Snug 2), the car rules from the Tesla Model 3 manual. An outgrow watch compares Baby Buddy weight and height with the seat's limits. Tested on 3D-rendered clips with planted mistakes, see `docs/car-seat-coach.md` and `results/carseat/`.

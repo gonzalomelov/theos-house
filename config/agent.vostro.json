@@ -17,11 +17,21 @@
     "read_baby_log",
     "baby_summary",
     "remember",
-    "current_time"
+    "current_time",
+    "prep_next",
+    "prep_list",
+    "prep_check",
+    "prep_add",
+    "add_appointment",
+    "appointments",
+    "cancel_appointment",
+    "set_due_date",
+    "nursery_plan"
   ],
   "plugins": [
     "parenting_agent.agent.heartbeat:Heartbeat",
-    "parenting_agent.channels.telegram:Telegram"
+    "parenting_agent.channels.telegram:Telegram",
+    "parenting_agent.prep:Prep"
   ],
   "heartbeat": {
     "interval_s": 30
@@ -31,5 +41,27 @@
     "token_env": "TELEGRAM_BOT_TOKEN",
     "allowed_chat_ids_env": "TELEGRAM_CHAT_ID",
     "poll_timeout_s": 25
+  },
+  "people": {
+    "gonza": {
+      "chat_ids_env": "TELEGRAM_CHAT_ID"
+    },
+    "ceci": {
+      "chat_ids_env": "TELEGRAM_CECI_CHAT_ID"
+    }
+  },
+  "house": {
+    "live": false
+  },
+  "prep": {
+    "due_date": "2026-12-15",
+    "due_date_estimate": true,
+    "nudge": {
+      "enabled": true,
+      "at": "08:00",
+      "until": "11:00",
+      "channel": "telegram",
+      "chat_ids_env": "TELEGRAM_CHAT_ID"
+    }
   }
 }

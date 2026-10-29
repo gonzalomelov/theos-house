@@ -58,6 +58,7 @@ flowchart LR
 | House plan | `parenting_agent/house_plan.py`, `meals.py` | Vacuum around naps, room cleans, the daily run, the shopping list, fast dinners after a bad night (Cookidoo read only through home-agents), dinner timing, white noise on the rhythm, see `docs/house-plan.md` |
 | Sitter handover | `parenting_agent/sitter.py` | Handover brief from the log, parent approves first, time-boxed guest role, summary after, see `docs/sitter-handover.md` |
 | Families | `parenting_agent/families/` | Invited parents on a second Telegram bot, one SQLite log per family, a separate walled-off service, see `docs/families.md` |
+| Before he arrives | `parenting_agent/prep/` | Prep lists (nursery from the home twin, hospital bag, car seat, white noise machine), appointments, the countdown and one morning nudge to Gonza. Logistics only. Every turn and prep change logged with the person, see `docs/before-he-arrives.md` |
 | Tesla | `parenting_agent/tesla/` | A simulated Model 3 with the `tesla_fleet` entity ids today, the real car through Home Assistant from Nov 5. Cabin ready, car naps, the Child Left Alone Detection check, every command after the parent's yes. See `docs/tesla.md` |
 | Simulated week | `simweek/` | A realistic tagged week in Baby Buddy for tests and demos |
 

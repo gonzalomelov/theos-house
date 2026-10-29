@@ -17,7 +17,7 @@ Three containers in the compose project `parenting-agent` (`deploy/compose.yml`)
 - Health check: the heartbeat plug-in (`parenting_agent/agent/heartbeat.py`) writes `/data/heartbeat.json` every 30 s while the decide-act loop is alive. Docker marks the container unhealthy when the file is older than 90 s. If the loop thread dies, the plug-in ends the process with exit code 1 so the restart policy brings it back.
 - Data: `~/apps/parenting-agent-data` on the Vostro, mounted at `/data`: `memory.sqlite`, `events.jsonl`, `heartbeat.json`.
 - Logs: Docker's json-file driver, 10 MB per file, 3 files.
-- Plug-ins on the Vostro: the heartbeat and the Telegram channel (#3). No console (no terminal there) and no changing table (vision runs on the Mac).
+- Plug-ins on the Vostro: the heartbeat, the Telegram channel (#3) and the prep mode with the morning nudge (#56, `docs/before-he-arrives.md`). No console (no terminal there) and no changing table (vision runs on the Mac).
 - No channel router on the Vostro. Replies to a Telegram message go back to Telegram. The router picks the home speaker when the parent is home, and on the Vostro that would be a live house action, so it stays on the Mac until #9.
 
 ### Telegram
@@ -42,7 +42,7 @@ The internal network is created with `--internal` and the isolated gateway mode 
 
 ## Secrets
 
-`~/apps/parenting-agent.env` on the Vostro, mode 600, written by `push-env` over ssh from the git-ignored `.env` of meta-hackathon-2026. Only these names travel: `ANTHROPIC_API_KEY`, `BABYBUDDY_TOKEN`, `HA_MCP_TOKEN`, `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`, `BASETEN_API_KEY`. Values are never printed. See `deploy/env.example`.
+`~/apps/parenting-agent.env` on the Vostro, mode 600, written by `push-env` over ssh from the git-ignored `.env` of meta-hackathon-2026. Only these names travel: `ANTHROPIC_API_KEY`, `BABYBUDDY_TOKEN`, `HA_MCP_TOKEN`, `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`, `TELEGRAM_CECI_CHAT_ID` (optional, Ceci's chat), `BASETEN_API_KEY`. Values are never printed. See `deploy/env.example`.
 
 ## House actions stay dry
 

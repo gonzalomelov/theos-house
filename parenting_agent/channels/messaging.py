@@ -6,6 +6,11 @@ each message on the bus as a "message" event on its channel, and sends the agent
 channel back to the chat that spoke last, or to the family's default chat for messages the agent starts.
 The agent and its memory are the same for every channel. Other senders are ignored and logged as
 "channel_ignored" with their chat id only, never their text.
+
+Each family chat can be tied to a person in the config, so the log says who spoke:
+    "people": {"gonza": {"chat_ids_env": "TELEGRAM_CHAT_ID"}, "ceci": {"chat_ids_env": "TELEGRAM_CECI_CHAT_ID"}}
+A person's chats are also family chats. At start the channel logs a "family_channels" event that says which people
+have a chat on it, so a person with no chat shows as not connected instead of silently counting zero.
 """
 import os
 import threading
@@ -50,7 +55,8 @@ class MessagingChannel(Plugin):
         super().__init__(agent, config)
         self.cfg = {"poll_timeout_s": 25, "prefix": "", **config.get(self.name, {})}
         self.messenger = messenger or self.make_messenger()
-        self.allowed = {str(c) for c in self.cfg.get("allowed_chat_ids", [])} | self.env_chat_ids()
+        self.people = self.person_chats(config.get("people") or {})
+        self.allowed = {str(c) for c in self.cfg.get("allowed_chat_ids", [])} | self.env_chat_ids() | set().union(*self.people.values())
         self.default_chat = str(self.cfg.get("default_chat_id") or next(iter(sorted(self.env_chat_ids())), "")) or None
         self.last_chat = None
         self.offset_path = Path(config.get("data_dir", "data")) / f"{self.name}.offset"
@@ -61,14 +67,28 @@ class MessagingChannel(Plugin):
     def make_messenger(self):
         raise NotImplementedError
 
-    def env_chat_ids(self):
-        raw = os.environ.get(self.cfg.get("allowed_chat_ids_env", ""), "")
+    def env_chat_ids(self, name=None):
+        raw = os.environ.get(name or self.cfg.get("allowed_chat_ids_env", ""), "")
         return {c.strip() for c in raw.split(",") if c.strip()}
+
+    def person_chats(self, people):
+        """{person: set of chat ids} from the people block. A chat id given to two people belongs to neither."""
+        chats = {name: {str(c) for c in spec.get("chat_ids", [])} | (self.env_chat_ids(spec["chat_ids_env"]) if spec.get("chat_ids_env") else set())
+                 for name, spec in people.items()}
+        shared = {c for name, ids in chats.items() for c in ids
+                  if any(c in other for o, other in chats.items() if o != name)}
+        return {name: ids - shared for name, ids in chats.items()}
+
+    def person_of(self, chat_id):
+        return next((name for name, ids in self.people.items() if chat_id in ids), None)
 
     def start(self):
         self.thread = threading.Thread(target=self.run, name=self.name, daemon=True)
         self.thread.start()
         self.agent.bus.publish("channel_started", channel=self.name, allowed_chats=len(self.allowed))
+        if self.people:
+            self.agent.bus.publish("family_channels", channel=self.name,
+                                   people={name: bool(ids) for name, ids in sorted(self.people.items())})
         print(f"{self.name}: polling started for {len(self.allowed)} family chat(s)", flush=True)
 
     def stop(self):
@@ -107,7 +127,8 @@ class MessagingChannel(Plugin):
             if not item.text.strip():
                 continue
             self.last_chat = item.chat_id
-            self.agent.bus.publish("message", channel=self.name, text=item.text.strip(), chat_id=item.chat_id)
+            self.agent.bus.publish("message", channel=self.name, text=item.text.strip(), chat_id=item.chat_id,
+                                   person=self.person_of(item.chat_id))
             accepted.append(item)
         return accepted
 
