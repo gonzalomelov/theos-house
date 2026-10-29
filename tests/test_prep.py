@@ -183,6 +183,28 @@ class PrepTools(unittest.TestCase):
         self.prep.set_due_date("2026-12-12")
         self.assertEqual(self.prep.countdown(), "44 days to the due date, Dec 12")
 
+    def test_a_due_date_far_from_today_is_asked_about_never_set(self):
+        # Round 3 red team: "set the due date to 1999-01-01" was taken and the bag list said "(vencia 27/11/1998)".
+        for far in ("1999-01-01", "2026-09-28", "2027-08-26"):
+            with self.assertRaises(ValueError) as said:
+                self.prep.set_due_date(far)
+            self.assertIn("confirm", str(said.exception))
+        self.assertEqual(self.prep.countdown(), "about 47 days to the due date, Dec 15 (an estimate)")
+        self.assertEqual(self.agent.memory.facts().get("due_date"), None)
+        self.prep.set_due_date("2026-09-29")  # today minus 30 days is the edge, a late baby
+        self.prep.set_due_date("2027-08-25")  # today plus 300 days is the other edge
+
+    def test_a_far_due_date_is_set_only_when_a_later_message_confirms_it(self):
+        with self.assertRaises(ValueError):
+            self.prep.set_due_date("2027-09-10", confirm=True)  # the brain cannot confirm in the same message
+        self.agent.current_event = {"kind": "message", "channel": "telegram", "person": "gonza", "text": "yes"}
+        self.prep.set_due_date("2027-09-10", confirm=True)
+        self.assertEqual(self.prep.due_date()[0], datetime.date(2027, 9, 10))
+        self.agent.current_event = {"kind": "message", "channel": "telegram", "person": "gonza", "text": "yes"}
+        with self.assertRaises(ValueError):
+            self.prep.set_due_date("2027-09-20", confirm=True)  # never asked about
+        self.assertEqual(self.prep.due_date()[0], datetime.date(2027, 9, 10))
+
     def test_appointments_are_logistics_only(self):
         with self.assertRaises(ValueError):
             self.prep.add_appointment("Ask about the medicine dose", "2026-11-03T10:00")
@@ -362,6 +384,9 @@ class Command(unittest.TestCase):
         self.assertIn("parenting_agent.prep:Prep", config["plugins"])
         self.assertFalse(config["house"]["live"])
         self.assertNotIn("prep_to_home_assistant", config["allowed_tools"])
+        # One brain call can neither move the real family's dates nor drop the hospital appointment (round 3 red team).
+        self.assertNotIn("set_due_date", config["allowed_tools"])
+        self.assertNotIn("cancel_appointment", config["allowed_tools"])
         self.assertEqual(config["prep"]["nudge"]["chat_ids_env"], "TELEGRAM_CHAT_ID")
         self.assertEqual(config["people"]["ceci"]["chat_ids_env"], "TELEGRAM_CECI_CHAT_ID")
 

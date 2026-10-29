@@ -92,7 +92,7 @@ A deploy that fails its health check or its wall check stops the new agent and s
 
 On Oct 29 two agents deployed at once and both rolled back. Every deploy now takes one lock on the Vostro, the directory `~/apps/.pa-deploy.lock.d` (`deploy/lock.sh`). `agent.sh` deploy, update, rollback, stop and start, `public.sh demo|families` deploy, stop and start, and `voice.sh` deploy all take it before they send code. A deploy that finds it held prints who holds it and waits up to 10 minutes (`PA_DEPLOY_LOCK_WAIT`, in seconds), then stops without changing anything. The lock is released when the script exits, also on failure or Ctrl-C, and only by the deploy that took it.
 
-To hold it by hand, for example while working on the Vostro: `ssh vostro 'mkdir ~/apps/.pa-deploy.lock.d'`, and `ssh vostro 'rmdir ~/apps/.pa-deploy.lock.d'` when done. If a Mac lost its connection mid deploy and no deploy runs, clear it with `ssh vostro 'rm -rf ~/apps/.pa-deploy.lock.d'`.
+To hold it by hand, for example while working on the Vostro: `ssh vostro 'mkdir ~/apps/.pa-deploy.lock.d'`, and `ssh vostro 'rmdir ~/apps/.pa-deploy.lock.d'` when done. A killed deploy no longer blocks the next one forever. Each deploy writes `owner.pid` (PID, host, start time) into the lock. When the lock is older than 30 minutes and its PID no longer runs on the same host, the next deploy takes it over and prints `TAKING OVER` with the old owner. A lock with no `owner.pid`, like one made by hand, is never taken over. If a deploy from another host lost its connection and no deploy runs, clear it with `ssh vostro 'rm -rf ~/apps/.pa-deploy.lock.d'`.
 
 ### The voice build stays out of the way
 

@@ -43,6 +43,21 @@ PREP_WORDS = re.compile(r"\b(hospital bag|before (he|she|the baby) (arrives|is b
                         r"car seat|white noise|prep (list|mode)|pack(ing)? the bag|days left|bolso|sanatorio|maternidad|"
                         r"cuna|cuarto del beb[eé]|silla del auto|ruido blanco|fecha (probable )?de parto|"
                         r"antes de que nazca|cu[aá]ntos d[ií]as faltan)\b", re.I)
+# Routing is by intent, not by one word (round 3 red team): an action on a house device stays on the baby agent even in
+# the nursery, and a thing for the hospital bag or a named list goes to prep even when it names a diaper.
+HOUSE_ACTION = re.compile(r"\b(dim|brighten|turn (on|off)|switch (on|off)|pause|stop|start|apag[aá]|prend[eé]|"
+                          r"baj[aá]|sub[ií]|paus[aá]|encend[eé])\b.*\b(lights?|lamps?|vacuum|speakers?|luz|luces|"
+                          r"l[aá]mparas?|aspiradora|parlantes?)\b", re.I)
+PREP_TARGET = re.compile(r"\b(hospital bag|bolso|(car seat|nursery|white noise|prep|packing) list|"
+                         r"lista (de la |del |de )?(cuna|cuarto|silla|ruido blanco|bolso|preparativos))\b", re.I)
+
+
+def is_prep(text):
+    if HOUSE_ACTION.search(text) or rules.is_health(text):
+        return False
+    return bool(PREP_TARGET.search(text) or (PREP_WORDS.search(text) and not rules.is_log_request(text)))
+
+
 # The prep lists come from the real family plan. In the demo the parents are Parent A and Parent B, and no house device
 # id or address is ever shown.
 DEMO_NAMES = (("Gonza", "Parent A"), ("Ceci", "Parent B"))
@@ -297,7 +312,7 @@ class Visitor:
         """(reply, actions, mode). A message about getting ready goes to prep mode from either tab. lang is the page's
         language, used only when the message's own words do not tell."""
         self.agent.page_lang = lang
-        if mode == "prep" or (PREP_WORDS.search(text) and not rules.is_health(text) and not rules.is_log_request(text)):
+        if mode == "prep" or is_prep(text):
             self.prep().agent.page_lang = lang
             prep_start = len(self.prep().bus.history)
             reply, actions = self.prep().talk(text)

@@ -32,8 +32,6 @@
     "prep_add",
     "add_appointment",
     "appointments",
-    "cancel_appointment",
-    "set_due_date",
     "nursery_plan"
   ],
   "plugins": [

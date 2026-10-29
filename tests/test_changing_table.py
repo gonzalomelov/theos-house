@@ -1,6 +1,7 @@
 import importlib.util
 import json
 import tempfile
+import threading
 import time
 import unittest
 from pathlib import Path
@@ -108,6 +109,15 @@ class ChangingTablePlugin(unittest.TestCase):
             agent.close()
 
 
+def wait_until(predicate, timeout=5):
+    deadline = time.monotonic() + timeout
+    while time.monotonic() < deadline:
+        if predicate():
+            return True
+        time.sleep(0.02)
+    return False
+
+
 class SlowDetector(confirm_mod.NoConfirm):
     """Stands in for SAM 3.1: takes load_s to build, counts how many were built and closed."""
 
@@ -159,6 +169,34 @@ class ConfirmPreload(unittest.TestCase):
             plugin.stop()
             self.assertEqual(len(SlowDetector.built), 2)
             self.assertEqual(SlowDetector.closed, SlowDetector.built)  # nothing left running
+            agent.close()
+
+    def test_a_hung_preload_never_freezes_changing_time_or_done(self):
+        # Round 3 red team (rt3/h_preload.py): a SAM build that hangs held the lock, "changing time" did not return in
+        # 8 s and "done" did not return in 3 s. Now arm waits preload_wait_s, then watches with the MediaPipe regions.
+        hang = threading.Event()
+        confirm_mod.build = lambda cfg: (hang.wait(), SlowDetector(0))[1]
+        with tempfile.TemporaryDirectory() as tmp:
+            agent, plugin = self.plugin(tmp, preload=True)
+            plugin.cfg["preload_wait_s"] = 0.3
+            plugin.start()
+            done = {}
+            arm = threading.Thread(target=lambda: done.setdefault("arm", plugin.arm()), daemon=True)
+            arm.start()
+            arm.join(3)
+            self.assertIn("MediaPipe", done.get("arm", ""))
+            self.assertIsInstance(plugin.skill.confirm.detector, confirm_mod.NoConfirm)
+            self.assertEqual(agent.bus.count("confirm_preload_timeout"), 1)
+            self.assertTrue(any("MediaPipe" in e.get("text", "") for e in agent.bus.history if e["kind"] == "reply"))
+            finish = threading.Thread(target=lambda: done.setdefault("finish", plugin.finish()), daemon=True)
+            finish.start()
+            finish.join(3)
+            self.assertEqual(done.get("finish"), "diaper change logged")
+            hang.set()
+            self.assertTrue(wait_until(lambda: plugin.warm is not None and plugin.warm.done()))
+            plugin.arm()  # the late detector is kept for the next change
+            self.assertIs(plugin.skill.confirm.detector, SlowDetector.built[0])
+            plugin.stop()
             agent.close()
 
     def test_without_preload_the_detector_loads_at_arm(self):

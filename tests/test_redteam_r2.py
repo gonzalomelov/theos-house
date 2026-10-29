@@ -203,10 +203,12 @@ class FactsAreLocked(Base):
         self.assertEqual(prep.due_date()[0], datetime.date(2026, 12, 15))
         self.assertIn("Good morning", prep.send_nudge())
 
-    def test_a_real_date_is_kept(self):
-        agent, prep = self.family([[call("remember", key="due_date", value="2026-12-10")], "Saved."])
-        say(agent, "the due date is 2026-12-10")
-        self.assertEqual(prep.due_date(), (datetime.date(2026, 12, 10), False))
+    def test_remember_never_moves_the_due_date(self):
+        # Round 3: remember was a way around set_due_date's range check and its ask-first rule in the family agent.
+        agent, prep = self.family([[call("remember", key="due_date", value="1999-01-01")], "Saved."])
+        say(agent, "the due date is 1999-01-01")
+        self.assertEqual(tools(agent, "remember")[0]["status"], "error")
+        self.assertEqual(prep.due_date(), (datetime.date(2026, 12, 15), True))
 
     def test_remember_writes_only_the_fixed_keys(self):
         agent, _ = self.family(

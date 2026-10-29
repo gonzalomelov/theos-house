@@ -17,10 +17,13 @@ the agent can answer "when was the last diaper?" from its own memory too.
 With "preload_confirm": true the confirm detector (SAM 3.1, about 10 s to load on the Mac) loads when the agent
 starts and again after each change, so "changing time" starts watching at once instead of after the load. Without
 it the skill is blind for those 10 s, and a hover in them is never seen (results/hero/README.md).
+A load that is still running after preload_wait_s (default 5) never holds up "changing time": the watch starts with
+the MediaPipe hand regions only, the agent says so, and the detector is used from the next change (round 3 red team).
 """
 import threading
 import time
 from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import TimeoutError as FutureTimeout
 
 from . import confirm as confirm_mod
 from . import config as config_mod
@@ -38,6 +41,10 @@ FINISH_PHRASES = ["done", "all done", "change done", "done with the change", "ch
 ARMED_FACT = ("The changing-table watch is on now. When the parent says done, call finish_changing_table, "
               "never start_changing_table again.")
 IDLE_FACT = "No diaper change in progress, the changing-table watch is off."
+# How long "changing time" waits for a SAM 3.1 that is still loading before it watches with MediaPipe alone.
+PRELOAD_WAIT_S = 5
+REGIONS_ONLY = ("Watching the changing table with the MediaPipe hand regions only, SAM 3.1 is still loading. "
+                "The chime works, the hand check is not confirmed by SAM this change.")
 
 
 class ChangingTable(Plugin):
@@ -52,7 +59,7 @@ class ChangingTable(Plugin):
         self._reflex, self._confirm, self._source, self.quiet = reflex, confirm_detector, source, quiet
         self.skill, self.source, self.thread = None, None, None
         self.lock = threading.Lock()
-        self.loader, self.warm, self.stopping = None, None, False
+        self.loader, self.warm, self.stopping, self.arming = None, None, False, False
         agent.tools.add(Tool("start_changing_table", "Start watching the changing table, when the parent says a change is starting.",
                              schema({}), self.arm))
         agent.tools.add(Tool("finish_changing_table", "Stop watching the changing table and log the diaper change.",
@@ -83,34 +90,52 @@ class ChangingTable(Plugin):
         self.warm = self.loader.submit(confirm_mod.build, self.skill_cfg["confirm"])
 
     def take_warm(self):
-        """The preloaded detector, waiting for it if it is still loading, or None to build one at arm as before."""
-        if self.warm is None:
+        """The preloaded detector, waiting up to preload_wait_s for it if it is still loading, or None to build one
+        at arm as before. A load that takes longer leaves the watch on the MediaPipe hand regions only, and the late
+        detector stays for the next change."""
+        warm = self.warm
+        if warm is None:
             return None
-        warm, self.warm, started = self.warm, None, time.monotonic()
+        started = time.monotonic()
         try:
-            detector = warm.result()
+            detector = warm.result(timeout=self.cfg.get("preload_wait_s", PRELOAD_WAIT_S))
+        except FutureTimeout:
+            self.agent.bus.publish("confirm_preload_timeout", waited_s=round(time.monotonic() - started, 3))
+            return confirm_mod.NoConfirm()
         except Exception as error:  # the skill builds its own and raises Unavailable the usual way
+            self.warm = None
             self.agent.bus.publish("confirm_preload_error", error=str(error)[:200])
             return None
+        self.warm = None
         self.agent.bus.publish("confirm_preloaded", waited_s=round(time.monotonic() - started, 3))
         return detector
 
     def arm(self):
+        """Never waits for a loading detector while holding the lock, so "done" always answers."""
         with self.lock:
-            if self.skill is not None:
+            if self.skill is not None or self.arming:
                 return "already watching the changing table"
-            self.source = self._source or open_source(self.cfg["source"])
-            if isinstance(self.source, PhoneSource):
-                self.agent.bus.publish("head_camera", url=self.source.url)
-            speaker = Speaker(self.source, quiet=self.quiet)
-            self.agent.bus.subscribe(speaker.on_event, ["chime", "voice"])
-            reflex = self._reflex or MediaPipeReflex(self.skill_cfg["contact"])
-            self.skill = Skill(self.skill_cfg, self.agent.bus, reflex, confirm_detector=self._confirm or self.take_warm())
-            self.skill.arm()
-            self.thread = threading.Thread(target=watch, args=(self.skill, self.source), name="changing-table", daemon=True)
-            self.thread.start()
-            self.agent.memory.remember(self.name, ARMED_FACT)
-            return "watching the changing table"
+            self.arming = True
+        try:
+            detector = self._confirm or self.take_warm()
+            with self.lock:
+                self.source = self._source or open_source(self.cfg["source"])
+                if isinstance(self.source, PhoneSource):
+                    self.agent.bus.publish("head_camera", url=self.source.url)
+                speaker = Speaker(self.source, quiet=self.quiet)
+                self.agent.bus.subscribe(speaker.on_event, ["chime", "voice"])
+                reflex = self._reflex or MediaPipeReflex(self.skill_cfg["contact"])
+                self.skill = Skill(self.skill_cfg, self.agent.bus, reflex, confirm_detector=detector)
+                self.skill.arm()
+                self.thread = threading.Thread(target=watch, args=(self.skill, self.source), name="changing-table", daemon=True)
+                self.thread.start()
+                self.agent.memory.remember(self.name, ARMED_FACT)
+        finally:
+            self.arming = False
+        if isinstance(detector, confirm_mod.NoConfirm) and self._confirm is None:
+            self.agent.say(self.cfg["channel"], REGIONS_ONLY)
+            return REGIONS_ONLY
+        return "watching the changing table"
 
     def finish(self):
         with self.lock:

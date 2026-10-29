@@ -62,6 +62,10 @@ NUDGE = {"en": {"hello": "Good morning.", "appointment": "Next appointment", "ne
                 "end": "Avisame cuando hagas uno, o preguntame qué sigue."}}
 
 
+# A due date this far from today is asked about before it is set: a late baby, or a plan up to about ten months ahead.
+DUE_PAST_DAYS, DUE_AHEAD_DAYS = 30, 300
+
+
 def parse_day(value):
     return datetime.date.fromisoformat(str(value)[:10])
 
@@ -77,6 +81,7 @@ class Prep(Plugin):
         self.house_live = (config.get("house") or {}).get("live") is True
         self.client = client
         self.clock = clock
+        self.far_due = None  # (day, the message that asked) for a due date outside the usual range
         self.marker = Path(config.get("data_dir", "data")) / "prep-nudge.json"
         self.stopped = threading.Event()
         self.thread = None
@@ -115,7 +120,8 @@ class Prep(Plugin):
             Tool("cancel_appointment", "Remove an appointment by its id from appointments.",
                  schema({"id": {"type": "integer"}}, ["id"]), self.cancel_appointment),
             Tool("set_due_date", "Set Theo's due date when a parent says it (YYYY-MM-DD).",
-                 schema({"date": {"type": "string"}}, ["date"]), self.set_due_date),
+                 schema({"date": {"type": "string"}, "confirm": {"type": "boolean", "description": "true only when the parent confirmed a far date in a new message"}},
+                        ["date"]), self.set_due_date),
             Tool("nursery_plan", "The nursery plan from the home twin: room size, the two layouts and their placement checks "
                  "(walkway, door swing, shelf over the crib, white noise distance).",
                  schema({"layout": {"type": "string", "enum": sorted(nursery.LAYOUTS)}}), self.nursery_plan),
@@ -286,8 +292,22 @@ class Prep(Plugin):
         self.publish("cancel_appointment", appointment_id=int(id))
         return f"removed appointment {id}"
 
-    def set_due_date(self, date):
+    def set_due_date(self, date, confirm=False):
+        """A date from today minus DUE_PAST_DAYS to today plus DUE_AHEAD_DAYS is set. One outside it is asked about:
+        it is set only when a later message confirms that same date, never on the brain's word in the message that
+        asked (round 3 red team: 1999-01-01 was taken and every list date moved 27 years back)."""
         day = parse_day(date)
+        today = self.now().date()
+        if not today - datetime.timedelta(days=DUE_PAST_DAYS) <= day <= today + datetime.timedelta(days=DUE_AHEAD_DAYS):
+            event = getattr(self.agent, "current_event", None) or {}
+            asked = self.far_due
+            if not (confirm and asked and asked[0] == day and asked[1] is not event):
+                self.far_due = (day, event)
+                self.publish("due_date_asked", date=day.isoformat())
+                raise ValueError(f"{day.isoformat()} is {abs((day - today).days)} days from today, outside the usual "
+                                 "range, so nothing was changed. Ask the parent to confirm that exact date. Only after "
+                                 "they confirm it in a new message, call set_due_date again with confirm true")
+            self.far_due = None
         self.agent.memory.remember("due_date", day.isoformat())
         self.publish("due_date")
         return f"due date set to {day.strftime('%b %d %Y')}"

@@ -212,6 +212,19 @@ class PrepMode(unittest.TestCase):
         status, body = app.message("v", True, "what is next?", mode="prep")
         self.assertEqual(body["mode"], "prep")
 
+    def test_a_message_goes_where_its_intent_is(self):
+        # Round 3 red team: "dim the nursery light" went to prep mode, "add diapers to the hospital bag" to the baby log.
+        app, _ = demo(CountingBrain())
+        self.addCleanup(app.close)
+        cases = {"dim the nursery light": "baby", "turn off the light in the nursery": "baby",
+                 "apagá la luz del cuarto del bebé": "baby", "pause the vacuum in the nursery": "baby",
+                 "add diapers to the hospital bag": "prep", "agregá pañales al bolso": "prep",
+                 "put wipes on the car seat list": "prep", "is the nursery ready?": "prep",
+                 "wet diaper": "baby", "she had 120 ml": "baby"}
+        for text, mode in cases.items():
+            with self.subTest(text=text):
+                self.assertEqual(app.message("v", True, text)[1]["mode"], mode)
+
     def test_the_prep_tools_run_on_simulated_lists_with_a_due_date_from_today(self):
         app, _ = demo(now=at(15))
         self.addCleanup(app.close)

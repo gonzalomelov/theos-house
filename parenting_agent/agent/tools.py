@@ -102,14 +102,9 @@ def remember(memory, key, value, keys=None):
     limit the keys to what its privacy note says it stores."""
     key, value = str(key or "").strip(), str(value or "").strip()
     if key == "due_date":
-        # The prep countdown and the morning nudge read this fact. "mid December" would stop both, so only a date goes in.
-        try:
-            day = datetime.date.fromisoformat(value)
-        except ValueError:
-            raise ValueError("a due date is kept only as YYYY-MM-DD, with set_due_date when it is there, for example "
-                             "2026-12-15. Nothing was kept") from None
-        memory.remember("due_date", day.isoformat())
-        return "remembered"
+        # The prep countdown, the list dates and the morning nudge read this fact, so only set_due_date changes it:
+        # it checks the date and, in the family agent, waits for the parent's yes.
+        raise ValueError("a due date is changed only with set_due_date, for example 2026-12-15. Nothing was kept")
     if keys and key not in keys:
         raise ValueError(f"only {', '.join(sorted(keys))} can be remembered here, nothing was kept")
     if not key or key.startswith("_") or len(value) > 120:
