@@ -1,0 +1,115 @@
+{
+ "brain": "fake rule-based",
+ "runs": [
+  {
+   "said": "baby agent fed 90 ml",
+   "matched": true,
+   "query": "fed 90 ml",
+   "status": 200,
+   "spoken": "Done, logged.",
+   "path": "assist",
+   "seconds": 0.06
+  },
+  {
+   "said": "Ask the baby agent how much did he drink today?",
+   "matched": true,
+   "query": "how much did he drink today",
+   "status": 200,
+   "spoken": "90 ml today over 1 feeds.",
+   "path": "assist",
+   "seconds": 0.01
+  },
+  {
+   "said": "turn on the study light",
+   "matched": false,
+   "spoken": "(not for the agent, Assist handles it itself)",
+   "path": "assist",
+   "seconds": 0.0
+  },
+  {
+   "said": "agente del bebé tomó 120 ml",
+   "matched": true,
+   "query": "tomó 120 ml",
+   "status": 200,
+   "spoken": "Done, logged.",
+   "path": "assist",
+   "seconds": 0.01
+  },
+  {
+   "said": "baby agent wet diaper",
+   "forwarded": true,
+   "status": 200,
+   "spoken_on_echo": "Done, logged.",
+   "speaker": "notify.gonza_s_echo_dot_speak",
+   "path": "echo",
+   "seconds": 0.01
+  },
+  {
+   "said": "tell the baby agent he fell asleep",
+   "forwarded": true,
+   "status": 200,
+   "spoken_on_echo": "Done, logged.",
+   "speaker": "notify.gonza_s_echo_dot_speak",
+   "path": "echo",
+   "seconds": 0.01
+  },
+  {
+   "said": "what time is it",
+   "forwarded": false,
+   "spoken": "(Alexa answers it herself, the agent never sees it)",
+   "path": "echo",
+   "seconds": 0.0
+  },
+  {
+   "said": "baby agent yes",
+   "forwarded": true,
+   "status": 200,
+   "spoken_on_echo": "Noted.",
+   "speaker": "notify.gonza_s_echo_dot_speak",
+   "path": "echo",
+   "seconds": 0.01
+  },
+  {
+   "path": "wrong token",
+   "status": 401
+  }
+ ],
+ "log_after": [
+  {
+   "ts": "2026-10-29T12:13:05-03:00",
+   "kind": "feeding",
+   "details": {
+    "amount_ml": 90.0,
+    "method": "bottle"
+   }
+  },
+  {
+   "ts": "2026-10-29T12:13:05-03:00",
+   "kind": "feeding",
+   "details": {
+    "amount_ml": 120.0,
+    "method": "bottle"
+   }
+  },
+  {
+   "ts": "2026-10-29T12:13:05-03:00",
+   "kind": "diaper",
+   "details": {
+    "wet": true,
+    "solid": false
+   }
+  },
+  {
+   "ts": "2026-10-29T12:13:05-03:00",
+   "kind": "sleep",
+   "details": {
+    "action": "start"
+   }
+  }
+ ],
+ "brain_calls": 11,
+ "brain_hosts": [
+  "none (local)"
+ ],
+ "seconds_total": 0.1
+}

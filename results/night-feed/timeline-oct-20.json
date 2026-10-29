@@ -1,0 +1,417 @@
+[
+ {
+  "kind": "white_noise",
+  "action": "on",
+  "reason": "bedtime, before the night starts",
+  "device": "white_noise_sim",
+  "dry": true,
+  "on": true,
+  "level": 0.08,
+  "crib_db": 48.1,
+  "noise": "white",
+  "timer_off_at": null,
+  "asked": 0.08,
+  "capped": false,
+  "sim_at": "2026-10-20T22:00:00-03:00"
+ },
+ {
+  "kind": "night_feed",
+  "step": "prepare",
+  "at": "2026-10-20T22:55:00-03:00",
+  "trigger": "rhythm",
+  "reason": "night feed expected around 23:05",
+  "on_duty": "Parent B",
+  "expected": "23:05",
+  "computed_from": [
+   "feeding@2026-10-20T16:05:00-03:00#21",
+   "feeding@2026-10-20T18:31:00-03:00#25",
+   "feeding@2026-10-20T20:45:00-03:00#28"
+  ],
+  "sim_at": "2026-10-20T22:55:00-03:00"
+ },
+ {
+  "kind": "virtual_device",
+  "device": "bottle warmer",
+  "entity": "switch.bottle_warmer_plug",
+  "action": "on",
+  "state": "on",
+  "reason": "night feed expected around 23:05",
+  "dry": true,
+  "at": "2026-10-20T22:55:00-03:00",
+  "off_at": "2026-10-20T23:25:00-03:00",
+  "sim_at": "2026-10-20T22:55:00-03:00"
+ },
+ {
+  "kind": "house_call",
+  "action": "study_light",
+  "service": "light.turn_on",
+  "entity": "light.wiz_824512_192_0_2_10",
+  "live": false,
+  "status": "dry",
+  "data": {
+   "brightness_pct": 10,
+   "color_temp_kelvin": 2700
+  },
+  "reason": "house.live is off",
+  "sim_at": "2026-10-20T22:55:00-03:00"
+ },
+ {
+  "kind": "white_noise",
+  "action": "level",
+  "reason": "night feed, turned down",
+  "device": "white_noise_sim",
+  "dry": true,
+  "on": true,
+  "level": 0.04,
+  "crib_db": 42.0,
+  "noise": "white",
+  "timer_off_at": null,
+  "asked": 0.04,
+  "capped": false,
+  "sim_at": "2026-10-20T22:55:00-03:00"
+ },
+ {
+  "kind": "night_feed",
+  "step": "push",
+  "at": "2026-10-20T22:55:00-03:00",
+  "to": "Parent B",
+  "via": "notify",
+  "text": "Night feed around 23:05. Bottle warmer on, study light dim and warm, white noise down. Parent B is on duty.",
+  "sim_at": "2026-10-20T22:55:00-03:00"
+ },
+ {
+  "kind": "virtual_device",
+  "device": "bottle warmer",
+  "entity": "switch.bottle_warmer_plug",
+  "action": "on",
+  "state": "on",
+  "reason": "crying, the feed is coming now",
+  "dry": true,
+  "at": "2026-10-20T23:23:00-03:00",
+  "off_at": "2026-10-20T23:53:00-03:00",
+  "sim_at": "2026-10-20T23:23:00-03:00"
+ },
+ {
+  "kind": "night_feed",
+  "step": "rewarm",
+  "at": "2026-10-20T23:23:00-03:00",
+  "on_duty": "Parent B",
+  "was_off": false,
+  "sim_at": "2026-10-20T23:23:00-03:00"
+ },
+ {
+  "kind": "virtual_device",
+  "device": "bottle warmer",
+  "entity": "switch.bottle_warmer_plug",
+  "action": "off",
+  "state": "off",
+  "reason": "feed logged, the bottle is out",
+  "dry": true,
+  "at": "2026-10-20T23:29:00-03:00",
+  "off_at": null,
+  "sim_at": "2026-10-20T23:29:00-03:00"
+ },
+ {
+  "kind": "night_feed",
+  "step": "logged",
+  "at": "2026-10-20T23:29:00-03:00",
+  "logged": "voice#0",
+  "feed_at": "23:28",
+  "sim_at": "2026-10-20T23:29:00-03:00"
+ },
+ {
+  "kind": "house_call",
+  "action": "study_light",
+  "service": "light.turn_off",
+  "entity": "light.wiz_824512_192_0_2_10",
+  "live": false,
+  "status": "dry",
+  "data": null,
+  "reason": "house.live is off",
+  "sim_at": "2026-10-20T23:58:00-03:00"
+ },
+ {
+  "kind": "white_noise",
+  "action": "level",
+  "reason": "night feed over, back to its level",
+  "device": "white_noise_sim",
+  "dry": true,
+  "on": true,
+  "level": 0.08,
+  "crib_db": 48.1,
+  "noise": "white",
+  "timer_off_at": null,
+  "asked": 0.08,
+  "capped": false,
+  "sim_at": "2026-10-20T23:58:00-03:00"
+ },
+ {
+  "kind": "night_feed",
+  "step": "done",
+  "at": "2026-10-20T23:58:00-03:00",
+  "reason": "feed logged at 23:28",
+  "logged": "voice#0",
+  "minutes": 35,
+  "sim_at": "2026-10-20T23:58:00-03:00"
+ },
+ {
+  "kind": "night_feed",
+  "step": "prepare",
+  "at": "2026-10-21T01:47:00-03:00",
+  "trigger": "rhythm",
+  "reason": "night feed expected around 01:56",
+  "on_duty": "Parent A",
+  "expected": "01:56",
+  "computed_from": [
+   "feeding@2026-10-20T18:31:00-03:00#25",
+   "feeding@2026-10-20T20:45:00-03:00#28",
+   "voice#0"
+  ],
+  "sim_at": "2026-10-21T01:47:00-03:00"
+ },
+ {
+  "kind": "virtual_device",
+  "device": "bottle warmer",
+  "entity": "switch.bottle_warmer_plug",
+  "action": "on",
+  "state": "on",
+  "reason": "night feed expected around 01:56",
+  "dry": true,
+  "at": "2026-10-21T01:47:00-03:00",
+  "off_at": "2026-10-21T02:17:00-03:00",
+  "sim_at": "2026-10-21T01:47:00-03:00"
+ },
+ {
+  "kind": "house_call",
+  "action": "study_light",
+  "service": "light.turn_on",
+  "entity": "light.wiz_824512_192_0_2_10",
+  "live": false,
+  "status": "dry",
+  "data": {
+   "brightness_pct": 10,
+   "color_temp_kelvin": 2700
+  },
+  "reason": "house.live is off",
+  "sim_at": "2026-10-21T01:47:00-03:00"
+ },
+ {
+  "kind": "white_noise",
+  "action": "level",
+  "reason": "night feed, turned down",
+  "device": "white_noise_sim",
+  "dry": true,
+  "on": true,
+  "level": 0.04,
+  "crib_db": 42.0,
+  "noise": "white",
+  "timer_off_at": null,
+  "asked": 0.04,
+  "capped": false,
+  "sim_at": "2026-10-21T01:47:00-03:00"
+ },
+ {
+  "kind": "night_feed",
+  "step": "push",
+  "at": "2026-10-21T01:47:00-03:00",
+  "to": "Parent A",
+  "via": "notify",
+  "text": "Night feed around 01:56. Bottle warmer on, study light dim and warm, white noise down. Parent A is on duty.",
+  "sim_at": "2026-10-21T01:47:00-03:00"
+ },
+ {
+  "kind": "virtual_device",
+  "device": "bottle warmer",
+  "entity": "switch.bottle_warmer_plug",
+  "action": "on",
+  "state": "on",
+  "reason": "crying, the feed is coming now",
+  "dry": true,
+  "at": "2026-10-21T02:09:00-03:00",
+  "off_at": "2026-10-21T02:39:00-03:00",
+  "sim_at": "2026-10-21T02:09:00-03:00"
+ },
+ {
+  "kind": "night_feed",
+  "step": "rewarm",
+  "at": "2026-10-21T02:09:00-03:00",
+  "on_duty": "Parent A",
+  "was_off": false,
+  "sim_at": "2026-10-21T02:09:00-03:00"
+ },
+ {
+  "kind": "virtual_device",
+  "device": "bottle warmer",
+  "entity": "switch.bottle_warmer_plug",
+  "action": "off",
+  "state": "off",
+  "reason": "feed logged, the bottle is out",
+  "dry": true,
+  "at": "2026-10-21T02:15:00-03:00",
+  "off_at": null,
+  "sim_at": "2026-10-21T02:15:00-03:00"
+ },
+ {
+  "kind": "night_feed",
+  "step": "logged",
+  "at": "2026-10-21T02:15:00-03:00",
+  "logged": "voice#2",
+  "feed_at": "02:14",
+  "sim_at": "2026-10-21T02:15:00-03:00"
+ },
+ {
+  "kind": "house_call",
+  "action": "study_light",
+  "service": "light.turn_off",
+  "entity": "light.wiz_824512_192_0_2_10",
+  "live": false,
+  "status": "dry",
+  "data": null,
+  "reason": "house.live is off",
+  "sim_at": "2026-10-21T02:44:00-03:00"
+ },
+ {
+  "kind": "white_noise",
+  "action": "level",
+  "reason": "night feed over, back to its level",
+  "device": "white_noise_sim",
+  "dry": true,
+  "on": true,
+  "level": 0.08,
+  "crib_db": 48.1,
+  "noise": "white",
+  "timer_off_at": null,
+  "asked": 0.08,
+  "capped": false,
+  "sim_at": "2026-10-21T02:44:00-03:00"
+ },
+ {
+  "kind": "night_feed",
+  "step": "done",
+  "at": "2026-10-21T02:44:00-03:00",
+  "reason": "feed logged at 02:14",
+  "logged": "voice#2",
+  "minutes": 35,
+  "sim_at": "2026-10-21T02:44:00-03:00"
+ },
+ {
+  "kind": "night_feed",
+  "step": "prepare",
+  "at": "2026-10-21T04:36:00-03:00",
+  "trigger": "cry",
+  "reason": "cry heard, feed expected around 04:58",
+  "on_duty": "Parent B",
+  "expected": "04:58",
+  "computed_from": [
+   "feeding@2026-10-20T20:45:00-03:00#28",
+   "voice#0",
+   "voice#2"
+  ],
+  "sim_at": "2026-10-21T04:36:00-03:00"
+ },
+ {
+  "kind": "virtual_device",
+  "device": "bottle warmer",
+  "entity": "switch.bottle_warmer_plug",
+  "action": "on",
+  "state": "on",
+  "reason": "cry heard, feed expected around 04:58",
+  "dry": true,
+  "at": "2026-10-21T04:36:00-03:00",
+  "off_at": "2026-10-21T05:06:00-03:00",
+  "sim_at": "2026-10-21T04:36:00-03:00"
+ },
+ {
+  "kind": "house_call",
+  "action": "study_light",
+  "service": "light.turn_on",
+  "entity": "light.wiz_824512_192_0_2_10",
+  "live": false,
+  "status": "dry",
+  "data": {
+   "brightness_pct": 10,
+   "color_temp_kelvin": 2700
+  },
+  "reason": "house.live is off",
+  "sim_at": "2026-10-21T04:36:00-03:00"
+ },
+ {
+  "kind": "white_noise",
+  "action": "level",
+  "reason": "night feed, turned down",
+  "device": "white_noise_sim",
+  "dry": true,
+  "on": true,
+  "level": 0.04,
+  "crib_db": 42.0,
+  "noise": "white",
+  "timer_off_at": null,
+  "asked": 0.04,
+  "capped": false,
+  "sim_at": "2026-10-21T04:36:00-03:00"
+ },
+ {
+  "kind": "night_feed",
+  "step": "push",
+  "at": "2026-10-21T04:36:00-03:00",
+  "to": "Parent B",
+  "via": "notify",
+  "text": "Night feed around 04:58. Bottle warmer on, study light dim and warm, white noise down. Parent B is on duty.",
+  "sim_at": "2026-10-21T04:36:00-03:00"
+ },
+ {
+  "kind": "virtual_device",
+  "device": "bottle warmer",
+  "entity": "switch.bottle_warmer_plug",
+  "action": "off",
+  "state": "off",
+  "reason": "feed logged, the bottle is out",
+  "dry": true,
+  "at": "2026-10-21T04:42:00-03:00",
+  "off_at": null,
+  "sim_at": "2026-10-21T04:42:00-03:00"
+ },
+ {
+  "kind": "night_feed",
+  "step": "logged",
+  "at": "2026-10-21T04:42:00-03:00",
+  "logged": "voice#4",
+  "feed_at": "04:41",
+  "sim_at": "2026-10-21T04:42:00-03:00"
+ },
+ {
+  "kind": "house_call",
+  "action": "study_light",
+  "service": "light.turn_off",
+  "entity": "light.wiz_824512_192_0_2_10",
+  "live": false,
+  "status": "dry",
+  "data": null,
+  "reason": "house.live is off",
+  "sim_at": "2026-10-21T05:11:00-03:00"
+ },
+ {
+  "kind": "white_noise",
+  "action": "level",
+  "reason": "night feed over, back to its level",
+  "device": "white_noise_sim",
+  "dry": true,
+  "on": true,
+  "level": 0.08,
+  "crib_db": 48.1,
+  "noise": "white",
+  "timer_off_at": null,
+  "asked": 0.08,
+  "capped": false,
+  "sim_at": "2026-10-21T05:11:00-03:00"
+ },
+ {
+  "kind": "night_feed",
+  "step": "done",
+  "at": "2026-10-21T05:11:00-03:00",
+  "reason": "feed logged at 04:41",
+  "logged": "voice#4",
+  "minutes": 35,
+  "sim_at": "2026-10-21T05:11:00-03:00"
+ }
+]

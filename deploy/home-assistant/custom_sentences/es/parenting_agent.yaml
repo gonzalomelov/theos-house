@@ -1,0 +1,11 @@
+# Frases de Assist para el agente (issue #112). Copiar a <config>/custom_sentences/es/ en Home Assistant.
+language: "es"
+intents:
+  ParentingAgentAsk:
+    data:
+      - sentences:
+          - "[preguntale | decile] al agente [del bebé] [que] {query}"
+          - "agente del bebé {query}"
+lists:
+  query:
+    wildcard: true

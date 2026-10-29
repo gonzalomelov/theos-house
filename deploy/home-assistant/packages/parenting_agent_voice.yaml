@@ -1,0 +1,61 @@
+# Talk to the parenting agent through Assist and the Echo Dot (issue #112). Core Home Assistant only:
+# rest_command, intent_script, an automation, the core Alexa Devices integration. No HACS, no Alexa skill.
+# Copy to <config>/packages/ and add to configuration.yaml:
+#   homeassistant:
+#     packages: !include_dir_named packages
+# and to secrets.yaml (the token from the agent's data/voice-bridge-token, never in this file):
+#   parenting_agent_voice_auth: "Bearer <token>"
+#   parenting_agent_voice_url: "http://<relay or Mac address>:8767/ask"
+
+rest_command:
+  parenting_agent_ask:
+    url: !secret parenting_agent_voice_url
+    method: post
+    headers:
+      authorization: !secret parenting_agent_voice_auth
+    content_type: "application/json"
+    payload: '{{ {"text": text, "source": source, "person": person} | tojson }}'
+    timeout: 40
+
+intent_script:
+  ParentingAgentAsk:
+    action:
+      - action: rest_command.parenting_agent_ask
+        data:
+          text: "{{ query }}"
+          source: assist
+          person: ""
+        response_variable: agent
+      - stop: ""
+        response_variable: agent
+    speech:
+      text: >-
+        {% if action_response.status == 200 %}{{ action_response.content.reply }}{% else %}The baby agent did not answer.{% endif %}
+
+automation:
+  - id: parenting_agent_echo_voice
+    alias: "Parenting agent: talk through the Echo Dot"
+    description: "A voice command to the kitchen Echo that starts with baby agent goes to the agent, its answer is said on the Echo."
+    mode: queued
+    max: 3
+    triggers:
+      - trigger: state
+        entity_id: event.gonza_s_echo_dot_voice_event
+    conditions:
+      - condition: template
+        value_template: >-
+          {% set said = (state_attr('event.gonza_s_echo_dot_voice_event', 'voice_command') or '') | lower %}
+          {{ said is match('^(ask |tell )?(the )?baby agent') or said is match('^(preguntale al |decile al )?agente') }}
+    actions:
+      - action: rest_command.parenting_agent_ask
+        data:
+          text: "{{ state_attr('event.gonza_s_echo_dot_voice_event', 'voice_command') }}"
+          source: echo
+          person: "{{ state_attr('event.gonza_s_echo_dot_voice_event', 'person_first_name') or '' }}"
+        response_variable: agent
+      - action: notify.send_message
+        target:
+          entity_id: notify.gonza_s_echo_dot_speak
+        data:
+          message: >-
+            {% if agent.status == 200 %}{{ agent.content.reply }}{% else %}The baby agent did not answer.{% endif %}

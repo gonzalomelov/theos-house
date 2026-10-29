@@ -1,0 +1,105 @@
+{
+ "timeline": [
+  {
+   "step": "started",
+   "at": "2026-10-21T09:13:00-03:00",
+   "since": "09:12",
+   "sim_at": "2026-10-21T09:13:00-03:00"
+  },
+  {
+   "step": "push",
+   "at": "2026-10-21T09:13:00-03:00",
+   "text": "Washer started. If it is the baby's laundry, say \"baby load\".",
+   "sim_at": "2026-10-21T09:13:00-03:00"
+  },
+  {
+   "step": "finished",
+   "at": "2026-10-21T11:01:00-03:00",
+   "minutes": 103,
+   "baby": false,
+   "sim_at": "2026-10-21T11:01:00-03:00"
+  },
+  {
+   "step": "push",
+   "at": "2026-10-21T11:01:00-03:00",
+   "text": "Washer done after 103 min: move the laundry to the dryer.",
+   "sim_at": "2026-10-21T11:01:00-03:00"
+  },
+  {
+   "step": "reminder",
+   "at": "2026-10-21T19:00:00-03:00",
+   "clean": 9,
+   "sim_at": "2026-10-21T19:00:00-03:00"
+  },
+  {
+   "step": "push",
+   "at": "2026-10-21T19:00:00-03:00",
+   "text": "No baby load today yet. About 9 clean bodysuits left.",
+   "sim_at": "2026-10-21T19:00:00-03:00"
+  },
+  {
+   "step": "started",
+   "at": "2026-10-22T10:11:00-03:00",
+   "since": "10:10",
+   "sim_at": "2026-10-22T10:11:00-03:00"
+  },
+  {
+   "step": "push",
+   "at": "2026-10-22T10:11:00-03:00",
+   "text": "Washer started. If it is the baby's laundry, say \"baby load\".",
+   "sim_at": "2026-10-22T10:11:00-03:00"
+  },
+  {
+   "at": "2026-10-22T10:20:00-03:00",
+   "said": "baby agent, baby load",
+   "reply": "mark baby load: the running load is the baby's, bodysuits count clean again when it finishes."
+  },
+  {
+   "step": "baby_load",
+   "at": "2026-10-22T10:20:00-03:00",
+   "start": "10:10",
+   "sim_at": "2026-10-22T10:20:00-03:00"
+  },
+  {
+   "step": "finished",
+   "at": "2026-10-22T11:59:00-03:00",
+   "minutes": 103,
+   "baby": true,
+   "sim_at": "2026-10-22T11:59:00-03:00"
+  },
+  {
+   "step": "push",
+   "at": "2026-10-22T11:59:00-03:00",
+   "text": "Washer done after 103 min: move the laundry to the dryer.",
+   "sim_at": "2026-10-22T11:59:00-03:00"
+  },
+  {
+   "step": "bodysuits_reset",
+   "at": "2026-10-22T11:53:00-03:00",
+   "count": 12,
+   "reason": "baby load washed",
+   "sim_at": "2026-10-22T11:59:00-03:00"
+  },
+  {
+   "step": "reminder_skipped",
+   "at": "2026-10-22T19:00:00-03:00",
+   "reason": "a baby load ran today",
+   "sim_at": "2026-10-22T19:00:00-03:00"
+  }
+ ],
+ "bodysuits": {
+  "2026-10-21T08:00:00-03:00": 12,
+  "2026-10-21T12:00:00-03:00": 11,
+  "2026-10-21T18:00:00-03:00": 9,
+  "2026-10-21T22:00:00-03:00": 9,
+  "2026-10-22T08:00:00-03:00": 7,
+  "2026-10-22T12:00:00-03:00": 12,
+  "2026-10-22T18:00:00-03:00": 12,
+  "2026-10-22T22:00:00-03:00": 12
+ },
+ "pushes": 5,
+ "pushes_dry": 5,
+ "live_house_calls": 0,
+ "status_by_voice_fake_brain": "Washer idle.",
+ "status_tool": "Washer idle. Loads today: 10:10 baby. Baby load today: yes. Clean bodysuits: about 12."
+}

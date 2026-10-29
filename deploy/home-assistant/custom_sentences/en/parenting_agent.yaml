@@ -1,0 +1,12 @@
+# Assist sentences for the parenting agent (issue #112). Copy to <config>/custom_sentences/en/ in Home Assistant.
+# "baby agent" first, so a normal Assist command ("turn on the study light") never reaches the agent.
+language: "en"
+intents:
+  ParentingAgentAsk:
+    data:
+      - sentences:
+          - "[ask | tell] [the] baby agent [that] {query}"
+          - "baby agent {query}"
+lists:
+  query:
+    wildcard: true

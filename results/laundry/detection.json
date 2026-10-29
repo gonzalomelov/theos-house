@@ -1,0 +1,62 @@
+[
+ {
+  "end_min": 2,
+  "washes": 300,
+  "one_start_one_finish": 58,
+  "ended_too_early": 242,
+  "missed": 0,
+  "blips_counted_as_a_load": 0,
+  "start_seen_after_min_median": 1.5,
+  "finish_pushed_after_min_median": 2.0
+ },
+ {
+  "end_min": 3,
+  "washes": 300,
+  "one_start_one_finish": 158,
+  "ended_too_early": 142,
+  "missed": 0,
+  "blips_counted_as_a_load": 0,
+  "start_seen_after_min_median": 2.0,
+  "finish_pushed_after_min_median": 3.0
+ },
+ {
+  "end_min": 4,
+  "washes": 300,
+  "one_start_one_finish": 236,
+  "ended_too_early": 64,
+  "missed": 0,
+  "blips_counted_as_a_load": 0,
+  "start_seen_after_min_median": 2.0,
+  "finish_pushed_after_min_median": 4.0
+ },
+ {
+  "end_min": 5,
+  "washes": 300,
+  "one_start_one_finish": 300,
+  "ended_too_early": 0,
+  "missed": 0,
+  "blips_counted_as_a_load": 0,
+  "start_seen_after_min_median": 2.0,
+  "finish_pushed_after_min_median": 5.0
+ },
+ {
+  "end_min": 6,
+  "washes": 300,
+  "one_start_one_finish": 300,
+  "ended_too_early": 0,
+  "missed": 0,
+  "blips_counted_as_a_load": 0,
+  "start_seen_after_min_median": 2.0,
+  "finish_pushed_after_min_median": 6.0
+ },
+ {
+  "end_min": 8,
+  "washes": 300,
+  "one_start_one_finish": 300,
+  "ended_too_early": 0,
+  "missed": 0,
+  "blips_counted_as_a_load": 0,
+  "start_seen_after_min_median": 2.0,
+  "finish_pushed_after_min_median": 8.0
+ }
+]

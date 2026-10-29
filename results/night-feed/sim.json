@@ -1,0 +1,375 @@
+{
+ "nights": [
+  {
+   "night": "Oct 20 to 21",
+   "feeds": [
+    {
+     "feed": "23:27",
+     "method": "right breast",
+     "light_on": true,
+     "warmer_on": true,
+     "warm_min": 32
+    },
+    {
+     "feed": "02:13",
+     "method": "bottle",
+     "light_on": true,
+     "warmer_on": true,
+     "warm_min": 26
+    },
+    {
+     "feed": "04:40",
+     "method": "right breast",
+     "light_on": true,
+     "warmer_on": true,
+     "warm_min": 4
+    }
+   ],
+   "voice": [
+    {
+     "at": "23:28",
+     "said": "baby agent, fed right breast",
+     "reply": "Done, logged."
+    },
+    {
+     "at": "02:14",
+     "said": "baby agent, fed 90 ml bottle",
+     "reply": "Done, logged."
+    },
+    {
+     "at": "04:41",
+     "said": "baby agent, fed right breast",
+     "reply": "Done, logged."
+    }
+   ],
+   "prepares": 3,
+   "skips": 0,
+   "rewarms": 2,
+   "warmer_on": 5,
+   "live_calls": 0
+  },
+  {
+   "night": "Oct 21 to 22",
+   "feeds": [
+    {
+     "feed": "00:05",
+     "method": "bottle",
+     "light_on": true,
+     "warmer_on": true,
+     "warm_min": 4
+    },
+    {
+     "feed": "02:20",
+     "method": "bottle",
+     "light_on": true,
+     "warmer_on": true,
+     "warm_min": 4
+    },
+    {
+     "feed": "04:44",
+     "method": "both breasts",
+     "light_on": true,
+     "warmer_on": true,
+     "warm_min": 8
+    }
+   ],
+   "voice": [
+    {
+     "at": "00:06",
+     "said": "baby agent, fed 70 ml bottle",
+     "reply": "Done, logged."
+    },
+    {
+     "at": "02:21",
+     "said": "baby agent, fed 100 ml bottle",
+     "reply": "Done, logged."
+    },
+    {
+     "at": "04:45",
+     "said": "baby agent, fed both breasts",
+     "reply": "Done, logged."
+    }
+   ],
+   "prepares": 3,
+   "skips": 0,
+   "rewarms": 1,
+   "warmer_on": 4,
+   "live_calls": 0
+  },
+  {
+   "night": "Oct 22 to 23",
+   "feeds": [
+    {
+     "feed": "23:07",
+     "method": "both breasts",
+     "light_on": true,
+     "warmer_on": true,
+     "warm_min": 11
+    },
+    {
+     "feed": "01:49",
+     "method": "right breast",
+     "light_on": true,
+     "warmer_on": true,
+     "warm_min": 4
+    },
+    {
+     "feed": "04:03",
+     "method": "bottle",
+     "light_on": true,
+     "warmer_on": true,
+     "warm_min": 4
+    }
+   ],
+   "voice": [
+    {
+     "at": "23:08",
+     "said": "baby agent, fed both breasts",
+     "reply": "Done, logged."
+    },
+    {
+     "at": "01:50",
+     "said": "baby agent, fed right breast",
+     "reply": "Done, logged."
+    },
+    {
+     "at": "04:04",
+     "said": "baby agent, fed 110 ml bottle",
+     "reply": "Done, logged."
+    }
+   ],
+   "prepares": 3,
+   "skips": 0,
+   "rewarms": 1,
+   "warmer_on": 4,
+   "live_calls": 0
+  },
+  {
+   "night": "Oct 23 to 24",
+   "feeds": [
+    {
+     "feed": "22:04",
+     "method": "bottle",
+     "light_on": true,
+     "warmer_on": true,
+     "warm_min": 4
+    },
+    {
+     "feed": "00:51",
+     "method": "bottle",
+     "light_on": true,
+     "warmer_on": true,
+     "warm_min": 4
+    },
+    {
+     "feed": "03:21",
+     "method": "left breast",
+     "light_on": true,
+     "warmer_on": true,
+     "warm_min": 4
+    },
+    {
+     "feed": "05:47",
+     "method": "both breasts",
+     "light_on": true,
+     "warmer_on": true,
+     "warm_min": 4
+    }
+   ],
+   "voice": [
+    {
+     "at": "22:05",
+     "said": "baby agent, fed 110 ml bottle",
+     "reply": "Done, logged."
+    },
+    {
+     "at": "00:52",
+     "said": "baby agent, fed 70 ml bottle",
+     "reply": "Done, logged."
+    },
+    {
+     "at": "03:22",
+     "said": "baby agent, fed left breast",
+     "reply": "Done, logged."
+    },
+    {
+     "at": "05:48",
+     "said": "baby agent, fed both breasts",
+     "reply": "Done, logged."
+    }
+   ],
+   "prepares": 4,
+   "skips": 0,
+   "rewarms": 2,
+   "warmer_on": 6,
+   "live_calls": 0
+  },
+  {
+   "night": "Oct 24 to 25",
+   "feeds": [
+    {
+     "feed": "00:10",
+     "method": "bottle",
+     "light_on": true,
+     "warmer_on": true,
+     "warm_min": 30
+    },
+    {
+     "feed": "01:37",
+     "method": "left breast",
+     "light_on": false,
+     "warmer_on": false,
+     "warm_min": null
+    },
+    {
+     "feed": "03:08",
+     "method": "right breast",
+     "light_on": true,
+     "warmer_on": true,
+     "warm_min": 4
+    },
+    {
+     "feed": "04:54",
+     "method": "left breast",
+     "light_on": true,
+     "warmer_on": true,
+     "warm_min": 26
+    }
+   ],
+   "voice": [
+    {
+     "at": "00:11",
+     "said": "baby agent, fed 100 ml bottle",
+     "reply": "Done, logged."
+    },
+    {
+     "at": "01:38",
+     "said": "baby agent, fed left breast",
+     "reply": "Done, logged."
+    },
+    {
+     "at": "03:09",
+     "said": "baby agent, fed right breast",
+     "reply": "Done, logged."
+    },
+    {
+     "at": "04:55",
+     "said": "baby agent, fed left breast",
+     "reply": "Done, logged."
+    }
+   ],
+   "prepares": 3,
+   "skips": 1,
+   "rewarms": 2,
+   "warmer_on": 5,
+   "live_calls": 0
+  },
+  {
+   "night": "Oct 25 to 26",
+   "feeds": [
+    {
+     "feed": "23:42",
+     "method": "bottle",
+     "light_on": true,
+     "warmer_on": true,
+     "warm_min": 4
+    },
+    {
+     "feed": "01:10",
+     "method": "right breast",
+     "light_on": true,
+     "warmer_on": true,
+     "warm_min": 4
+    },
+    {
+     "feed": "04:02",
+     "method": "both breasts",
+     "light_on": true,
+     "warmer_on": true,
+     "warm_min": 4
+    }
+   ],
+   "voice": [
+    {
+     "at": "23:43",
+     "said": "baby agent, fed 60 ml bottle",
+     "reply": "Done, logged."
+    },
+    {
+     "at": "01:11",
+     "said": "baby agent, fed right breast",
+     "reply": "Done, logged."
+    },
+    {
+     "at": "04:03",
+     "said": "baby agent, fed both breasts",
+     "reply": "Done, logged."
+    }
+   ],
+   "prepares": 3,
+   "skips": 0,
+   "rewarms": 1,
+   "warmer_on": 4,
+   "live_calls": 0
+  }
+ ],
+ "feeds": 20,
+ "light_on_at_feed_start": 19,
+ "bottle_feeds": 8,
+ "bottle_feeds_warmer_on_at_start": 8,
+ "warmer_on_for_breast_feeds": 11,
+ "warm_min_median": 4,
+ "warm_min_all": [
+  32,
+  26,
+  4,
+  4,
+  4,
+  8,
+  11,
+  4,
+  4,
+  4,
+  4,
+  4,
+  4,
+  30,
+  4,
+  26,
+  4,
+  4,
+  4
+ ],
+ "prepares": 19,
+ "rewarms": 9,
+ "cry_skips": 1,
+ "voice_logs": 20,
+ "voice_logs_answered_done": 20,
+ "live_house_calls": 0,
+ "predictor_night_errors_min": [
+  12,
+  22,
+  18,
+  -17,
+  -8,
+  -24,
+  0,
+  2,
+  -11,
+  -32,
+  -17,
+  100,
+  38,
+  -12,
+  20,
+  -71,
+  -35,
+  17,
+  -25,
+  -38,
+  65
+ ],
+ "predictor_abs_error_median_min": 20,
+ "predictor_within_10_min": 3,
+ "predictor_within_20_min": 11
+}

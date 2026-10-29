@@ -1,0 +1,57 @@
+{
+ "brain": "meta-models/muse-spark-open-1026",
+ "runs": [
+  {
+   "said": "baby agent fed 90 ml",
+   "matched": true,
+   "query": "fed 90 ml",
+   "status": 200,
+   "spoken": "Logged 90 ml at 12:13.",
+   "path": "assist",
+   "seconds": 2.54
+  },
+  {
+   "said": "baby agent when was the last feed",
+   "forwarded": true,
+   "status": 200,
+   "spoken_on_echo": "Last feed was at 12:13 today, 90 ml.",
+   "speaker": "notify.gonza_s_echo_dot_speak",
+   "path": "echo",
+   "seconds": 2.74
+  },
+  {
+   "said": "agente del bebé cambié un pañal mojado",
+   "matched": true,
+   "query": "cambié un pañal mojado",
+   "status": 200,
+   "spoken": "Pañal mojado registrado a las 12:13.",
+   "path": "assist",
+   "seconds": 3.78
+  },
+  {
+   "path": "wrong token",
+   "status": 401
+  }
+ ],
+ "log_after": [
+  {
+   "ts": "2026-10-29T12:13:14-03:00",
+   "kind": "feeding",
+   "details": {
+    "amount_ml": 90.0
+   }
+  },
+  {
+   "ts": "2026-10-29T12:13:20-03:00",
+   "kind": "diaper",
+   "details": {
+    "wet": true
+   }
+  }
+ ],
+ "brain_calls": 6,
+ "brain_hosts": [
+  "inference.baseten.co"
+ ],
+ "seconds_total": 9.1
+}
