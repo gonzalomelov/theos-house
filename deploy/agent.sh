@@ -11,6 +11,7 @@
 #   sh deploy/agent.sh stop | start      stop or start the agent and its two proxies
 #   sh deploy/agent.sh rollback          run the image of the previous good deploy again
 #
+# NO_HA=1 in front of deploy or check sends no request to Home Assistant at all, for when it has banned the relay.
 # Secrets are never printed and never in git. See docs/deploy-agent.md.
 set -eu
 HOST="${VOSTRO_HOST:-vostro}"
@@ -61,6 +62,7 @@ walled() {
 # One Home Assistant request before any other. Home Assistant bans an IP after a few failed logins,
 # so a rejected token (probe exit 3) stops the check here instead of trying again.
 ha_token_ok() {
+  if [ "${NO_HA:-0}" = 1 ]; then echo "== Home Assistant skipped (NO_HA=1): no request is sent"; return 0; fi
   echo "== Home Assistant token, one request from inside the container"
   RC=0
   docker exec -i "$APP" python - token < "$DIR/deploy/probe.py" || RC=$?
@@ -75,7 +77,7 @@ checks() {
   echo "== python -m parenting_agent --check (inside the container)"
   docker exec "$APP" python -m parenting_agent --check --config config/agent.vostro.json
   echo "== Baby Buddy and Home Assistant, read from inside the container"
-  docker exec -i "$APP" python - < "$DIR/deploy/probe.py"
+  docker exec -i -e PA_NO_HA="${NO_HA:-0}" "$APP" python - < "$DIR/deploy/probe.py"
   echo "== the wall"
   walled
 }
@@ -114,7 +116,7 @@ push_env() {
 
 deploy() {
   send_code
-  remote "SHA=$SHA REQUIRED_NAMES='$REQUIRED_NAMES' sh -s" <<REMOTE
+  remote "SHA=$SHA REQUIRED_NAMES='$REQUIRED_NAMES' NO_HA=${NO_HA:-0} sh -s" <<REMOTE
 $REMOTE_LIB
 [ -f "\$ENV_FILE" ] || fail "missing \$ENV_FILE: run sh deploy/agent.sh push-env"
 [ "\$(stat -c %a "\$ENV_FILE")" = "600" ] || fail "\$ENV_FILE must have mode 600"
@@ -174,7 +176,7 @@ case "${1:-}" in
   push-env) push_env ;;
   deploy|update) deploy ;;
   rollback) rollback ;;
-  check) remote sh -s <<REMOTE
+  check) remote "NO_HA=${NO_HA:-0} sh -s" <<REMOTE
 $REMOTE_LIB
 checks
 REMOTE

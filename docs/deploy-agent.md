@@ -80,6 +80,8 @@ sh deploy/agent.sh start       # start them again
 sh deploy/agent.sh rollback    # run the image of the previous good deploy
 ```
 
+When Home Assistant has banned the relay's address, `NO_HA=1 sh deploy/agent.sh deploy` (or `check`) sends no request to Home Assistant at all and checks everything else. The wall check reaches Home Assistant with a TCP connect only, since a tokenless HTTP request counts as a failed login there (Oct 28, the relay was banned after two of them).
+
 A deploy that fails its health check or its wall check stops the new agent and starts the previous commit again. Rollback switches images only, the compose file stays the last deployed one.
 
 ## Restarts

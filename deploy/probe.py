@@ -54,6 +54,10 @@ def main():
         result["baby_buddy_entries_read"] = len(log.entries(limit=20))
     except BabyBuddyError as error:
         result["baby_buddy_error"] = str(error)[:200]
+    if os.environ.get("PA_NO_HA") == "1":
+        result["home_assistant_api"] = "skipped, PA_NO_HA=1: no request sent"
+        print(json.dumps(result, indent=2))
+        return 0 if "baby_buddy_child_id" in result else 1
     result["home_assistant_api"] = home_assistant()
     print(json.dumps(result, indent=2))
     return 0 if "baby_buddy_child_id" in result and result["home_assistant_api"].startswith("HTTP 200") else 1

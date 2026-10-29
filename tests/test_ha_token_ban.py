@@ -127,6 +127,21 @@ class TokenRejectedTests(unittest.TestCase):
         deploy = script[script.index("deploy() {"):]
         self.assertLess(deploy.index("ha_token_ok"), deploy.index("if healthy && checks"))
 
+    def test_probe_with_no_ha_sends_nothing_to_home_assistant(self):
+        fake = self.fake(401)
+        env = {**os.environ, "HA_URL": fake.url, "HA_MCP_TOKEN": "wrong", "PYTHONPATH": str(ROOT), "PA_NO_HA": "1",
+               "BABYBUDDY_URL": "http://127.0.0.1:9", "BABYBUDDY_TOKEN": "x"}
+        with open(ROOT / "deploy" / "probe.py") as script:
+            done = subprocess.run([sys.executable, "-"], stdin=script, cwd=ROOT, env=env, capture_output=True, text=True, timeout=60)
+        self.assertIn("skipped, PA_NO_HA=1", done.stdout, done.stderr)
+        self.assertEqual(fake.requests, [])
+        self.assertIn("NO_HA", (ROOT / "deploy" / "agent.sh").read_text())
+
+    def test_the_wall_check_never_sends_an_http_request_to_home_assistant(self):
+        wall = (ROOT / "deploy" / "wall_check.py").read_text()
+        self.assertNotIn("relay:8123/", wall)
+        self.assertIn('tcp("relay", 8123)', wall)
+
 
 if __name__ == "__main__":
     unittest.main()

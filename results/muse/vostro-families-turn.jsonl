@@ -1,6 +1,9 @@
-{"message": "mamadera 120", "reply": "Anotada la mamadera de 120 ml para Tomi."}
-{"message": "¿cuánto tomó hoy?", "reply": "Hoy tomó 120 ml en total, en 2 tomas. La última fue a las 22:51, mamadera de 120 ml."}
-{"kind": "brain_call", "model": "meta-models/muse-spark-open-1026", "destination": "inference.baseten.co", "seconds": 1.815, "usd": 0.0036215, "fallback": false}
-{"kind": "brain_call", "model": "meta-models/muse-spark-open-1026", "destination": "inference.baseten.co", "seconds": 0.91, "usd": 0.00352, "fallback": false}
-{"kind": "brain_call", "model": "meta-models/muse-spark-open-1026", "destination": "inference.baseten.co", "seconds": 2.282, "usd": 0.00446, "fallback": false}
-{"kind": "brain_call", "model": "meta-models/muse-spark-open-1026", "destination": "inference.baseten.co", "seconds": 1.207, "usd": 0.0042425, "fallback": false}
+{"message": "mamadera 120", "reply": "Tomi tomó 120 ml en mamadera."}
+{"message": "¿cuánto tomó hoy?", "reply": "Hoy Tomi tomó 120 ml en 1 toma, la última a las 23:06."}
+{"kind": "brain_call", "model": "meta-models/muse-spark-open-1026", "destination": "inference.baseten.co", "seconds": 1.598, "usd": 0.003862, "fallback": false}
+{"kind": "brain_call", "model": "meta-models/muse-spark-open-1026", "destination": "inference.baseten.co", "seconds": 0.886, "usd": 0.0036755, "fallback": false}
+{"kind": "brain_call", "model": "meta-models/muse-spark-open-1026", "destination": "inference.baseten.co", "seconds": 0.969, "usd": 0.00362025, "fallback": false}
+{"kind": "brain_call", "model": "meta-models/muse-spark-open-1026", "destination": "inference.baseten.co", "seconds": 1.804, "usd": 0.00475175, "fallback": false}
+[{'id': 1, 'ts': '2026-10-28T23:06:30-03:00', 'kind': 'feeding', 'details': {'method': 'bottle', 'type': 'unknown', 'start': '2026-10-28T23:06:30-03:00', 'duration_min': 0, 'amount_ml': 120.0}}]
+{"tool": "log_baby_event", "status": "ran"}
+{"tool": "baby_summary", "status": "ran"}
