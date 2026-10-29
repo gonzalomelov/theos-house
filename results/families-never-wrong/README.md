@@ -9,7 +9,7 @@ Four sets of 45 messages were written by agents that changed no code, and each w
 | First | main at `ee4c401`, before the fixes of PR #103 | **8 of 45** | 1 | [heldout/](heldout/README.md) |
 | Second | main at `24bd72b`, after every families fix of Oct 29 | **8 of 45** | 5 (4 are English replies to English messages) | [heldout2/](heldout2/README.md) |
 | Third | main at `1417505`, after the meaning based guards of PR #105 | **5 of 45** | 3 (all English replies to English messages) | [heldout3/](heldout3/README.md) |
-| Fourth | merged main after the third set's fixes | see [heldout4/](heldout4/README.md) | | [heldout4/](heldout4/README.md) |
+| Fourth | main at `78febfc`, after the third set's fixes (PR #107) | **11 of 45** | 1 | [heldout4/](heldout4/README.md) |
 
 The fixes after the first set did not carry over to new phrasings. Six of the 8 second-set misses have one cause, the
 guards decide what the parent said from fixed word lists, and that is what the next fix targets. Everything below this
