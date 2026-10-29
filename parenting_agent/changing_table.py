@@ -13,9 +13,16 @@ While armed it watches the newest frames from the source: the local reflex chime
 plays when SAM 3.1 confirms no hand is on the baby or the alarm holds for voice_hold_s, and one hand on stays
 silent. Closing restores the house, logs the diaper to Baby Buddy and tells the agent with an observation, so
 the agent can answer "when was the last diaper?" from its own memory too.
+
+With "preload_confirm": true the confirm detector (SAM 3.1, about 10 s to load on the Mac) loads when the agent
+starts and again after each change, so "changing time" starts watching at once instead of after the load. Without
+it the skill is blind for those 10 s, and a hover in them is never seen (results/hero/README.md).
 """
 import threading
+import time
+from concurrent.futures import ThreadPoolExecutor
 
+from . import confirm as confirm_mod
 from . import config as config_mod
 from .camera_skill import phrase
 from .agent.plugins import Plugin
@@ -45,6 +52,7 @@ class ChangingTable(Plugin):
         self._reflex, self._confirm, self._source, self.quiet = reflex, confirm_detector, source, quiet
         self.skill, self.source, self.thread = None, None, None
         self.lock = threading.Lock()
+        self.loader, self.warm, self.stopping = None, None, False
         agent.tools.add(Tool("start_changing_table", "Start watching the changing table, when the parent says a change is starting.",
                              schema({}), self.arm))
         agent.tools.add(Tool("finish_changing_table", "Stop watching the changing table and log the diaper change.",
@@ -63,8 +71,29 @@ class ChangingTable(Plugin):
         threading.Thread(target=action, name=f"{self.name}-{action.__name__}", daemon=True).start()
 
     def start(self):
+        self.preload()
         if self.cfg["arm"] == "start":
             self.arm()
+
+    def preload(self):
+        """Starts loading the next change's confirm detector in the background (changing_table.preload_confirm)."""
+        if not self.cfg.get("preload_confirm") or self._confirm is not None or self.warm is not None or self.stopping:
+            return
+        self.loader = self.loader or ThreadPoolExecutor(max_workers=1)
+        self.warm = self.loader.submit(confirm_mod.build, self.skill_cfg["confirm"])
+
+    def take_warm(self):
+        """The preloaded detector, waiting for it if it is still loading, or None to build one at arm as before."""
+        if self.warm is None:
+            return None
+        warm, self.warm, started = self.warm, None, time.monotonic()
+        try:
+            detector = warm.result()
+        except Exception as error:  # the skill builds its own and raises Unavailable the usual way
+            self.agent.bus.publish("confirm_preload_error", error=str(error)[:200])
+            return None
+        self.agent.bus.publish("confirm_preloaded", waited_s=round(time.monotonic() - started, 3))
+        return detector
 
     def arm(self):
         with self.lock:
@@ -76,7 +105,7 @@ class ChangingTable(Plugin):
             speaker = Speaker(self.source, quiet=self.quiet)
             self.agent.bus.subscribe(speaker.on_event, ["chime", "voice"])
             reflex = self._reflex or MediaPipeReflex(self.skill_cfg["contact"])
-            self.skill = Skill(self.skill_cfg, self.agent.bus, reflex, confirm_detector=self._confirm)
+            self.skill = Skill(self.skill_cfg, self.agent.bus, reflex, confirm_detector=self._confirm or self.take_warm())
             self.skill.arm()
             self.thread = threading.Thread(target=watch, args=(self.skill, self.source), name="changing-table", daemon=True)
             self.thread.start()
@@ -95,7 +124,17 @@ class ChangingTable(Plugin):
                                    text=f"A diaper change just finished at the changing table. Hand alerts spoken: {closed['voices']}.")
             self.skill, self.source, self.thread = None, None, None
             self.agent.memory.remember(self.name, IDLE_FACT)
+            self.preload()
             return "diaper change logged"
 
     def stop(self):
+        self.stopping = True
         self.finish()
+        if self.warm is not None:
+            try:
+                getattr(self.warm.result(timeout=60), "close", lambda: None)()
+            except Exception:  # a detector that never loaded has nothing to close
+                pass
+            self.warm = None
+        if self.loader:
+            self.loader.shutdown(wait=False)

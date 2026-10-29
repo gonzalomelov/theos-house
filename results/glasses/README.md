@@ -100,3 +100,7 @@ python scripts/glasses_sim_run.py --config CONFIG --udid SIM --fps 10 --watch 60
 python scripts/glasses_sim_run.py --config CONFIG --udid SIM --fps 10 --watch 60 --mock-feed table-a-hover-2.5cm --feed-s 7 \
     --out results/glasses/hover/table-a-hover-2.5cm-60s.json
 ```
+
+# Hero run with Muse and SAM 3.1 together, Oct 29 2026
+
+The recorded end-to-end run (Muse Spark Open brain, SAM 3.1 lift masks and confirm, real Baby Buddy, the spoken lines muxed onto the screen recording) and the first-hover-after-arming reruns are in `results/hero/README.md`.

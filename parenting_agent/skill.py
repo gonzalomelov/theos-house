@@ -37,6 +37,9 @@ class Skill:
         self.lift = LiftCheck(lift) if lift.get("enabled") else None
         self.anchor_pool = ThreadPoolExecutor(max_workers=1) if self.masks else None
         self.anchor_job = None
+        source = getattr(getattr(detector, "impl", None), "source", None)
+        if source:  # which weights answer the confirm and the anchors, and where they run
+            self.bus.publish("confirm_model", provider=detector.name, **{k: v for k, v in source.items() if k != "ready"})
 
     def _on_voice(self, event):
         self.house.on_event("voice")
@@ -106,6 +109,7 @@ class Skill:
                 self.lift.anchor(anchor_gray, hands, baby, anchor_s)
                 self.bus.publish("anchor", stream_s=round(anchor_s, 3), hands=len(hands), based=self.lift.base is not None)
         if self.anchor_job is None and self.lift.wants_anchor and not self.lift.lifted:
+            self.bus.publish("anchor_request", stream_s=round(stream_s, 3))
             self.anchor_job = (gray, stream_s, self.anchor_pool.submit(self.masks, frame_bgr.copy()))
 
     def close(self):

@@ -72,7 +72,8 @@ final class Companion {
 
   #if DEBUG
   /// Simulator demo: mock glasses on, the synthetic changing-table clip as their camera, then the parent's two lines.
-  /// The launch argument -mockFeed NAME plays MockFeed/NAME.mp4 instead (for example a hover or a touch clip).
+  /// The launch argument -mockFeed NAME plays MockFeed/NAME.mp4 instead (for example a hover or a touch clip), and
+  /// -demoAsk TEXT asks one more question after "done" (for example the last diaper, read back from the baby log).
   func runDemo() async {
     let name = UserDefaults.standard.string(forKey: "mockFeed") ?? "changing-table-feed"
     guard let feed = Bundle.main.url(forResource: name, withExtension: "mp4") else {
@@ -88,6 +89,11 @@ final class Companion {
     let watch = UserDefaults.standard.double(forKey: "demoWatchSeconds")
     try? await Task.sleep(for: .seconds(watch > 0 ? watch : 20))
     say("done")
+    if let question = UserDefaults.standard.string(forKey: "demoAsk"), !question.isEmpty {
+      let wait = UserDefaults.standard.double(forKey: "demoAskAfterSeconds")
+      try? await Task.sleep(for: .seconds(wait > 0 ? wait : 12))
+      say(question)
+    }
   }
   #endif
 }

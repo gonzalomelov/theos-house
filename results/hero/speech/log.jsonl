@@ -1,0 +1,36 @@
+{"t":1793256375.67136,"file":"001.wav","urgent":false,"text":"We're already watching. Just say done when finished.","kind":"queued"}
+{"file":"001.wav","kind":"started","t":1793256375.769629}
+{"kind":"rendered","t":1793256376.714169,"file":"001.wav"}
+{"t":1793256379.8054841,"file":"001.wav","kind":"finished"}
+{"kind":"chime","sound_id":1057,"t":1793256380.2992301}
+{"urgent":true,"t":1793256381.5842009,"kind":"queued","text":"hand","file":"002.wav"}
+{"t":1793256381.6073861,"file":"002.wav","kind":"started"}
+{"kind":"rendered","file":"002.wav","t":1793256381.724607}
+{"file":"002.wav","t":1793256382.2370739,"kind":"finished"}
+{"sound_id":1057,"kind":"chime","t":1793256388.943027}
+{"text":"hand","urgent":true,"t":1793256390.1825209,"kind":"queued","file":"003.wav"}
+{"kind":"started","file":"003.wav","t":1793256390.1877089}
+{"kind":"rendered","t":1793256390.3030438,"file":"003.wav"}
+{"t":1793256390.823293,"file":"003.wav","kind":"finished"}
+{"kind":"chime","t":1793256401.9149871,"sound_id":1057}
+{"text":"hand","urgent":true,"file":"004.wav","t":1793256403.184515,"kind":"queued"}
+{"kind":"started","file":"004.wav","t":1793256403.1864419}
+{"file":"004.wav","kind":"rendered","t":1793256403.308624}
+{"file":"004.wav","t":1793256403.814671,"kind":"finished"}
+{"kind":"chime","sound_id":1057,"t":1793256410.8127642}
+{"text":"hand","kind":"queued","t":1793256412.0601439,"file":"005.wav","urgent":true}
+{"t":1793256412.0646691,"file":"005.wav","kind":"started"}
+{"file":"005.wav","t":1793256412.1800442,"kind":"rendered"}
+{"t":1793256412.6997008,"file":"005.wav","kind":"finished"}
+{"file":"006.wav","t":1793256420.372988,"kind":"queued","text":"Change finished at 03:46. Let me know what was in the diaper if you'd like it logged.","urgent":false}
+{"kind":"started","file":"006.wav","t":1793256420.379493}
+{"kind":"rendered","file":"006.wav","t":1793256420.524035}
+{"urgent":false,"file":"007.wav","text":"Change finished, I heard 4 hand alerts. Tell me what was in the diaper if you'd like it noted.","t":1793256421.5924349,"kind":"queued"}
+{"t":1793256421.7534142,"kind":"rendered","file":"007.wav"}
+{"t":1793256425.4457369,"kind":"finished","file":"006.wav"}
+{"file":"007.wav","t":1793256425.4464469,"kind":"started"}
+{"file":"007.wav","t":1793256430.9389739,"kind":"finished"}
+{"urgent":false,"t":1793256433.729805,"text":"Last diaper change finished at 03:47 today.","file":"008.wav","kind":"queued"}
+{"kind":"started","file":"008.wav","t":1793256433.7562909}
+{"file":"008.wav","kind":"rendered","t":1793256433.922157}
+{"file":"008.wav","t":1793256437.0184679,"kind":"finished"}

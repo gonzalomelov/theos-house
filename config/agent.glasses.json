@@ -41,7 +41,8 @@
     "skill": "skills/changing-table.json",
     "source": "glasses",
     "arm": "command",
-    "channel": "glasses"
+    "channel": "glasses",
+    "preload_confirm": true
   },
   "camera_skills": [
     {"skill": "skills/bath.json", "source": "glasses", "channel": "glasses"}

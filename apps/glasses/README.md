@@ -32,6 +32,8 @@ python -m parenting_agent --config config/agent.glasses.json      # prints the e
 xcrun simctl launch booted com.bygmv.parentingglasses -agentToken <token> -autoDemo YES
 ```
 
+Debug launch arguments for the simulator demo: `-mockFeed NAME` plays `MockFeed/NAME.mp4`, `-demoAsk TEXT` asks one more question after "done", and `-recordSpeech YES` also renders every line the app speaks to `Documents/speech/NNN.wav` with a play log, because the simulator's screen recording has no audio. `scripts/glasses_hero_run.py` uses all three for the recorded hero run (`results/hero/README.md`).
+
 The first build downloads the DAT package from GitHub (about 230 MB of git history, the first build took 18 minutes on Oct 28). `scripts/glasses_sim_run.py` runs the whole loop and writes the numbers, see `results/glasses/README.md`.
 
 ## Morning steps for Gonza: real glasses

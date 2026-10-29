@@ -108,6 +108,92 @@ class ChangingTablePlugin(unittest.TestCase):
             agent.close()
 
 
+class SlowDetector(confirm_mod.NoConfirm):
+    """Stands in for SAM 3.1: takes load_s to build, counts how many were built and closed."""
+
+    built, closed = [], []
+
+    def __init__(self, load_s):
+        time.sleep(load_s)
+        SlowDetector.built.append(self)
+
+    def close(self):
+        SlowDetector.closed.append(self)
+
+
+class ConfirmPreload(unittest.TestCase):
+    """The glasses hero run (results/hero): SAM 3.1 took about 10 s to load at "changing time", and the skill watched
+    nothing in that time. preload_confirm loads it when the agent starts and again after each change."""
+
+    def setUp(self):
+        SlowDetector.built, SlowDetector.closed = [], []
+        self.real_build = confirm_mod.build
+        confirm_mod.build = lambda cfg: SlowDetector(0.3)
+
+    def tearDown(self):
+        confirm_mod.build = self.real_build
+
+    def plugin(self, tmp, preload):
+        from parenting_agent.changing_table import ChangingTable
+        config = config_mod.load()
+        config.update({"data_dir": str(Path(tmp) / "data"), "env_file": "/nonexistent", "brain": {"provider": "fake"},
+                       "plugins": [], "changing_table": {"arm": "command", "preload_confirm": preload}})
+        agent = build(config)
+        return agent, ChangingTable(agent, config, reflex=FakeReflex(on_frames=100), source=FakeSource(frames=4, step=0.2), quiet=True)
+
+    def test_the_detector_loads_before_changing_time_and_again_after_done(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            agent, plugin = self.plugin(tmp, preload=True)
+            plugin.start()
+            time.sleep(0.6)
+            self.assertEqual(len(SlowDetector.built), 1)  # loaded before the parent said anything
+            started = time.monotonic()
+            plugin.arm()
+            self.assertLess(time.monotonic() - started, 0.25)  # no load at arm
+            self.assertIs(plugin.skill.confirm.detector, SlowDetector.built[0])
+            self.assertEqual(agent.bus.count("confirm_preloaded"), 1)
+            plugin._source.drained.wait(30)
+            plugin.finish()
+            self.assertEqual(SlowDetector.closed, SlowDetector.built[:1])
+            self.assertIsNotNone(plugin.warm)  # the next change's detector is loading
+            plugin.stop()
+            self.assertEqual(len(SlowDetector.built), 2)
+            self.assertEqual(SlowDetector.closed, SlowDetector.built)  # nothing left running
+            agent.close()
+
+    def test_without_preload_the_detector_loads_at_arm(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            agent, plugin = self.plugin(tmp, preload=False)
+            plugin.start()
+            time.sleep(0.4)
+            self.assertEqual(SlowDetector.built, [])
+            plugin.arm()
+            self.assertEqual(len(SlowDetector.built), 1)
+            plugin._source.drained.wait(30)
+            plugin.stop()
+            self.assertIsNone(plugin.warm)
+            agent.close()
+
+    def test_a_preload_that_fails_falls_back_to_loading_at_arm(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            agent, plugin = self.plugin(tmp, preload=True)
+            calls = []
+
+            def flaky(cfg):
+                calls.append(cfg)
+                if len(calls) == 1:
+                    raise confirm_mod.Unavailable("busy")
+                return SlowDetector(0)
+            confirm_mod.build = flaky
+            plugin.start()
+            plugin.arm()
+            self.assertEqual(agent.bus.count("confirm_preload_error"), 1)
+            self.assertIs(plugin.skill.confirm.detector, SlowDetector.built[0])
+            plugin._source.drained.wait(30)
+            plugin.stop()
+            agent.close()
+
+
 class Sam3LocalStartup(unittest.TestCase):
     def test_missing_python_is_unavailable_before_the_routine(self):
         with self.assertRaises(confirm_mod.Unavailable):

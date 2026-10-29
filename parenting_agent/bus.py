@@ -1,6 +1,7 @@
 """Event bus: every part publishes what happened, listeners react, a JSONL log keeps the numbers.
 
-Events are plain dicts with a kind, a time t (seconds since the bus started) and a wall-clock ts. Only
+Events are plain dicts with a kind, a time t (seconds since the bus started), a wall-clock ts and unix (Unix seconds,
+ms precision, so a run can be lined up with a screen recording). Only
 numbers, states and short texts go on the bus, never frames or audio. Listeners run in the publisher's
 thread, so a slow listener (the agent) hands events to its own queue instead of working inline.
 """
@@ -29,7 +30,7 @@ class Bus:
 
     def publish(self, kind, **fields):
         ts = datetime.datetime.now().astimezone().isoformat(timespec="seconds")
-        event = {"kind": kind, "t": self.now(), "ts": ts, **fields}
+        event = {"kind": kind, "t": self.now(), "ts": ts, "unix": round(time.time(), 3), **fields}
         with self.lock:
             self.history.append(event)
             if self.log:
