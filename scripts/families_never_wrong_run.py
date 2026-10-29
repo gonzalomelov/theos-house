@@ -13,6 +13,12 @@ neither a time nor how long ago. As the judge did, the memory module's wall cloc
 
     .venv/bin/python scripts/families_never_wrong_run.py --keys-env ~/.parenting-agent.env \
         --out results/families-never-wrong/run-1
+
+--sets old,judge (the default) runs the 70 messages above, then the round 3 real-new-parent judge's 37 messages, each
+set in its own new family. --steps-file runs a JSON file of steps instead, in the same shape as STEPS:
+[day, "HH:MM", "A" or "B", message, op, tag], where op is null, ["add", {"kind": "feeding", "method": "bottle",
+"ml": 120, "type": "formula", "min": 0, "at": "HH:MM"}] (fields left out take the defaults of F, D, S, N and BATH below),
+["edit", day, "HH:MM", kind, {fields}] or ["del", day, "HH:MM", kind], and tag is null, "q", "next" or "asleep HH:MM".
 """
 import argparse
 import collections
@@ -141,6 +147,70 @@ STEPS = [
 ]
 
 
+# The round 3 real-new-parent judge's 37 messages (judges/rounds/r3, his martin3.py), with the log a careful parent keeps.
+JUDGE_STEPS = [
+    (29, "01:40", A, "recien tomo 80 de la mamadera", ("add", F(ml=80)), None),
+    (29, "01:42", A, "uy no fueron 60, los otros 20 los dejo", ("edit", 29, "01:40", "feeding", {"ml": 60.0}), None),
+    (29, "02:30", A, "pañal mojadisimo", ("add", D(wet=True)), None),
+    (29, "04:50", B, "pecho izquierdo 15", ("add", F("left breast", minutes=15)), None),
+    (29, "04:51", B, "pecho izquierdo 15", None, None),
+    (29, "04:53", B, "ah no esa ya la habia puesto", None, None),
+    (29, "07:15", A, "a que hora comio la ultima", None, "q"),
+    (29, "07:16", A, "y cuanto lleva desde la medianoche", None, "q"),
+    (29, "09:10", B, "se durmio en el cochecito", None, "asleep 09:10"),
+    (29, "10:20", B, "ya se levanto", ("add", S("09:10")), None),
+    (29, "10:25", A, "cuanto fue la siesta", None, "q"),
+    (29, "13:00", A, "le dimos 100 de materna extraida a eso de las 12 y media",
+     ("add", F(ml=100, kind_type="breast milk", at="12:30")), None),
+    (29, "13:05", A, "no espera, fue a las 12", ("edit", 29, "12:30", "feeding", {"at": "12:00"}), None),
+    (29, "16:00", B, "le puedo dar agua? hace calor", None, None),
+    (29, "20:05", A, "/resumen", None, None),
+    (30, "00:50", A, "mamadera 4 onzas", ("add", F(ml=120)), None),
+    (30, "00:52", A, "en realidad tomo 3, dejo una", ("edit", 30, "00:50", "feeding", {"ml": 90.0}), None),
+    (30, "02:40", B, "caca amarilla", ("add", D(solid=True)), None),
+    (30, "02:41", B, "saca el ultimo pañal q no era", ("del", 30, "02:40", "diaper"), None),
+    (30, "05:00", A, "le dio teta de los dos lados 25 min", ("add", F("both breasts", minutes=25)), None),
+    (30, "07:30", A, "le toca ya?", None, "next"),
+    (30, "11:00", B, "hizo una siestita de 40 min", ("add", S("10:20")), None),
+    (30, "14:00", A, "tomo la mitad de la mamadera de 120", ("add", F(ml=60)), None),
+    (30, "18:00", A, "cuantos pañales sucios hoy", None, "q"),
+    (30, "20:10", B, "/resumen", None, None),
+    (30, "22:00", A, "tiene la nariz tapada y le cuesta tomar", ("add", N()), None),
+    (31, "01:20", A, "90", ("add", F(ml=90)), None),
+    (31, "01:21", A, "de mamadera digo", None, None),
+    (31, "03:30", B, "lloro un monton y despues tomo pecho der 10 min", ("add", F("right breast", minutes=10)), None),
+    (31, "06:00", A, "mamadera 110", ("add", F(ml=110)), None),
+    (31, "06:01", A, "mamadera 110", None, None),
+    (31, "06:02", A, "fueron dos, la otra se la dio mi suegra", ("add", F(ml=110, at="06:01")), None),
+    (31, "09:00", A, "q comio ayer en total", None, "q"),
+    (31, "12:00", A, "la de la 1 y 20 fue 80", ("edit", 31, "01:20", "feeding", {"ml": 80.0}), None),
+    (31, "15:00", A, "durmio 2 horas recien se desperto", ("add", S("13:00")), None),
+    (31, "15:05", A, "/proxima", None, "next"),
+    (31, "20:10", A, "/resumen", None, None),
+]
+SETS = {"old": STEPS, "judge": JUDGE_STEPS}
+MAKERS = {"feeding": lambda e: F(e.get("method", "bottle"), e.get("ml"), e.get("type"), e.get("min", 0), e.get("at")),
+          "diaper": lambda e: D(e.get("wet", False), e.get("solid", False), e.get("at")),
+          "sleep": lambda e: S(e["start"], e.get("at")), "note": lambda e: N(e.get("at")), "bath": lambda e: BATH(e.get("at"))}
+
+
+def load_steps(path):
+    """Steps from a JSON file, in the STEPS shape. "A" and "B" are the two parents."""
+    out = []
+    for day, hhmm, who, text, op, tag in json.loads(Path(path).read_text()):
+        if op and op[0] == "add":
+            op = ("add", MAKERS[op[1]["kind"]](op[1]))
+        elif op and op[0] == "edit":
+            fields = dict(op[4])
+            if "ml" in fields and fields["ml"] is not None:
+                fields["ml"] = float(fields["ml"])
+            op = ("edit", int(op[1]), op[2], op[3], fields)
+        elif op:
+            op = ("del", int(op[1]), op[2], op[3])
+        out.append((int(day), hhmm, A if str(who).upper() == "A" else B, text, op, tag))
+    return out
+
+
 def at(day, hhmm):
     h, m = (int(x) for x in hhmm.split(":"))
     return datetime.datetime(2026, 10, day, h, m, tzinfo=TZ)
@@ -214,10 +284,31 @@ def main():
     parser.add_argument("--keys-env", required=True)
     parser.add_argument("--out", required=True, help="path without extension, for .md and .json")
     parser.add_argument("--brain", default="baseten", choices=["baseten", "claude", "fake"])
+    parser.add_argument("--sets", default="old,judge", help="comma list of message sets: " + ", ".join(SETS))
+    parser.add_argument("--steps-file", help="a JSON file of steps to run instead of --sets")
     args = parser.parse_args()
     settings_mod.read_keys(args.keys_env)
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)
+    runs = [(Path(args.steps_file).stem, load_steps(args.steps_file))] if args.steps_file else \
+        [(name, SETS[name]) for name in args.sets.split(",")]
+    lines, results = [], []
+    for name, steps in runs:
+        part_lines, summary = run_set(args, name, steps)
+        lines += part_lines
+        results.append(summary)
+    total = {"sets": [r["set"] for r in results], "messages": sum(r["messages"] for r in results),
+             "wrong_log_states": sum(r["wrong_log_states"] for r in results),
+             "reply_misses": sum(r["reply_misses"] for r in results), "fallbacks": sum(r["fallbacks"] for r in results),
+             "usd": round(sum(r["usd"] for r in results), 4), "by_set": results}
+    out.with_suffix(".md").write_text("\n".join(lines) + "\n")
+    out.with_suffix(".json").write_text(json.dumps(total, ensure_ascii=False, indent=1) + "\n")
+    print(json.dumps({k: total[k] for k in ("sets", "messages", "wrong_log_states", "reply_misses", "fallbacks", "usd")}
+                     | {"per_set": {r["set"]: (r["wrong_log_states"], r["reply_misses"]) for r in results}}))
+
+
+def run_set(args, name, STEPS):
+    """One message set in a new family. Returns its transcript lines and its summary."""
     data = tempfile.mkdtemp(prefix="never-wrong-")
     s = settings_mod.load({"PA_FAMILIES_BRAIN": args.brain, "PA_FAMILIES_DATA_DIR": data,
                            "PA_FAMILIES_FAMILY_USD": "5", "PA_FAMILIES_DAILY_USD": "5", "PA_FAMILIES_MAX_MESSAGES": "200"})
@@ -225,7 +316,7 @@ def main():
     # As the judge did: the memory module's own wall clock follows the simulated one too.
     memory_mod.now = lambda: clock["now"].isoformat(timespec="seconds")
     app = Families(s, clock=lambda: clock["now"])
-    lines = [f"# Never wrong, 3 simulated nights\n\nBrain: {s['brain'].get('provider')} {s['brain'].get('model')}\n"]
+    lines = [f"# Never wrong, 3 simulated nights, set {name}\n\nBrain: {s['brain'].get('provider')} {s['brain'].get('model')}\n"]
     code = app.store.create_invite(internal=True)
     for text in (f"/start {code}", "Lola", "2/9/2026", "si"):
         replies = app.handle(A, A, text, "private", "es-UY")
@@ -291,7 +382,7 @@ def main():
             reply_misses.append({"step": n, "what": "a claimed log with nothing logged", "reply": reply})
     final = actual_log(fam)
     spend = app.store._one("select coalesce(sum(usd),0) from spend where scope=?", (ALL,))[0]
-    summary = {"brain": s["brain"].get("model"), "messages": len(STEPS), "wrong_log_states": len(misses),
+    summary = {"set": name, "brain": s["brain"].get("model"), "messages": len(STEPS), "wrong_log_states": len(misses),
                "reply_misses": len(reply_misses), "fallbacks": len(fallbacks), "usd": round(spend, 4),
                "fallback_steps": [x["step"] for x in steps if any(b != s["brain"].get("model") for b in x["brains"])],
                "misses": misses, "reply_problems": reply_misses, "steps": steps, "final_log": final}
@@ -299,10 +390,8 @@ def main():
     lines += [f"- {json.dumps(e, ensure_ascii=False)}" for e in final]
     lines.append(f"\nWrong log states: {len(misses)} of {len(STEPS)} messages. Reply problems: {len(reply_misses)}. "
                  f"Fallbacks: {len(fallbacks)}. Spend: {spend:.4f} USD.")
-    out.with_suffix(".md").write_text("\n".join(lines) + "\n")
-    out.with_suffix(".json").write_text(json.dumps(summary, ensure_ascii=False, indent=1) + "\n")
     app.close()
-    print(json.dumps({k: summary[k] for k in ("messages", "wrong_log_states", "reply_misses", "fallbacks", "usd")}))
+    return lines, summary
 
 
 if __name__ == "__main__":

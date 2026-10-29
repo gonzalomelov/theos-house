@@ -98,7 +98,9 @@ class Families(unittest.TestCase):
                                       [[log("diaper", {"wet": True})], "Logged."])
                 app, f, _ = self.family(brain, lang)
                 reply = app.handle(7, 7, NOTES[lang]["feeding"], "private", LANG_CODE[lang])[0][1]
-                self.assertEqual(reply, table["SAVED_BEFORE_FAIL"].format(entries=table["ENTRY_FEEDING_ML"].format(ml="120")))
+                # Built from the log diff of the turn: the stored bottle, then "no need to send it again".
+                self.assertRegex(reply, {"en": r"^Logged the \d\d:\d\d bottle of 120 ml\. No need to send it again\.$",
+                                         "es": r"^Anoté la mamadera de 120 ml de las \d\d:\d\d\. No hace falta que lo mandes de nuevo\.$"}[lang])
                 last = f.memory.recent_messages(2)
                 self.assertEqual([m["role"] for m in last], ["user", "assistant"])
                 self.assertEqual(last[-1]["text"], reply)
@@ -174,7 +176,7 @@ class SharedLoop(unittest.TestCase):
         agent = Agent(bus, memory, baby_log, core_tools(memory, baby_log, ["log_baby_event"]),
                       ScriptedBrain([[log("feeding", BOTTLE)], FAIL]))
         agent.handle({"kind": "message", "channel": "test", "text": "bottle 120 ml"})
-        self.assertEqual(replies[-1]["text"], "I could not finish my answer, but I logged a feed of 120 ml. No need to send it again.")
+        self.assertRegex(replies[-1]["text"], r"^Logged the \d\d:\d\d bottle of 120 ml\. No need to send it again\.$")
         self.assertEqual(len(baby_log.entries("feeding")), 1)
 
     def test_demo_logs_one_feed_per_message(self):

@@ -59,7 +59,7 @@ class Words(unittest.TestCase):
 
     def test_an_earlier_bottle_never_rides_along(self):
         details, _ = rules.said_only("teta izq 15 min", "feeding", {"amount_ml": 120, "method": "bottle"})
-        self.assertEqual(details, {"method": "left breast"})
+        self.assertEqual(details, {"method": "left breast", "duration_min": 15})
         details, _ = rules.said_only("mamadera 90", "feeding", {"amount_ml": 120, "method": "bottle"})
         self.assertEqual(details, {"method": "bottle"})
 

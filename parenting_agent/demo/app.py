@@ -556,6 +556,7 @@ class DemoApp:
         raw = brain or brain_mod.build(settings["brain"])
         self.brain = MeteredBrain(raw, self.records, settings)
         self.visitors = collections.OrderedDict()
+        self.langs = {}
         self.lock = threading.Lock()
         self.thinking = threading.BoundedSemaphore(settings["max_parallel_brain"])
         self.clients = Clients(settings)
@@ -609,7 +610,16 @@ class DemoApp:
             return None
         return max(0, self.s["max_messages_per_visitor"] - self.records.messages_from(vid))
 
-    def state(self, vid, internal, lang="en"):
+    def visitor_lang(self, vid, lang=None):
+        """The language of the visitor's cards: the one asked for, else the language of their last message or reset, so
+        /api/state after a Spanish conversation is Spanish too."""
+        if lang in ("es", "en"):
+            self.langs[vid] = lang
+            return lang
+        return self.langs.get(vid, "en")
+
+    def state(self, vid, internal, lang=None):
+        lang = self.visitor_lang(vid, lang)
         v = self.known(vid) or self.fresh_state()
         return {"proactive": v.proactive(lang), "recent": v.recent(), "prep": v.prep().state(lang),
                 "remaining": self.remaining(vid, internal), "resting": self.brain.resting(), "max_input": self.s["max_input_chars"]}
@@ -643,6 +653,8 @@ class DemoApp:
                 try:
                     lang = "es" if lang == "es" else "en"
                     reply, actions, mode = v.talk(text, "prep" if mode == "prep" else "baby", lang)
+                    # The cards follow the language the visitor writes in, as the reply does.
+                    lang = self.visitor_lang(vid, v.agent.lang(text))
                 except SpendCapReached:
                     v.memory.add_message("demo", "assistant", RESTING)
                     return 503, {"error": "resting", "reply": RESTING, "remaining": self.remaining(vid, internal)}
@@ -655,7 +667,7 @@ class DemoApp:
         finally:
             self.thinking.release()
 
-    def reset(self, vid, internal, client=None, lang="en"):
+    def reset(self, vid, internal, client=None, lang=None):
         """A fresh demo baby. It counts as a new visitor for the connection's limit, so resets cannot fill the demo."""
         if not internal and not self.clients.allow(client, new_visitor=True, message=False):
             return 429, {"error": "client_limit", "reply": CLIENT_LIMIT, "remaining": 0}

@@ -160,6 +160,9 @@ class DemoBabyLog(BabyLog):
             text = f"Bath. {text}".strip()
         return self._append({"kind": "note", "time": iso(when), "note": text or "Note"})
 
+    def open_sleep(self):
+        return iso(self.sleep_started) if self.sleep_started is not None else None
+
     def _sleep(self, details, when):
         action = details.get("action")
         if details.get("start") and details.get("end"):

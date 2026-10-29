@@ -73,9 +73,11 @@ def core_tools(memory, baby_log, allowed, remember_keys=None):
         lambda kind=None, since=None, limit=50: baby_log.entries(kind, since, limit)))
     tools.add(Tool(
         "baby_summary", "Totals and last times from the baby log: feed count and total ml, diaper counts and the last dirty one, "
-        "sleep minutes, the last bath. Counts cover since (ISO) or today from midnight. Use it for how much, how many, when was the last.",
-        schema({"since": {"type": "string", "description": "ISO start of the period, omit for today"}}),
-        lambda since=None: baby_log.summary(since)))
+        "sleep minutes, the last bath. Counts cover since (ISO) or today from midnight, until (ISO) or now. For yesterday give "
+        "both since and until. Use it for how much, how many, when was the last.",
+        schema({"since": {"type": "string", "description": "ISO start of the period, omit for today"},
+                "until": {"type": "string", "description": "ISO end of the period, omit for now"}}),
+        lambda since=None, until=None: baby_log.summary(since, until)))
     if remember_keys != ():
         tools.add(Tool(
             "remember", "Keep a fact about the family for later, for example the baby's name or the partner's name. "

@@ -129,7 +129,8 @@ EDIT = re.compile(r"\b(perd[oó]n|perdon|correg\w*|corrij\w*|cambi[aá](la|lo)?|
                   r"(ese|esa|eso|el|la|lo) .{0,25}\bera (solo|s[oó]lo|nada m[aá]s|de|un|una)\b|era (solo|s[oó]lo)\b|"
                   r"(dos|2) veces|sin querer|duplicad\w*|repetid\w*|doble|se mand\w*|"
                   r"(it|that) was \d+|was \d+ not|not \d+|delete|remove|undo|wrong|mistake|sent (it )?twice|twice by|"
-                  r"correct (it|that)|fix (it|that)|change (it|that)|actually)\b", re.I)
+                  r"correct (it|that)|fix (it|that)|change (it|that)|actually|no,? esper[aá]|esper[aá],? (fue|era)|digo|"
+                  r"(fue|era) a las? \d|^\W*no\W+(a las? )?\d{1,2}([:.]\d{2}| y \w+)?\W*$)\b", re.I)
 # A message that asks for an entry to go, not only to be changed: a delete runs on one of these, or on a "sent twice"
 # only when the log really holds the entry twice.
 DELETE_SAID = re.compile(r"\b(borr[aá]\w*|elimin[aá]\w*|sac[aá]\w*|quit[aá]\w*|delete|remove|undo|no (le )?(di|dimos|dio|tom[oó])\b|"
@@ -397,7 +398,29 @@ def asks_delete(text):
     return bool(DELETE_SAID.search(text or ""))
 
 
-WOKE_SAID = re.compile(r"despert|despiert|\bwoke\b|\bwakes?\b|\bawake\b", re.I)
+WOKE_SAID = re.compile(r"despert|despiert|levant|\bwoke\b|\bwakes?\b|\bawake\b|\bgot up\b", re.I)
+# How long a sleep lasted, said in the message: "durmio 2 horas", "hizo una siestita de 40 min", "napped for an hour".
+SLEPT_FOR = re.compile(r"(\d+(?:[.,]\d+)?|una|un|one|an?|media|half an?)\s*(horas?|hs?\b|hours?|hrs?\b|min\w*|m\b)", re.I)
+SLEPT_WORDS = re.compile(r"durm|dorm|siest|slept|\bnap", re.I)
+
+
+def slept_minutes(text):
+    """The minutes of a finished sleep the message names ("durmio 2 horas", "siestita de 40 min"), or None."""
+    text = text or ""
+    if not SLEPT_WORDS.search(text):
+        return None
+    total = 0.0
+    for amount, unit in SLEPT_FOR.findall(text):
+        low = amount.lower()
+        value = {"una": 1, "un": 1, "one": 1, "a": 1, "an": 1, "media": 0.5}.get(low)
+        if value is None:
+            value = 0.5 if low.startswith("half") else float(low.replace(",", "."))
+        total += value * (60 if unit.lower().startswith("h") else 1)
+    return total if 0 < total <= BOUNDS["sleep_hours"] * 60 else None
+
+
+def says_woke(text):
+    return bool(WOKE_SAID.search(text or ""))
 ASLEEP_SAID = re.compile(r"durm|dorm|asleep|\bnap", re.I)
 
 
@@ -481,6 +504,12 @@ def said_only(request, kind, details, ts=None):
                 details.pop("amount_ml", None)
         elif bottle_said and not breast_said and "breast" in str(details.get("method") or ""):
             details["method"] = "bottle"
+    if kind == "feeding" and "breast" in str(details.get("method") or "") and details.get("duration_min") is None \
+            and not BOTTLE_WORDS.search(request) and not TIME_SAID.search(request):
+        # "pecho izquierdo 15": a bare number after a breast side is minutes. Run 1 of round 3 lost the 15.
+        bare = re.findall(r"(?<![\d:.])(\d{1,3})(?![\d:.])", request)
+        if len(bare) == 1 and 1 <= int(bare[0]) <= 60:
+            details["duration_min"] = int(bare[0])
     if kind == "diaper" and details.get("color") and not COLOR_SAID.search(request):
         details.pop("color", None)
     if kind == "diaper" and details.get("wet") and details.get("solid"):
@@ -511,6 +540,35 @@ def amount_said(amount, text):
     except (TypeError, ValueError):
         return False
     return any(abs(float(n.replace(",", ".")) - wanted) < 0.5 for n in re.findall(r"-?\d+(?:[.,]\d+)?", text or ""))
+
+
+HALF_OF = re.compile(r"\b(la )?mitad de (la |una )?(mamadera|biber[oó]n|bottle)?\s*(de )?(\d+)|\bhalf (of )?(a |the )?(\d+)", re.I)
+
+
+def half_ml(text):
+    """"tomo la mitad de la mamadera de 120" is 60 ml, or None."""
+    m = HALF_OF.search(text or "")
+    if not m:
+        return None
+    return float(m.group(5) or m.group(8)) / 2
+
+
+def ounce_followup_ml(request, previous):
+    """"en realidad tomo 3, dejo una" right after "mamadera 4 onzas": the first number in ounces, at 30 ml each."""
+    if not previous or not OUNCES.search(previous) or re.search(r"\d\s*ml\b", request or "", re.I):
+        return None
+    numbers = re.findall(r"\d+(?:[.,]\d+)?", request or "")
+    if not numbers or float(numbers[0].replace(",", ".")) > 12:
+        return None
+    return round(float(numbers[0].replace(",", ".")) * ML_PER_OUNCE)
+
+
+NAMES_WHEN = re.compile(r"\b(de|a) las? \d{1,2}\b|\d{1,2}[:.]\d{2}|\b(at|from) \d{1,2}\b", re.I)
+
+
+def names_when(text):
+    """True when a message names a day or a clock time: "la de la 1 y 20 fue 80", "la de ayer"."""
+    return bool(DAY_SAID.search(text or "") or NAMES_WHEN.search(text or ""))
 
 
 def ounces_ml(text):
@@ -712,8 +770,54 @@ def claims_logged(text):
     return bool(CLAIMS_LOGGED.search(text or ""))
 
 
+# A reply that says this turn wrote to the log: "Anoté", "Corregí", "ya anoté el sueño", "moví esa mamadera", "Logged".
+CLAIMS_DONE = re.compile(r"\b(anot[eé]|registr[eé]|correg[ií]|borr[eé]|mov[ií]|cambi[eé]|saqu[eé]|elimin[eé]|actualic[eé])\b|"
+                         r"\b(I|I've|I have)\s+(just\s+)?(logged|recorded|fixed|moved|deleted|removed|changed|updated|corrected)\b|"
+                         r"(^|[.!:]\s+)(Logged|Recorded|Fixed|Moved|Deleted|Removed|Changed|Updated|Corrected)\b")
+
+
+YESTERDAY = re.compile(r"\bayer\b|\byesterday\b", re.I)
+SO_FAR = re.compile(r"hasta ahora|hasta hoy|y hoy|\bhoy\b|so far|until now|and today|\btoday\b", re.I)
+# A reply that says the agent did something only one tool does. It goes out only when that tool ran in the turn.
+CLAIM_TOOLS = [
+    (re.compile(r"\b(told|messaged|texted|notified|pinged|let (him|her|them|your partner|\w+) know|asked (him|her|them|your|ceci|"
+                r"gonza|parent)|sent (him|her|them|ceci|gonza|your|a message|parent)|(is|are) on (his|her|their|the) way|"
+                r"le avis[eé]|les avis[eé]|le dije|les dije|le escrib[ií]|le mand[eé]|le ped[ií]|va en camino|est[aá] en camino)\b", re.I),
+     {"call_partner", "notify", "send_handover_to_sitter", "reply_to_visitor"}),
+    (re.compile(r"\b(announced|anunci[eé])\b", re.I), {"announce", "announce_kitchen", "reply_to_visitor"}),
+    (re.compile(r"\b(saved|remembered|i'?ll remember|i will remember|guard[eé]|lo recuerdo|me lo acuerdo)\b", re.I),
+     {"remember", "log_baby_event", "edit_baby_event", "appointments", "prep_add", "prep_check", "set_due_date"}),
+    (re.compile(r"\b(added|agregu[eé]|sum[eé])\b", re.I), {"prep_add", "log_baby_event", "appointments"}),
+    (re.compile(r"\b(ticked|checked (it )?off|crossed (it )?off|tach[eé]|marqu[eé])\b", re.I), {"prep_check"}),
+]
+
+
+def unmet_claims(text, ran):
+    """The claimed actions in a reply whose tool did not run this turn: "I told Parent B" after only dim_lights."""
+    text, out = text or "", set()
+    for pattern, tools in CLAIM_TOOLS:
+        for m in pattern.finditer(text):
+            if not NEGATED.search(text[max(0, m.start() - 40):m.start()]) and not (tools & set(ran)):
+                out.add(m.group(0).lower())
+    return out
+
+
+def claims_done(text):
+    """True when a reply says the log was written in this turn, and does not say the opposite ("no lo anoté")."""
+    text = text or ""
+    return any(not NEGATED.search(text[max(0, m.start() - 40):m.start()]) for m in CLAIMS_DONE.finditer(text))
+
+
+SPANISH_WORDS = re.compile(r"\b(se|le|la|el|de|del|un|una|y|con|ya|reci[eé]n|hoy)\b", re.I)
+NAME_WORD = re.compile(r"(?<![\w.!?¿¡]\s)(?<=\s)[A-ZÁÉÍÓÚÑ][\wáéíóúñ]*")
+
+
 def looks_spanish(text):
-    return note_to_english(text) != text or bool(SPANISH.search(text))
+    """Spanish words, or an accent or ¿¡ outside a name: "José had 90 ml" stays English."""
+    text = text or ""
+    if note_to_english(text) != text or SPANISH_WORDS.search(text):
+        return True
+    return bool(re.search(r"[ñáéíóú¿¡]", NAME_WORD.sub("", " " + text)))
 
 
 ENGLISH = re.compile(r"\b(the|she|he|his|her|him|is|was|did|gave|had|just|when|how|what|why|it|that|bottle|diaper|"

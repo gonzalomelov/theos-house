@@ -115,7 +115,8 @@ def make_handler(app, settings):
                        b"Its messages are not counted as strangers.</p><p><a href='/'>Open the demo</a></p>"
                 return self.send(200, page, "text/html; charset=utf-8", cookies)
             if path == "/api/state":
-                lang = "es" if "lang=es" in self.path.partition("?")[2].split("&") else "en"
+                query = self.path.partition("?")[2].split("&")
+                lang = "es" if "lang=es" in query else ("en" if "lang=en" in query else None)
                 return self.send(200, app.state(vid, internal, lang), cookies=cookies)
             return self.send(404, {"error": "not_found"})
 
@@ -144,7 +145,7 @@ def make_handler(app, settings):
                 return self.send(status, {"error": "bad_request"})
             vid, internal, cookies = self.visitor()
             if path == "/api/reset":
-                status, out = app.reset(vid, internal, self.client(), lang="es" if body.get("lang") == "es" else "en")
+                status, out = app.reset(vid, internal, self.client(), lang=body.get("lang") if body.get("lang") in ("es", "en") else None)
                 return self.send(status, out, cookies=cookies)
             text, mode, lang = body.get("text"), body.get("mode"), body.get("lang")
             status, out = app.message(vid, internal, text if isinstance(text, str) else "", self.client(),

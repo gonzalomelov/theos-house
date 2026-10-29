@@ -70,6 +70,27 @@ Every brain call in the three runs was answered by Muse. The bar, 0 wrong log st
 
 The English "I stopped after too many steps" from `main-1` is gone: every fixed agent text is now in English and Spanish and follows the reply language (out of steps, and the Done, Not done and Nothing was waiting lines after a yes). When the brain runs out of steps after something was logged, the reply says what was saved, so the parent does not send it again (`tests/test_log_edit.py`, `FixedTextsInTheReplyLanguage`, fails without the fix). The rule brain that answers after the spend cap already answered in Spanish.
 
+## Round 3: confirmations from the log diff, plus the judge's 37 messages (Oct 29)
+
+The round 3 real-new-parent judge ran 37 new phrasings (his `martin3.py`) and the log ended wrong in 7 of 9 nights, 3 of them under a confident "Anoté", "Corregí" or "ya anoté el sueño, no hace falta que lo mandes de nuevo". The fix is structural: every confirmation is built from the diff of the log before and after the turn (`docs/families.md`, "Every confirmation from the log diff"). His 37 messages are now `JUDGE_STEPS` in the eval, with the log a careful parent keeps, and the default run plays the team's 70 and his 37, each in a new family. These 37 were the dev set for this fix, so the judge set is not a held-out number.
+
+| Run | Code | Team 70: wrong states | Judge 37: wrong states | Reply problems | Fallbacks | Spend |
+|---|---|---|---|---|---|---|
+| `r3diff-1` | diff-based confirmations, before the breast minutes fix | 1 | 1 | 0 | 0 | 0.887 USD |
+| `r3diff-2` | final branch | 1 | **0** | 0 | 0 | 0.885 USD |
+
+Both runs ran one at a time, Muse Spark Open, 1.77 USD in all.
+
+- `r3diff-1`, judge step 4, "pecho izquierdo 15": Muse logged the left breast with no duration. Fix: a single bare number after a breast side, with no bottle word and no time, is minutes. In `r3diff-2` it kept 15 min.
+- Both runs, team step 47, "tiene fiebre le doy paracetamol?": the newborn fever red flag from PR #97 now logs a note before the call-now line. The eval still expects no entry for that message. The log is not wrong, the expected op is out of date, and that path belongs to the safety work, so it was left as it is.
+
+In `r3diff-2` the judge's misses all ended right: "ya se levanto" closed the 09:10 sleep ("Anoté el sueño de 09:10 a 10:20"), "no espera, fue a las 12" moved the bottle to 12:00, "en realidad tomo 3, dejo una" after "mamadera 4 onzas" became 90 ml, "hizo una siestita de 40 min" was one 40 min sleep, the half bottle was 60 ml, "de mamadera digo" changed nothing and said so, "q comio ayer en total" said 3 feeds and 150 ml for Oct 30 only, and "durmio 2 horas recien se desperto" was one sleep from 13:00 to 15:00.
+
+To score another message file through the same harness, write it as JSON in the STEPS shape (see the script's docstring) and run:
+
+    .venv/bin/python scripts/families_never_wrong_run.py --keys-env ~/.parenting-agent.env \
+        --steps-file path/to/steps.json --out results/families-never-wrong/heldout-1
+
 ## What did not get tested
 
 - No real parent, no voice notes, no Telegram in these runs.

@@ -148,6 +148,9 @@ class FamilyBabyLog(BabyLog):
             self.memory.db.commit()
         return {"deleted": before}
 
+    def open_sleep(self):
+        return self.memory.facts().get("_sleep_started", {}).get("value") or None
+
     def _sleep(self, details, when):
         action = details.get("action")
         started = self.memory.facts().get("_sleep_started", {}).get("value")

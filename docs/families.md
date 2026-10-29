@@ -119,7 +119,20 @@ The round 2 real-new-parent judge saw "nono eran 70" log a second bottle with th
 - The next feed is always a time or how long since the last feed. Feeds less than 30 minutes apart are one feed for the rhythm, the interval is said only from at least 4 feeds in the last day, and with fewer feeds more than 6 hours apart the bot names the last feed and how long ago. A question is never answered with "No pude anotarlo".
 - Spanish replies use Uruguayan words: mamadera, cédula, mutualista.
 
-Measured with `scripts/families_never_wrong_run.py`, 70 new messages over 3 simulated nights on Muse Spark Open: 0 wrong log states in each of 3 runs. The misses of the earlier rounds and their diffs are in `results/families-never-wrong/README.md`. Tests: `tests/test_never_wrong_log.py`.
+## Every confirmation from the log diff (round 3)
+
+The round 3 real-new-parent judge ran 37 phrasings the team had never seen. The log ended wrong in 7 of 9 nights, and 3 of those replies said "Anoté", "Corregí" or "ya anoté el sueño, no hace falta que lo mandes de nuevo" over a lost or corrupted entry. Phrase lists do not fix that, so the structure changed (issue #77):
+
+- The agent takes a snapshot of the log before the turn and one after it. Every confirmation and every "already saved" line is built from that diff, never from the tool calls that ran. A reply that says "anoté", "corregí", "borré", "moví" or "logged" with an empty diff is replaced with "No cambió nada en el registro, así que no quedó anotado. ¿Me lo decís de nuevo?". When the brain fails after a log call, the parent hears exactly what the diff holds, or that nothing was kept. This is shared agent code, so the demo and the family agent have it too.
+- A sleep is "anotado" only when a finished sleep with a start and an end is in the log. A wake-up ("ya se levanto", "recién se despertó", "woke") closes the open sleep. A sleep with its length ("durmio 2 horas recien se desperto", "hizo una siestita de 40 min") is one finished sleep ending now, never a new start and never a negative length.
+- An edit only touches an entry from the last 4 hours unless the parent names a day or a time ("la de la 1 y 20 fue 80"). When the log call before it failed, a correction asks instead of editing an older entry. A correction right after an ounce message is in ounces, and amounts are whole ml, never 88.72.
+- Short follow-ups are corrections: "de mamadera digo", "no espera, fue a las 12", a bare time after "no". "tomo la mitad de la mamadera de 120" is 60 ml. "pecho izquierdo 15" keeps the 15 minutes.
+- "q comio ayer en total" is yesterday only: the summary gets an end time.
+- A reply that claims an action needs the tool for that action to have run in the turn: "le avisé" or "told" needs call_partner, "announced" needs announce, "saved" needs remember or a log call, "added" needs prep_add, "ticked" needs prep_check. Another acting tool does not cover it. A brain-written "Espero tu sí" line is removed, a sentence with a code word and digits never goes out, and a brain answer in the wrong language is asked for once more in the right one. A turn that only added entries is never undone because Muse said "actualicé el registro".
+
+Measured with `scripts/families_never_wrong_run.py`, which now runs the 70 team messages and the judge's 37 each in a new family. The numbers are in `results/families-never-wrong/README.md`. Tests: `tests/test_log_diff_r3.py`.
+
+Round 2 measurement, before the judge's set: `scripts/families_never_wrong_run.py`, 70 new messages over 3 simulated nights on Muse Spark Open: 0 wrong log states in each of 3 runs. The misses of the earlier rounds and their diffs are in `results/families-never-wrong/README.md`. Tests: `tests/test_never_wrong_log.py`.
 
 ## How it is built
 

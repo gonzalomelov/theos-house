@@ -134,6 +134,16 @@ NOT_NEW = ("not logged: this message corrects or removes an earlier entry. Use e
            "never a new entry.")
 NOT_STARTED = ("not logged: the newest message says the baby woke up, so no new sleep starts. Log the wake-up with "
                "kind sleep and action end at the time the parent said, it closes the sleep already started.")
+NO_OPEN_SLEEP = ("not logged: the newest message says the baby woke up, and no sleep was started. Ask the parent when the "
+                 "baby fell asleep, never log a new sleep start.")
+SLEEP_DONE = "not logged: this message's sleep is already logged as one finished sleep."
+LANG_CHECK = ("[check from the agent, not the parent] Your answer is not in the language of the parent's newest message. "
+              "Write the same answer again in {language}. " + QUIET)
+LANG_NAMES = {"es": "Spanish (Uruguay, voseo)", "en": "English"}
+# The approval line is the harness's own. A brain that copies it from the history names a call nobody is waiting on.
+BRAIN_ASK_LINE = re.compile(r"\s*(Waiting for your yes|Espero tu s[ií])\b[^\n]*?(cancels it|lo cancela)\.?", re.I)
+EDIT_RECENT = datetime.timedelta(hours=4)
+OPEN_SLEEP_ID = "open-sleep"
 DOUBLE_WINDOW = datetime.timedelta(minutes=3)
 DOUBLE_ANSWER_WINDOW = datetime.timedelta(minutes=30)
 TEXTS = {
@@ -151,6 +161,12 @@ TEXTS = {
         "DOUBLE_ONCE": "OK, it stays as one: {entry}.",
         "DOUBLE_TWO": "Logged the second one: {entry}.",
         "TOO_MANY_STEPS": "I could not finish that. Tell me again in other words.",
+        "NO_RESEND": "No need to send it again.",
+        "NOT_IN_LOG": "Nothing changed in the log, so it is not logged. Could you tell me again?",
+        "WOKE_NO_SLEEP": "I did not log the sleep. When did {name} fall asleep?",
+        "OLD_EDIT": "I did not change anything: the latest I have is {entry}, more than {hours} hours ago. Which one do you mean, or should I log it new?",
+        "LAST_NOT_LOGGED": "I did not change anything: the one before was not logged. Tell me what it was and I log it.",
+        "DID_ONLY": "Nothing was sent. I only did this: {what}.",
         "DONE": "Done. {what}.", "NOT_DONE": "Not done. {what}.", "NOTHING_WAITING": "Not done. Nothing was waiting.",
         "EDITED": "Fixed {entry}: {changes}.", "UNCHANGED": "{entry} already says that, nothing changed.",
         "DELETED": "Deleted {entry}.",
@@ -174,6 +190,12 @@ TEXTS = {
         "DOUBLE_ONCE": "Dale, queda una sola: {entry}.",
         "DOUBLE_TWO": "Anoté la segunda: {entry}.",
         "TOO_MANY_STEPS": "No pude terminar eso. Decímelo de nuevo con otras palabras.",
+        "NO_RESEND": "No hace falta que lo mandes de nuevo.",
+        "NOT_IN_LOG": "No cambió nada en el registro, así que no quedó anotado. ¿Me lo decís de nuevo?",
+        "WOKE_NO_SLEEP": "No anoté el sueño. ¿A qué hora se durmió {name}?",
+        "OLD_EDIT": "No cambié nada: lo último que tengo es {entry}, de hace más de {hours} horas. ¿Cuál querés corregir, o lo anoto nuevo?",
+        "LAST_NOT_LOGGED": "No cambié nada: la anterior no quedó anotada. Decime qué fue y la anoto.",
+        "DID_ONLY": "Todavía no mandé nada. Solo hice esto: {what}.",
         "DONE": "Listo. {what}.", "NOT_DONE": "No se hizo. {what}.", "NOTHING_WAITING": "No se hizo nada. No había nada esperando.",
         "EDITED": "Corregí {entry}: {changes}.", "UNCHANGED": "{entry} ya decía eso, no cambié nada.",
         "DELETED": "Borré {entry}.",
@@ -364,6 +386,52 @@ def describe_call(call):
     return f"{call['name']} ({shown})" if shown else call["name"]
 
 
+def log_diff(before, after):
+    """What one turn did to the log: the entries it added, removed and changed, from two log_state snapshots."""
+    if before is None or after is None:
+        return {"added": [], "removed": [], "changed": []}
+    added = [after[k] for k in after if k not in before]
+    removed = [before[k] for k in before if k not in after]
+    changed = [{"before": before[k], "after": after[k]} for k in after if k in before and after[k] != before[k]]
+    if any(e.get("id") == OPEN_SLEEP_ID for e in removed) and any(e.get("kind") == "sleep" for e in added):
+        # An open sleep that ended is one finished sleep, not a removed start.
+        removed = [e for e in removed if e.get("id") != OPEN_SLEEP_ID]
+    for c in list(changed):
+        if c["after"].get("id") == OPEN_SLEEP_ID:
+            # A sleep start moved: say the new start.
+            changed.remove(c)
+            added.append(c["after"])
+    return {"added": added, "removed": removed, "changed": changed}
+
+
+def diff_empty(diff):
+    return not (diff["added"] or diff["removed"] or diff["changed"])
+
+
+def finished_sleep(diff):
+    """True when the turn stored a finished sleep, with a start and an end."""
+    return any(e.get("kind") == "sleep" and e.get("id") != OPEN_SLEEP_ID and (e.get("details") or {}).get("start")
+               for e in diff["added"] + [c["after"] for c in diff["changed"]])
+
+
+def diff_text(diff, lang, name=None):
+    """The confirmation for a turn, from the log diff and nothing else, or "" when the log did not change."""
+    words = TEXTS.get(lang, TEXTS["en"])
+    out = changes_text(diff["changed"], lang) if diff["changed"] else []
+    out += [words["DELETED"].format(entry=describe(e, lang)) for e in diff["removed"] if e.get("id") != OPEN_SLEEP_ID]
+    if diff["added"]:
+        out.append(logged_text(diff["added"], lang, name))
+    return " ".join(out)
+
+
+def strip_codes(text):
+    """A reply never carries a code: a sentence that names a code word and holds digits is dropped."""
+    if not rules.holds_code(text, numbers=False):
+        return text
+    kept = [part for part in re.split(r"(?<=[.!?])\s+", text) if not (rules.CODE_WORD.search(part) and re.search(r"\d", part))]
+    return " ".join(kept) or "OK."
+
+
 class Agent:
     # The demo and the families bot answer health questions with the kind refusal before any brain call, and log a
     # health message that also reports a medicine given or a milestone. The family agent leaves it to the brain.
@@ -380,6 +448,7 @@ class Agent:
         self.clock_s = time.monotonic
         self.health_turn = None
         self.double = None
+        self.last_log_failed = None
         self.thread = None
         self.stopped = threading.Event()
         self.current_event = None
@@ -724,6 +793,63 @@ class Agent:
                 return other
         return None
 
+    def open_sleep(self):
+        try:
+            return self.baby_log.open_sleep()
+        except Exception:  # noqa: BLE001 a log with no open sleep to read has none
+            return None
+
+    def follows_same_kind(self, stored):
+        """True when an entry this turn stored has an earlier one of the same kind within 30 minutes: "corregido a 70"
+        then means the new 70 ml bottle was a correction of the 90 one, while "actualicé: pañal mojado" after a bottle
+        is only wording."""
+        ids = {e.get("id") for e in stored}
+        since = (self.now() - DOUBLE_ANSWER_WINDOW).isoformat(timespec="seconds")
+        for entry in stored:
+            try:
+                near = self.baby_log.entries(entry.get("kind"), since, 20)
+            except Exception:  # noqa: BLE001 a log that cannot be read keeps the old claim guard
+                return True
+            if any(e.get("id") not in ids for e in near):
+                return True
+        return False
+
+    def sleep_call(self, arguments, request):
+        """A wake-up or a sleep with its length ("ya se levanto", "durmio 2 horas recien se desperto", "hizo una siestita
+        de 40 min") is one finished sleep: it closes the open sleep, or it is logged as a sleep ending now (or at the
+        time named), never a new start and never a negative length."""
+        minutes, woke = rules.slept_minutes(request), rules.says_woke(request)
+        if not (minutes or woke):
+            return arguments
+        timed = {"ts": arguments["ts"]} if arguments.get("ts") else {}
+        if self.open_sleep():
+            return {"kind": "sleep", "details": {"action": "end"}, **timed}
+        if minutes:
+            end = parse_time(arguments["ts"]) if arguments.get("ts") else self.now()
+            start = end - datetime.timedelta(minutes=minutes)
+            return {"kind": "sleep", "details": {"start": start.isoformat(timespec="seconds"),
+                                                 "end": end.isoformat(timespec="seconds")}}
+        return arguments
+
+    def log_state(self):
+        """The log as it stands, by kind and id, plus a sleep the parent started and has not ended. Two snapshots, one
+        before and one after a turn, give the turn's diff, which every confirmation is built from."""
+        try:
+            since = (self.now() - datetime.timedelta(days=7)).isoformat(timespec="seconds")
+            rows = self.baby_log.entries(None, since, 1000)
+        except Exception:  # noqa: BLE001 a log that cannot be read gives no diff, and claims are then left as they are
+            return None
+        state = {}
+        for e in rows:
+            # A log without ids (a plain test log) is keyed by what the entry holds.
+            ident = e.get("id") if e.get("id") is not None else json.dumps([e.get("ts"), e.get("details")], sort_keys=True, default=str)
+            state[(e.get("kind"), ident)] = copy.deepcopy(e)
+        opened = self.open_sleep()
+        if opened:
+            state[("sleep", OPEN_SLEEP_ID)] = {"id": OPEN_SLEEP_ID, "kind": "sleep", "ts": str(opened),
+                                               "details": {"action": "start"}}
+        return state
+
     def edit_target(self, arguments):
         try:
             return self.baby_log.find(arguments.get("id"), arguments.get("kind"), arguments.get("at"), arguments.get("last"))
@@ -784,6 +910,39 @@ class Agent:
         sees that nothing was logged."""
         return NOT_LOGGED["es" if rules.looks_spanish(request) else "en"]
 
+    def honest(self, text, before, request, editing, ran):
+        """A reply that says this turn logged, fixed or removed something goes out only when the log diff shows it. With
+        an empty diff the parent hears that nothing changed, never "anoté" or "corregí" over a lost entry."""
+        if request is None or before is None:
+            return text
+        if ran - (EDIT_TOOLS | READ_TOOLS | {"log_baby_event"}):
+            return text  # another tool ran (an appointment, a list): its own claim guard covers it
+        diff = log_diff(before, self.log_state())
+        lang = self.lang(request)
+        if rules.says_woke(request) and rules.is_log_request(request) and not finished_sleep(diff) and not editing \
+                and rules.claims_done(text):
+            name = self.baby_name() or TEXTS.get(lang, TEXTS["en"])["THE_BABY"]
+            return self.text("WOKE_NO_SLEEP", request, name=name)
+        if not rules.claims_done(text):
+            return text
+        if diff_empty(diff):
+            self.bus.publish("guard", status="claim_without_diff")
+            return self.text("NOT_CHANGED" if editing else "NOT_IN_LOG", request)
+        return text
+
+    def after_fail(self, before, request, editing):
+        """The reply when the brain stops after the log may have changed: the diff of the turn, so the parent knows what
+        was kept, or the honest "not logged" when nothing was."""
+        diff = log_diff(before, self.log_state())
+        lang = self.lang(request)
+        if diff_empty(diff):
+            return self.text("NOT_CHANGED" if editing else "NOT_IN_LOG", request)
+        said = diff_text(diff, lang, self.baby_name())
+        if rules.says_woke(request) and not finished_sleep(diff):
+            name = self.baby_name() or TEXTS.get(lang, TEXTS["en"])["THE_BABY"]
+            return said + " " + self.text("WOKE_NO_SLEEP", request, name=name)
+        return said + " " + self.text("NO_RESEND", request)
+
     @staticmethod
     def needs_log(request, text, failed, acted, read=False):
         """True when the brain's answer to a parent's message must not go out as it is, because no log call ran: a log
@@ -832,8 +991,16 @@ class Agent:
         can_edit = EDIT_TOOLS <= set(self.tools.items)
         earlier = [item["text"].split("] ", 1)[-1] for item in transcript[:-1] if item["role"] == "user"]
         lang = self.lang(request)
+        before = self.log_state() if request is not None else None
+        ran, lang_checked = set(), False
+        previous = earlier[-1] if earlier else None
 
-        def finish(text, fixed=False):
+        def finish(text, fixed=False, log_failed=False):
+            if not fixed:
+                text = strip_codes(BRAIN_ASK_LINE.sub("", text or "").strip() or "OK.")
+            text = self.honest(text, before, request, editing, ran)
+            if request is not None:
+                self.last_log_failed = self.now() if log_failed else None
             self.finish(channel, text, asked=asked, request=request, fixed=fixed)
 
         for _ in range(self.max_steps):
@@ -845,7 +1012,9 @@ class Agent:
                 if not kept:
                     raise
                 self.bus.publish("agent_error", error=str(error)[:300])
-                return finish(self.saved_before_fail(kept), fixed=self.health_turn is None)
+                if request is None:
+                    return finish(self.saved_before_fail(kept), fixed=self.health_turn is None)
+                return finish(self.after_fail(before, request, editing), fixed=self.health_turn is None)
             usage = reply.usage or {}
             self.bus.publish("brain_call", provider=self.brain.name, model=self.brain.model,
                              destination=self.brain.destination, seconds=seconds, tool_calls=len(reply.tool_calls),
@@ -858,6 +1027,11 @@ class Agent:
                 # "Corregido" with no edit that ran is never sent. On Oct 29 Muse logged a new 70 ml bottle for "nono eran
                 # 70" and said "corregido a 70 ml": what this turn logged is taken back and the brain is asked to edit.
                 claim = request is not None and not changed and not self_fixed and rules.claims_change(reply.text)
+                if claim and stored and not editing and not self.follows_same_kind(stored):
+                    # "Actualicé el registro: pañal mojado" after a new diaper: this turn only added, the claim is wording.
+                    # What it stored stays, and the reply is built from the log diff.
+                    claim = False
+                    reply.text = diff_text(log_diff(before, self.log_state()), lang, self.baby_name()) or reply.text
                 if claim and not editing and can_edit and not edit_checked:
                     self.bus.publish("guard", status="claimed_change", logged=len(stored))
                     for entry in stored:
@@ -882,8 +1056,9 @@ class Agent:
                         return finish(self.text("NOT_CHANGED" if can_edit else "CANNOT_CHANGE", request), fixed=True)
                 if changed:
                     said = changes_text(changed, lang)
-                    if self.confirm_from_log and stored:
-                        return finish(" ".join(said + [logged_text(stored, lang, self.baby_name())]), fixed=True)
+                    if self.confirm_from_log:
+                        text = diff_text(log_diff(before, self.log_state()), lang, self.baby_name())
+                        return finish(text or " ".join(said), fixed=True)
                     return finish(" ".join(said + ([reply.text] if kept and reply.text else [])), fixed=True)
                 if not kept and self.needs_log(request, reply.text, failed, acted, read=bool(read)):
                     if not checked:
@@ -893,8 +1068,9 @@ class Agent:
                         transcript.append({"role": "user", "text": LOG_CHECK.format(request=request.replace('"', "'"))})
                         continue
                     self.bus.publish("guard", status="not_logged", failed=failed)
-                    return finish(self.not_logged(request), fixed=True)
-                if not actors and (rules.claims_acted(reply.text) or rules.describes_house(reply.text, observation)):
+                    return finish(self.not_logged(request), fixed=True, log_failed=True)
+                unmet = rules.unmet_claims(reply.text, ran)
+                if unmet or (not actors and (rules.claims_acted(reply.text) or rules.describes_house(reply.text, observation))):
                     # "Partner request sent" with nothing sent (live, round 2), or the door words with no announce (the
                     # full day, PR #79): a reply that says the agent did something goes out only when a tool that acts
                     # ran in this turn. The brain is asked once to call the tool, then the answer is the honest one.
@@ -904,8 +1080,10 @@ class Agent:
                         transcript.append({"role": "assistant", "text": reply.text or "(no answer)"})
                         transcript.append({"role": "user", "text": ACT_CHECK})
                         continue
-                    self.bus.publish("guard", status="claimed_action", asked=bool(asked))
-                    return finish((NOT_SENT if asked else NOT_SENT_NOTHING)[lang])
+                    self.bus.publish("guard", status="claimed_action", asked=bool(asked), unmet=sorted(unmet))
+                    if actors and not asked:
+                        return finish(self.text("DID_ONLY", request, what=", ".join(sorted(actors))), fixed=True)
+                    return finish((NOT_SENT if asked else NOT_SENT_NOTHING)[lang], fixed=True)
                 if claim:
                     # Still a claim of a change that never ran: the honest answer from the log instead.
                     self.bus.publish("guard", status="claim_replaced")
@@ -913,7 +1091,7 @@ class Agent:
                         "NOT_CHANGED" if can_edit else "CANNOT_CHANGE", request)
                     return finish(honest, fixed=True)
                 if stored and self.confirm_from_log and self.health_turn is None and not observation:
-                    text = logged_text(stored, lang, self.baby_name())
+                    text = diff_text(log_diff(before, self.log_state()), lang, self.baby_name()) or logged_text(stored, lang, self.baby_name())
                     if any(e.get("kind") == "note" for e in stored) and (
                             rules.is_health(request) or SAFETY_WORDS.search(reply.text or "")):
                         # "respira raro hace un ruido como silbido": the note from the log, and the safety line the brain
@@ -925,6 +1103,15 @@ class Agent:
                 if next_text and not re.search(r"\d{1,2}:\d{2}|\bhace\b|\bago\b", reply.text or ""):
                     # The next feed is always a time or how long since the last one, in the rhythm's own words.
                     return finish(next_text)
+                said_lang = rules.message_lang(reply.text or "")
+                if request is not None and not lang_checked and said_lang and said_lang != lang and lang in LANG_NAMES \
+                        and not rules.is_health(request):
+                    # "bottle 120 ml" answered "Anotada mamadera de 120 ml": the brain is asked once for the right language.
+                    lang_checked = True
+                    self.bus.publish("guard", status="wrong_language", said=said_lang, wanted=lang)
+                    transcript.append({"role": "assistant", "text": reply.text or "(no answer)"})
+                    transcript.append({"role": "user", "text": LANG_CHECK.format(language=LANG_NAMES[lang])})
+                    continue
                 return finish(reply.text or "OK.")
             if request is not None:
                 reply.tool_calls = rules.one_diaper(reply.tool_calls, request)
@@ -950,19 +1137,34 @@ class Agent:
                             ts = named
                         if ts:
                             arguments["ts"] = ts
-                    elif isinstance(arguments.get("details"), dict) and arguments["details"].get("amount_ml") is not None \
-                            and rules.ounces_ml(request):
-                        arguments["details"] = {**arguments["details"], "amount_ml": rules.ounces_ml(request)}
+                        if isinstance(arguments["details"], dict) and arguments.get("kind") == "feeding" and rules.half_ml(request):
+                            # "tomo la mitad de la mamadera de 120" is 60 ml.
+                            arguments["details"]["amount_ml"] = rules.half_ml(request)
+                        if arguments.get("kind") == "sleep":
+                            arguments = self.sleep_call(arguments, request)
+                    elif isinstance(arguments.get("details"), dict) and arguments["details"].get("amount_ml") is not None:
+                        ounces = rules.ounces_ml(request) or rules.ounce_followup_ml(request, previous)
+                        if ounces:
+                            # "en realidad tomo 3" right after "mamadera 4 onzas" is 90 ml, never 88.72.
+                            arguments["details"] = {**arguments["details"], "amount_ml": ounces}
+                    if call["name"] == "edit_baby_event" and arguments.get("ts"):
+                        arguments["ts"] = rules.latest_time(arguments["ts"], self.now(), request)
+                    details = arguments.get("details")
+                    if isinstance(details, dict) and isinstance(details.get("amount_ml"), (int, float)) \
+                            and not isinstance(details["amount_ml"], bool):
+                        details["amount_ml"] = float(round(details["amount_ml"]))  # a bottle is never 88.72 ml
                     call = {**call, "arguments": arguments}
                     kind = arguments.get("kind")
                     if call["name"] == "edit_baby_event" and kind is None:
                         kind = "feeding" if isinstance(arguments.get("details"), dict) and "amount_ml" in arguments["details"] else None
                     bad = rules.out_of_bounds(kind, arguments.get("details"), arguments.get("ts"), self.now(), parse_time)
-                    if bad:
+                    if bad and not (call["name"] in EDIT_TOOLS and not editing):
+                        # A stray edit on a message that corrects nothing is held below, never asked about: on Oct 30
+                        # "mamadera 4 onzas" was refused as "12:00 es en el futuro" because of one.
                         # 9000 ml is a typo or a test, never a feed: ask the parent, log nothing.
                         self.bus.publish("guard", status="out_of_bounds", field=bad[0], tool=call["name"])
                         value = _ml(bad[1]) if bad[0] in ("amount_ml", "duration_min") and _ml(bad[1]) else bad[1]
-                        return finish(BOUNDS_ASK[lang][bad[0]].format(value=value), fixed=True)
+                        return finish(BOUNDS_ASK[lang][bad[0]].format(value=value), fixed=True, log_failed=call["name"] == "log_baby_event")
                 key = entry_key(call["arguments"] or {}) if call["name"] == "log_baby_event" else None
                 if key is not None and observation:
                     # A skill's observation is never a new entry. On Oct 28 Muse logged an earlier bottle again when a
@@ -985,12 +1187,19 @@ class Agent:
                     self.bus.publish("tool", name=call["name"], status="held")
                     transcript.append({"role": "tool", "id": call["id"], "name": call["name"], "result": NOT_NEW})
                     continue
+                if (key is not None and call["arguments"].get("kind") == "sleep"
+                        and any(e.get("kind") == "sleep" and (e.get("details") or {}).get("start") for e in stored)):
+                    # One message, one finished sleep: a second sleep call never starts or ends another one.
+                    self.bus.publish("tool", name=call["name"], status="held", reason="sleep_done")
+                    transcript.append({"role": "tool", "id": call["id"], "name": call["name"], "result": SLEEP_DONE})
+                    continue
                 if (key is not None and call["arguments"].get("kind") == "sleep" and rules.says_woke_only(request)
                         and isinstance(call["arguments"].get("details"), dict) and call["arguments"]["details"].get("action") == "start"):
                     # "se desperto a las 5": on Oct 29 Muse started a new 05:00 sleep over the open 03:20 one, then
                     # could not end it, and the night's sleep was lost.
                     self.bus.publish("tool", name=call["name"], status="held", reason="woke")
-                    transcript.append({"role": "tool", "id": call["id"], "name": call["name"], "result": NOT_STARTED})
+                    transcript.append({"role": "tool", "id": call["id"], "name": call["name"],
+                                       "result": NOT_STARTED if self.open_sleep() else NO_OPEN_SLEEP})
                     continue
                 if key is not None and call["arguments"].get("kind") == "feeding" and rules.medicine_only(request):
                     # "I gave her 2.5 ml of paracetamol" is a note, never a 2.5 ml feed.
@@ -1039,8 +1248,35 @@ class Agent:
                         self.bus.publish("tool", name=call["name"], status="held", reason="not_twice")
                         transcript.append({"role": "tool", "id": call["id"], "name": call["name"], "result": NOT_REMOVED})
                         continue
+                if call["name"] in EDIT_TOOLS and request is not None and editing and not rules.names_when(request):
+                    target = self.edit_target(call["arguments"] or {})
+                    if target is not None and target.get("id") not in {e.get("id") for e in stored}:
+                        recent_fail = self.last_log_failed and self.now() - self.last_log_failed <= DOUBLE_ANSWER_WINDOW
+                        if recent_fail:
+                            # The entry this corrects was never logged: an older one is never changed in its place.
+                            self.bus.publish("guard", status="edit_after_failed_log")
+                            return finish(self.text("LAST_NOT_LOGGED", request), fixed=True)
+                        try:
+                            age = self.now() - parse_time(target["ts"])
+                        except (KeyError, TypeError, ValueError):
+                            age = datetime.timedelta(0)
+                        if age > EDIT_RECENT:
+                            # "en realidad tomo 3" never changes yesterday's bottle: only the last few hours, unless the
+                            # parent names a day or a time.
+                            self.bus.publish("guard", status="edit_too_old")
+                            return finish(self.text("OLD_EDIT", request, entry=describe(target, lang),
+                                                    hours=int(EDIT_RECENT.total_seconds() // 3600)), fixed=True)
+                if call["name"] == "baby_summary" and request is not None and rules.YESTERDAY.search(request) \
+                        and not rules.SO_FAR.search(request):
+                    # "q comio ayer en total" is yesterday only, never yesterday plus today.
+                    midnight = self.now().replace(hour=0, minute=0, second=0, microsecond=0)
+                    call = {**call, "arguments": {**(call["arguments"] or {}),
+                                                  "since": (midnight - datetime.timedelta(days=1)).isoformat(timespec="seconds"),
+                                                  "until": midnight.isoformat(timespec="seconds")}}
                 status, result = self.tools.run(call["name"], call["arguments"])
                 self.bus.publish("tool", name=call["name"], status=status)
+                if status == "ran":
+                    ran.add(call["name"])
                 failed = failed or (key is not None and status == "error")
                 if status == "ran" and call["name"] in READ_TOOLS:
                     read.add(call["name"])
@@ -1078,9 +1314,12 @@ class Agent:
                     asked = min(asked + 1, len(self.pending))
                     self.bus.publish("ask_parent", channel=channel, name=call["name"], arguments=call["arguments"])
                 transcript.append({"role": "tool", "id": call["id"], "name": call["name"], "result": result})
+        if request is not None and (changed or kept):
+            # The brain ran out of steps after a log call: the turn's diff says what was kept, so the parent does not
+            # send it again, or that nothing was.
+            return finish(self.after_fail(before, request, editing), fixed=True)
         if changed:
             return finish(" ".join(changes_text(changed, lang)), fixed=True)
         if kept:
-            # Something was logged before the brain ran out of steps: say what, so the parent does not send it again.
             return finish(self.saved_before_fail(kept), fixed=True)
         return finish(self.text("TOO_MANY_STEPS", request), fixed=True)

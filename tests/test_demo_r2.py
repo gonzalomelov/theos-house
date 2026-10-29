@@ -343,7 +343,7 @@ class VisitorLanguage(unittest.TestCase):
         self.assertTrue(all(item["text"] == app_mod.prep_text_es(item["list"], item["id"], item["text"])
                             and item["text"] != app_mod.PREP_ITEMS_ES[(item["list"], item["id"])][0]
                             for item in state["items"]))
-        english = app.state("v", True)["prep"]
+        english = app.state("v", True, lang="en")["prep"]
         self.assertEqual(english["lists"]["hospital_bag"]["title"], "Hospital bag")
         self.assertEqual([i["id"] for i in english["items"]], [i["id"] for i in state["items"]])
 

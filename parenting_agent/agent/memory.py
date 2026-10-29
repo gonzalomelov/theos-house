@@ -94,6 +94,10 @@ class BabyLog:
     def entries(self, kind=None, since=None, limit=50):
         raise NotImplementedError
 
+    def open_sleep(self):
+        """The start of a sleep the parent began and has not ended yet, as an ISO time, or None."""
+        return None
+
     def find(self, entry_id=None, kind=None, at=None, last=None):
         """One entry, by id, by kind and local time (HH:MM, the most recent one at that time), or the last one."""
         if entry_id is not None:
@@ -122,13 +126,14 @@ class BabyLog:
         if bad:
             raise ValueError(f"{bad[0]} {bad[1]} is outside what one entry can be, nothing was logged")
 
-    def summary(self, since=None):
+    def summary(self, since=None, until=None):
         """Totals since an instant (default midnight today on the log's own clock, so a family clock and a server on UTC
-        agree) and the last of each kind, computed from the log, never guessed."""
+        agree) and until one (default now), and the last of each kind, computed from the log, never guessed."""
         current = self.now()
         since = since or current.replace(hour=0, minute=0, second=0, microsecond=0).isoformat(timespec="seconds")
         recent = self.entries(None, None, 200)
-        window = [e for e in recent if parse_time(e["ts"]) >= parse_time(since)]
+        window = [e for e in recent if parse_time(e["ts"]) >= parse_time(since)
+                  and (until is None or parse_time(e["ts"]) < parse_time(until))]
 
         def last(kind, test=lambda e: True):
             found = [e for e in recent if e["kind"] == kind and test(e)]
@@ -145,7 +150,7 @@ class BabyLog:
             return hhmm(ts, current.tzinfo)
 
         return {
-            "since": since, "now": current.isoformat(timespec="seconds"),
+            "since": since, "until": until or current.isoformat(timespec="seconds"), "now": current.isoformat(timespec="seconds"),
             "feedings": {"count": len(feeds), "total_ml": round(sum(float(e["details"].get("amount_ml") or 0) for e in feeds)),
                          "last_at": at(last_feed["ts"]) if last_feed else None,
                          "last_amount_ml": last_feed["details"].get("amount_ml") if last_feed else None,
