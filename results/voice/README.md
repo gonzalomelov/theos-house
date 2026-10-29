@@ -53,8 +53,21 @@ Samples, OGG Opus mono 48 kHz, as Telegram receives them:
 
 Can the voice be understood? `scripts/voice_roundtrip.py` speaks each of the 20 answers of run 2 with MMS-TTS and lets Muse hear it back. The numbers came back in **18 of 20** (`roundtrip.json`, 9 Spanish, 9 English, "4 y media" counted as 4:30). The Spanish voice is clear apart from the baby's name ("Tomi" heard as "Tommy"). The English voice loses words more often: "Logged for Mia" came back as "Lod for Maya", "dirty diaper" once as "Debra". Muse is a machine listener, so this says whether the facts survive the voice, not how it sounds to a person.
 
+## On the Vostro (Oct 29, 00:04 to 00:10)
+
+Deployed: `pa-voice-family` and `pa-voice-families` (`sh deploy/voice.sh deploy`, commit ad05f04), then the family agent and the families bot (commit 1cd6b36). The voice check passed in both containers: both languages spoken and converted, weights offline, no proxy, `1.1.1.1:443`, `huggingface.co:443` and the host unreachable. The agent and families wall checks passed after the deploy.
+
+The full handler, with a recorded note instead of a Telegram download (`deploy/voice/handler_check.py`):
+
+| Where | Note | Heard by Muse | Text answer | Voice answer |
+|---|---|---|---|---|
+| `parenting-agent`, real Telegram messenger, sent to Gonza's chat | es08, "¿Cuánto tomó de mamadera hoy?" | "¿Cuánto tomó de mamadera hoy?" in 4.5 s | sent after 9.1 s (baby_summary on Baby Buddy, 2 Muse brain calls) | sent after 54.9 s, 45.8 s to speak 3 sentences |
+| `pa-families`, temporary family, recording messenger, nothing sent | es01, "Le di noventa mililitros de mamadera a las tres." | "Le di 90 mililitros de mamadera a las 3" | "Anotado, 90 ml en mamadera para Tomi." | 16 KB OGG Opus, 21.1 s for the whole note |
+
+The voice answer on the Vostro is slow: about 10 s a sentence on its CPU, more when the answer is long. The text answer is not held up by it.
+
 ## What is not proven here
 
 - No real voice note from a parent's phone yet. These are synthetic `say` voices, clean, with no baby crying behind them.
 - No rioplatense accent in the audio, only rioplatense wording.
-- The Vostro runs below were the full handler with a recorded file, see the PR. A real voice note sent from Telegram is the next check.
+- On the Vostro the full handler ran with a recorded file, not a Telegram download. A real voice note sent from a phone is the next check.
