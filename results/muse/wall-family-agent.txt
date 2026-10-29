@@ -1,0 +1,194 @@
+== send commit 396ed0b8b431 to vostro:~/apps/parenting-agent
+ Image parenting-agent-egress:396ed0b8b431 Building 
+ Image parenting-agent:396ed0b8b431 Building 
+ Image parenting-agent-egress:396ed0b8b431 Built 
+ Image parenting-agent:396ed0b8b431 Built 
+ Container parenting-agent-egress Recreate 
+ Container parenting-agent-relay Recreate 
+ Container parenting-agent-egress Recreated 
+ Container parenting-agent-relay Recreated 
+ Container parenting-agent Recreate 
+ Container parenting-agent Recreated 
+ Container parenting-agent-relay Starting 
+ Container parenting-agent-egress Starting 
+ Container parenting-agent-egress Started 
+ Container parenting-agent-relay Started 
+ Container parenting-agent Starting 
+== Home Assistant skipped (NO_HA=1): no request is sent
+ Container parenting-agent Started 
+== Home Assistant skipped (NO_HA=1): no request is sent
+== health: healthy
+== python -m parenting_agent --check (inside the container)
+{
+  "brain": {
+    "provider": "openai_compatible",
+    "model": "meta-models/muse-spark-open-1026",
+    "destination": "inference.baseten.co"
+  },
+  "plugins": [
+    "heartbeat",
+    "telegram",
+    "prep"
+  ],
+  "skills": [
+    "prep"
+  ],
+  "tools": [
+    "add_appointment",
+    "appointments",
+    "baby_summary",
+    "cancel_appointment",
+    "current_time",
+    "log_baby_event",
+    "nursery_plan",
+    "prep_add",
+    "prep_check",
+    "prep_list",
+    "prep_next",
+    "prep_to_home_assistant",
+    "read_baby_log",
+    "remember",
+    "set_due_date"
+  ],
+  "allowed_tools": [
+    "add_appointment",
+    "appointments",
+    "baby_summary",
+    "cancel_appointment",
+    "current_time",
+    "log_baby_event",
+    "nursery_plan",
+    "prep_add",
+    "prep_check",
+    "prep_list",
+    "prep_next",
+    "read_baby_log",
+    "remember",
+    "set_due_date"
+  ],
+  "baby_log": "babybuddy",
+  "data_dir": "/data"
+}
+== Baby Buddy and Home Assistant, read from inside the container
+{
+  "house": "dry run (no HA_TOKEN)",
+  "baby_buddy_child_id": 1,
+  "baby_buddy_entries_read": 20,
+  "home_assistant_api": "skipped, PA_NO_HA=1: no request sent"
+}
+== the wall
+-- must work
+PASS  Baby Buddy through the relay                         reached (HTTP 403)
+PASS  Home Assistant through the relay                     reached (connected)
+PASS  Anthropic through the egress proxy                   reached (HTTP 401)
+PASS  Baseten through the egress proxy                     reached (HTTP 401)
+PASS  Telegram through the egress proxy                    reached (HTTP 404)
+-- must fail
+PASS  Anthropic, direct                                    blocked (URLError: [Errno -3] Temporary failure in name resolution)
+PASS  public website, direct                               blocked (URLError: [Errno -3] Temporary failure in name resolution)
+PASS  public website, through the egress proxy             blocked (URLError: Tunnel connection failed: 403 Filtered)
+PASS  plain HTTP website, through the egress proxy         blocked (refused by the egress proxy, HTTP 403)
+PASS  Baby Buddy by name, direct                           blocked (gaierror: [Errno -3] Temporary failure in name resolution)
+PASS  Home Assistant by name, direct                       blocked (gaierror: [Errno -3] Temporary failure in name resolution)
+PASS  Home Assistant MCP server by name, direct            blocked (gaierror: [Errno -3] Temporary failure in name resolution)
+PASS  Baby Buddy by name, through the egress proxy         blocked (refused by the egress proxy, HTTP 403)
+PASS  relay on another port                                blocked (ConnectionRefusedError: [Errno 111] Connection refused)
+PASS  public DNS server, direct                            blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:22, direct                              blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:80, direct                              blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:443, direct                             blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:8086, direct                            blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:8123, direct                            blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:8790, direct                            blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:8123, through the egress proxy          blocked (refused by the egress proxy, HTTP 403)
+PASS  192.0.2.10:443, through the egress proxy           blocked (URLError: Tunnel connection failed: 403 Filtered)
+PASS  100.64.0.1:22, direct                             blocked (OSError: [Errno 101] Network is unreachable)
+PASS  100.64.0.1:80, direct                             blocked (OSError: [Errno 101] Network is unreachable)
+PASS  100.64.0.1:443, direct                            blocked (OSError: [Errno 101] Network is unreachable)
+PASS  100.64.0.1:8086, direct                           blocked (OSError: [Errno 101] Network is unreachable)
+PASS  100.64.0.1:8123, direct                           blocked (OSError: [Errno 101] Network is unreachable)
+PASS  100.64.0.1:8790, direct                           blocked (OSError: [Errno 101] Network is unreachable)
+PASS  100.64.0.1:8123, through the egress proxy         blocked (refused by the egress proxy, HTTP 403)
+PASS  100.64.0.1:443, through the egress proxy          blocked (URLError: Tunnel connection failed: 403 Filtered)
+PASS  192.0.2.10:22, direct                                blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:80, direct                                blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:443, direct                               blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:8086, direct                              blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:8123, direct                              blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:8790, direct                              blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:8123, through the egress proxy            blocked (refused by the egress proxy, HTTP 403)
+PASS  192.0.2.10:443, through the egress proxy             blocked (URLError: Tunnel connection failed: 403 Filtered)
+PASS  192.0.2.10:22, direct                                blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:80, direct                                blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:443, direct                               blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:8086, direct                              blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:8123, direct                              blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:8790, direct                              blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:8123, through the egress proxy            blocked (refused by the egress proxy, HTTP 403)
+PASS  192.0.2.10:443, through the egress proxy             blocked (URLError: Tunnel connection failed: 403 Filtered)
+PASS  192.0.2.10:22, direct                                blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:80, direct                                blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:443, direct                               blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:8086, direct                              blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:8123, direct                              blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:8790, direct                              blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:8123, through the egress proxy            blocked (refused by the egress proxy, HTTP 403)
+PASS  192.0.2.10:443, through the egress proxy             blocked (URLError: Tunnel connection failed: 403 Filtered)
+PASS  192.0.2.10:22, direct                                blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:80, direct                                blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:443, direct                               blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:8086, direct                              blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:8123, direct                              blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:8790, direct                              blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:8123, through the egress proxy            blocked (refused by the egress proxy, HTTP 403)
+PASS  192.0.2.10:443, through the egress proxy             blocked (URLError: Tunnel connection failed: 403 Filtered)
+PASS  192.0.2.10:22, direct                                blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:80, direct                                blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:443, direct                               blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:8086, direct                              blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:8123, direct                              blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:8790, direct                              blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:8123, through the egress proxy            blocked (refused by the egress proxy, HTTP 403)
+PASS  192.0.2.10:443, through the egress proxy             blocked (URLError: Tunnel connection failed: 403 Filtered)
+PASS  192.0.2.10:22, direct                                blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:80, direct                                blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:443, direct                               blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:8086, direct                              blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:8123, direct                              blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:8790, direct                              blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:8123, through the egress proxy            blocked (refused by the egress proxy, HTTP 403)
+PASS  192.0.2.10:443, through the egress proxy             blocked (URLError: Tunnel connection failed: 403 Filtered)
+PASS  192.0.2.10:22, direct                                blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:80, direct                                blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:443, direct                               blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:8086, direct                              blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:8123, direct                              blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:8790, direct                              blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:8123, through the egress proxy            blocked (refused by the egress proxy, HTTP 403)
+PASS  192.0.2.10:443, through the egress proxy             blocked (URLError: Tunnel connection failed: 403 Filtered)
+PASS  192.0.2.10:22, direct                                blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:80, direct                                blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:443, direct                               blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:8086, direct                              blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:8123, direct                              blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:8790, direct                              blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:8123, through the egress proxy            blocked (refused by the egress proxy, HTTP 403)
+PASS  192.0.2.10:443, through the egress proxy             blocked (URLError: Tunnel connection failed: 403 Filtered)
+PASS  192.0.2.10:22, direct                                blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:80, direct                                blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:443, direct                               blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:8086, direct                              blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:8123, direct                              blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:8790, direct                              blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:8123, through the egress proxy            blocked (refused by the egress proxy, HTTP 403)
+PASS  192.0.2.10:443, through the egress proxy             blocked (URLError: Tunnel connection failed: 403 Filtered)
+PASS  192.0.2.10:22, direct                                blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:80, direct                                blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:443, direct                               blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:8086, direct                              blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:8123, direct                              blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:8790, direct                              blocked (OSError: [Errno 101] Network is unreachable)
+PASS  192.0.2.10:8123, through the egress proxy            blocked (refused by the egress proxy, HTTP 403)
+PASS  192.0.2.10:443, through the egress proxy             blocked (URLError: Tunnel connection failed: 403 Filtered)
+wall holds
+deployed 396ed0b8b431

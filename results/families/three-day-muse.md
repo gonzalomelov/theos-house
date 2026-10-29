@@ -6,7 +6,7 @@ Checks passed: 29 of 29. Replies with bookkeeping talk: 0. Late 'se esperaba' wo
 
 **Thu 29 01:30 A:** mamadera 120
 
-> Anotado, mamadera de 120 para Tomi a la 01:30.
+> Anotada la mamadera de 120 ml de Tomi de las 01:30.
 
 Tools: `log_baby_event({"kind": "feeding", "details": {"amount_ml": 120, "method": "bottle"}})`
 
@@ -22,9 +22,9 @@ Check (ok): the 01:30 bottle is now 100 ml and the reply says so
 
 **Thu 29 04:40 A:** tomó 110 ml de mamadera
 
-> Anotado, mamadera de 110 para Tomi a las 04:40.
+> La mamadera de 100 ml de las 01:30 ya decía eso, no cambié nada. Anotada la mamadera de 110 ml de las 04:40 para Tomi.
 
-Tools: `log_baby_event({"kind": "feeding", "details": {"amount_ml": 110, "method": "bottle"}})`, `read_baby_log({})`
+Tools: `log_baby_event({"kind": "feeding", "details": {"amount_ml": 110, "method": "bottle"}})`, `edit_baby_event({"kind": "feeding", "at": "01:30", "details": {"amount_ml": 100}})`
 
 Check (ok): a 110 ml bottle
 
@@ -44,7 +44,7 @@ Check (ok): still one 110 ml bottle
 
 **Thu 29 07:50 A:** pañal mojado y sucio
 
-> Anotado, pañal mojado y sucio de Tomi a las 07:50.
+> Anotado el pañal mojado y sucio de las 07:50 para Tomi.
 
 Tools: `log_baby_event({"kind": "diaper", "details": {"wet": true, "solid": true}})`
 
@@ -52,15 +52,15 @@ Check (ok): none
 
 **Thu 29 08:00 B:** teta 10 min
 
-> Anotado, teta 10 min para Tomi a las 08:00.
+> Anotada la teta de 10 min de las 08:00 para Tomi.
 
-Tools: `log_baby_event({"kind": "feeding", "details": {"duration_min": 10, "method": "breast"}})`
+Tools: `log_baby_event({"kind": "feeding", "details": {"method": "breast", "duration_min": 10}})`
 
 Check (ok): a breast feed with no side invented
 
 **Thu 29 09:35 A:** cuanto tomo hoy
 
-> Hoy Tomi tomó 3 veces, con un total de 210 ml en mamadera, de 100 ml a las 01:30 y 110 ml a las 04:40, más teta de 10 min a las 08:00.
+> Hoy Tomi tomó 210 ml en total, en 2 mamaderas: 100 ml a las 01:30 y 110 ml a las 04:40. Además tuvo una teta de 10 min a las 08:00.
 
 Tools: `baby_summary({})`
 
@@ -70,7 +70,7 @@ Check (ok): 210 ml today, no bookkeeping talk
 
 **Thu 29 12:10 A:** mamadera 90
 
-> Anotado, mamadera de 90 para Tomi a las 12:10.
+> Anotada la mamadera de 90 ml de las 12:10 para Tomi.
 
 Tools: `log_baby_event({"kind": "feeding", "details": {"amount_ml": 90, "method": "bottle"}})`
 
@@ -96,7 +96,7 @@ Check (ok): a time from the rhythm
 
 **Thu 29 16:00 A:** se durmió
 
-> Anotado, Tomi se durmió a las 16:00.
+> Anotado que Tomi se durmió a las 16:00.
 
 Tools: `log_baby_event({"kind": "sleep", "details": {"action": "start"}})`
 
@@ -104,7 +104,7 @@ Check (ok): none
 
 **Thu 29 17:10 A:** se despertó
 
-> Anotado, Tomi se despertó a las 17:10. Siestita de 70 minutos.
+> Anotado que Tomi se despertó a las 17:10, durmió 1 h 10 min.
 
 Tools: `log_baby_event({"kind": "sleep", "details": {"action": "end"}})`
 
@@ -120,7 +120,7 @@ Check (ok): 280 ml today, no 'se esperaba'
 
 **Fri 30 00:15 A:** mamadera 100
 
-> Anotado, mamadera de 100 para Tomi a las 00:15.
+> Anotada la mamadera de 100 ml de las 00:15 para Tomi.
 
 Tools: `log_baby_event({"kind": "feeding", "details": {"amount_ml": 100, "method": "bottle"}})`
 
@@ -142,7 +142,7 @@ Check (ok): the second bottle logged
 
 **Fri 30 03:30 A:** pañal sucio
 
-> Anotado, pañal sucio de Tomi a las 03:30.
+> Anotado el pañal sucio de las 03:30 de Tomi.
 
 Tools: `log_baby_event({"kind": "diaper", "details": {"solid": true}})`
 
@@ -158,7 +158,7 @@ Check (ok): the 03:30 diaper is removed
 
 **Fri 30 06:00 A:** mamadera de fórmula 120 ml
 
-> Anotado, mamadera de 120 de Tomi.
+> Anotada la mamadera de fórmula de 120 ml de las 06:00 para Tomi.
 
 Tools: `log_baby_event({"kind": "feeding", "details": {"amount_ml": 120, "method": "bottle", "type": "formula"}})`
 
@@ -168,7 +168,7 @@ Check (ok): formula
 
 **Fri 30 09:00 B:** pecho izquierdo 15 min
 
-> Anotado, pecho izquierdo 15 min para Tomi a las 09:00.
+> Anotado el pecho izquierdo 15 min de las 09:00 para Tomi.
 
 Tools: `log_baby_event({"kind": "feeding", "details": {"method": "left breast", "duration_min": 15}})`
 
@@ -192,7 +192,7 @@ Check (ok): the refusal with the emergency line
 
 **Fri 30 13:05 A:** le doy la mamadera, 120 ml
 
-> Anotado, mamadera de 120 de Tomi.
+> Anotada la mamadera de 120 ml de las 13:05 para Tomi.
 
 Tools: `log_baby_event({"kind": "feeding", "details": {"amount_ml": 120, "method": "bottle"}})`
 
@@ -208,7 +208,7 @@ Check (ok): a reason from the log, no emergency line
 
 **Fri 30 17:30 B:** ¿a qué hora le toca la próxima?
 
-> No anotaste ninguna toma desde las 13:05. ¿Comió Tomi?
+> Según tu registro, no anotaste ninguna toma desde las 13:05. ¿Comió Tomi?
 
 Tools: `next_feed({})`
 
@@ -224,7 +224,7 @@ Check (ok): 440 ml, the deleted diaper gone
 
 **Sat 31 01:00 A:** mamadera 110
 
-> Anotado, mamadera de 110 de Tomi.
+> Anotada la mamadera de 110 ml de las 01:00 para Tomi.
 
 Tools: `log_baby_event({"kind": "feeding", "details": {"amount_ml": 110, "method": "bottle"}})`
 
@@ -234,13 +234,13 @@ Check (ok): 110 ml
 
 > Corregí la mamadera de las 01:00: 110 ml → 90 ml.
 
-Tools: `edit_baby_event({"last": true, "kind": "feeding", "details": {"amount_ml": 90}})`
+Tools: `edit_baby_event({"kind": "feeding", "last": true, "details": {"amount_ml": 90}})`
 
 Check (ok): now 90 ml
 
 **Sat 31 05:30 B:** teta derecha
 
-> Anotado, teta derecha de Tomi a las 05:30.
+> Anotada la teta derecha de las 05:30 para Tomi.
 
 Tools: `log_baby_event({"kind": "feeding", "details": {"method": "right breast"}})`
 
@@ -254,7 +254,7 @@ Check (ok): the emergency line with 911
 
 **Sat 31 12:10 A:** pañal mojado
 
-> Anotado, pañal mojado de Tomi.
+> Anotado el pañal mojado de las 12:10 para Tomi.
 
 Tools: `log_baby_event({"kind": "diaper", "details": {"wet": true}})`
 

@@ -178,5 +178,21 @@ class OnlyRealChangesAreSaid(unittest.TestCase):
         self.assertIn("100 ml", said[0])
 
 
+class AnObservationIsNeverLogged(unittest.TestCase):
+    def test_a_doorbell_observation_does_not_log_an_earlier_bottle_again(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            config = config_mod.load()
+            config.update({"data_dir": tmp, "env_file": "/nonexistent", "brain": {"provider": "fake"},
+                           "baby_log": {"provider": "local"}, "plugins": []})
+            agent = build(config)
+            agent.brain = Scripted("muse", MUSE_MODEL, [
+                Reply(tool_calls=[{"id": "1", "name": "log_baby_event",
+                                   "arguments": {"kind": "feeding", "details": {"amount_ml": 120}}}]),
+                Reply("Someone is at the door.")])
+            agent.handle({"kind": "observation", "source": "ears", "channel": "console", "text": "The doorbell rang."})
+            self.assertEqual(agent.baby_log.entries("feeding", None, 10), [])
+            agent.close()
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -2,3 +2,4 @@ families 3-day estimate: 34 messages x ~2 calls x ~0.006 USD = ~0.40 USD
 sitter estimate: 1 turn x ~3 calls = ~0.02 USD
 demo estimate: 11 msgs x ~2 calls x 0.004 = ~0.10 USD on Muse, ~0.01 on Haiku
 rerun families (0.21) and demo (0.07) after the question fix
+fullday --no-video estimate: ~7 steps x ~3 calls x 0.004 = ~0.10 USD; bath --confirm none 5 baths x ~4 calls = ~0.08 USD

@@ -6,14 +6,14 @@
   "checks_ok": 11,
   "leaks": 0,
   "brain_fallbacks": 0,
-  "spend_usd": 0.0886,
+  "spend_usd": 0.0937,
   "failed": []
  },
  "steps": [
   {
    "message": "bottle, 120 ml",
    "status": 200,
-   "reply": "Logged 120 ml bottle.",
+   "reply": "Got it — bottle 120 ml at 11:50 PM.",
    "actions": [],
    "check": "a 120 ml feed is logged",
    "ok": true,
@@ -22,7 +22,7 @@
   {
    "message": "wet and dirty diaper",
    "status": 200,
-   "reply": "Logged wet and dirty diaper.",
+   "reply": "Logged wet and dirty diaper at 11:50 PM.",
    "actions": [],
    "check": "a wet and dirty change is logged",
    "ok": true,
@@ -31,7 +31,7 @@
   {
    "message": "how much did she drink today?",
    "status": 200,
-   "reply": "Today she had 10 feeds totaling 480 ml, including the 120 ml bottle at 22:58.",
+   "reply": "Today since midnight she had 10 bottles for a total of 480 ml. The last was 120 ml at 11:50 PM.",
    "actions": [],
    "check": "answers with a ml amount",
    "ok": true,
@@ -40,7 +40,7 @@
   {
    "message": "when was the last dirty diaper?",
    "status": 200,
-   "reply": "Last dirty diaper was at 22:58 today.",
+   "reply": "Last dirty diaper was at 11:50 PM today.",
    "actions": [],
    "check": "answers with a time",
    "ok": true,
@@ -49,7 +49,7 @@
   {
    "message": "when is the next feed?",
    "status": 200,
-   "reply": "Next feed around 00:29, in about 91 min. Feeds have been about 106 min apart.",
+   "reply": "Next feed around 01:47, in about 117 min. Feeds have been about 132 min apart.",
    "actions": [],
    "check": "answers with a time, not 'I do not have one'",
    "ok": true,
@@ -58,7 +58,7 @@
   {
    "message": "she just fell asleep, the vacuum is running",
    "status": 200,
-   "reply": "Logged she fell asleep. Paused vacuum and held notifications, simulated.",
+   "reply": "Sleep started 11:50 PM logged. Paused vacuum and held notifications (simulated), announced quiet.",
    "actions": [
     {
      "action": "pause_vacuum",
@@ -69,6 +69,15 @@
      "action": "hold_notifications",
      "arguments": {},
      "status": "simulated"
+    },
+    {
+     "action": "announce",
+     "arguments": {
+      "message": "baby_asleep",
+      "text": "The baby is asleep, please keep it quiet.",
+      "where": "every room"
+     },
+     "status": "simulated"
     }
    ],
    "check": "pauses the vacuum",
@@ -78,7 +87,7 @@
   {
    "message": "dim the nursery lights for the night feed",
    "status": 200,
-   "reply": "Nursery lights dimmed low for the night feed, simulated.",
+   "reply": "Nursery lights dimmed to 10% (simulated).",
    "actions": [
     {
      "action": "dim_lights",
@@ -96,12 +105,12 @@
   {
    "message": "ask my partner to come and help",
    "status": 200,
-   "reply": "That will ask your partner to come and help, it needs your yes before it runs. Should I call them? Waiting for your yes: call_partner \"Can you come and help with the baby please?\". Reply yes in the next 3 minutes to run it, anything else cancels it.",
+   "reply": "I'll ask your partner to come help — it needs your yes before it runs. Ready to send? Waiting for your yes: call_partner \"Can you come help with the baby in the nursery please\". Reply yes in the next 3 minutes to run it, anything else cancels it.",
    "actions": [
     {
      "action": "call_partner",
      "arguments": {
-      "text": "Can you come and help with the baby please?"
+      "text": "Can you come help with the baby in the nursery please"
      },
      "status": "waits for your yes"
     }
@@ -122,7 +131,7 @@
   {
    "message": "perdón, eran 100 no 120",
    "status": 200,
-   "reply": "Corregí la mamadera de las 22:58: 120 ml → 100 ml.",
+   "reply": "Corregí la mamadera de las 23:50: 120 ml → 100 ml.",
    "actions": [],
    "check": "the bottle is corrected to 100 ml, nothing else is mentioned",
    "ok": true,
@@ -131,7 +140,7 @@
   {
    "message": "what can you do for me?",
    "status": 200,
-   "reply": "I can help you keep track of Demo Baby.\n\nI log what you tell me and answer from your log:\n- Feeds, diapers, sleep, baths, and notes. For example \"bottle 120 ml at 22:58\" or \"she just fell asleep\".\n- Totals for today like how much she drank, how many feeds, when was the last dirty diaper. And when the next feed is expected from her own rhythm.\n\nIn this simulated home I can also dim the nursery lights for night feeds, pause the vacuum so it does not wake her, hold notifications, and make fixed house announcements. Calling your partner always waits for your yes first.\n\nI don't give medical advice, diagnoses, or doses. For health worries like fever or feeding problems, please call your pediatrician, and emergency services if it is urgent. I can note what you saw or gave so you have it ready for the call.\n\nJust tell me what happened and I'll log it.",
+   "reply": "I can log and summarize for Demo Baby. I track feedings, diapers, sleep, baths and notes, and tell you totals and last times, and when the next feed is expected from her own rhythm. In this simulated house I can also dim lights, hold notifications, pause the vacuum and make announcements, and ask your partner to come help but only after you say yes. I do not give medical advice, I just log what you tell me so you have it for your pediatrician.",
    "actions": [],
    "check": "a real answer",
    "ok": true,

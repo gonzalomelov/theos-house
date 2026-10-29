@@ -37,7 +37,8 @@ Rules:
   pediatrician, and emergency services if it is urgent.
 - Some tools always wait for the parent's yes, such as replying to a visitor or calling the partner. When one would help,
   call it anyway with what you would do: the parent is asked before it runs. Never say a yes was given before the
-  parent's newest message says yes.
+  parent's newest message says yes. Someone at the door while the parent's hands are on the baby: announce "one
+  moment please" and also call reply_to_visitor with what you would tell them, so it waits for the parent's yes.
 - A medicine the parent says they gave, a symptom they saw or a milestone is logged as a note with their own words,
   never as a feed, and you never comment on it.
 - Lines that start with [observation from ...] come from the agent's own skills, and lines that start with
@@ -102,6 +103,8 @@ EDIT_CHECK = ("[check from the agent, not the parent] The parent's newest messag
 READ_TOOLS = {"read_baby_log", "baby_summary", "current_time", "next_feed"}
 EDIT_TOOLS = {"edit_baby_event", "delete_baby_event"}
 ONE_AFTER_CHECK = "not logged: after the check only the newest message is logged, once. Earlier messages were already handled."
+OBSERVED_ONLY = ("not logged: this is an observation from the agent's own skill, which logged what it saw itself. Earlier "
+                 "messages were already handled, never log them again. Act on the observation or answer it.")
 ASKED_ONLY = ("not logged: this message is a question about the log, it reports nothing new. Answer it from baby_summary "
               "or read_baby_log.")
 OTHER_KIND = ("not logged: the newest message does not report this kind of entry. Earlier messages were already "
@@ -416,7 +419,7 @@ class Agent:
             transcript = self.transcript(observed)
             # Kept in memory too, so a later turn knows why the agent spoke and does not think it invented the event.
             self.memory.add_message(channel, "user", observed, ts=self.now())
-        self.decide(channel, transcript)
+        self.decide(channel, transcript, observation=True)
 
     def emergency(self, request):
         return rules.EMERGENCY_REPLY[self.lang(request)]
@@ -522,7 +525,7 @@ class Agent:
             return False
         return rules.is_log_request(request) or (rules.claims_logged(text) and not rules.is_question(request))
 
-    def decide(self, channel, transcript, request=None, check_double=True):
+    def decide(self, channel, transcript, request=None, check_double=True, observation=False):
         """One incoming message or observation, through the brain and the tools, until the brain answers. Within it a
         log entry is written once, whatever the brain repeats. If the brain fails after something was logged, the agent
         still answers with what it kept.
@@ -623,6 +626,12 @@ class Agent:
                         value = _ml(bad[1]) if bad[0] in ("amount_ml", "duration_min") and _ml(bad[1]) else bad[1]
                         return finish(BOUNDS_ASK[lang][bad[0]].format(value=value), fixed=True)
                 key = entry_key(call["arguments"] or {}) if call["name"] == "log_baby_event" else None
+                if key is not None and observation:
+                    # A skill's observation is never a new entry. On Oct 28 Muse logged an earlier bottle again when a
+                    # doorbell observation came in.
+                    self.bus.publish("tool", name=call["name"], status="held")
+                    transcript.append({"role": "tool", "id": call["id"], "name": call["name"], "result": OBSERVED_ONLY})
+                    continue
                 said_kinds = rules.kinds_said(request) if key is not None and request is not None else set()
                 if said_kinds and (call["arguments"] or {}).get("kind") not in said_kinds | {"note"}:
                     # "she fell asleep at 3:15" logs the sleep, never the 02:00 bottle from an earlier message again.
