@@ -71,7 +71,7 @@ class HomeAssistant:
     def __init__(self, url, token):
         self.url, self.token = url.rstrip("/"), token
 
-    def _call(self, path, data=None):
+    def _call(self, path, data=None, raw=False):
         if _rejected["code"] is not None:
             raise TokenRejected(_rejected["code"])
         request = urllib.request.Request(
@@ -80,7 +80,8 @@ class HomeAssistant:
             method="POST" if data is not None else "GET")
         try:
             with urllib.request.urlopen(request, timeout=10) as response:
-                return json.loads(response.read() or b"null")
+                body = response.read()
+                return body if raw else json.loads(body or b"null")
         except urllib.error.HTTPError as error:
             if error.code in (401, 403):
                 with _rejected_lock:
@@ -112,6 +113,10 @@ class HomeAssistant:
 
     def attributes(self, entity_id):
         return self._call(f"/api/states/{entity_id}").get("attributes") or {}
+
+    def camera_image(self, entity_id):
+        """The camera's current JPEG through Home Assistant's camera proxy, as bytes in memory. Read only."""
+        return self._call(f"/api/camera_proxy/{entity_id}", raw=True)
 
     def calendar_events(self, entity_id, start, end):
         query = urllib.parse.urlencode({"start": start.isoformat(), "end": end.isoformat()})

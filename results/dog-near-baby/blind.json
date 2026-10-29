@@ -1,0 +1,1747 @@
+{
+ "split": "blind",
+ "set": "dog-near-baby",
+ "prompts": [
+  "dog",
+  "baby",
+  "bassinet",
+  "play mat"
+ ],
+ "near_ratio": 0.5,
+ "score": {
+  "near": 20,
+  "caught": 15,
+  "missed": 5,
+  "not_near": 49,
+  "false_alerts": 0,
+  "by_label": {
+   "no_baby": {
+    "n": 24,
+    "alerts": 0
+   },
+   "near": {
+    "n": 20,
+    "alerts": 15
+   },
+   "far": {
+    "n": 13,
+    "alerts": 0
+   },
+   "no_dog": {
+    "n": 12,
+    "alerts": 0
+   }
+  }
+ },
+ "latency": {
+  "sam_median_s": 2.976,
+  "sam_p90_s": 4.715,
+  "total_median_s": 3.005,
+  "total_p90_s": 4.733,
+  "total_max_s": 6.65
+ },
+ "rows": [
+  {
+   "id": "c001",
+   "label": "no_baby",
+   "kind": "photo",
+   "measure": {
+    "dog": true,
+    "baby": false
+   },
+   "scores": {
+    "dog": [
+     0.896
+    ],
+    "baby": [],
+    "bassinet": [],
+    "play mat": []
+   },
+   "sam_s": 3.288,
+   "total_s": 3.299,
+   "verdict": "no_baby",
+   "alert": false
+  },
+  {
+   "id": "c004",
+   "label": "no_baby",
+   "kind": "photo",
+   "measure": {
+    "dog": true,
+    "baby": false
+   },
+   "scores": {
+    "dog": [
+     0.928
+    ],
+    "baby": [],
+    "bassinet": [],
+    "play mat": []
+   },
+   "sam_s": 3.527,
+   "total_s": 3.55,
+   "verdict": "no_baby",
+   "alert": false
+  },
+  {
+   "id": "c008",
+   "label": "no_baby",
+   "kind": "photo",
+   "measure": {
+    "dog": true,
+    "baby": false
+   },
+   "scores": {
+    "dog": [
+     0.928
+    ],
+    "baby": [],
+    "bassinet": [],
+    "play mat": []
+   },
+   "sam_s": 3.245,
+   "total_s": 3.277,
+   "verdict": "no_baby",
+   "alert": false
+  },
+  {
+   "id": "c009",
+   "label": "near",
+   "kind": "photo",
+   "measure": {
+    "dog": true,
+    "baby": true,
+    "gap_px": 23.5,
+    "baby_size_px": 175.3,
+    "ratio": 0.134,
+    "touching": false,
+    "area_has_furniture": false
+   },
+   "scores": {
+    "dog": [
+     0.938
+    ],
+    "baby": [
+     0.898
+    ],
+    "bassinet": [],
+    "play mat": []
+   },
+   "sam_s": 3.831,
+   "total_s": 3.85,
+   "verdict": "near",
+   "alert": true
+  },
+  {
+   "id": "c021",
+   "label": "no_baby",
+   "kind": "photo",
+   "measure": {
+    "dog": true,
+    "baby": false
+   },
+   "scores": {
+    "dog": [
+     0.955
+    ],
+    "baby": [],
+    "bassinet": [],
+    "play mat": []
+   },
+   "sam_s": 4.035,
+   "total_s": 4.134,
+   "verdict": "no_baby",
+   "alert": false
+  },
+  {
+   "id": "c023",
+   "label": "no_baby",
+   "kind": "photo",
+   "measure": {
+    "dog": true,
+    "baby": false
+   },
+   "scores": {
+    "dog": [
+     0.944,
+     0.804
+    ],
+    "baby": [],
+    "bassinet": [],
+    "play mat": []
+   },
+   "sam_s": 4.561,
+   "total_s": 4.594,
+   "verdict": "no_baby",
+   "alert": false
+  },
+  {
+   "id": "c035",
+   "label": "no_baby",
+   "kind": "photo",
+   "measure": {
+    "dog": true,
+    "baby": false
+   },
+   "scores": {
+    "dog": [
+     0.922
+    ],
+    "baby": [],
+    "bassinet": [],
+    "play mat": []
+   },
+   "sam_s": 6.523,
+   "total_s": 6.65,
+   "verdict": "no_baby",
+   "alert": false
+  },
+  {
+   "id": "c036",
+   "label": "no_baby",
+   "kind": "photo",
+   "measure": {
+    "dog": true,
+    "baby": false
+   },
+   "scores": {
+    "dog": [
+     0.93
+    ],
+    "baby": [],
+    "bassinet": [],
+    "play mat": []
+   },
+   "sam_s": 2.569,
+   "total_s": 2.657,
+   "verdict": "no_baby",
+   "alert": false
+  },
+  {
+   "id": "c041",
+   "label": "no_baby",
+   "kind": "photo",
+   "measure": {
+    "dog": true,
+    "baby": false
+   },
+   "scores": {
+    "dog": [
+     0.919,
+     0.653
+    ],
+    "baby": [],
+    "bassinet": [],
+    "play mat": []
+   },
+   "sam_s": 2.555,
+   "total_s": 2.568,
+   "verdict": "no_baby",
+   "alert": false
+  },
+  {
+   "id": "c042",
+   "label": "near",
+   "kind": "photo",
+   "measure": {
+    "dog": true,
+    "baby": true,
+    "gap_px": 3.3,
+    "baby_size_px": 496.1,
+    "ratio": 0.007,
+    "touching": true,
+    "area_has_furniture": false
+   },
+   "scores": {
+    "dog": [
+     0.956,
+     0.928
+    ],
+    "baby": [
+     0.886,
+     0.582
+    ],
+    "bassinet": [],
+    "play mat": []
+   },
+   "sam_s": 2.441,
+   "total_s": 2.477,
+   "verdict": "near",
+   "alert": true
+  },
+  {
+   "id": "c045",
+   "label": "far",
+   "kind": "photo",
+   "measure": {
+    "dog": true,
+    "baby": false
+   },
+   "scores": {
+    "dog": [
+     0.977,
+     0.925
+    ],
+    "baby": [],
+    "bassinet": [],
+    "play mat": []
+   },
+   "sam_s": 2.457,
+   "total_s": 2.468,
+   "verdict": "no_baby",
+   "alert": false
+  },
+  {
+   "id": "c052",
+   "label": "near",
+   "kind": "photo",
+   "measure": {
+    "dog": true,
+    "baby": true,
+    "gap_px": 7.0,
+    "baby_size_px": 332.2,
+    "ratio": 0.021,
+    "touching": false,
+    "area_has_furniture": false
+   },
+   "scores": {
+    "dog": [
+     0.942
+    ],
+    "baby": [
+     0.827
+    ],
+    "bassinet": [],
+    "play mat": []
+   },
+   "sam_s": 2.429,
+   "total_s": 2.445,
+   "verdict": "near",
+   "alert": true
+  },
+  {
+   "id": "c056",
+   "label": "near",
+   "kind": "photo",
+   "measure": {
+    "dog": true,
+    "baby": false
+   },
+   "scores": {
+    "dog": [
+     0.935
+    ],
+    "baby": [],
+    "bassinet": [],
+    "play mat": []
+   },
+   "sam_s": 2.582,
+   "total_s": 2.6,
+   "verdict": "no_baby",
+   "alert": false
+  },
+  {
+   "id": "c060",
+   "label": "near",
+   "kind": "photo",
+   "measure": {
+    "dog": true,
+    "baby": false
+   },
+   "scores": {
+    "dog": [
+     0.96
+    ],
+    "baby": [
+     0.582
+    ],
+    "bassinet": [],
+    "play mat": []
+   },
+   "sam_s": 2.839,
+   "total_s": 2.852,
+   "verdict": "no_baby",
+   "alert": false
+  },
+  {
+   "id": "c072",
+   "label": "no_dog",
+   "kind": "photo",
+   "measure": {
+    "dog": false,
+    "baby": true
+   },
+   "scores": {
+    "dog": [],
+    "baby": [
+     0.833
+    ],
+    "bassinet": [],
+    "play mat": []
+   },
+   "sam_s": 3.397,
+   "total_s": 3.414,
+   "verdict": "no_dog",
+   "alert": false
+  },
+  {
+   "id": "c081",
+   "label": "no_dog",
+   "kind": "photo",
+   "measure": {
+    "dog": false,
+    "baby": true
+   },
+   "scores": {
+    "dog": [],
+    "baby": [
+     0.803,
+     0.627,
+     0.342
+    ],
+    "bassinet": [],
+    "play mat": []
+   },
+   "sam_s": 4.799,
+   "total_s": 4.831,
+   "verdict": "no_dog",
+   "alert": false
+  },
+  {
+   "id": "c091",
+   "label": "no_baby",
+   "kind": "photo",
+   "measure": {
+    "dog": false,
+    "baby": false
+   },
+   "scores": {
+    "dog": [],
+    "baby": [],
+    "bassinet": [],
+    "play mat": []
+   },
+   "sam_s": 5.045,
+   "total_s": 5.057,
+   "verdict": "no_baby",
+   "alert": false
+  },
+  {
+   "id": "c092",
+   "label": "no_dog",
+   "kind": "photo",
+   "measure": {
+    "dog": false,
+    "baby": true
+   },
+   "scores": {
+    "dog": [],
+    "baby": [
+     0.917
+    ],
+    "bassinet": [],
+    "play mat": []
+   },
+   "sam_s": 4.475,
+   "total_s": 4.503,
+   "verdict": "no_dog",
+   "alert": false
+  },
+  {
+   "id": "c094",
+   "label": "no_dog",
+   "kind": "photo",
+   "measure": {
+    "dog": false,
+    "baby": true
+   },
+   "scores": {
+    "dog": [],
+    "baby": [
+     0.943
+    ],
+    "bassinet": [
+     0.886
+    ],
+    "play mat": []
+   },
+   "sam_s": 2.801,
+   "total_s": 2.819,
+   "verdict": "no_dog",
+   "alert": false
+  },
+  {
+   "id": "c095",
+   "label": "no_dog",
+   "kind": "photo",
+   "measure": {
+    "dog": false,
+    "baby": true
+   },
+   "scores": {
+    "dog": [],
+    "baby": [
+     0.904,
+     0.322
+    ],
+    "bassinet": [
+     0.74
+    ],
+    "play mat": []
+   },
+   "sam_s": 2.589,
+   "total_s": 2.607,
+   "verdict": "no_dog",
+   "alert": false
+  },
+  {
+   "id": "c099",
+   "label": "no_baby",
+   "kind": "photo",
+   "measure": {
+    "dog": false,
+    "baby": false
+   },
+   "scores": {
+    "dog": [],
+    "baby": [],
+    "bassinet": [
+     0.615
+    ],
+    "play mat": []
+   },
+   "sam_s": 3.638,
+   "total_s": 3.662,
+   "verdict": "no_baby",
+   "alert": false
+  },
+  {
+   "id": "c100",
+   "label": "no_dog",
+   "kind": "photo",
+   "measure": {
+    "dog": false,
+    "baby": true
+   },
+   "scores": {
+    "dog": [],
+    "baby": [
+     0.958
+    ],
+    "bassinet": [
+     0.634
+    ],
+    "play mat": []
+   },
+   "sam_s": 2.898,
+   "total_s": 2.918,
+   "verdict": "no_dog",
+   "alert": false
+  },
+  {
+   "id": "c119",
+   "label": "no_dog",
+   "kind": "photo",
+   "measure": {
+    "dog": false,
+    "baby": true
+   },
+   "scores": {
+    "dog": [],
+    "baby": [
+     0.809,
+     0.306
+    ],
+    "bassinet": [
+     0.943
+    ],
+    "play mat": []
+   },
+   "sam_s": 2.911,
+   "total_s": 2.991,
+   "verdict": "no_dog",
+   "alert": false
+  },
+  {
+   "id": "c132",
+   "label": "no_dog",
+   "kind": "photo",
+   "measure": {
+    "dog": false,
+    "baby": true
+   },
+   "scores": {
+    "dog": [],
+    "baby": [
+     0.608
+    ],
+    "bassinet": [],
+    "play mat": []
+   },
+   "sam_s": 2.849,
+   "total_s": 2.86,
+   "verdict": "no_dog",
+   "alert": false
+  },
+  {
+   "id": "c139",
+   "label": "no_baby",
+   "kind": "photo",
+   "measure": {
+    "dog": true,
+    "baby": false
+   },
+   "scores": {
+    "dog": [
+     0.942
+    ],
+    "baby": [],
+    "bassinet": [],
+    "play mat": []
+   },
+   "sam_s": 3.302,
+   "total_s": 3.323,
+   "verdict": "no_baby",
+   "alert": false
+  },
+  {
+   "id": "c142",
+   "label": "no_baby",
+   "kind": "photo",
+   "measure": {
+    "dog": true,
+    "baby": false
+   },
+   "scores": {
+    "dog": [
+     0.955
+    ],
+    "baby": [],
+    "bassinet": [],
+    "play mat": []
+   },
+   "sam_s": 2.776,
+   "total_s": 2.79,
+   "verdict": "no_baby",
+   "alert": false
+  },
+  {
+   "id": "c149",
+   "label": "no_baby",
+   "kind": "photo",
+   "measure": {
+    "dog": true,
+    "baby": false
+   },
+   "scores": {
+    "dog": [
+     0.711
+    ],
+    "baby": [],
+    "bassinet": [],
+    "play mat": []
+   },
+   "sam_s": 3.063,
+   "total_s": 3.095,
+   "verdict": "no_baby",
+   "alert": false
+  },
+  {
+   "id": "c152",
+   "label": "no_baby",
+   "kind": "photo",
+   "measure": {
+    "dog": true,
+    "baby": false
+   },
+   "scores": {
+    "dog": [
+     0.918
+    ],
+    "baby": [],
+    "bassinet": [],
+    "play mat": []
+   },
+   "sam_s": 3.507,
+   "total_s": 3.538,
+   "verdict": "no_baby",
+   "alert": false
+  },
+  {
+   "id": "c165",
+   "label": "no_baby",
+   "kind": "photo",
+   "measure": {
+    "dog": true,
+    "baby": false
+   },
+   "scores": {
+    "dog": [
+     0.938
+    ],
+    "baby": [],
+    "bassinet": [],
+    "play mat": []
+   },
+   "sam_s": 5.597,
+   "total_s": 5.637,
+   "verdict": "no_baby",
+   "alert": false
+  },
+  {
+   "id": "c176",
+   "label": "no_baby",
+   "kind": "photo",
+   "measure": {
+    "dog": true,
+    "baby": false
+   },
+   "scores": {
+    "dog": [
+     0.972
+    ],
+    "baby": [],
+    "bassinet": [],
+    "play mat": []
+   },
+   "sam_s": 5.237,
+   "total_s": 5.248,
+   "verdict": "no_baby",
+   "alert": false
+  },
+  {
+   "id": "c180",
+   "label": "no_baby",
+   "kind": "photo",
+   "measure": {
+    "dog": true,
+    "baby": false
+   },
+   "scores": {
+    "dog": [
+     0.933
+    ],
+    "baby": [],
+    "bassinet": [],
+    "play mat": []
+   },
+   "sam_s": 3.405,
+   "total_s": 3.423,
+   "verdict": "no_baby",
+   "alert": false
+  },
+  {
+   "id": "c197",
+   "label": "no_baby",
+   "kind": "photo",
+   "measure": {
+    "dog": true,
+    "baby": false
+   },
+   "scores": {
+    "dog": [
+     0.901,
+     0.876,
+     0.855
+    ],
+    "baby": [],
+    "bassinet": [],
+    "play mat": []
+   },
+   "sam_s": 3.486,
+   "total_s": 3.575,
+   "verdict": "no_baby",
+   "alert": false
+  },
+  {
+   "id": "c224",
+   "label": "near",
+   "kind": "photo",
+   "measure": {
+    "dog": true,
+    "baby": false
+   },
+   "scores": {
+    "dog": [
+     0.944
+    ],
+    "baby": [
+     0.425
+    ],
+    "bassinet": [],
+    "play mat": []
+   },
+   "sam_s": 2.81,
+   "total_s": 2.836,
+   "verdict": "no_baby",
+   "alert": false
+  },
+  {
+   "id": "c239",
+   "label": "near",
+   "kind": "photo",
+   "measure": {
+    "dog": true,
+    "baby": false
+   },
+   "scores": {
+    "dog": [
+     0.935
+    ],
+    "baby": [
+     0.532
+    ],
+    "bassinet": [],
+    "play mat": []
+   },
+   "sam_s": 2.976,
+   "total_s": 2.99,
+   "verdict": "no_baby",
+   "alert": false
+  },
+  {
+   "id": "c253",
+   "label": "near",
+   "kind": "photo",
+   "measure": {
+    "dog": true,
+    "baby": false
+   },
+   "scores": {
+    "dog": [
+     0.601
+    ],
+    "baby": [
+     0.586
+    ],
+    "bassinet": [],
+    "play mat": [
+     0.362
+    ]
+   },
+   "sam_s": 2.959,
+   "total_s": 3.022,
+   "verdict": "no_baby",
+   "alert": false
+  },
+  {
+   "id": "c260",
+   "label": "no_baby",
+   "kind": "photo",
+   "measure": {
+    "dog": false,
+    "baby": false
+   },
+   "scores": {
+    "dog": [],
+    "baby": [],
+    "bassinet": [],
+    "play mat": []
+   },
+   "sam_s": 2.646,
+   "total_s": 2.654,
+   "verdict": "no_baby",
+   "alert": false
+  },
+  {
+   "id": "c269",
+   "label": "no_baby",
+   "kind": "photo",
+   "measure": {
+    "dog": false,
+    "baby": false
+   },
+   "scores": {
+    "dog": [],
+    "baby": [],
+    "bassinet": [],
+    "play mat": []
+   },
+   "sam_s": 2.539,
+   "total_s": 2.544,
+   "verdict": "no_baby",
+   "alert": false
+  },
+  {
+   "id": "m001",
+   "label": "near",
+   "kind": "composite",
+   "measure": {
+    "dog": true,
+    "baby": true,
+    "gap_px": 2.5,
+    "baby_size_px": 132.3,
+    "ratio": 0.019,
+    "touching": true,
+    "area_has_furniture": false
+   },
+   "scores": {
+    "dog": [
+     0.963
+    ],
+    "baby": [
+     0.919
+    ],
+    "bassinet": [],
+    "play mat": []
+   },
+   "sam_s": 3.375,
+   "total_s": 3.419,
+   "verdict": "near",
+   "alert": true
+  },
+  {
+   "id": "m003",
+   "label": "near",
+   "kind": "composite",
+   "measure": {
+    "dog": true,
+    "baby": true,
+    "gap_px": 30.0,
+    "baby_size_px": 130.5,
+    "ratio": 0.23,
+    "touching": false,
+    "area_has_furniture": false
+   },
+   "scores": {
+    "dog": [
+     0.958
+    ],
+    "baby": [
+     0.963
+    ],
+    "bassinet": [],
+    "play mat": []
+   },
+   "sam_s": 3.17,
+   "total_s": 3.186,
+   "verdict": "near",
+   "alert": true
+  },
+  {
+   "id": "m004",
+   "label": "near",
+   "kind": "composite",
+   "measure": {
+    "dog": true,
+    "baby": true,
+    "gap_px": 2.5,
+    "baby_size_px": 104.9,
+    "ratio": 0.024,
+    "touching": true,
+    "area_has_furniture": false
+   },
+   "scores": {
+    "dog": [
+     0.935
+    ],
+    "baby": [
+     0.917
+    ],
+    "bassinet": [
+     0.386,
+     0.385
+    ],
+    "play mat": []
+   },
+   "sam_s": 2.61,
+   "total_s": 2.631,
+   "verdict": "near",
+   "alert": true
+  },
+  {
+   "id": "m005",
+   "label": "near",
+   "kind": "composite",
+   "measure": {
+    "dog": true,
+    "baby": true,
+    "gap_px": 2.5,
+    "baby_size_px": 118.5,
+    "ratio": 0.021,
+    "touching": true,
+    "area_has_furniture": false
+   },
+   "scores": {
+    "dog": [
+     0.95,
+     0.918,
+     0.873
+    ],
+    "baby": [
+     0.79,
+     0.544
+    ],
+    "bassinet": [
+     0.48,
+     0.388
+    ],
+    "play mat": []
+   },
+   "sam_s": 2.674,
+   "total_s": 2.701,
+   "verdict": "near",
+   "alert": true
+  },
+  {
+   "id": "m008",
+   "label": "near",
+   "kind": "composite",
+   "measure": {
+    "dog": true,
+    "baby": true,
+    "gap_px": 5.0,
+    "baby_size_px": 136.1,
+    "ratio": 0.037,
+    "touching": false,
+    "area_has_furniture": false
+   },
+   "scores": {
+    "dog": [
+     0.939
+    ],
+    "baby": [
+     0.887
+    ],
+    "bassinet": [
+     0.462
+    ],
+    "play mat": []
+   },
+   "sam_s": 2.809,
+   "total_s": 2.869,
+   "verdict": "near",
+   "alert": true
+  },
+  {
+   "id": "m009",
+   "label": "near",
+   "kind": "composite",
+   "measure": {
+    "dog": true,
+    "baby": true,
+    "gap_px": 31.0,
+    "baby_size_px": 125.0,
+    "ratio": 0.248,
+    "touching": false,
+    "area_has_furniture": false
+   },
+   "scores": {
+    "dog": [
+     0.92
+    ],
+    "baby": [
+     0.779,
+     0.303
+    ],
+    "bassinet": [
+     0.351,
+     0.347
+    ],
+    "play mat": []
+   },
+   "sam_s": 4.43,
+   "total_s": 4.464,
+   "verdict": "near",
+   "alert": true
+  },
+  {
+   "id": "m010",
+   "label": "near",
+   "kind": "composite",
+   "measure": {
+    "dog": true,
+    "baby": true,
+    "gap_px": 15.0,
+    "baby_size_px": 120.8,
+    "ratio": 0.124,
+    "touching": false,
+    "area_has_furniture": false
+   },
+   "scores": {
+    "dog": [
+     0.957
+    ],
+    "baby": [
+     0.903
+    ],
+    "bassinet": [],
+    "play mat": []
+   },
+   "sam_s": 3.107,
+   "total_s": 3.124,
+   "verdict": "near",
+   "alert": true
+  },
+  {
+   "id": "m011",
+   "label": "near",
+   "kind": "composite",
+   "measure": {
+    "dog": true,
+    "baby": true,
+    "gap_px": 2.5,
+    "baby_size_px": 109.7,
+    "ratio": 0.023,
+    "touching": true,
+    "area_has_furniture": false
+   },
+   "scores": {
+    "dog": [
+     0.947
+    ],
+    "baby": [
+     0.861
+    ],
+    "bassinet": [],
+    "play mat": []
+   },
+   "sam_s": 2.954,
+   "total_s": 2.966,
+   "verdict": "near",
+   "alert": true
+  },
+  {
+   "id": "m012",
+   "label": "near",
+   "kind": "composite",
+   "measure": {
+    "dog": true,
+    "baby": true,
+    "gap_px": 2.5,
+    "baby_size_px": 132.4,
+    "ratio": 0.019,
+    "touching": true,
+    "area_has_furniture": false
+   },
+   "scores": {
+    "dog": [
+     0.963
+    ],
+    "baby": [
+     0.939
+    ],
+    "bassinet": [
+     0.502
+    ],
+    "play mat": []
+   },
+   "sam_s": 4.278,
+   "total_s": 4.298,
+   "verdict": "near",
+   "alert": true
+  },
+  {
+   "id": "m014",
+   "label": "near",
+   "kind": "composite",
+   "measure": {
+    "dog": true,
+    "baby": true,
+    "gap_px": 2.5,
+    "baby_size_px": 86.1,
+    "ratio": 0.029,
+    "touching": true,
+    "area_has_furniture": false
+   },
+   "scores": {
+    "dog": [
+     0.907
+    ],
+    "baby": [
+     0.862
+    ],
+    "bassinet": [],
+    "play mat": []
+   },
+   "sam_s": 5.283,
+   "total_s": 5.311,
+   "verdict": "near",
+   "alert": true
+  },
+  {
+   "id": "m019",
+   "label": "near",
+   "kind": "composite",
+   "measure": {
+    "dog": true,
+    "baby": true,
+    "gap_px": 5.0,
+    "baby_size_px": 97.4,
+    "ratio": 0.051,
+    "touching": false,
+    "area_has_furniture": false
+   },
+   "scores": {
+    "dog": [
+     0.955
+    ],
+    "baby": [
+     0.73
+    ],
+    "bassinet": [],
+    "play mat": []
+   },
+   "sam_s": 3.908,
+   "total_s": 3.952,
+   "verdict": "near",
+   "alert": true
+  },
+  {
+   "id": "m020",
+   "label": "near",
+   "kind": "composite",
+   "measure": {
+    "dog": true,
+    "baby": true,
+    "gap_px": 2.5,
+    "baby_size_px": 77.4,
+    "ratio": 0.032,
+    "touching": true,
+    "area_has_furniture": false
+   },
+   "scores": {
+    "dog": [
+     0.911,
+     0.761
+    ],
+    "baby": [
+     0.871
+    ],
+    "bassinet": [],
+    "play mat": []
+   },
+   "sam_s": 2.858,
+   "total_s": 2.901,
+   "verdict": "near",
+   "alert": true
+  },
+  {
+   "id": "m025",
+   "label": "far",
+   "kind": "composite",
+   "measure": {
+    "dog": true,
+    "baby": true,
+    "gap_px": 284.9,
+    "baby_size_px": 121.3,
+    "ratio": 2.349,
+    "touching": false,
+    "area_has_furniture": false
+   },
+   "scores": {
+    "dog": [
+     0.96
+    ],
+    "baby": [
+     0.949
+    ],
+    "bassinet": [],
+    "play mat": []
+   },
+   "sam_s": 2.991,
+   "total_s": 3.005,
+   "verdict": "far",
+   "alert": false
+  },
+  {
+   "id": "m028",
+   "label": "far",
+   "kind": "composite",
+   "measure": {
+    "dog": true,
+    "baby": true,
+    "gap_px": 218.4,
+    "baby_size_px": 79.5,
+    "ratio": 2.748,
+    "touching": false,
+    "area_has_furniture": false
+   },
+   "scores": {
+    "dog": [
+     0.945,
+     0.428
+    ],
+    "baby": [
+     0.806,
+     0.48
+    ],
+    "bassinet": [],
+    "play mat": []
+   },
+   "sam_s": 2.687,
+   "total_s": 2.705,
+   "verdict": "far",
+   "alert": false
+  },
+  {
+   "id": "m032",
+   "label": "far",
+   "kind": "composite",
+   "measure": {
+    "dog": true,
+    "baby": true,
+    "gap_px": 314.7,
+    "baby_size_px": 115.0,
+    "ratio": 2.737,
+    "touching": false,
+    "area_has_furniture": false
+   },
+   "scores": {
+    "dog": [
+     0.953
+    ],
+    "baby": [
+     0.927
+    ],
+    "bassinet": [],
+    "play mat": []
+   },
+   "sam_s": 2.705,
+   "total_s": 2.715,
+   "verdict": "far",
+   "alert": false
+  },
+  {
+   "id": "m036",
+   "label": "far",
+   "kind": "composite",
+   "measure": {
+    "dog": true,
+    "baby": true,
+    "gap_px": 356.5,
+    "baby_size_px": 107.8,
+    "ratio": 3.306,
+    "touching": false,
+    "area_has_furniture": false
+   },
+   "scores": {
+    "dog": [
+     0.944
+    ],
+    "baby": [
+     0.946
+    ],
+    "bassinet": [],
+    "play mat": []
+   },
+   "sam_s": 3.183,
+   "total_s": 3.194,
+   "verdict": "far",
+   "alert": false
+  },
+  {
+   "id": "m037",
+   "label": "far",
+   "kind": "composite",
+   "measure": {
+    "dog": true,
+    "baby": true,
+    "gap_px": 165.8,
+    "baby_size_px": 117.6,
+    "ratio": 1.411,
+    "touching": false,
+    "area_has_furniture": false
+   },
+   "scores": {
+    "dog": [
+     0.914,
+     0.869,
+     0.842
+    ],
+    "baby": [
+     0.928
+    ],
+    "bassinet": [
+     0.468,
+     0.419
+    ],
+    "play mat": []
+   },
+   "sam_s": 3.072,
+   "total_s": 3.12,
+   "verdict": "far",
+   "alert": false
+  },
+  {
+   "id": "m038",
+   "label": "far",
+   "kind": "composite",
+   "measure": {
+    "dog": true,
+    "baby": true,
+    "gap_px": 229.7,
+    "baby_size_px": 125.0,
+    "ratio": 1.838,
+    "touching": false,
+    "area_has_furniture": false
+   },
+   "scores": {
+    "dog": [
+     0.958
+    ],
+    "baby": [
+     0.796
+    ],
+    "bassinet": [
+     0.381,
+     0.378
+    ],
+    "play mat": []
+   },
+   "sam_s": 3.044,
+   "total_s": 3.069,
+   "verdict": "far",
+   "alert": false
+  },
+  {
+   "id": "m041",
+   "label": "far",
+   "kind": "composite",
+   "measure": {
+    "dog": true,
+    "baby": true,
+    "gap_px": 175.9,
+    "baby_size_px": 89.5,
+    "ratio": 1.964,
+    "touching": false,
+    "area_has_furniture": false
+   },
+   "scores": {
+    "dog": [
+     0.93
+    ],
+    "baby": [
+     0.952
+    ],
+    "bassinet": [],
+    "play mat": []
+   },
+   "sam_s": 2.581,
+   "total_s": 2.594,
+   "verdict": "far",
+   "alert": false
+  },
+  {
+   "id": "m042",
+   "label": "far",
+   "kind": "composite",
+   "measure": {
+    "dog": true,
+    "baby": true,
+    "gap_px": 180.8,
+    "baby_size_px": 102.2,
+    "ratio": 1.768,
+    "touching": false,
+    "area_has_furniture": false
+   },
+   "scores": {
+    "dog": [
+     0.956
+    ],
+    "baby": [
+     0.818
+    ],
+    "bassinet": [
+     0.453,
+     0.438
+    ],
+    "play mat": []
+   },
+   "sam_s": 2.292,
+   "total_s": 2.307,
+   "verdict": "far",
+   "alert": false
+  },
+  {
+   "id": "m043",
+   "label": "far",
+   "kind": "composite",
+   "measure": {
+    "dog": true,
+    "baby": true,
+    "gap_px": 309.0,
+    "baby_size_px": 125.0,
+    "ratio": 2.472,
+    "touching": false,
+    "area_has_furniture": false
+   },
+   "scores": {
+    "dog": [
+     0.958
+    ],
+    "baby": [
+     0.643
+    ],
+    "bassinet": [
+     0.348,
+     0.342
+    ],
+    "play mat": []
+   },
+   "sam_s": 2.257,
+   "total_s": 2.271,
+   "verdict": "far",
+   "alert": false
+  },
+  {
+   "id": "m044",
+   "label": "far",
+   "kind": "composite",
+   "measure": {
+    "dog": true,
+    "baby": true,
+    "gap_px": 291.1,
+    "baby_size_px": 86.4,
+    "ratio": 3.37,
+    "touching": false,
+    "area_has_furniture": false
+   },
+   "scores": {
+    "dog": [
+     0.903
+    ],
+    "baby": [
+     0.916
+    ],
+    "bassinet": [
+     0.442
+    ],
+    "play mat": []
+   },
+   "sam_s": 2.443,
+   "total_s": 2.455,
+   "verdict": "far",
+   "alert": false
+  },
+  {
+   "id": "m046",
+   "label": "far",
+   "kind": "composite",
+   "measure": {
+    "dog": true,
+    "baby": false
+   },
+   "scores": {
+    "dog": [
+     0.972
+    ],
+    "baby": [
+     0.49
+    ],
+    "bassinet": [],
+    "play mat": []
+   },
+   "sam_s": 2.841,
+   "total_s": 2.849,
+   "verdict": "no_baby",
+   "alert": false
+  },
+  {
+   "id": "m047",
+   "label": "far",
+   "kind": "composite",
+   "measure": {
+    "dog": true,
+    "baby": true,
+    "gap_px": 298.1,
+    "baby_size_px": 89.0,
+    "ratio": 3.349,
+    "touching": false,
+    "area_has_furniture": false
+   },
+   "scores": {
+    "dog": [
+     0.929
+    ],
+    "baby": [
+     0.932
+    ],
+    "bassinet": [],
+    "play mat": []
+   },
+   "sam_s": 2.911,
+   "total_s": 2.921,
+   "verdict": "far",
+   "alert": false
+  },
+  {
+   "id": "m048",
+   "label": "no_baby",
+   "kind": "composite",
+   "measure": {
+    "dog": true,
+    "baby": false
+   },
+   "scores": {
+    "dog": [
+     0.961
+    ],
+    "baby": [],
+    "bassinet": [],
+    "play mat": []
+   },
+   "sam_s": 3.332,
+   "total_s": 3.339,
+   "verdict": "no_baby",
+   "alert": false
+  },
+  {
+   "id": "m049",
+   "label": "no_baby",
+   "kind": "composite",
+   "measure": {
+    "dog": true,
+    "baby": false
+   },
+   "scores": {
+    "dog": [
+     0.957
+    ],
+    "baby": [],
+    "bassinet": [],
+    "play mat": []
+   },
+   "sam_s": 2.715,
+   "total_s": 2.724,
+   "verdict": "no_baby",
+   "alert": false
+  },
+  {
+   "id": "m054",
+   "label": "no_baby",
+   "kind": "composite",
+   "measure": {
+    "dog": true,
+    "baby": false
+   },
+   "scores": {
+    "dog": [
+     0.945
+    ],
+    "baby": [],
+    "bassinet": [
+     0.371,
+     0.363
+    ],
+    "play mat": []
+   },
+   "sam_s": 2.748,
+   "total_s": 2.763,
+   "verdict": "no_baby",
+   "alert": false
+  },
+  {
+   "id": "m055",
+   "label": "no_baby",
+   "kind": "composite",
+   "measure": {
+    "dog": true,
+    "baby": false
+   },
+   "scores": {
+    "dog": [
+     0.944
+    ],
+    "baby": [],
+    "bassinet": [
+     0.572
+    ],
+    "play mat": []
+   },
+   "sam_s": 2.671,
+   "total_s": 2.684,
+   "verdict": "no_baby",
+   "alert": false
+  },
+  {
+   "id": "m056",
+   "label": "no_dog",
+   "kind": "composite",
+   "measure": {
+    "dog": false,
+    "baby": true
+   },
+   "scores": {
+    "dog": [],
+    "baby": [
+     0.933
+    ],
+    "bassinet": [
+     0.455
+    ],
+    "play mat": []
+   },
+   "sam_s": 2.649,
+   "total_s": 2.664,
+   "verdict": "no_dog",
+   "alert": false
+  },
+  {
+   "id": "m058",
+   "label": "no_dog",
+   "kind": "composite",
+   "measure": {
+    "dog": false,
+    "baby": true
+   },
+   "scores": {
+    "dog": [],
+    "baby": [
+     0.957
+    ],
+    "bassinet": [],
+    "play mat": []
+   },
+   "sam_s": 3.325,
+   "total_s": 3.335,
+   "verdict": "no_dog",
+   "alert": false
+  },
+  {
+   "id": "m059",
+   "label": "no_dog",
+   "kind": "composite",
+   "measure": {
+    "dog": false,
+    "baby": true
+   },
+   "scores": {
+    "dog": [],
+    "baby": [
+     0.669
+    ],
+    "bassinet": [
+     0.391,
+     0.382
+    ],
+    "play mat": []
+   },
+   "sam_s": 4.715,
+   "total_s": 4.733,
+   "verdict": "no_dog",
+   "alert": false
+  },
+  {
+   "id": "m063",
+   "label": "no_dog",
+   "kind": "composite",
+   "measure": {
+    "dog": false,
+    "baby": true
+   },
+   "scores": {
+    "dog": [],
+    "baby": [
+     0.941
+    ],
+    "bassinet": [],
+    "play mat": []
+   },
+   "sam_s": 3.894,
+   "total_s": 3.907,
+   "verdict": "no_dog",
+   "alert": false
+  }
+ ]
+}
