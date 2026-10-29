@@ -15,6 +15,11 @@ natural  hover moments that the generated clips already show (hands lifted above
 
 Sources are split by scene: dev sources pick thresholds, test sources are only scored. Clips and a contact sheet
 per moment go to <synthetic>/hover/set, never into git. moments.json lists every moment with its label.
+
+A fresh render reuses the method with other lifts and other points in each source, for a check the design never saw:
+    python scripts/hover_render.py --synthetic ... --out fresh --splits test --lifts 2.5,4 --touch-phases 0.25,0.75 \
+        --hover-phase 0.33 --no-natural
+It also writes labels.json, labelled by construction (a rendered lift is a hover, an untouched stretch a touch).
 """
 import argparse
 import json
@@ -140,28 +145,38 @@ def sheet(frames, path, cue_s):
 def main(argv=None):
     parser = argparse.ArgumentParser()
     parser.add_argument("--synthetic", type=Path, required=True)
+    parser.add_argument("--out", default="set", help="folder under <synthetic>/hover")
+    parser.add_argument("--splits", default="dev,test")
+    parser.add_argument("--lifts", default=",".join(f"{v:g}" for v in LIFTS_CM))
+    parser.add_argument("--touch-phases", default=None, help="fractions of the stretch, default 0 and 0.5")
+    parser.add_argument("--hover-phase", type=float, default=0.0, help="fraction of the stretch")
+    parser.add_argument("--no-natural", action="store_true")
     args = parser.parse_args(argv)
     root = args.synthetic.expanduser()
-    out = root / "hover" / "set"
+    out = root / "hover" / args.out
+    splits, lifts = args.splits.split(","), [float(v) for v in args.lifts.split(",")]
+    touch_phases = [float(v) for v in args.touch_phases.split(",")] if args.touch_phases else [0.0, 0.5]
     (out / "sheets").mkdir(parents=True, exist_ok=True)
     hands = Hands()
     moments = []
     for source_id, file, scene, split, start_s, end_s in SOURCES:
+        if split not in splits:
+            continue
         base = read(root / file, start_s, end_s)
         for mirrored in (False, True):
             frames = [cv2.flip(f, 1) for f in base] if mirrored else base
             tag = f"{source_id}{'-m' if mirrored else ''}"
-            for phase in (0, len(frames) // 2):
+            for phase in [int(len(frames) * f) for f in touch_phases]:
                 clip = ping_pong(frames, LENGTH_S, phase)
                 moment = f"{tag}-touch-p{phase}"
                 write(clip, out / f"{moment}.mp4")
                 sheet(clip, out / "sheets" / f"{moment}.jpg", CUE_S)
                 moments.append({"id": moment, "source": source_id, "file": file, "scene": scene, "split": split,
                                 "kind": "touch", "lift_cm": 0.0, "mirrored": mirrored, "cue_s": CUE_S, "origin": "generated"})
-            clip = ping_pong(frames, LENGTH_S)
+            clip = ping_pong(frames, LENGTH_S, int(len(frames) * args.hover_phase))
             hands.last = []
             masks = [hands.masks(f) for f in clip]
-            for lift_cm in LIFTS_CM:
+            for lift_cm in lifts:
                 moment = f"{tag}-hover-{lift_cm:g}cm"
                 rendered = [f if i < CUE_S * FPS else
                             lift(f, m, lift_cm * min(1.0, (i / FPS - CUE_S) / RAMP_S))
@@ -170,7 +185,7 @@ def main(argv=None):
                 sheet(rendered, out / "sheets" / f"{moment}.jpg", CUE_S)
                 moments.append({"id": moment, "source": source_id, "file": file, "scene": scene, "split": split,
                                 "kind": "hover", "lift_cm": lift_cm, "mirrored": mirrored, "cue_s": CUE_S, "origin": "rendered"})
-    for moment, file, scene, split, start_s, cue_s, note in NATURAL:
+    for moment, file, scene, split, start_s, cue_s, note in ([] if args.no_natural else NATURAL):
         clip = read(root / file, start_s, start_s + 30)
         clip = clip + [clip[-1]] * int(2.5 * FPS)  # the scene goes on after the clip ends
         write(clip, out / f"{moment}.mp4")
@@ -179,6 +194,9 @@ def main(argv=None):
                         "lift_cm": None, "mirrored": False, "cue_s": cue_s, "origin": "generated", "note": note})
     (out / "moments.json").write_text(json.dumps({"camera_cm": CAMERA_CM, "shadow_px_per_cm": SHADOW_PX_PER_CM,
                                                   "fps": FPS, "moments": moments}, indent=2) + "\n")
+    if args.out != "set":  # the original set was labelled by eye in labels.json, a fresh render by construction
+        (out / "labels.json").write_text(json.dumps({"labelled_by": "construction", "moments": [
+            {**m, "label": m["kind"], "split": "test"} for m in moments]}, indent=2) + "\n")
     print(f"{len(moments)} moments in {out}")
 
 

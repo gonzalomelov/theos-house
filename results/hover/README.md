@@ -1,5 +1,7 @@
 # Touch versus hover ablation, Oct 28 2026
 
+Update Oct 29: the lift check now catches these hovers (24 and 23 of 26 in two runs, 1 false voice on 16 touches), see `lift/README.md`.
+
 Measured on Oct 28 2026, during the Meta hackathon (Oct 26 12 PM ET to Nov 4 9 PM ET), for issues #6 (changing table) and #10 (bath). Numbers in `ablation.json`. It replaces the pre-event number (21 of 21 hovers, Oct 23 and 24, one Kling clip with the forearm far above the baby).
 
 ## The question

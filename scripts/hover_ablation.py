@@ -9,6 +9,8 @@ the baby log are off. A hover moment must speak "hand" (no hand touches the baby
 moment must stay silent from start to end. Latency is wall time from the cue on screen to the spoken word.
 --confirm-wait-s sets alarm.confirm_wait_s, the bounded wait for SAM 3.1 on a near (ambiguous) reflex reading.
 --wait-without-confirm is the control: the same wait with the reflex alone, so the wait is not credited to SAM 3.1.
+--lift on|off overrides lift.enabled, the lift check that measures how far a hand the reflex reads on rose above
+the baby (parenting_agent/lift.py). Per moment it reports the median seconds per frame of the reflex and the lift check.
 """
 import argparse
 import copy
@@ -45,8 +47,10 @@ class Shared:
         return verdict
 
 
-def skill_config(scene, confirm_wait_s):
+def skill_config(scene, confirm_wait_s, lift=None):
     cfg = copy.deepcopy(config_mod.load(SKILLS[scene]))
+    if lift is not None:
+        cfg.setdefault("lift", {})["enabled"] = lift == "on"
     cfg["house"] = {"allowed": {}, "on_armed": [], "on_voice": [], "on_closed": []}
     cfg["tracking"] = {"provider": "none", "on_closed": None}
     if confirm_wait_s is not None:
@@ -70,6 +74,9 @@ def run_moment(moment, clip, cfg, reflex, detector, wait_without_confirm=False):
     worker.join()
     skill.close()
     events = list(bus.history)
+    frames = [e for e in events if e["kind"] == "frame"]
+    lift_times = sorted(e["lift_s"] for e in frames if e.get("lift_s") is not None)
+    reflex_times = sorted(e["seconds"] for e in frames)
     cue_mono = source.started + moment["cue_s"]
     if moment["kind"] == "hover":
         early = [v for v in heard if v["stream_s"] < moment["cue_s"] - EARLY_TOLERANCE_S]
@@ -85,8 +92,14 @@ def run_moment(moment, clip, cfg, reflex, detector, wait_without_confirm=False):
         "chimes": sum(1 for e in events if e["kind"] == "chime"),
         "cancels": sum(1 for e in events if e["kind"] == "alarm" and e.get("action") == "cancel"),
         "confirms": [e["verdict"] for e in events if e["kind"] == "confirm"],
-        "reflex": "".join({"on": "1", "off": "0", "unknown": "?", "near": "~"}.get(e["state"], "x")
-                          for e in events if e["kind"] == "frame"),
+        "reflex": "".join({"on": "1", "off": "0", "unknown": "?", "near": "~", "lifted": "^"}.get(e["state"], "x")
+                          for e in frames),
+        "max_lift_cm_after_cue": max((e["lift_cm"] for e in frames if e.get("lift_cm") is not None
+                                      and e["stream_s"] >= moment["cue_s"]), default=None),
+        "frames": len(frames),
+        "lift_series": [[round(e["stream_s"] - moment["cue_s"], 2), e.get("lift_cm")] for e in frames],
+        "reflex_s_median": reflex_times[len(reflex_times) // 2] if reflex_times else None,
+        "lift_s_median": lift_times[len(lift_times) // 2] if lift_times else None,
     }
 
 
@@ -105,7 +118,14 @@ def summarize(rows):
         "cancels": sum(r["cancels"] for r in rows),
         "latency_median_s": lat[len(lat) // 2] if lat else None,
         "latency_max_s": lat[-1] if lat else None,
+        "lift_s_median_of_moments": median([r["lift_s_median"] for r in rows if r["lift_s_median"] is not None]),
+        "reflex_s_median_of_moments": median([r["reflex_s_median"] for r in rows if r["reflex_s_median"] is not None]),
     }
+
+
+def median(values):
+    values = sorted(values)
+    return values[len(values) // 2] if values else None
 
 
 def main(argv=None):
@@ -115,6 +135,7 @@ def main(argv=None):
     parser.add_argument("--confirm", choices=["none", "sam3_local"], required=True)
     parser.add_argument("--confirm-wait-s", type=float, default=None)
     parser.add_argument("--wait-without-confirm", action="store_true", help="control for --confirm none")
+    parser.add_argument("--lift", choices=["on", "off"], default=None, help="override lift.enabled")
     parser.add_argument("--only", default=None, help="comma separated moment ids")
     parser.add_argument("--out", type=Path, required=True)
     args = parser.parse_args(argv)
@@ -130,15 +151,17 @@ def main(argv=None):
     rows = []
     try:
         for moment in moments:
-            cfg = skill_config(moment["scene"], args.confirm_wait_s)
+            cfg = skill_config(moment["scene"], args.confirm_wait_s, args.lift)
             rows.append(run_moment(moment, root / f"{moment['id']}.mp4", cfg, reflex, detector, args.wait_without_confirm))
-            print(json.dumps({k: rows[-1][k] for k in ("id", "spoken", "latency_s", "chimes", "cancels", "confirms")}), flush=True)
+            print(json.dumps({k: rows[-1][k] for k in ("id", "spoken", "latency_s", "chimes", "cancels", "confirms",
+                                                       "max_lift_cm_after_cue", "lift_s_median")}), flush=True)
     finally:
         if detector:
             detector.detector.close()
     result = {
         "generated_at": datetime.datetime.now().astimezone().isoformat(timespec="seconds"),
         "split": args.split, "confirm": args.confirm, "wait_without_confirm": args.wait_without_confirm,
+        "lift": {scene: skill_config(scene, args.confirm_wait_s, args.lift).get("lift") for scene in SKILLS},
         "alarm": {k: v for k, v in skill_config("changing_table", args.confirm_wait_s)["alarm"].items() if k != "voice_text"},
         "summary": summarize(rows),
         "by_scene": {scene: summarize([r for r in rows if r["scene"] == scene]) for scene in SKILLS},

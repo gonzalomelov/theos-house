@@ -1,7 +1,9 @@
 """Skill lifecycle: arm, watch, close.
 
 Arming publishes skill_armed and fires the house on_armed actions. Each new frame goes through the reflex,
-the alarm and, when the alarm raises, one confirm request. A spoken prompt fires the on_voice actions.
+the lift check when the reflex reads on (config lift.enabled, see parenting_agent/lift.py), the alarm and, when
+the alarm raises, one confirm request. A hand the lift check finds held above the baby counts as off, and that
+alarm skips the confirm detector, because SAM 3.1 reads a hovering hand as on (results/hover). A spoken prompt fires the on_voice actions.
 Closing fires on_closed, logs the routine to tracking, and publishes skill_closed with the numbers.
 """
 import datetime
@@ -10,6 +12,7 @@ import time
 from . import confirm as confirm_mod
 from .alarm import Alarm
 from .house import House
+from .lift import LiftCheck
 from .tracking import Tracker
 
 
@@ -22,7 +25,9 @@ class Skill:
         self.house = house or House(config["house"], bus)
         self.tracker = tracker or Tracker(config["tracking"], bus)
         self.bus.subscribe(self._on_voice, ["voice"])
-        self.armed_at, self.frames = None, 0
+        self.armed_at, self.frames, self.off_since = None, 0, None
+        lift = config.get("lift", {})
+        self.lift = LiftCheck(lift) if lift.get("enabled") else None
 
     def _on_voice(self, event):
         self.house.on_event("voice")
@@ -39,12 +44,32 @@ class Skill:
             frame_bgr = cv2.resize(frame_bgr, (width, round(frame_bgr.shape[0] * width / frame_bgr.shape[1])))
         state, hands, seconds = self.reflex.state(frame_bgr)
         self.frames += 1
-        self.bus.publish("frame", stream_s=round(stream_s, 3), state=state, hands=hands, seconds=round(seconds, 4))
+        lifted, lift_cm, lift_s = self._lift(frame_bgr, state, stream_s)
+        self.bus.publish("frame", stream_s=round(stream_s, 3), state="lifted" if lifted else state, hands=hands,
+                         seconds=round(seconds, 4), lift_cm=lift_cm, lift_s=lift_s)
         before = self.alarm.episode
-        self.alarm.on_reflex(state, round(stream_s, 3), near=getattr(self.reflex, "near", False))
-        if self.alarm.episode != before:
+        self.alarm.on_reflex(state, round(stream_s, 3), near=getattr(self.reflex, "near", False), lifted=lifted)
+        if self.alarm.episode != before and not lifted:
             self.confirm.request(self.alarm.episode, frame_bgr, round(stream_s, 3))
         self.confirm.collect()
+
+    def _lift(self, frame_bgr, state, stream_s):
+        """Whether every hand the reflex reads on is held above the baby, its lift in cm and the seconds it took."""
+        if self.lift is None:
+            return False, None, None
+        if state != "on":  # a short flicker keeps the resting baseline, a longer absence drops it
+            self.off_since = stream_s if self.off_since is None else self.off_since
+            if stream_s - self.off_since >= self.lift.cfg["reset_after_off_s"]:
+                self.lift.reset()
+            return False, None, None
+        self.off_since = None
+        import cv2
+        started = time.monotonic()
+        landmarks = getattr(self.reflex, "landmarks_px", [])
+        hands = [landmarks[i] for i in getattr(self.reflex, "on_hands", []) if i < len(landmarks)]
+        lifted = self.lift.update(cv2.cvtColor(frame_bgr, cv2.COLOR_BGR2GRAY), hands, stream_s)
+        lift_cm = None if self.lift.lift_cm is None else round(self.lift.lift_cm, 2)
+        return lifted, lift_cm, round(time.monotonic() - started, 4)
 
     def close(self):
         self.confirm.close()
