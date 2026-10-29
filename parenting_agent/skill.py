@@ -115,13 +115,13 @@ class Skill:
             self.bus.publish("anchor_request", stream_s=round(stream_s, 3))
             self.anchor_job = (gray, stream_s, self.anchor_pool.submit(self.masks, frame_bgr.copy()))
 
-    def close(self):
+    def close(self, content=None):
         if self.anchor_pool:
             self.anchor_pool.shutdown(wait=True)
         self.confirm.close()
         ended = datetime.datetime.now(datetime.timezone.utc)
         self.house.on_event("closed")
-        self.tracker.skill_closed(self.cfg["name"], self.armed_at or ended, ended)
+        self.tracker.skill_closed(self.cfg["name"], self.armed_at or ended, ended, content)
         self.house.close()
         self.bus.publish("skill_closed", skill=self.cfg["name"], frames=self.frames,
                          alarms=self.bus.count("chime"), voices=self.bus.count("voice"))

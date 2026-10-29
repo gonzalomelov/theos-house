@@ -73,6 +73,7 @@ final class Companion {
   #if DEBUG
   /// Simulator demo: mock glasses on, the synthetic changing-table clip as their camera, then the parent's two lines.
   /// The launch argument -mockFeed NAME plays MockFeed/NAME.mp4 instead (for example a hover or a touch clip), and
+  /// -demoDone TEXT is the parent's closing line instead of "done" (for example "done, it was dirty"), and
   /// -demoAsk TEXT asks one more question after "done" (for example the last diaper, read back from the baby log).
   func runDemo() async {
     let name = UserDefaults.standard.string(forKey: "mockFeed") ?? "changing-table-feed"
@@ -88,7 +89,8 @@ final class Companion {
     say("changing time")
     let watch = UserDefaults.standard.double(forKey: "demoWatchSeconds")
     try? await Task.sleep(for: .seconds(watch > 0 ? watch : 20))
-    say("done")
+    let done = UserDefaults.standard.string(forKey: "demoDone") ?? ""
+    say(done.isEmpty ? "done" : done)
     if let question = UserDefaults.standard.string(forKey: "demoAsk"), !question.isEmpty {
       let wait = UserDefaults.standard.double(forKey: "demoAskAfterSeconds")
       try? await Task.sleep(for: .seconds(wait > 0 ? wait : 12))

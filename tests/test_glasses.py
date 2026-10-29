@@ -174,7 +174,7 @@ class GlassesChannel(unittest.TestCase):
                 agent.stop()
                 agent.close()
 
-    def test_phrases_arm_and_finish_without_the_brain(self):
+    def test_phrases_arm_and_finish_as_a_logged_fallback_when_the_brain_does_not(self):
         from tests.test_changing_table import FakeReflex
         from parenting_agent.changing_table import ChangingTable
         with tempfile.TemporaryDirectory() as tmp:
@@ -183,7 +183,7 @@ class GlassesChannel(unittest.TestCase):
             agent = build(config)
             hub = GlassesHub.shared(0, host="127.0.0.1", token="t")
             try:
-                table = ChangingTable(agent, {**config, "changing_table": {"source": f"glasses:{hub.port}"}},
+                table = ChangingTable(agent, {**config, "changing_table": {"source": f"glasses:{hub.port}", "phrase_fallback_s": 0.3}},
                                       reflex=FakeReflex(on_frames=100), quiet=True)
                 table.skill_cfg["confirm"] = {"provider": "none"}
                 table.skill_cfg["tracking"] = {"provider": "none"}
@@ -201,6 +201,10 @@ class GlassesChannel(unittest.TestCase):
                     time.sleep(0.05)
                 self.assertEqual(agent.bus.count("skill_closed"), 1)
                 self.assertIn("off", agent.memory.facts()["changing-table"]["value"])
+                self.assertEqual([e["action"] for e in agent.bus.history if e["kind"] == "phrase_fallback"], ["arm", "finish"])
+                armed = next(e for e in agent.bus.history if e["kind"] == "changing_armed")
+                self.assertEqual(armed["via"], "phrase fallback")
+                self.assertGreaterEqual(armed["since_words_s"], 0.3)
             finally:
                 hub.close()
                 agent.close()

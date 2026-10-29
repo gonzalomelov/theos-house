@@ -29,6 +29,11 @@ class BabyBuddy:
         with urllib.request.urlopen(request, timeout=10) as response:
             return json.loads(response.read())
 
+    def get(self, path, entry_id):
+        request = urllib.request.Request(f"{self.url}/api/{path}/{entry_id}/", headers={"Authorization": f"Token {self.token}"})
+        with urllib.request.urlopen(request, timeout=10) as response:
+            return json.loads(response.read())
+
 
 def parse_voice(text):
     """Voice entries the agent understands without a model. Returns (kind, fields) or None."""
@@ -65,10 +70,22 @@ class Tracker:
         except (urllib.error.URLError, TimeoutError, ValueError) as error:
             self.bus.publish("track_error", entry=path, error=str(error)[:200])
 
-    def skill_closed(self, skill, started, ended):
+    def read(self, path, entry_id):
+        """One entry as Baby Buddy stores it, or None when the tracker runs dry or the read fails."""
+        if self.client is None or entry_id is None:
+            return None
+        try:
+            return self.client.get(path, entry_id)
+        except (urllib.error.URLError, TimeoutError, ValueError) as error:
+            self.bus.publish("track_error", entry=path, error=str(error)[:200])
+            return None
+
+    def skill_closed(self, skill, started, ended, content=None):
+        """content is the diaper's {"wet": bool, "solid": bool} when the parent said it, both false otherwise."""
         kind = self.cfg.get("on_closed")
+        content = content or {}
         if kind == "change":
-            self.log("changes", {"time": iso(ended), "wet": False, "solid": False,
+            self.log("changes", {"time": iso(ended), "wet": bool(content.get("wet")), "solid": bool(content.get("solid")),
                                  "notes": f"logged by {skill}, {iso(started)} to {iso(ended)}"})
         elif kind == "bath":
             self.log("notes", {"note": f"bath {iso(started)} to {iso(ended)}", "time": iso(ended)})

@@ -1,0 +1,23 @@
+{"file":"001.wav","text":"Watching the changing table.","urgent":false,"t":1793261101.020072,"kind":"queued"}
+{"file":"001.wav","t":1793261101.0894179,"kind":"started"}
+{"file":"001.wav","t":1793261101.835427,"kind":"rendered"}
+{"file":"001.wav","t":1793261103.5100091,"kind":"finished"}
+{"t":1793261103.9724391,"file":"tone.wav","seconds":0.26000000000000001,"kind":"chime"}
+{"file":"002.wav","kind":"queued","t":1793261105.4658451,"text":"hand","urgent":true}
+{"kind":"started","file":"002.wav","t":1793261105.4813418}
+{"kind":"rendered","file":"002.wav","t":1793261105.5870008}
+{"file":"002.wav","t":1793261106.1126809,"kind":"finished"}
+{"seconds":0.26000000000000001,"t":1793261112.4793549,"kind":"chime","file":"tone.wav"}
+{"kind":"queued","file":"003.wav","urgent":true,"t":1793261113.7250991,"text":"hand"}
+{"t":1793261113.7299399,"kind":"started","file":"003.wav"}
+{"file":"003.wav","t":1793261113.8442469,"kind":"rendered"}
+{"t":1793261114.3686662,"kind":"finished","file":"003.wav"}
+{"t":1793261125.212523,"file":"tone.wav","seconds":0.26000000000000001,"kind":"chime"}
+{"t":1793261126.5016241,"file":"004.wav","kind":"queued","text":"hand","urgent":true}
+{"kind":"started","file":"004.wav","t":1793261126.504406}
+{"t":1793261126.6201959,"file":"004.wav","kind":"rendered"}
+{"kind":"finished","file":"004.wav","t":1793261127.1368361}
+{"kind":"queued","file":"005.wav","text":"3 hand alerts this change. Logged diaper at 05:05, dirty.","urgent":false,"t":1793261146.282733}
+{"kind":"started","t":1793261146.290292,"file":"005.wav"}
+{"kind":"rendered","t":1793261146.4313631,"file":"005.wav"}
+{"kind":"finished","t":1793261150.6036,"file":"005.wav"}

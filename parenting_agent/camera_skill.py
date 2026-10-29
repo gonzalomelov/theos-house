@@ -96,7 +96,7 @@ class AgentLogTracker:
         self.cfg, self.bus, self.baby_log, self.label = config, bus, baby_log, label
         self.record = None
 
-    def skill_closed(self, skill, started, ended):
+    def skill_closed(self, skill, started, ended, content=None):
         kind = self.cfg.get("on_closed")
         if kind == "bath":
             entry = ("bath", {"text": f"Bath {hhmm(started)} to {hhmm(ended)}, logged by the {self.label} skill"})

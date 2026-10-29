@@ -1,10 +1,10 @@
 import AVFoundation
-import AudioToolbox
 
 /// Plays what the agent says on the phone, which routes to the glasses speakers when they are connected.
 @MainActor
 final class Voice: NSObject, AVSpeechSynthesizerDelegate {
   private let synthesizer = AVSpeechSynthesizer()
+  private let tone = AlertTone()
   #if DEBUG
   private let recorder = UserDefaults.standard.bool(forKey: "recordSpeech") ? SpeechRecorder() : nil
   #endif
@@ -30,9 +30,10 @@ final class Voice: NSObject, AVSpeechSynthesizerDelegate {
 
   func chime() {
     #if DEBUG
-    recorder?.log(["kind": "chime", "sound_id": 1057])
+    recorder?.saveTone(tone.wav)
+    recorder?.log(["kind": "chime", "file": AlertTone.fileName, "seconds": AlertTone.seconds])
     #endif
-    AudioServicesPlaySystemSound(1057)
+    tone.play()
   }
 
   nonisolated func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didStart utterance: AVSpeechUtterance) {
@@ -59,10 +60,51 @@ final class Voice: NSObject, AVSpeechSynthesizerDelegate {
   }
 }
 
+/// The alert tone: two short sine notes (988 Hz then 1319 Hz, 0.13 s each, 5 ms fades) generated in code, so the app
+/// ships no sound asset and needs no license for one. It replaces system sound 1057 (Tink), which lasts 0.02 s and
+/// was barely audible in the hero run (results/hero/README.md).
+@MainActor
+final class AlertTone {
+  static let fileName = "tone.wav", seconds = 0.26
+  let wav: Data
+  private var player: AVAudioPlayer?
+
+  init() {
+    wav = AlertTone.render()
+    player = try? AVAudioPlayer(data: wav)
+    player?.volume = 1
+    player?.prepareToPlay()
+  }
+
+  func play() {
+    player?.currentTime = 0
+    player?.play()
+  }
+
+  static func render(rate: Int = 44100) -> Data {
+    let note = Int(Double(rate) * seconds / 2), fade = rate / 200
+    var samples: [Int16] = []
+    for frequency in [988.0, 1319.0] {
+      for i in 0..<note {
+        let envelope = min(1, Double(min(i, note - 1 - i)) / Double(fade))
+        samples.append(Int16(0.7 * envelope * sin(2 * .pi * frequency * Double(i) / Double(rate)) * Double(Int16.max)))
+      }
+    }
+    var data = Data()
+    func put<T: FixedWidthInteger>(_ value: T) { withUnsafeBytes(of: value.littleEndian) { data.append(contentsOf: $0) } }
+    let bytes = UInt32(samples.count * 2)
+    data.append(contentsOf: Array("RIFF".utf8)); put(36 + bytes); data.append(contentsOf: Array("WAVEfmt ".utf8))
+    put(UInt32(16)); put(UInt16(1)); put(UInt16(1)); put(UInt32(rate)); put(UInt32(rate * 2)); put(UInt16(2)); put(UInt16(16))
+    data.append(contentsOf: Array("data".utf8)); put(bytes)
+    samples.forEach { put($0) }
+    return data
+  }
+}
+
 #if DEBUG
 /// Debug only, launch argument -recordSpeech YES. The simulator's screen recording has no audio, so every line the
 /// app speaks is also rendered with the same voice and rate to Documents/speech/NNN.wav, and Documents/speech/log.jsonl
-/// records when each line started and stopped playing and when the chime played (Unix seconds, the Mac's clock).
+/// records when each line started and stopped playing and when the alert tone played (saved once as tone.wav) (Unix seconds, the Mac's clock).
 /// scripts/glasses_sim_run.py --audio muxes them onto the screen recording.
 @MainActor
 final class SpeechRecorder {
@@ -89,6 +131,11 @@ final class SpeechRecorder {
     } else {
       try? Data((line + "\n").utf8).write(to: url)
     }
+  }
+
+  func saveTone(_ wav: Data) {
+    let url = folder.appendingPathComponent(AlertTone.fileName)
+    if !FileManager.default.fileExists(atPath: url.path) { try? wav.write(to: url) }
   }
 
   func queued(_ utterance: AVSpeechUtterance, urgent: Bool) {

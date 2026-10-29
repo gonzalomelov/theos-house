@@ -102,6 +102,48 @@ class ChangingTablePlugin(unittest.TestCase):
             self.assertEqual(agent.bus.count("voice"), 0)
             agent.close()
 
+    def test_the_brain_tools_log_the_content_and_read_it_back(self):
+        """The brain arms through its tool, no fallback fires, and finish_changing_table(solid=True) logs a dirty diaper
+        and returns the entry read back from Baby Buddy for the spoken summary."""
+        from parenting_agent.tracking import Tracker
+
+        class FakeBabyBuddy:
+            def __init__(self):
+                self.saved = {}
+
+            def post(self, path, data):
+                self.saved[len(self.saved) + 1] = data
+                return {"id": len(self.saved)}
+
+            def get(self, path, entry_id):
+                return {"id": entry_id, **self.saved[entry_id], "time": "2026-10-29T03:46:58-03:00"}
+
+        with tempfile.TemporaryDirectory() as tmp:
+            agent, plugin = agent_with_skill(tmp, FakeReflex(on_frames=4), FakeSource(frames=12, step=0.2))
+            plugin.fallback_s = 0.2
+            agent.tools.allowed.update({"start_changing_table", "finish_changing_table"})
+            client = FakeBabyBuddy()
+            agent.bus.publish("message", channel="glasses", text="changing time")
+            self.assertEqual(agent.tools.run("start_changing_table", {})[1], "watching the changing table")
+            plugin.skill.tracker = Tracker({"on_closed": "change"}, agent.bus, client=client)
+            self.assertTrue(plugin._source.drained.wait(30), "the watcher never took every frame")
+            time.sleep(0.4)
+            status, result = agent.tools.run("finish_changing_table", {"wet": False, "solid": True})
+            self.assertEqual(status, "ran")
+            self.assertIn("diaper at 03:46, dirty", result)
+            self.assertIn("Hand alerts spoken this change: 1", result)
+            self.assertEqual(client.saved[1]["solid"], True)
+            self.assertEqual(agent.bus.count("phrase_fallback"), 0)
+            self.assertEqual(agent.bus.count("observation"), 0)  # the tool result carries the summary, no second answer
+            self.assertEqual(next(e for e in agent.bus.history if e["kind"] == "changing_armed")["via"], "brain")
+            self.assertIn("dirty", agent.memory.facts()["last-diaper-change"]["value"])
+            agent.close()
+
+    def test_fallback_content_from_words(self):
+        from parenting_agent.changing_table import content_from
+        self.assertEqual(content_from("Done, it was dirty!"), {"wet": False, "solid": True})
+        self.assertEqual(content_from("done wet"), {"wet": True, "solid": False})
+
     def test_finish_without_arm(self):
         with tempfile.TemporaryDirectory() as tmp:
             agent, plugin = agent_with_skill(tmp, FakeReflex(0), FakeSource(0, 0.2))

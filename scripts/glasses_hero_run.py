@@ -27,7 +27,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 BUNDLE = "com.bygmv.parentingglasses"
-CHIME_SOUND = "System/Library/Audio/UISounds/Tink.caf"  # system sound 1057, what Voice.chime() plays
+TONE = "tone.wav"  # the alert tone the app generates in code (AlertTone in Voice.swift) and saves next to the speech
 
 # Each feed as (moment, start s, end s, cue s or None) inside one loop. The cues come from the synthetic set
 # (kt/clips/cues.json and hover/fresh/labels.json). A cue is when the hands leave or the hover starts.
@@ -103,6 +103,27 @@ def sam_calls(rows):
     return sorted(calls, key=lambda c: c["asked_t"])
 
 
+def arming(rows):
+    """Who armed the watch and closed it, and how long each took from the parent's words, from the agent's events."""
+    said = lambda text: next((e for e in rows if e["kind"] == "message" and e.get("text") == text), None)
+    armed = next((e for e in rows if e["kind"] == "changing_armed"), None)
+    start = said("changing time")
+    watching = next((e for e in rows if e["kind"] == "skill_armed"), None)
+    tools = [{"t": e["t"], "name": e["name"], "status": e["status"]} for e in rows if e["kind"] == "tool"]
+    closed = next((e for e in rows if e["kind"] == "skill_closed"), None)
+    back = next((e for e in rows if e["kind"] == "change_read_back"), None)
+    return {
+        "armed_by": armed and armed["via"],
+        "words_to_armed_s": armed and armed.get("since_words_s"),
+        "words_to_watching_s": round(watching["t"] - start["t"], 3) if watching and start else None,
+        "phrase_fallbacks": [{k: e.get(k) for k in ("t", "action", "text")} for e in rows if e["kind"] == "phrase_fallback"],
+        "tool_calls": tools,
+        "read_back_event": back,
+        "words_to_closed_s": None if not closed else next((round(closed["t"] - e["t"], 3) for e in reversed(rows)
+                                                            if e["kind"] == "message" and e["t"] < closed["t"]), None),
+    }
+
+
 def brain_calls(rows):
     keys = ("t", "provider", "model", "destination", "seconds", "tool_calls", "input_tokens", "output_tokens",
             "reasoning_tokens", "usd", "fallback")
@@ -145,7 +166,7 @@ def audio_clips(speech, speech_dir, video_start, chime_file):
             if wav.exists():
                 keep = round(row["t"] - start, 3) if row["kind"] == "cancelled" else None
                 clips.append((wav, round(start - video_start, 3), keep))
-        elif row["kind"] == "chime" and chime_file:
+        elif row["kind"] == "chime" and chime_file and chime_file.exists():
             clips.append((chime_file, round(row["t"] - video_start, 3), None))
     for name, start in played.items():  # still playing when the recording stopped: the recording's end cuts it
         if (speech_dir / name).exists():
@@ -177,6 +198,9 @@ def main():
     parser.add_argument("--fps", type=float, default=10)
     parser.add_argument("--watch", type=float, default=50, help="seconds between \"changing time\" and \"done\"")
     parser.add_argument("--feed", default="hero-feed", choices=sorted(FEEDS))
+    parser.add_argument("--done", default="done", help="the parent's closing line, for example \"done, it was dirty\"")
+    parser.add_argument("--regions", choices=("sam3", "mediapipe"), help="override the lift check's hand regions")
+    parser.add_argument("--no-sam", action="store_true", help="rehearsal without the GPU: no SAM 3.1 confirm, MediaPipe regions")
     parser.add_argument("--ask", default="", help="one more question after \"done\", answered from the baby log")
     parser.add_argument("--ask-after", type=float, default=14)
     parser.add_argument("--out-dir", required=True)
@@ -187,6 +211,18 @@ def main():
     out = Path(args.out_dir)
     out.mkdir(parents=True, exist_ok=True)
     config = json.loads((ROOT / args.config).read_text())
+    if args.regions or args.no_sam:  # a variant of the skill file in the data dir, out of git
+        skill = json.loads((ROOT / config["changing_table"]["skill"]).read_text())
+        skill["lift"]["regions"] = "mediapipe" if args.no_sam else args.regions
+        if args.no_sam:
+            skill["confirm"] = {"provider": "none"}
+            config["changing_table"]["preload_confirm"] = False
+        (ROOT / config["data_dir"]).mkdir(exist_ok=True)
+        variant = ROOT / config["data_dir"] / "skill-variant.json"
+        variant.write_text(json.dumps(skill))
+        config["changing_table"]["skill"] = str(variant)
+        args.config = str(ROOT / config["data_dir"] / "agent-variant.json")
+        Path(args.config).write_text(json.dumps(config))
     log = ROOT / config["data_dir"] / "events.jsonl"
     if log.exists():
         log.unlink()
@@ -217,7 +253,7 @@ def main():
         launched = time.time()
         subprocess.run(["xcrun", "simctl", "launch", "--terminate-running-process", args.udid, BUNDLE,
                         "-agentURL", f"http://127.0.0.1:{port}", "-agentToken", token, "-autoDemo", "YES",
-                        "-sendFPS", str(args.fps), "-demoWatchSeconds", str(args.watch), "-mockFeed", args.feed,
+                        "-sendFPS", str(args.fps), "-demoWatchSeconds", str(args.watch), "-mockFeed", args.feed, "-demoDone", args.done,
                         "-recordSpeech", "YES", *(["-demoAsk", args.ask, "-demoAskAfterSeconds", str(args.ask_after)] if args.ask else [])],
                         check=True, capture_output=True)
         deadline = time.monotonic() + args.watch + args.ask_after + 60
@@ -240,9 +276,7 @@ def main():
     rows = events(log)
     speech_dir = out / f"{args.name}-speech"
     speech = pull_speech(args.udid, speech_dir)
-    sim_root = subprocess.run(["xcrun", "simctl", "getenv", args.udid, "IPHONE_SIMULATOR_ROOT"], capture_output=True, text=True).stdout.strip()
-    chime = Path(sim_root) / CHIME_SOUND if sim_root else None
-    chime = chime if chime and chime.exists() else None
+    chime = speech_dir / TONE
     found = moments(rows, args.feed)
     sams = sam_calls(rows)
     brains = brain_calls(rows)
@@ -258,7 +292,11 @@ def main():
             "vision": f"SAM 3.1 ({model.get('repo')}, {model.get('device')}, this Mac)" if model else None,
             "hand_reflex": "MediaPipe Hands (Google, this Mac)",
             "voice": "iOS AVSpeechSynthesizer en-US, in the companion app",
+            "alert_tone": "two sine notes generated in the app's code (AlertTone, Voice.swift), no sound asset",
         },
+        "lift_regions": json.loads(Path(config["changing_table"]["skill"] if Path(config["changing_table"]["skill"]).is_absolute()
+                                        else ROOT / config["changing_table"]["skill"]).read_text())["lift"]["regions"],
+        "arming": arming(rows),
         "baby_log": readback(config, rows),
         "moments": found,
         "summary": {
@@ -287,7 +325,8 @@ def main():
         run["video"] = {"file": muxed.name, "bytes": muxed.stat().st_size,
                         "sounds": [{"file": p.name, "at_s": at, "kept_s": keep} for p, at, keep in clips]}
     (out / f"{args.name}.json").write_text(json.dumps(run, indent=1) + "\n")
-    print(json.dumps({"moments": found, "summary": run["summary"], "baby_log": run["baby_log"].get("logged"),
+    print(json.dumps({"moments": found, "summary": run["summary"], "arming": run["arming"], "baby_log": run["baby_log"],
+                      "conversation": run["conversation"],
                       "video": run.get("video", {}).get("bytes")}, indent=1))
 
 

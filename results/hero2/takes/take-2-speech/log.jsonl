@@ -1,0 +1,32 @@
+{"text":"Watching the changing table.","file":"001.wav","kind":"queued","t":1793260698.3233881,"urgent":false}
+{"file":"001.wav","t":1793260698.3878021,"kind":"started"}
+{"kind":"rendered","file":"001.wav","t":1793260699.153923}
+{"t":1793260700.8220549,"kind":"finished","file":"001.wav"}
+{"t":1793260701.2218029,"seconds":0.26000000000000001,"kind":"chime","file":"tone.wav"}
+{"urgent":true,"kind":"queued","t":1793260702.729634,"file":"002.wav","text":"hand"}
+{"file":"002.wav","t":1793260702.74331,"kind":"started"}
+{"t":1793260702.849719,"kind":"rendered","file":"002.wav"}
+{"kind":"finished","t":1793260703.3719192,"file":"002.wav"}
+{"t":1793260710.0322142,"file":"tone.wav","seconds":0.26000000000000001,"kind":"chime"}
+{"kind":"queued","file":"003.wav","text":"hand","urgent":true,"t":1793260711.280905}
+{"kind":"started","t":1793260711.2849689,"file":"003.wav"}
+{"t":1793260711.399544,"file":"003.wav","kind":"rendered"}
+{"kind":"finished","file":"003.wav","t":1793260711.9157381}
+{"kind":"chime","file":"tone.wav","t":1793260722.669852,"seconds":0.26000000000000001}
+{"urgent":true,"file":"004.wav","text":"hand","kind":"queued","t":1793260724.176465}
+{"kind":"started","file":"004.wav","t":1793260724.180485}
+{"file":"004.wav","t":1793260724.3070359,"kind":"rendered"}
+{"t":1793260724.8117771,"kind":"finished","file":"004.wav"}
+{"seconds":0.26000000000000001,"kind":"chime","file":"tone.wav","t":1793260731.310657}
+{"file":"005.wav","kind":"queued","t":1793260732.56687,"text":"hand","urgent":true}
+{"t":1793260732.571296,"file":"005.wav","kind":"started"}
+{"file":"005.wav","t":1793260732.6824632,"kind":"rendered"}
+{"file":"005.wav","t":1793260733.2063651,"kind":"finished"}
+{"kind":"queued","t":1793260743.16396,"file":"006.wav","text":"4 hand alerts this change. Logged diaper at 04:59, dirty.","urgent":false}
+{"kind":"started","file":"006.wav","t":1793260743.1715519}
+{"kind":"rendered","t":1793260743.3024559,"file":"006.wav"}
+{"kind":"finished","t":1793260747.6384301,"file":"006.wav"}
+{"text":"Last diaper change was at 04:59, dirty.","t":1793260756.3321881,"urgent":false,"kind":"queued","file":"007.wav"}
+{"t":1793260756.3440552,"kind":"started","file":"007.wav"}
+{"t":1793260756.4787159,"kind":"rendered","file":"007.wav"}
+{"kind":"finished","t":1793260759.649303,"file":"007.wav"}
