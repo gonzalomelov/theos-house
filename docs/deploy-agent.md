@@ -86,7 +86,17 @@ sh deploy/agent.sh rollback    # run the image of the previous good deploy
 
 When Home Assistant has banned the relay's address, `NO_HA=1 sh deploy/agent.sh deploy` (or `check`) sends no request to Home Assistant at all and checks everything else. The wall check reaches Home Assistant with a TCP connect only, since a tokenless HTTP request counts as a failed login there (Oct 28, the relay was banned after two of them).
 
-A deploy that fails its health check or its wall check stops the new agent and starts the previous commit again. Rollback switches images only, the compose file stays the last deployed one.
+A deploy that fails its health check or its wall check stops the new agent and starts the commit that ran before it again, even when that is the same commit (a redeploy of HEAD). That agent keeps running when it is inside the wall, healthy or not yet, so a failed deploy never leaves the family without an agent. Only an agent that fails the wall check is stopped. Before Oct 29 a failed redeploy of the same commit stopped the agent and never started it again. `rollback` works the same way: if the previous image fails, the current one starts again. Rollback switches images only, the compose file stays the last deployed one. `public.sh` (pa-demo and pa-families) and `voice.sh` restore the same way.
+
+### One deploy at a time
+
+On Oct 29 two agents deployed at once and both rolled back. Every deploy now takes one lock on the Vostro, the directory `~/apps/.pa-deploy.lock.d` (`deploy/lock.sh`). `agent.sh` deploy, update, rollback, stop and start, `public.sh demo|families` deploy, stop and start, and `voice.sh` deploy all take it before they send code. A deploy that finds it held prints who holds it and waits up to 10 minutes (`PA_DEPLOY_LOCK_WAIT`, in seconds), then stops without changing anything. The lock is released when the script exits, also on failure or Ctrl-C, and only by the deploy that took it.
+
+To hold it by hand, for example while working on the Vostro: `ssh vostro 'mkdir ~/apps/.pa-deploy.lock.d'`, and `ssh vostro 'rmdir ~/apps/.pa-deploy.lock.d'` when done. If a Mac lost its connection mid deploy and no deploy runs, clear it with `ssh vostro 'rm -rf ~/apps/.pa-deploy.lock.d'`.
+
+### The voice build stays out of the way
+
+The pa-voice image installs torch, which loaded all 4 cores of the Vostro. `voice.sh` builds it in its own BuildKit container, `pa-lowprio` (docker-container driver, `moby/buildkit:v0.32.2`), held to cores 1 to 3, a quarter of the normal CPU weight and 3 GB of memory. Core 0 stays free and the live agents win every contention. A `nice` on the Mac or on the `docker compose` client would do nothing, because the build runs inside the BuildKit daemon. The builder is created on the first voice deploy and keeps its own cache.
 
 ## Restarts
 

@@ -21,6 +21,8 @@ SECRET_NAMES="ANTHROPIC_API_KEY BABYBUDDY_TOKEN HA_MCP_TOKEN TELEGRAM_BOT_TOKEN 
 REQUIRED_NAMES="ANTHROPIC_API_KEY BABYBUDDY_TOKEN"
 
 remote() { ssh "$HOST" "$@"; }
+# shellcheck source=deploy/lock.sh
+. "$ROOT/deploy/lock.sh"
 
 # The remote half: every command runs on the Vostro with this preamble.
 REMOTE_LIB='
@@ -51,6 +53,21 @@ healthy() {
 host_addresses() {
   ip -4 -o addr show | awk "{split(\$4, a, \"/\"); if (a[1] != \"127.0.0.1\") print a[1]}" | tr "\n" " "
 }
+# restore <commit>: run that image again after a failed deploy or rollback. It keeps running when it is inside the
+# wall, healthy or not yet, so a failure never leaves the family without the agent that ran before. Only an agent
+# that fails the wall is stopped. The same commit as the failed one is started again too (a redeploy of HEAD).
+restore() {
+  if [ -z "$1" ]; then echo "no earlier deploy recorded: the agent stays stopped" >&2; return 1; fi
+  docker image inspect "$APP:$1" >/dev/null 2>&1 || { echo "image $APP:$1 is gone: the agent stays stopped" >&2; return 1; }
+  echo "starting $1 again" >&2
+  APP_TAG="$1" compose up -d --no-build --force-recreate --remove-orphans
+  HEALTH=healthy
+  healthy || HEALTH="running, not healthy yet"
+  if walled >/dev/null; then echo "$1 is back: $HEALTH, inside the wall" >&2; return 0; fi
+  docker stop "$APP" >/dev/null 2>&1 || true
+  echo "$1 failed the wall check: the agent is stopped" >&2
+  return 1
+}
 walled() {
   NETWORKS="$(docker inspect "$APP" --format "{{range \$name, \$_ := .NetworkSettings.Networks}}{{\$name}} {{end}}")"
   [ "$NETWORKS" = "$NETWORK " ] || { echo "$APP is on: $NETWORKS" >&2; return 1; }
@@ -75,9 +92,9 @@ checks() {
   ha_token_ok || fail "deploy check aborted: Home Assistant token rejected"
   echo "== health: $(docker inspect "$APP" --format "{{.State.Health.Status}}")"
   echo "== python -m parenting_agent --check (inside the container)"
-  docker exec "$APP" python -m parenting_agent --check --config config/agent.vostro.json
+  docker exec "$APP" python -m parenting_agent --check --config config/agent.vostro.json || return 1
   echo "== Baby Buddy and Home Assistant, read from inside the container"
-  docker exec -i -e PA_NO_HA="${NO_HA:-0}" "$APP" python - < "$DIR/deploy/probe.py"
+  docker exec -i -e PA_NO_HA="${NO_HA:-0}" "$APP" python - < "$DIR/deploy/probe.py" || return 1
   echo "== the wall"
   walled
 }
@@ -115,6 +132,7 @@ push_env() {
 }
 
 deploy() {
+  deploy_lock "agent deploy $(git -C "$ROOT" rev-parse --short=12 HEAD)"
   send_code
   remote "SHA=$SHA REQUIRED_NAMES='$REQUIRED_NAMES' NO_HA=${NO_HA:-0} sh -s" <<REMOTE
 $REMOTE_LIB
@@ -146,17 +164,14 @@ else
   docker logs --tail 30 "\$APP" >&2 || true
   # An agent that may be outside the wall does not keep running.
   docker stop "\$APP" >/dev/null 2>&1 || true
-  if [ -n "\$PREVIOUS" ] && [ "\$PREVIOUS" != "\$SHA" ] && docker image inspect "\$APP:\$PREVIOUS" >/dev/null 2>&1; then
-    echo "rolling back to \$PREVIOUS" >&2
-    run "\$PREVIOUS"
-    if healthy && walled >/dev/null; then echo "rollback healthy" >&2; else docker stop "\$APP" >/dev/null 2>&1 || true; echo "rollback failed too: the agent is stopped" >&2; fi
-  fi
+  restore "\$PREVIOUS"
   exit 1
 fi
 REMOTE
 }
 
 rollback() {
+  deploy_lock "agent rollback"
   remote sh -s <<REMOTE
 $REMOTE_LIB
 PREVIOUS="\$(cat "\$PREVIOUS_FILE" 2>/dev/null || true)"
@@ -165,7 +180,12 @@ CURRENT="\$(cat "\$CURRENT_FILE" 2>/dev/null || true)"
 docker image inspect "\$APP:\$PREVIOUS" >/dev/null 2>&1 || fail "image \$APP:\$PREVIOUS is gone"
 echo "== roll back from \$CURRENT to \$PREVIOUS (images only, the compose file stays the deployed one)"
 APP_TAG="\$PREVIOUS" compose up -d --no-build --force-recreate --remove-orphans
-healthy && walled >/dev/null || { docker stop "\$APP" >/dev/null 2>&1 || true; fail "previous image is not healthy or not walled: the agent is stopped"; }
+if ! { healthy && walled >/dev/null; }; then
+  echo "\$PREVIOUS is not healthy or not walled" >&2
+  docker stop "\$APP" >/dev/null 2>&1 || true
+  restore "\$CURRENT" || true
+  fail "rollback failed: \$CURRENT runs again if it passed the wall check"
+fi
 echo "\$PREVIOUS" > "\$CURRENT_FILE"
 echo "\$CURRENT" > "\$PREVIOUS_FILE"
 echo "rolled back to \$PREVIOUS"
@@ -189,12 +209,12 @@ echo "heartbeat: \$(cat "\$HOME/apps/parenting-agent-data/heartbeat.json" 2>/dev
 REMOTE
   ;;
   logs) remote "docker logs --tail '${2:-100}' parenting-agent" ;;
-  stop) remote sh -s <<REMOTE
+  stop) deploy_lock "agent stop"; remote sh -s <<REMOTE
 $REMOTE_LIB
 compose stop
 REMOTE
   ;;
-  start) remote sh -s <<REMOTE
+  start) deploy_lock "agent start"; remote sh -s <<REMOTE
 $REMOTE_LIB
 APP_TAG="\$(cat "\$CURRENT_FILE")" compose up -d --no-build
 healthy && echo "healthy"

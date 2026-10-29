@@ -24,6 +24,8 @@ SERVICE="${1:-}"
 COMMAND="${2:-}"
 
 remote() { ssh "$HOST" "$@"; }
+# shellcheck source=deploy/lock.sh
+. "$ROOT/deploy/lock.sh"
 usage() { sed -n '3,18p' "$0" | sed 's/^# \{0,1\}//' >&2; exit 2; }
 
 case "$SERVICE" in
@@ -86,6 +88,21 @@ walled() {
   network_is_walled || return 1
   # shellcheck disable=SC2046,SC2086
   bash "$DIR/deploy/$SERVICE/check-wall.sh" $(host_targets) ${WALL_EXTRA_TARGETS:-}
+}
+# restore <commit>: run that image again after a failed deploy. It keeps running when it is inside the wall,
+# healthy or not yet, so a failure never leaves the service down when the one before it worked. Only a service
+# that fails the wall is stopped. The same commit as the failed one is started again too (a redeploy of HEAD).
+restore() {
+  if [ -z "$1" ]; then echo "no earlier deploy recorded: $APP stays stopped" >&2; return 1; fi
+  docker image inspect "$APP:$1" >/dev/null 2>&1 || { echo "image $APP:$1 is gone: $APP stays stopped" >&2; return 1; }
+  echo "starting $1 again" >&2
+  APP_TAG="$1" compose up -d --no-build --force-recreate --remove-orphans
+  HEALTH=healthy
+  healthy >/dev/null 2>&1 || HEALTH="running, not healthy yet"
+  if walled >/dev/null; then echo "$APP $1 is back: $HEALTH, inside the wall" >&2; return 0; fi
+  docker stop "$APP" >/dev/null 2>&1 || true
+  echo "$APP $1 failed the wall check: it is stopped" >&2
+  return 1
 }
 checks() {
   echo "== health"
@@ -162,6 +179,7 @@ internal_url() {
 }
 
 deploy() {
+  deploy_lock "$SERVICE deploy $(git -C "$ROOT" rev-parse --short=12 HEAD)"
   send_code
   run_remote '
 [ -f "$ENV_FILE" ] || fail "missing $ENV_FILE: run sh deploy/public.sh $SERVICE push-env"
@@ -189,11 +207,7 @@ else
   echo "commit $SHA failed its health check or its wall check" >&2
   # A service that may be outside the wall does not keep running.
   docker stop "$APP" >/dev/null 2>&1 || true
-  if [ -n "$PREVIOUS" ] && [ "$PREVIOUS" != "$SHA" ] && docker image inspect "$APP:$PREVIOUS" >/dev/null 2>&1; then
-    echo "rolling back to $PREVIOUS" >&2
-    run "$PREVIOUS"
-    if checks >/dev/null; then echo "rollback healthy" >&2; else docker stop "$APP" >/dev/null 2>&1 || true; echo "rollback failed too: $APP is stopped" >&2; fi
-  fi
+  restore "$PREVIOUS"
   exit 1
 fi'
 }
@@ -225,7 +239,7 @@ case "$SERVICE:$COMMAND" in
   *:status)    run_remote 'docker ps -a --filter "name=^$APP" --format "{{.Names}}  {{.Status}}  {{.Ports}}"
 echo "deployed: $(cat "$CURRENT_FILE" 2>/dev/null || echo none), previous: $(cat "$PREVIOUS_FILE" 2>/dev/null || echo none)"' ;;
   *:logs)      remote "docker logs --tail ${3:-100} pa-$SERVICE" ;;
-  *:stop)      run_remote 'compose stop' ;;
-  *:start)     run_remote 'compose start' ;;
+  *:stop)      deploy_lock "$SERVICE stop"; run_remote 'compose stop' ;;
+  *:start)     deploy_lock "$SERVICE start"; run_remote 'compose start' ;;
   *)           usage ;;
 esac
