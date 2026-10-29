@@ -276,6 +276,7 @@ class Family:
         self.agent = FamilyAgent(self.bus, self.memory, self.log, tools, FamilyBrain(service, family_id, lambda: self.lang),
                                  max_steps=service.s["max_steps"], history=service.s["history"])
         self.agent.family_lang = lambda: self.lang
+        self.agent.log_mode = service.s.get("log_mode", "ops")
         self.turn_lang = None
         self.replies = collections.deque()
         self.bus.subscribe(self.replies.append, ["reply"])

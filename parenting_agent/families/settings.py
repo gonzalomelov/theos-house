@@ -58,6 +58,9 @@ def read_keys(path, environ=None):
     return read
 
 
+LOG_MODES = ("ops", "ops-verify", "guards")
+
+
 def _number(environ, name, default, cast=float):
     raw = environ.get(name)
     return cast(raw) if raw not in (None, "") else default
@@ -76,12 +79,18 @@ def load(environ=None):
     brain = dict(BRAINS[brain_name])
     if environ.get("PA_FAMILIES_MODEL") and brain_name != "fake":
         brain["model"] = environ["PA_FAMILIES_MODEL"]
+    log_mode = environ.get("PA_FAMILIES_LOG_MODE") or "ops"
+    if log_mode not in LOG_MODES:
+        raise ValueError(f"PA_FAMILIES_LOG_MODE must be one of {', '.join(LOG_MODES)}")
     price_in, price_out = PRICES[brain_name]
     if environ.get("PA_FAMILIES_PRICE_IN") or environ.get("PA_FAMILIES_PRICE_OUT"):
         brain.pop("price_in_per_mtok", None)  # an explicit price knob wins over the brain's own prices
     return {
         "brain_name": brain_name,
         "brain": brain,
+        # How the brain changes the log: "ops" (Muse returns the log operations as data, the default since the #77
+        # ablation), "ops-verify" (plus a second checking call) or "guards" (tool calls checked by the rules in loop.py).
+        "log_mode": log_mode,
         "data_dir": environ.get("PA_FAMILIES_DATA_DIR", "data/families"),
         "tz": environ.get("PA_FAMILIES_TZ", "America/Montevideo"),
         "bot_username": environ.get("PA_FAMILIES_BOT_USERNAME", ""),

@@ -1,0 +1,525 @@
+{
+ "variant": "ops",
+ "sets": [
+  "steps"
+ ],
+ "messages": 45,
+ "wrong_log_states": 0,
+ "reply_misses": 1,
+ "fallbacks": 0,
+ "usd": 0.2113,
+ "seconds_per_message": 1.62,
+ "by_set": [
+  {
+   "set": "steps",
+   "brain": "meta-models/muse-spark-open-1026",
+   "messages": 45,
+   "wrong_log_states": 0,
+   "reply_misses": 1,
+   "fallbacks": 0,
+   "usd": 0.2113,
+   "seconds": 73.1,
+   "fallback_steps": [],
+   "misses": [],
+   "reply_problems": [
+    {
+     "step": 2,
+     "what": "a claimed log with nothing logged",
+     "reply": "Me parece que es la misma mamadera de las 00:15 que ya tengo anotada, ¿la mandaste dos veces o Lola tomó otra ahora a las 00:17?"
+    }
+   ],
+   "steps": [
+    {
+     "step": 1,
+     "brains": [
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 1.42
+    },
+    {
+     "step": 2,
+     "brains": [
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 1.83
+    },
+    {
+     "step": 3,
+     "brains": [
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 1.98
+    },
+    {
+     "step": 4,
+     "brains": [
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 1.07
+    },
+    {
+     "step": 5,
+     "brains": [
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 2.34
+    },
+    {
+     "step": 6,
+     "brains": [
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 1.97
+    },
+    {
+     "step": 7,
+     "brains": [
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 1.45
+    },
+    {
+     "step": 8,
+     "brains": [
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 1.6
+    },
+    {
+     "step": 9,
+     "brains": [
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 1.67
+    },
+    {
+     "step": 10,
+     "brains": [
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 1.47
+    },
+    {
+     "step": 11,
+     "brains": [
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 1.98
+    },
+    {
+     "step": 12,
+     "brains": [
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 1.07
+    },
+    {
+     "step": 13,
+     "brains": [
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 1.96
+    },
+    {
+     "step": 14,
+     "brains": [
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 1.03
+    },
+    {
+     "step": 15,
+     "brains": [
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 1.99
+    },
+    {
+     "step": 16,
+     "brains": [
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 1.57
+    },
+    {
+     "step": 17,
+     "brains": [
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 1.33
+    },
+    {
+     "step": 18,
+     "brains": [
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 1.67
+    },
+    {
+     "step": 19,
+     "brains": [
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 1.34
+    },
+    {
+     "step": 20,
+     "brains": [
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 1.75
+    },
+    {
+     "step": 21,
+     "brains": [
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 1.18
+    },
+    {
+     "step": 22,
+     "brains": [
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 1.83
+    },
+    {
+     "step": 23,
+     "brains": [
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 1.29
+    },
+    {
+     "step": 24,
+     "brains": [
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 1.36
+    },
+    {
+     "step": 25,
+     "brains": [
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 2.11
+    },
+    {
+     "step": 26,
+     "brains": [
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 1.24
+    },
+    {
+     "step": 27,
+     "brains": [
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 1.39
+    },
+    {
+     "step": 28,
+     "brains": [
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 1.88
+    },
+    {
+     "step": 29,
+     "brains": [
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 1.7
+    },
+    {
+     "step": 30,
+     "brains": [
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 1.85
+    },
+    {
+     "step": 31,
+     "brains": [
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 1.78
+    },
+    {
+     "step": 32,
+     "brains": [
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 2.07
+    },
+    {
+     "step": 33,
+     "brains": [
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 1.2
+    },
+    {
+     "step": 34,
+     "brains": [
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 1.23
+    },
+    {
+     "step": 35,
+     "brains": [
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 1.24
+    },
+    {
+     "step": 36,
+     "brains": [
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 1.4
+    },
+    {
+     "step": 37,
+     "brains": [
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 1.37
+    },
+    {
+     "step": 38,
+     "brains": [
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 1.27
+    },
+    {
+     "step": 39,
+     "brains": [
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 4.53
+    },
+    {
+     "step": 40,
+     "brains": [
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 1.21
+    },
+    {
+     "step": 41,
+     "brains": [
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 1.39
+    },
+    {
+     "step": 42,
+     "brains": [
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 2.03
+    },
+    {
+     "step": 43,
+     "brains": [
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 1.16
+    },
+    {
+     "step": 44,
+     "brains": [
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 1.61
+    },
+    {
+     "step": 45,
+     "brains": [
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 1.31
+    }
+   ],
+   "final_log": [
+    {
+     "kind": "feeding",
+     "day": 29,
+     "at": "00:15",
+     "method": "bottle",
+     "ml": 110.0,
+     "type": "formula",
+     "min": 0
+    },
+    {
+     "kind": "sleep",
+     "day": 29,
+     "at": "03:10",
+     "start": "00:40"
+    },
+    {
+     "kind": "feeding",
+     "day": 29,
+     "at": "03:25",
+     "method": "left breast",
+     "ml": null,
+     "type": "breast milk",
+     "min": 12
+    },
+    {
+     "kind": "diaper",
+     "day": 29,
+     "at": "03:40",
+     "wet": true,
+     "solid": false
+    },
+    {
+     "kind": "diaper",
+     "day": 29,
+     "at": "06:30",
+     "wet": true,
+     "solid": true
+    },
+    {
+     "kind": "feeding",
+     "day": 29,
+     "at": "07:15",
+     "method": "bottle",
+     "ml": 120.0,
+     "type": "breast milk",
+     "min": 0
+    },
+    {
+     "kind": "bath",
+     "day": 29,
+     "at": "10:30"
+    },
+    {
+     "kind": "feeding",
+     "day": 29,
+     "at": "12:00",
+     "method": "right breast",
+     "ml": null,
+     "type": "breast milk",
+     "min": 20
+    },
+    {
+     "kind": "feeding",
+     "day": 30,
+     "at": "00:10",
+     "method": "left breast",
+     "ml": null,
+     "type": "breast milk",
+     "min": 15
+    },
+    {
+     "kind": "diaper",
+     "day": 30,
+     "at": "01:05",
+     "wet": true,
+     "solid": true
+    },
+    {
+     "kind": "sleep",
+     "day": 30,
+     "at": "04:30",
+     "start": "01:20"
+    },
+    {
+     "kind": "feeding",
+     "day": 30,
+     "at": "04:50",
+     "method": "bottle",
+     "ml": 120.0,
+     "type": "formula",
+     "min": 0
+    },
+    {
+     "kind": "note",
+     "day": 30,
+     "at": "05:30"
+    },
+    {
+     "kind": "feeding",
+     "day": 30,
+     "at": "07:00",
+     "method": "bottle",
+     "ml": 75.0,
+     "type": "unknown",
+     "min": 0
+    },
+    {
+     "kind": "sleep",
+     "day": 30,
+     "at": "11:00",
+     "start": "10:00"
+    },
+    {
+     "kind": "feeding",
+     "day": 31,
+     "at": "00:05",
+     "method": "both breasts",
+     "ml": null,
+     "type": "breast milk",
+     "min": 20
+    },
+    {
+     "kind": "diaper",
+     "day": 31,
+     "at": "00:40",
+     "wet": false,
+     "solid": true
+    },
+    {
+     "kind": "sleep",
+     "day": 31,
+     "at": "03:45",
+     "start": "00:50"
+    },
+    {
+     "kind": "feeding",
+     "day": 31,
+     "at": "03:50",
+     "method": "bottle",
+     "ml": 100.0,
+     "type": "breast milk",
+     "min": 0
+    },
+    {
+     "kind": "feeding",
+     "day": 31,
+     "at": "06:20",
+     "method": "right breast",
+     "ml": null,
+     "type": "breast milk",
+     "min": 14
+    },
+    {
+     "kind": "feeding",
+     "day": 31,
+     "at": "08:45",
+     "method": "bottle",
+     "ml": 120.0,
+     "type": "formula",
+     "min": 0
+    },
+    {
+     "kind": "bath",
+     "day": 31,
+     "at": "10:00"
+    },
+    {
+     "kind": "diaper",
+     "day": 31,
+     "at": "12:15",
+     "wet": true,
+     "solid": false
+    }
+   ]
+  }
+ ]
+}

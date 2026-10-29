@@ -14,6 +14,7 @@ import threading
 import time
 
 from . import brain as brain_mod
+from . import log_ops
 from . import rules
 from .memory import parse_time
 
@@ -450,6 +451,9 @@ class Agent:
     health_gate = False
     # The families bot confirms every log from the stored entry, never in the brain's words.
     confirm_from_log = False
+    # "guards": the brain logs through the tools and the rules in decide check it. "ops" and "ops-verify": the brain
+    # returns the log operations for the message as data (log_ops.py), with a second checking call in ops-verify.
+    log_mode = "guards"
     approval_window_s = APPROVAL_WINDOW_S
 
     def __init__(self, bus, memory, baby_log, tools, brain, max_steps=6, history=20):
@@ -665,6 +669,13 @@ class Agent:
             self.bus.publish("guard", status="health_noted")
             self.say(channel, self.note_observation(text))
             return
+        if self.log_mode in ("ops", "ops-verify"):
+            reply = log_ops.decide(self, channel, text, verify=self.log_mode == "ops-verify", health=route == "log")
+            if reply is not None:
+                self.memory.add_message(channel, "user", text, ts=self.now())
+                self.say(channel, strip_codes(reply))
+                return
+            # No log operations came back (the rule brain behind the spend cap never answers log_ops): the guarded loop.
         double, self.double = self.double, None
         if double and self.now() - double["asked"] <= DOUBLE_ANSWER_WINDOW and self.answer_double(channel, text, double):
             return

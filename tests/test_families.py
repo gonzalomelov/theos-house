@@ -413,7 +413,8 @@ class Caps(unittest.TestCase):
 
     def test_family_spend_cap_falls_back_to_the_free_rules(self):
         brain = CountingBrain(tokens=(1_000_000, 0))  # $0.10 a call at Haiku prices
-        app = make(self, brain=brain, PA_FAMILIES_BRAIN="claude", PA_FAMILIES_FAMILY_USD="0.25")
+        # The call counts below are the guarded loop's, the ops mode has its own cap test in test_log_ops.py.
+        app = make(self, brain=brain, PA_FAMILIES_BRAIN="claude", PA_FAMILIES_FAMILY_USD="0.25", PA_FAMILIES_LOG_MODE="guards")
         onboard(app, "111")
         for i in range(5):
             app.handle("111", "111", f"bottle {100 + 10 * i} ml")  # different bottles, a repeat minutes later is asked about

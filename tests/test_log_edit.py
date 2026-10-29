@@ -35,7 +35,8 @@ def delete(**which):
 class Base(unittest.TestCase):
     def family(self, brain, lang=ES_UY, user=7, clock=None):
         clock = clock or Clock()
-        app = make(self, brain=brain, clock=clock)
+        # These tests script the guarded loop, so they run the families bot in its guards log mode (#77).
+        app = make(self, brain=brain, clock=clock, PA_FAMILIES_LOG_MODE="guards")
         onboard(app, user, lang)
         return app, app.family(family_of(app, user)), clock
 

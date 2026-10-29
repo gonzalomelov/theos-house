@@ -1,5 +1,8 @@
 # The families log is never wrong (issue #77)
 
+**Update, later on Oct 29: the rule guards were replaced as the default by Muse log ops, which scored 1 of 45 on a fifth
+blind set against 13 of 45 for the guards. See [../families-log-ablation/README.md](../families-log-ablation/README.md).**
+
 ## Blind numbers first
 
 Four sets of 45 messages were written by agents that changed no code, and each was scored once before anyone read it.

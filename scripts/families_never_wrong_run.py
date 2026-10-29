@@ -27,18 +27,23 @@ import json
 import re
 import sys
 import tempfile
+import time
 import zoneinfo
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
+from parenting_agent.agent import loop as loop_mod  # noqa: E402
 from parenting_agent.agent import memory as memory_mod  # noqa: E402
 from parenting_agent.agent import rules  # noqa: E402
+from parenting_agent.families import service as service_mod  # noqa: E402
 from parenting_agent.families import settings as settings_mod  # noqa: E402
 from parenting_agent.families.service import Families  # noqa: E402
 from parenting_agent.families.store import ALL, visitor_id  # noqa: E402
 
 TZ = zoneinfo.ZoneInfo("America/Montevideo")
+# The scorer's own checks, kept before a variant patches rules, so every variant is scored the same way.
+message_lang, claims_change, claims_logged = rules.message_lang, rules.claims_change, rules.claims_logged
 A, B = 8101, 8102
 NOT_LOGGED = re.compile(r"No pude anotarlo", re.I)
 HAS_TIME = re.compile(r"\b\d{1,2}:\d{2}\b|\bhace\b")
@@ -195,6 +200,46 @@ MAKERS = {"feeding": lambda e: F(e.get("method", "bottle"), e.get("ml"), e.get("
           "sleep": lambda e: S(e["start"], e.get("at")), "note": lambda e: N(e.get("at")), "bath": lambda e: BATH(e.get("at"))}
 
 
+DOUBLE_LINE = ("A new message is a new event even when it repeats an earlier one, a second bottle of the same amount "
+               "included: log it, never ask.")
+DOUBLE_ASK = ("The same report again a few minutes after it was logged is usually one message sent twice: log nothing and "
+              "ask whether it was sent twice or there were two. Log the second only when the parent says there were two.")
+
+
+def safety_only():
+    """Variant b of the ablation (issue #77): the guards that judge the brain's log calls are switched off and only the
+    safety ones stay, the emergency and newborn red flag lines, the health refusal, codes kept out of replies and the
+    bounds on amounts, lengths and times. The brain decides the log operations, and its prompt asks about double sends
+    because the agent no longer does."""
+    off = {"said_only": lambda request, kind, details, ts=None: (details, ts), "addendum": lambda text: None,
+           "diaper_patch": lambda text: None, "amount_followup": lambda text: None, "half_ml": lambda text: None,
+           "ounces_ml": lambda text: None, "ounce_followup_ml": lambda request, previous: None,
+           "named_time": lambda request, now: None, "feed_minutes": lambda text, now: None,
+           "kinds_said": lambda text: set(), "denied_kinds": lambda text: set(), "says_sleep": lambda text: True,
+           "chat_only": lambda text: False, "says_woke_only": lambda text: False, "medicine_only": lambda text: False,
+           "from_earlier": lambda note, request, earlier: False, "one_diaper": lambda calls, request: calls,
+           "is_edit_request": lambda text: False, "claims_change": lambda text: False,
+           "is_log_request": lambda text: False, "claims_done": lambda text: False,
+           "latest_time": lambda ts, now, request="": ts, "names_when": lambda text: True,
+           "QUESTION_START": re.compile(r"(?!x)x")}
+    for name, value in off.items():
+        setattr(rules, name, value)
+    loop_mod.Agent.addendum = lambda self, request: False
+    loop_mod.Agent.same_feed_just_logged = lambda self, arguments: None
+    loop_mod.Agent.delete_held = lambda self, request, arguments: None
+    loop_mod.Agent.sleep_call = lambda self, arguments, request: arguments
+    loop_mod.Agent.honest = lambda self, text, before, request, editing, ran: text
+    loop_mod.Agent.unbacked_value = lambda self, text, before, request, editing, ran: text
+    service_mod.SYSTEM = service_mod.SYSTEM.replace(DOUBLE_LINE, DOUBLE_ASK)
+    assert DOUBLE_ASK in service_mod.SYSTEM
+
+
+# The architectures the ablation compares: main's guards, guards cut to safety only, Muse's log operations checked
+# by a second Muse call, and Muse's log operations alone.
+VARIANTS = {"main": "guards", "safety": safety_only, "ops-verify": "ops-verify", "ops": "ops"}
+LOG_MODE = {"mode": "ops"}
+
+
 def load_steps(path):
     """Steps from a JSON file, in the STEPS shape. "A" and "B" are the two parents."""
     out = []
@@ -287,7 +332,14 @@ def main():
     parser.add_argument("--brain", default="baseten", choices=["baseten", "claude", "fake"])
     parser.add_argument("--sets", default="old,judge", help="comma list of message sets: " + ", ".join(SETS))
     parser.add_argument("--steps-file", help="a JSON file of steps to run instead of --sets")
+    parser.add_argument("--variant", default="main", choices=list(VARIANTS), help="the log architecture to run")
     args = parser.parse_args()
+    setup = VARIANTS[args.variant]
+    if callable(setup):
+        setup()
+        LOG_MODE["mode"] = "guards"
+    else:
+        LOG_MODE["mode"] = setup
     settings_mod.read_keys(args.keys_env)
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -298,13 +350,16 @@ def main():
         part_lines, summary = run_set(args, name, steps)
         lines += part_lines
         results.append(summary)
-    total = {"sets": [r["set"] for r in results], "messages": sum(r["messages"] for r in results),
+    total = {"variant": args.variant, "sets": [r["set"] for r in results], "messages": sum(r["messages"] for r in results),
              "wrong_log_states": sum(r["wrong_log_states"] for r in results),
              "reply_misses": sum(r["reply_misses"] for r in results), "fallbacks": sum(r["fallbacks"] for r in results),
-             "usd": round(sum(r["usd"] for r in results), 4), "by_set": results}
+             "usd": round(sum(r["usd"] for r in results), 4),
+             "seconds_per_message": round(sum(r["seconds"] for r in results) / max(1, sum(r["messages"] for r in results)), 2),
+             "by_set": results}
     out.with_suffix(".md").write_text("\n".join(lines) + "\n")
     out.with_suffix(".json").write_text(json.dumps(total, ensure_ascii=False, indent=1) + "\n")
-    print(json.dumps({k: total[k] for k in ("sets", "messages", "wrong_log_states", "reply_misses", "fallbacks", "usd")}
+    print(json.dumps({k: total[k] for k in ("variant", "sets", "messages", "wrong_log_states", "reply_misses", "fallbacks",
+                                            "usd", "seconds_per_message")}
                      | {"per_set": {r["set"]: (r["wrong_log_states"], r["reply_misses"]) for r in results}}))
 
 
@@ -312,12 +367,13 @@ def run_set(args, name, STEPS):
     """One message set in a new family. Returns its transcript lines and its summary."""
     data = tempfile.mkdtemp(prefix="never-wrong-")
     s = settings_mod.load({"PA_FAMILIES_BRAIN": args.brain, "PA_FAMILIES_DATA_DIR": data,
-                           "PA_FAMILIES_FAMILY_USD": "5", "PA_FAMILIES_DAILY_USD": "5", "PA_FAMILIES_MAX_MESSAGES": "200"})
+                           "PA_FAMILIES_FAMILY_USD": "5", "PA_FAMILIES_DAILY_USD": "5", "PA_FAMILIES_MAX_MESSAGES": "200",
+                           "PA_FAMILIES_LOG_MODE": LOG_MODE["mode"]})
     clock = {"now": at(28, "23:30")}
     # As the judge did: the memory module's own wall clock follows the simulated one too.
     memory_mod.now = lambda: clock["now"].isoformat(timespec="seconds")
     app = Families(s, clock=lambda: clock["now"])
-    lines = [f"# Never wrong, 3 simulated nights, set {name}\n\nBrain: {s['brain'].get('provider')} {s['brain'].get('model')}\n"]
+    lines = [f"# Never wrong, 3 simulated nights, set {name}, variant {args.variant}\n\nBrain: {s['brain'].get('provider')} {s['brain'].get('model')}\n"]
     code = app.store.create_invite(internal=True)
     for text in (f"/start {code}", "Lola", "2/9/2026", "si"):
         replies = app.handle(A, A, text, "private", "es-UY")
@@ -350,10 +406,12 @@ def run_set(args, name, STEPS):
         calls.clear()
         brains.clear()
         before = actual_log(fam)
+        started = time.monotonic()
         reply = " ".join(t for _, t in app.handle(who, who, text, "private", "es-UY", message_id=f"{n}"))
+        seconds = round(time.monotonic() - started, 2)
         after = actual_log(fam)
         answered = step_brains(brains)
-        steps.append({"step": n, "brains": answered})
+        steps.append({"step": n, "brains": answered, "seconds": seconds})
         expected = apply(expected, op, day, hhmm)
         lines.append(f"\n**{n}. `{day} {hhmm}` {'A' if who == A else 'B'}: {text}**\n\n> {reply}\n"
                      + (f"\ntools: `{'`, `'.join(calls)}`\n" if calls else "")
@@ -369,11 +427,11 @@ def run_set(args, name, STEPS):
         if tag == "next" and not HAS_TIME.search(reply):
             reply_misses.append({"step": n, "what": "a next-feed answer with no time and no 'hace'", "reply": reply})
         # A reply follows the language of the parent's message, and the family's Spanish when the message says neither.
-        wanted, got = rules.message_lang(text) or "es", rules.message_lang(reply)
+        wanted, got = message_lang(text) or "es", message_lang(reply)
         if got and got != wanted:
             what = "an English reply to a Spanish message" if got == "en" else "a Spanish reply to an English message"
             reply_misses.append({"step": n, "what": what, "reply": reply})
-        if rules.claims_change(reply) and not (changed and op and op[0] in ("edit", "del")):
+        if claims_change(reply) and not (changed and op and op[0] in ("edit", "del")):
             reply_misses.append({"step": n, "what": "a claimed change that did not happen", "reply": reply})
         if tag and tag.startswith("asleep"):
             # A sleep start is kept until the wake-up makes it one sleep entry: check the start the service holds.
@@ -382,12 +440,13 @@ def run_set(args, name, STEPS):
                 misses.append({"step": n, "message": text, "reply": reply, "missing": [f"sleep start {tag.split()[1]}"],
                                "extra": [f"sleep start {started or 'none'}"], "tools": list(calls), "brains": answered})
                 lines.append(f"\nWRONG LOG STATE: sleep start {started or 'none'}, expected {tag.split()[1]}\n")
-        elif tag is None and op is None and rules.claims_logged(reply) and not changed and not text.startswith("/"):
+        elif tag is None and op is None and claims_logged(reply) and not changed and not text.startswith("/"):
             reply_misses.append({"step": n, "what": "a claimed log with nothing logged", "reply": reply})
     final = actual_log(fam)
     spend = app.store._one("select coalesce(sum(usd),0) from spend where scope=?", (ALL,))[0]
     summary = {"set": name, "brain": s["brain"].get("model"), "messages": len(STEPS), "wrong_log_states": len(misses),
                "reply_misses": len(reply_misses), "fallbacks": len(fallbacks), "usd": round(spend, 4),
+               "seconds": round(sum(x["seconds"] for x in steps), 1),
                "fallback_steps": [x["step"] for x in steps if any(b != s["brain"].get("model") for b in x["brains"])],
                "misses": misses, "reply_problems": reply_misses, "steps": steps, "final_log": final}
     lines.append("\n## Final log\n")

@@ -1,0 +1,650 @@
+{
+ "variant": "main",
+ "sets": [
+  "steps-oct"
+ ],
+ "messages": 45,
+ "wrong_log_states": 3,
+ "reply_misses": 0,
+ "fallbacks": 0,
+ "usd": 0.4446,
+ "seconds_per_message": 3.36,
+ "by_set": [
+  {
+   "set": "steps-oct",
+   "brain": "meta-models/muse-spark-open-1026",
+   "messages": 45,
+   "wrong_log_states": 3,
+   "reply_misses": 0,
+   "fallbacks": 0,
+   "usd": 0.4446,
+   "seconds": 151.2,
+   "fallback_steps": [],
+   "misses": [
+    {
+     "step": 22,
+     "message": "ta, arriba y a los gritos",
+     "reply": " No hace falta que lo mandes de nuevo.",
+     "missing": [
+      {
+       "at": "04:40",
+       "day": 30,
+       "kind": "sleep",
+       "start": "02:10"
+      }
+     ],
+     "extra": [],
+     "tools": [
+      "log_baby_event({\"kind\": \"sleep\", \"details\": {\"action\": \"start\"}})",
+      "read_baby_log({})",
+      "log_baby_event({\"kind\": \"sleep\", \"details\": {\"action\": \"end\"}})"
+     ],
+     "brains": [
+      "meta-models/muse-spark-open-1026",
+      "meta-models/muse-spark-open-1026",
+      "meta-models/muse-spark-open-1026",
+      "meta-models/muse-spark-open-1026",
+      "meta-models/muse-spark-open-1026"
+     ]
+    },
+    {
+     "step": 28,
+     "message": "recien se desperto, durmio 1h10",
+     "reply": "No cambió nada en el registro, así que no quedó anotado. ¿Me lo decís de nuevo?",
+     "missing": [
+      {
+       "at": "10:40",
+       "day": 30,
+       "kind": "sleep",
+       "start": "09:30"
+      }
+     ],
+     "extra": [],
+     "tools": [
+      "log_baby_event({\"kind\": \"sleep\", \"details\": {\"action\": \"end\"}, \"ts\": \"2026-10-30T01:10:00-03:00\"})",
+      "log_baby_event({\"kind\": \"sleep\", \"details\": {\"action\": \"start\"}, \"ts\": \"2026-10-30T01:10:00-03:00\"})",
+      "log_baby_event({\"kind\": \"sleep\", \"details\": {\"action\": \"end\"}, \"ts\": \"2026-10-30T01:10:00-03:00\"})"
+     ],
+     "brains": [
+      "meta-models/muse-spark-open-1026",
+      "meta-models/muse-spark-open-1026",
+      "meta-models/muse-spark-open-1026",
+      "meta-models/muse-spark-open-1026",
+      "meta-models/muse-spark-open-1026"
+     ]
+    },
+    {
+     "step": 32,
+     "message": "tomo todo menos un chorrito, ponele 120",
+     "reply": "Anoté la mamadera de 120 ml de las 00:27. No hace falta que lo mandes de nuevo.",
+     "missing": [
+      {
+       "at": "00:25",
+       "day": 31,
+       "kind": "feeding",
+       "method": "bottle",
+       "min": 0,
+       "ml": 120.0,
+       "type": "formula"
+      }
+     ],
+     "extra": [
+      {
+       "at": "00:25",
+       "day": 31,
+       "kind": "feeding",
+       "method": "bottle",
+       "min": 0,
+       "ml": 130.0,
+       "type": "formula"
+      },
+      {
+       "at": "00:27",
+       "day": 31,
+       "kind": "feeding",
+       "method": "bottle",
+       "min": 0,
+       "ml": 120.0,
+       "type": "unknown"
+      }
+     ],
+     "tools": [
+      "read_baby_log({\"kind\": \"feeding\", \"limit\": 5})",
+      "log_baby_event({\"kind\": \"feeding\", \"details\": {\"amount_ml\": 120.0}})"
+     ],
+     "brains": [
+      "meta-models/muse-spark-open-1026",
+      "meta-models/muse-spark-open-1026",
+      "meta-models/muse-spark-open-1026",
+      "meta-models/muse-spark-open-1026",
+      "meta-models/muse-spark-open-1026",
+      "meta-models/muse-spark-open-1026"
+     ]
+    }
+   ],
+   "reply_problems": [],
+   "steps": [
+    {
+     "step": 1,
+     "brains": [
+      "meta-models/muse-spark-open-1026",
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 3.11
+    },
+    {
+     "step": 2,
+     "brains": [],
+     "seconds": 0.01
+    },
+    {
+     "step": 3,
+     "brains": [
+      "meta-models/muse-spark-open-1026",
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 2.68
+    },
+    {
+     "step": 4,
+     "brains": [
+      "meta-models/muse-spark-open-1026",
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 2.32
+    },
+    {
+     "step": 5,
+     "brains": [
+      "meta-models/muse-spark-open-1026",
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 5.02
+    },
+    {
+     "step": 6,
+     "brains": [
+      "meta-models/muse-spark-open-1026",
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 2.31
+    },
+    {
+     "step": 7,
+     "brains": [
+      "meta-models/muse-spark-open-1026",
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 2.66
+    },
+    {
+     "step": 8,
+     "brains": [
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 2.51
+    },
+    {
+     "step": 9,
+     "brains": [
+      "meta-models/muse-spark-open-1026",
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 3.35
+    },
+    {
+     "step": 10,
+     "brains": [
+      "meta-models/muse-spark-open-1026",
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 5.77
+    },
+    {
+     "step": 11,
+     "brains": [],
+     "seconds": 0.0
+    },
+    {
+     "step": 12,
+     "brains": [
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 1.24
+    },
+    {
+     "step": 13,
+     "brains": [
+      "meta-models/muse-spark-open-1026",
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 3.27
+    },
+    {
+     "step": 14,
+     "brains": [
+      "meta-models/muse-spark-open-1026",
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 4.35
+    },
+    {
+     "step": 15,
+     "brains": [
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 1.08
+    },
+    {
+     "step": 16,
+     "brains": [
+      "meta-models/muse-spark-open-1026",
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 3.54
+    },
+    {
+     "step": 17,
+     "brains": [
+      "meta-models/muse-spark-open-1026",
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 3.5
+    },
+    {
+     "step": 18,
+     "brains": [
+      "meta-models/muse-spark-open-1026",
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 3.36
+    },
+    {
+     "step": 19,
+     "brains": [
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 1.64
+    },
+    {
+     "step": 20,
+     "brains": [],
+     "seconds": 0.0
+    },
+    {
+     "step": 21,
+     "brains": [
+      "meta-models/muse-spark-open-1026",
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 4.11
+    },
+    {
+     "step": 22,
+     "brains": [
+      "meta-models/muse-spark-open-1026",
+      "meta-models/muse-spark-open-1026",
+      "meta-models/muse-spark-open-1026",
+      "meta-models/muse-spark-open-1026",
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 13.45
+    },
+    {
+     "step": 23,
+     "brains": [
+      "meta-models/muse-spark-open-1026",
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 3.02
+    },
+    {
+     "step": 24,
+     "brains": [
+      "meta-models/muse-spark-open-1026",
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 2.71
+    },
+    {
+     "step": 25,
+     "brains": [
+      "meta-models/muse-spark-open-1026",
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 3.5
+    },
+    {
+     "step": 26,
+     "brains": [
+      "meta-models/muse-spark-open-1026",
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 2.64
+    },
+    {
+     "step": 27,
+     "brains": [
+      "meta-models/muse-spark-open-1026",
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 2.46
+    },
+    {
+     "step": 28,
+     "brains": [
+      "meta-models/muse-spark-open-1026",
+      "meta-models/muse-spark-open-1026",
+      "meta-models/muse-spark-open-1026",
+      "meta-models/muse-spark-open-1026",
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 10.72
+    },
+    {
+     "step": 29,
+     "brains": [
+      "meta-models/muse-spark-open-1026",
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 3.4
+    },
+    {
+     "step": 30,
+     "brains": [
+      "meta-models/muse-spark-open-1026",
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 2.41
+    },
+    {
+     "step": 31,
+     "brains": [
+      "meta-models/muse-spark-open-1026",
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 2.84
+    },
+    {
+     "step": 32,
+     "brains": [
+      "meta-models/muse-spark-open-1026",
+      "meta-models/muse-spark-open-1026",
+      "meta-models/muse-spark-open-1026",
+      "meta-models/muse-spark-open-1026",
+      "meta-models/muse-spark-open-1026",
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 14.34
+    },
+    {
+     "step": 33,
+     "brains": [
+      "meta-models/muse-spark-open-1026",
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 2.7
+    },
+    {
+     "step": 34,
+     "brains": [
+      "meta-models/muse-spark-open-1026",
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 3.41
+    },
+    {
+     "step": 35,
+     "brains": [
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 1.69
+    },
+    {
+     "step": 36,
+     "brains": [
+      "meta-models/muse-spark-open-1026",
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 2.38
+    },
+    {
+     "step": 37,
+     "brains": [
+      "meta-models/muse-spark-open-1026",
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 2.65
+    },
+    {
+     "step": 38,
+     "brains": [
+      "meta-models/muse-spark-open-1026",
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 3.15
+    },
+    {
+     "step": 39,
+     "brains": [],
+     "seconds": 0.01
+    },
+    {
+     "step": 40,
+     "brains": [
+      "meta-models/muse-spark-open-1026",
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 2.54
+    },
+    {
+     "step": 41,
+     "brains": [
+      "meta-models/muse-spark-open-1026",
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 2.87
+    },
+    {
+     "step": 42,
+     "brains": [
+      "meta-models/muse-spark-open-1026",
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 2.07
+    },
+    {
+     "step": 43,
+     "brains": [
+      "meta-models/muse-spark-open-1026",
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 4.6
+    },
+    {
+     "step": 44,
+     "brains": [
+      "meta-models/muse-spark-open-1026",
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 3.93
+    },
+    {
+     "step": 45,
+     "brains": [
+      "meta-models/muse-spark-open-1026",
+      "meta-models/muse-spark-open-1026"
+     ],
+     "seconds": 1.86
+    }
+   ],
+   "final_log": [
+    {
+     "kind": "feeding",
+     "day": 29,
+     "at": "00:30",
+     "method": "bottle",
+     "ml": 105.0,
+     "type": "formula",
+     "min": 0
+    },
+    {
+     "kind": "diaper",
+     "day": 29,
+     "at": "01:15",
+     "wet": true,
+     "solid": false
+    },
+    {
+     "kind": "feeding",
+     "day": 29,
+     "at": "02:40",
+     "method": "left breast",
+     "ml": null,
+     "type": "breast milk",
+     "min": 17
+    },
+    {
+     "kind": "sleep",
+     "day": 29,
+     "at": "05:00",
+     "start": "03:15"
+    },
+    {
+     "kind": "feeding",
+     "day": 29,
+     "at": "05:10",
+     "method": "bottle",
+     "ml": 90.0,
+     "type": "breast milk",
+     "min": 0
+    },
+    {
+     "kind": "diaper",
+     "day": 29,
+     "at": "07:45",
+     "wet": true,
+     "solid": true
+    },
+    {
+     "kind": "feeding",
+     "day": 30,
+     "at": "00:10",
+     "method": "both breasts",
+     "ml": null,
+     "type": "breast milk",
+     "min": 20
+    },
+    {
+     "kind": "diaper",
+     "day": 30,
+     "at": "00:45",
+     "wet": true,
+     "solid": false
+    },
+    {
+     "kind": "feeding",
+     "day": 30,
+     "at": "01:50",
+     "method": "bottle",
+     "ml": 100.0,
+     "type": "unknown",
+     "min": 0
+    },
+    {
+     "kind": "feeding",
+     "day": 30,
+     "at": "04:45",
+     "method": "right breast",
+     "ml": null,
+     "type": "breast milk",
+     "min": 15
+    },
+    {
+     "kind": "feeding",
+     "day": 30,
+     "at": "07:00",
+     "method": "bottle",
+     "ml": 60.0,
+     "type": "formula",
+     "min": 0
+    },
+    {
+     "kind": "bath",
+     "day": 30,
+     "at": "09:00"
+    },
+    {
+     "kind": "diaper",
+     "day": 30,
+     "at": "11:00",
+     "wet": true,
+     "solid": false
+    },
+    {
+     "kind": "note",
+     "day": 30,
+     "at": "12:15"
+    },
+    {
+     "kind": "feeding",
+     "day": 31,
+     "at": "00:25",
+     "method": "bottle",
+     "ml": 130.0,
+     "type": "formula",
+     "min": 0
+    },
+    {
+     "kind": "feeding",
+     "day": 31,
+     "at": "00:27",
+     "method": "bottle",
+     "ml": 120.0,
+     "type": "unknown",
+     "min": 0
+    },
+    {
+     "kind": "diaper",
+     "day": 31,
+     "at": "01:40",
+     "wet": false,
+     "solid": true
+    },
+    {
+     "kind": "feeding",
+     "day": 31,
+     "at": "02:20",
+     "method": "right breast",
+     "ml": null,
+     "type": "breast milk",
+     "min": 14
+    },
+    {
+     "kind": "sleep",
+     "day": 31,
+     "at": "05:10",
+     "start": "03:00"
+    },
+    {
+     "kind": "feeding",
+     "day": 31,
+     "at": "05:35",
+     "method": "bottle",
+     "ml": 90.0,
+     "type": "formula",
+     "min": 0
+    },
+    {
+     "kind": "feeding",
+     "day": 31,
+     "at": "08:00",
+     "method": "left breast",
+     "ml": null,
+     "type": "breast milk",
+     "min": 19
+    }
+   ]
+  }
+ ]
+}

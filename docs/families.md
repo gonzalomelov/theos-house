@@ -134,6 +134,17 @@ Measured with `scripts/families_never_wrong_run.py`, which now runs the 70 team 
 
 Round 2 measurement, before the judge's set: `scripts/families_never_wrong_run.py`, 70 new messages over 3 simulated nights on Muse Spark Open: 0 wrong log states in each of 3 runs. The misses of the earlier rounds and their diffs are in `results/families-never-wrong/README.md`. Tests: `tests/test_never_wrong_log.py`.
 
+## Muse decides the log (log ops, issue #77)
+
+The guards above decided what the parent said from rules, and four blind sets still scored 8, 8, 5 and 11 wrong log states of 45. An ablation (`results/families-log-ablation/README.md`) compared architectures on all 180 messages and then on a fifth blind set. The winner is now the default:
+
+- Each message gets one Muse call that sees what a careful parent sees: the log of the last 30 hours with ids, the open sleep, today's and yesterday's totals, the rhythm line for the next feed and the last 12 messages with their times. Muse returns the log operations as data (add, edit or delete by id, sleep start, sleep end) and a short reply.
+- Code only does what code is sure about: ounces to ml at 30 ml an ounce, a clock time on the latest such moment not in the future, the bounds on amounts, lengths and times, and the confirmation built from the log diff. A reply with no operations never says something was logged.
+- A Muse answer with no `log_ops` call is asked for once more. If it still has none, as with the free rule brain after the spend cap, the message goes through the guarded loop above.
+- Fifth blind set, scored once each: log ops 1 of 45 wrong, the guarded loop 13 of 45, at half the cost and latency.
+
+`PA_FAMILIES_LOG_MODE` is `ops` by default, `ops-verify` adds a second checking call (no better on the 180, twice the cost) and `guards` is the old loop. The emergency, red flag, safe sleep and health gates run before any mode. Code: `parenting_agent/agent/log_ops.py`. Tests: `tests/test_log_ops.py`.
+
 ## How it is built
 
 | Part | Code |

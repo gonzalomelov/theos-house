@@ -41,7 +41,8 @@ class Recording(ScriptedBrain):
 class FamiliesGuard(unittest.TestCase):
     def family(self, brain, lang, user=7):
         clock = Clock()
-        app = make(self, brain=brain, clock=clock)
+        # These tests script the guarded loop, so they run the families bot in its guards log mode (#77).
+        app = make(self, brain=brain, clock=clock, PA_FAMILIES_LOG_MODE="guards")
         onboard(app, user, LANG_CODE[lang])
         return app, app.family(family_of(app, user)), clock
 
