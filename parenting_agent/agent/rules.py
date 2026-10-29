@@ -159,7 +159,7 @@ LEFT_SAID = re.compile(r"izquierd|\bizq\w*|\bleft\b", re.I)
 RIGHT_SAID = re.compile(r"derech|\bder\b|\bdcha\b|\bright\b", re.I)
 TYPE_SAID = {"formula": re.compile(r"f[oó]rmula|formula|leche de f", re.I),
              "breast milk": re.compile(r"leche materna|materna|extra[ií]da|sacada|breast ?milk|pumped|expressed", re.I)}
-TIME_SAID = re.compile(r"\d{1,2}[:.h]\d{2}|\d{1,2}\s*(am|pm|hs?)\b|\ba las?\s+\d|\bat \d|\bhace\b|\bago\b|y media|y cuarto|"
+TIME_SAID = re.compile(r"\d{1,2}[:.h]\d{2}|\d{1,2}\s*(am|pm|hs?)\b|\b(a|desde) las?\s+\d|\b(at|since) \d|\bhace\b|\bago\b|y media|y cuarto|"
                        r"menos cuarto|anoche|esta ma[ñn]ana|madrugada|this morning|last night|earlier|\bantes\b|from \d|"
                        r"de \d{1,2} a \d{1,2}|\bayer\b|yesterday|\bla de la", re.I)
 MINUTES_SAID = re.compile(r"\d+\s*(min|minutos|minutes|mins)\b|\d+\s*m\b|media hora|half an hour", re.I)
@@ -463,8 +463,9 @@ def is_cry_question(text):
     return is_bare_cry_question(text)
 
 
-WET_SAID = re.compile(r"wet|pee|wee|pis|mojad|orin|me[oó]\b|meado|both|ambos|los dos|y (con )?caca|and dirty|and poo", re.I)
-SOLID_SAID = re.compile(r"dirty|poo|solid|caca|sucio|pop[oó]|deposici|cacona|both|ambos|los dos", re.I)
+WET_SAID = re.compile(r"wet|pee|wee|pis|pich|mojad|orin|me[oó]\b|meado|both|ambos|los dos|y (con )?ca(c|qu)|and dirty|and poo", re.I)
+# Stems, not whole words: "caquita", "cacona", "popó" and "sucito" are all a dirty diaper (round 4 blind, step 13).
+SOLID_SAID = re.compile(r"dirty|poo|solid|caca|caqu|cacon|suci|pop[oó]|deposici|both|ambos|los dos", re.I)
 
 
 def said_only(request, kind, details, ts=None):
@@ -525,22 +526,30 @@ DAY_SAID = re.compile(r"\b(ayer|anoche|anteayer|yesterday|last night|lunes|marte
                       r"domingo|monday|tuesday|wednesday|thursday|friday|saturday|sunday)\b|\d{1,2}/\d{1,2}", re.I)
 
 
-OUNCES = re.compile(r"(\d+(?:[.,]\d+)?)\s*(?:onzas?|oz|ounces?)\b", re.I)
-HALF_OUNCE = re.compile(r"\d\s*(?:y media|and a half)\s*(?:onzas?|oz|ounces?)\b|(?:onzas?|oz|ounces?)\s*(?:y media|and a half)\b", re.I)
+# "onza", "onzas", "onzitas", "oz": any form of the word, never a fixed list (round 4 blind, step 10).
+OUNCE_WORD = r"(?:onz\w*|oz|ounces?)"
+OUNCES = re.compile(r"(\d+(?:[.,]\d+)?)\s*" + OUNCE_WORD + r"\b", re.I)
+HALF_OUNCE = re.compile(r"\d\s*(?:y media|and a half)\s*" + OUNCE_WORD + r"\b|" + OUNCE_WORD + r"\s*(?:y media|and a half)\b", re.I)
 ML_PER_OUNCE = 30
 
 
 BREAST_WORDS = re.compile(r"\b(teta|tetas|pecho|pechos|breast\w*|nurs\w*|amamant\w*)\b", re.I)
-BOTTLE_WORDS = re.compile(r"\b(mamadera|biber[oó]n|bottle|f[oó]rmula|formula)\b|\d\s*ml\b|\bonzas?\b", re.I)
+BOTTLE_WORDS = re.compile(r"\b(mamadera\w*|biber[oó]n|bottle|f[oó]rmula|formula)\b|\d\s*ml\b|\bonz\w*", re.I)
 
 
 def amount_said(amount, text):
-    """True when the message names this amount: "le di 90" for 90 ml."""
+    """True when the amount follows from the message's own numbers: "le di 90" is 90, "prepare 110 y sobraron 20" is
+    110 minus 20, "3 onzitas" is 3 times 30. The guard used to ask for the literal number, so in the second blind set it
+    threw away Muse's right 90 ml twice. An amount from no number in the message (an earlier bottle) is still not said."""
     try:
         wanted = float(amount)
     except (TypeError, ValueError):
         return False
-    return any(abs(float(n.replace(",", ".")) - wanted) < 0.5 for n in re.findall(r"-?\d+(?:[.,]\d+)?", text or ""))
+    numbers = [float(n.replace(",", ".")) for n in re.findall(r"-?\d+(?:[.,]\d+)?", text or "")][:4]
+    if re.search(OUNCE_WORD, text or "", re.I):
+        numbers += [n * ML_PER_OUNCE for n in numbers]
+    candidates = set(numbers) | {a - b for a in numbers for b in numbers if a > b}
+    return any(abs(c - wanted) < 0.5 for c in candidates)
 
 
 HALF_OF = re.compile(r"\b(la )?mitad de (la |una )?(mamadera|biber[oó]n|bottle)?\s*(de )?(\d+)|\bhalf (of )?(a |the )?(\d+)", re.I)
@@ -579,7 +588,7 @@ def names_when(text):
 
 def ounces_ml(text):
     """The ml of "tomo 3 onzas", at 30 ml an ounce as the bottle marks read, or None. One amount only."""
-    text = re.sub(r"(\d)\s*(y media|and a half)\s*(onzas?|oz|ounces?)\b", r"\1 \3 \2", text or "", flags=re.I)
+    text = re.sub(r"(\d)\s*(y media|and a half)\s*(" + OUNCE_WORD + r")\b", r"\1 \3 \2", text or "", flags=re.I)
     found = OUNCES.findall(text)
     if len(found) != 1:
         return None
@@ -651,10 +660,10 @@ def kinds_said(text):
     return {kind for kind, words in KIND_WORDS.items() if words.search(text or "")}
 
 
-CLOCK_ES = re.compile(r"\ba las? (\d{1,2})(?:[:.](\d{2})| y (media|cuarto|diez|veinte|cinco|\d{1,2}\b(?!\s*(?:min|ml))))?"
+CLOCK_ES = re.compile(r"\b(?:a|desde) las? (\d{1,2})(?:[:.](\d{2})| y (media|cuarto|diez|veinte|cinco|\d{1,2}\b(?!\s*(?:min|ml))))?"
                       r"(?!\s*(?:min|ml|hs?\b))", re.I)
 MINUTE_WORDS = {"media": 30, "cuarto": 15, "diez": 10, "veinte": 20, "cinco": 5}
-RANGE_SAID = re.compile(r"\bde (las? )?\d{1,2}.{0,12}\ba (las? )?\d|\bfrom \d{1,2}.{0,12}\b(to|until|till) \d|\bdesde\b|\bhasta\b", re.I)
+RANGE_SAID = re.compile(r"\bde (las? )?\d{1,2}.{0,12}\ba (las? )?\d|\bfrom \d{1,2}.{0,12}\b(to|until|till) \d|\bdesde\b.{0,30}\bhasta\b|\bhasta\b", re.I)
 CLOCK_EN = re.compile(r"\bat (\d{1,2})(?:[:.](\d{2}))?\s*(am|pm)?\b(?!\s*(?:min|ml))", re.I)
 
 
@@ -1003,7 +1012,9 @@ def from_earlier(note, request, earlier):
 ADD_START = re.compile(r"^\W*(ah,?\s+)?(y|tambi[eé]n|tmb|tb|and|also)\b|\b(tambi[eé]n|tmb|tb|too|also)\W*$", re.I)
 WET_ADD = re.compile(r"\b(pis|pich[ií]|pee|wee|mojad\w*|orin\w*|wet)\b", re.I)
 SOLID_ADD = re.compile(r"\b(caca|caquita|poo|poop|popo|pop[oó]|sucio|dirty)\b", re.I)
-TYPE_ADD = re.compile(r"\b(era|es|fue|eran|was|it was)\b\W+(de\s+|la\s+|de la\s+)?(f[oó]rmula|formula|leche materna|materna|breast ?milk)\b", re.I)
+TYPE_ADD = re.compile(r"\b(f[oó]rmula|formula|leche materna|materna|breast ?milk)\b", re.I)
+# Words that start a new feed rather than add to the last one: "le di formula" is a feed, "de materna" is a detail.
+NEW_FEED = re.compile(r"\b(le di|le dio|le dimos|le doy|di[oó]|tom[oó]|toma|gave|fed|drank|mamadera|biber[oó]n|bottle|otra|another)\b", re.I)
 SLEEP_SLANG = re.compile(r"frit[ao]|rendid[ao]|se qued[oó]|cay[oó]|planch|fundid|arriba|abri[oó] los ojos|ojitos|cuna|upa|"
                          r"\bout\b|crashed|went down|is up\b", re.I)
 
@@ -1034,8 +1045,12 @@ def addendum(text):
         if patch:
             return "diaper", patch, 15
     m = TYPE_ADD.search(text)
-    if m and not BREAST_WORDS.search(text):
-        milk = "formula" if TYPE_SAID["formula"].search(m.group(3)) else "breast milk"
+    # A short message whose only detail is a milk type, in any frame: "ah y era formula", "de materna, la q sacaste
+    # ayer", "la de recien fue con formula". The old rule wanted "era" or "fue" right before the type, so the second
+    # blind set lost two of these to the brain.
+    if m and not (BREAST_WORDS.search(text) or NEW_FEED.search(text) or KIND_WORDS["diaper"].search(text)
+                  or KIND_WORDS["sleep"].search(text)):
+        milk = "formula" if TYPE_SAID["formula"].search(m.group(1)) else "breast milk"
         return "feeding", {"type": milk}, 20
     return None
 

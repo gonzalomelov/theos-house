@@ -46,5 +46,19 @@ says it cannot compare with yesterday.
 
 ## What was done after this run
 
-See the next PR on issue #77: the root cause above, fixed in the guards, with tests built from these steps. It is not
-measured on this set, because this set is no longer blind.
+One fix at the root, in `parenting_agent/agent/rules.py`, with tests in `tests/test_heldout2_misses.py` built from steps
+10, 11, 13, 21, 38 and 39. The guards now check what the parent said by meaning, not by a fixed list:
+
+- An amount counts as said when it follows from the message's own numbers: the number itself, the number in ounces at
+  30 ml, or one number minus another ("prepare 110 y sobraron 20" is 90). An amount from no number in the message, such
+  as an earlier bottle's 120 ml inside "teta izq 15 min", is still dropped.
+- Words are matched by stem: any form of "onza" ("onzitas"), "caqu" and "cacon" for a dirty diaper, "pich" for wet.
+- "desde las 2 y 10" is a time, and a start time for a sleep. A range now needs "desde" and "hasta" both.
+- A short message whose only detail is a milk type, in any frame ("de materna, ...", "fue con formula"), adds the type to
+  the bottle just logged, unless it also starts a new feed ("le di formula", "otra mamadera").
+
+Not fixed: step 2 (the brain logged a new bottle and edited it for one correction) and the step 8 reply. They have
+other causes. The 4 English replies are left as they are, since answering in the message's language is intended.
+
+The tests fail 7 of 8 on the old code and pass on the new. The fix is not measured on this set. It was read, so any
+rerun would be tuned, not blind. A third blind set, written separately, is the measure.
