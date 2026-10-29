@@ -153,6 +153,13 @@ class FamilyAgent(Agent):
     def emergency(self, request):
         return t(self.lang(), "EMERGENCY")
 
+    def birth_date(self):
+        born = self.memory.facts().get("birth_date", {}).get("value")
+        try:
+            return datetime.date.fromisoformat(born) if born else None
+        except ValueError:
+            return None
+
     def refusal(self, request):
         return t(self.lang(), "REFUSAL")
 

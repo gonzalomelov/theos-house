@@ -557,6 +557,14 @@ class Agent:
             self.bus.publish("guard", status="emergency")
             self.say(channel, self.emergency(text))
             return
+        urgent = rules.newborn_red_flag(text, rules.under_3_months(self.birth_date(), self.now().date()))
+        if urgent:
+            # A fever under 3 months or another newborn call-now sign: the fixed line with its public source, no brain
+            # call, and what the parent said kept as a note for the pediatrician, in the same turn.
+            self.memory.add_message(channel, "user", text, ts=self.now())
+            self.bus.publish("guard", status=f"urgent_{urgent}")
+            self.say(channel, self.urgent(text, urgent))
+            return
         if rules.is_safe_sleep_question(text):
             # How a baby sleeps safely: the AAP's public line with its source, the same every time, no brain call.
             self.memory.add_message(channel, "user", text, ts=self.now())
@@ -590,6 +598,20 @@ class Agent:
 
     def emergency(self, request):
         return rules.EMERGENCY_REPLY[self.lang(request)]
+
+    def birth_date(self):
+        """The baby's birth date, or None when it is not known yet."""
+        return None
+
+    def urgent(self, request, kind):
+        """The call-now line first, then the note that keeps the parent's words. A failed note never holds the line back."""
+        lang = self.lang(request) if self.lang(request) in ("en", "es") else "en"
+        line = rules.URGENT_REPLY[kind][lang]
+        status, entry = self.tools.run("log_baby_event", {"kind": "note", "details": {"text": request}})
+        self.bus.publish("tool", name="log_baby_event", status=status)
+        if status != "ran" or not isinstance(entry, dict):
+            return line
+        return line + " " + logged_text([entry], lang)
 
     def note_observation(self, request):
         """Log what the parent saw as a note, with their words, and answer with the stored note and the no-advice line."""

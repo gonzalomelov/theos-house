@@ -34,7 +34,11 @@ EVERYDAY = ("le di la mamadera", "le di la mamadera, 120 ml", "bath done", "wate
             "baño listo, el agua estaba tibia", "le cambié el pañal", "diaper changed, wet", "se durmió boca arriba",
             "he slept on his back from 1 to 3", "changed the battery in the monitor", "she loves the water",
             "tomó 120 ml", "le di la teta 10 min", "se bañó a las 19", "he went under the blanket",
-            "le cambié la pila al monitor")
+            "le cambié la pila al monitor",
+            # Everyday lines the round 3 audit saw answered with the 911 line and not logged.
+            "le puse un pañal limpio", "pañal limpio y seco a las 3", "le limpié la cola, pañal con caca",
+            "se cayó dormido en la mamadera", "I rinsed his hair under the water, bath done", "la cuna no se mueve",
+            "morado es su color favorito")
 SAFE_SLEEP = {
     "en": ("can I put her to sleep on her tummy?", "is it ok if he sleeps on his stomach", "what is the safest way for a baby to sleep?",
            "can she sleep on her side?", "can I put a blanket in the crib?", "is co-sleeping ok?", "can he sleep in our bed?",

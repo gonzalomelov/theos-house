@@ -269,20 +269,21 @@ class PlainReplies(unittest.TestCase):
 
 
 class VisitorLanguage(unittest.TestCase):
-    def test_a_spanish_fever_question_gets_the_spanish_refusal(self):
+    def test_a_spanish_fever_question_gets_the_spanish_urgent_line(self):
+        # The demo baby has no birth date, so a fever gets the under 3 months line: call the pediatrician now.
         brain = CountingBrain()
         app, _ = demo(brain)
         self.addCleanup(app.close)
         reply = app.message("v", True, "tiene 38 de fiebre le doy algo?")[1]["reply"]
-        self.assertEqual(reply, app_mod.TEXTS["es"]["REFUSAL"])
+        self.assertTrue(reply.startswith(rules.URGENT_REPLY["fever"]["es"]), reply)
         self.assertIn("pediatra", reply)
         self.assertEqual(brain.calls, 0)
 
     def test_an_english_health_question_stays_english_on_a_spanish_page(self):
         app, _ = demo(CountingBrain())
         self.addCleanup(app.close)
-        self.assertEqual(app.message("v", True, "he has a fever, can I give him something?", lang="es")[1]["reply"],
-                         rules.REFUSAL)
+        self.assertTrue(app.message("v", True, "he has a fever, can I give him something?", lang="es")[1]["reply"]
+                        .startswith(rules.URGENT_REPLY["fever"]["en"]))
 
     def test_a_spanish_emergency_gets_the_spanish_line(self):
         app, _ = demo(CountingBrain())

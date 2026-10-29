@@ -396,7 +396,7 @@ class Safety(unittest.TestCase):
         brain = CountingBrain()
         app = make(self, brain=brain)
         onboard(app, "111")
-        for question in ("She has a fever, should I give her paracetamol?", "Is this rash normal?", "What dose of ibuprofen?"):
+        for question in ("She has a cough, should I give her paracetamol?", "Is this rash normal?", "What dose of ibuprofen?"):
             self.assertEqual(text(app.handle("111", "111", question)), rules.REFUSAL)
         self.assertEqual(brain.calls, 0)
 

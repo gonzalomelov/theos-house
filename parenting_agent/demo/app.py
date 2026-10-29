@@ -307,8 +307,9 @@ class Visitor:
         self.replies.clear()
         from_log = rules.is_cry_question(text) and not rules.is_health(text) and not rules.is_log_request(text)
         if from_log:
-            # "Why is he crying?" gets the likely reason from the log with no brain call, as in the families bot. Red
-            # flags never reach here: is_cry_question is false for them and the agent answers with the emergency line.
+            # Only a bare "why is he crying?" gets the likely reason from the log with no brain call, as in the families
+            # bot. A cry with anything else in it (bluish, lethargic, hot, swallowed a coin) is not bare, so the agent's
+            # gates answer it: the emergency line, the newborn call-now line or the refusal.
             self.memory.add_message("demo", "user", text, ts=self.baby_log.now())
             self.agent.say("demo", self.cry_text(self.agent.lang(text)))
         else:

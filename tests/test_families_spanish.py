@@ -18,7 +18,7 @@ from test_families import TZ, CountingBrain, FakeTelegram, family_of, make, text
 # Words that only English text has. The Spanish texts name English twice on purpose, as the way to switch.
 ENGLISH = re.compile(r"\b(the|you|your|please|send|done|feed|feeds|diaper|diapers|logged|today|welcome|nothing|"
                      r"could|not|is|are|and|of|at|here|bath|sleep|deleted|limit|reminders are)\b", re.I)
-ALLOWED_ENGLISH = ("For English send /language.", "/language English")
+ALLOWED_ENGLISH = ("For English send /language.", "/language English", rules.FEVER_SOURCE, rules.NEWBORN_SOURCE)
 
 
 class SpanishBrain(CountingBrain):
@@ -214,15 +214,15 @@ class Medical(unittest.TestCase):
         brain = CountingBrain()
         app = make(self, brain=brain, PA_FAMILIES_BRAIN="claude")
         onboard(app, "111", lang="es")
-        for question in ("¿le doy ibuprofeno?", "¿es normal este sarpullido?", "tiene fiebre, ¿le doy algo?"):
+        for question in ("¿le doy ibuprofeno?", "¿es normal este sarpullido?", "tiene tos, ¿le doy algo?"):
             self.assertEqual(text(app.handle("111", "111", question)), ES["REFUSAL"])
         # What the parent saw, with no question, is noted in their words and the advice is refused, in one turn.
-        for seen in ("tiene fiebre", "vomitó dos veces", "tiene tos", "vomito un poquito dsp de la toma"):
+        for seen in ("tiene sarpullido", "vomitó dos veces", "tiene tos", "vomito un poquito dsp de la toma"):
             reply = text(app.handle("111", "111", seen))
             self.assertRegex(reply, r"^Anoté una nota a las \d\d:\d\d: \"" + seen + r"\"\. ")
             self.assertIn(rules.NO_ADVICE["es"], reply)
         notes = [e["details"]["text"] for e in app.family(family_of(app, "111")).log.entries("note")]
-        self.assertEqual(notes, ["tiene fiebre", "vomitó dos veces", "tiene tos", "vomito un poquito dsp de la toma"])
+        self.assertEqual(notes, ["tiene sarpullido", "vomitó dos veces", "tiene tos", "vomito un poquito dsp de la toma"])
         self.assertEqual(brain.calls, 0)
 
     def test_spanish_advice_words_stop_a_reminder(self):

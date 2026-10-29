@@ -27,15 +27,19 @@ MEDICAL_ES = re.compile(r"\b(fiebre|temperatura|medicamento|medicina|remedio|dos
 EMERGENCY = re.compile(
     r"\b(not breathing|stopped breathing|isn'?t breathing|can'?t breathe|cannot breathe|struggling to breathe|"
     r"(blue|purple|gr[ae]y) (lips|face)|lips (are |look |turned |turning )?(blue|purple|gr[ae]y)|turn(ed|ing|s)? (blue|purple)|"
-    r"limp|floppy|chok(e|es|ed|ing)|won'?t wake|wont wake|can'?t wake|cannot wake|not waking|unresponsive|"
+    r"limp\b|limply|floppy|chok(e|es|ed|ing)|won'?t wake|wont wake|can'?t wake|cannot wake|not waking|unresponsive|"
     r"fell (off|from|down|out of)|had a fall|dropped (him|her|the baby)|hit (his|her|the|its) head|head injury|seizure|convuls\w*|"
-    r"no respira|dej[oó] de respirar|le cuesta respirar|no puede respirar|morad[oa]s?|labios azules|se puso azul|"
+    r"no respira|dej[oó] de respirar|le cuesta respirar|no puede respirar|"
+    r"(est[aá]|se puso|se pone|se ve|se le puso|qued[oó]|labios|cara|boca) (muy |re |medio |todo |toda |bien |un poco )?morad\w*|"
+    r"labios azules|se puso azul|"
     r"se (est[aá] )?ahog\w*|atragant\w*|no se despierta|no reacciona|no responde|"
-    r"se (me )?cay[oó](?! (el|la) (chupete|mamadera|biber[oó]n|tete|juguete))|"
+    r"se (me )?cay[oó](?! (el|la) (chupete|mamadera|biber[oó]n|tete|juguete))(?! (dormid\w*|rendid\w*|frit\w*|redond\w*))|"
+    # Falls the round 3 audit found missing: the baby fell, rolled off the bed or the couch.
+    r"(the baby|baby|he|she|my baby|my son|my daughter) fell(?! (back )?asleep)(?! into)\b|rol+ed (off|out of)|rol+s (off|out of)|"
     r"se golpe[oó]|golpe en la cabeza|convulsi\w*|"
     # Bath, changing table and breathing red flags a safety audit found missing (round 2), English then rioplatense.
     r"gasp\w*|(trouble|difficulty|hard time|problems?) breathing|breath(ing|es) (really |very |so |too )?(fast|hard|rapid\w*|weird\w*|strange\w*)|"
-    r"labou?red breathing|went under(?! (the |his |her |a )?(blanket|covers|sheets?|table|bed|crib|cot|sofa|couch|chair))|(head|face) went under|slipped under|under (the )?water|drown\w*|"
+    r"labou?red breathing|went under(?! (the |his |her |a )?(blanket|covers|sheets?|table|bed|crib|cot|sofa|couch|chair))|(head|face) went under|slipped under|(went|was|stayed|slipped|got|been|is|fell|sank|sunk) (all the way |completely )?under (the )?water|drown\w*|"
     r"(swallowed|ate|ingested|put) (a |an |the |some |one of the |two )?(button |coin )?(battery|batteries|magnets?)\b|"
     r"(swallowed|drank|ate) (some )?(bleach|detergent|a (laundry |detergent )?pod)|poison\w*|"
     r"(bulging|swollen) (soft spot|fontanel\w*)|(soft spot|fontanel\w*) (is |looks |seems )?(bulging|swollen|puffy)|"
@@ -48,7 +52,30 @@ EMERGENCY = re.compile(
     r"(pila|pilas|bater[ií]a\w*|im[aá]n|imanes)\b.{0,25}\b(se )?(lo |la |los |las )?trag[oó]|pila de bot[oó]n|envenen\w*|intoxic\w*|"
     r"(fontanela|mollera) (est[aá] |se ve |muy )?(abultad\w*|hinchad\w*|inflad\w*)|"
     r"p[aá]lid[oa] y fr[ií][oa]|fr[ií][oa] y p[aá]lid[oa]|se (me )?quem[oó]|quemadura|"
-    r"se desmay[oó]|desmayad[oa]|inconsciente|no se mueve)", re.I)
+    r"se desmay[oó]|desmayad[oa]|inconsciente|(?<!cuna )(?<!silla )(?<!hamaca )(?<!mesa )(?<!cama )(?<!puerta )(?<!rueda )(?<!auto )(?<!mecedora )no se mueve(?! de)|"
+    # Pills, medicine and coins, eyes rolling back and a chest that caves in, from the round 3 audit.
+    r"(swallowed|ate|got into|chewed) (a |an |some |one of |my |the |his |her |two |few |a few )*(pills?|tablets?|coins?|medicines?|medication|meds)\b|"
+    r"drank (some of |some )?(my|mom'?s|dad'?s|grandma'?s|the|a bottle of|his brother'?s|her sister'?s) (medicine|medication|meds|cough syrup|syrup)|"
+    r"(se )?(trag[oó]|comi[oó]) (una |un |unas |unos |mi |mis |la |el |las |los |dos )*(monedas?|pastillas?|pastillitas?|comprimidos?|remedios?|medicamentos?)\b|"
+    r"se tom[oó] (mi|mis|el de|un frasco de) (remedio|pastillas?|jarabe|medicamento)|"
+    r"eyes (are |were |keep |kept )?(rolling|rolled|roll) back|eyes rolling|ojos (para|hacia) atr[aá]s|ojos en blanco|pone los ojos en blanco|"
+    r"chest (caves?|caving|caved|sinks?|sinking|sucks?|sucking|pulls?|pulling) in|ribs (show|showing|pull\w*) (in )?when|retraction\w*|"
+    r"se le hunde el pecho|se le marcan las costillas|tiraje|"
+    # Grunting or moaning with every breath is a 911 sign on the healthychildren.org newborn illness list.
+    r"(grunt|moan)\w* (with|on|at) (each|every) breath|(quej\w*|hace ruido) (en|con) cada respiraci[oó]n|"
+    # Signs the round 3 red teamer sent next to a cry: bluish, barely breathing, stiff, a high pitched scream, wheezing,
+    # anything swallowed.
+    r"bluish|azulad\w*|barely breathing|hardly breathing|apenas respira|casi no respira|stiff\b|rigid\b|r[ií]gid[oa]|ties[oa]\b|"
+    r"high[- ]?pitched|shrill (cry|scream)|grito agudo|llanto (muy )?agudo|grita agudo|wheez\w*|silbido|le silba el pecho|"
+    r"swallowed (something|a |an |some |one |the |his |her |my )(?!(lot of |bit of |little )?(air|milk|formula|leche|aire))|"
+    r"se (me )?trag[oó] (algo|un |una |unas |unos )(?!(poco de )?(aire|leche))|"
+    # Pregnancy red flags for prep mode: bleeding, the baby stopped moving, a severe headache, blurred vision.
+    r"(i'?m|i am|she'?s|she is|estoy|est[aá]) (bleeding|sangrando)|bleeding (a lot|heavily)|heavy bleeding|"
+    r"sangr\w* (mucho|abundante)|tengo (un )?sangrado|"
+    r"(baby|he|she) (has )?(stopped|isn'?t|is not) moving|(not|no longer|can'?t|cannot) feel (the baby|him|her|it) mov\w*|"
+    r"no siento que se mueva|ya no (lo |la )?siento|no (lo |la )?siento mover\w*|dej[oó] de moverse|"
+    r"(severe|terrible|worst|really bad|very bad|strong) headache|dolor de cabeza (muy )?(fuerte|intenso|terrible|horrible)|"
+    r"blurr\w* vision|vision (is )?blurr\w*|visi[oó]n borrosa)", re.I)
 # A question on how a baby sleeps safely gets the AAP's public safe sleep line, the same every time, never the brain's
 # words and never a refusal with no fact. Anything that also names a symptom stays refused.
 SLEEP_WORD = r"(sleep\w*|slept|asleep|nap\w*|put (him|her|the baby|my baby|them) down|crib|cot|bassinet|dorm\w*|duerm\w*|siesta\w*|cuna|mois[eé]s|acost\w*)"
@@ -65,7 +92,11 @@ SAFE_SLEEP = re.compile(
     + SLEEP_WORD + r".{0,30}(en|con) (nuestra|mi|la) cama|" + SLEEP_WORD + r".{0,30}(sill[oó]n|sof[aá])|"
     + SLEEP_WORD + r".{0,40}(car ?seat|swing|sling|incline\w*|sillita|silla del auto|hamaca|mecedora)|"
     r"(car ?seat|swing|sling|sillita|silla del auto|hamaca).{0,40}" + SLEEP_WORD + "|"
-    r"(forma|manera|posici[oó]n) (m[aá]s )?segur\w* (de|para) (dormir|acostar\w*)|sue[ñn]o seguro|dormir segur\w*", re.I)
+    r"(forma|manera|posici[oó]n) (m[aá]s )?segur\w* (de|para) (dormir|acostar\w*)|sue[ñn]o seguro|dormir segur\w*|"
+    # The round 3 audit misses: a mantita, sleeping in arms, weighted sleep sacks, inclined sleepers, swaddling.
+    r"mantitas?|in (my|our|your|his|her|mom'?s|dad'?s) arms|(en|a) (mis|sus|tus|los) brazos|en brazos|weighted|con peso|"
+    r"pesad[oa]s? para dormir|inclin\w* sleep\w*|incline\w*|inclinad\w*|rock ?(n|and|'?n'?) ?play|reclin\w*|swaddl\w*|"
+    r"envolv\w*|envuelt\w*|faj\w*|arrull\w*|saco de dormir|sleep ?(sack|bag)", re.I)
 SAFE_SLEEP_ASK = re.compile(r"\?|\b(can|could|should|is it|is that|ok|okay|safe\w*|how|what|which|where|puedo|debo|"
                             r"deber[ií]a|est[aá] bien|es seguro|segur\w*|c[oó]mo|qu[eé]|cu[aá]l|d[oó]nde|conviene|hay que)\b", re.I)
 SAFE_SLEEP_SOURCE = "https://www.healthychildren.org/English/ages-stages/baby/sleep/Pages/a-parents-guide-to-safe-sleep.aspx"
@@ -73,16 +104,21 @@ SAFE_SLEEP_FACT = {
     "en": ("This is the public safe sleep guidance of the American Academy of Pediatrics, for every baby, not advice about "
            "yours: on the back for every nap and at night, on a firm, flat surface, with nothing else in the crib (no pillows, "
            "blankets, bumpers or toys). Room sharing yes, bed sharing no. A baby who falls asleep in a car seat, swing or "
-           f"sling is moved to a firm, flat surface, on the back. Source: {SAFE_SLEEP_SOURCE} "
+           "sling is moved to a firm, flat surface, on the back, and so is one who falls asleep in your arms. No inclined "
+           "sleepers and no weighted sleep sacks, swaddles or blankets. A swaddled baby always sleeps on the back, and "
+           f"swaddling stops when the baby starts trying to roll over. Source: {SAFE_SLEEP_SOURCE} "
            "For anything about your baby's health, ask your pediatrician."),
     "es": ("Esta es la guía pública de sueño seguro de la Academia Estadounidense de Pediatría (AAP), para todos los bebés, "
            "no un consejo sobre el tuyo: boca arriba en todas las siestas y de noche, sobre una superficie firme y plana, sin "
            "nada más en la cuna (ni almohadas, ni mantas, ni chichoneras, ni juguetes). Dormir en el mismo cuarto sí, en la "
            "misma cama no. Si se duerme en la sillita del auto, la hamaca o el fular, se pasa a una superficie firme y plana, "
-           f"boca arriba. Fuente: {SAFE_SLEEP_SOURCE} Para cualquier cosa de la salud de tu bebé, consultá a tu pediatra."),
+           "boca arriba, y también si se duerme en tus brazos. Nada inclinado y nada con peso (ni saco de dormir, ni manta, "
+           "ni envoltura con peso). Un bebé envuelto siempre duerme boca arriba, y se deja de envolver cuando empieza a "
+           f"querer darse vuelta. Fuente: {SAFE_SLEEP_SOURCE} Para cualquier cosa de la salud de tu bebé, consultá a tu pediatra."),
 }
 # Health and feeding-safety talk. Never a log request, so the not-logged check never answers it with "send it again".
-HEALTH = re.compile(r"\b(can i|could i|should i|is it ok|is it safe|safe to|puedo|debo|deber[ií]a|es seguro|"
+HEALTH = re.compile(r"\b(fell(?! (back )?asleep)|fall(s|en)?(?! asleep)|rol+ed off|tumbled|se (me )?cay[oó](?! (dormid|rendid|el chupete|la mamadera|el biber|el tete|el juguete))|ca[ií]da|"
+                    r"can i|could i|should i|is it ok|is it safe|safe to|puedo|debo|deber[ií]a|es seguro|"
                     r"cereal|honey|miel|water|agua|not (pooped|peed|eaten)|hasn'?t (pooped|peed|eaten)|"
                     r"no (hizo|ha hecho) (caca|pis)|in \d+ days|\d+ d[ií]as sin|hace \d+ d[ií]as)\b", re.I)
 # A message that corrects or removes an entry already in the log.
@@ -207,6 +243,113 @@ EMERGENCY_REPLY = {
     "es": "Puede ser una emergencia. Llamá ya al 911 (emergencias en Uruguay) y contales lo que ves.",
 }
 
+# Newborn red flags from the healthychildren.org "when to call" lists: a fever under 3 months, and the signs that mean
+# call the pediatrician now or go to the emergency room. The answer is a fixed line with its public source, never a
+# dose, a home remedy or a guess, and what the parent said is kept as a note for the call.
+FEVER_SOURCE = "https://www.healthychildren.org/English/health-issues/conditions/fever/Pages/When-to-Call-the-Pediatrician.aspx"
+NEWBORN_SOURCE = ("https://www.healthychildren.org/English/tips-tools/symptom-checker/Pages/symptomviewer.aspx"
+                  "?symptom=Newborn+Illness+-+How+to+Recognize")
+FEVER_WORD = re.compile(r"\b(fever\w*|febrile|high temp\w*|fiebre|febril|calentura|afiebrad\w*|(temperatura|temp) (alta|elevada))\b",
+                        re.I)
+# Hot to the touch, with no number: a fever word for a newborn, unless the message is about the water or the room.
+HOT_WORD = re.compile(r"\b(burning up|feels? (so |very |really |too )?hot|is (so |very |really )?hot|(he|she)'?s (so |very |really )?hot|"
+                      r"hirviendo|ardiendo|est[aá] (muy |re |bien )?caliente|lo siento caliente|la siento caliente|"
+                      r"volando)\b", re.I)
+NO_FEVER = re.compile(r"\b(no|not|without|sin|ni|never|nunca|doesn'?t have( a)?|does not have( a)?)\s+(\w+\s+){0,2}"
+                      r"(fever\w*|fiebre|febril|calentura|high temp\w*)", re.I)
+# A body temperature: 38 to 42 °C, or 100.4 to 107 °F, and never a millilitre, an ounce, a minute or a weight.
+TEMP_NUMBER = re.compile(r"(?<![\d.,])(3[89]|4[0-2]|100[.,][4-9]|10[1-7])([.,]\d)?(?![\d.,]*\d)"
+                         r"(?!\s*(ml|cc|oz|onzas?|min\w*|h\b|hs|horas?|hours?|g\b|gr\b|gramos|kg|kilos?|cm|semanas|weeks|"
+                         r"d[ií]as|days|%|mamaderas?|bottles?|pa[ñn]ales|diapers))", re.I)
+LOW_TEMP_NUMBER = re.compile(r"(?<![\d.,])3[45]([.,]\d)?(?![\d.,]*\d)(?!\s*(ml|cc|oz|min\w*|g\b|gr\b|gramos|kg|cm|semanas|weeks))",
+                             re.I)
+BODY_HEAT = re.compile(r"\b(hot|warm|burning( up)?|temp\w*|thermometer|degrees|caliente|calient\w*|calor|ardiendo|hirviendo|"
+                       r"term[oó]metro|grados)\b|°|º", re.I)
+BODY_TEMP = re.compile(r"\b(temp\w*|thermometer|term[oó]metro)\b", re.I)
+# What a 38 in a message is about when it is not the baby: the bath water, the room, the bottle, the weather.
+NOT_BODY = re.compile(r"\b(water|bath\w*|tub|room|nursery|bottle|milk|formula|outside|weather|heater|oven|agua|ba[ñn]o|"
+                      r"ba[ñn]era|tina|cuarto|habitaci[oó]n|ambiente|mamadera|biber[oó]n|leche|f[oó]rmula|afuera|calefa\w*|"
+                      r"estufa|horno|d[ií]a|clima)\b", re.I)
+RED_FLAG = re.compile(
+    r"\b((vomit\w*|throw\w* up|threw up|spit\w* up)( is| was| looks?)? (dark |bright )?green|green (vomit|throw[- ]?up|spit[- ]?up)|"
+    r"vomit\w* bile|\bbile\b|"
+    r"weak suck\w*|(can'?t|cannot|won'?t|isn'?t able to) suck|weak cry\w*|"
+    r"(won'?t|will not|isn'?t|is not|not|refus\w*( to)?) (feed|feeding|eat|eating)\b|refus\w* (every|all|each|the) (feeds?|bottles?|breast)|"
+    r"can'?t finish (a |his |her |any |the )?feeds?|(won'?t|doesn'?t) wake (up )?(for|to) (feeds?|eat)|"
+    r"blood (in|on) (his |her |the )?(stool|poop|poo|diaper|nappy|vomit|spit[- ]?up)|bloody (stool|poop|diaper|nappy|vomit)|"
+    r"sangre en (la |el |las )?(caca|pa[ñn]al|heces|v[oó]mito|deposici\w*)|caca con sangre|v[oó]mito con sangre|deca[ií]d[oa]|"
+    r"hard to wake|difficult to wake|(very|really|so|unusually|too|extremely) (sleepy|drowsy|lethargic)|letharg\w*|"
+    r"sleep\w* (much |way |a lot )?more than (normal|usual)|barely moving|moving (much )?less|very weak|"
+    r"no wet (diapers|nappies)|no wet (diaper|nappy) (in|since|all|today|for)|fewer wet (diapers|nappies)|dry (diapers|nappies)|"
+    r"(hasn'?t|has not) (peed|had a wet (diaper|nappy))|(not|no) (peed|pee) (in|since|all|today|for)|"
+    r"jaundic\w*|(skin|eyes?|face|body|chest|whites of (his|her|the) eyes)( is| are| looks?| turned| turning| seems?| got)?"
+    r"( a bit| very| really| so| kind of| a little)? yellow\w*|yellow\w* (skin|eyes?|face|tint)|"
+    r"v[oó]mit\w* verde|vomit[oó] verde|devolvi[oó] (algo )?verde|vomita (algo )?verde|bilis|"
+    r"succi[oó]n d[eé]bil|succiona (muy )?d[eé]bil|no (puede )?(succiona|succionar)\b|llanto d[eé]bil|llora (muy )?d[eé]bil\w*|"
+    r"no quiere (comer|tomar|mamar)|no (come|toma|mama) nada|rechaza (todas las tomas|todas las mamaderas|el pecho|la teta|"
+    r"la mamadera)|no termina (ninguna|las) tomas?|no se despierta para (comer|tomar|mamar)|"
+    r"(es |est[aá] )?(dif[ií]cil|cuesta( mucho)?) (de )?despertarl[oa]|le cuesta despertar\w*|"
+    r"muy (dormid[oa]|somnolient[oa]|dormil[oó]n[a]?|d[eé]bil)|let[aá]rgic[oa]|duerme (mucho )?m[aá]s de lo (normal|habitual)|"
+    r"no hay (forma|manera) de despertarl[oa]|casi no se mueve|se mueve (mucho )?menos|"
+    r"no (hizo|ha hecho|hace) pis (en|hace|desde|todo|en todo)|no moj[oó] (ning[uú]n|ningun) pa[ñn]al|"
+    r"pa[ñn]ales secos|menos pa[ñn]ales mojados|ning[uú]n pa[ñn]al mojado|no moja (los )?pa[ñn]ales|"
+    r"ictericia|(piel|ojos|cara|cuerpo|pecho|blanco de los ojos)( est[aá]n?| se ve\w*| se puso| se pusieron)?"
+    r"( medio| muy| re| un poco| algo)? amarill\w*|amarill\w* (la piel|los ojos|la cara))", re.I)
+URGENT_REPLY = {
+    "fever": {
+        "en": ("A baby under 3 months with a temperature of 38 °C (100.4 °F) or more needs a doctor right away. Call your "
+               "pediatrician now, or go to the emergency room. If you cannot reach them, call 911 (Uruguay) or your local "
+               "emergency number. This is the public guidance of the American Academy of Pediatrics, not advice about your "
+               f"baby: {FEVER_SOURCE}"),
+        "es": ("Un bebé de menos de 3 meses con 38 °C (100,4 °F) o más de temperatura tiene que verlo un médico ya. Llamá "
+               "ahora a tu pediatra o andá a emergencia. Si no los ubicás, llamá al 911. Es la guía pública de la Academia "
+               f"Estadounidense de Pediatría (AAP), no un consejo sobre tu bebé: {FEVER_SOURCE}"),
+    },
+    "red_flag": {
+        "en": ("That is on the list of newborn signs to act on right away. Call your pediatrician now, or go to the emergency "
+               "room. If you cannot reach them, call 911 (Uruguay) or your local emergency number. This is the public "
+               f"guidance of the American Academy of Pediatrics, not advice about your baby: {NEWBORN_SOURCE}"),
+        "es": ("Eso está en la lista de señales en un recién nacido para actuar ya. Llamá ahora a tu pediatra o andá a "
+               "emergencia. Si no los ubicás, llamá al 911. Es la guía pública de la Academia Estadounidense de Pediatría "
+               f"(AAP), no un consejo sobre tu bebé: {NEWBORN_SOURCE}"),
+    },
+}
+
+
+def names_fever(text):
+    """True when a message says the baby has a fever: a fever word, or a body temperature of 38 °C (100.4 °F) or more
+    with a word for heat. "His bath water was 38 degrees", "le di 38 ml" and "no fever" are not one."""
+    text = text or ""
+    if FEVER_WORD.search(text) and not NO_FEVER.search(text):
+        return True
+    if HOT_WORD.search(text) and not NOT_BODY.search(text):
+        return True
+    return bool(TEMP_NUMBER.search(text) and BODY_HEAT.search(text) and not NOT_BODY.search(text))
+
+
+def names_low_temperature(text):
+    """A thermometer reading of 34 to 35.9 °C, on the newborn list next to fever."""
+    text = text or ""
+    return bool(LOW_TEMP_NUMBER.search(text) and BODY_TEMP.search(text) and not NOT_BODY.search(text))
+
+
+def newborn_red_flag(text, under_3_months=True):
+    """"fever" for a fever in a baby under 3 months (or of unknown age), "red_flag" for another call-now sign, else None.
+    Emergencies come first and keep the 911 line."""
+    text = text or ""
+    if not text or is_emergency(text):
+        return None
+    if under_3_months and names_fever(text):
+        return "fever"
+    if RED_FLAG.search(text) or (under_3_months and names_low_temperature(text)):
+        return "red_flag"
+    return None
+
+
+def under_3_months(born, today):
+    """True when the baby is under 3 months, or the birth date is unknown (before birth, the demo baby)."""
+    return born is None or (today - born).days < 91
+
 
 def is_medical(text):
     return bool(MEDICAL.search(text))
@@ -229,7 +372,8 @@ def is_medical_es(text):
 
 def is_health(text):
     """Any health, safety or emergency talk, in English or Spanish. Never treated as a note to log."""
-    return is_medical(text) or is_medical_es(text) or is_emergency(text) or bool(HEALTH.search(text or ""))
+    return (is_medical(text) or is_medical_es(text) or is_emergency(text) or bool(HEALTH.search(text or ""))
+            or newborn_red_flag(text) is not None)
 
 
 def is_edit_request(text):
@@ -273,8 +417,27 @@ def claims_change(text):
     return any(not NEGATED.search(text[max(0, m.start() - 40):m.start()]) for m in CLAIMS_CHANGE.finditer(text))
 
 
+# The only words a bare "why is he crying?" holds. Anything else in a cry message (a symptom, a colour, something
+# swallowed) means it is not bare, and the agent's gates answer it instead of the cry shortcut.
+CRY_BARE_WORDS = set("""why is he she it the baby my so much a lot keep keeps keeps still won wont t stop stopping been has
+has for an hour hours again now all night tonight today what wrong with him her how come does do did s and just right
+minutes mins min this that crying cry cries cried fussy fussing fuss screaming por porque qu que q xq le pasa tiene llora
+llorando lloró llore llorar qué por no para de tanto mucho mi el la beba bebe nene nena sigue otra vez ahora toda noche hoy y
+hace minutos horas hora molesto molesta está esta es""".split())
+
+
+def is_bare_cry_question(text):
+    """True only for a cry question with nothing else in it: "why is he crying?", "no para de llorar, ¿por qué?". A
+    baby's name is allowed. Anything else, a symptom or a sign, goes to the gates."""
+    text = text or ""
+    if not CRY.search(text) or is_health(text) or newborn_red_flag(text) is not None:
+        return False
+    rest = [w for w in re.findall(r"[^\W\d_]+", text) if w.lower() not in CRY_BARE_WORDS]
+    return not rest or (len(rest) == 1 and rest[0][:1].isupper() and rest[0].lower() not in ("i", "y"))
+
+
 def is_cry_question(text):
-    return bool(CRY.search(text or "")) and not is_emergency(text)
+    return is_bare_cry_question(text)
 
 
 WET_SAID = re.compile(r"wet|pee|wee|pis|mojad|orin|me[oó]\b|meado|both|ambos|los dos|y (con )?caca|and dirty|and poo", re.I)

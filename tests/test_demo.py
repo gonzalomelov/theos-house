@@ -140,7 +140,7 @@ class HealthQuestions(unittest.TestCase):
         brain = CountingBrain()
         app = DemoApp(settings(), brain=brain)
         self.addCleanup(app.close)
-        for question in ("She has a fever, should I give her paracetamol?", "Is this rash normal?", "What dose of ibuprofen?"):
+        for question in ("She has a cough, should I give her paracetamol?", "Is this rash normal?", "What dose of ibuprofen?"):
             status, body = app.message("v", False, question)
             self.assertEqual(status, 200)
             self.assertEqual(body["reply"], rules.REFUSAL)

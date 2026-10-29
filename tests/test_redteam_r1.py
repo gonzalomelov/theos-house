@@ -262,7 +262,7 @@ class PreciseRefusal(unittest.TestCase):
         brain = test_demo.CountingBrain()
         app = demo(brain)
         self.addCleanup(app.close)
-        for text in ("She has a fever, should I give her paracetamol?", "Tylenol drops, 38.4, how much?", "is it normal she spits up?"):
+        for text in ("She has a cough, should I give her paracetamol?", "Tylenol drops, 38.4, how much?", "is it normal she spits up?"):
             self.assertEqual(app.message("v", False, text)[1]["reply"], rules.REFUSAL)
         self.assertEqual(brain.calls, 0)
 
