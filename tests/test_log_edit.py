@@ -448,3 +448,42 @@ class ReplyLanguage(Base):
         self.assertEqual(rules.message_lang("le di una mamadera de 60"), "es")
         self.assertEqual(rules.message_lang("teta izq 15 min"), "es")
         self.assertIsNone(rules.message_lang("120"))
+
+
+class FixedTextsInTheReplyLanguage(Base):
+    READ = {"name": "read_baby_log", "arguments": {"limit": 5}}
+
+    def test_out_of_steps_is_in_spanish_for_a_spanish_parent(self):
+        # Oct 29 never-wrong run: a Spanish parent got "I stopped after too many steps. Tell me again in other words."
+        brain = Recording([[self.READ]] * 10)
+        app, f, clock = self.family(brain)
+        reply = self.send(app, clock, "05:10", "se desperto a las 5")
+        self.assertEqual(reply, TEXTS["es"]["TOO_MANY_STEPS"])
+
+    def test_out_of_steps_after_a_log_says_what_was_saved(self):
+        brain = Recording([[log("feeding", {"amount_ml": 90, "method": "bottle"})]] + [[self.READ]] * 10)
+        app, f, clock = self.family(brain)
+        reply = self.send(app, clock, "05:10", "mamadera 90")
+        self.assertEqual(self.ml(f), [90.0])
+        self.assertIn("90 ml", reply)
+        self.assertNotIn("steps", reply)
+
+    def test_out_of_steps_in_english_for_an_english_message(self):
+        brain = Recording([[self.READ]] * 10)
+        app, f, clock = self.family(brain)
+        self.assertEqual(self.send(app, clock, "05:10", "when did she last eat"), TEXTS["en"]["TOO_MANY_STEPS"])
+
+    def test_every_fixed_agent_text_has_both_languages(self):
+        self.assertEqual(set(TEXTS["en"]), set(TEXTS["es"]))
+        for key in ("TOO_MANY_STEPS", "DONE", "NOT_DONE", "NOTHING_WAITING"):
+            self.assertNotEqual(TEXTS["en"][key], TEXTS["es"][key])
+
+    def test_a_yes_with_nothing_waiting_answers_in_the_parents_language(self):
+        memory = Memory(":memory:")
+        log_ = LocalBabyLog(memory)
+        agent = Agent(Bus(None), memory, log_, core_tools(memory, log_, ["log_baby_event"]), CountingBrain())
+        said = []
+        agent.say = lambda channel, text: said.append(text)
+        agent.approve_pending("console", [], "es")
+        agent.approve_pending("console", [], "en")
+        self.assertEqual(said, [TEXTS["es"]["NOTHING_WAITING"], TEXTS["en"]["NOTHING_WAITING"]])

@@ -198,6 +198,17 @@ def diff(expected, actual):
     return {"missing": [json.loads(k) for k in (want - got).elements()], "extra": [json.loads(k) for k in (got - want).elements()]}
 
 
+def step_brains(events):
+    """The model of every brain call in a step, in order. A call Muse could not answer is named by its fallback."""
+    answered = []
+    for event in events:
+        if event["kind"] == "brain_call":
+            answered.append(event.get("model"))
+        elif answered:
+            answered[-1] = event.get("to_model")
+    return answered
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--keys-env", required=True)
@@ -223,11 +234,14 @@ def main():
     fam = app.family(app.store.parent(visitor_id(A))["family_id"])
     fallbacks = []
     fam.agent.bus.subscribe(fallbacks.append, ["brain_fallback"])
+    # Which brain answered each call of a step: a miss can be put on Muse or on the fallback.
+    brains = []
+    fam.agent.bus.subscribe(lambda e: brains.append(e), ["brain_call", "brain_fallback"])
     calls = []
     run = fam.agent.tools.run
     fam.agent.tools.run = lambda name, arguments: (calls.append(f"{name}({json.dumps(arguments, ensure_ascii=False)})"),
                                                    run(name, arguments))[1]
-    expected, misses, reply_misses, pushes = [], [], [], []
+    expected, misses, reply_misses, pushes, steps = [], [], [], [], []
     last = clock["now"]
     for n, (day, hhmm, who, text, op, tag) in enumerate(STEPS, 1):
         moment = at(day, hhmm)
@@ -242,15 +256,19 @@ def main():
                     reply_misses.append({"step": n, "what": "push says it could not log", "reply": said})
         clock["now"], last = moment, moment
         calls.clear()
+        brains.clear()
         before = actual_log(fam)
         reply = " ".join(t for _, t in app.handle(who, who, text, "private", "es-UY", message_id=f"{n}"))
         after = actual_log(fam)
+        answered = step_brains(brains)
+        steps.append({"step": n, "brains": answered})
         expected = apply(expected, op, day, hhmm)
         lines.append(f"\n**{n}. `{day} {hhmm}` {'A' if who == A else 'B'}: {text}**\n\n> {reply}\n"
-                     + (f"\ntools: `{'`, `'.join(calls)}`\n" if calls else ""))
+                     + (f"\ntools: `{'`, `'.join(calls)}`\n" if calls else "")
+                     + (f"\nbrain: {', '.join(answered)}\n" if answered else ""))
         if after != expected:
             change = diff(expected, after)
-            misses.append({"step": n, "message": text, "reply": reply, **change, "tools": list(calls)})
+            misses.append({"step": n, "message": text, "reply": reply, **change, "tools": list(calls), "brains": answered})
             lines.append(f"\nWRONG LOG STATE: missing {change['missing']}, extra {change['extra']}\n")
             expected = after
         changed = before != after
@@ -258,6 +276,8 @@ def main():
             reply_misses.append({"step": n, "what": "a question got 'No pude anotarlo'", "reply": reply})
         if tag == "next" and not HAS_TIME.search(reply):
             reply_misses.append({"step": n, "what": "a next-feed answer with no time and no 'hace'", "reply": reply})
+        if rules.message_lang(reply) == "en":
+            reply_misses.append({"step": n, "what": "an English reply to a Spanish parent", "reply": reply})
         if rules.claims_change(reply) and not (changed and op and op[0] in ("edit", "del")):
             reply_misses.append({"step": n, "what": "a claimed change that did not happen", "reply": reply})
         if tag and tag.startswith("asleep"):
@@ -265,7 +285,7 @@ def main():
             started = str(fam.fact("_sleep_started"))[11:16]
             if started != tag.split()[1]:
                 misses.append({"step": n, "message": text, "reply": reply, "missing": [f"sleep start {tag.split()[1]}"],
-                               "extra": [f"sleep start {started or 'none'}"], "tools": list(calls)})
+                               "extra": [f"sleep start {started or 'none'}"], "tools": list(calls), "brains": answered})
                 lines.append(f"\nWRONG LOG STATE: sleep start {started or 'none'}, expected {tag.split()[1]}\n")
         elif tag is None and op is None and rules.claims_logged(reply) and not changed and not text.startswith("/"):
             reply_misses.append({"step": n, "what": "a claimed log with nothing logged", "reply": reply})
@@ -273,7 +293,8 @@ def main():
     spend = app.store._one("select coalesce(sum(usd),0) from spend where scope=?", (ALL,))[0]
     summary = {"brain": s["brain"].get("model"), "messages": len(STEPS), "wrong_log_states": len(misses),
                "reply_misses": len(reply_misses), "fallbacks": len(fallbacks), "usd": round(spend, 4),
-               "misses": misses, "reply_problems": reply_misses, "final_log": final}
+               "fallback_steps": [x["step"] for x in steps if any(b != s["brain"].get("model") for b in x["brains"])],
+               "misses": misses, "reply_problems": reply_misses, "steps": steps, "final_log": final}
     lines.append("\n## Final log\n")
     lines += [f"- {json.dumps(e, ensure_ascii=False)}" for e in final]
     lines.append(f"\nWrong log states: {len(misses)} of {len(STEPS)} messages. Reply problems: {len(reply_misses)}. "

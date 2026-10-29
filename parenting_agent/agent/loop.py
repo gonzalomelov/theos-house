@@ -150,6 +150,8 @@ TEXTS = {
         "BATH_AT": "the bath at {at}", "THE_BABY": "the baby",
         "DOUBLE_ONCE": "OK, it stays as one: {entry}.",
         "DOUBLE_TWO": "Logged the second one: {entry}.",
+        "TOO_MANY_STEPS": "I could not finish that. Tell me again in other words.",
+        "DONE": "Done. {what}.", "NOT_DONE": "Not done. {what}.", "NOTHING_WAITING": "Not done. Nothing was waiting.",
         "EDITED": "Fixed {entry}: {changes}.", "UNCHANGED": "{entry} already says that, nothing changed.",
         "DELETED": "Deleted {entry}.",
         "BOTTLE": "bottle", "BREAST": "breast feed", "DIAPER": "diaper", "SLEEP": "sleep", "BATH": "bath", "NOTE": "note",
@@ -171,6 +173,8 @@ TEXTS = {
         "BATH_AT": "el baño de las {at}", "THE_BABY": "el bebé",
         "DOUBLE_ONCE": "Dale, queda una sola: {entry}.",
         "DOUBLE_TWO": "Anoté la segunda: {entry}.",
+        "TOO_MANY_STEPS": "No pude terminar eso. Decímelo de nuevo con otras palabras.",
+        "DONE": "Listo. {what}.", "NOT_DONE": "No se hizo. {what}.", "NOTHING_WAITING": "No se hizo nada. No había nada esperando.",
         "EDITED": "Corregí {entry}: {changes}.", "UNCHANGED": "{entry} ya decía eso, no cambié nada.",
         "DELETED": "Borré {entry}.",
         "BOTTLE": "la mamadera", "BREAST": "la toma de pecho", "DIAPER": "el pañal", "SLEEP": "el sueño", "BATH": "el baño",
@@ -488,7 +492,7 @@ class Agent:
         if text:
             self.say(channel, text)
 
-    def approve_pending(self, channel, calls=None):
+    def approve_pending(self, channel, calls=None, lang="en"):
         """The parent's yes runs exactly the calls asked in the agent's last question, as they were asked, and only
         within the approval window. A yes after it, or after any other message, runs nothing. The answer says "Done"
         only for a call that ran, and "Not done" for one the tool refused."""
@@ -505,8 +509,10 @@ class Agent:
             self.bus.publish("tool", name=call["name"], status=status)
             (done if status == "ran_after_yes" else failed).append(f"{call['name']}: {str(result)[:80]}")
         self.pending = [call for call in self.pending if call not in calls]
-        parts = ([f"Done. {'; '.join(done)}."] if done else []) + ([f"Not done. {'; '.join(failed)}."] if failed else [])
-        self.say(channel, " ".join(parts) or "Not done. Nothing was waiting.")
+        texts = TEXTS.get(lang, TEXTS["en"])
+        parts = (([texts["DONE"].format(what="; ".join(done))] if done else [])
+                 + ([texts["NOT_DONE"].format(what="; ".join(failed))] if failed else []))
+        self.say(channel, " ".join(parts) or texts["NOTHING_WAITING"])
 
     def handle(self, event):
         channel = event.get("channel", "console")
@@ -530,7 +536,7 @@ class Agent:
                     self.bus.publish("guard", status="approval_expired", names=[c["name"] for c in mine])
                     self.say(channel, EXPIRED[self.lang(text)])
                     return
-                self.approve_pending(channel, mine)
+                self.approve_pending(channel, mine, self.lang(text))
                 return
             if mine and word not in HOLD:
                 # A yes is bound to the question just asked: any other message cancels it, so a stale "ok" runs nothing.
@@ -1052,4 +1058,7 @@ class Agent:
                 transcript.append({"role": "tool", "id": call["id"], "name": call["name"], "result": result})
         if changed:
             return finish(" ".join(changes_text(changed, lang)), fixed=True)
-        return finish("I stopped after too many steps. Tell me again in other words.", fixed=True)
+        if kept:
+            # Something was logged before the brain ran out of steps: say what, so the parent does not send it again.
+            return finish(self.saved_before_fail(kept), fixed=True)
+        return finish(self.text("TOO_MANY_STEPS", request), fixed=True)

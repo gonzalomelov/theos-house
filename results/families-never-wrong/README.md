@@ -54,9 +54,22 @@ On the live families bot at `845463d` the voice agent saw two bugs. A brand-new 
 - First entry: the brain logged the bottle at the current time (15:00) and then edited that same new entry to the time the parent said, and the edit was reported as a correction. Now an edit or delete of an entry logged by the same message is part of logging it, and the reply says what the log holds, with the final time and no "→". A message with correction words ("perdon, eran 90") on an empty log is logged, never held as a fix. It did not happen again in 6 live tries (3 messages, before and after the fix), so the tests script the brain (`tests/test_log_edit.py`, `FirstEntry`, they fail without the fix).
 - Language: a family kept the language it started in for every reply. Now each reply is in the language of the parent's message, and a message whose words say neither ("120") gets the family's language. A language chosen with /idioma or /language wins over the message. Pushes and summaries keep the family's language. Live before the fix (`scripts/families_first_entry_live.py`, Muse): "Gave her a 60 ml bottle at 2:15" in a family that started in Spanish was answered "Anoté la mamadera de 60 ml de las 14:15." After the fix it was answered "Logged the 14:15 bottle of 60 ml." Tests: `ReplyLanguage`. Two old tests changed with the rule: an English red flag in a Spanish family now gets the English emergency line, and the Spanish-mode leak test sends a Spanish fever message instead of "she has a fever".
 
-On this code the 29-check script passed 29 of 29 with 0 fallbacks (0.246 USD, `results/families/three-day-first-entry.md`). The never-wrong eval was not rerun on it, because one run would have reached the 3 USD cap for tonight and three would have passed it. Spend tonight: 2.68 USD in eval runs plus about 0.03 USD in live checks.
+On this code the 29-check script passed 29 of 29 with 0 fallbacks (0.246 USD, `results/families/three-day-first-entry.md`). The never-wrong eval ran 3 more times on it later with a separate 2.5 USD budget, see Final below. Spend tonight: 2.68 USD in eval runs plus about 0.03 USD in live checks.
+
+## Final: 3 runs in a row on main with #87 and #89 (Oct 29)
+
+Run one at a time on `9c26c9e` plus this PR's change (fixed agent texts in the reply language), Muse Spark Open. The script now records which brain answered every call of every step (`steps` and `fallback_steps` in the JSON, a `brain:` line in the transcript), and counts an English reply to these Spanish parents as a reply problem.
+
+| Run | Wrong log states | Reply problems | Steps with a fallback | Spend |
+|---|---|---|---|---|
+| `final-1` | **0** | 0 | 0 | 0.587 USD |
+| `final-2` | **0** | 0 | 0 | 0.566 USD |
+| `final-3` | **0** | 0 | 0 | 0.552 USD |
+
+Every brain call in the three runs was answered by Muse. The bar, 0 wrong log states in 3 runs, holds on the final code.
+
+The English "I stopped after too many steps" from `main-1` is gone: every fixed agent text is now in English and Spanish and follows the reply language (out of steps, and the Done, Not done and Nothing was waiting lines after a yes). When the brain runs out of steps after something was logged, the reply says what was saved, so the parent does not send it again (`tests/test_log_edit.py`, `FixedTextsInTheReplyLanguage`, fails without the fix). The rule brain that answers after the spend cap already answered in Spanish.
 
 ## What did not get tested
 
-- Three Muse-only never-wrong runs in a row on the wake-up fix (one was run) and on the first-entry and language fix (none).
 - No real parent, no voice notes, no Telegram in these runs.
