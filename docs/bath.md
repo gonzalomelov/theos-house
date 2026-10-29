@@ -25,7 +25,7 @@ python scripts/bath_run.py --baths 10        # Muse brain, Baby Buddy, SAM 3.1, 
 python scripts/bath_run.py --wipe-only       # remove the entries earlier runs wrote (tag bath-sim)
 ```
 
-Each bath gets a fresh agent memory, then: "bath time", the clips in real time, one interruption (doorbell, towel, phone, oven timer, "can I leave her a second"), "bath done". It writes `results/bath/bath.json`.
+The recorded run in `results/bath/bath.json` is from Oct 28 with the Claude brain, before Muse became the default. Across its 10 baths the chime came within 0.61 s and "hand" within 1.89 s. Each bath gets a fresh agent memory, then: "bath time", the clips in real time, one interruption (doorbell, towel, phone, oven timer, "can I leave her a second"), "bath done". It writes `results/bath/bath.json`.
 
 Clips live in `~/Engineering/gonza/meta-hackathon-2026-synthetic/bath/clips`, generated or rendered only, never a real child:
 

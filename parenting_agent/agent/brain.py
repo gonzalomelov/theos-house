@@ -2,7 +2,7 @@
 
 Which model runs is one setting (brain.provider in the agent config), so swapping needs no code change:
 - fake: a small rule-based brain for tests and offline runs. No network.
-- claude: the stand-in until Muse is reachable. Anthropic Messages API, key ANTHROPIC_API_KEY.
+- claude: the logged fallback when a Muse call errors. Anthropic Messages API, key ANTHROPIC_API_KEY.
 - openai_compatible: any OpenAI-compatible chat endpoint. This is how Muse Spark Open runs on Baseten
   (issue #4), and Meta's Model API speaks it too. Key from the env variable named in brain.key_env.
 

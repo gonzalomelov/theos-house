@@ -1,6 +1,6 @@
 # Touch versus hover ablation, Oct 28 2026
 
-Measured on Oct 28 2026, during the Meta hackathon (Oct 27 to Nov 4), for issues #6 (changing table) and #10 (bath). Numbers in `ablation.json`. It replaces the pre-event number (21 of 21 hovers, Oct 23 and 24, one Kling clip with the forearm far above the baby).
+Measured on Oct 28 2026, during the Meta hackathon (Oct 26 12 PM ET to Nov 4 9 PM ET), for issues #6 (changing table) and #10 (bath). Numbers in `ablation.json`. It replaces the pre-event number (21 of 21 hovers, Oct 23 and 24, one Kling clip with the forearm far above the baby).
 
 ## The question
 

@@ -25,7 +25,7 @@ Cry length and voicing move a score by at most 0.05, a weak extra signal only. E
 
 It never names pain, illness or any medical cause. Every text passes `no_medical()` and the rhythm's `no_advice()`, and a test runs both over every output. ChatterBaby was ruled out (audio goes to UCLA servers, and pain is a medical reading), and so is any cloud audio service. The Donate-a-cry corpus (ODbL, mostly hungry clips) is not used yet.
 
-**Evaluation on the simulated week**, where the true reason is known. `simweek/cries.py` puts a cry 1 to 12 minutes before what the week does next: a feed (hungry), the diaper change after a feed (diaper), or falling asleep (tired).
+**Evaluation on the simulated week**, where the true reason is known. The same rhythm assumptions build the week and the reasoner, so this checks the logic, not real cries. `simweek/cries.py` puts a cry 1 to 12 minutes before what the week does next: a feed (hungry), the diaper change after a feed (diaper), or falling asleep (tired).
 
 | Set | Top guess right |
 |---|---|
@@ -46,7 +46,7 @@ The Echo fallback is not wired, there is no real playback in this item.
 
 ## The listener
 
-PANNs CNN14 (16 kHz, AudioSet) with related classes summed and the thresholds chosen in meta-hackathon-2026 issue #2: 18 of 24 events heard under speech at 0 dB, 0 false alarms on held-out kitchen noise and speech.
+PANNs CNN14 (16 kHz, AudioSet) with related classes summed and the thresholds chosen in meta-hackathon-2026 issue #2. That is prior work from Oct 23, before the event: 18 of 24 events heard under speech at 0 dB, 0 false alarms on held-out kitchen noise and speech (meta-hackathon-2026 `results/muse_hearing.json`). It was not re-measured during the event.
 
 - `parenting_agent/hearing.py`: the Ear. ffmpeg decodes the Tapo RTSP audio (or a test file) to 16 kHz PCM on a pipe. Every second the last 2 s are scored. Only labels, scores, times and a cry's length, loudness and pitch go on the bus. Samples stay in numpy arrays and are dropped when the cry is reported. A test checks that nothing opens a file for writing.
 - `parenting_agent/hearing_worker.py`: PANNs in its own process, in the Python that has torch (the SAM 3.1 venv, `HEARING_PYTHON` to change it). The checkpoint already holds the STFT kernels and the mel filters, so torchlibrosa and librosa are replaced by a small stub. The strict weight load fails if the stub does not match.

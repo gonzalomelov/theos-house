@@ -1,8 +1,8 @@
 """The public demo: the real agent core, one isolated demo baby per visitor, spend and abuse caps.
 
 Each visitor gets their own Agent with its own bus, an in-memory memory file and a DemoBabyLog copied from the
-simulated week, so visitors never see each other. The brain is the real one (Claude stand-in, Muse Spark Open on
-Baseten later). House tools only simulate: they record what the agent would do and touch nothing. There is no
+simulated week, so visitors never see each other. The brain is the real one (Muse Spark Open on
+Baseten, Claude only as a logged fallback). House tools only simulate: they record what the agent would do and touch nothing. There is no
 Baby Buddy client, no Home Assistant client and no channel plug-in in here.
 """
 import collections

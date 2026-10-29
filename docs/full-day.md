@@ -10,7 +10,7 @@ python -m parenting_agent.fullday
 
 | Time | Step | What runs | Passes when |
 |---|---|---|---|
-| 06:10 | Bottle by voice | "bottle, 120 ml" as a message on the ear channel, through the brain into Baby Buddy | a 120 ml feeding is logged and read back by id |
+| 06:10 | Bottle by voice | "bottle, 120 ml" as a typed message on the ear channel (no speech to text in this run), through the brain into Baby Buddy | a 120 ml feeding is logged and read back by id |
 | 06:40 | Changing table | the changing-table clips streamed in real time through the skill (local reflex, SAM 3.1 confirm on the Mac GPU), then "that was a dirty diaper" | every both-hands-off moment is spoken within 2.5 s, the one-hand clip stays silent, a dirty diaper is logged |
 | 09:15 | Doorbell during a change | a doorbell sound event reaches the agent as an observation, with a courier asking to sign | the agent says "one moment" on the speaker and asks the parent before replying to the visitor |
 | 13:00 | Unusual nap note | a nap 40 min longer than the simulated week's usual daytime nap | the note says so plainly, passes the no-advice check and is delivered on Telegram |

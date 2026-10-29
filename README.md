@@ -1,10 +1,12 @@
 # parenting-agent
 
-**A persistent agent built for new parents. It knows your baby, stays with you all day through your phone, glasses and home speakers, reminds you before you have to remember, and acts in your home while your hands stay on the baby. Everything stays in your house.**
+**A persistent agent built for new parents. It knows your baby, stays with you all day through your phone, glasses and home speakers, reminds you before you have to remember, and acts in your home while your hands stay on the baby. Video and audio stay in your house. Only the conversation text goes to the brain.**
 
-Built during the Meta Global AI Developer Hackathon, from Oct 26 2026. See [what was built during the hackathon](#built-during-the-meta-global-ai-developer-hackathon-oct-26-to-nov-4-2026) and [docs/architecture.md](docs/architecture.md).
+What runs today: the phone (Telegram and a web page) and the kitchen Echo. The glasses app ran the full loop only in the iOS simulator with Meta's mock Ray-Ban Meta, real glasses are not paired yet (`results/glasses/README.md`). House actions run dry, except reading the house, one Echo announcement and one test shopping list item (`results/channels/check.json`, `results/house-plan/live-check.json`). Every claim in this repo is checked in [results/honesty/claims.md](results/honesty/claims.md).
 
-It logs, reminds and alerts. It never gives medical advice and never diagnoses. It never replaces staying within arm's reach of the baby.
+Built during the Meta Global AI Developer Hackathon, which started Oct 26 2026 at 12 PM ET. Prior work from Oct 21 to 25 is named in [Prior work](#prior-work-oct-21-to-25-2026-before-the-event). See [what was built during the hackathon](#built-during-the-meta-global-ai-developer-hackathon-oct-26-to-nov-4-2026) and [docs/architecture.md](docs/architecture.md).
+
+It logs, reminds and alerts. It is built to never give medical advice and never diagnose: a rule gate refuses health questions and answers red flags (not breathing, blue lips, choking, a fall) with "call emergency services now" without a brain call (`parenting_agent/agent/rules.py`), and the brain's prompt forbids advice. The gate is a word list, so the prompt is the last line for anything it misses (`results/redteam/README.md`). It never replaces staying within arm's reach of the baby.
 
 ## How it works
 
@@ -21,7 +23,7 @@ One long-running agent sits in the middle. Everything it sees, hears and does go
 | Job | Model | Where it runs |
 |---|---|---|
 | Confirms or cancels the hand alarm at the changing table and in the bath. Touch versus a 2 to 5 cm hover not yet told apart, see `results/hover/README.md` (Oct 28) | **SAM 3.1**, Meta's open weights | On the Mac's GPU, 1.5 to 3 s per frame. Frames never leave the house |
-| The agent's brain, in the family agent, the families bot and the public demo | **Muse Spark Open** (`meta-models/muse-spark-open-1026`), Meta's open weights | Baseten's OpenAI-compatible API, synchronous calls only (`config/agent.json`, `config/agent.vostro.json`). Every call logs its model and host as a `brain_call` event. Numbers in `results/muse/README.md` |
+| The agent's brain, in the family agent, the families bot and the public demo | **Muse Spark Open** (`meta-models/muse-spark-open-1026`), Meta's open weights | Baseten's OpenAI-compatible API, synchronous calls only (`config/agent.json`, `config/agent.vostro.json`). Every call logs its model and host as a `brain_call` event. Per-call logs from Oct 28 runs in `results/muse/` |
 | Fallback brain, only when a Muse call errors | Claude Haiku 5.5 | Anthropic API. Each fallback is a `brain_fallback` event and a stderr line, so it is counted, never silent |
 
 ## Private by design
@@ -32,7 +34,7 @@ One long-running agent sits in the middle. Everything it sees, hears and does go
 | House audio | Labelled on the Mac by PANNs, never saved, only labels and numbers in `results/` (see `docs/house-sounds.md`) |
 | The baby's log | Baby Buddy on the family's server, reachable only on that server (see `docs/deploy-babybuddy.md`) |
 | The agent's memory | `data/memory.sqlite` and `data/events.jsonl` on the machine that runs it, on the Vostro in `~/apps/parenting-agent-data` |
-| **What leaves the house** | Only the brain call: the conversation text and tool results go to the configured brain (Baseten for Muse Spark Open, Anthropic only when a Muse call errors and Claude answers as the fallback). Every call logs its destination host as a `brain_call` event |
+| **What leaves the house** | The brain call: the conversation text and tool results (baby log lines included) go to the configured brain, Baseten for Muse Spark Open, Anthropic only when a Muse call errors and Claude answers as the fallback. Every call logs its destination host as a `brain_call` event. Baseten's docs say it does not store inputs or outputs of synchronous calls by default (https://docs.baseten.co/observability/security). Anthropic deletes API inputs and outputs within 30 days by default (https://privacy.claude.com/en/articles/7996866). Telegram messages also go through Telegram's servers. No frame and no audio leaves |
 
 ## Run it
 
@@ -55,11 +57,11 @@ The agent runs 24/7 on the Vostro in its own walled-off container: it reaches Ba
 
 ## Baby log in Baby Buddy (issue #2)
 
-Notes like "bottle, 120 ml", "wet and dirty diaper", "she napped from 14:00 to 15:00" or "just gave her a bath" become Baby Buddy entries. Questions like "when was the last dirty diaper?" or "how much did she drink today?" are answered from Baby Buddy through the `baby_summary` and `read_baby_log` tools. Health questions get a kind refusal and a suggestion to call the pediatrician. Notes arrive as text for now, the channels issue adds speech to text.
+Notes like "bottle, 120 ml", "wet and dirty diaper", "she napped from 14:00 to 15:00" or "just gave her a bath" become Baby Buddy entries. Questions like "when was the last dirty diaper?" or "how much did she drink today?" are answered from Baby Buddy through the `baby_summary` and `read_baby_log` tools. Health questions get a kind refusal and a suggestion to call the pediatrician. Notes arrive as typed text. Voice notes on Telegram are being built and are not merged yet.
 
 - `parenting_agent/agent/babybuddy.py`: Baby Buddy as the baby log. Baths are notes that start with "Bath". "Asleep" starts a timer and "awake" turns it into a sleep record. Entries are never timed in the future. A feed whose estimated start overlaps the previous feed starts right after it.
 - `config/agent.json` and `config/agent.muse-baseten.json` use Baby Buddy (`baby_log.provider: babybuddy`, URL and token from the env file, reached through the tunnel in `docs/deploy-babybuddy.md`). `config/agent.fake.json` keeps the offline log in the agent's memory file.
-- `scripts/voice_log_run.py`: the real run for a usage goal check 2. It sends notes through the agent and the brain, reads each record back from Baby Buddy by id and writes `results/kr222/voice-log.json`.
+- `scripts/voice_log_run.py`: the real run for a usage goal check 2 (the KR calls it the voice log, the notes are typed text). It sends notes through the agent and the brain, reads each record back from Baby Buddy by id and writes `results/kr222/voice-log.json`.
 
 Changing-table skill on generated clips streamed in real time:
 
@@ -86,11 +88,11 @@ python -m parenting_agent.fullday --no-video   # skip the two clip steps
 python -m parenting_agent.fullday --wipe-only  # remove the entries earlier runs wrote (tag full-day-sim)
 ```
 
-It replays the plan page day through the real agent: a bottle by voice, the changing table on the clips with a dirty diaper said aloud, a doorbell during the change, a long-nap note, the bath on its clip, a question answered from the log, and the night feed with the next feed and the next parent on duty. It writes `results/fullday/day.md`, `day.json` and the KR files in `results/fullday/kr222/`. What is not built yet shows as dry run in the report: Home Assistant actions (#9), delivery on Telegram, the ear and the speakers (#3, #8) and the house sound detector (#14). See `docs/full-day.md`.
+It replays the plan page day through the real agent: a typed "bottle, 120 ml" on the ear channel, the changing table on the clips with a typed dirty diaper note, a doorbell during the change, a long-nap note, the bath on its clip, a question answered from the log, and the night feed with the next feed and the next parent on duty. It writes `results/fullday/day.md`, `day.json` and the KR files in `results/fullday/kr222/`. The recorded run is from Oct 27 with the Claude brain, before Muse became the brain. What was not built on Oct 27 shows as dry run in that report: Home Assistant actions (#9), delivery on Telegram, the ear and the speakers (#3, #8) and the house sound detector (#14). See `docs/full-day.md`.
 
 ## Daily house plan: vacuum, shopping list, dinner and white noise (issues #29 and #32)
 
-The vacuum pauses and goes home when a nap starts and never starts when the run would reach a predicted nap. It starts alone only when nobody is home or the baby is out, otherwise it asks. "Clean under the high chair" is a room clean, there is one daily run at the quietest awake time, diapers go on `todo.shopping_list` before they run out, a bad night gives a draft of fast Thermomix dinners from Cookidoo (read only, through home-agents), a reminder says when to start dinner, and white noise follows the rhythm under the 50 dB cap. The Thermomix is never controlled. See `docs/house-plan.md`.
+The vacuum pauses and goes home when a nap starts and never starts when the run would reach a predicted nap. It starts alone only when nobody is home or the baby is out, otherwise it asks. "Clean under the high chair" is a room clean, there is one daily run at the quietest awake time, diapers go on `todo.shopping_list` before they run out, a bad night gives a draft of fast Thermomix dinners from Cookidoo (read only, through home-agents), a reminder says when to start dinner, and white noise follows the rhythm under a 50 dB cap in code. The cap uses a placeholder calibration (70 dB at full level) until the machine exists and is measured, so no dB number here is measured. The Thermomix is never controlled. See `docs/house-plan.md`.
 
 ```bash
 python scripts/house_plan_check.py   # live and safe: reads the vacuum, dry runs pause and home, one test list item added and removed
@@ -113,11 +115,11 @@ Theo is not born yet, so the family agent helps get ready: prep lists for the nu
 
 ## Car seat coach (issue #30)
 
-The agent coaches an infant carrier install with the car's seat belt, one step at a time by voice. SAM 3.1 on the Mac checks what the head camera can see: the lap belt in both side guides, the shoulder belt in the rear guide, no twist, the level line, the handle upright. The movement test at the belt path and the harness pinch test are asked and logged. It never says "safe", it lists what passed and what remains and suggests one check by a certified technician. The steps and limits come from the maker's manual (Joie i-Snug 2), the car rules from the Tesla Model 3 manual. An outgrow watch compares Baby Buddy weight and height with the seat's limits. Tested on 3D-rendered clips with planted mistakes, see `docs/car-seat-coach.md` and `results/carseat/`.
+The agent coaches an infant carrier install with the car's seat belt, one step at a time by voice. SAM 3.1 on the Mac checks what the head camera can see: the lap belt in both side guides, the shoulder belt in the rear guide, no twist, the level line, the handle upright. The movement test at the belt path and the harness pinch test are asked and logged. Its spoken lines never use the word "safe" (a filter on the coach's own lines, `parenting_agent/carseat/coach.py`), it lists what passed and what remains and suggests one check by a certified technician. The steps and limits come from the maker's manual (Joie i-Snug 2). The car rules come from Tesla's published child seat pages, not yet checked against the printed manual. An outgrow watch compares Baby Buddy weight and height with the seat's limits. Tested on 3D-rendered clips with planted mistakes, see `docs/car-seat-coach.md` and `results/carseat/`.
 
 ## Ray-Ban Meta glasses (issue #57)
 
-`apps/glasses` is an iPhone app on Meta's Wearables Device Access Toolkit. It streams the glasses camera, sends 10 frames a second to the agent on the family's Mac over the home network (`parenting_agent/glasses.py`, pairing token, never a public address), sends what the parent says, and shows and speaks what the agent answers. On Oct 28 the full loop ran in the iOS 27 simulator with DAT's mock Ray-Ban Meta playing the synthetic changing-table clip: "changing time", both hands off, "hand" spoken, "done", change logged. Real glasses are not paired yet. See `apps/glasses/README.md` and `results/glasses/README.md`.
+`apps/glasses` is an iPhone app on Meta's Wearables Device Access Toolkit. It streams the glasses camera, sends 10 frames a second to the agent on the family's Mac over the home network (`parenting_agent/glasses.py`, pairing token, never a public address), sends the parent's phrases (a button or typed text, there is no speech recognition in the app yet), and shows and speaks what the agent answers. On Oct 28 the full loop ran in the iOS 27 simulator with DAT's mock Ray-Ban Meta playing the synthetic changing-table clip: "changing time", both hands off, "hand" spoken, "done", change logged. Real glasses are not paired yet. See `apps/glasses/README.md` and `results/glasses/README.md`.
 
 ```bash
 python -m parenting_agent --config config/agent.glasses.json   # Muse Spark Open brain, glasses channel, changing table and bath on the glasses
@@ -125,7 +127,7 @@ python -m parenting_agent --config config/agent.glasses.json   # Muse Spark Open
 
 ## Public demo app
 
-A phone-first web chat where anyone can talk to the real agent core about Demo Baby, a simulated baby on the simulated week, with a simulated house. Each visitor gets their own copy, health questions get the kind refusal, and the process carries only the brain key. Local only until Gonza says "OK public". See `docs/demo-app.md`.
+A phone-first web chat where anyone can talk to the real agent core about Demo Baby, a simulated baby on the simulated week, with a simulated house. Each visitor gets their own copy, health questions get the kind refusal, and the process carries only the brain keys. Live at https://baby.bygmv.com since Oct 28 2026. See `docs/demo-app.md`.
 
 ```bash
 python -m parenting_agent.demo --brain-env ~/.parenting-agent.env   # http://127.0.0.1:8765
@@ -154,13 +156,13 @@ python -m parenting_agent.tesla   # one trip with the baby on the simulated car,
 
 ```bash
 python -m unittest discover -s tests             # fake brain, no network
-PA_LIVE=1 python -m unittest tests.test_agent    # also runs the same conversation with Claude
-PA_LIVE=1 PYTHONPATH=tests python -m unittest tests.test_voice_log   # notes, questions and the safety check with Claude
+PA_LIVE=1 python -m unittest tests.test_agent    # also runs the same conversation with the configured live brain
+PA_LIVE=1 PYTHONPATH=tests python -m unittest tests.test_voice_log   # notes, questions and the safety check with the live brain
 ```
 
-## Built during the Meta Global AI Developer Hackathon (Oct 26 to Nov 4 2026)
+## Built during the Meta Global AI Developer Hackathon (Oct 26 12 PM ET to Nov 4 9 PM ET 2026)
 
-Everything in this repo was written during the event. The repo was created on Oct 26 2026 at 15:03 Montevideo time, after the official start.
+The repo was created on Oct 26 2026 at 15:03 Montevideo time (14:03 ET), after the 12 PM ET start. Its code was written during the event, but parts were ported from prior work, listed below.
 
 | What | Issue | PR | Commit |
 |---|---|---|---|
@@ -173,7 +175,7 @@ Everything in this repo was written during the event. The repo was created on Oc
 | README and architecture | #18 | #26 | 66780c2 |
 | Voice log and answers from Baby Buddy | #2 | #27 | 6571481 |
 | Simulated full day 06:10 to 02:30, one-command demo rehearsal | #17 | #28 | be7ba04 |
-| Public demo app with a simulated baby, local only | #33 | #34 | see PR |
+| Public demo app with a simulated baby, live at baby.bygmv.com since Oct 28 | #33 | #34 | see PR |
 | Always on: the agent in a walled-off container on the Vostro | #15 | #35 | see PR |
 | Telegram channel and channel picking | #3, #8 | #36 | see PR |
 | House sounds, why is he crying, white noise | #14, #32 | see PR | see PR |
@@ -185,8 +187,26 @@ Everything in this repo was written during the event. The repo was created on Oc
 | Car seat coach: manual to steps, SAM 3.1 visible checks, hand checks, outgrow watch, rendered test clips | #30 | #47 | see PR |
 | Touch versus hover ablation, reflex only against SAM 3.1, the voice waits for SAM 3.1 on near readings (Oct 28) | #6, #10 | see PR | see PR |
 
-The first commits of Oct 26 (4f1898a to 90ca5a3) are an early skeleton that the issues above reviewed and partly rewrote.
+| Muse Spark Open as the brain of the family agent, the families bot and the demo, Claude only as a logged fallback | #4 | #61 | 115dc2e |
+| Red team round 1 closed, a regression test per attack | #60 | #63 | ed6c488 |
 
-**Planned, not built yet:** Muse Spark Open live on Baseten (#4), live Home Assistant actions (#9, dry run today), demo and submission (#11).
+The first commits of Oct 26 (4f1898a to 90ca5a3) are an early skeleton that the issues above reviewed and partly rewrote. Commit f41acfa ports the reflex and the chime then voice alarm from the prior work below.
+
+**Planned, not built yet:** voice notes on Telegram, the glasses app on real glasses, live Home Assistant actions (#9, dry run today), demo and submission (#11).
+
+## Prior work (Oct 21 to 25 2026, before the event)
+
+Built in the prep repo `gonzalomelov/meta-hackathon-2026` (64 commits from Oct 21 to 25) and reused here. None of its numbers is used as event evidence.
+
+| Prior work | Date | Reused here as |
+|---|---|---|
+| MediaPipe hand reflex with the contact rule, chime on every alarm then a spoken prompt after a 1.2 s hold | Oct 22 to 23 | `reflex.py`, `alarm.py` (ported in f41acfa) |
+| SAM 3.1 run locally from Meta's weights, then on the Mac GPU (MPS) | Oct 23 to 24 | `scripts/sam3-setup.sh`, `sam3_worker.py` |
+| Touch versus hover kill test, 21 of 21 hovers read off on one clip | Oct 23 to 24 | Not used. Replaced by the Oct 28 ablation in `results/hover/README.md` |
+| iPhone Safari page as the head camera over Tailscale | Oct 23 | `sources.py`, `phone.html` |
+| PANNs CNN14 labels under speech (18 of 24 events at 0 dB) and the thresholds, Tapo microphone listening | Oct 23 | `hearing.py` thresholds, `docs/house-sounds.md` |
+| Home Assistant MCP check and actions driven by live events | Oct 21 to 23 | the house layer design |
+| Generated changing-table clips (Oct 22), the generated bath clip and the hover clip (Oct 23) | Oct 22 to 23 | test clips outside git, the bath set was re-cut from it on Oct 28 |
+| Positioning, the Baby Buddy safety vet, the day 1 runbook | Oct 23 to 25 | planning only |
 
 **Public open-source tools used, not written by us:** Meta SAM 3.1 weights and code, PANNs CNN14 (code MIT, weights CC BY 4.0), MediaPipe hand landmarker, OpenCV, NumPy, Baby Buddy (BSD-2-Clause), Home Assistant.

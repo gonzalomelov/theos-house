@@ -67,11 +67,11 @@ flowchart LR
 
 | Flow | From | To | Leaves the house? |
 |---|---|---|---|
-| Camera frames | Head camera | Reflex and SAM 3.1 on the Mac | No. In memory only, never saved |
+| Camera frames | Head camera (iPhone page) | Reflex and SAM 3.1 on the Mac | No. Over the home Wi-Fi or Tailscale to the Mac (end to end encrypted, a Tailscale relay would see only encrypted packets), in memory only, never saved |
 | Confirm or cancel | SAM 3.1 | Skill, then bus | No |
 | Baby log entries | Agent core | Baby Buddy on the family server | No |
 | Rhythm reads | Baby Buddy | Daily rhythm | No |
-| Conversation and tool results | Agent core | Brain | **Yes, the only flow that does.** Baseten for Muse Spark Open, Anthropic only for a fallback call. Each call logs its model and host as a `brain_call` event, each fallback a `brain_fallback` event |
+| Conversation and tool results | Agent core | Brain | **Yes.** Baseten for Muse Spark Open, Anthropic only for a fallback call. With Telegram below and the car from Nov 5, the only flows that leave. No frame and no audio leaves. Each call logs its model and host as a `brain_call` event, each fallback a `brain_fallback` event |
 | House actions | Agent core | Home Assistant on the family server | No. Dry until `house.live` is true |
 | House sound labels | Camera microphone | Bus | No. Audio stays in memory, never saved |
 | Car readings and commands | Agent core | Simulated car today, Home Assistant `tesla_fleet` from Nov 5 | From Nov 5, yes: Home Assistant polls and commands the car through Tesla's Fleet API. Only the public key file is public |
@@ -80,6 +80,6 @@ flowchart LR
 ## Rules the code keeps
 
 - Anything not on the allowed list waits for a parent's yes.
-- No medical advice and no diagnosis in anything the agent says.
+- No medical advice and no diagnosis in anything the agent says. A rule gate (`parenting_agent/agent/rules.py`) refuses health questions and answers red flags with emergency services without a brain call. What the word lists miss rests on the brain's prompt.
 - Baby log entries are never timed in the future.
 - A camera skill never says or implies the baby can be left alone, and never offers to watch the baby in the parent's place. Checked when the skill loads.
