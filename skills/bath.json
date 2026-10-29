@@ -26,7 +26,7 @@
     "already_armed": "the bath helper is on, the head camera listens for the parent's hands",
     "not_armed": "the bath helper was not on",
     "finished_result": "bath logged",
-    "armed_fact": "A bath is in progress. The parent keeps a hand on the baby the whole bath. Never suggest stepping away from the bath, not even for a second, and never offer to watch the baby. If the parent must go, the baby comes out of the water with them, wrapped in the towel. For the door, the phone, a timer or a forgotten towel, offer to say one moment on the house speaker, hold notifications or call the partner.",
+    "armed_fact": "A bath is in progress. The parent keeps a hand on the baby the whole bath. Never suggest stepping away from the bath, not even for a second, never offer to watch the baby, and never describe going anywhere, not even with the baby. For the door, the phone, a timer or a forgotten towel, offer to say one moment on the house speaker, hold notifications or call the partner.",
     "idle_fact": "No bath in progress.",
     "closed_observation": "A bath just finished and was logged in the baby log. Hand alerts spoken: {voices}."
   },

@@ -35,6 +35,20 @@ TAKES_OVER = re.compile(r"\b(i'?ll|i will|i am|i'm|let me|i can)\s+(?:\w+\s+)?(w
                         r"take over|hold (?:her|him|them|the baby))\b", re.I)
 
 
+STAY = "Keep a hand on the baby. I can say one moment on the house speaker, hold notifications or call your partner."
+
+
+def keep_with_baby(text):
+    """The reply without any sentence that says or implies the parent may leave, or that the agent watches the baby.
+    A reasoning brain can paraphrase a safety fact into "if you need to go, take her with you", which still describes
+    going. Those sentences never reach a parent while a camera skill is on."""
+    sentences = re.split(r"(?<=[.!?])\s+|\n+", text or "")
+    kept = [s for s in sentences if s.strip() and not implies_left_alone(s)]
+    if len(kept) == len([s for s in sentences if s.strip()]):
+        return text
+    return " ".join(kept + [STAY]) if kept else STAY
+
+
 def implies_left_alone(text):
     """True when text says or implies the parent may leave the baby, or that the agent watches the baby instead."""
     for sentence in re.split(r"(?<=[.!?])\s+", text or ""):
@@ -112,6 +126,8 @@ class CameraSkill:
         self.phrases = {**{phrase(p): self.arm for p in self.text.get("start_phrases", [])},
                         **{phrase(p): self.finish for p in self.text.get("finish_phrases", [])}}
         self.agent.bus.subscribe(self.on_message, ["message"])
+        if hasattr(self.agent, "reply_guards"):
+            self.agent.reply_guards.append(lambda text: keep_with_baby(text) if self.skill is not None else text)
         if self.text.get("idle_fact"):
             self.agent.memory.remember(self.name, self.text["idle_fact"])
 

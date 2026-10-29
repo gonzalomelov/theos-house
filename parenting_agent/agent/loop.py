@@ -270,6 +270,8 @@ class Agent:
         self.stopped = threading.Event()
         self.current_event = None
         self.said = 0
+        # Callables text -> text run on every reply before it is said, such as a camera skill's "never leave" guard.
+        self.reply_guards = []
         bus.subscribe(self.inbox.put, ["message", "observation"])
 
     def start(self):
@@ -323,6 +325,8 @@ class Agent:
         return TEXTS[self.lang(request)][key].format(**values)
 
     def say(self, channel, text):
+        for guard in getattr(self, "reply_guards", []):
+            text = guard(text)
         self.said += 1
         self.memory.add_message(channel, "assistant", text, ts=self.now())
         # The answer goes back to the chat that asked, so two parents on one channel each get their own answer.

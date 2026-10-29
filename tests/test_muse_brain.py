@@ -194,5 +194,17 @@ class AnObservationIsNeverLogged(unittest.TestCase):
             agent.close()
 
 
+class NothingSaysLeaveDuringABath(unittest.TestCase):
+    def test_a_go_with_the_baby_sentence_is_cut_while_a_skill_is_on(self):
+        from parenting_agent.camera_skill import STAY, implies_left_alone, keep_with_baby
+        text = ("Keep your hand on her. If you need to go grab shampoo, take her out of the water with you, then go. "
+                "Want me to call your partner?")
+        kept = keep_with_baby(text)
+        self.assertFalse(implies_left_alone(kept))
+        self.assertIn("call your partner", kept)
+        self.assertIn(STAY, kept)
+        self.assertEqual(keep_with_baby("Bath logged."), "Bath logged.")
+
+
 if __name__ == "__main__":
     unittest.main()
