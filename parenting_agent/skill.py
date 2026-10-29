@@ -2,12 +2,15 @@
 
 Arming publishes skill_armed and fires the house on_armed actions. Each new frame goes through the reflex,
 the lift check when the reflex reads on (config lift.enabled, see parenting_agent/lift.py), the alarm and, when
-the alarm raises, one confirm request. A hand the lift check finds held above the baby counts as off, and that
+the alarm raises, one confirm request, sent confirm.delay_s after the raise with the newest frame (default 0). When the confirm
+cancels but the reflex still reads off, the skill asks again on a newer frame, up to confirm.retries times, and an
+off answer then raises the alarm again. A hand the lift check finds held above the baby counts as off, and that
 alarm skips the confirm detector, because SAM 3.1 reads a hovering hand as on (results/hover). A spoken prompt fires the on_voice actions.
 Closing fires on_closed, logs the routine to tracking, and publishes skill_closed with the numbers.
 """
 import datetime
 import time
+from concurrent.futures import ThreadPoolExecutor
 
 from . import confirm as confirm_mod
 from .alarm import Alarm
@@ -25,9 +28,15 @@ class Skill:
         self.house = house or House(config["house"], bus)
         self.tracker = tracker or Tracker(config["tracking"], bus)
         self.bus.subscribe(self._on_voice, ["voice"])
-        self.armed_at, self.frames, self.off_since = None, 0, None
+        self.armed_at, self.frames, self.off_since, self.confirm_due = None, 0, None, None
+        self.retries = 0
         lift = config.get("lift", {})
+        self.masks = getattr(detector, "masks", None) if lift.get("regions") == "sam3" else None
+        if lift.get("regions") == "sam3" and self.masks is None:  # no SAM 3.1: MediaPipe regions and their threshold
+            lift = {**lift, "regions": "mediapipe", "min_lift_cm": lift.get("mediapipe_min_lift_cm", 1.0)}
         self.lift = LiftCheck(lift) if lift.get("enabled") else None
+        self.anchor_pool = ThreadPoolExecutor(max_workers=1) if self.masks else None
+        self.anchor_job = None
 
     def _on_voice(self, event):
         self.house.on_event("voice")
@@ -50,6 +59,15 @@ class Skill:
         before = self.alarm.episode
         self.alarm.on_reflex(state, round(stream_s, 3), near=getattr(self.reflex, "near", False), lifted=lifted)
         if self.alarm.episode != before and not lifted:
+            self.confirm_due = (self.alarm.episode, stream_s + self.cfg["confirm"].get("delay_s", 0))
+        if self.confirm_due and stream_s >= self.confirm_due[1]:  # the first off frame often still shows the hands leaving
+            episode, self.confirm_due = self.confirm_due[0], None
+            if episode == self.alarm.episode and self.alarm.raised and not self.alarm.lifted:
+                self.retries = 0
+                self.confirm.request(episode, frame_bgr, round(stream_s, 3))
+        elif (self.alarm.cancelled and state != "on" and not self.confirm.pending
+              and self.retries < self.cfg["confirm"].get("retries", 0)):  # still off after a cancel: ask on a newer frame
+            self.retries += 1
             self.confirm.request(self.alarm.episode, frame_bgr, round(stream_s, 3))
         self.confirm.collect()
 
@@ -67,11 +85,32 @@ class Skill:
         started = time.monotonic()
         landmarks = getattr(self.reflex, "landmarks_px", [])
         hands = [landmarks[i] for i in getattr(self.reflex, "on_hands", []) if i < len(landmarks)]
-        lifted = self.lift.update(cv2.cvtColor(frame_bgr, cv2.COLOR_BGR2GRAY), hands, stream_s)
+        gray = cv2.cvtColor(frame_bgr, cv2.COLOR_BGR2GRAY)
+        self._anchor(frame_bgr, gray, stream_s)
+        lifted = self.lift.update(gray, hands, stream_s)
         lift_cm = None if self.lift.lift_cm is None else round(self.lift.lift_cm, 2)
         return lifted, lift_cm, round(time.monotonic() - started, 4)
 
+    def _anchor(self, frame_bgr, gray, stream_s):
+        """lift.regions sam3: land a finished SAM 3.1 anchor, and send a resting frame when the check asks for one."""
+        if self.masks is None:
+            return
+        if self.anchor_job and self.anchor_job[2].done():
+            anchor_gray, anchor_s, future = self.anchor_job
+            self.anchor_job = None
+            try:
+                hands, baby = future.result()
+            except Exception as error:  # no anchor, no reading: the reflex and SAM 3.1 confirm still run
+                self.bus.publish("anchor_error", error=str(error)[:200])
+            else:
+                self.lift.anchor(anchor_gray, hands, baby, anchor_s)
+                self.bus.publish("anchor", stream_s=round(anchor_s, 3), hands=len(hands), based=self.lift.base is not None)
+        if self.anchor_job is None and self.lift.wants_anchor and not self.lift.lifted:
+            self.anchor_job = (gray, stream_s, self.anchor_pool.submit(self.masks, frame_bgr.copy()))
+
     def close(self):
+        if self.anchor_pool:
+            self.anchor_pool.shutdown(wait=True)
         self.confirm.close()
         ended = datetime.datetime.now(datetime.timezone.utc)
         self.house.on_event("closed")

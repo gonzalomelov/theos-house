@@ -2,7 +2,7 @@
 
 Measured Oct 29 2026 between 01:25 and 02:15 Montevideo, during the Meta hackathon, for issue #10. PR #79 found that after the lift check (#75) the bath said "hand" during the one-hand clip in 5 of 10 baths, against 0 of 10 before.
 
-`scripts/skill_loop_check.py` (lands with the SAM 3.1 hover PR for #6, first run as `bath_onehand_check.py`) streams the same loop `scripts/bath_run.py` builds (`bath-handoff-01`, both hands leave at 4.0 s, then `bath-onehand-01`, one hand on the doll the whole clip) through the bath skill alone, in real time, with no brain, no Baby Buddy and no Home Assistant. Both hands off must speak "hand" within 2.5 s of the cue. One hand must stay silent.
+`scripts/skill_loop_check.py` (first run as `bath_onehand_check.py`) streams the same loop `scripts/bath_run.py` builds (`bath-handoff-01`, both hands leave at 4.0 s, then `bath-onehand-01`, one hand on the doll the whole clip) through the bath skill alone, in real time, with no brain, no Baby Buddy and no Home Assistant. Both hands off must speak "hand" within 2.5 s of the cue. One hand must stay silent.
 
 | Run | Both hands off spoken | One hand silent | File |
 |---|---|---|---|
@@ -19,11 +19,11 @@ Every false voice was a lifted reading on the one hand MediaPipe saw. In the one
 
 `skills/bath.json` sets `lift.min_hands` to 2. The lift check only measures when the reflex counts both hands on the baby, and a hover alarm needs both of them lifted. One hand on is never read as a hover. The reflex alone still raises "hand" when no hand is on.
 
-The gates in the second row cut the false voices but did not remove them, so they are not used.
+The gates in the second row cut the false voices but did not remove them, so they are in the code (`max_scene_zoom`, `max_scene_shift_px`, `max_hand_shift_px` in `parenting_agent/lift.py`) but off by default.
 
 ## What it costs
 
-A bath hover with only one hand in view is no longer caught by the lift check. On the hover dev set that is 6 of 13 bath hovers (all from the one-hand source).
+A bath hover with only one hand in view is no longer caught by the lift check. On the hover dev set that is 6 of 13 bath hovers (all from the one-hand source). See `results/hover/blind/README.md` for the blind numbers.
 
 ```bash
 python scripts/skill_loop_check.py --scene bath --runs 10 --out runs/bath/onehand.json                        # no GPU

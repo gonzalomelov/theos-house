@@ -71,6 +71,38 @@ class LiftTest(unittest.TestCase):
         self.assertIsNone(check.base)
 
 
+class SamRegionsTest(unittest.TestCase):
+    def hand_mask(self):
+        mask = np.zeros((H, W), np.uint8)
+        cv2.fillConvexPoly(mask, HAND.astype(np.int32), 1)
+        return mask.astype(bool)
+
+    def test_no_anchor_no_reading(self):
+        check = LiftCheck({"camera_cm": CAMERA_CM, "regions": "sam3"})
+        gray, hands = frame(3.0, scene(1), scene(2))
+        self.assertFalse(check.update(gray, hands, 0.0))
+        self.assertTrue(check.wants_anchor)
+        self.assertIsNone(check.lift_cm)
+
+    def test_anchored_hand_mask_measures_the_lift(self):
+        background, texture = scene(1), scene(2)
+        check = LiftCheck({"camera_cm": CAMERA_CM, "regions": "sam3", "refresh_s": 100})
+        rest, _ = frame(0.0, background, texture)
+        check.anchor(rest, [self.hand_mask()], None, 0.0)
+        self.assertFalse(check.wants_anchor)
+        out = [check.update(*frame(lift, background, texture), 0.1 + i / 15) for i, lift in enumerate([0.0] * 6 + [2.5] * 8)]
+        self.assertFalse(any(out[:6]))
+        self.assertTrue(out[-1])
+        self.assertAlmostEqual(check.lift_cm, 2.5, delta=0.5)
+
+    def test_hand_away_from_the_baby_is_not_anchored(self):
+        check = LiftCheck({"camera_cm": CAMERA_CM, "regions": "sam3"})
+        baby = np.zeros((H, W), bool)
+        baby[300:, :100] = True
+        check.anchor(scene(1), [self.hand_mask()], baby, 0.0)
+        self.assertIsNone(check.base)
+
+
 class LiftedAlarmTest(unittest.TestCase):
     def setUp(self):
         self.bus = Bus()

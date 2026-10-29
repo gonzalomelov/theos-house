@@ -40,6 +40,10 @@ class Shared:
     def __init__(self, detector):
         self.detector, self.name = detector, detector.name
 
+    @property
+    def masks(self):
+        return self.detector.masks
+
     def judge(self, frame_bgr):
         started = time.monotonic()
         verdict = self.detector.judge(frame_bgr)
@@ -47,10 +51,11 @@ class Shared:
         return verdict
 
 
-def skill_config(scene, confirm_wait_s, lift=None):
+def skill_config(scene, confirm_wait_s, lift=None, lift_cfg=None):
     cfg = copy.deepcopy(config_mod.load(SKILLS[scene]))
     if lift is not None:
         cfg.setdefault("lift", {})["enabled"] = lift == "on"
+    cfg.setdefault("lift", {}).update(lift_cfg or {})
     cfg["house"] = {"allowed": {}, "on_armed": [], "on_voice": [], "on_closed": []}
     cfg["tracking"] = {"provider": "none", "on_closed": None}
     if confirm_wait_s is not None:
@@ -131,18 +136,21 @@ def median(values):
 def main(argv=None):
     parser = argparse.ArgumentParser()
     parser.add_argument("--set", type=Path, required=True)
-    parser.add_argument("--split", choices=["dev", "test"], required=True)
+    parser.add_argument("--split", choices=["dev", "test"], default=None)
     parser.add_argument("--confirm", choices=["none", "sam3_local"], required=True)
     parser.add_argument("--confirm-wait-s", type=float, default=None)
     parser.add_argument("--wait-without-confirm", action="store_true", help="control for --confirm none")
     parser.add_argument("--lift", choices=["on", "off"], default=None, help="override lift.enabled")
+    parser.add_argument("--lift-cfg", type=json.loads, default=None, help="JSON merged into the lift config, for dev tuning")
+    parser.add_argument("--splits", default=None, help="comma separated, overrides --split (the wave 2 dev set is dev,test)")
     parser.add_argument("--only", default=None, help="comma separated moment ids")
     parser.add_argument("--out", type=Path, required=True)
     args = parser.parse_args(argv)
 
     root = args.set.expanduser()
     labels = json.loads((root / "labels.json").read_text())["moments"]
-    moments = [m for m in labels if m["split"] == args.split]
+    splits = (args.splits or args.split).split(",")
+    moments = [m for m in labels if m["split"] in splits]
     if args.only:
         moments = [m for m in moments if m["id"] in args.only.split(",")]
     base = config_mod.load(SKILLS["changing_table"])
@@ -151,7 +159,7 @@ def main(argv=None):
     rows = []
     try:
         for moment in moments:
-            cfg = skill_config(moment["scene"], args.confirm_wait_s, args.lift)
+            cfg = skill_config(moment["scene"], args.confirm_wait_s, args.lift, args.lift_cfg)
             rows.append(run_moment(moment, root / f"{moment['id']}.mp4", cfg, reflex, detector, args.wait_without_confirm))
             print(json.dumps({k: rows[-1][k] for k in ("id", "spoken", "latency_s", "chimes", "cancels", "confirms",
                                                        "max_lift_cm_after_cue", "lift_s_median")}), flush=True)
@@ -160,8 +168,8 @@ def main(argv=None):
             detector.detector.close()
     result = {
         "generated_at": datetime.datetime.now().astimezone().isoformat(timespec="seconds"),
-        "split": args.split, "confirm": args.confirm, "wait_without_confirm": args.wait_without_confirm,
-        "lift": {scene: skill_config(scene, args.confirm_wait_s, args.lift).get("lift") for scene in SKILLS},
+        "split": ",".join(splits), "confirm": args.confirm, "wait_without_confirm": args.wait_without_confirm,
+        "lift": {scene: skill_config(scene, args.confirm_wait_s, args.lift, args.lift_cfg).get("lift") for scene in SKILLS},
         "alarm": {k: v for k, v in skill_config("changing_table", args.confirm_wait_s)["alarm"].items() if k != "voice_text"},
         "summary": summarize(rows),
         "by_scene": {scene: summarize([r for r in rows if r["scene"] == scene]) for scene in SKILLS},

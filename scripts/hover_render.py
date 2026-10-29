@@ -20,6 +20,11 @@ A fresh render reuses the method with other lifts and other points in each sourc
     python scripts/hover_render.py --synthetic ... --out fresh --splits test --lifts 2.5,4 --touch-phases 0.25,0.75 \
         --hover-phase 0.33 --no-natural
 It also writes labels.json, labelled by construction (a rendered lift is a hover, an untouched stretch a touch).
+
+A seeded render draws new poses per moment from --seed: every moment starts at its own point in the stretch, every
+hover gets its own lift (2 to 5 cm), ramp (0.25 to 0.45 s), cue (2.2 to 2.8 s) and centre of perspective (the head
+up to 40 px off the image centre). It is the blind set for issue #6 wave 2:
+    python scripts/hover_render.py --synthetic ... --out blind --splits test --seed 1029 --hovers-per-tag 4 --no-natural
 """
 import argparse
 import json
@@ -106,7 +111,7 @@ class Hands:
         return self.last
 
 
-def lift(frame, masks, lift_cm):
+def lift(frame, masks, lift_cm, centre=None):
     """The hands lift_cm above where they rest, as the head camera sees it."""
     if lift_cm <= 0 or not masks:
         return frame
@@ -119,7 +124,7 @@ def lift(frame, masks, lift_cm):
         union = np.maximum(union, mask.astype(np.float32) / 255)
     shadow = cv2.warpAffine(cv2.GaussianBlur(union, (0, 0), 3 + lift_cm), np.float32([[1, 0, shift * 0.6], [0, 1, shift]]), (w, h))
     out *= 1 - 0.45 * shadow[..., None]
-    zoom = cv2.getRotationMatrix2D((w / 2, h / 2), 0, scale)
+    zoom = cv2.getRotationMatrix2D(centre or (w / 2, h / 2), 0, scale)
     raised = cv2.warpAffine(frame, zoom, (w, h)).astype(np.float32)
     alpha = cv2.GaussianBlur(cv2.warpAffine(union, zoom, (w, h)), (0, 0), 2)[..., None]
     return (out * (1 - alpha) + raised * alpha).clip(0, 255).astype(np.uint8)
@@ -151,6 +156,8 @@ def main(argv=None):
     parser.add_argument("--touch-phases", default=None, help="fractions of the stretch, default 0 and 0.5")
     parser.add_argument("--hover-phase", type=float, default=0.0, help="fraction of the stretch")
     parser.add_argument("--no-natural", action="store_true")
+    parser.add_argument("--seed", type=int, default=None, help="draw new poses per moment, see the docstring")
+    parser.add_argument("--hovers-per-tag", type=int, default=4, help="with --seed")
     args = parser.parse_args(argv)
     root = args.synthetic.expanduser()
     out = root / "hover" / args.out
@@ -159,6 +166,9 @@ def main(argv=None):
     (out / "sheets").mkdir(parents=True, exist_ok=True)
     hands = Hands()
     moments = []
+    if args.seed is not None:
+        seeded(args, root, out, splits, hands, moments)
+        return finish(args, out, moments)
     for source_id, file, scene, split, start_s, end_s in SOURCES:
         if split not in splits:
             continue
@@ -192,6 +202,49 @@ def main(argv=None):
         sheet(clip, out / "sheets" / f"{moment}.jpg", cue_s)
         moments.append({"id": moment, "source": moment, "file": file, "scene": scene, "split": split, "kind": "hover",
                         "lift_cm": None, "mirrored": False, "cue_s": cue_s, "origin": "generated", "note": note})
+    finish(args, out, moments)
+
+
+def seeded(args, root, out, splits, hands, moments):
+    rng = np.random.default_rng(args.seed)
+    for source_id, file, scene, split, start_s, end_s in SOURCES:
+        if split not in splits:
+            continue
+        base = read(root / file, start_s, end_s)
+        for mirrored in (False, True):
+            frames = [cv2.flip(f, 1) for f in base] if mirrored else base
+            tag = f"{source_id}{'-m' if mirrored else ''}"
+            common = {"source": source_id, "file": file, "scene": scene, "split": split, "mirrored": mirrored, "seed": args.seed}
+            for k in range(2):
+                phase = int(rng.integers(len(frames)))
+                cue_s = round(float(rng.uniform(2.2, 2.8)), 2)
+                clip = ping_pong(frames, LENGTH_S, phase)
+                moment = f"{tag}-touch-s{k}"
+                write(clip, out / f"{moment}.mp4")
+                sheet(clip, out / "sheets" / f"{moment}.jpg", cue_s)
+                moments.append({"id": moment, **common, "kind": "touch", "lift_cm": 0.0, "phase": phase, "cue_s": cue_s,
+                                "origin": "generated"})
+            edges = np.linspace(2.0, 5.0, args.hovers_per_tag + 1)
+            for k in range(args.hovers_per_tag):
+                lift_cm = round(float(rng.uniform(edges[k], edges[k + 1])), 2)
+                phase = int(rng.integers(len(frames)))
+                cue_s = round(float(rng.uniform(2.2, 2.8)), 2)
+                ramp_s = round(float(rng.uniform(0.25, 0.45)), 2)
+                h, w = frames[0].shape[:2]
+                centre = (w / 2 + float(rng.uniform(-40, 40)), h / 2 + float(rng.uniform(-40, 40)))
+                clip = ping_pong(frames, LENGTH_S, phase)
+                hands.last = []
+                masks = [hands.masks(f) for f in clip]
+                rendered = [f if i < cue_s * FPS else lift(f, m, lift_cm * min(1.0, (i / FPS - cue_s) / ramp_s), centre)
+                            for i, (f, m) in enumerate(zip(clip, masks))]
+                moment = f"{tag}-hover-s{k}"
+                write(rendered, out / f"{moment}.mp4")
+                sheet(rendered, out / "sheets" / f"{moment}.jpg", cue_s)
+                moments.append({"id": moment, **common, "kind": "hover", "lift_cm": lift_cm, "phase": phase, "cue_s": cue_s,
+                                "ramp_s": ramp_s, "centre_px": [round(c, 1) for c in centre], "origin": "rendered"})
+
+
+def finish(args, out, moments):
     (out / "moments.json").write_text(json.dumps({"camera_cm": CAMERA_CM, "shadow_px_per_cm": SHADOW_PX_PER_CM,
                                                   "fps": FPS, "moments": moments}, indent=2) + "\n")
     if args.out != "set":  # the original set was labelled by eye in labels.json, a fresh render by construction

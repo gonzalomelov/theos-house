@@ -10,6 +10,10 @@ again once it falls under rest_cm. The baseline follows the hands while they res
 every refresh_s) and is frozen while they rise, so a slow drift is absorbed and a lift is not.
 The skill keeps the baseline through a short reflex flicker to off and drops it after reset_after_off_s.
 
+With regions "sam3" the hand regions come from SAM 3.1 instead of MediaPipe: the skill sends a resting frame to
+SAM 3.1, and its hand masks (the ones that touch the baby mask) become the baseline once the answer lands, about
+2 s later. The check then asks for a new anchor where it would otherwise refresh the baseline. No anchor, no reading.
+
 Limits: a hand that arrives already hovering and never rests has no resting baseline, so it reads as resting.
 A lift slower than about rest_cm per refresh_s is absorbed by the baseline. When a hand cannot be measured against
 the baseline for refresh_s while resting, the baseline starts over. Everything runs on this machine.
@@ -21,7 +25,7 @@ import numpy as np
 
 DEFAULTS = {"camera_cm": 45.0, "min_lift_cm": 1.0, "rest_cm": 0.5, "refresh_s": 1.0, "smooth_frames": 5, "reset_after_off_s": 1.0,
             "min_matches": 8, "hull_grow": 1.18, "scene_margin_px": 30, "search_px": 60, "ratio": 0.8, "ransac_px": 2.0,
-            "min_hands": 1}
+            "min_hands": 1, "regions": "mediapipe", "max_scene_shift_px": None, "max_scene_zoom": None, "max_hand_shift_px": None}
 
 
 def hand_masks(hands_px, shape, grow):
@@ -37,14 +41,27 @@ def hand_masks(hands_px, shape, grow):
     return masks
 
 
-def similarity_scale(p0, p1, ransac_px, min_matches):
+def similarity(p0, p1, ransac_px, min_matches):
+    """Scale and shift in pixels of the similarity that maps p0 onto p1, or None when too few points agree."""
     if len(p0) < min_matches:
         return None
     matrix, inliers = cv2.estimateAffinePartial2D(np.float32(p0), np.float32(p1), method=cv2.RANSAC,
                                                   ransacReprojThreshold=ransac_px)
     if matrix is None or inliers.sum() < min_matches:
         return None
-    return float(np.hypot(matrix[0, 0], matrix[1, 0]))
+    return float(np.hypot(matrix[0, 0], matrix[1, 0])), matrix
+
+
+def similarity_scale(p0, p1, ransac_px, min_matches):
+    found = similarity(p0, p1, ransac_px, min_matches)
+    return None if found is None else found[0]
+
+
+def shift_px(matrix, point):
+    """How far the similarity moves a point, in pixels."""
+    x, y = point
+    return float(np.hypot(matrix[0, 0] * x + matrix[0, 1] * y + matrix[0, 2] - x,
+                          matrix[1, 0] * x + matrix[1, 1] * y + matrix[1, 2] - y))
 
 
 class LiftCheck:
@@ -57,6 +74,26 @@ class LiftCheck:
     def reset(self):
         self.base, self.base_s, self.lifted, self.lift_cm, self.failed_s = None, None, False, None, None
         self.recent = deque(maxlen=self.cfg["smooth_frames"])
+        self.wants_anchor = self.cfg["regions"] == "sam3"
+
+    def anchor(self, gray, hand_masks, baby, stream_s):
+        """A SAM 3.1 answer for a resting frame: its hands on the baby become the baseline (regions sam3)."""
+        self.wants_anchor = False
+        if baby is not None and baby.any():
+            near = cv2.dilate(baby.astype(np.uint8), np.ones((25, 25), np.uint8)).astype(bool)
+            hand_masks = [m for m in hand_masks if (m & near).any()]
+        points, descriptors = self._features(gray)
+        if len(hand_masks) < self.cfg["min_hands"] or descriptors is None:
+            self.base = None
+            return
+        self._baseline(points, descriptors, hand_masks, stream_s)
+        self.lifted, self.lift_cm = False, None
+
+    def _rebase(self, points, descriptors, masks, stream_s):
+        if self.cfg["regions"] == "sam3":
+            self.wants_anchor = True
+        else:
+            self._baseline(points, descriptors, masks, stream_s)
 
     def _features(self, gray):
         keypoints, descriptors = self.sift.detectAndCompute(gray, None)
@@ -94,37 +131,57 @@ class LiftCheck:
         good = [p[0] for p in pairs if len(p) == 2 and p[0].distance < self.cfg["ratio"] * p[1].distance]
         return [base_points[m.queryIdx] for m in good], [points[m.trainIdx] for m in good]
 
+    def _camera_moved(self, scene, matrix, centre):
+        """The head moved too much since the baseline for a scale reading to mean height: measure again from rest."""
+        zoom, shift = self.cfg["max_scene_zoom"], self.cfg["max_scene_shift_px"]
+        return (zoom is not None and abs(scene - 1) > zoom) or (shift is not None and shift_px(matrix, centre) > shift)
+
+    def _hand_slid(self, hand_matrix, scene_matrix, centre):
+        """The hand moved across the baby, beyond what a lift toward the camera explains: not a height reading."""
+        limit = self.cfg["max_hand_shift_px"]
+        if limit is None:
+            return False
+        moved = hand_matrix[:, :2] @ centre + hand_matrix[:, 2] - (scene_matrix[:, :2] @ centre + scene_matrix[:, 2])
+        return float(np.hypot(*moved)) > limit
+
     def update(self, gray, hands_px, stream_s):
         """gray frame, the parent's hands over the baby as landmark arrays in pixels. Returns lifted or not."""
-        if len(hands_px) < self.cfg["min_hands"]:  # the bath asks for both hands: one hand on is never a hover
+        sam = self.cfg["regions"] == "sam3"
+        if not len(hands_px) or (not sam and len(hands_px) < self.cfg["min_hands"]):  # the bath asks for both hands
             self.reset()
             return False
-        masks = hand_masks(hands_px, gray.shape[:2], self.cfg["hull_grow"])
+        if sam and self.base is None:
+            self.wants_anchor = True
+            return False
+        masks = None if sam else hand_masks(hands_px, gray.shape[:2], self.cfg["hull_grow"])
         points, descriptors = self._features(gray)
         if descriptors is None:
             return self.lifted
-        if self.base is None or len(self.base["hands"]) != len(masks):
+        if not sam and (self.base is None or len(self.base["hands"]) != len(masks)):
             self._baseline(points, descriptors, masks, stream_s)
             self.lifted, self.lift_cm = False, None
             return False
         cfg = self.cfg
         h, w = gray.shape[:2]
         xy = np.clip(points.round().astype(int), 0, [w - 1, h - 1])
-        scene = similarity_scale(*self._match(self.base["scene_points"], self.base["scene_descriptors"], points, descriptors),
-                                 cfg["ransac_px"], cfg["min_matches"])
+        found = similarity(*self._match(self.base["scene_points"], self.base["scene_descriptors"], points, descriptors),
+                           cfg["ransac_px"], cfg["min_matches"])
+        scene, scene_matrix = found if found else (None, None)
+        if scene is not None and self._camera_moved(scene, scene_matrix, (w / 2, h / 2)):
+            scene = None
         lifts = []
         for hand in self.base["hands"]:
             keep = hand["region"][xy[:, 1], xy[:, 0]]
-            scale = similarity_scale(*self._match(hand["points"], hand["descriptors"], points, descriptors, keep),
-                                     cfg["ransac_px"], cfg["min_matches"])
-            if scale is None or scene is None:
+            found = similarity(*self._match(hand["points"], hand["descriptors"], points, descriptors, keep),
+                               cfg["ransac_px"], cfg["min_matches"])
+            if found is None or scene is None or self._hand_slid(found[1], scene_matrix, hand["centre"]):
                 lifts.append(None)
                 continue
-            lifts.append(cfg["camera_cm"] * (1 - scene / scale))
+            lifts.append(cfg["camera_cm"] * (1 - scene / found[0]))
         if any(v is None for v in lifts):  # cannot measure a hand: hold the last reading, start over if it lasts
             self.failed_s = stream_s if self.failed_s is None else self.failed_s
             if stream_s - self.failed_s >= cfg["refresh_s"] and not self.lifted:
-                self._baseline(points, descriptors, masks, stream_s)
+                self._rebase(points, descriptors, masks, stream_s)
             return self.lifted
         self.failed_s = None
         self.recent.append(min(lifts))
@@ -136,5 +193,5 @@ class LiftCheck:
         elif self.lift_cm < cfg["rest_cm"]:
             self.lifted = False
             if stream_s - self.base_s >= cfg["refresh_s"]:
-                self._baseline(points, descriptors, masks, stream_s)
+                self._rebase(points, descriptors, masks, stream_s)
         return self.lifted

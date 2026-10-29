@@ -37,6 +37,11 @@ class ModuleConfirm:
     def judge(self, frame_bgr):
         return self.impl.judge(frame_bgr)
 
+    @property
+    def masks(self):
+        """SAM 3.1 hand and baby masks for the lift check, when the provider has them."""
+        return getattr(self.impl, "masks", None)
+
     def close(self):
         getattr(self.impl, "close", lambda: None)()
 

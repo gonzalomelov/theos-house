@@ -5,9 +5,12 @@ parenting_agent.sam3_local. It speaks a tiny protocol on stdin and stdout so the
   start: one JSON line {"ready": true, ...} or {"blocked": "reason"}
   each request: 4-byte big-endian length, then that many bytes of JPEG
   each reply: one JSON line {"verdict": "on"|"off"|"unknown", "seconds": float, "rings": [...]}
+  a request whose length has the top bit set (MASKS) also gets "hands" and "baby": PNG masks in base64, for the
+  lift check's SAM 3.1 regions (parenting_agent/lift.py)
 A hand is on the baby when at least ring_min of the ring of pixels around the hand mask is baby. Hands smaller
 than min_hand_area of the frame are dropped, so the baby's own hand never counts. Frames stay in memory.
 """
+import base64
 import json
 import os
 import struct
@@ -15,6 +18,7 @@ import sys
 import time
 from pathlib import Path
 
+MASKS = 1 << 31
 DEFAULTS = {
     "checkpoints": [{"repo": "facebook/sam3.1", "file": "sam3.1_multiplex.pt"}, {"repo": "facebook/sam3", "file": "sam3.pt"}],
     "device": "mps", "confidence": 0.4, "hand_word": "hand", "baby_word": "baby",
@@ -69,7 +73,7 @@ class Sam3:
             tried.append(f"{source['repo']}: {len(missing)} detector keys missing")
         raise RuntimeError("no SAM 3 checkpoint loaded: " + " | ".join(tried))
 
-    def judge(self, jpeg):
+    def judge(self, jpeg, with_masks=False):
         import cv2
         import numpy as np
         from PIL import Image
@@ -81,8 +85,15 @@ class Sam3:
             masks[word] = self.processor.set_text_prompt(word, state)["masks"][:, 0].cpu().numpy()
         babies = masks[self.cfg["baby_word"]]
         baby = babies.any(axis=0) if len(babies) else np.zeros(frame.shape[:2], bool)
-        verdict, rings = ring_state(list(masks[self.cfg["hand_word"]]), baby, self.cfg)
-        return {"verdict": verdict, "seconds": round(time.monotonic() - started, 3), "rings": rings}
+        hands = list(masks[self.cfg["hand_word"]])
+        verdict, rings = ring_state(hands, baby, self.cfg)
+        reply = {"verdict": verdict, "seconds": round(time.monotonic() - started, 3), "rings": rings}
+        if with_masks:
+            png = lambda mask: base64.b64encode(cv2.imencode(".png", mask.astype(np.uint8) * 255)[1].tobytes()).decode()
+            pixels = baby.shape[0] * baby.shape[1]
+            reply["hands"] = [png(m) for m in hands if m.sum() / pixels >= self.cfg["min_hand_area"]]
+            reply["baby"] = png(baby)
+        return reply
 
 
 def main():
@@ -101,9 +112,10 @@ def main():
         header = read(4)
         if len(header) < 4:
             return 0
-        jpeg = read(struct.unpack(">I", header)[0])
+        size = struct.unpack(">I", header)[0]
+        jpeg = read(size & ~MASKS)
         try:
-            reply = sam.judge(jpeg)
+            reply = sam.judge(jpeg, with_masks=bool(size & MASKS))
         except Exception as error:  # one bad frame never kills the worker
             reply = {"verdict": "unknown", "error": str(error)[:200]}
         out.write(json.dumps(reply) + "\n")

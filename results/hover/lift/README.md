@@ -1,5 +1,7 @@
 # Hover: measure how far the hand rose, Oct 28 and 29 2026
 
+Update Oct 29, wave 2: on the changing table the lift check now measures inside SAM 3.1 hand masks, and the bath needs both hands. On a fresh blind set: 22 of 32 hovers, 0 of 16 false voices, against 21 of 32 and 1 of 16 for this MediaPipe version (`../blind/README.md`, `../wave2/README.md`).
+
 Measured Oct 28 22:20 to Oct 29 01:00 (Montevideo), during the Meta hackathon, for issue #6 (changing table), with the bath skill on the same set. The set and the rules are the ones in `results/hover/README.md`: a hover (hand 2 to 5 cm above the baby, no touch) must speak "hand" within 2.5 s of the cue, and a touch must stay silent. Before this change the reflex and SAM 3.1 together caught 2 of 26 test hovers, with 0 false voices on 16 touches.
 
 Target: at least 24 of 26 hovers and at most 1 false voice on 16 touches.

@@ -267,6 +267,51 @@ if __name__ == "__main__":
     unittest.main()
 
 
+class RecordingConfirm:
+    name = "sam3_local"
+
+    def __init__(self, verdicts):
+        self.verdicts, self.asked = iter(verdicts), []
+
+    def judge(self, frame_bgr):
+        self.asked.append(int(frame_bgr[0, 0, 0]))
+        return next(self.verdicts)
+
+
+class SkillConfirm(unittest.TestCase):
+    def run_skill(self, confirm, states, detector):
+        import numpy as np
+        bus = Bus()
+        cfg = config_mod.load("skills/changing-table.json")
+        cfg = dict(cfg, confirm={**cfg["confirm"], **confirm}, lift={"enabled": False},
+                   house={"allowed": {}, "on_armed": [], "on_voice": [], "on_closed": []})
+        skill = Skill(cfg, bus, FakeReflex(states), confirm_detector=detector, tracker=Tracker({"on_closed": None}, bus))
+        for i in range(len(states)):
+            skill.on_frame(np.full((360, 640, 3), i, np.uint8), i * 0.1)
+            skill.confirm.pending and skill.confirm.pending[2].result()
+            skill.confirm.collect()
+        skill.close()
+        return bus
+
+    def test_confirm_waits_delay_s_and_sends_the_newer_frame(self):
+        detector = RecordingConfirm(["off"])
+        self.run_skill({"delay_s": 0.8}, ["on"] * 3 + ["off"] * 12, detector)
+        self.assertEqual(detector.asked, [11])  # raised on frame 3 (0.3 s), asked on frame 11 (1.1 s)
+
+    def test_a_cancel_while_still_off_is_asked_again_and_an_off_reraises(self):
+        detector = RecordingConfirm(["on", "off"])
+        bus = self.run_skill({"delay_s": 0, "retries": 1}, ["on"] * 2 + ["off"] * 6, detector)
+        self.assertEqual(len(detector.asked), 2)
+        self.assertEqual([e["action"] for e in bus.history if e["kind"] == "alarm"][-1], "reraise")
+
+    def test_sam_regions_without_sam_fall_back_to_mediapipe(self):
+        from parenting_agent.confirm import NoConfirm
+        cfg = config_mod.load("skills/changing-table.json")
+        skill = Skill(cfg, Bus(), FakeReflex([]), confirm_detector=NoConfirm(), tracker=Tracker({"on_closed": None}, Bus()))
+        self.assertEqual(skill.lift.cfg["regions"], "mediapipe")
+        self.assertEqual(skill.lift.cfg["min_lift_cm"], 1.0)
+
+
 class HeadCameraPage(unittest.TestCase):
     def test_frame_post_reaches_the_latest_slot_and_events_flow(self):
         import urllib.request

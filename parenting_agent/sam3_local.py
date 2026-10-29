@@ -16,6 +16,7 @@ from .confirm import Unavailable
 
 DEFAULT_PYTHON = Path.home() / "Engineering/gonza/sam3-native/venv/bin/python"
 WORKER = Path(__file__).with_name("sam3_worker.py")
+MASKS = 1 << 31  # same flag as sam3_worker.MASKS
 KEYS = ("device", "confidence", "hand_word", "baby_word", "ring_px", "ring_min", "min_hand_area")
 
 
@@ -40,18 +41,30 @@ class Sam3Local:
         self.source = hello
         self.lock = threading.Lock()
 
-    def judge(self, frame_bgr):
+    def _ask(self, frame_bgr, flag=0):
         import cv2
         ok, jpeg = cv2.imencode(".jpg", frame_bgr, [cv2.IMWRITE_JPEG_QUALITY, 90])
         if not ok:
-            return "unsure"
+            return {"verdict": "unknown"}
         data = jpeg.tobytes()
         with self.lock:
-            self.process.stdin.write(struct.pack(">I", len(data)) + data)
+            self.process.stdin.write(struct.pack(">I", len(data) | flag) + data)
             self.process.stdin.flush()
-            reply = json.loads(self.process.stdout.readline() or b'{"verdict": "unknown"}')
-        self.last = reply
+            return json.loads(self.process.stdout.readline() or b'{"verdict": "unknown"}')
+
+    def judge(self, frame_bgr):
+        reply = self.last = self._ask(frame_bgr)
         return {"on": "on", "off": "off"}.get(reply.get("verdict"), "unsure")
+
+    def masks(self, frame_bgr):
+        """SAM 3.1 hand masks (each at least min_hand_area of the frame) and the baby mask, as bool arrays."""
+        import base64
+        import cv2
+        import numpy as np
+        reply = self._ask(frame_bgr, MASKS)
+        decode = lambda text: cv2.imdecode(np.frombuffer(base64.b64decode(text), np.uint8), cv2.IMREAD_GRAYSCALE) > 0
+        baby = decode(reply["baby"]) if reply.get("baby") else None
+        return [decode(h) for h in reply.get("hands", [])], baby
 
     def close(self):
         if self.process.poll() is None:
