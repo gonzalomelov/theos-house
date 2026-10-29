@@ -49,3 +49,54 @@ At 2 fps two of five hands-off moments were missed: the voice waits until the re
 - The spoken audio was not captured. `simctl recordVideo` has no audio track. The app speaks with AVSpeechSynthesizer, and the text it speaks is what the screenshots show.
 - After "done" the agent answers twice, once to the message and once to the skill's closing observation. That is how the agent loop already works for every channel.
 - Not tested: real glasses, a real iPhone, the home network path, SAM 3.1 confirm on glasses frames, the bath skill on glasses (wired in `config/agent.glasses.json`, not run).
+
+# Rerun with SAM 3.1 confirm on, Oct 29 2026 00:56 to 01:07
+
+Same simulator setup as above (iOS 27.0, iPhone 18 Pro, DAT MockDeviceKit 1.0.1, Muse Spark Open as the brain), 10 fps, but now with SAM 3.1 confirm on, from Meta's open weights on the Mac GPU. Baby Buddy was reachable in these runs, so the change was logged.
+
+## The headline loop with SAM 3.1 (`sam/run-10fps-sam.json`, 60 s watch)
+
+| Measure | Hand reflex only (Oct 28, `rate-10fps.json`) | With SAM 3.1 confirm (Oct 29) |
+|---|---|---|
+| Frames processed per second | 8.0 | 8.0 |
+| Hands-off moments while armed | 5 | 4 (50.5 s armed, SAM 3.1 takes about 10 s to load when the skill arms) |
+| "hand" spoken | 5 of 5 | 4 of 4 |
+| Chime to "hand" | 1.24 to 1.27 s | 1.25 to 1.31 s |
+| False alarms ("hand" in the one-hand part) | 0 | 0 |
+| SAM 3.1 verdicts | none | 4, all "on" (a hand on the baby), 1.7 to 2.4 s after the chime |
+
+Every "hand" was spoken by the 1.2 s hold, not by SAM 3.1. SAM 3.1 got all 4 wrong: it said a hand was still on the baby when both hands had left. It answered after the voice had already played, so it changed nothing the parent heard, but had it been faster it would have silenced all 4 real alarms.
+
+Why: the skill sends SAM 3.1 the frame the alarm rose on, the very first frame the reflex reads off, when the hands are only starting to leave. I ran SAM 3.1 on the feed itself (`sam/sam-feed-probe.json`): the frame 0.06 s after the hands start to leave reads "on", and every frame from 0.36 s on reads "off". The hands-on and one-hand frames read "on", which is right. So the fix is to send SAM 3.1 a frame about 0.4 s after the raise, not the first one. That is not done in this PR.
+
+The hand delay (hands leave on screen to "hand" spoken) cannot be read exactly here, because the mock feed and the agent share no clock. The chime plays on the first frame the reflex reads off (`off_frames_to_alert` is 1), so the delay is the chime to voice time above plus the sampling and upload lag, at most 0.1 s at 10 fps plus a 46 ms reflex.
+
+Muse said "Watching the changing table. Let me know when you're done and what you found for the diaper." on "changing time", and "Got it, all done." on "done".
+
+## The changing table with the new hover check, end to end through the glasses (`hover/`)
+
+After the lift check merged (#75), I ran the glasses loop on two clips from the fresh render the lift check never saw (`hover/fresh` in the synthetic set, rendered on Oct 29): one hand hovering 2.5 cm above the baby (`table-a-hover-2.5cm`, the lowest hover in that set), and one hand resting on the baby (`table-a-touch-p16`). Each 7 s clip was looped as the glasses camera, so the hover comes back every 7 s. SAM 3.1 confirm was on. A lifted alarm skips SAM 3.1 by design, so SAM 3.1 was never asked in these runs.
+
+| Clip | Watch | Hovers while armed | "hand" spoken | Chime to "hand" | False "hand" |
+|---|---|---|---|---|---|
+| Hover 2.5 cm | 30 s (`table-a-hover-2.5cm.json`) | 2 complete, a third cut off by "done" | 1 of 2 | 1.25 s | |
+| Hover 2.5 cm | 60 s (`table-a-hover-2.5cm-60s.json`) | 7 | **6 of 7** | 1.25 to 1.26 s | |
+| Touch | 30 s (`table-a-touch-p16.json`) | none | | | 0, and no chime |
+| Touch | 60 s (`table-a-touch-p16-60s.json`) | none | | | **0**, and no chime |
+
+The miss is the same in both hover runs: the first hover after arming. The lift reads lifted for 3 frames and falls back to on, so the alarm rose and cleared before the voice. Every later hover was read lifted for its whole 3.4 s and spoken. It looks like the lift baseline is still settling on the first hover, the known limit in `results/hover/lift/README.md`. Not fixed here.
+
+What the agent said, hover run (60 s): "Watching the changing table. Let me know when you're done." Then on "done": "Got it, finished." and "Noted, the changing table finished with 6 hand alerts. Try to keep one hand on baby when you can."
+
+Touch run (60 s): "Watching the changing table. Tell me when you're done." Then "All set." and "Logged the finished change."
+
+Screenshots and a screen recording of each 30 s run are in `hover/table-a-hover-2.5cm/` and `hover/table-a-touch-p16/`.
+
+Brain on these glasses runs: 26 Muse calls, p50 1.12 s, p90 1.65 s, about $0.09 at $1.25 in and $4.25 out per million tokens (the glasses config carries no prices, so this is computed from the token counts), no fallback (`results/muse/calls-glasses-sam.jsonl`, `calls-glasses-hover.jsonl`).
+
+```bash
+# the app plays MockFeed/NAME.mp4 with -mockFeed NAME (copy the clip there re-encoded to HEVC, then build)
+python scripts/glasses_sim_run.py --config CONFIG --udid SIM --fps 10 --watch 60 --out results/glasses/sam/run-10fps-sam.json
+python scripts/glasses_sim_run.py --config CONFIG --udid SIM --fps 10 --watch 60 --mock-feed table-a-hover-2.5cm --feed-s 7 \
+    --out results/glasses/hover/table-a-hover-2.5cm-60s.json
+```

@@ -72,8 +72,10 @@ final class Companion {
 
   #if DEBUG
   /// Simulator demo: mock glasses on, the synthetic changing-table clip as their camera, then the parent's two lines.
+  /// The launch argument -mockFeed NAME plays MockFeed/NAME.mp4 instead (for example a hover or a touch clip).
   func runDemo() async {
-    guard let feed = Bundle.main.url(forResource: "changing-table-feed", withExtension: "mp4") else {
+    let name = UserDefaults.standard.string(forKey: "mockFeed") ?? "changing-table-feed"
+    guard let feed = Bundle.main.url(forResource: name, withExtension: "mp4") else {
       add(.system, "No mock feed in the app. Run apps/glasses/scripts/make-mock-feed.sh and build again.")
       return
     }

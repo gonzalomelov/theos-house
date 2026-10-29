@@ -34,7 +34,17 @@ def answered(rows):
     return closed is not None and any(e["kind"] == "reply" and e["t"] > closed for e in rows)
 
 
-def summarize(rows, fps, watch):
+def out_of_phase(voices, feed_s=FEED_S, tolerance_s=2.0):
+    """Voices that do not fall one feed loop apart from the first: the both-hands-off part repeats every FEED_S, so a
+    voice off that rhythm was spoken in the one-hand part, a false alarm. Assumes the first voice is a true one."""
+    if not voices:
+        return 0
+    first = voices[0]["t"]
+    drift = [((v["t"] - first) % feed_s) for v in voices[1:]]
+    return sum(1 for d in drift if tolerance_s < d < feed_s - tolerance_s)
+
+
+def summarize(rows, fps, watch, feed_s=FEED_S):
     kinds = collections.Counter(e["kind"] for e in rows)
     armed = next((e["t"] for e in rows if e["kind"] == "skill_armed"), None)
     closed = next((e for e in rows if e["kind"] == "skill_closed"), None)
@@ -50,11 +60,18 @@ def summarize(rows, fps, watch):
         "processed_fps": round((len(frames) - 1) / span, 2) if span else None,
         "reflex_ms_median": round(sorted(e["seconds"] for e in frames)[len(frames) // 2] * 1000, 1) if frames else None,
         "armed_s": round(armed_s, 1),
-        "hands_off_moments_expected": int(armed_s // FEED_S),
+        "hands_off_moments_expected": int(armed_s // feed_s),
         "chimes": kinds["chime"],
         "voices": len(voices),
         "voices_dropped": kinds["voice_dropped"],
+        "voice_reasons": dict(collections.Counter(str(v.get("reason")) for v in voices)),
         "chime_to_voice_s": [round(v["t"] - chimes[v["episode"]], 2) for v in voices if v.get("episode") in chimes],
+        "voices_out_of_phase": out_of_phase(voices, feed_s),
+        "confirms": [{"episode": e["episode"], "verdict": e.get("verdict"), "after_chime_s": round(e["t"] - chimes[e["episode"]], 2)}
+                     for e in rows if e["kind"] == "confirm" and e.get("episode") in chimes],
+        "confirm_verdicts": dict(collections.Counter(str(e.get("verdict")) for e in rows if e["kind"] == "confirm")),
+        "confirm_errors": kinds["confirm_error"],
+        "alarms_cancelled": sum(1 for e in rows if e["kind"] == "alarm" and e.get("action") == "cancel"),
         "skill_closed": bool(closed),
         "brain_calls": [{"destination": e.get("destination"), "seconds": e.get("seconds")} for e in rows if e["kind"] == "brain_call"],
         "tools": [{"name": e["name"], "status": e["status"]} for e in rows if e["kind"] == "tool"],
@@ -72,6 +89,8 @@ def main():
     parser.add_argument("--out", required=True)
     parser.add_argument("--video")
     parser.add_argument("--shots")
+    parser.add_argument("--mock-feed", help="play apps/glasses/ParentingGlasses/MockFeed/NAME.mp4 (bundled at build time)")
+    parser.add_argument("--feed-s", type=float, default=FEED_S, help="the feed's loop length, one hands-off moment per loop")
     args = parser.parse_args()
 
     config = json.loads(Path(args.config).read_text())
@@ -91,7 +110,8 @@ def main():
             time.sleep(2)
         subprocess.run(["xcrun", "simctl", "launch", "--terminate-running-process", args.udid, BUNDLE,
                         "-agentURL", f"http://127.0.0.1:{port}", "-agentToken", token, "-autoDemo", "YES",
-                        "-sendFPS", str(args.fps), "-demoWatchSeconds", str(args.watch)], check=True, capture_output=True)
+                        "-sendFPS", str(args.fps), "-demoWatchSeconds", str(args.watch),
+                        *(["-mockFeed", args.mock_feed] if args.mock_feed else [])], check=True, capture_output=True)
         started, shot = time.monotonic(), 0
         total = args.watch + 20
         while time.monotonic() - started < total:
@@ -116,7 +136,7 @@ def main():
             recorder.wait(timeout=30)
         agent.send_signal(signal.SIGTERM)
         agent.wait(timeout=30)
-    summary = summarize(events(log), args.fps, args.watch)
+    summary = summarize(events(log), args.fps, args.watch, args.feed_s)
     Path(args.out).write_text(json.dumps(summary, indent=2) + "\n")
     print(json.dumps({k: v for k, v in summary.items() if k != "conversation"}, indent=2))
 

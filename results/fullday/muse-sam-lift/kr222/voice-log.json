@@ -1,0 +1,60 @@
+{
+  "generated_at": "2026-10-29T01:13:56-03:00",
+  "brain": {
+    "provider": "openai_compatible",
+    "model": "meta-models/muse-spark-open-1026",
+    "destination": "inference.baseten.co"
+  },
+  "baby_log": "babybuddy",
+  "entries": [
+    {
+      "utterance": "bottle, 120 ml",
+      "expected_type": "feeding",
+      "spoken_at": "2026-10-29T01:12:36-03:00",
+      "babybuddy": {
+        "id": 171,
+        "type": "feeding",
+        "time": "2026-10-29T01:12:38-03:00",
+        "details": {
+          "amount_ml": 120.0,
+          "type": "formula",
+          "method": "bottle",
+          "start": "2026-10-29T00:57:38-03:00",
+          "duration_min": 15
+        }
+      }
+    },
+    {
+      "utterance": "that was a dirty diaper",
+      "expected_type": "diaper",
+      "spoken_at": "2026-10-29T01:13:16-03:00",
+      "babybuddy": {
+        "id": 142,
+        "type": "diaper",
+        "time": "2026-10-29T01:13:18-03:00",
+        "details": {
+          "wet": false,
+          "solid": true,
+          "color": null
+        }
+      }
+    },
+    {
+      "utterance": "night feed, 90 ml bottle",
+      "expected_type": "feeding",
+      "spoken_at": "2026-10-29T01:13:46-03:00",
+      "babybuddy": {
+        "id": 172,
+        "type": "feeding",
+        "time": "2026-10-29T01:13:47-03:00",
+        "details": {
+          "amount_ml": 90.0,
+          "type": "formula",
+          "method": "bottle",
+          "start": "2026-10-29T01:12:39-03:00",
+          "duration_min": 1
+        }
+      }
+    }
+  ]
+}

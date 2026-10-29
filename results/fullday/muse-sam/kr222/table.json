@@ -1,0 +1,38 @@
+{
+  "generated_at": "2026-10-29T01:00:56-03:00",
+  "source": "live_stream",
+  "skill": "changing-table",
+  "confirm": "sam3_local",
+  "passes": 1,
+  "loop_s": 24.0,
+  "moments": [
+    {
+      "clip_id": "table-handsoff-01",
+      "kind": "both_hands_off",
+      "pass": 1,
+      "spoken": true,
+      "latency_s": 0.909
+    },
+    {
+      "clip_id": "table-handsoff-02",
+      "kind": "both_hands_off",
+      "pass": 1,
+      "spoken": true,
+      "latency_s": 1.574
+    },
+    {
+      "clip_id": "table-handsoff-03",
+      "kind": "both_hands_off",
+      "pass": 1,
+      "spoken": true,
+      "latency_s": 1.709
+    },
+    {
+      "clip_id": "table-onehand-01",
+      "kind": "one_hand",
+      "pass": 1,
+      "spoken": false,
+      "latency_s": null
+    }
+  ]
+}

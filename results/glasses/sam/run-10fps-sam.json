@@ -1,0 +1,117 @@
+{
+  "sample_fps_set": 10,
+  "watch_s": 60,
+  "frames_processed": 399,
+  "processed_fps": 8.0,
+  "reflex_ms_median": 44.9,
+  "armed_s": 50.5,
+  "hands_off_moments_expected": 4,
+  "chimes": 5,
+  "voices": 4,
+  "voices_dropped": 1,
+  "voice_reasons": {
+    "hold": 4
+  },
+  "chime_to_voice_s": [
+    1.31,
+    1.25,
+    1.25,
+    1.26
+  ],
+  "voices_out_of_phase": 0,
+  "confirms": [
+    {
+      "episode": 1,
+      "verdict": "on",
+      "after_chime_s": 2.42
+    },
+    {
+      "episode": 2,
+      "verdict": "on",
+      "after_chime_s": 1.79
+    },
+    {
+      "episode": 4,
+      "verdict": "on",
+      "after_chime_s": 1.66
+    },
+    {
+      "episode": 5,
+      "verdict": "on",
+      "after_chime_s": 1.81
+    }
+  ],
+  "confirm_verdicts": {
+    "on": 4
+  },
+  "confirm_errors": 0,
+  "alarms_cancelled": 3,
+  "skill_closed": true,
+  "brain_calls": [
+    {
+      "destination": "inference.baseten.co",
+      "seconds": 1.089
+    },
+    {
+      "destination": "inference.baseten.co",
+      "seconds": 1.016
+    },
+    {
+      "destination": "inference.baseten.co",
+      "seconds": 1.003
+    },
+    {
+      "destination": "inference.baseten.co",
+      "seconds": 1.076
+    },
+    {
+      "destination": "inference.baseten.co",
+      "seconds": 1.322
+    },
+    {
+      "destination": "inference.baseten.co",
+      "seconds": 1.446
+    }
+  ],
+  "tools": [
+    {
+      "name": "start_changing_table",
+      "status": "ran"
+    },
+    {
+      "name": "finish_changing_table",
+      "status": "ran"
+    },
+    {
+      "name": "finish_changing_table",
+      "status": "ran"
+    }
+  ],
+  "conversation": [
+    {
+      "t": 13.048,
+      "who": "parent",
+      "text": "changing time"
+    },
+    {
+      "t": 24.403,
+      "who": "agent",
+      "text": "Watching the changing table. Let me know when you're done and what you found for the diaper."
+    },
+    {
+      "t": 73.05,
+      "who": "parent",
+      "text": "done"
+    },
+    {
+      "t": 75.132,
+      "who": "agent",
+      "text": "Got it, all done."
+    },
+    {
+      "t": 77.901,
+      "who": "agent",
+      "text": "Thanks, noted the change is finished."
+    }
+  ]
+}

@@ -1,0 +1,652 @@
+{
+  "generated_at": "2026-10-29T01:12:32-03:00",
+  "source": "live_stream",
+  "skill": "bath",
+  "confirm": "sam3_local",
+  "brain": "openai_compatible",
+  "model": "meta-models/muse-spark-open-1026",
+  "clips": [
+    {
+      "clip_id": "bath-handoff-01",
+      "kind": "both_hands_off",
+      "cue_s": 4.0
+    },
+    {
+      "clip_id": "bath-onehand-01",
+      "kind": "one_hand",
+      "cue_s": 0.0
+    }
+  ],
+  "loop_s": 14.967,
+  "summary": {
+    "baths": 10,
+    "armed_by_voice": 10,
+    "both_hands_off_spoken": "10 of 10 within 2.5 s",
+    "max_voice_latency_s": 1.828,
+    "chime_within_1s": "10 of 10",
+    "max_chime_latency_s": 0.289,
+    "one_hand_spoken": "5 of 10",
+    "hands_on_voices": 0,
+    "logged_and_read_back": 10,
+    "replies_never_left_alone": "10 of 10"
+  },
+  "baths": [
+    {
+      "bath": 1,
+      "armed_by_voice": true,
+      "armed_by": [
+        "phrase",
+        "brain"
+      ],
+      "reminder": "Bath time. Water ready, towel within reach, nothing left on in the kitchen. Keep a hand on the baby the whole bath.",
+      "moments": [
+        {
+          "clip_id": "bath-handoff-01",
+          "kind": "both_hands_off",
+          "pass": 1,
+          "spoken": true,
+          "latency_s": 1.511
+        },
+        {
+          "clip_id": "bath-onehand-01",
+          "kind": "one_hand",
+          "pass": 1,
+          "spoken": false,
+          "latency_s": null
+        }
+      ],
+      "chimes": [
+        {
+          "clip_id": "bath-handoff-01",
+          "latency_s": 0.272
+        }
+      ],
+      "hands_on_voices": 0,
+      "confirms": [
+        "off",
+        "off"
+      ],
+      "house": [
+        "house_dry:hold_notifications",
+        "ask_parent:call_partner",
+        "house_dry:restore_notifications"
+      ],
+      "interruption": {
+        "kind": "observation",
+        "text": "The doorbell just rang and a courier asks for a signature. The parent is bathing the baby."
+      },
+      "replies": {
+        "armed": "Bath helper is on, I'm listening for hands.",
+        "interruption": "Hands stay on the baby, I'll handle the door. Keeping bath helper on.",
+        "done": "Bath logged, well done."
+      },
+      "replies_never_left_alone": true,
+      "babybuddy": {
+        "id": 144,
+        "kind": "bath",
+        "time": "2026-10-29T01:07:49-03:00",
+        "text": "Bath 01:07 to 01:07, logged by the bath skill",
+        "tags": [
+          "agent",
+          "bath-sim"
+        ]
+      }
+    },
+    {
+      "bath": 2,
+      "armed_by_voice": true,
+      "armed_by": [
+        "phrase",
+        "brain"
+      ],
+      "reminder": "Bath time. Water ready, towel within reach, nothing left on in the kitchen. Keep a hand on the baby the whole bath.",
+      "moments": [
+        {
+          "clip_id": "bath-handoff-01",
+          "kind": "both_hands_off",
+          "pass": 1,
+          "spoken": true,
+          "latency_s": 1.494
+        },
+        {
+          "clip_id": "bath-onehand-01",
+          "kind": "one_hand",
+          "pass": 1,
+          "spoken": true,
+          "latency_s": null
+        }
+      ],
+      "chimes": [
+        {
+          "clip_id": "bath-handoff-01",
+          "latency_s": 0.275
+        }
+      ],
+      "hands_on_voices": 0,
+      "confirms": [
+        "off",
+        "off"
+      ],
+      "house": [
+        "house_dry:hold_notifications",
+        "ask_parent:call_partner",
+        "ask_parent:call_partner",
+        "house_dry:restore_notifications"
+      ],
+      "interruption": {
+        "kind": "message",
+        "text": "I forgot the towel in the bedroom, can I run and get it?"
+      },
+      "replies": {
+        "armed": "Bath helper is on, listening for your hands.",
+        "interruption": "Keep your hand on the baby the whole bath, don't step away even for a second \u2014 not to grab the towel.\n\nI can say \"one moment please\" on the house speaker, hold your notifications, or call your partner to bring the towel. Which would you like?",
+        "done": "Bath done, logged."
+      },
+      "replies_never_left_alone": true,
+      "babybuddy": {
+        "id": 145,
+        "kind": "bath",
+        "time": "2026-10-29T01:08:22-03:00",
+        "text": "Bath 01:08 to 01:08, logged by the bath skill",
+        "tags": [
+          "agent",
+          "bath-sim"
+        ]
+      }
+    },
+    {
+      "bath": 3,
+      "armed_by_voice": true,
+      "armed_by": [
+        "phrase",
+        "brain"
+      ],
+      "reminder": "Bath time. Water ready, towel within reach, nothing left on in the kitchen. Keep a hand on the baby the whole bath.",
+      "moments": [
+        {
+          "clip_id": "bath-handoff-01",
+          "kind": "both_hands_off",
+          "pass": 1,
+          "spoken": true,
+          "latency_s": 1.457
+        },
+        {
+          "clip_id": "bath-onehand-01",
+          "kind": "one_hand",
+          "pass": 1,
+          "spoken": false,
+          "latency_s": null
+        }
+      ],
+      "chimes": [
+        {
+          "clip_id": "bath-handoff-01",
+          "latency_s": 0.247
+        }
+      ],
+      "hands_on_voices": 0,
+      "confirms": [
+        "off",
+        "off",
+        "off"
+      ],
+      "house": [
+        "house_dry:hold_notifications",
+        "ask_parent:call_partner",
+        "ask_parent:call_partner",
+        "house_dry:restore_notifications"
+      ],
+      "interruption": {
+        "kind": "message",
+        "text": "The phone is ringing in the kitchen, should I get it?"
+      },
+      "replies": {
+        "armed": "Bath helper is on, I'm listening for your hands.",
+        "interruption": "Keep your hand on the baby the whole bath and stay right there. Don't step away, not even for a second. I can say one moment on the house speaker for the phone, hold notifications, or call your partner to grab it. Want me to do that?",
+        "done": "Bath logged. Nice work keeping a hand on baby."
+      },
+      "replies_never_left_alone": true,
+      "babybuddy": {
+        "id": 146,
+        "kind": "bath",
+        "time": "2026-10-29T01:08:59-03:00",
+        "text": "Bath 01:08 to 01:08, logged by the bath skill",
+        "tags": [
+          "agent",
+          "bath-sim"
+        ]
+      }
+    },
+    {
+      "bath": 4,
+      "armed_by_voice": true,
+      "armed_by": [
+        "phrase",
+        "brain"
+      ],
+      "reminder": "Bath time. Water ready, towel within reach, nothing left on in the kitchen. Keep a hand on the baby the whole bath.",
+      "moments": [
+        {
+          "clip_id": "bath-handoff-01",
+          "kind": "both_hands_off",
+          "pass": 1,
+          "spoken": true,
+          "latency_s": 1.493
+        },
+        {
+          "clip_id": "bath-onehand-01",
+          "kind": "one_hand",
+          "pass": 1,
+          "spoken": false,
+          "latency_s": null
+        }
+      ],
+      "chimes": [
+        {
+          "clip_id": "bath-handoff-01",
+          "latency_s": 0.269
+        }
+      ],
+      "hands_on_voices": 0,
+      "confirms": [
+        "off",
+        "off"
+      ],
+      "house": [
+        "house_dry:hold_notifications",
+        "ask_parent:call_partner",
+        "house_dry:restore_notifications"
+      ],
+      "interruption": {
+        "kind": "observation",
+        "text": "The oven timer is beeping in the kitchen while the parent is bathing the baby."
+      },
+      "replies": {
+        "armed": "Bath helper is on. Head camera listening, it will chime if both hands leave the baby.",
+        "interruption": "I hear the oven timer beeping \u2014 keep your hand on the baby in the bath, don't step away.\n\nI can say \"one moment please\" on the house speaker to let anyone nearby know you're busy, hold other notifications, or call your partner to check the oven \u2014 just let me know which you\u2019d like.\n\nBath helper is still listening and will chime if both hands leave the baby.",
+        "done": "Bath logged."
+      },
+      "replies_never_left_alone": true,
+      "babybuddy": {
+        "id": 147,
+        "kind": "bath",
+        "time": "2026-10-29T01:09:28-03:00",
+        "text": "Bath 01:09 to 01:09, logged by the bath skill",
+        "tags": [
+          "agent",
+          "bath-sim"
+        ]
+      }
+    },
+    {
+      "bath": 5,
+      "armed_by_voice": true,
+      "armed_by": [
+        "phrase",
+        "brain"
+      ],
+      "reminder": "Bath time. Water ready, towel within reach, nothing left on in the kitchen. Keep a hand on the baby the whole bath.",
+      "moments": [
+        {
+          "clip_id": "bath-handoff-01",
+          "kind": "both_hands_off",
+          "pass": 1,
+          "spoken": true,
+          "latency_s": 1.483
+        },
+        {
+          "clip_id": "bath-onehand-01",
+          "kind": "one_hand",
+          "pass": 1,
+          "spoken": true,
+          "latency_s": null
+        }
+      ],
+      "chimes": [
+        {
+          "clip_id": "bath-handoff-01",
+          "latency_s": 0.23
+        }
+      ],
+      "hands_on_voices": 0,
+      "confirms": [
+        "off",
+        "off"
+      ],
+      "house": [
+        "house_dry:hold_notifications",
+        "ask_parent:call_partner",
+        "ask_parent:call_partner",
+        "house_dry:restore_notifications"
+      ],
+      "interruption": {
+        "kind": "message",
+        "text": "She looks happy in the water, can I leave her a second to grab the shampoo?"
+      },
+      "replies": {
+        "armed": "Bath helper is on. I'm listening for hands leaving the baby to chime, you stay focused on the baby.",
+        "interruption": "Keep your hand on her the whole time, do not step away from the bath, not even for a second.\n\nI can help without you leaving:\n- I can say \"one moment please\" on the house speaker if someone is waiting, or hold notifications for you.\n- I can call your partner to bring the shampoo to you.\n- If you can reach it while keeping a hand on her, that's okay, but do not leave her.\n\nWant me to call your partner or announce you need a moment?",
+        "done": "Bath logged. Hope it was a nice splash time."
+      },
+      "replies_never_left_alone": true,
+      "babybuddy": {
+        "id": 148,
+        "kind": "bath",
+        "time": "2026-10-29T01:10:00-03:00",
+        "text": "Bath 01:09 to 01:10, logged by the bath skill",
+        "tags": [
+          "agent",
+          "bath-sim"
+        ]
+      }
+    },
+    {
+      "bath": 6,
+      "armed_by_voice": true,
+      "armed_by": [
+        "phrase",
+        "brain"
+      ],
+      "reminder": "Bath time. Water ready, towel within reach, nothing left on in the kitchen. Keep a hand on the baby the whole bath.",
+      "moments": [
+        {
+          "clip_id": "bath-handoff-01",
+          "kind": "both_hands_off",
+          "pass": 1,
+          "spoken": true,
+          "latency_s": 1.475
+        },
+        {
+          "clip_id": "bath-onehand-01",
+          "kind": "one_hand",
+          "pass": 1,
+          "spoken": false,
+          "latency_s": null
+        }
+      ],
+      "chimes": [
+        {
+          "clip_id": "bath-handoff-01",
+          "latency_s": 0.232
+        }
+      ],
+      "hands_on_voices": 0,
+      "confirms": [
+        "off",
+        "off"
+      ],
+      "house": [
+        "house_dry:hold_notifications",
+        "ask_parent:call_partner",
+        "house_dry:restore_notifications"
+      ],
+      "interruption": {
+        "kind": "observation",
+        "text": "The doorbell just rang and a courier asks for a signature. The parent is bathing the baby."
+      },
+      "replies": {
+        "armed": "Bath helper is on. I'm listening for your hands.",
+        "interruption": "Keep your hand on the baby, I've got the door.",
+        "done": "Bath finished, logged."
+      },
+      "replies_never_left_alone": true,
+      "babybuddy": {
+        "id": 149,
+        "kind": "bath",
+        "time": "2026-10-29T01:10:29-03:00",
+        "text": "Bath 01:10 to 01:10, logged by the bath skill",
+        "tags": [
+          "agent",
+          "bath-sim"
+        ]
+      }
+    },
+    {
+      "bath": 7,
+      "armed_by_voice": true,
+      "armed_by": [
+        "phrase",
+        "brain"
+      ],
+      "reminder": "Bath time. Water ready, towel within reach, nothing left on in the kitchen. Keep a hand on the baby the whole bath.",
+      "moments": [
+        {
+          "clip_id": "bath-handoff-01",
+          "kind": "both_hands_off",
+          "pass": 1,
+          "spoken": true,
+          "latency_s": 1.828
+        },
+        {
+          "clip_id": "bath-onehand-01",
+          "kind": "one_hand",
+          "pass": 1,
+          "spoken": true,
+          "latency_s": null
+        }
+      ],
+      "chimes": [
+        {
+          "clip_id": "bath-handoff-01",
+          "latency_s": 0.263
+        }
+      ],
+      "hands_on_voices": 0,
+      "confirms": [
+        "off",
+        "off"
+      ],
+      "house": [
+        "house_dry:hold_notifications",
+        "ask_parent:call_partner",
+        "ask_parent:call_partner",
+        "house_dry:restore_notifications"
+      ],
+      "interruption": {
+        "kind": "message",
+        "text": "I forgot the towel in the bedroom, can I run and get it?"
+      },
+      "replies": {
+        "armed": "Bath helper is on. I'll chime if both hands leave the baby.",
+        "interruption": "Keep a hand on the baby the whole bath and do not step away, not even for a second to get the towel.\n\nI can help without you leaving. I can hold notifications, say one moment on the house speaker if needed, or ask your partner to bring the towel to you. Would you like me to call your partner to bring it?",
+        "done": "Bath finished and logged. Hope it went well."
+      },
+      "replies_never_left_alone": true,
+      "babybuddy": {
+        "id": 151,
+        "kind": "bath",
+        "time": "2026-10-29T01:11:01-03:00",
+        "text": "Bath 01:10 to 01:11, logged by the bath skill",
+        "tags": [
+          "agent",
+          "bath-sim"
+        ]
+      }
+    },
+    {
+      "bath": 8,
+      "armed_by_voice": true,
+      "armed_by": [
+        "phrase",
+        "brain"
+      ],
+      "reminder": "Bath time. Water ready, towel within reach, nothing left on in the kitchen. Keep a hand on the baby the whole bath.",
+      "moments": [
+        {
+          "clip_id": "bath-handoff-01",
+          "kind": "both_hands_off",
+          "pass": 1,
+          "spoken": true,
+          "latency_s": 1.62
+        },
+        {
+          "clip_id": "bath-onehand-01",
+          "kind": "one_hand",
+          "pass": 1,
+          "spoken": false,
+          "latency_s": null
+        }
+      ],
+      "chimes": [
+        {
+          "clip_id": "bath-handoff-01",
+          "latency_s": 0.289
+        }
+      ],
+      "hands_on_voices": 0,
+      "confirms": [
+        "off",
+        "off"
+      ],
+      "house": [
+        "house_dry:hold_notifications",
+        "ask_parent:call_partner",
+        "house_dry:restore_notifications"
+      ],
+      "interruption": {
+        "kind": "message",
+        "text": "The phone is ringing in the kitchen, should I get it?"
+      },
+      "replies": {
+        "armed": "Bath helper is on, I am listening for your hands.",
+        "interruption": "Keep your hand on the baby and stay with the bath, do not step away to get the phone. I can hold notifications and say one moment please on the speaker if you want, or call your partner to get it.",
+        "done": "Bath logged. Well done staying with baby the whole time."
+      },
+      "replies_never_left_alone": true,
+      "babybuddy": {
+        "id": 152,
+        "kind": "bath",
+        "time": "2026-10-29T01:11:30-03:00",
+        "text": "Bath 01:11 to 01:11, logged by the bath skill",
+        "tags": [
+          "agent",
+          "bath-sim"
+        ]
+      }
+    },
+    {
+      "bath": 9,
+      "armed_by_voice": true,
+      "armed_by": [
+        "phrase",
+        "brain"
+      ],
+      "reminder": "Bath time. Water ready, towel within reach, nothing left on in the kitchen. Keep a hand on the baby the whole bath.",
+      "moments": [
+        {
+          "clip_id": "bath-handoff-01",
+          "kind": "both_hands_off",
+          "pass": 1,
+          "spoken": true,
+          "latency_s": 1.706
+        },
+        {
+          "clip_id": "bath-onehand-01",
+          "kind": "one_hand",
+          "pass": 1,
+          "spoken": true,
+          "latency_s": null
+        }
+      ],
+      "chimes": [
+        {
+          "clip_id": "bath-handoff-01",
+          "latency_s": 0.251
+        }
+      ],
+      "hands_on_voices": 0,
+      "confirms": [
+        "off",
+        "off"
+      ],
+      "house": [
+        "house_dry:hold_notifications",
+        "ask_parent:call_partner",
+        "ask_parent:call_partner",
+        "house_dry:restore_notifications"
+      ],
+      "interruption": {
+        "kind": "observation",
+        "text": "The oven timer is beeping in the kitchen while the parent is bathing the baby."
+      },
+      "replies": {
+        "armed": "Bath helper is on. I'll chime if both hands leave the baby.",
+        "interruption": "Keeping bath helper on. Keep a hand on the baby the whole time, I hear the oven timer beeping in the kitchen. I can hold notifications or call your partner to check the oven, want me to?",
+        "done": "Bath logged."
+      },
+      "replies_never_left_alone": true,
+      "babybuddy": {
+        "id": 153,
+        "kind": "bath",
+        "time": "2026-10-29T01:12:00-03:00",
+        "text": "Bath 01:11 to 01:12, logged by the bath skill",
+        "tags": [
+          "agent",
+          "bath-sim"
+        ]
+      }
+    },
+    {
+      "bath": 10,
+      "armed_by_voice": true,
+      "armed_by": [
+        "phrase",
+        "brain"
+      ],
+      "reminder": "Bath time. Water ready, towel within reach, nothing left on in the kitchen. Keep a hand on the baby the whole bath.",
+      "moments": [
+        {
+          "clip_id": "bath-handoff-01",
+          "kind": "both_hands_off",
+          "pass": 1,
+          "spoken": true,
+          "latency_s": 1.574
+        },
+        {
+          "clip_id": "bath-onehand-01",
+          "kind": "one_hand",
+          "pass": 1,
+          "spoken": true,
+          "latency_s": null
+        }
+      ],
+      "chimes": [
+        {
+          "clip_id": "bath-handoff-01",
+          "latency_s": 0.234
+        }
+      ],
+      "hands_on_voices": 0,
+      "confirms": [
+        "off",
+        "off"
+      ],
+      "house": [
+        "house_dry:hold_notifications",
+        "ask_parent:call_partner",
+        "ask_parent:call_partner",
+        "house_dry:restore_notifications"
+      ],
+      "interruption": {
+        "kind": "message",
+        "text": "She looks happy in the water, can I leave her a second to grab the shampoo?"
+      },
+      "replies": {
+        "armed": "Bath helper is on, keeping an eye on hands so you can focus on the baby. Say bath done when you're finished.",
+        "interruption": "Keep your hand on the baby the whole time, please do not step away even for a second.\n\nIf you need the shampoo, I can call your partner to bring it, or say one moment on the speaker if someone needs you. Would you like me to hold notifications while your hands are on the baby?\n\nThe water can wait, staying with her is the safest choice.",
+        "done": "All done, bath logged."
+      },
+      "replies_never_left_alone": true,
+      "babybuddy": {
+        "id": 154,
+        "kind": "bath",
+        "time": "2026-10-29T01:12:29-03:00",
+        "text": "Bath 01:12 to 01:12, logged by the bath skill",
+        "tags": [
+          "agent",
+          "bath-sim"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,88 @@
+{
+  "sample_fps_set": 10.0,
+  "watch_s": 60.0,
+  "frames_processed": 407,
+  "processed_fps": 8.0,
+  "reflex_ms_median": 38.1,
+  "armed_s": 51.6,
+  "hands_off_moments_expected": 7,
+  "chimes": 7,
+  "voices": 6,
+  "voices_dropped": 1,
+  "voice_reasons": {
+    "hold": 6
+  },
+  "chime_to_voice_s": [
+    1.26,
+    1.26,
+    1.26,
+    1.26,
+    1.25,
+    1.26
+  ],
+  "voices_out_of_phase": 0,
+  "confirms": [],
+  "confirm_verdicts": {},
+  "confirm_errors": 0,
+  "alarms_cancelled": 0,
+  "skill_closed": true,
+  "brain_calls": [
+    {
+      "destination": "inference.baseten.co",
+      "seconds": 0.97
+    },
+    {
+      "destination": "inference.baseten.co",
+      "seconds": 0.99
+    },
+    {
+      "destination": "inference.baseten.co",
+      "seconds": 1.387
+    },
+    {
+      "destination": "inference.baseten.co",
+      "seconds": 1.472
+    },
+    {
+      "destination": "inference.baseten.co",
+      "seconds": 2.719
+    }
+  ],
+  "tools": [
+    {
+      "name": "start_changing_table",
+      "status": "ran"
+    },
+    {
+      "name": "finish_changing_table",
+      "status": "ran"
+    }
+  ],
+  "conversation": [
+    {
+      "t": 9.044,
+      "who": "parent",
+      "text": "changing time"
+    },
+    {
+      "t": 19.228,
+      "who": "agent",
+      "text": "Watching the changing table. Let me know when you're done."
+    },
+    {
+      "t": 69.054,
+      "who": "parent",
+      "text": "done"
+    },
+    {
+      "t": 71.917,
+      "who": "agent",
+      "text": "Got it, finished."
+    },
+    {
+      "t": 74.637,
+      "who": "agent",
+      "text": "Noted, the changing table finished with 6 hand alerts. Try to keep one hand on baby when you can."
+    }
+  ]
+}

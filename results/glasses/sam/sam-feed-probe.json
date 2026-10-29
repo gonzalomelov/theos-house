@@ -1,0 +1,50 @@
+[
+ {
+  "feed_s": 3.0,
+  "part": "one_hand",
+  "verdict": "on",
+  "s": 2.44
+ },
+ {
+  "feed_s": 8.0,
+  "part": "hands_on",
+  "verdict": "on",
+  "s": 1.89
+ },
+ {
+  "feed_s": 9.3,
+  "part": "both_off",
+  "verdict": "on",
+  "s": 1.53
+ },
+ {
+  "feed_s": 9.6,
+  "part": "both_off",
+  "verdict": "off",
+  "s": 1.59
+ },
+ {
+  "feed_s": 10.0,
+  "part": "both_off",
+  "verdict": "off",
+  "s": 1.56
+ },
+ {
+  "feed_s": 10.5,
+  "part": "both_off",
+  "verdict": "off",
+  "s": 1.53
+ },
+ {
+  "feed_s": 11.0,
+  "part": "both_off",
+  "verdict": "off",
+  "s": 1.53
+ },
+ {
+  "feed_s": 11.8,
+  "part": "both_off",
+  "verdict": "off",
+  "s": 1.56
+ }
+]

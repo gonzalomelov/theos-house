@@ -1,0 +1,83 @@
+{
+  "sample_fps_set": 10.0,
+  "watch_s": 30.0,
+  "frames_processed": 155,
+  "processed_fps": 7.95,
+  "reflex_ms_median": 38.3,
+  "armed_s": 20.2,
+  "hands_off_moments_expected": 2,
+  "chimes": 3,
+  "voices": 1,
+  "voices_dropped": 1,
+  "voice_reasons": {
+    "hold": 1
+  },
+  "chime_to_voice_s": [
+    1.25
+  ],
+  "voices_out_of_phase": 0,
+  "confirms": [],
+  "confirm_verdicts": {},
+  "confirm_errors": 0,
+  "alarms_cancelled": 0,
+  "skill_closed": true,
+  "brain_calls": [
+    {
+      "destination": "inference.baseten.co",
+      "seconds": 1.128
+    },
+    {
+      "destination": "inference.baseten.co",
+      "seconds": 1.139
+    },
+    {
+      "destination": "inference.baseten.co",
+      "seconds": 1.82
+    },
+    {
+      "destination": "inference.baseten.co",
+      "seconds": 1.246
+    },
+    {
+      "destination": "inference.baseten.co",
+      "seconds": 2.825
+    }
+  ],
+  "tools": [
+    {
+      "name": "start_changing_table",
+      "status": "ran"
+    },
+    {
+      "name": "finish_changing_table",
+      "status": "ran"
+    }
+  ],
+  "conversation": [
+    {
+      "t": 11.567,
+      "who": "parent",
+      "text": "changing time"
+    },
+    {
+      "t": 23.391,
+      "who": "agent",
+      "text": "Watching the changing table. Tell me when you're done."
+    },
+    {
+      "t": 41.564,
+      "who": "parent",
+      "text": "done"
+    },
+    {
+      "t": 44.631,
+      "who": "agent",
+      "text": "All set."
+    },
+    {
+      "t": 47.458,
+      "who": "agent",
+      "text": "Noted the diaper change finished."
+    }
+  ]
+}

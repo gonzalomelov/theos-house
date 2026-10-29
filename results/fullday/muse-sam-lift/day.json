@@ -1,0 +1,162 @@
+{
+  "generated_at": "2026-10-29T01:13:56-03:00",
+  "brain": {
+    "provider": "openai_compatible",
+    "model": "meta-models/muse-spark-open-1026",
+    "destination": "inference.baseten.co"
+  },
+  "tag": "full-day-sim",
+  "steps": [
+    {
+      "sim_time": "06:10",
+      "step": "Bottle by voice",
+      "status": "pass",
+      "real_ts": "2026-10-29T01:12:36-03:00",
+      "seconds": 2.8,
+      "channel": "ear",
+      "input": "voice: bottle, 120 ml",
+      "action": "logged a 120 ml bottle in Baby Buddy",
+      "reply": "Logged bottle 120 ml.",
+      "dry": [
+        "delivery logged only: Telegram, ear and speakers are pending (#3, #8)"
+      ],
+      "evidence": {
+        "records": [
+          {
+            "id": 171,
+            "kind": "feeding",
+            "ts": "2026-10-29T01:12:38-03:00"
+          }
+        ]
+      }
+    },
+    {
+      "sim_time": "06:40",
+      "step": "Changing table",
+      "status": "pass",
+      "real_ts": "2026-10-29T01:12:39-03:00",
+      "seconds": 40.8,
+      "channel": "ear",
+      "input": "head camera: the changing-table clips streamed live, then voice: that was a dirty diaper",
+      "action": "hand spoken 3 of 3, one hand silent 1 of 1, dirty diaper logged",
+      "reply": "Got it, dirty diaper logged.",
+      "dry": [
+        "Home Assistant dry run: the token is pending (#9), nothing was switched (house_dry:hold_notifications, house_dry:mute_media, house_dry:restore_notifications)",
+        "delivery logged only: Telegram, ear and speakers are pending (#3, #8)"
+      ],
+      "evidence": {
+        "max_latency_s": 2.013,
+        "confirm": "sam3_local",
+        "diaper": {
+          "id": 142,
+          "ts": "2026-10-29T01:13:18-03:00"
+        }
+      }
+    },
+    {
+      "sim_time": "09:15",
+      "step": "Doorbell during a change",
+      "status": "pass",
+      "real_ts": "2026-10-29T01:13:20-03:00",
+      "seconds": 3.5,
+      "channel": "speaker and ear",
+      "input": "sound: doorbell during a change",
+      "action": "announced 'one moment please'; asked the parent before replying to the visitor",
+      "reply": "Doorbell at the front door, courier with a package to sign. I said one moment please on the speaker. I can tell them you'll be there shortly once you say yes. Waiting for your yes: reply_to_visitor \"Hello, one moment please, the parent is busy with the baby and will be with you \". Reply yes in the next 3 minutes to run it, anything else cancels it.",
+      "dry": [
+        "scripted sound event: the house sound detector is pending (#14)",
+        "Home Assistant dry run: the token is pending (#9), nothing was switched",
+        "delivery logged only: Telegram, ear and speakers are pending (#3, #8)"
+      ],
+      "evidence": {
+        "tools": [
+          "announce",
+          "reply_to_visitor"
+        ],
+        "ask_parent": [
+          "reply_to_visitor"
+        ]
+      }
+    },
+    {
+      "sim_time": "13:00",
+      "step": "Unusual nap note",
+      "status": "pass",
+      "real_ts": "2026-10-29T01:13:24-03:00",
+      "seconds": 3.3,
+      "channel": "telegram",
+      "input": "nap logged, 131 min",
+      "action": "Today's nap was 131 min, about 40 min longer than the usual 91 min. Just a note.",
+      "reply": "Today's nap was 131 min, about 40 min longer than the usual 91 min. Just a note.",
+      "dry": [
+        "delivery logged only: Telegram, ear and speakers are pending (#3, #8)"
+      ],
+      "evidence": {
+        "usual_nap_min": 91,
+        "sleep_id": 146
+      }
+    },
+    {
+      "sim_time": "18:30",
+      "step": "Bath",
+      "status": "pass",
+      "real_ts": "2026-10-29T01:13:27-03:00",
+      "seconds": 9.1,
+      "channel": "ear and partner phone",
+      "input": "head camera: the bath clip streamed live",
+      "action": "chime 0.283 s and hand 1.491 s after both hands left, calling the partner waits for a yes",
+      "reply": "hand",
+      "dry": [
+        "Home Assistant dry run: the token is pending (#9), nothing was switched (ask_parent:call_partner, house_dry:hold_notifications, house_dry:restore_notifications)",
+        "delivery logged only: Telegram, ear and speakers are pending (#3, #8)"
+      ],
+      "evidence": {
+        "chime_s": 0.283,
+        "voice_s": 1.491,
+        "bath_note": [
+          155
+        ],
+        "new_agent_records": 0
+      }
+    },
+    {
+      "sim_time": "20:00",
+      "step": "Question answered from the log",
+      "status": "pass",
+      "real_ts": "2026-10-29T01:13:36-03:00",
+      "seconds": 6.2,
+      "channel": "telegram",
+      "input": "question: When was the last dirty diaper?",
+      "action": "answered from Baby Buddy, expected 01:13",
+      "reply": "Last dirty diaper was at 01:13 today.",
+      "dry": [
+        "delivery logged only: Telegram, ear and speakers are pending (#3, #8)"
+      ],
+      "evidence": {
+        "tools": [
+          "baby_summary"
+        ]
+      }
+    },
+    {
+      "sim_time": "02:30",
+      "step": "Night feed and night shift",
+      "status": "pass",
+      "real_ts": "2026-10-29T01:13:42-03:00",
+      "seconds": 13.8,
+      "channel": "ear",
+      "input": "night feed starts, then voice: night feed, 90 ml bottle",
+      "action": "dimmed the nursery lights; Logged 90 ml. Next feed around 04:50, feeds have been about 140 min apart. Next night wake-up: Parent B.",
+      "reply": "Dimmed nursery lights for the night feed. / Logged bottle 90 ml.",
+      "dry": [
+        "Home Assistant dry run: the token is pending (#9), nothing was switched",
+        "delivery logged only: Telegram, ear and speakers are pending (#3, #8)"
+      ],
+      "evidence": {
+        "on_duty": "Parent B",
+        "next_feed_day_clock": "04:50",
+        "gap_min": 140
+      }
+    }
+  ]
+}

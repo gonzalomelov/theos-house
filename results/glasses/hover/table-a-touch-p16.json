@@ -1,0 +1,79 @@
+{
+  "sample_fps_set": 10.0,
+  "watch_s": 30.0,
+  "frames_processed": 164,
+  "processed_fps": 8.0,
+  "reflex_ms_median": 38.9,
+  "armed_s": 21.2,
+  "hands_off_moments_expected": 3,
+  "chimes": 0,
+  "voices": 0,
+  "voices_dropped": 0,
+  "voice_reasons": {},
+  "chime_to_voice_s": [],
+  "voices_out_of_phase": 0,
+  "confirms": [],
+  "confirm_verdicts": {},
+  "confirm_errors": 0,
+  "alarms_cancelled": 0,
+  "skill_closed": true,
+  "brain_calls": [
+    {
+      "destination": "inference.baseten.co",
+      "seconds": 1.103
+    },
+    {
+      "destination": "inference.baseten.co",
+      "seconds": 0.895
+    },
+    {
+      "destination": "inference.baseten.co",
+      "seconds": 1.15
+    },
+    {
+      "destination": "inference.baseten.co",
+      "seconds": 1.029
+    },
+    {
+      "destination": "inference.baseten.co",
+      "seconds": 1.484
+    }
+  ],
+  "tools": [
+    {
+      "name": "start_changing_table",
+      "status": "ran"
+    },
+    {
+      "name": "finish_changing_table",
+      "status": "ran"
+    }
+  ],
+  "conversation": [
+    {
+      "t": 11.116,
+      "who": "parent",
+      "text": "changing time"
+    },
+    {
+      "t": 21.67,
+      "who": "agent",
+      "text": "Watching the changing table. Let me know when you're done."
+    },
+    {
+      "t": 41.119,
+      "who": "parent",
+      "text": "done"
+    },
+    {
+      "t": 43.302,
+      "who": "agent",
+      "text": "All done."
+    },
+    {
+      "t": 44.787,
+      "who": "agent",
+      "text": "Change finished, all set."
+    }
+  ]
+}

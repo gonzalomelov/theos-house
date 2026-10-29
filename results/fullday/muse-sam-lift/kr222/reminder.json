@@ -1,0 +1,28 @@
+{
+  "generated_at": "2026-10-29T01:13:56-03:00",
+  "source": "full_day",
+  "reminders": [
+    {
+      "text": "Today's nap was 131 min, about 40 min longer than the usual 91 min. Just a note.",
+      "computed_from": [
+        "sleep/146"
+      ],
+      "channel": "telegram",
+      "delivered_at": "2026-10-29T01:13:27-03:00",
+      "asked": false,
+      "kind": "unusual_day"
+    },
+    {
+      "text": "Logged 90 ml. Next feed around 04:50, feeds have been about 140 min apart. Next night wake-up: Parent B.",
+      "computed_from": [
+        "feedings/140",
+        "feedings/141",
+        "feedings/142"
+      ],
+      "channel": "ear",
+      "delivered_at": "2026-10-29T01:13:56-03:00",
+      "asked": false,
+      "kind": "next_feed"
+    }
+  ]
+}
