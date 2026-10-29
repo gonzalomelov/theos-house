@@ -17,7 +17,7 @@ from . import audio, words
 from . import screen
 from .ear import Ear
 
-# A spoken answer is the first sentences only: the text has the rest. On the Vostro CPU a sentence takes about 10 s.
+# A spoken answer is the first sentences only: the text has the rest. On the Vostro CPU a sentence takes about 5 s.
 MAX_SPOKEN_SENTENCES = 3
 
 

@@ -1,0 +1,283 @@
+{
+  "summary": {
+    "replies": 20,
+    "numbers_back": 19,
+    "es": 10,
+    "en": 9,
+    "listener": "meta-models/muse-spark-open-1026"
+  },
+  "rows": [
+    {
+      "id": "es01",
+      "reply": "Anotado: mamadera de 90 ml de Tomi a las 3.",
+      "heard": "Ha notado mamadera de 90 ml de Tomi a las 3",
+      "numbers": [
+        "3:00",
+        "90"
+      ],
+      "heard_numbers": [
+        "3:00",
+        "90"
+      ],
+      "ok": true
+    },
+    {
+      "id": "es02",
+      "reply": "Anotado, pañal mojado de Tomi a las 3:45.",
+      "heard": "Alotado para allá en mojado de Tommy a las 3 y 45",
+      "numbers": [
+        "3:45"
+      ],
+      "heard_numbers": [
+        "3:45"
+      ],
+      "ok": true
+    },
+    {
+      "id": "es03",
+      "reply": "Anotado, pañal sucio de Tomi a las 4:10.",
+      "heard": "Anotado pañal sucio de Tommy a las 4 y 10",
+      "numbers": [
+        "4:10"
+      ],
+      "heard_numbers": [
+        "4:10"
+      ],
+      "ok": true
+    },
+    {
+      "id": "es04",
+      "reply": "Anotado que Tomi se durmió a las 4:30.",
+      "heard": "Ha notado que Tommy se durmió a las 4 y media.",
+      "numbers": [
+        "4:30"
+      ],
+      "heard_numbers": [
+        "4:30"
+      ],
+      "ok": true
+    },
+    {
+      "id": "es05",
+      "reply": "Anotado, Tomi se despertó a las 6:15.",
+      "heard": "Anotado Tomi se despertó a las 6 y cuarto",
+      "numbers": [
+        "6:15"
+      ],
+      "heard_numbers": [
+        "6:15"
+      ],
+      "ok": true
+    },
+    {
+      "id": "es06",
+      "reply": "Anotado, teta izquierda 10 minutos de Tomi a las 6:40.",
+      "heard": "Anotado teta izquierda 10 minutos de toma a las 6 y 40",
+      "numbers": [
+        "10",
+        "6:40"
+      ],
+      "heard_numbers": [
+        "10",
+        "6:40"
+      ],
+      "ok": true
+    },
+    {
+      "id": "es07",
+      "reply": "Anotado, mamadera de 120 ml de Tomi a las 7:30.",
+      "heard": "Anotado mamadera de 120 mililitros de tome a las 7 y media.",
+      "numbers": [
+        "120",
+        "7:30"
+      ],
+      "heard_numbers": [
+        "120",
+        "7:30"
+      ],
+      "ok": true
+    },
+    {
+      "id": "es08",
+      "reply": "Hoy Tomi tomó 210 ml en mamadera, en 2 tomas. La última fue de 120 ml a las 7:30.",
+      "heard": "Hoy Tomi tomó 210 ml en mamadera en 2 tomas. La última fue de 120 ml a las 7 y media.",
+      "numbers": [
+        "120",
+        "2",
+        "210",
+        "7:30"
+      ],
+      "heard_numbers": [
+        "120",
+        "2",
+        "210",
+        "7:30"
+      ],
+      "ok": true
+    },
+    {
+      "id": "es09",
+      "reply": "Corregí la mamadera de las 07:30: 120 ml → 100 ml.",
+      "heard": "Corregí la mamadera de las 7 y media 120 ml a 100 ml",
+      "numbers": [
+        "100",
+        "120",
+        "7:30"
+      ],
+      "heard_numbers": [
+        "100",
+        "120",
+        "7:30"
+      ],
+      "ok": true
+    },
+    {
+      "id": "es10",
+      "reply": "Anotado, pañal mojado y sucio de Tomi a las 8:40.",
+      "heard": "Anotado pañal mojado y sucio de Tony a las 8 y 40",
+      "numbers": [
+        "8:40"
+      ],
+      "heard_numbers": [
+        "8:40"
+      ],
+      "ok": true
+    },
+    {
+      "id": "en01",
+      "reply": "Logged for Mia, 60 ml bottle at 2:00.",
+      "heard": "Blood for Maya 60 milliliters bottle at 2 o'clock",
+      "numbers": [
+        "2:00",
+        "60"
+      ],
+      "heard_numbers": [
+        "2:00",
+        "60"
+      ],
+      "ok": true
+    },
+    {
+      "id": "en02",
+      "reply": "Noted for Mia, wet diaper changed at 2:45.",
+      "heard": "Nodded from Maya, wet diaper changed at 2, 45.",
+      "numbers": [
+        "2:45"
+      ],
+      "heard_numbers": [
+        "2:45"
+      ],
+      "ok": true
+    },
+    {
+      "id": "en03",
+      "reply": "Got it, dirty diaper for Mia at 3:10.",
+      "heard": "bought at 30 Debra for my at Tritin",
+      "numbers": [
+        "3:10"
+      ],
+      "heard_numbers": [
+        "30:00"
+      ],
+      "ok": false
+    },
+    {
+      "id": "en04",
+      "reply": "Logged for Mia, fell asleep at 3:15.",
+      "heard": "Logged for Maya, fell asleep at 3:15",
+      "numbers": [
+        "3:15"
+      ],
+      "heard_numbers": [
+        "3:15"
+      ],
+      "ok": true
+    },
+    {
+      "id": "en05",
+      "reply": "Got it, Mia woke up at 5:30.",
+      "heard": "Got it, Maya, woke up at 5:30.",
+      "numbers": [
+        "5:30"
+      ],
+      "heard_numbers": [
+        "5:30"
+      ],
+      "ok": true
+    },
+    {
+      "id": "en06",
+      "reply": "Logged breastfeed on the right side for Mia, 12 minutes at 5:50.",
+      "heard": "Bug brace feed on the right side for Maya 12 minutes at 5:50",
+      "numbers": [
+        "12",
+        "5:50"
+      ],
+      "heard_numbers": [
+        "12",
+        "5:50"
+      ],
+      "ok": true
+    },
+    {
+      "id": "en07",
+      "reply": "Logged for Mia, 150 ml bottle at 6:30.",
+      "heard": "Lug for Maya, 150 ml bottle at 6:30",
+      "numbers": [
+        "150",
+        "6:30"
+      ],
+      "heard_numbers": [
+        "150",
+        "6:30"
+      ],
+      "ok": true
+    },
+    {
+      "id": "en08",
+      "reply": "Mia drank 210 ml from bottles today, across 2 bottles. Last bottle was 150 ml at 6:30.",
+      "heard": "Mia drank 210 ml from bottles today across two bottles. Last bottle was 150 ml at 6:30.",
+      "numbers": [
+        "150",
+        "2",
+        "210",
+        "6:30"
+      ],
+      "heard_numbers": [
+        "150",
+        "2",
+        "210",
+        "6:30"
+      ],
+      "ok": true
+    },
+    {
+      "id": "en09",
+      "reply": "Fixed the 06:30 bottle: 150 ml → 130 ml.",
+      "heard": "It's the 6:30 bottle, 150 ml to 130 ml",
+      "numbers": [
+        "130",
+        "150",
+        "6:30"
+      ],
+      "heard_numbers": [
+        "130",
+        "150",
+        "6:30"
+      ],
+      "ok": true
+    },
+    {
+      "id": "en10",
+      "reply": "Logged for Mia, wet and dirty diaper at 7:40.",
+      "heard": "Logged for Mayo, wet and dirty dipper at 7:40",
+      "numbers": [
+        "7:40"
+      ],
+      "heard_numbers": [
+        "7:40"
+      ],
+      "ok": true
+    }
+  ]
+}

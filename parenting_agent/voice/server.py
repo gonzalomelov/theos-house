@@ -5,7 +5,7 @@
 POST /wav     body: any audio            -> 16 kHz mono WAV
 POST /speak   JSON {"text", "lang", "format": "ogg" or "wav"} -> the reply as audio, X-Timings header with the
               seconds per sentence
-GET  /health  -> {"ok": true, "loaded": [...]}
+GET  /health  -> {"ok": true, "loaded": [...], "decoders": {"es": "mms-es-decoder-int8.onnx" or "torch", ...}}
 
 It has no internet and no secrets. It never logs text or audio, only sizes and seconds.
 """
@@ -39,7 +39,7 @@ def make_handler(voice):
 
         def do_GET(self):
             if self.path == "/health":
-                return self.reply(200, json.dumps({"ok": True, "loaded": sorted(voice.loaded)}).encode())
+                return self.reply(200, json.dumps({"ok": True, "loaded": sorted(voice.loaded), "decoders": voice.decoders}).encode())
             self.fail(404, "not found")
 
         def do_POST(self):

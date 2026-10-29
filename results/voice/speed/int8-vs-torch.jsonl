@@ -1,0 +1,21 @@
+{"id": "es01", "snr_db": 22.1, "same_length": true, "int8_s": 6.968, "torch_s": 10.983}
+{"id": "es02", "snr_db": 20.0, "same_length": true, "int8_s": 6.492, "torch_s": 10.805}
+{"id": "es03", "snr_db": 17.2, "same_length": true, "int8_s": 4.305, "torch_s": 15.302}
+{"id": "es04", "snr_db": 20.6, "same_length": true, "int8_s": 6.846, "torch_s": 13.078}
+{"id": "es05", "snr_db": 20.6, "same_length": true, "int8_s": 6.95, "torch_s": 9.728}
+{"id": "es06", "snr_db": 18.4, "same_length": true, "int8_s": 5.905, "torch_s": 11.31}
+{"id": "es07", "snr_db": 20.7, "same_length": true, "int8_s": 7.342, "torch_s": 14.019}
+{"id": "es08", "snr_db": 21.8, "same_length": true, "int8_s": 11.873000000000001, "torch_s": 27.15}
+{"id": "es09", "snr_db": 19.8, "same_length": true, "int8_s": 6.212, "torch_s": 16.607}
+{"id": "es10", "snr_db": 20.2, "same_length": true, "int8_s": 5.078, "torch_s": 10.158}
+{"id": "en01", "snr_db": 8.7, "same_length": true, "int8_s": 5.904, "torch_s": 10.279}
+{"id": "en02", "snr_db": 12.5, "same_length": true, "int8_s": 4.146, "torch_s": 9.71}
+{"id": "en03", "snr_db": 15.8, "same_length": true, "int8_s": 3.813, "torch_s": 8.669}
+{"id": "en04", "snr_db": 12.7, "same_length": true, "int8_s": 3.938, "torch_s": 7.65}
+{"id": "en05", "snr_db": 13.1, "same_length": true, "int8_s": 2.855, "torch_s": 6.824}
+{"id": "en06", "snr_db": 14.0, "same_length": true, "int8_s": 6.907, "torch_s": 13.601}
+{"id": "en07", "snr_db": 14.4, "same_length": true, "int8_s": 6.023, "torch_s": 13.748}
+{"id": "en08", "snr_db": 15.7, "same_length": true, "int8_s": 12.465, "torch_s": 24.237000000000002}
+{"id": "en09", "snr_db": 17.1, "same_length": true, "int8_s": 7.87, "torch_s": 14.721}
+{"id": "en10", "snr_db": 17.8, "same_length": true, "int8_s": 6.955, "torch_s": 22.598}
+{"decoders": {"es": "mms-es-decoder-int8.onnx", "en": "mms-en-decoder-int8.onnx"}, "median_snr_db": 17.5}

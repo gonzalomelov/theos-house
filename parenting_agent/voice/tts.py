@@ -4,8 +4,12 @@ facebook/mms-tts-spa and facebook/mms-tts-eng on Hugging Face, from Meta's Massi
 License CC-BY-NC 4.0: fine for this hackathon and the family's own use, not for a commercial product.
 Weights are read from the local Hugging Face cache only when HF_HUB_OFFLINE=1, which the voice image sets, so
 nothing is downloaded at run time.
+
+On a slow CPU the decoder can run on ONNX Runtime in int8 (onnx_decoder.py): set PA_VOICE_ONNX to the folder the
+image build exported it to. Without it, everything runs in torch, as on the Mac.
 """
 import io
+import os
 import threading
 import time
 import wave
@@ -20,8 +24,10 @@ MODELS = {"es": ("facebook/mms-tts-spa", "833b96c0278c85cf09776d565ba8f1cb2819f7
 class MmsVoice:
     name = "mms-tts"
 
-    def __init__(self, models=None, threads=2):
+    def __init__(self, models=None, threads=2, onnx_dir=None):
         self.models, self.threads = dict(models or MODELS), threads
+        self.onnx_dir = onnx_dir if onnx_dir is not None else os.environ.get("PA_VOICE_ONNX", "")
+        self.decoders = {}
         self.loaded = {}
         self.lock = threading.Lock()
         self.busy = threading.Lock()  # one synthesis at a time, the CPU is the limit
@@ -35,11 +41,27 @@ class MmsVoice:
                 import torch
                 from transformers import AutoTokenizer, VitsModel
                 torch.set_num_threads(self.threads)
+                torch.set_flush_denormal(True)
                 repo, revision = self.models[lang]
                 model = VitsModel.from_pretrained(repo, revision=revision)
                 model.eval()
+                self.use_onnx_decoder(lang, model)
                 self.loaded[lang] = (model, AutoTokenizer.from_pretrained(repo, revision=revision))
         return lang, self.loaded[lang]
+
+    def use_onnx_decoder(self, lang, model):
+        """Swaps the torch decoder for the int8 ONNX one when the image has it. Fails loudly when PA_VOICE_ONNX
+        names a folder without it, so a broken image never falls back to the slow path in silence."""
+        if not self.onnx_dir:
+            self.decoders[lang] = "torch"
+            return
+        from . import onnx_decoder
+        file = onnx_decoder.path(self.onnx_dir, lang)
+        if not file.exists():
+            raise FileNotFoundError(f"PA_VOICE_ONNX is set but {file} is missing")
+        del model.decoder
+        model.decoder = onnx_decoder.OrtDecoder(file, self.threads)
+        self.decoders[lang] = file.name
 
     def synth(self, text, lang="en", seed=0):
         """WAV bytes (16-bit mono at the model's rate) for text, sentence by sentence. Returns (wav, timings) where

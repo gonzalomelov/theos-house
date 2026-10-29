@@ -27,6 +27,7 @@ def to_wav(data, rate=16000):
 
 
 def to_ogg_opus(data):
-    """Any audio ffmpeg reads, as OGG Opus mono, the format Telegram shows as a voice note."""
+    """Any audio ffmpeg reads, as OGG Opus mono, the format Telegram shows as a voice note. Compression level 5,
+    not the default 10: on the Vostro CPU that takes a 9 s reply from about 2.8 s to 0.7 s to encode."""
     return ffmpeg(data, ["-vn", "-ac", "1", "-ar", "48000", "-c:a", "libopus", "-b:a", "32k",
-                         "-application", "voip", "-f", "ogg"])
+                         "-application", "voip", "-compression_level", "5", "-f", "ogg"])

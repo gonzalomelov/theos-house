@@ -1,0 +1,11 @@
+{"id": "es08", "seconds": 36.16, "model": [13.13, 17.468], "bytes": 40422}
+{"id": "en08", "seconds": 27.5, "model": [12.581, 11.702], "bytes": 40433}
+{"id": "es01+es02", "seconds": 20.51, "model": [10.29, 9.044], "bytes": 34970}
+{"id": "es03+es04", "seconds": 20.82, "model": [11.087, 8.777], "bytes": 30494}
+{"id": "es05+es06", "seconds": 26.55, "model": [8.106, 14.056], "bytes": 36256}
+{"id": "es07+es10", "seconds": 30.08, "model": [13.573, 13.323], "bytes": 41548}
+{"id": "en01+en02", "seconds": 24.67, "model": [11.905, 8.256], "bytes": 35140}
+{"id": "en03+en04", "seconds": 17.0, "model": [8.3, 7.773], "bytes": 26291}
+{"id": "en05+en06", "seconds": 28.08, "model": [6.732, 13.866], "bytes": 33880}
+{"id": "en07+en10", "seconds": 31.52, "model": [13.992, 10.637], "bytes": 41389}
+{"median": 27.025, "max": 36.16, "min": 17.0}

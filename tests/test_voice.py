@@ -366,6 +366,37 @@ class Image(unittest.TestCase):
             self.assertIn(f"get('{repo}', revision='{revision}')", dockerfile)
         self.assertIn("HF_HUB_OFFLINE=1", dockerfile)
 
+    def test_the_image_exports_the_int8_decoder_and_points_the_voice_at_it(self):
+        from pathlib import Path
+        dockerfile = (Path(__file__).resolve().parent.parent / "deploy" / "voice" / "Dockerfile").read_text()
+        self.assertIn("python -m parenting_agent.voice.onnx_decoder /opt/mms-onnx", dockerfile)
+        self.assertIn("ENV PA_VOICE_ONNX=/opt/mms-onnx", dockerfile)
+        self.assertLess(dockerfile.index("HF_HUB_OFFLINE=1"), dockerfile.index("onnx_decoder /opt/mms-onnx"))
+
+
+class OnnxDecoder(unittest.TestCase):
+    class Model:
+        decoder = "torch decoder"
+
+    def test_without_a_folder_the_decoder_stays_in_torch(self):
+        from parenting_agent.voice.tts import MmsVoice
+        voice, model = MmsVoice(onnx_dir=""), self.Model()
+        voice.use_onnx_decoder("es", model)
+        self.assertEqual((voice.decoders, model.decoder), ({"es": "torch"}, "torch decoder"))
+
+    def test_a_folder_without_the_file_fails_loudly(self):
+        import tempfile
+        from parenting_agent.voice.tts import MmsVoice
+        voice = MmsVoice(onnx_dir=tempfile.mkdtemp())
+        with self.assertRaises(FileNotFoundError):
+            voice.use_onnx_decoder("es", self.Model())
+
+    def test_the_file_names(self):
+        from parenting_agent.voice import onnx_decoder
+        self.assertEqual(onnx_decoder.path("/x", "es").name, "mms-es-decoder-int8.onnx")
+        self.assertEqual(onnx_decoder.path("/x", "en", int8=False).name, "mms-en-decoder.onnx")
+        self.assertEqual(sorted(onnx_decoder.CALIBRATION), ["en", "es"])
+
 
 class Build(unittest.TestCase):
     def test_none_is_off_and_a_url_is_the_service(self):

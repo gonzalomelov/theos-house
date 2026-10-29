@@ -34,7 +34,7 @@ Checked again on Oct 29 with clips Muse could not guess (a made-up word and rand
 
 | Option | License | Runs here | Verdict |
 |---|---|---|---|
-| MMS-TTS, `facebook/mms-tts-spa` and `facebook/mms-tts-eng` (VITS, about 36M parameters each) | CC-BY-NC 4.0 | Yes, CPU: 0.4 s a sentence on the Mac, about 10 s on the Vostro | **Picked** |
+| MMS-TTS, `facebook/mms-tts-spa` and `facebook/mms-tts-eng` (VITS, about 36M parameters each) | CC-BY-NC 4.0 | Yes, CPU: 0.4 s a sentence on the Mac, about 5 s on the Vostro with the int8 decoder | **Picked** |
 | SeamlessM4T v2 large, text to speech | CC-BY-NC 4.0 | 2.3B parameters, too heavy for the Vostro CPU, slow on the Mac | Not picked |
 | Seamless Expressive | Seamless license, gated on Hugging Face | Needs a request form for the weights, GPU | Not picked, gated |
 | Anything newer from Meta | | No Meta open-weights TTS release found on Oct 28 2026 | |
@@ -49,7 +49,7 @@ Numbers: MMS-TTS reads letters only and drops digits, so `parenting_agent/voice/
 - **On the Vostro**: the voice service, `deploy/voice/`. One image (python slim, ffmpeg, torch CPU, transformers, both MMS weights baked in at build and pinned to a revision, `HF_HUB_OFFLINE=1`), two containers:
   - `pa-voice-family` on `parenting-agent-internal`, used by the family agent (`"voice": {"service": "http://pa-voice-family:8800"}` in `config/agent.vostro.json`).
   - `pa-voice-families` on `pa-families-internal`, used by the families bot (`PA_FAMILIES_VOICE`).
-  Two containers so the family's private agent and the families bot never share one. On the Vostro CPU a sentence takes about 10 s, so the text answer goes out at once and the voice note follows in the background. Only the first 3 sentences are spoken. Hearing itself is the Muse call from the agent or families container, through their egress proxies, as before.
+  Two containers so the family's private agent and the families bot never share one. The HiFi-GAN decoder runs on ONNX Runtime in int8 there, exported from the same weights at image build (`parenting_agent/voice/onnx_decoder.py`, `PA_VOICE_ONNX`), about 2 times faster than torch. The Vostro CPU is held at about 760 MHz by its firmware (dead battery, PROCHOT), so a sentence still takes about 5 s, and the text answer goes out at once and the voice note follows in the background. Only the first 3 sentences are spoken. Hearing itself is the Muse call from the agent or families container, through their egress proxies, as before.
 
 ### The wall
 

@@ -33,6 +33,10 @@ for lang, text in (("es", "Listo, anoté la mamadera de 90 ml a las 15:00."), ("
     wav, _, seconds = post("/wav", ogg, "application/octet-stream")
     check(f"converts {lang} back to WAV", wav[:4] == b"RIFF", f"{len(wav)} bytes in {seconds} s")
 
+with urllib.request.urlopen("http://127.0.0.1:8800/health", timeout=10) as response:
+    decoders = json.loads(response.read()).get("decoders", {})
+check("int8 ONNX decoder in use", sorted(decoders) == ["en", "es"] and all(d.endswith("-int8.onnx") for d in decoders.values()),
+      json.dumps(decoders))
 check("no proxy settings", not any(k.lower().endswith("_proxy") for k in os.environ))
 check("weights offline", os.environ.get("HF_HUB_OFFLINE") == "1")
 for host, port in (("1.1.1.1", 443), ("huggingface.co", 443), ("host.docker.internal", 22)):

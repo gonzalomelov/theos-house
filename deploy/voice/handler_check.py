@@ -59,10 +59,11 @@ def families_check():
     from parenting_agent.voice import client as voice_client
 
     class Recorder(Messenger):
-        sent, voices = [], []
+        sent, voices, at = [], [], {}
 
         def send(self, chat_id, text):
             self.sent.append(text)
+            self.at.setdefault("text", time.monotonic() - started)
             return 1
 
         def download(self, file_id):
@@ -70,6 +71,7 @@ def families_check():
 
         def send_voice(self, chat_id, ogg):
             self.voices.append(len(ogg))
+            self.at.setdefault("voice", time.monotonic() - started)
             return 1
 
     s = settings_mod.load({**os.environ, "PA_FAMILIES_DATA_DIR": tempfile.mkdtemp(dir="/tmp")})
@@ -85,6 +87,9 @@ def families_check():
         bot.spoken_thread.join(180)
     print(f"replies: {recorder.sent}")
     print(f"voice replies: {recorder.voices} bytes, {time.monotonic() - started:.1f} s, brain {s['brain_name']}")
+    if len(recorder.at) == 2:
+        at = recorder.at
+        print(f"text at {at['text']:.1f} s, voice at {at['voice']:.1f} s, voice {at['voice'] - at['text']:.1f} s after the text")
     app.close()
     return 0 if recorder.voices and recorder.sent and recorder.sent[0].startswith("«") else 1
 
