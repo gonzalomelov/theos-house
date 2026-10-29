@@ -51,8 +51,9 @@ class Shared:
         return verdict
 
 
-def skill_config(scene, confirm_wait_s, lift=None, lift_cfg=None):
+def skill_config(scene, confirm_wait_s, lift=None, lift_cfg=None, alarm_cfg=None):
     cfg = copy.deepcopy(config_mod.load(SKILLS[scene]))
+    cfg["alarm"].update(alarm_cfg or {})
     if lift is not None:
         cfg.setdefault("lift", {})["enabled"] = lift == "on"
     cfg.setdefault("lift", {}).update(lift_cfg or {})
@@ -72,7 +73,8 @@ def run_moment(moment, clip, cfg, reflex, detector, wait_without_confirm=False):
     while source.started is None and not source.stopped:
         time.sleep(0.005)
     heard = []
-    bus.subscribe(lambda e: heard.append({"stream_s": e["stream_s"], "mono": time.monotonic(), "reason": e["reason"]}), ["voice"])
+    bus.subscribe(lambda e: heard.append({"stream_s": e["stream_s"], "mono": time.monotonic(), "reason": e["reason"],
+                                          "episode": e["episode"]}), ["voice"])
     skill.arm()
     worker = threading.Thread(target=watch, args=(skill, source), daemon=True)
     worker.start()
@@ -90,9 +92,14 @@ def run_moment(moment, clip, cfg, reflex, detector, wait_without_confirm=False):
         spoken = latency is not None and latency <= SPEAK_WITHIN_S
     else:
         early, late, latency, spoken = heard, [], None, bool(heard)
+    raised = {e["episode"]: e["stream_s"] for e in events if e["kind"] == "alarm" and e.get("action") == "raise"}
+    # strict: the voice that counts belongs to an alarm raised after the cue, not one left over from the rest
+    strict = spoken and moment["kind"] == "hover" and raised.get(late[0]["episode"], -1) >= moment["cue_s"] - EARLY_TOLERANCE_S
     return {
         "id": moment["id"], "scene": moment["scene"], "kind": moment["kind"], "lift_cm": moment.get("lift_cm"),
-        "spoken": spoken, "latency_s": latency, "voices_before_cue": len(early) if moment["kind"] == "hover" else None,
+        "held": moment.get("held"), "object": moment.get("object"), "hands": moment.get("hands"),
+        "confirm_s": confirm_seconds(events),
+        "spoken": spoken, "spoken_strict": strict, "latency_s": latency, "voices_before_cue": len(early) if moment["kind"] == "hover" else None,
         "voice_reasons": [v["reason"] for v in heard],
         "chimes": sum(1 for e in events if e["kind"] == "chime"),
         "cancels": sum(1 for e in events if e["kind"] == "alarm" and e.get("action") == "cancel"),
@@ -108,6 +115,17 @@ def run_moment(moment, clip, cfg, reflex, detector, wait_without_confirm=False):
     }
 
 
+def confirm_seconds(events):
+    """Request to answer of each SAM 3.1 confirm, the wait behind a running anchor included."""
+    asked, out = [], []
+    for e in events:
+        if e["kind"] == "confirm_request":
+            asked.append(e["t"])
+        elif e["kind"] in ("confirm", "confirm_error") and asked:
+            out.append(round(e["t"] - asked.pop(0), 3))
+    return out
+
+
 def summarize(rows):
     hover = [r for r in rows if r["kind"] == "hover"]
     touch = [r for r in rows if r["kind"] == "touch"]
@@ -116,6 +134,8 @@ def summarize(rows):
         "hover_moments": len(hover),
         "hover_spoken_within_2_5_s": sum(r["spoken"] for r in hover),
         "hover_missed": sum(not r["spoken"] for r in hover),
+        "hover_spoken_strict": sum(bool(r.get("spoken_strict")) for r in hover),
+        "hovers_with_a_voice_during_the_rest": sum(1 for r in hover if r["voices_before_cue"]),
         "touch_moments": len(touch),
         "touch_false_voices": sum(r["spoken"] for r in touch),
         "touch_chimes": sum(r["chimes"] for r in touch),
@@ -123,9 +143,16 @@ def summarize(rows):
         "cancels": sum(r["cancels"] for r in rows),
         "latency_median_s": lat[len(lat) // 2] if lat else None,
         "latency_max_s": lat[-1] if lat else None,
+        "confirm_s_median": percentile([v for r in rows for v in r.get("confirm_s", [])], 0.5),
+        "confirm_s_p90": percentile([v for r in rows for v in r.get("confirm_s", [])], 0.9),
         "lift_s_median_of_moments": median([r["lift_s_median"] for r in rows if r["lift_s_median"] is not None]),
         "reflex_s_median_of_moments": median([r["reflex_s_median"] for r in rows if r["reflex_s_median"] is not None]),
     }
+
+
+def percentile(values, q):
+    values = sorted(values)
+    return values[min(int(len(values) * q), len(values) - 1)] if values else None
 
 
 def median(values):
@@ -142,6 +169,8 @@ def main(argv=None):
     parser.add_argument("--wait-without-confirm", action="store_true", help="control for --confirm none")
     parser.add_argument("--lift", choices=["on", "off"], default=None, help="override lift.enabled")
     parser.add_argument("--lift-cfg", type=json.loads, default=None, help="JSON merged into the lift config, for dev tuning")
+    parser.add_argument("--alarm-cfg", type=json.loads, default=None, help="JSON merged into the alarm config")
+    parser.add_argument("--confirm-cfg", type=json.loads, default=None, help="JSON merged into the SAM 3.1 confirm config")
     parser.add_argument("--splits", default=None, help="comma separated, overrides --split (the wave 2 dev set is dev,test)")
     parser.add_argument("--only", default=None, help="comma separated moment ids")
     parser.add_argument("--out", type=Path, required=True)
@@ -155,11 +184,11 @@ def main(argv=None):
         moments = [m for m in moments if m["id"] in args.only.split(",")]
     base = config_mod.load(SKILLS["changing_table"])
     reflex = MediaPipeReflex(base["contact"])
-    detector = Shared(confirm_mod.build(base["confirm"])) if args.confirm == "sam3_local" else None
+    detector = Shared(confirm_mod.build({**base["confirm"], **(args.confirm_cfg or {})})) if args.confirm == "sam3_local" else None
     rows = []
     try:
         for moment in moments:
-            cfg = skill_config(moment["scene"], args.confirm_wait_s, args.lift, args.lift_cfg)
+            cfg = skill_config(moment["scene"], args.confirm_wait_s, args.lift, args.lift_cfg, args.alarm_cfg)
             rows.append(run_moment(moment, root / f"{moment['id']}.mp4", cfg, reflex, detector, args.wait_without_confirm))
             print(json.dumps({k: rows[-1][k] for k in ("id", "spoken", "latency_s", "chimes", "cancels", "confirms",
                                                        "max_lift_cm_after_cue", "lift_s_median")}), flush=True)
@@ -170,7 +199,9 @@ def main(argv=None):
         "generated_at": datetime.datetime.now().astimezone().isoformat(timespec="seconds"),
         "split": ",".join(splits), "confirm": args.confirm, "wait_without_confirm": args.wait_without_confirm,
         "lift": {scene: skill_config(scene, args.confirm_wait_s, args.lift, args.lift_cfg).get("lift") for scene in SKILLS},
-        "alarm": {k: v for k, v in skill_config("changing_table", args.confirm_wait_s)["alarm"].items() if k != "voice_text"},
+        "alarm": {k: v for k, v in skill_config("changing_table", args.confirm_wait_s, alarm_cfg=args.alarm_cfg)["alarm"].items()
+                  if k != "voice_text"},
+        "confirm_cfg": args.confirm_cfg,
         "summary": summarize(rows),
         "by_scene": {scene: summarize([r for r in rows if r["scene"] == scene]) for scene in SKILLS},
         "moments": rows,

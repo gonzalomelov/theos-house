@@ -47,7 +47,22 @@ The same command three times in a row (`takes/take-1.json`, `run.json` is take 2
 | 3 | 1 of 2 | 2 of 2 | 3 of 3 | 1.78, 3.28 | 6, 0 |
 | **All** | **4 of 6** | **6 of 6** | **9 of 9** | | **18, 0** |
 
-The two missed hands-off moments are the reflex, not SAM 3.1. In this clip the hands come back over the baby holding a fresh diaper. MediaPipe reads that as a hand on (2D overlap), so the off stretch lasts about 1.2 s and the alarm clears before the 1.2 s hold. In take 1 SAM 3.1 read the frame at 9.66 s as "off" while the reflex read it as "on", and SAM 3.1 was right, but its answer came 3.1 s later (it waited behind a lift anchor), after the alarm had cleared. Not fixed here.
+The two missed hands-off moments are the reflex, not SAM 3.1 (addressed later the same night, see "After the held object fix" below). In this clip the hands come back over the baby holding a fresh diaper. MediaPipe reads that as a hand on (2D overlap), so the off stretch lasts about 1.2 s and the alarm clears before the 1.2 s hold. In take 1 SAM 3.1 read the frame at 9.66 s as "off" while the reflex read it as "on", and SAM 3.1 was right, but its answer came 3.1 s later (it waited behind a lift anchor), after the alarm had cleared.
+
+## After the held object fix, Oct 29 04:44 to 04:49
+
+The same command, three more takes, on the code of the held object PR (`held-fix/take-1` to `-3`, `results/hover/held/README.md` for the fix and its own measurements). Hands that come back over the baby while the alarm waits unspoken now wait for SAM 3.1 before the alarm clears, the confirm no longer waits behind a lift anchor, and SAM 3.1 runs in float16.
+
+| Takes | Both hands off | Hover 2.5 cm | One hand, silent | SAM 3.1 confirm, request to answer | Brain calls, fallbacks |
+|---|---|---|---|---|---|
+| Before (take 1, 2, 3 above) | **4 of 6** | 6 of 6 | 9 of 9 | 1.70, 2.98, 3.12, 3.14, 3.14 s (median 3.12 s) | 18, 0 |
+| After (`held-fix/take-1` to `-3`) | **5 of 6** | 6 of 6 | 9 of 9 | 1.36, 1.38, 1.48, 1.52, 1.61 s (median 1.48 s) | 18, 0 |
+
+- Four of the five "before" confirms took 3.0 to 3.1 s from request to answer, about a lift anchor plus a confirm on the one SAM 3.1 worker. After, every confirm answered in 1.36 to 1.61 s.
+- The one "both hands off" not counted (take 3, second loop): the lift check read the hands as lifted while they rose to leave, the voice said "hand" at 29.08 s, 1.6 s before the scripted cue at 30.7 s, and that alarm was still up when the hands left, so no new one was raised. The script only counts a voice after the cue, so it counts as a miss. The cue carries about 0.5 s of feed phase error.
+- Every brain call went to Muse Spark Open on `inference.baseten.co`, 0 fallbacks. The three changes are Baby Buddy entries 168, 169 and 170 on `test-baby`.
+- `held-fix/first-try/` has three earlier takes from 04:40 with a bug in the new wait: a hover alarm whose reading flickered from lifted to on waited for a SAM 3.1 answer that is never asked for a lifted alarm, and its voice was dropped. Fixed and tested before the takes above. Those takes gave both hands off 5 of 6 and hover 5 of 6.
+- 5 of 6 is one moment better on three takes, not a proven rate. Which of the three changes made the difference was not separated.
 
 ## The first hover after arming, through the glasses
 

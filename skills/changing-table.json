@@ -2,7 +2,7 @@
   "name": "changing-table",
   "concepts": {"hand": "hand", "baby": "baby"},
   "contact": {"min_overlap": 0.3, "min_hand_area": 0.012, "off_frames_to_alert": 1},
-  "alarm": {"voice_hold_s": 1.2, "confirm_wait_s": 2.3, "clear_after_on_s": 0.5, "voice_text": "hand"},
+  "alarm": {"voice_hold_s": 1.2, "confirm_wait_s": 2.3, "clear_after_on_s": 0.5, "return_waits_for_confirm": true, "return_wait_s": 2.0, "voice_text": "hand"},
   "lift": {"enabled": true, "regions": "sam3", "camera_cm": 45, "min_lift_cm": 1.7, "mediapipe_min_lift_cm": 1.0, "rest_cm": 0.5, "refresh_s": 1.0, "smooth_frames": 5, "reset_after_off_s": 1.0},
   "phases": ["lay down", "unfasten", "wipe", "clean diaper", "fasten", "pick up"],
   "confirm": {
@@ -14,7 +14,8 @@
     "baby_word": "baby",
     "ring_px": 6,
     "ring_min": 0.35,
-    "min_hand_area": 0.012
+    "min_hand_area": 0.012,
+    "autocast": "float16"
   },
   "reasoning": {"provider": "none"},
   "house": {

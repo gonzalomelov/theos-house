@@ -155,6 +155,78 @@ class ConfirmWait(unittest.TestCase):
                 config_mod.load(f.name)
 
 
+class ReturnWaitsForConfirm(unittest.TestCase):
+    """Hands that come back over the baby before the prompt (holding a diaper above it reads on in 2D) wait for SAM 3.1."""
+
+    def setUp(self):
+        self.bus = Bus()
+        self.cfg = {**ALARM, "return_waits_for_confirm": True, "return_wait_s": 2.0}
+        self.alarm = Alarm(self.bus, CONTACT, self.cfg, waits_for_confirm=True)
+
+    def back_on(self, alarm):
+        alarm.on_reflex("off", 1.0)
+        for t in (1.5, 1.8, 2.1, 2.4):
+            alarm.on_reflex("on", t)
+
+    def test_return_neither_clears_nor_speaks_before_the_answer(self):
+        self.back_on(self.alarm)
+        self.assertEqual(self.bus.count("voice"), 0)
+        self.assertTrue(self.alarm.raised)
+
+    def test_off_answer_after_the_return_speaks(self):
+        self.back_on(self.alarm)
+        self.alarm.on_confirm(1, "off", 1.8)
+        self.assertEqual(self.bus.history[-1]["reason"], "confirm")
+
+    def test_on_answer_after_the_return_cancels_silently(self):
+        self.back_on(self.alarm)
+        self.alarm.on_confirm(1, "on", 1.8)
+        self.alarm.on_reflex("on", 3.0)
+        self.assertEqual(self.bus.count("voice"), 0)
+        self.assertFalse(self.alarm.raised)
+
+    def test_no_answer_clears_after_return_wait_s(self):
+        self.back_on(self.alarm)
+        self.alarm.on_reflex("on", 3.6)
+        self.assertFalse(self.alarm.raised)
+        self.assertEqual(self.bus.count("voice"), 0)
+
+    def test_without_a_detector_the_reflex_clears_as_before(self):
+        alarm = Alarm(self.bus, CONTACT, self.cfg, waits_for_confirm=False)
+        self.back_on(alarm)
+        self.assertFalse(alarm.raised)
+
+    def test_a_lifted_alarm_keeps_its_hold_when_the_reading_flickers_to_on(self):
+        self.alarm.on_reflex("on", 1.0, lifted=True)
+        self.alarm.on_reflex("on", 2.0)
+        self.alarm.on_reflex("on", 2.3)
+        self.assertEqual(self.bus.count("voice"), 1)
+
+    def test_off_by_default(self):
+        alarm = Alarm(self.bus, CONTACT, ALARM, waits_for_confirm=True)
+        self.back_on(alarm)
+        self.assertFalse(alarm.raised)
+
+
+class ConfirmWaitAll(unittest.TestCase):
+    def test_a_clear_off_reading_also_waits_for_the_detector(self):
+        bus = Bus()
+        alarm = Alarm(bus, CONTACT, {**ALARM, "confirm_wait_s": 2.3, "confirm_wait_all": True}, waits_for_confirm=True)
+        alarm.on_reflex("off", 1.0)
+        alarm.on_reflex("off", 2.5)
+        self.assertEqual(bus.count("voice"), 0)
+        alarm.on_confirm(1, "on", 1.5)
+        alarm.on_reflex("off", 3.5)
+        self.assertEqual(bus.count("voice"), 0)
+
+    def test_a_lifted_alarm_never_waits(self):
+        bus = Bus()
+        alarm = Alarm(bus, CONTACT, {**ALARM, "confirm_wait_s": 2.3, "confirm_wait_all": True}, waits_for_confirm=True)
+        alarm.on_reflex("on", 1.0, lifted=True)
+        alarm.on_reflex("on", 2.3, lifted=True)
+        self.assertEqual(bus.count("voice"), 1)
+
+
 class Config(unittest.TestCase):
     def test_skills_load(self):
         for path in Path("skills").glob("*.json"):
@@ -310,6 +382,44 @@ class SkillConfirm(unittest.TestCase):
         skill = Skill(cfg, Bus(), FakeReflex([]), confirm_detector=NoConfirm(), tracker=Tracker({"on_closed": None}, Bus()))
         self.assertEqual(skill.lift.cfg["regions"], "mediapipe")
         self.assertEqual(skill.lift.cfg["min_lift_cm"], 1.0)
+
+
+class MaskConfirm(RecordingConfirm):
+    def __init__(self):
+        super().__init__([])
+        self.mask_calls = 0
+
+    def masks(self, frame_bgr):
+        self.mask_calls += 1
+        return [], None
+
+
+class ConfirmBeforeAnchor(unittest.TestCase):
+    """One GPU: while an alarm is raised no lift anchor is sent, so the confirm never waits behind one (results/hero)."""
+
+    def skill(self):
+        cfg = config_mod.load("skills/changing-table.json")
+        detector = MaskConfirm()
+        skill = Skill(cfg, Bus(), FakeReflex([]), confirm_detector=detector, tracker=Tracker({"on_closed": None}, Bus()))
+        return skill, detector
+
+    def test_no_anchor_while_an_alarm_is_raised(self):
+        import numpy as np
+        skill, detector = self.skill()
+        skill.alarm.raised = True
+        frame = np.zeros((360, 640, 3), np.uint8)
+        skill._anchor(frame, frame[..., 0], 1.0)
+        self.assertIsNone(skill.anchor_job)
+        skill.anchor_pool.shutdown(wait=True)
+
+    def test_anchor_when_no_alarm(self):
+        import numpy as np
+        skill, detector = self.skill()
+        frame = np.zeros((360, 640, 3), np.uint8)
+        skill._anchor(frame, frame[..., 0], 1.0)
+        self.assertIsNotNone(skill.anchor_job)
+        skill.anchor_pool.shutdown(wait=True)
+        self.assertEqual(detector.mask_calls, 1)
 
 
 class HeadCameraPage(unittest.TestCase):

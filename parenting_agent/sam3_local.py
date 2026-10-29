@@ -17,7 +17,7 @@ from .confirm import Unavailable
 DEFAULT_PYTHON = Path.home() / "Engineering/gonza/sam3-native/venv/bin/python"
 WORKER = Path(__file__).with_name("sam3_worker.py")
 MASKS = 1 << 31  # same flag as sam3_worker.MASKS
-KEYS = ("device", "confidence", "hand_word", "baby_word", "ring_px", "ring_min", "min_hand_area")
+KEYS = ("device", "confidence", "hand_word", "baby_word", "ring_px", "ring_min", "min_hand_area", "autocast", "held_words", "held_touch_px")
 
 
 class Sam3Local:

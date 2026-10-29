@@ -5,7 +5,9 @@ the lift check when the reflex reads on (config lift.enabled, see parenting_agen
 the alarm raises, one confirm request, sent confirm.delay_s after the raise with the newest frame (default 0). When the confirm
 cancels but the reflex still reads off, the skill asks again on a newer frame, up to confirm.retries times, and an
 off answer then raises the alarm again. A hand the lift check finds held above the baby counts as off, and that
-alarm skips the confirm detector, because SAM 3.1 reads a hovering hand as on (results/hover). A spoken prompt fires the on_voice actions.
+alarm skips the confirm detector, because SAM 3.1 reads a hovering hand as on (results/hover). While an alarm is
+raised or its confirm is due or pending, no lift anchor is sent, so the confirm never waits behind one on the shared
+SAM 3.1 worker (results/hero, take 1). A spoken prompt fires the on_voice actions.
 Closing fires on_closed, logs the routine to tracking, and publishes skill_closed with the numbers.
 """
 import datetime
@@ -108,7 +110,8 @@ class Skill:
             else:
                 self.lift.anchor(anchor_gray, hands, baby, anchor_s)
                 self.bus.publish("anchor", stream_s=round(anchor_s, 3), hands=len(hands), based=self.lift.base is not None)
-        if self.anchor_job is None and self.lift.wants_anchor and not self.lift.lifted:
+        confirm_first = self.alarm.raised or self.confirm_due or self.confirm.pending  # one GPU: the confirm goes first
+        if self.anchor_job is None and self.lift.wants_anchor and not self.lift.lifted and not confirm_first:
             self.bus.publish("anchor_request", stream_s=round(stream_s, 3))
             self.anchor_job = (gray, stream_s, self.anchor_pool.submit(self.masks, frame_bgr.copy()))
 

@@ -22,7 +22,8 @@ MASKS = 1 << 31
 DEFAULTS = {
     "checkpoints": [{"repo": "facebook/sam3.1", "file": "sam3.1_multiplex.pt"}, {"repo": "facebook/sam3", "file": "sam3.pt"}],
     "device": "mps", "confidence": 0.4, "hand_word": "hand", "baby_word": "baby",
-    "ring_px": 6, "ring_min": 0.35, "min_hand_area": 0.012, "max_missing_share": 0.01,
+    "ring_px": 6, "ring_min": 0.35, "min_hand_area": 0.012, "max_missing_share": 0.01, "autocast": None,
+    "held_words": [], "held_touch_px": 4,
 }
 
 
@@ -41,6 +42,23 @@ def ring_state(hand_masks, baby, cfg):
     if not baby.any():
         return "unknown", rings
     return ("on" if any(r >= cfg["ring_min"] for r in rings) else "off"), rings
+
+
+def holding(hands, objects, cfg):
+    """Each hand with the held objects that touch it: a wipe or a diaper in the hand hides the hand's own contact edge,
+    so the ring is drawn around the hand and what it holds (held_words, results/hover/held)."""
+    if not objects:
+        return hands
+    import cv2
+    import numpy as np
+    kernel = np.ones((2 * cfg["held_touch_px"] + 1,) * 2, np.uint8)
+    grown = [cv2.dilate(h.astype(np.uint8), kernel).astype(bool) for h in hands]
+    out = [h.copy() for h in hands]
+    for obj in objects:
+        touching = [i for i, g in enumerate(grown) if (g & obj).any()]
+        for i in touching:
+            out[i] |= obj & ~hands[i]
+    return out
 
 
 class Sam3:
@@ -74,6 +92,21 @@ class Sam3:
         raise RuntimeError("no SAM 3 checkpoint loaded: " + " | ".join(tried))
 
     def judge(self, jpeg, with_masks=False):
+        """autocast "float16" runs the model in half precision on MPS: 1.73 to 1.56 s median, same verdicts (results/held)."""
+        import contextlib
+        import torch
+        dtype = self.cfg.get("autocast")
+        context = torch.autocast(self.source["device"], dtype=getattr(torch, dtype)) if dtype else contextlib.nullcontext()
+        with context:
+            return self._judge(jpeg, with_masks)
+
+    def _held(self, state):
+        found = []
+        for word in self.cfg["held_words"]:
+            found += list(self.processor.set_text_prompt(word, state)["masks"][:, 0].cpu().numpy())
+        return found
+
+    def _judge(self, jpeg, with_masks=False):
         import cv2
         import numpy as np
         from PIL import Image
@@ -85,7 +118,7 @@ class Sam3:
             masks[word] = self.processor.set_text_prompt(word, state)["masks"][:, 0].cpu().numpy()
         babies = masks[self.cfg["baby_word"]]
         baby = babies.any(axis=0) if len(babies) else np.zeros(frame.shape[:2], bool)
-        hands = list(masks[self.cfg["hand_word"]])
+        hands = holding(list(masks[self.cfg["hand_word"]]), self._held(state), self.cfg)
         verdict, rings = ring_state(hands, baby, self.cfg)
         reply = {"verdict": verdict, "seconds": round(time.monotonic() - started, 3), "rings": rings}
         if with_masks:
