@@ -119,7 +119,8 @@ STEPS = [
     (30, "13:16", A, "le di 100", None, None),
     (30, "13:18", A, "q?", None, None),
     (30, "13:19", A, "fue una sola, la mande 2 veces", None, None),
-    (30, "15:00", B, "tiene fiebre le doy paracetamol?", None, None),
+    # PR #97 logs the fever as a note for the pediatrician, with the no-advice line.
+    (30, "15:00", B, "tiene fiebre le doy paracetamol?", ("add", N()), None),
     (30, "16:40", A, "pecho izq 12 min a las 16:20", ("add", F("left breast", minutes=12, at="16:20")), None),
     (30, "16:45", A, "borra esa ultima toma, no fue", ("del", 30, "16:20", "feeding"), None),
     # Night 3, Oct 31

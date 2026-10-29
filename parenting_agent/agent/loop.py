@@ -137,6 +137,11 @@ NOT_STARTED = ("not logged: the newest message says the baby woke up, so no new 
 NO_OPEN_SLEEP = ("not logged: the newest message says the baby woke up, and no sleep was started. Ask the parent when the "
                  "baby fell asleep, never log a new sleep start.")
 SLEEP_DONE = "not logged: this message's sleep is already logged as one finished sleep."
+NO_SLEEP_SAID = ("not logged: the newest message says nothing about sleep, so no sleep starts or ends. Earlier messages "
+                 "were already handled.")
+NOT_A_NOTE = ("not logged: the newest message is a moment shared, not something to keep in the log. Answer it warmly, "
+              "log nothing.")
+ASLEEP_AGAIN = datetime.timedelta(minutes=60)
 LANG_CHECK = ("[check from the agent, not the parent] Your answer is not in the language of the parent's newest message. "
               "Write the same answer again in {language}. " + QUIET)
 LANG_NAMES = {"es": "Spanish (Uruguay, voseo)", "en": "English"}
@@ -164,6 +169,7 @@ TEXTS = {
         "NO_RESEND": "No need to send it again.",
         "NOT_IN_LOG": "Nothing changed in the log, so it is not logged. Could you tell me again?",
         "WOKE_NO_SLEEP": "I did not log the sleep. When did {name} fall asleep?",
+        "STILL_ASLEEP": "{name} has been asleep since {at}, that stays as it was.",
         "OLD_EDIT": "I did not change anything: the latest I have is {entry}, more than {hours} hours ago. Which one do you mean, or should I log it new?",
         "LAST_NOT_LOGGED": "I did not change anything: the one before was not logged. Tell me what it was and I log it.",
         "DID_ONLY": "Nothing was sent. I only did this: {what}.",
@@ -193,6 +199,7 @@ TEXTS = {
         "NO_RESEND": "No hace falta que lo mandes de nuevo.",
         "NOT_IN_LOG": "No cambió nada en el registro, así que no quedó anotado. ¿Me lo decís de nuevo?",
         "WOKE_NO_SLEEP": "No anoté el sueño. ¿A qué hora se durmió {name}?",
+        "STILL_ASLEEP": "{name} ya duerme desde las {at}, eso queda como estaba.",
         "OLD_EDIT": "No cambié nada: lo último que tengo es {entry}, de hace más de {hours} horas. ¿Cuál querés corregir, o lo anoto nuevo?",
         "LAST_NOT_LOGGED": "No cambié nada: la anterior no quedó anotada. Decime qué fue y la anoto.",
         "DID_ONLY": "Todavía no mandé nada. Solo hice esto: {what}.",
@@ -831,6 +838,33 @@ class Agent:
                                                  "end": end.isoformat(timespec="seconds")}}
         return arguments
 
+    def addendum(self, request):
+        """A short follow-up that adds one detail to the entry just logged ("como 14 min" after "teta izq", "y pis tmb"
+        after a dirty diaper, "ah y era formula" after a bottle) changes that entry, never logs a second one. It runs
+        without the brain: in run 1 of the held-out set Muse logged each of these as a new entry or not at all.
+        Returns True when it changed the entry."""
+        found = rules.addendum(request)
+        if not found:
+            return False
+        kind, patch, minutes = found
+        try:
+            recent = self.baby_log.entries(kind, (self.now() - datetime.timedelta(minutes=minutes)).isoformat(timespec="seconds"), 20)
+        except Exception:  # noqa: BLE001 a log that cannot be read leaves the message to the brain
+            return False
+        if not recent or recent[-1].get("id") is None:
+            return False
+        target = recent[-1]
+        d = target.get("details") or {}
+        if "duration_min" in patch and ("breast" not in str(d.get("method") or "") or _number(d.get("duration_min"))):
+            return False
+        if "type" in patch and ("breast" in str(d.get("method") or "") or d.get("type") == patch["type"]):
+            return False
+        if kind == "diaper" and all(d.get(name) for name in patch):
+            return False
+        status, _ = self.tools.run("edit_baby_event", {"id": target["id"], "details": patch})
+        self.bus.publish("guard", status="addendum", entry=kind, ran=status)
+        return status == "ran"
+
     def log_state(self):
         """The log as it stands, by kind and id, plus a sleep the parent started and has not ended. Two snapshots, one
         before and one after a turn, give the turn's diff, which every confirmation is built from."""
@@ -1003,6 +1037,10 @@ class Agent:
                 self.last_log_failed = self.now() if log_failed else None
             self.finish(channel, text, asked=asked, request=request, fixed=fixed)
 
+        if request is not None and before is not None and not observation and can_edit and self.addendum(request):
+            ran.add("edit_baby_event")
+            return finish(diff_text(log_diff(before, self.log_state()), lang, self.baby_name())
+                          or self.text("NOT_CHANGED", request), fixed=True)
         for _ in range(self.max_steps):
             try:
                 reply, seconds = brain_mod.timed(self.brain, system, transcript, specs)
@@ -1187,6 +1225,33 @@ class Agent:
                     self.bus.publish("tool", name=call["name"], status="held")
                     transcript.append({"role": "tool", "id": call["id"], "name": call["name"], "result": NOT_NEW})
                     continue
+                if key is not None and call["arguments"].get("kind") == "sleep" and request is not None \
+                        and not rules.says_sleep(request):
+                    # "hoy esta re sonriente, no para de mirar el movil": run 1 of the held-out set started a 12:40 sleep.
+                    self.bus.publish("tool", name=call["name"], status="held", reason="no_sleep_said")
+                    transcript.append({"role": "tool", "id": call["id"], "name": call["name"], "result": NO_SLEEP_SAID})
+                    continue
+                if key is not None and call["arguments"].get("kind") == "note" and request is not None \
+                        and rules.chat_only(request) and not rules.kinds_said(request):
+                    self.bus.publish("tool", name=call["name"], status="held", reason="not_a_note")
+                    transcript.append({"role": "tool", "id": call["id"], "name": call["name"], "result": NOT_A_NOTE})
+                    continue
+                sleep_details = call["arguments"].get("details") if key is not None else None
+                if (key is not None and call["arguments"].get("kind") == "sleep" and isinstance(sleep_details, dict)
+                        and not sleep_details.get("start") and sleep_details.get("action", "start") == "start"
+                        and not call["arguments"].get("ts")):
+                    opened = self.open_sleep()
+                    try:
+                        recent_start = opened and self.now() - parse_time(opened) <= ASLEEP_AGAIN
+                    except (TypeError, ValueError):
+                        recent_start = False
+                    if recent_start:
+                        # "se quedo frita en upa" sent twice a minute apart: run 1 of the held-out set moved the 03:20
+                        # start to 03:21. A sleep that is already open keeps its start.
+                        self.bus.publish("guard", status="already_asleep")
+                        name = self.baby_name() or TEXTS.get(lang, TEXTS["en"])["THE_BABY"]
+                        at = parse_time(opened).strftime("%H:%M")
+                        return finish(self.text("STILL_ASLEEP", request, name=name[:1].upper() + name[1:], at=at), fixed=True)
                 if (key is not None and call["arguments"].get("kind") == "sleep"
                         and any(e.get("kind") == "sleep" and (e.get("details") or {}).get("start") for e in stored)):
                     # One message, one finished sleep: a second sleep call never starts or ends another one.

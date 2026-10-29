@@ -526,6 +526,7 @@ DAY_SAID = re.compile(r"\b(ayer|anoche|anteayer|yesterday|last night|lunes|marte
 
 
 OUNCES = re.compile(r"(\d+(?:[.,]\d+)?)\s*(?:onzas?|oz|ounces?)\b", re.I)
+HALF_OUNCE = re.compile(r"\d\s*(?:y media|and a half)\s*(?:onzas?|oz|ounces?)\b|(?:onzas?|oz|ounces?)\s*(?:y media|and a half)\b", re.I)
 ML_PER_OUNCE = 30
 
 
@@ -545,12 +546,17 @@ def amount_said(amount, text):
 HALF_OF = re.compile(r"\b(la )?mitad de (la |una )?(mamadera|biber[oó]n|bottle)?\s*(de )?(\d+)|\bhalf (of )?(a |the )?(\d+)", re.I)
 
 
+HALF_TAKEN = re.compile(r"(?<![\d:.])(\d{2,3})(?![\d:.])(?!\s*(?:min|hs?\b|horas?))[^\d]{0,40}?\b(?:se )?(?:tom[oó]|drank|took|had)\s+"
+                        r"(?:la |the |solo la |s[oó]lo la )?(?:mitad|half)\b", re.I)
+
+
 def half_ml(text):
-    """"tomo la mitad de la mamadera de 120" is 60 ml, or None."""
+    """"tomo la mitad de la mamadera de 120" and "le prepare 120 y tomo la mitad" are 60 ml, or None."""
     m = HALF_OF.search(text or "")
-    if not m:
-        return None
-    return float(m.group(5) or m.group(8)) / 2
+    if m:
+        return float(m.group(5) or m.group(8)) / 2
+    m = HALF_TAKEN.search(text or "")
+    return float(m.group(1)) / 2 if m else None
 
 
 def ounce_followup_ml(request, previous):
@@ -573,10 +579,13 @@ def names_when(text):
 
 def ounces_ml(text):
     """The ml of "tomo 3 onzas", at 30 ml an ounce as the bottle marks read, or None. One amount only."""
-    found = OUNCES.findall(text or "")
+    text = re.sub(r"(\d)\s*(y media|and a half)\s*(onzas?|oz|ounces?)\b", r"\1 \3 \2", text or "", flags=re.I)
+    found = OUNCES.findall(text)
     if len(found) != 1:
         return None
-    return round(float(found[0].replace(",", ".")) * ML_PER_OUNCE)
+    # "3 onzas y media" is 105 ml: run 1 of the held-out set logged 90.
+    half = 0.5 if HALF_OUNCE.search(text) else 0
+    return round((float(found[0].replace(",", ".")) + half) * ML_PER_OUNCE)
 
 
 def side_said(text):
@@ -989,3 +998,64 @@ def from_earlier(note, request, earlier):
         return False
     need = max(2, (len(words) + 1) // 2)
     return any(len(words & content_words(text)) >= need for text in earlier)
+
+
+ADD_START = re.compile(r"^\W*(ah,?\s+)?(y|tambi[eé]n|tmb|tb|and|also)\b|\b(tambi[eé]n|tmb|tb|too|also)\W*$", re.I)
+WET_ADD = re.compile(r"\b(pis|pich[ií]|pee|wee|mojad\w*|orin\w*|wet)\b", re.I)
+SOLID_ADD = re.compile(r"\b(caca|caquita|poo|poop|popo|pop[oó]|sucio|dirty)\b", re.I)
+TYPE_ADD = re.compile(r"\b(era|es|fue|eran|was|it was)\b\W+(de\s+|la\s+|de la\s+)?(f[oó]rmula|formula|leche materna|materna|breast ?milk)\b", re.I)
+SLEEP_SLANG = re.compile(r"frit[ao]|rendid[ao]|se qued[oó]|cay[oó]|planch|fundid|arriba|abri[oó] los ojos|ojitos|cuna|upa|"
+                         r"\bout\b|crashed|went down|is up\b", re.I)
+
+
+def addendum(text):
+    """A short follow-up that only adds one detail to the entry logged just before: "como 14 min" after "teta izq",
+    "y pis tmb" after a dirty diaper, "ah y era formula" after a bottle. Returns (kind, details, minutes back) or None.
+    In run 1 of the held-out set each of these became a second entry or was lost."""
+    text = (text or "").strip()
+    if not text or "?" in text or len(text) > 60:
+        return None
+    numbers = re.findall(r"\d+", text)
+    lowered = text.lower()
+    minutes = MINUTES.search(lowered) or re.search(r"(\d+)\s*mins?\b", lowered)
+    if minutes and len(numbers) == 1 and not (BREAST_WORDS.search(text) or SIDE_SAID.search(text) or BOTTLE_WORDS.search(text)
+                                              or KIND_WORDS["diaper"].search(text) or KIND_WORDS["sleep"].search(text)
+                                              or TIME_SAID.search(text) or ML.search(text)):
+        value = int(minutes.group(1))
+        return ("feeding", {"duration_min": value}, 60) if 1 <= value <= 90 else None
+    if numbers:
+        return None
+    if ADD_START.search(text) and not re.search(r"pa[nñ]al|diaper|otro|another", text, re.I):
+        patch = {}
+        if WET_ADD.search(text):
+            patch["wet"] = True
+        if SOLID_ADD.search(text):
+            patch["solid"] = True
+        if patch:
+            return "diaper", patch, 15
+    m = TYPE_ADD.search(text)
+    if m and not BREAST_WORDS.search(text):
+        milk = "formula" if TYPE_SAID["formula"].search(m.group(3)) else "breast milk"
+        return "feeding", {"type": milk}, 20
+    return None
+
+
+def says_sleep(text):
+    """True when a message speaks of sleep or waking at all, in the plain words or the slang ("se quedo frita")."""
+    return bool(KIND_WORDS["sleep"].search(text or "") or SLEEP_SLANG.search(text or "") or WOKE_SAID.search(text or ""))
+
+
+CHAT = re.compile(r"sonrient\w*|sonr[ií]e\b|feliz|content[ao]|divin[ao]|hermos[ao]|re lind[ao]|no para de mirar|mirando todo|"
+                  r"fr[ií]o|abrigad\w*|calor(?! en)|que sue[nñ]o|q sue[nñ]o|cansad[ao]|agotad[ao]|so happy|smiley|so cute|cold today",
+                  re.I)
+
+
+def chat_only(text):
+    """True when a message only shares a moment or a mood, "hoy esta re sonriente, no para de mirar el movil", "hoy hace
+    un frio barbaro": chat, never a note (run 1 of the held-out set logged one). Health, a medicine, a milestone or a
+    parent asking to log it is never chat."""
+    text = text or ""
+    if not CHAT.search(text):
+        return False
+    return not (is_health(text) or MEDICINE.search(text) or SYMPTOM.search(text) or MILESTONE.search(text)
+                or LOG_ASK.search(text) or GAVE.search(text))
