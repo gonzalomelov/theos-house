@@ -35,7 +35,7 @@ LISTS = {
         "source": "logistics only, ask the hospital what they provide",
         "items": [
             ("ask_hospital", "Ask the hospital what they give and what to bring, and where to park", None, 35),
-            ("ids", "Both IDs and the health provider card", None, 28),
+            ("ids", "Both cédulas and the mutualista card", None, 28),
             ("papers", "Admission papers and any forms the hospital asked for", None, 28),
             ("chargers", "Phone chargers and a long cable", None, 28),
             ("ceci_clothes", "Clothes for Ceci for 2 or 3 days, slippers and toiletries", None, 28),
@@ -81,6 +81,70 @@ LISTS = {
     },
 }
 ORDER = ("car_seat", "nursery", "white_noise", "hospital_bag")
+
+# The same items in Uruguayan Spanish, for a Spanish morning nudge. An item a parent added or reworded keeps its own words.
+ES = {
+    "nursery": {
+        "layout": "Elegir la distribución: A, el escritorio en la pared de adentro, o B, el escritorio en la ventana",
+        "crib": "La cuna, 130 x 70 cm, en la pared larga frente a la del escritorio",
+        "dresser": "La cómoda con el cambiador, 120 x 45 cm, a 82 cm de la pared de la puerta para que la puerta abra",
+        "anchor": "Fijar la cómoda y el estante a la pared",
+        "walkway": "Dejar 70 cm libres entre la cómoda y la cuna",
+        "shelf": "El estante a 152 cm, nunca en la pared arriba de la cuna",
+        "rocker": "La mecedora Alba en la esquina de la pared de la puerta",
+        "rug": "La alfombra de estrellas, 145 x 92 cm, entre la cómoda y la cuna",
+        "bins": "El tacho de pañales, el canasto de ropa y el de juguetes en su lugar",
+        "night_light": "La luz para las tomas de noche: la del estudio, cálida y baja, probarla una vez",
+        "heater": "Decidir dónde va la estufa del enchufe Shelly, lejos de la cuna",
+        "noise_spot": "La máquina de ruido blanco en la esquina más lejos de la cuna",
+    },
+    "hospital_bag": {
+        "ask_hospital": "Preguntar en el sanatorio qué dan, qué llevar y dónde estacionar",
+        "ids": "Las cédulas de los dos y el carné de la mutualista",
+        "papers": "Los papeles de ingreso y lo que haya pedido el sanatorio",
+        "chargers": "Cargadores del celular y un cable largo",
+        "ceci_clothes": "Ropa para Ceci para 2 o 3 días, pantuflas y cosas de baño",
+        "gonza_clothes": "Una muda de ropa para Gonza",
+        "theo_outfit": "La ropa de salida de Theo en talle recién nacido y de 0 a 3 meses, un gorro y una manta",
+        "diapers": "Pañales de recién nacido y toallitas, si el sanatorio pide llevarlos",
+        "snacks": "Algo para picar y botellas de agua",
+        "payment": "Una tarjeta y algo de efectivo para el estacionamiento",
+        "car_seat_in": "La silla del auto instalada antes de cargar el bolso (lista de la silla)",
+    },
+    "car_seat": {
+        "model": "Revisar que la caja de la Litetrax traiga el huevito i-Snug 2 (Europa y Nueva Zelanda) y no el Gemm (EE.UU.)",
+        "buy": "Comprar el sistema de viaje Litetrax (lo compra Gonza, el agente nunca paga)",
+        "manual": "Leer la parte 'instalación sin base' del manual",
+        "seat_spot": "Elegir el asiento: el del medio atrás solo con cinturón, ISOFIX está en los dos de los costados",
+        "no_front": "Nunca adelante con el airbag prendido",
+        "first_install": "Primera instalación en el Model 3 con el coach de la silla en la Mac: decí 'car seat coach'",
+        "hand_checks": "Que se mueva menos de 2,5 cm en el paso del cinturón y la prueba del pellizco del arnés",
+        "technician": "Reservar una revisión con un técnico certificado en sillas de auto",
+        "practice": "Practicar sacar y poner el huevito del auto unas cuantas veces",
+        "register": "Registrar la silla con Joie para los avisos de retiro",
+    },
+    "white_noise": {
+        "esp32": "ESP32-S3 N16R8, placa B",
+        "usb_power": "Fuente USB-C",
+        "amp": "Comprar un amplificador I2S MAX98357A",
+        "speaker": "Comprar un parlante de 3 W y 4 ohm, de 40 a 50 mm",
+        "breadboard": "Protoboard: el amplificador en la placa B por I2S, ruido blanco, rosa y marrón",
+        "by_ear": "Elegir el sonido de oído con Ceci",
+        "esphome": "ESPHome: prender y apagar, tipo de ruido, volumen con tope, temporizador, luz de noche",
+        "measure": "Medir en la cuna con un medidor de dB en el celular, tope de 50 dB ahí, y pasarle los números al agente",
+        "enclosure": "Imprimir la caja",
+        "automation": "Home Assistant: prender a la hora de dormir, bajar el temporizador cuando se duerme",
+    },
+}
+
+
+def text_in(lang, item):
+    """An item's words in the nudge's language: the Spanish ones only for an item still worded as in the plan."""
+    if lang == "es":
+        seeded = {row[0]: row[1] for row in LISTS.get(item["list"], {}).get("items", [])}
+        if seeded.get(item.get("id") or item.get("item_id")) == item["text"]:
+            return ES.get(item["list"], {}).get(item.get("id") or item.get("item_id"), item["text"])
+    return item["text"]
 
 
 def seed_items():

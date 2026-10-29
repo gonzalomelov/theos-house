@@ -6,6 +6,7 @@ import re
 import string
 import unittest
 
+from parenting_agent.agent import rules
 from parenting_agent.channels import telegram as telegram_mod
 from parenting_agent.channels.messaging import Incoming
 from parenting_agent.families import texts
@@ -80,7 +81,7 @@ class Onboarding(unittest.TestCase):
         self.assertEqual(replies, [ES["WELCOME"] + ES["ASK_NAME"], ES["ASK_BORN"].format(name="Mia"), ES["ASK_PARTNER"],
                                    ES["READY"].format(name="Mia")])
         self.assertEqual(app.family(family_of(app, "111")).fact("birth_date"), "2026-10-12")
-        self.assertEqual(text(app.handle("111", "111", "mamadera 120 ml")), "Listo, anotado.")
+        self.assertRegex(text(app.handle("111", "111", "mamadera 120 ml")), r"^Anoté la mamadera de 120 ml de las \d\d:\d\d\.$")
 
     def test_english_app_still_onboards_in_english(self):
         app = make(self)
@@ -115,8 +116,8 @@ class NoEnglishLeak(unittest.TestCase):
             say(message)
         say("hola")
         say("hola")  # the brain is over the family cap from here, the free rules answer in Spanish
-        self.assertEqual(say("mamadera 120 ml"), "Listo, anotado.")
-        self.assertEqual(say("pañal mojado y sucio"), "Listo, anotado.")
+        self.assertRegex(say("mamadera 120 ml"), r"^Anoté la mamadera de 120 ml de las \d\d:\d\d\.$")
+        self.assertRegex(say("pañal mojado y sucio"), r"^Anoté el pañal mojado y sucio de las \d\d:\d\d\.$")
         self.assertIn("1 toma", say("¿cuánto tomó hoy?"))
         f = app.family(family_of(app, "111"))
         f.log.add("feeding", {"amount_ml": 100, "start": "2026-10-28T06:00:00-03:00"}, "2026-10-28T06:15:00-03:00")
@@ -213,8 +214,15 @@ class Medical(unittest.TestCase):
         brain = CountingBrain()
         app = make(self, brain=brain, PA_FAMILIES_BRAIN="claude")
         onboard(app, "111", lang="es")
-        for question in ("tiene fiebre", "¿le doy ibuprofeno?", "vomitó dos veces", "tiene tos", "¿es normal este sarpullido?"):
+        for question in ("¿le doy ibuprofeno?", "¿es normal este sarpullido?", "tiene fiebre, ¿le doy algo?"):
             self.assertEqual(text(app.handle("111", "111", question)), ES["REFUSAL"])
+        # What the parent saw, with no question, is noted in their words and the advice is refused, in one turn.
+        for seen in ("tiene fiebre", "vomitó dos veces", "tiene tos", "vomito un poquito dsp de la toma"):
+            reply = text(app.handle("111", "111", seen))
+            self.assertRegex(reply, r"^Anoté una nota a las \d\d:\d\d: \"" + seen + r"\"\. ")
+            self.assertIn(rules.NO_ADVICE["es"], reply)
+        notes = [e["details"]["text"] for e in app.family(family_of(app, "111")).log.entries("note")]
+        self.assertEqual(notes, ["tiene fiebre", "vomitó dos veces", "tiene tos", "vomito un poquito dsp de la toma"])
         self.assertEqual(brain.calls, 0)
 
     def test_spanish_advice_words_stop_a_reminder(self):

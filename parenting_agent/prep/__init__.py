@@ -45,11 +45,21 @@ ASK_FIRST = ("prep_to_home_assistant",)
 PROMPT_FACT = ("Theo is not born yet, the family is getting ready. Prep, purchases, the nursery, the hospital bag, the car "
                "seat, the white noise machine and appointments never go in the baby log: use the prep tools "
                "(prep_next, prep_list, prep_check, prep_add, add_appointment, appointments, nursery_plan). Appointments "
-               "are logistics only: never comment on anything medical.")
+               "are logistics only: never comment on anything medical. The family is in Uruguay: in Spanish say cédula "
+               "(never DNI), mutualista (never obra social or prepaga), sanatorio, mamadera (never biberón), and never "
+               "an English word.")
 LOGISTICS_ONLY = "I keep only the logistics of an appointment: what, when, where and what to bring. Nothing medical."
 NO_SECRETS = ("a code, a PIN, a password or a long number is never kept in a prep list or an appointment, it would go out "
               "in the morning nudge. Nothing was kept")
 NUDGE_FAILED = ("The morning prep message failed today ({error}). Ask me what is next and I will answer from the lists.")
+
+
+MONTHS_ES = ("enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre",
+             "noviembre", "diciembre")
+NUDGE = {"en": {"hello": "Good morning.", "appointment": "Next appointment", "next": "Next up:", "late": " (late)",
+                "end": "Tell me when one is done, or ask what is next."},
+         "es": {"hello": "Buen día.", "appointment": "Próxima cita", "next": "Lo que sigue:", "late": " (atrasado)",
+                "end": "Avisame cuando hagas uno, o preguntame qué sigue."}}
 
 
 def parse_day(value):
@@ -282,9 +292,14 @@ class Prep(Plugin):
         self.publish("due_date")
         return f"due date set to {day.strftime('%b %d %Y')}"
 
-    def countdown(self):
+    def countdown(self, lang="en"):
         day, estimate = self.due_date()
         left = (day - self.now().date()).days
+        if lang == "es":
+            when = f"el {day.day} de {MONTHS_ES[day.month - 1]}"
+            if left < 0:
+                return f"la fecha de parto, {when}, fue hace {-left} días"
+            return f"{'unos ' if estimate else ''}{left} días para la fecha de parto, {when}{' (estimada)' if estimate else ''}"
         when = day.strftime("%b %d").replace(" 0", " ")
         if left < 0:
             return f"the due date, {when}, was {-left} days ago"
@@ -347,23 +362,36 @@ class Prep(Plugin):
 
     # The morning nudge
 
-    def nudge_text(self):
+    def nudge_lang(self):
+        """The nudge's language: prep.lang when set to en or es, else the language most of the family's recent messages
+        are in, so a Spanish family gets a Spanish nudge."""
+        lang = self.cfg.get("lang")
+        if lang in NUDGE:
+            return lang
+        said = [m["text"] for m in self.agent.memory.recent_messages(40) if m["role"] == "user" and m["text"][:1] != "["]
+        spanish = sum(1 for text in said if rules.looks_spanish(text))
+        return "es" if said and spanish * 2 > len(said) else "en"
+
+    def nudge_text(self, lang=None):
+        lang = lang or self.nudge_lang()
+        words = NUDGE[lang]
         nxt = self.next()
-        lines = [f"Good morning. {nxt['countdown'][0].upper()}{nxt['countdown'][1:]}."]
+        countdown = self.countdown(lang)
+        lines = [f"{words['hello']} {countdown[0].upper()}{countdown[1:]}."]
         appointment = nxt["next_appointment"]
         if appointment:
             moment = datetime.datetime.fromisoformat(appointment["when"])
-            lines.append(f"Next appointment: {appointment['title']}, {moment.strftime('%a %b %d %H:%M')}"
+            lines.append(f"{words['appointment']}: {appointment['title']}, {moment.strftime('%d/%m %H:%M') if lang == 'es' else moment.strftime('%a %b %d %H:%M')}"
                          + (f", {appointment['place']}" if appointment.get("place") else "") + ".")
         if nxt["items"]:
-            lines.append("Next up:")
+            lines.append(words["next"])
             for item in nxt["items"]:
                 if rules.holds_code(item["text"]):
                     # An item kept before round 2 can hold a code: the push never carries it.
-                    lines.append("- an item that holds a code, ask me for it")
+                    lines.append("- an item that holds a code, ask me for it" if lang == "en" else "- un ítem que tiene un código, pedímelo")
                     continue
-                lines.append(f"- {item['text'].split(': http')[0]}" + (" (late)" if item["late"] else ""))
-        lines.append("Tell me when one is done, or ask what is next.")
+                lines.append(f"- {lists_mod.text_in(lang, item).split(': http')[0]}" + (words["late"] if item["late"] else ""))
+        lines.append(words["end"])
         return "\n".join(lines)
 
     def gonza_chat(self):

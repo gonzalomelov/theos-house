@@ -1,0 +1,323 @@
+{
+ "brain": "meta-models/muse-spark-open-1026",
+ "messages": 70,
+ "wrong_log_states": 2,
+ "reply_misses": 1,
+ "fallbacks": 0,
+ "usd": 0.5683,
+ "misses": [
+  {
+   "step": 36,
+   "message": "tomo 3 onzas",
+   "reply": "Anoté la mamadera de 89 ml de las 08:00.",
+   "missing": [
+    {
+     "at": "08:00",
+     "day": 30,
+     "kind": "feeding",
+     "method": "bottle",
+     "min": 0,
+     "ml": 90.0,
+     "type": "unknown"
+    }
+   ],
+   "extra": [
+    {
+     "at": "08:00",
+     "day": 30,
+     "kind": "feeding",
+     "method": "bottle",
+     "min": 0,
+     "ml": 89.0,
+     "type": "unknown"
+    }
+   ],
+   "tools": [
+    "log_baby_event({\"kind\": \"feeding\", \"details\": {\"amount_ml\": 89, \"method\": \"bottle\"}})"
+   ]
+  },
+  {
+   "step": 37,
+   "message": "me equivoque, eran 2 onzas",
+   "reply": "Corregí la mamadera de las 08:00: 89 ml → 59 ml.",
+   "missing": [
+    {
+     "at": "08:00",
+     "day": 30,
+     "kind": "feeding",
+     "method": "bottle",
+     "min": 0,
+     "ml": 60.0,
+     "type": "unknown"
+    }
+   ],
+   "extra": [
+    {
+     "at": "08:00",
+     "day": 30,
+     "kind": "feeding",
+     "method": "bottle",
+     "min": 0,
+     "ml": 59.0,
+     "type": "unknown"
+    }
+   ],
+   "tools": [
+    "edit_baby_event({\"last\": true, \"kind\": \"feeding\", \"details\": {\"amount_ml\": 59}})"
+   ]
+  }
+ ],
+ "reply_problems": [
+  {
+   "step": 45,
+   "what": "a claimed log with nothing logged",
+   "reply": "Perdón, me expliqué mal. Me llegaron dos mensajes iguales de 100 ml a las 13:15 y 13:16. Decime si fue una sola mamadera mandada dos veces, o si fueron dos mamaderas distintas, así lo dejo bien anotado."
+  }
+ ],
+ "final_log": [
+  {
+   "kind": "feeding",
+   "day": 29,
+   "at": "00:40",
+   "method": "bottle",
+   "ml": 100.0,
+   "type": "formula",
+   "min": 0
+  },
+  {
+   "kind": "diaper",
+   "day": 29,
+   "at": "01:30",
+   "wet": true,
+   "solid": false
+  },
+  {
+   "kind": "feeding",
+   "day": 29,
+   "at": "03:10",
+   "method": "left breast",
+   "ml": null,
+   "type": "breast milk",
+   "min": 15
+  },
+  {
+   "kind": "diaper",
+   "day": 29,
+   "at": "03:40",
+   "wet": true,
+   "solid": true
+  },
+  {
+   "kind": "sleep",
+   "day": 29,
+   "at": "06:20",
+   "start": "04:05"
+  },
+  {
+   "kind": "feeding",
+   "day": 29,
+   "at": "06:25",
+   "method": "bottle",
+   "ml": 90.0,
+   "type": "unknown",
+   "min": 0
+  },
+  {
+   "kind": "feeding",
+   "day": 29,
+   "at": "06:26",
+   "method": "bottle",
+   "ml": 90.0,
+   "type": "unknown",
+   "min": 0
+  },
+  {
+   "kind": "feeding",
+   "day": 29,
+   "at": "08:15",
+   "method": "left breast",
+   "ml": null,
+   "type": "breast milk",
+   "min": 10
+  },
+  {
+   "kind": "feeding",
+   "day": 29,
+   "at": "09:30",
+   "method": "bottle",
+   "ml": 110.0,
+   "type": "unknown",
+   "min": 0
+  },
+  {
+   "kind": "diaper",
+   "day": 29,
+   "at": "12:30",
+   "wet": false,
+   "solid": true
+  },
+  {
+   "kind": "note",
+   "day": 29,
+   "at": "13:00"
+  },
+  {
+   "kind": "feeding",
+   "day": 30,
+   "at": "00:20",
+   "method": "bottle",
+   "ml": 120.0,
+   "type": "unknown",
+   "min": 0
+  },
+  {
+   "kind": "feeding",
+   "day": 30,
+   "at": "02:00",
+   "method": "right breast",
+   "ml": null,
+   "type": "breast milk",
+   "min": 18
+  },
+  {
+   "kind": "diaper",
+   "day": 30,
+   "at": "02:30",
+   "wet": true,
+   "solid": false
+  },
+  {
+   "kind": "sleep",
+   "day": 30,
+   "at": "05:00",
+   "start": "03:20"
+  },
+  {
+   "kind": "feeding",
+   "day": 30,
+   "at": "05:15",
+   "method": "bottle",
+   "ml": 80.0,
+   "type": "breast milk",
+   "min": 0
+  },
+  {
+   "kind": "feeding",
+   "day": 30,
+   "at": "07:30",
+   "method": "both breasts",
+   "ml": null,
+   "type": "breast milk",
+   "min": 25
+  },
+  {
+   "kind": "feeding",
+   "day": 30,
+   "at": "08:00",
+   "method": "bottle",
+   "ml": 59.0,
+   "type": "unknown",
+   "min": 0
+  },
+  {
+   "kind": "diaper",
+   "day": 30,
+   "at": "10:30",
+   "wet": true,
+   "solid": false
+  },
+  {
+   "kind": "bath",
+   "day": 30,
+   "at": "12:00"
+  },
+  {
+   "kind": "feeding",
+   "day": 30,
+   "at": "13:15",
+   "method": "bottle",
+   "ml": 100.0,
+   "type": "unknown",
+   "min": 0
+  },
+  {
+   "kind": "feeding",
+   "day": 31,
+   "at": "00:50",
+   "method": "bottle",
+   "ml": 70.0,
+   "type": "formula",
+   "min": 0
+  },
+  {
+   "kind": "diaper",
+   "day": 31,
+   "at": "01:40",
+   "wet": true,
+   "solid": false
+  },
+  {
+   "kind": "feeding",
+   "day": 31,
+   "at": "03:00",
+   "method": "right breast",
+   "ml": null,
+   "type": "breast milk",
+   "min": 15
+  },
+  {
+   "kind": "feeding",
+   "day": 31,
+   "at": "04:30",
+   "method": "bottle",
+   "ml": 110.0,
+   "type": "unknown",
+   "min": 0
+  },
+  {
+   "kind": "sleep",
+   "day": 31,
+   "at": "07:10",
+   "start": "05:00"
+  },
+  {
+   "kind": "feeding",
+   "day": 31,
+   "at": "08:00",
+   "method": "both breasts",
+   "ml": null,
+   "type": "breast milk",
+   "min": 25
+  },
+  {
+   "kind": "feeding",
+   "day": 31,
+   "at": "09:30",
+   "method": "bottle",
+   "ml": 120.0,
+   "type": "unknown",
+   "min": 0
+  },
+  {
+   "kind": "note",
+   "day": 31,
+   "at": "11:20"
+  },
+  {
+   "kind": "diaper",
+   "day": 31,
+   "at": "13:00",
+   "wet": false,
+   "solid": true
+  },
+  {
+   "kind": "feeding",
+   "day": 31,
+   "at": "13:40",
+   "method": "bottle",
+   "ml": 60.0,
+   "type": "formula",
+   "min": 0
+  }
+ ]
+}

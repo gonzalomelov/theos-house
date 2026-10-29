@@ -50,8 +50,30 @@ such as addresses or phone numbers.
 LANGUAGE_NOTE = {
     "en": "Always reply in English, even when the parent writes in another language.\n",
     "es": ("Always reply in Rioplatense Spanish with voseo (vos escribís, mandá, querés), warm, short and in plain words, "
-           "even when the parent writes in English. Log entries keep their English field values.\n"),
+           "even when the parent writes in English. The family is in Uruguay: say mamadera (never biberón), cédula (never "
+           "DNI), mutualista (never obra social or prepaga), and never use an English word. Log entries keep their English "
+           "field values.\n"),
 }
+
+# The interval is said only from at least 4 feeds in the last day. With fewer, a time is still given when the feeds
+# are at most 6 hours apart: a longer gap means feeds are missing from the log, so only the last feed is named.
+MIN_FEEDS_DAY = 4
+FEW_FEEDS_MAX_GAP_MIN = 360
+SESSION_GAP = datetime.timedelta(minutes=30)
+
+
+def sessions(rows):
+    """The log rows with feeds that start within 30 minutes of the previous feed folded into it, for the rhythm."""
+    out, last = [], None
+    for row in sorted(rows, key=lambda r: patterns.when(r)):
+        if row["kind"] == "feeding":
+            start = patterns.when(row)
+            if last is not None and start - last < SESSION_GAP:
+                continue
+            last = start
+        out.append(row)
+    return out
+
 
 def _hm(minutes):
     h, m = divmod(int(round(minutes)), 60)
@@ -75,8 +97,37 @@ def parse_birth(text, today):
     return None
 
 
+# Words from Spain or Argentina a Uruguayan parent would not use, in any reply to a Spanish family.
+# Each masculine word becomes a feminine one, so its article changes with it: "el DNI" is "la cédula".
+ES_UY = [(r"biberones", "mamaderas"), (r"biber[oó]n", "mamadera"), (r"DNI", "cédula"),
+         (r"obra social(?: (?:o|y|u) (?:la )?prepaga)?", "mutualista"), (r"prepaga", "mutualista")]
+ARTICLE = {"el": "la", "un": "una", "del": "de la", "al": "a la", "los": "las", "unos": "unas", "este": "esta", "ese": "esa",
+           "tu": "tu", "su": "su", "la": "la", "una": "una", "las": "las"}
+
+
+def es_uy(text):
+    for word, local in ES_UY:
+        def swap(m):
+            article = m.group(1)
+            if not article:
+                return local
+            low = article.lower()
+            new = ARTICLE.get(low, article)
+            return (new[0].upper() + new[1:] if article[0].isupper() else new) + " " + local
+        articles = "(?i:el|un|del|al|los|unos|este|ese|la|una|las|tu|su)"
+        text = re.sub(rf"\b(?:({articles}) )?{word}\b", swap, text, flags=0 if word == "DNI" else re.I)
+    return text
+
+
 class FamilyAgent(Agent):
     health_gate = True
+    confirm_from_log = True
+
+    def say(self, channel, text):
+        super().say(channel, es_uy(text) if self.lang() == "es" else text)
+
+    def baby_name(self):
+        return self.memory.facts().get("baby_name", {}).get("value") or None
 
     def system_prompt(self):
         """The core prompt with the family's own facts only, and the family's language. Keys starting with _ are the
@@ -476,28 +527,47 @@ class Families:
     # What the agent says first
 
     def next_feed(self, f, now=None):
-        """The next feed from the rhythm engine, as a time from the family's own log. kind is next (still ahead),
-        now (due in the last 30 minutes), missing (no feed logged for a while, worth asking) or old (the last feed is
-        too long ago to guess, likely just not logged), or None before two feeds."""
+        """The next feed from the rhythm engine, as a time from the family's own log, or how long since the last feed.
+        kind is next (still ahead), now (due in the last 30 minutes), missing (no feed logged for a while, worth
+        asking), old (the last feed is too long ago to guess, likely just not logged), few (too few feeds in the last
+        day for an interval, so only the last feed and how long ago) or None before any feed.
+
+        Feeds that start within 30 minutes of the one before are one feed for the rhythm (a top-up, or one bottle
+        sent twice), and the interval is shown only when the last day holds at least MIN_FEEDS_DAY feeds: "every 12 h
+        40 min" from three feeds is no rhythm for a six week old."""
         now = now or self.now()
-        nxt = patterns.next_feed(f.log.rhythm_rows(), now)
-        if not nxt:
-            return {"text": f.t("NEED_TWO_FEEDS", name=f.name), "at": None, "kind": None}
+        rows = sessions(f.log.rhythm_rows())
+        feeds = patterns.feeds(rows, now)
+        if not feeds:
+            return {"text": f.t("NO_FEEDS_YET", name=f.name), "at": None, "kind": None}
+        last = patterns.when(feeds[-1]).astimezone(self.tz)
+        since = self.at_words(f, last, now)
+        ago = _hm((now - last).total_seconds() / 60)
+        out = {"at": None, "last": feeds[-1]["ref"]}
+        if now - last > datetime.timedelta(hours=self.s["reminder_max_gap_h"]):
+            return {**out, "kind": "old", "text": f.t("LAST_FEED_AT", name=f.name, since=since, ago=ago)}
+        day = [e for e in feeds if patterns.when(e) > patterns.when(feeds[-1]) - datetime.timedelta(hours=24)]
+        nxt = patterns.next_feed(rows, now)
+        few = len(day) < MIN_FEEDS_DAY
+        if not nxt or (few and nxt["gap_min"] > FEW_FEEDS_MAX_GAP_MIN):
+            return {**out, "kind": "few", "text": f.t("FEW_FEEDS", name=f.name, since=since, ago=ago)}
         minutes = round((nxt["at"] - now).total_seconds() / 60)
         when = patterns.hhmm(nxt["at"].astimezone(self.tz))
         out = {"at": nxt["at"], "last": nxt["computed_from"][-1]}
         if minutes >= 0:
+            if few:
+                return {**out, "kind": "next", "text": f.t("NEXT_FEED_FEW", name=f.name, when=when, minutes=minutes)}
             return {**out, "kind": "next", "text": f.t("NEXT_FEED", name=f.name, when=when, minutes=minutes, gap=_hm(nxt["gap_min"]))}
         if minutes >= -30:
             return {**out, "kind": "now", "text": f.t("NEXT_FEED_NOW", name=f.name, when=when)}
-        feeds = f.log.entries("feeding", None, 100_000)
-        last = datetime.datetime.fromisoformat(feeds[-1]["ts"]).astimezone(self.tz)
-        at = f.t("AT_TODAY", at=patterns.hhmm(last)) if last.date() == now.date() else (
-            f.t("AT_YESTERDAY", at=patterns.hhmm(last)) if last.date() == now.date() - datetime.timedelta(days=1)
-            else f.t("AT_DAY", day=last.strftime("%d/%m"), at=patterns.hhmm(last)))
-        if now - last <= datetime.timedelta(hours=self.s["reminder_max_gap_h"]):
-            return {**out, "kind": "missing", "text": f.t("NO_FEED_SINCE", name=f.name, since=at)}
-        return {**out, "kind": "old", "text": f.t("LAST_FEED_AT", name=f.name, since=at)}
+        return {**out, "kind": "missing", "text": f.t("NO_FEED_SINCE", name=f.name, since=since, ago=ago)}
+
+    def at_words(self, f, moment, now):
+        if moment.date() == now.date():
+            return f.t("AT_TODAY", at=patterns.hhmm(moment))
+        if moment.date() == now.date() - datetime.timedelta(days=1):
+            return f.t("AT_YESTERDAY", at=patterns.hhmm(moment))
+        return f.t("AT_DAY", day=moment.strftime("%d/%m"), at=patterns.hhmm(moment))
 
     def cry_text(self, f, now=None):
         """Why the baby may be crying, from the log only (the cry reason from issue #32), in the family's language.

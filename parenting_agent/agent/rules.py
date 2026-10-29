@@ -13,8 +13,10 @@ SPAN = re.compile(r"from\s+(\d{1,2})[:.](\d{2})\s+(?:to|until)\s+(\d{1,2})[:.](\
 MEDICAL = re.compile(r"\b(fever|temperature|medicine|medication|dose|dosage|paracetamol|ibuprofen|rash|vomit|sick|"
                      r"diagnos|should i give|is it normal|cough|infection|antibiotic|tylenol|acetaminophen|motrin|advil|"
                      r"calpol|nurofen|simethicone|gripe water|teething gel)", re.I)
-QUESTION_START = re.compile(r"^(when|how|what|did|has|have|is|was|why|cu[aá]nd[oa]|cu[aá]nt[oa]s?|qu[eé]|a qu[eé]|c[oó]mo|"
-                            r"d[oó]nde|por qu[eé]|para cu[aá]ndo)\b", re.I)
+# Tired parents skip the accents and the question mark: "a q hr le toca", "cuanto durmio", "y cuantos pañales".
+QUESTION_START = re.compile(r"^(y |and )?(when|how|what|did|has|have|is|was|why|cu[aá]nd[oa]|cu[aá]nt[oa]s?|qu[eé]|q|a qu[eé]|a q|"
+                            r"c[oó]mo|d[oó]nde|por qu[eé]|para cu[aá]ndo|hace cu[aá]nto|desde cu[aá]ndo|le toca|"
+                            r"toca\b|cada cu[aá]nto)\b", re.I)
 # Health words in Spanish, on top of the English ones in MEDICAL. A bottle the parent gives ("le doy la mamadera") is
 # not one of them, only a question about what to give ("le puedo dar").
 MEDICAL_ES = re.compile(r"\b(fiebre|temperatura|medicamento|medicina|remedio|dosis|paracetamol|ibuprofeno|sarpullido|"
@@ -84,17 +86,40 @@ HEALTH = re.compile(r"\b(can i|could i|should i|is it ok|is it safe|safe to|pued
                     r"cereal|honey|miel|water|agua|not (pooped|peed|eaten)|hasn'?t (pooped|peed|eaten)|"
                     r"no (hizo|ha hecho) (caca|pis)|in \d+ days|\d+ d[ií]as sin|hace \d+ d[ií]as)\b", re.I)
 # A message that corrects or removes an entry already in the log.
-EDIT = re.compile(r"\b(perd[oó]n|correg\w*|corrij\w*|cambi[aá](la|lo)?|borr[aá](la|lo)?|elimin[aá](la|lo)?|sac[aá](la|lo)|"
-                  r"me equivoqu[eé]|no eran?|nono|eran? \d+(?! *(mamaderas|tomas|pa[ñn]ales))|fue de \d+|fue \d+|(dos|2) veces|sin querer|duplicad\w*|repetid\w*|"
+# Typed at 3 AM: "nono eran 70", "ahh no, 110", "eran 70 nomas", "se mando doble", "me equivoque fueron 80".
+EDIT = re.compile(r"\b(perd[oó]n|perdon|correg\w*|corrij\w*|cambi[aá](la|lo)?|borr[aá](la|lo)?|elimin[aá](la|lo)?|sac[aá](la|lo)|"
+                  r"quit[aá](la|lo)?|me equivoqu[eé]|me confund\w*|no,? eran?|(no){2,}|no no|no+,? \d+|eran? (de )?\d+(?! *(mamaderas|tomas|pa[ñn]ales))|"
+                  r"eran? \d+ no|fue de \d+|fue \d+|fueron \d+(?! *(mamaderas|tomas|pa[ñn]ales))|no,? fue|no,? era|en realidad|o sea|"
+                  r"(ese|esa|eso|el|la|lo) .{0,25}\bera (solo|s[oó]lo|nada m[aá]s|de|un|una)\b|era (solo|s[oó]lo)\b|"
+                  r"(dos|2) veces|sin querer|duplicad\w*|repetid\w*|doble|se mand\w*|"
                   r"(it|that) was \d+|was \d+ not|not \d+|delete|remove|undo|wrong|mistake|sent (it )?twice|twice by|"
-                  r"correct (it|that)|fix (it|that)|change (it|that))\b", re.I)
+                  r"correct (it|that)|fix (it|that)|change (it|that)|actually)\b", re.I)
+# A message that asks for an entry to go, not only to be changed: a delete runs on one of these, or on a "sent twice"
+# only when the log really holds the entry twice.
+DELETE_SAID = re.compile(r"\b(borr[aá]\w*|elimin[aá]\w*|sac[aá]\w*|quit[aá]\w*|delete|remove|undo|no (le )?(di|dimos|dio|tom[oó])\b|"
+                         r"no (fue|hubo|pas[oó]) nada|no pas[oó]|nunca pas[oó]|never happened|didn'?t happen)", re.I)
+TWICE_SAID = re.compile(r"(dos|2) veces|sin querer|duplic|repet|doble|se mand|lo mand|la mand|twice|by mistake|double", re.I)
+# A reply that says an entry was changed or removed. It goes out only when an edit or delete really ran in that turn.
+CLAIMS_CHANGE = re.compile(r"\b(correg[ií](do|da|dos|das)?|corrij[oe]|cambi[eé]|cambiad[oa]s?|actualic[eé]|actualizad[oa]s?|"
+                           r"modifiqu[eé]|modificad[oa]s?|borr[eé]|borrad[oa]s?|elimin[eé]|eliminad[oa]s?|saqu[eé]|quit[eé]|"
+                           r"quitad[oa]s?|fixed|corrected|deleted|removed|updated|changed)\b", re.I)
+NEGATED = re.compile(r"\b(no|not|nothing|never|nunca|nada|sin|n't)\b[^.!?]{0,25}$|n't\s*$", re.I)
 # The parent's answer to "did you send it twice or were there two bottles?"
-DOUBLE_ONCE = re.compile(r"(dos|2) veces|sin querer|repet|duplic|una sola|era una|fue una|la misma|me equivoqu|error|"
-                         r"twice|by mistake|same (one|bottle)|just one|only one|\bonce\b", re.I)
-DOUBLE_TWO = re.compile(r"(dos|2) mamaderas|fueron (dos|2)|son (dos|2)|\botra\b|segunda|two bottles|another|second|"
-                        r"there were two|were two|both", re.I)
+# Strong words for "I sent it twice": checked before the "two" words, so "la mandé otra vez" is one.
+DOUBLE_ONCE = re.compile(r"(dos|2) veces|sin querer|repet|duplic|doble|se mand|lo mand|la mand|mand[eé] (dos|2|de nuevo|otra)|"
+                         r"la misma|el mismo|me equivoqu|error|twice|by mistake|double|same (one|bottle|feed)", re.I)
+DOUBLE_TWO = re.compile(r"(dos|2) (mamaderas|tomas|biberones|veces le di)|fueron (dos|2)|son (dos|2)|\botra\b(?! vez)|"
+                        r"una m[aá]s|segunda|tom[oó] (de nuevo|otra)|two (bottles|feeds)|another|second|there were two|"
+                        r"were two|both|^\W*(dos|2|two)\W*$", re.I)
+# Weak words for one, checked last: "una", "una sola", "solo una", "just one".
+DOUBLE_ONE = re.compile(r"\buna sola\b|\bsolo una\b|\bera una\b|\bfue una\b|^\W*(una|uno|1|one|once)\W*$|just one|"
+                        r"only one|\bonce\b", re.I)
 CRY = re.compile(r"\b(cry|crying|cries|cried|fussy|fussing|screaming|llor\w*|berrinche|molest[oa])\b", re.I)
-SIDE_SAID = re.compile(r"izquierd|derech|ambos|los dos|las dos|left|right|both", re.I)
+SIDE_SAID = re.compile(r"izquierd|derech|\bizq|\bder\b|\bdcha\b|ambos|los dos|las dos|left|right|both", re.I)
+BOTH_SIDES = re.compile(r"ambos|los dos|las dos|both|(izq\w*|left)\W+(y|e|and|\+|,)\W*(der\w*|right)|"
+                        r"(der\w*|right)\W+(y|e|and|\+|,)\W*(izq\w*|left)", re.I)
+LEFT_SAID = re.compile(r"izquierd|\bizq\w*|\bleft\b", re.I)
+RIGHT_SAID = re.compile(r"derech|\bder\b|\bdcha\b|\bright\b", re.I)
 TYPE_SAID = {"formula": re.compile(r"f[oó]rmula|formula|leche de f", re.I),
              "breast milk": re.compile(r"leche materna|materna|extra[ií]da|sacada|breast ?milk|pumped|expressed", re.I)}
 TIME_SAID = re.compile(r"\d{1,2}[:.h]\d{2}|\d{1,2}\s*(am|pm|hs?)\b|\ba las?\s+\d|\bat \d|\bhace\b|\bago\b|y media|y cuarto|"
@@ -213,11 +238,29 @@ def is_edit_request(text):
 
 def double_answer(text):
     """"once" when the parent sent the same note twice by mistake, "two" when there were two, None when unclear."""
-    if DOUBLE_ONCE.search(text or ""):
+    text = (text or "").strip()
+    if DOUBLE_ONCE.search(text):
         return "once"
-    if DOUBLE_TWO.search(text or ""):
+    if DOUBLE_TWO.search(text):
         return "two"
+    if DOUBLE_ONE.search(text):
+        return "once"
     return None
+
+
+def asks_delete(text):
+    """True when the parent asks for an entry to go: "borrá la última", "no le di nada"."""
+    return bool(DELETE_SAID.search(text or ""))
+
+
+def says_twice(text):
+    return bool(TWICE_SAID.search(text or ""))
+
+
+def claims_change(text):
+    """True when a reply says an entry was corrected or removed, and does not say the opposite ("no cambié nada")."""
+    text = text or ""
+    return any(not NEGATED.search(text[max(0, m.start() - 40):m.start()]) for m in CLAIMS_CHANGE.finditer(text))
 
 
 def is_cry_question(text):
@@ -241,8 +284,9 @@ def said_only(request, kind, details, ts=None):
                 details.pop(name, None)
     if kind == "feeding":
         method = str(details.get("method") or "")
-        if "breast" in method.lower() and not SIDE_SAID.search(request):
-            details["method"] = "breast"
+        if "breast" in method.lower():
+            # The side the parent said, never one the brain picked: "teta der" is the right breast.
+            details["method"] = side_said(request) or "breast"
         milk = details.get("type")
         if milk and not any(pattern.search(request) for pattern in TYPE_SAID.values()):
             details.pop("type", None)
@@ -250,6 +294,20 @@ def said_only(request, kind, details, ts=None):
             details.pop("duration_min", None)
         if details.get("amount_ml") is not None and not re.search(r"\d", request):
             details.pop("amount_ml", None)
+        if details.get("amount_ml") is not None and ounces_ml(request):
+            # "3 onzas" is 90 ml on the bottle, never the brain's 89.
+            details["amount_ml"] = ounces_ml(request)
+        elif details.get("amount_ml") is not None and not amount_said(details["amount_ml"], request):
+            # An amount the message never names comes from an earlier message: on Oct 29 Muse logged the 00:40 bottle's
+            # 120 ml again inside "teta izq 15 min".
+            details.pop("amount_ml", None)
+        breast_said, bottle_said = BREAST_WORDS.search(request), BOTTLE_WORDS.search(request)
+        if breast_said and not bottle_said and "breast" not in str(details.get("method") or ""):
+            details["method"] = side_said(request) or "breast"
+            if not re.search(r"\d+\s*ml", request, re.I):
+                details.pop("amount_ml", None)
+        elif bottle_said and not breast_said and "breast" in str(details.get("method") or ""):
+            details["method"] = "bottle"
     if kind == "diaper" and details.get("color") and not COLOR_SAID.search(request):
         details.pop("color", None)
     if kind == "diaper" and details.get("wet") and details.get("solid"):
@@ -263,6 +321,43 @@ def said_only(request, kind, details, ts=None):
 
 DAY_SAID = re.compile(r"\b(ayer|anoche|anteayer|yesterday|last night|lunes|martes|mi[eé]rcoles|jueves|viernes|s[aá]bado|"
                       r"domingo|monday|tuesday|wednesday|thursday|friday|saturday|sunday)\b|\d{1,2}/\d{1,2}", re.I)
+
+
+OUNCES = re.compile(r"(\d+(?:[.,]\d+)?)\s*(?:onzas?|oz|ounces?)\b", re.I)
+ML_PER_OUNCE = 30
+
+
+BREAST_WORDS = re.compile(r"\b(teta|tetas|pecho|pechos|breast\w*|nurs\w*|amamant\w*)\b", re.I)
+BOTTLE_WORDS = re.compile(r"\b(mamadera|biber[oó]n|bottle|f[oó]rmula|formula)\b|\d\s*ml\b|\bonzas?\b", re.I)
+
+
+def amount_said(amount, text):
+    """True when the message names this amount: "le di 90" for 90 ml."""
+    try:
+        wanted = float(amount)
+    except (TypeError, ValueError):
+        return False
+    return any(abs(float(n.replace(",", ".")) - wanted) < 0.5 for n in re.findall(r"-?\d+(?:[.,]\d+)?", text or ""))
+
+
+def ounces_ml(text):
+    """The ml of "tomo 3 onzas", at 30 ml an ounce as the bottle marks read, or None. One amount only."""
+    found = OUNCES.findall(text or "")
+    if len(found) != 1:
+        return None
+    return round(float(found[0].replace(",", ".")) * ML_PER_OUNCE)
+
+
+def side_said(text):
+    """The breast side a message names, as a log method, or None."""
+    text = text or ""
+    if BOTH_SIDES.search(text) or (LEFT_SAID.search(text) and RIGHT_SAID.search(text)):
+        return "both breasts"
+    if LEFT_SAID.search(text):
+        return "left breast"
+    if RIGHT_SAID.search(text):
+        return "right breast"
+    return None
 
 
 def latest_time(ts, now, request=""):
@@ -316,7 +411,9 @@ def kinds_said(text):
     return {kind for kind, words in KIND_WORDS.items() if words.search(text or "")}
 
 
-CLOCK_ES = re.compile(r"\ba las? (\d{1,2})(?:[:.](\d{2})| y (media|cuarto))?(?!\s*(?:min|ml|hs?\b))", re.I)
+CLOCK_ES = re.compile(r"\ba las? (\d{1,2})(?:[:.](\d{2})| y (media|cuarto|diez|veinte|cinco|\d{1,2}\b(?!\s*(?:min|ml))))?"
+                      r"(?!\s*(?:min|ml|hs?\b))", re.I)
+MINUTE_WORDS = {"media": 30, "cuarto": 15, "diez": 10, "veinte": 20, "cinco": 5}
 RANGE_SAID = re.compile(r"\bde (las? )?\d{1,2}.{0,12}\ba (las? )?\d|\bfrom \d{1,2}.{0,12}\b(to|until|till) \d|\bdesde\b|\bhasta\b", re.I)
 CLOCK_EN = re.compile(r"\bat (\d{1,2})(?:[:.](\d{2}))?\s*(am|pm)?\b(?!\s*(?:min|ml))", re.I)
 
@@ -329,7 +426,9 @@ def named_time(request, now):
     if len(found) != 1 or DAY_SAID.search(request or "") or RANGE_SAID.search(request or ""):
         return None
     hour, minute, extra = found[0]
-    hour, minute = int(hour), int(minute) if minute else {"media": 30, "cuarto": 15}.get((extra or "").lower(), 0)
+    extra_low = (extra or "").lower()
+    hour = int(hour)
+    minute = int(minute) if minute else (int(extra_low) if extra_low.isdigit() else MINUTE_WORDS.get(extra_low, 0))
     if hour > 23 or minute > 59:
         return None
     if (extra or "").lower() in ("am", "pm"):
@@ -509,12 +608,16 @@ def personal_detail(text):
 
 def health_route(text):
     """None for a message with no health talk. "refuse" for health advice with nothing to log: the kind refusal, no
-    brain call. "log" for a health message that also reports something the parent wants kept, a medicine given, a
+    brain call. "note" for a symptom the parent reports with no question: noted in their words, no brain call. "log" for a health message that also reports something the parent wants kept, a medicine given, a
     milestone or an explicit ask to log: it is logged as a note and only the advice part is refused."""
     if not text or is_emergency(text) or not (is_medical(text) or is_medical_es(text)):
         return None
     if LOG_ASK.search(text) or GAVE.search(text) or MILESTONE.search(text):
         return "log"
+    if SYMPTOM.search(text) and not is_question(text) and not ADVICE.search(text):
+        # "vomito un poquito dsp de la toma" reports what the parent saw: it is kept as a note in their words, for the
+        # pediatrician, and only the advice part is refused, in one turn.
+        return "note"
     return "refuse"
 
 

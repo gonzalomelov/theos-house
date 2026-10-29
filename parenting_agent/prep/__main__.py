@@ -35,9 +35,13 @@ def main(argv=None):
     args = parser.parse_intermixed_args(argv)
 
     config = config_mod.load(args.config)
-    if args.command == "ask":
+    if args.command == "ask" or not args.send:
         # Only the prep plug-in: no channel polls and nothing is sent anywhere.
         config["plugins"] = [p for p in config["plugins"] if p.startswith("parenting_agent.prep")]
+    if args.command != "ask":
+        # show and nudge make no brain call and read no baby log, so they need no brain key and no Baby Buddy.
+        config["brain"] = {"provider": "fake"}
+        config["baby_log"] = {"provider": "local"}
     agent = build(config)
     prep = prep_of(agent)
     try:

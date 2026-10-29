@@ -56,6 +56,17 @@ Next up:
 Tell me when one is done, or ask what is next.
 ```
 
+The nudge is in Spanish when most of the family's recent messages are, or when the config sets `"prep": {"lang": "es"}` (`"en"` forces English). The items read in Uruguayan Spanish, with cédula, mutualista and sanatorio, and an item a parent added or reworded keeps its own words. The brain is told to use the same words in Spanish answers (issue #77):
+
+```
+Buen día. Unos 47 días para la fecha de parto, el 15 de diciembre (estimada).
+Lo que sigue:
+- Revisar que la caja de la Litetrax traiga el huevito i-Snug 2 (Europa y Nueva Zelanda) y no el Gemm (EE.UU.)
+- Comprar el sistema de viaje Litetrax (lo compra Gonza, el agente nunca paga)
+- Leer la parte 'instalación sin base' del manual
+Avisame cuando hagas uno, o preguntame qué sigue.
+```
+
 ## Who used it, for the scorer
 
 - Each family chat is tied to a person in the config (`people`): Gonza is `TELEGRAM_CHAT_ID`, Ceci is `TELEGRAM_CECI_CHAT_ID`. A chat id given to both belongs to neither.
@@ -67,7 +78,7 @@ Tell me when one is done, or ask what is next.
 ## Check it
 
 ```bash
-python -m parenting_agent.prep show --config config/agent.vostro.json                      # what the nudge would say
+python -m parenting_agent.prep show --config config/agent.vostro.json                      # what the nudge would say, no brain key or Baby Buddy needed
 python -m parenting_agent.prep ask "Test: what is next?" --config config/agent.vostro.json # one turn through the brain, nothing sent
 python -m parenting_agent.prep nudge --send --config config/agent.vostro.json              # one nudge to Gonza now
 .venv/bin/python -m unittest tests.test_prep -v

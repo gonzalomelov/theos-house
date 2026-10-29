@@ -368,3 +368,33 @@ class Command(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class SpanishNudge(unittest.TestCase):
+    """A Spanish family gets the morning nudge in Uruguayan Spanish (round 2 real-new-parent judge, issue #77)."""
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.agent, self.config = make_agent(self.tmp.name)
+        self.prep = Prep(self.agent, self.config, clock=Clock(datetime.datetime(2026, 10, 29, 9, 0, tzinfo=TZ)))
+
+    def tearDown(self):
+        self.agent.close()
+        self.tmp.cleanup()
+
+    def test_the_family_language_picks_the_nudge(self):
+        self.assertTrue(self.prep.nudge_text().startswith("Good morning. About 47 days to the due date"))
+        for text in ("ya compramos la silla del auto", "¿qué nos falta?", "dale"):
+            self.agent.memory.add_message("telegram", "user", text)
+        text = self.prep.nudge_text()
+        self.assertTrue(text.startswith("Buen día. Unos 47 días para la fecha de parto, el 15 de diciembre (estimada)."), text)
+        self.assertIn("Lo que sigue:", text)
+        self.assertNotIn("Next up", text)
+
+    def test_uruguayan_words_in_the_lists(self):
+        hospital = [i for i in lists.seed_items() if i["list"] == "hospital_bag" and i["item_id"] == "ids"][0]
+        self.assertIn("cédulas", hospital["text"])
+        self.assertIn("mutualista", lists.text_in("es", {**hospital, "id": "ids"}))
+        for item in lists.seed_items():
+            self.assertIn(item["item_id"], lists.ES[item["list"]], item)
+        self.assertNotRegex(json.dumps(lists.ES, ensure_ascii=False), r"\b(DNI|obra social|prepaga|biber[oó]n)\b")

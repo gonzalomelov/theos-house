@@ -125,6 +125,11 @@ ASKED_ONLY = ("not logged: this message is a question about the log, it reports 
               "or read_baby_log.")
 OTHER_KIND = ("not logged: the newest message does not report this kind of entry. Earlier messages were already "
               "handled, never log them again.")
+NOT_REMOVED = ("not deleted: the log holds this entry only once, so it happened and it stays. A message sent twice was "
+               "logged once. Delete only when the parent asks to delete it.")
+SAFETY_WORDS = re.compile(r"911|pediatr|emergenc|m[eé]dic|doctor|urgent", re.I)
+NOT_AN_EDIT = ("not changed: the newest message corrects no earlier entry. Earlier messages were already handled, never "
+               "change their entries now. Log only what the newest message says.")
 NOT_NEW = ("not logged: this message corrects or removes an earlier entry. Use edit_baby_event or delete_baby_event, "
            "never a new entry.")
 DOUBLE_WINDOW = datetime.timedelta(minutes=3)
@@ -133,7 +138,14 @@ TEXTS = {
     "en": {
         "NOT_CHANGED": "I could not change the log. Tell me which entry and what to change, for example: the 01:30 bottle was 100 ml.",
         "CANNOT_CHANGE": "I cannot change entries in this log, so nothing changed.",
-        "ASK_DOUBLE": "Did you send it twice, or were there two bottles? So far it is logged once: {entry}.",
+        "ASK_DOUBLE": "Did you send it twice, or were there {two}? So far it is logged once: {entry}.",
+        "ASK_DOUBLE_AGAIN": "I did not get that, so it stays logged once: {entry}. Was it one sent twice, or {two}? Reply one or two.",
+        "TWO_BOTTLES": "two bottles", "TWO_BREASTS": "two breast feeds",
+        "NOT_DELETED": "I did not delete anything: the log holds {entry} only once.",
+        "LOGGED": "Logged {entries}.", "AND": " and ",
+        "SLEEP_START": "that {name} fell asleep at {at}", "SLEEP_SPAN": "the sleep from {start} to {at}, {length}",
+        "OF_MIN": " of {min} min", "DIAPER_OF": "the {at} {what} diaper", "NOTE_OF": "a note at {at}: \"{text}\"",
+        "BATH_AT": "the bath at {at}", "THE_BABY": "the baby",
         "DOUBLE_ONCE": "OK, it stays as one: {entry}.",
         "DOUBLE_TWO": "Logged the second one: {entry}.",
         "EDITED": "Fixed {entry}: {changes}.", "UNCHANGED": "{entry} already says that, nothing changed.",
@@ -147,7 +159,14 @@ TEXTS = {
     "es": {
         "NOT_CHANGED": "No pude cambiar el registro. Decime cuál y qué cambio, por ejemplo: la mamadera de la 1 y media fue de 100 ml.",
         "CANNOT_CHANGE": "En este registro no puedo cambiar entradas, así que no cambió nada.",
-        "ASK_DOUBLE": "¿La mandaste dos veces o fueron dos mamaderas? Por ahora quedó una sola: {entry}.",
+        "ASK_DOUBLE": "¿La mandaste dos veces o fueron {two}? Por ahora quedó una sola: {entry}.",
+        "ASK_DOUBLE_AGAIN": "No te entendí, así que quedó una sola: {entry}. ¿Fue una sola mandada dos veces, o fueron {two}? Respondé una o dos.",
+        "TWO_BOTTLES": "dos mamaderas", "TWO_BREASTS": "dos tomas de pecho",
+        "NOT_DELETED": "No borré nada: en el registro {entry} está una sola vez.",
+        "LOGGED": "Anoté {entries}.", "AND": " y ",
+        "SLEEP_START": "que {name} se durmió a las {at}", "SLEEP_SPAN": "el sueño de {start} a {at}, {length}",
+        "OF_MIN": " de {min} min", "DIAPER_OF": "el pañal {what} de las {at}", "NOTE_OF": "una nota a las {at}: \"{text}\"",
+        "BATH_AT": "el baño de las {at}", "THE_BABY": "el bebé",
         "DOUBLE_ONCE": "Dale, queda una sola: {entry}.",
         "DOUBLE_TWO": "Anoté la segunda: {entry}.",
         "EDITED": "Corregí {entry}: {changes}.", "UNCHANGED": "{entry} ya decía eso, no cambié nada.",
@@ -182,6 +201,64 @@ def describe(entry, lang, with_ml=True):
     if lang == "es":
         return words["ENTRY_AT"].format(noun=noun, ml=of_ml, at=at)
     return words["ENTRY_AT"].format(noun=noun, at=at) + of_ml
+
+
+SIDE_WORDS = {"es": {"left breast": " izquierdo", "right breast": " derecho", "both breasts": " de los dos lados"},
+              "en": {"left breast": "left breast feed", "right breast": "right breast feed",
+                     "both breasts": "breast feed on both sides"}}
+
+
+def describe_stored(entry, lang, name=None):
+    """A logged entry in a few words, from what the log stored and nothing else: "la toma de pecho derecho de 12 min de
+    las 05:20", "la mamadera de 90 ml de fórmula de las 02:10", "el pañal mojado de las 03:00"."""
+    words = TEXTS.get(lang, TEXTS["en"])
+    kind, d = entry.get("kind"), entry.get("details") or {}
+    at = str(entry.get("ts") or "")[11:16]
+    if kind == "feeding":
+        method = str(d.get("method") or "bottle")
+        breast = "breast" in method
+        noun = words["BREAST"] if breast else words["BOTTLE"]
+        extra = ""
+        if breast and method in SIDE_WORDS[lang]:
+            if lang == "es":
+                extra += SIDE_WORDS[lang][method]
+            else:
+                noun = SIDE_WORDS[lang][method]
+        ml = _ml(d.get("amount_ml")) if d.get("amount_ml") else None
+        if ml:
+            extra += words["OF_ML"].format(ml=ml)
+        if d.get("type") in ("formula", "breast milk") and not breast:
+            extra += (" de " if lang == "es" else ", ") + words[d["type"]]
+        minutes = d.get("duration_min")
+        if minutes and float(minutes) > 0:
+            extra += words["OF_MIN"].format(min=_ml(minutes))
+        if lang == "es":
+            return f"{noun}{extra} de las {at}"
+        return f"the {at} {noun}{extra}"
+    if kind == "diaper":
+        return words["DIAPER_OF"].format(at=at, what=words[_diaper_word(d)])
+    if kind == "sleep":
+        if d.get("action") == "start":
+            return words["SLEEP_START"].format(name=name or words["THE_BABY"], at=at)
+        start = str(d.get("start") or "")[11:16]
+        return words["SLEEP_SPAN"].format(start=start, at=at, length=_length(d.get("duration_min")))
+    if kind == "bath":
+        return words["BATH_AT"].format(at=at)
+    return words["NOTE_OF"].format(at=at, text=str(d.get("text") or "")[:120])
+
+
+def _length(minutes):
+    try:
+        h, m = divmod(int(round(float(minutes))), 60)
+    except (TypeError, ValueError):
+        return "?"
+    return f"{h} h {m:02d} min" if h else f"{m} min"
+
+
+def logged_text(entries, lang, name=None):
+    """The confirmation for what a turn logged, built from the stored entries, never from the brain's words."""
+    words = TEXTS.get(lang, TEXTS["en"])
+    return words["LOGGED"].format(entries=words["AND"].join(describe_stored(e, lang, name) for e in entries))
 
 
 def _diaper_word(d):
@@ -250,6 +327,8 @@ def entry_key(arguments):
         value = details.get(name)
         if name == "method":
             value = "breast" if "breast" in str(value or "").lower() else "bottle"
+        elif arguments.get("kind") == "diaper":
+            value = bool(value)  # "wet: true" and "wet: true, solid: false" are one diaper
         elif isinstance(value, (int, float)) and not isinstance(value, bool):
             value = float(value)
         elif isinstance(value, str):
@@ -272,6 +351,8 @@ class Agent:
     # The demo and the families bot answer health questions with the kind refusal before any brain call, and log a
     # health message that also reports a medicine given or a milestone. The family agent leaves it to the brain.
     health_gate = False
+    # The families bot confirms every log from the stored entry, never in the brain's words.
+    confirm_from_log = False
     approval_window_s = APPROVAL_WINDOW_S
 
     def __init__(self, bus, memory, baby_log, tools, brain, max_steps=6, history=20):
@@ -470,6 +551,12 @@ class Agent:
             self.bus.publish("guard", status="health_refused")
             self.say(channel, self.refusal(text))
             return
+        if route == "note":
+            # A symptom the parent saw, with no question: kept as a note in their words, and the advice refused.
+            self.memory.add_message(channel, "user", text, ts=self.now())
+            self.bus.publish("guard", status="health_noted")
+            self.say(channel, self.note_observation(text))
+            return
         double, self.double = self.double, None
         if double and self.now() - double["asked"] <= DOUBLE_ANSWER_WINDOW and self.answer_double(channel, text, double):
             return
@@ -484,6 +571,18 @@ class Agent:
 
     def emergency(self, request):
         return rules.EMERGENCY_REPLY[self.lang(request)]
+
+    def note_observation(self, request):
+        """Log what the parent saw as a note, with their words, and answer with the stored note and the no-advice line."""
+        status, entry = self.tools.run("log_baby_event", {"kind": "note", "details": {"text": request}})
+        self.bus.publish("tool", name="log_baby_event", status=status)
+        if status != "ran" or not isinstance(entry, dict):
+            return self.refusal(request)
+        lang = self.lang(request)
+        return logged_text([entry], lang) + " " + self.no_advice(request)
+
+    def baby_name(self):
+        return None
 
     def refusal(self, request):
         return rules.REFUSAL
@@ -526,7 +625,20 @@ class Agent:
         """The parent's answer to "did you send it twice or were there two bottles?". True when it settled it."""
         answer = rules.double_answer(text)
         if answer is None:
-            return False
+            # Unclear: never let the brain guess, it once deleted the only breast feed on "se mando doble perdon". Keep one
+            # and ask once more, unless the message is clearly something else: a new note, a question or a correction.
+            short = len(re.sub(r"\W", "", text)) <= 3  # "q?", "eh", "??": no answer, never a new question
+            other = not short and (rules.is_log_request(text) or rules.is_question(text) or rules.is_edit_request(text)
+                                   or rules.is_health(text))
+            if other or double.get("again"):
+                return False
+            self.memory.add_message(channel, "user", text, ts=self.now())
+            self.bus.publish("guard", status="double_unclear")
+            self.double = {**double, "again": True, "asked": self.now()}
+            lang = self.lang(double["request"])
+            self.say(channel, self.text("ASK_DOUBLE_AGAIN", double["request"], entry=describe(double["previous"], lang),
+                                        two=self.two_words(double["previous"], lang)))
+            return True
         self.memory.add_message(channel, "user", text, ts=self.now())
         if answer == "once":
             self.bus.publish("guard", status="double_once")
@@ -539,6 +651,57 @@ class Agent:
             return True
         self.say(channel, self.text("DOUBLE_TWO", double["request"], entry=describe(entry, self.lang(double["request"]))))
         return True
+
+    @staticmethod
+    def two_words(entry, lang):
+        """"dos tomas de pecho" for a breast feed, "dos mamaderas" for a bottle: the question names the real kind."""
+        breast = "breast" in str((entry.get("details") or {}).get("method") or "")
+        return TEXTS.get(lang, TEXTS["en"])["TWO_BREASTS" if breast else "TWO_BOTTLES"]
+
+    def twin_of(self, entry):
+        """Another entry of the same kind within 30 minutes with the same amount and method: the log holds it twice."""
+        if not entry or not entry.get("ts"):
+            return None
+        try:
+            moment = parse_time(entry["ts"])
+            near = self.baby_log.entries(entry.get("kind"), (moment - DOUBLE_ANSWER_WINDOW).isoformat(timespec="seconds"), 50)
+        except Exception:  # noqa: BLE001 a log that cannot be read has no twin to point at
+            return None
+        d = entry.get("details") or {}
+        for other in near:
+            o = other.get("details") or {}
+            if other.get("id") == entry.get("id") or abs((parse_time(other["ts"]) - moment).total_seconds()) > 1800:
+                continue
+            if entry.get("kind") == "feeding":
+                same = (("breast" in str(o.get("method"))) == ("breast" in str(d.get("method")))
+                        and _ml(o.get("amount_ml")) == _ml(d.get("amount_ml")))
+            elif entry.get("kind") == "diaper":
+                same = bool(o.get("wet")) == bool(d.get("wet")) and bool(o.get("solid")) == bool(d.get("solid"))
+            else:
+                same = True
+            if same:
+                return other
+        return None
+
+    def edit_target(self, arguments):
+        try:
+            return self.baby_log.find(arguments.get("id"), arguments.get("kind"), arguments.get("at"), arguments.get("last"))
+        except (TypeError, ValueError, KeyError, AttributeError):
+            return None
+
+    def delete_held(self, request, arguments):
+        """Why a delete must not run, or None. A delete runs when the parent asks for one ("borrá la última"), or for a
+        "sent twice" only when the log really holds the entry twice. Anything else keeps the entry: a feed that happened
+        is never removed on a guess."""
+        if request is None or rules.asks_delete(request):
+            return None
+        try:
+            target = self.baby_log.find(arguments.get("id"), arguments.get("kind"), arguments.get("at"), arguments.get("last"))
+        except (TypeError, ValueError, KeyError, AttributeError):
+            return None
+        if rules.says_twice(request) and self.twin_of(target) is not None:
+            return None
+        return target
 
     def same_feed_just_logged(self, arguments):
         """The feed logged in an earlier message less than 3 minutes ago with the same amount and method, if any."""
@@ -575,13 +738,16 @@ class Agent:
         return NOT_LOGGED["es" if rules.looks_spanish(request) else "en"]
 
     @staticmethod
-    def needs_log(request, text, failed, acted):
+    def needs_log(request, text, failed, acted, read=False):
         """True when the brain's answer to a parent's message must not go out as it is, because no log call ran: a log
         call failed, or nothing acted on the message although it reports something to log or the answer says it
         logged. A plug-in tool that ran, such as finish_bath on "bath done", acted on it, and a call waiting for the
         parent's yes is never held. A health message is never held: "send it again" is no answer to "she has not
         pooped in 4 days"."""
         if request is None or acted == "ask_parent" or rules.is_health(request) or rules.is_edit_request(request):
+            return False
+        if read and not rules.is_log_request(request):
+            # The brain read the log or the rhythm for it: a question, never "send it again".
             return False
         if failed:
             return True
@@ -603,9 +769,10 @@ class Agent:
         A value no real entry can have (9000 ml, a feed in the future) is asked about, never logged, and a note that
         only repeats an earlier message is not logged again."""
         system, specs = self.system_prompt(), self.tools.specs()
-        logged, kept, changed = {}, [], []
+        logged, kept, changed, stored = {}, [], [], []
         failed, acted, checked, edit_checked = False, None, False, False
         actors, act_checked = set(), False
+        read, next_text, held_delete = set(), None, None
         asked = 0
         wanted = rules.log_kind(request) if request is not None else None
         editing = request is not None and rules.is_edit_request(request)
@@ -639,6 +806,21 @@ class Agent:
             if reply.fallback:
                 self.bus.publish("brain_fallback", **reply.fallback)
             if not reply.tool_calls:
+                # "Corregido" with no edit that ran is never sent. On Oct 29 Muse logged a new 70 ml bottle for "nono eran
+                # 70" and said "corregido a 70 ml": what this turn logged is taken back and the brain is asked to edit.
+                claim = request is not None and not changed and rules.claims_change(reply.text)
+                if claim and not editing and can_edit and not edit_checked:
+                    self.bus.publish("guard", status="claimed_change", logged=len(stored))
+                    for entry in stored:
+                        if isinstance(entry, dict) and entry.get("id") is not None:
+                            self.baby_log.delete(entry["id"])
+                    logged.clear()
+                    kept.clear()
+                    stored.clear()
+                    editing = True
+                if editing and not changed and held_delete is not None and rules.says_twice(request):
+                    self.bus.publish("guard", status="not_deleted")
+                    return finish(self.text("NOT_DELETED", request, entry=describe(held_delete, lang)), fixed=True)
                 if editing and not changed:
                     if can_edit and not edit_checked:
                         edit_checked = True
@@ -651,8 +833,10 @@ class Agent:
                         return finish(self.text("NOT_CHANGED" if can_edit else "CANNOT_CHANGE", request), fixed=True)
                 if changed:
                     said = changes_text(changed, lang)
+                    if self.confirm_from_log and stored:
+                        return finish(" ".join(said + [logged_text(stored, lang, self.baby_name())]), fixed=True)
                     return finish(" ".join(said + ([reply.text] if kept and reply.text else [])), fixed=True)
-                if not kept and self.needs_log(request, reply.text, failed, acted):
+                if not kept and self.needs_log(request, reply.text, failed, acted, read=bool(read)):
                     if not checked:
                         checked = True
                         self.bus.publish("guard", status="asked_to_log", failed=failed)
@@ -673,6 +857,25 @@ class Agent:
                         continue
                     self.bus.publish("guard", status="claimed_action", asked=bool(asked))
                     return finish((NOT_SENT if asked else NOT_SENT_NOTHING)[lang])
+                if claim:
+                    # Still a claim of a change that never ran: the honest answer from the log instead.
+                    self.bus.publish("guard", status="claim_replaced")
+                    honest = logged_text(stored, lang, self.baby_name()) if stored else self.text(
+                        "NOT_CHANGED" if can_edit else "CANNOT_CHANGE", request)
+                    return finish(honest, fixed=True)
+                if stored and self.confirm_from_log and self.health_turn is None and not observation:
+                    text = logged_text(stored, lang, self.baby_name())
+                    if any(e.get("kind") == "note" for e in stored) and (
+                            rules.is_health(request) or SAFETY_WORDS.search(reply.text or "")):
+                        # "respira raro hace un ruido como silbido": the note from the log, and the safety line the brain
+                        # meant, in the agent's own fixed words.
+                        text += " " + self.no_advice(request)
+                    elif "?" in (request or "") and reply.text and not rules.claims_logged(reply.text):
+                        text += " " + reply.text
+                    return finish(text, fixed=True)
+                if next_text and not re.search(r"\d{1,2}:\d{2}|\bhace\b|\bago\b", reply.text or ""):
+                    # The next feed is always a time or how long since the last one, in the rhythm's own words.
+                    return finish(next_text)
                 return finish(reply.text or "OK.")
             if request is not None:
                 reply.tool_calls = rules.one_diaper(reply.tool_calls, request)
@@ -698,6 +901,9 @@ class Agent:
                             ts = named
                         if ts:
                             arguments["ts"] = ts
+                    elif isinstance(arguments.get("details"), dict) and arguments["details"].get("amount_ml") is not None \
+                            and rules.ounces_ml(request):
+                        arguments["details"] = {**arguments["details"], "amount_ml": rules.ounces_ml(request)}
                     call = {**call, "arguments": arguments}
                     kind = arguments.get("kind")
                     if call["name"] == "edit_baby_event" and kind is None:
@@ -759,10 +965,31 @@ class Agent:
                     self.bus.publish("guard", status="asked_double")
                     second = {**call["arguments"], "ts": self.now().isoformat(timespec="seconds")}  # logged at its own time if it was two
                     self.double = {"arguments": second, "previous": previous, "request": request, "asked": self.now()}
-                    return finish(self.text("ASK_DOUBLE", request, entry=describe(previous, lang)), fixed=True)
+                    return finish(self.text("ASK_DOUBLE", request, entry=describe(previous, lang),
+                                            two=self.two_words(previous, lang)), fixed=True)
+                if call["name"] in EDIT_TOOLS and request is not None and not editing:
+                    target = self.edit_target(call["arguments"] or {})
+                    if target is None or target.get("id") not in {e.get("id") for e in stored}:
+                        # A message that corrects nothing changes no earlier entry: on Oct 29 Muse turned an earlier
+                        # bottle into "teta izq 15 min".
+                        self.bus.publish("tool", name=call["name"], status="held", reason="not_an_edit")
+                        transcript.append({"role": "tool", "id": call["id"], "name": call["name"], "result": NOT_AN_EDIT})
+                        continue
+                if call["name"] == "delete_baby_event" and request is not None:
+                    target = self.delete_held(request, call["arguments"] or {})
+                    if target is not None:
+                        # "se mando doble" when the log holds the feed once: the feed happened, it stays.
+                        held_delete = target
+                        self.bus.publish("tool", name=call["name"], status="held", reason="not_twice")
+                        transcript.append({"role": "tool", "id": call["id"], "name": call["name"], "result": NOT_REMOVED})
+                        continue
                 status, result = self.tools.run(call["name"], call["arguments"])
                 self.bus.publish("tool", name=call["name"], status=status)
                 failed = failed or (key is not None and status == "error")
+                if status == "ran" and call["name"] in READ_TOOLS:
+                    read.add(call["name"])
+                    if call["name"] == "next_feed" and isinstance(result, str):
+                        next_text = result
                 if status == "ask_parent":
                     acted = "ask_parent"
                 elif status == "ran" and call["name"] not in READ_TOOLS and acted is None:
@@ -772,6 +999,8 @@ class Agent:
                 if key is not None and status == "ran":
                     logged[key] = result
                     kept.append(call["arguments"])
+                    if isinstance(result, dict):
+                        stored.append(result)
                     if self.health_turn is not None and isinstance(result, dict):
                         self.health_turn["entries"].append(result)
                 if call["name"] in EDIT_TOOLS and status == "ran":

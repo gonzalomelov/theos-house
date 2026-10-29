@@ -9,7 +9,7 @@ call fails, and the questions and small talk the guard must leave alone.
 import unittest
 
 from parenting_agent.agent import rules
-from parenting_agent.agent.loop import LOG_CHECK, NOT_LOGGED, Agent
+from parenting_agent.agent.loop import LOG_CHECK, NOT_LOGGED, Agent, logged_text
 from parenting_agent.agent.memory import LocalBabyLog, Memory
 from parenting_agent.agent.tools import core_tools
 from parenting_agent.bus import Bus
@@ -66,7 +66,7 @@ class FamiliesGuard(unittest.TestCase):
                 brain = Recording([CLAIM[lang]], [[log("feeding", BOTTLE), log("feeding", BOTTLE)], CLAIM[lang]])
                 app, f, _ = self.family(brain, lang)
                 reply = app.handle(7, 7, NOTES[lang]["feeding"], "private", LANG_CODE[lang])[0][1]
-                self.assertEqual(reply, CLAIM[lang])
+                self.assertEqual(reply, logged_text(f.log.entries("feeding"), lang))
                 self.assertEqual(len(f.log.entries("feeding")), 1)
 
     def test_a_brain_that_calls_the_tool_is_not_asked_again(self):
@@ -77,7 +77,8 @@ class FamiliesGuard(unittest.TestCase):
                     brain = Recording([[log(kind, details)], CLAIM[lang]])
                     app, f, _ = self.family(brain, lang)
                     reply = app.handle(7, 7, NOTES[lang][kind], "private", LANG_CODE[lang])[0][1]
-                    self.assertEqual(reply, CLAIM[lang])
+                    # The confirmation comes from the stored entry, never from the brain's words (here a wrong bottle).
+                    self.assertEqual(reply, logged_text(f.log.entries(kind), lang))
                     self.assertEqual(len(f.log.entries(kind)), 1)
                     self.assertFalse(any(u.startswith("[check") for u in brain.users))
 

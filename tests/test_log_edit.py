@@ -159,7 +159,7 @@ class DoubleSend(Base):
     def test_after_3_minutes_it_is_logged_without_asking(self):
         app, f, clock = self.family(self.brain())
         self.send(app, clock, "04:40", "tomó 110 ml de mamadera")
-        self.assertEqual(self.send(app, clock, "04:44", "tomó 110 ml de mamadera"), "Anotado.")
+        self.assertEqual(self.send(app, clock, "04:44", "tomó 110 ml de mamadera"), "Anoté la mamadera de 110 ml de las 04:44.")
         self.assertEqual(self.ml(f), [110.0, 110.0])
 
     def test_a_different_bottle_is_logged_without_asking(self):
@@ -170,11 +170,14 @@ class DoubleSend(Base):
         self.send(app, clock, "04:41", "mamadera 90")
         self.assertEqual(self.ml(f), [110.0, 90.0])
 
-    def test_an_unclear_answer_goes_to_the_brain(self):
+    def test_an_unclear_answer_keeps_one_and_is_asked_once_more(self):
         app, f, clock = self.family(self.brain(["¿Cómo dijiste?"]))
         self.send(app, clock, "04:40", "tomó 110 ml de mamadera")
         self.send(app, clock, "04:41", "tomó 110 ml de mamadera")
-        self.assertEqual(self.send(app, clock, "04:42", "mmm"), "¿Cómo dijiste?")
+        self.assertEqual(self.send(app, clock, "04:42", "mmm"),
+                         "No te entendí, así que quedó una sola: la mamadera de 110 ml de las 04:40. ¿Fue una sola mandada "
+                         "dos veces, o fueron dos mamaderas? Respondé una o dos.")
+        self.assertEqual(self.send(app, clock, "04:43", "ehh"), "¿Cómo dijiste?")
         self.assertEqual(self.ml(f), [110.0])
 
     def test_the_answers(self):
@@ -246,10 +249,10 @@ class NextFeed(Base):
         app, f, clock = self.family(CountingBrain())
         self.feeds(f, clock, "09:10", "12:10")
         clock.now = clock.now.replace(hour=16, minute=0)
-        self.assertEqual(app.next_feed(f)["text"], "No anotaste ninguna toma desde las 12:10. ¿Comió Mia?")
+        self.assertEqual(app.next_feed(f)["text"], "Ya pasaron 3 h 50 min desde la última toma anotada, a las 12:10. ¿Comió Mia?")
         clock.now = clock.now.replace(hour=23, minute=10)
         nxt = app.next_feed(f)
-        self.assertEqual((nxt["kind"], nxt["text"]), ("old", "La última toma anotada de Mia es de las 12:10."))
+        self.assertEqual((nxt["kind"], nxt["text"]), ("old", "La última toma anotada de Mia fue a las 12:10, hace 11 h 00 min."))
         self.assertNotIn("12:10.", app.summary_text(f).split("la última a las 12:10")[-1])
         for text in (app.next_feed(f)["text"], app.summary_text(f)):
             self.assertNotIn("se esperaba", text)

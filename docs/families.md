@@ -57,6 +57,7 @@ For Gonza's own test accounts: `invite --internal` makes a code whose parent, an
 | `no para de llorar, ¿por qué?` | The likely reason from the log (the cry reason from #32), a guess and never a diagnosis, without a brain call |
 | Red flags: not breathing, blue lips, limp, choking, won't wake, a fall, a hit to the head, a seizure, and the Spanish forms | "Call emergency services now" with 911 for Uruguay, at once, without a brain call |
 | Health questions | The kind refusal, with "if it is urgent, call emergency services", without a brain call |
+| `vomito un poquito dsp de la toma`, `tiene tos` | What the parent saw, with no question: noted in their words and the advice refused, in one turn, without a brain call (issue #77) |
 | `le di 5 ml de ibuprofeno a las 14, anotalo`, `se dio vuelta por primera vez, ¿es normal?` | Logged as a note in the parent's words, never as a feed, and only the advice part is refused. The reply comes from the log, not the brain (issue #60) |
 | `mamadera 9000 ml` | Asked about, never logged: a feed is 1 to 300 ml and 1 to 120 min, a sleep at most 14 hours, nothing in the future (issue #60) |
 | `/summary` | Today so far, computed from the log, no brain call |
@@ -99,13 +100,26 @@ The real-new-parent judge ran 3 Spanish days with the real brain on Oct 28 and f
 - `edit_baby_event` and `delete_baby_event` change or remove an entry, named by id, by kind and local time ("01:30") or as the last one. They are in the shared tools for any baby log that can change entries (the family log). Totals, `/resumen` and the evening summary read the log, so they follow.
 - The reply for a change is built from the log, not from the brain: "Corregí la mamadera de las 01:30: 120 ml → 100 ml." or "Borré el pañal de las 03:30."
 - The no-false-logged guard covers corrections. Until an edit or delete ran, no new entry is logged for a correction and no "Listo" is sent. The brain is asked once more, and if it still did not change anything the parent hears "No pude cambiar el registro". A log that cannot change entries (the demo) says so and adds nothing.
-- The same bottle (same amount and method) from a new message within 3 minutes is not logged. The bot asks "¿La mandaste dos veces o fueron dos mamaderas?". "la mandé 2 veces sin querer" keeps one, "fueron dos" logs the second at its own time, anything else goes to the brain as a normal message.
-- A log call keeps only what the parent said: no breast side ("teta 10 min" is a breast feed, side unknown), no milk type (a bottle with no type is logged with the type unknown, never breast milk), no duration, amount, diaper color or time the parent did not say. A feed is logged at the message time, and starts earlier only when the parent said how long it lasted.
+- The same feed (same amount and method) from a new message within 3 minutes is not logged. The bot asks "¿La mandaste dos veces o fueron dos mamaderas?", or "dos tomas de pecho" for a breast feed. "la mandé 2 veces sin querer" or "se mando doble" keeps one, "fueron dos" logs the second at its own time. An unclear answer keeps one and is asked once more, and only a new note, a question or a correction goes to the brain (issue #77).
+- A log call keeps only what the parent said: the side the parent named and no other ("teta der" is the right breast, "teta 10 min" is a breast feed with the side unknown), no milk type (a bottle with no type is logged with the type unknown, never breast milk), no duration, amount, diaper color or time the parent did not say. A feed is logged at the message time, and starts earlier only when the parent said how long it lasted.
 - The brain is told never to talk about its own bookkeeping ("no reporta nada nuevo", "ahora sí quedó registrada", apologies for answers the parent never saw), and the guard's own check message says the same.
-- The next feed is a time from the family's log, never advice. A feed due in the last 30 minutes is "más o menos ahora". When none was logged for longer, the bot says "No anotaste ninguna toma desde las 12:10. ¿Comió Tomi?", and only when the last feed is less than 8 hours old. Older than that it only says when the last feed was, and the evening summary leaves it out.
+- The next feed is a time from the family's log, never advice. A feed due in the last 30 minutes is "más o menos ahora". When none was logged for longer, the bot says "Ya pasaron 3 h 50 min desde la última toma anotada, a las 12:10. ¿Comió Tomi?", and only when the last feed is less than 8 hours old. Older than that it only says when the last feed was and how long ago, and the evening summary leaves it out.
 - A health message is never answered with "No pude anotarlo, ¿me lo repetís?". "le doy la mamadera, 120 ml" is a bottle, not a health question.
 
 Measured on Oct 28 with `scripts/families_3day_run.py`: 34 Spanish messages over 3 simulated days, two parents, Claude Haiku 5.5 (before Muse became the brain, the Muse run is `results/families/three-day-muse.md`). Before the fix 10 of 29 checks passed, with 10 replies of bookkeeping talk and 8 "se esperaba" texts. After, three runs passed 29, 28 and 27 of 29 with none of either. Each miss was the brain not calling a tool ("teta 10 min" once, "borrá la última" once), and the parent got the honest "No pude anotarlo" or "No pude cambiar el registro", never a false "Listo". Transcripts in `results/families/three-day-before.md` and `results/families/three-day-after.md` (plus `-2` and `-3`). Tests: `tests/test_log_edit.py`.
+
+## The log is never wrong (round 2)
+
+The round 2 real-new-parent judge saw "nono eran 70" log a second bottle with the reply "corregido", and "se mando doble perdon" delete the only breast feed. The fix does not depend on clean words (issue #77):
+
+- A reply that claims a change ("corregido", "borré", "fixed", "deleted") goes out only when an edit or delete really ran in that turn. Otherwise what the turn logged is taken back, the brain is asked once to edit, and if it still does not, the parent gets the honest "No pude cambiar el registro".
+- A delete runs when the parent asks for one ("borrá", "no le di nada"), or for "sent twice" only when the log really holds the entry twice. "se mando doble" with one entry gets "No borré nada: en el registro la toma de pecho de las 05:20 está una sola vez."
+- An edit or delete on a message that corrects nothing never touches an earlier entry, and an amount the message never names is dropped, so an earlier bottle never rides along into "teta izq 15 min".
+- Every log confirmation is built from the stored entry: "Anoté la toma de pecho derecho de 12 min de las 05:20." The side is the one the parent said ("teta der" is the right breast). An ounce is 30 ml.
+- The next feed is always a time or how long since the last feed. Feeds less than 30 minutes apart are one feed for the rhythm, the interval is said only from at least 4 feeds in the last day, and with fewer feeds more than 6 hours apart the bot names the last feed and how long ago. A question is never answered with "No pude anotarlo".
+- Spanish replies use Uruguayan words: mamadera, cédula, mutualista.
+
+Measured with `scripts/families_never_wrong_run.py`, 70 new messages over 3 simulated nights on Muse Spark Open: 0 wrong log states in each of 3 runs. The misses of the earlier rounds and their diffs are in `results/families-never-wrong/README.md`. Tests: `tests/test_never_wrong_log.py`.
 
 ## How it is built
 
