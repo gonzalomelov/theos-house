@@ -129,5 +129,123 @@ class LiftedAlarmTest(unittest.TestCase):
         self.assertEqual(self.alarm.episode, 2)
 
 
+class HeldRegionTest(unittest.TestCase):
+    """A grip on a diaper hides the hand from MediaPipe: the anchored SAM 3.1 region is followed instead (results/hover/held)."""
+
+    def anchored(self):
+        background, texture = scene(1), scene(2)
+        check = LiftCheck({"camera_cm": CAMERA_CM, "regions": "sam3", "refresh_s": 100})
+        mask = np.zeros((H, W), np.uint8)
+        cv2.fillConvexPoly(mask, HAND.astype(np.int32), 1)
+        check.anchor(frame(0.0, background, texture)[0], [mask.astype(bool)], None, 0.0)
+        return check, background, texture
+
+    def test_no_anchor_no_held_reading(self):
+        check = LiftCheck({"camera_cm": CAMERA_CM, "regions": "sam3"})
+        self.assertIsNone(check.held(scene(1), 0.0))
+
+    def test_region_in_place_reads_on_and_a_lift_reads_lifted(self):
+        check, background, texture = self.anchored()
+        out = [check.held(frame(lift, background, texture)[0], 0.1 + i / 15) for i, lift in enumerate([0.0] * 6 + [3.0] * 8)]
+        self.assertEqual(set(out[:6]), {"on"})
+        self.assertEqual(out[-1], "lifted")
+
+    def test_region_that_leaves_reads_gone_after_held_gone_s(self):
+        check, background, _ = self.anchored()
+        out = [check.held(background, 0.1 + i / 15) for i in range(8)]
+        self.assertEqual(out[0], "on")  # held through a short miss
+        self.assertEqual(out[-1], "gone")
+
+
+class UnseenAlarmTest(unittest.TestCase):
+    def setUp(self):
+        self.bus = Bus()
+        self.alarm = Alarm(self.bus, {"off_frames_to_alert": 1}, {"voice_hold_s": 1.2, "confirm_wait_s": 2.3,
+                                                                  "clear_after_on_s": 0.5, "voice_text": "hand"},
+                           waits_for_confirm=True)
+
+    def voices(self):
+        return [e for e in self.bus.history if e["kind"] == "voice"]
+
+    def test_unseen_alarm_waits_past_the_voice_hold_and_a_confirm_on_cancels_it(self):
+        for i in range(19):
+            self.alarm.on_reflex("off", i * 0.1, unseen=True)
+        self.assertEqual(self.voices(), [])
+        self.alarm.on_confirm(1, "on", 1.9)
+        self.alarm.on_reflex("off", 2.5)
+        self.assertEqual(self.voices(), [])
+
+    def test_unseen_alarm_speaks_at_the_confirm_wait_without_an_answer(self):
+        for i in range(25):
+            self.alarm.on_reflex("off", i * 0.1, unseen=True)
+        self.assertEqual(len(self.voices()), 1)
+
+    def test_seen_alarm_keeps_the_voice_hold(self):
+        for i in range(13):
+            self.alarm.on_reflex("off", i * 0.1)
+        self.assertEqual(len(self.voices()), 1)
+
+
+class HiddenReflex:
+    """MediaPipe that never finds the hand: off with no hands, every frame."""
+    near, on_hands, landmarks_px = False, [], []
+
+    def state(self, frame):
+        return "off", 0, 0.001
+
+
+class HeldMasks:
+    name = "sam3_local"
+
+    def __init__(self, mask):
+        self.mask, self.held_calls = mask, 0
+
+    def judge(self, frame_bgr):  # asked only after the hand left
+        return "off"
+
+    def masks(self, frame_bgr, held=False):
+        self.held_calls += held
+        return [self.mask], None
+
+
+class HeldSkillTest(unittest.TestCase):
+    def run_skill(self, lifts):
+        from parenting_agent import config as config_mod
+        from parenting_agent.skill import Skill
+        from parenting_agent.tracking import Tracker
+        background, texture = scene(1), scene(2)
+        mask = np.zeros((H, W), np.uint8)
+        cv2.fillConvexPoly(mask, HAND.astype(np.int32), 1)
+        cfg = config_mod.load("skills/changing-table.json")
+        cfg = dict(cfg, house={"allowed": {}, "on_armed": [], "on_voice": [], "on_closed": []})
+        bus, detector = Bus(), HeldMasks(mask.astype(bool))
+        skill = Skill(cfg, bus, HiddenReflex(), confirm_detector=detector, tracker=Tracker({"on_closed": None}, bus))
+        for i, lift in enumerate(lifts):
+            gray = frame(lift, background, texture)[0] if lift is not None else background
+            skill.on_frame(cv2.cvtColor(gray, cv2.COLOR_GRAY2BGR), i / 15)
+            skill.confirm.pending and skill.confirm.pending[2].result()
+            skill.confirm.collect()
+        skill.close()
+        return bus, detector
+
+    def voices(self, bus):
+        return [e["stream_s"] for e in bus.history if e["kind"] == "voice"]
+
+    def test_hidden_hand_resting_stays_silent(self):
+        bus, detector = self.run_skill([0.0] * 60)
+        self.assertEqual(detector.held_calls, 1)
+        self.assertEqual(self.voices(bus), [])
+
+    def test_hidden_hand_lifting_speaks(self):
+        bus, _ = self.run_skill([0.0] * 30 + [3.0] * 30)
+        self.assertEqual(len(self.voices(bus)), 1)
+        self.assertGreater(self.voices(bus)[0], 2.0)
+
+    def test_hidden_hand_leaving_speaks(self):
+        bus, _ = self.run_skill([0.0] * 30 + [None] * 30)
+        self.assertEqual(len(self.voices(bus)), 1)
+        self.assertGreater(self.voices(bus)[0], 2.0)
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -7,6 +7,8 @@ parenting_agent.sam3_local. It speaks a tiny protocol on stdin and stdout so the
   each reply: one JSON line {"verdict": "on"|"off"|"unknown", "seconds": float, "rings": [...]}
   a request whose length has the top bit set (MASKS) also gets "hands" and "baby": PNG masks in base64, for the
   lift check's SAM 3.1 regions (parenting_agent/lift.py)
+  a request with the next bit set too (HELD) also prompts the held_mask_words and draws each hand with what it holds,
+  for a hand the reflex lost behind a diaper, a wipe or a bottle (results/hover/held)
 A hand is on the baby when at least ring_min of the ring of pixels around the hand mask is baby. Hands smaller
 than min_hand_area of the frame are dropped, so the baby's own hand never counts. Frames stay in memory.
 """
@@ -19,11 +21,12 @@ import time
 from pathlib import Path
 
 MASKS = 1 << 31
+HELD = 1 << 30
 DEFAULTS = {
     "checkpoints": [{"repo": "facebook/sam3.1", "file": "sam3.1_multiplex.pt"}, {"repo": "facebook/sam3", "file": "sam3.pt"}],
     "device": "mps", "confidence": 0.4, "hand_word": "hand", "baby_word": "baby",
     "ring_px": 6, "ring_min": 0.35, "min_hand_area": 0.012, "max_missing_share": 0.01, "autocast": None,
-    "held_words": [], "held_touch_px": 4,
+    "held_words": [], "held_touch_px": 4, "batch_prompts": True, "worn_share": 0.5, "held_min_hand_area": 0.004, "held_mask_words": ["diaper", "wipe", "bottle"],
 }
 
 
@@ -44,9 +47,12 @@ def ring_state(hand_masks, baby, cfg):
     return ("on" if any(r >= cfg["ring_min"] for r in rings) else "off"), rings
 
 
-def holding(hands, objects, cfg):
+def holding(hands, objects, cfg, baby=None):
     """Each hand with the held objects that touch it: a wipe or a diaper in the hand hides the hand's own contact edge,
-    so the ring is drawn around the hand and what it holds (held_words, results/hover/held)."""
+    so the ring is drawn around the hand and what it holds (held_words, results/hover/held). An object that lies
+    mostly inside the baby mask is worn, not held (the baby's own diaper), and is left out."""
+    if baby is not None:
+        objects = [o for o in objects if (o & baby).sum() <= cfg["worn_share"] * max(o.sum(), 1)]
     if not objects:
         return hands
     import cv2
@@ -91,40 +97,73 @@ class Sam3:
             tried.append(f"{source['repo']}: {len(missing)} detector keys missing")
         raise RuntimeError("no SAM 3 checkpoint loaded: " + " | ".join(tried))
 
-    def judge(self, jpeg, with_masks=False):
+    def judge(self, jpeg, with_masks=False, held=False):
         """autocast "float16" runs the model in half precision on MPS: 1.73 to 1.56 s median, same verdicts (results/held)."""
         import contextlib
         import torch
         dtype = self.cfg.get("autocast")
         context = torch.autocast(self.source["device"], dtype=getattr(torch, dtype)) if dtype else contextlib.nullcontext()
         with context:
-            return self._judge(jpeg, with_masks)
+            return self._judge(jpeg, with_masks, held)
 
-    def _held(self, state):
-        found = []
-        for word in self.cfg["held_words"]:
-            found += list(self.processor.set_text_prompt(word, state)["masks"][:, 0].cpu().numpy())
+    def _prompts(self, state, words):
+        """Every word's masks from one decoder pass: the words share the image and go through as a batch of queries.
+        The same masks as one set_text_prompt per word, in less time: 5 words 0.82 s against 1.79 s on the M3 Max
+        (results/hover/held). batch_prompts false keeps one pass per word."""
+        import torch
+        from torch.nn.functional import interpolate
+        p = self.processor
+        if not self.cfg.get("batch_prompts", True) or len(words) == 1:
+            return {w: p.set_text_prompt(w, state)["masks"][:, 0].cpu().numpy() for w in words}
+        from sam3.model.data_misc import FindStage
+        n, device = len(words), p.device
+        with torch.inference_mode():
+            state["backbone_out"].update(p.model.backbone.forward_text(list(words), device=device))
+            find = FindStage(img_ids=torch.zeros(n, device=device, dtype=torch.long),
+                             text_ids=torch.arange(n, device=device, dtype=torch.long), input_boxes=None,
+                             input_boxes_mask=None, input_boxes_label=None, input_points=None, input_points_mask=None)
+            out = p.model.forward_grounding(backbone_out=state["backbone_out"], find_input=find,
+                                            geometric_prompt=p.model._get_dummy_prompt(n), find_target=None)
+            probs = (out["pred_logits"].sigmoid() * out["presence_logit_dec"].sigmoid().unsqueeze(1)).squeeze(-1)
+            found = {}
+            for i, word in enumerate(words):
+                masks = out["pred_masks"][i][probs[i] > p.confidence_threshold]
+                masks = interpolate(masks.unsqueeze(1).float(), (state["original_height"], state["original_width"]),
+                                    mode="bilinear", align_corners=False).sigmoid() > 0.5
+                found[word] = masks[:, 0].cpu().numpy()
         return found
 
-    def _judge(self, jpeg, with_masks=False):
+    def warm(self):
+        """The first batched pass of each size is slow on MPS (about 2 s): run them once at start."""
+        import cv2
+        import numpy as np
+        blank = cv2.imencode(".jpg", np.full((360, 640, 3), 128, np.uint8))[1].tobytes()
+        self.judge(blank)
+        self.judge(blank, with_masks=True, held=True)
+
+    def _judge(self, jpeg, with_masks=False, held=False):
         import cv2
         import numpy as np
         from PIL import Image
         frame = cv2.imdecode(np.frombuffer(jpeg, np.uint8), cv2.IMREAD_COLOR)
         started = time.monotonic()
         state = self.processor.set_image(Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)))
-        masks = {}
-        for word in (self.cfg["hand_word"], self.cfg["baby_word"]):
-            masks[word] = self.processor.set_text_prompt(word, state)["masks"][:, 0].cpu().numpy()
+        extra = list(self.cfg["held_mask_words"] if held else self.cfg["held_words"])
+        masks = self._prompts(state, [self.cfg["hand_word"], self.cfg["baby_word"], *extra])
         babies = masks[self.cfg["baby_word"]]
         baby = babies.any(axis=0) if len(babies) else np.zeros(frame.shape[:2], bool)
-        hands = holding(list(masks[self.cfg["hand_word"]]), self._held(state), self.cfg)
+        hands = list(masks[self.cfg["hand_word"]])
+        min_area = self.cfg["min_hand_area"]
+        if held:  # the parent's hand, mostly hidden by what it holds: smaller, and never the baby's own hand
+            hands = [h for h in hands if (h & baby).sum() < self.cfg["worn_share"] * max(h.sum(), 1)]
+            min_area = self.cfg["held_min_hand_area"]
+        hands = holding(hands, [m for w in extra for m in masks[w]], self.cfg, baby)
         verdict, rings = ring_state(hands, baby, self.cfg)
         reply = {"verdict": verdict, "seconds": round(time.monotonic() - started, 3), "rings": rings}
         if with_masks:
             png = lambda mask: base64.b64encode(cv2.imencode(".png", mask.astype(np.uint8) * 255)[1].tobytes()).decode()
             pixels = baby.shape[0] * baby.shape[1]
-            reply["hands"] = [png(m) for m in hands if m.sum() / pixels >= self.cfg["min_hand_area"]]
+            reply["hands"] = [png(m) for m in hands if m.sum() / pixels >= min_area]
             reply["baby"] = png(baby)
         return reply
 
@@ -138,6 +177,10 @@ def main():
         out.write(json.dumps({"blocked": str(error)[:300]}) + "\n")
         out.flush()
         return 1
+    try:
+        sam.warm()
+    except Exception as error:  # a cold first pass is slower, never fatal
+        sam.source["warm_error"] = str(error)[:200]
     out.write(json.dumps({"ready": True, **sam.source}) + "\n")
     out.flush()
     read = sys.stdin.buffer.read
@@ -146,9 +189,9 @@ def main():
         if len(header) < 4:
             return 0
         size = struct.unpack(">I", header)[0]
-        jpeg = read(size & ~MASKS)
+        jpeg = read(size & ~(MASKS | HELD))
         try:
-            reply = sam.judge(jpeg, with_masks=bool(size & MASKS))
+            reply = sam.judge(jpeg, with_masks=bool(size & MASKS), held=bool(size & HELD))
         except Exception as error:  # one bad frame never kills the worker
             reply = {"verdict": "unknown", "error": str(error)[:200]}
         out.write(json.dumps(reply) + "\n")

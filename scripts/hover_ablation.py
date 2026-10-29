@@ -104,8 +104,10 @@ def run_moment(moment, clip, cfg, reflex, detector, wait_without_confirm=False):
         "chimes": sum(1 for e in events if e["kind"] == "chime"),
         "cancels": sum(1 for e in events if e["kind"] == "alarm" and e.get("action") == "cancel"),
         "confirms": [e["verdict"] for e in events if e["kind"] == "confirm"],
-        "reflex": "".join({"on": "1", "off": "0", "unknown": "?", "near": "~", "lifted": "^"}.get(e["state"], "x")
+        "reflex": "".join("h" if e.get("held") == "on" else {"on": "1", "off": "0", "unknown": "?", "near": "~", "lifted": "^"}.get(e["state"], "x")
                           for e in frames),
+        "held_looks": [e["verdict"] for e in events if e["kind"] == "confirm" and any(
+            r["kind"] == "confirm_request" and r.get("check") == "held" and r["episode"] == e["episode"] for r in events)],
         "max_lift_cm_after_cue": max((e["lift_cm"] for e in frames if e.get("lift_cm") is not None
                                       and e["stream_s"] >= moment["cue_s"]), default=None),
         "frames": len(frames),

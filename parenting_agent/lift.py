@@ -25,7 +25,7 @@ import numpy as np
 
 DEFAULTS = {"camera_cm": 45.0, "min_lift_cm": 1.0, "rest_cm": 0.5, "refresh_s": 1.0, "smooth_frames": 5, "reset_after_off_s": 1.0,
             "min_matches": 8, "hull_grow": 1.18, "scene_margin_px": 30, "search_px": 60, "ratio": 0.8, "ransac_px": 2.0,
-            "min_hands": 1, "regions": "mediapipe", "max_scene_shift_px": None, "max_scene_zoom": None, "max_hand_shift_px": None}
+            "min_hands": 1, "regions": "mediapipe", "held_gone_s": 0.3, "held_scene_px": 3.0, "split_scene": False, "max_scene_shift_px": None, "max_scene_zoom": None, "max_hand_shift_px": None}
 
 
 def hand_masks(hands_px, shape, grow):
@@ -162,6 +162,78 @@ class LiftCheck:
             self.lifted, self.lift_cm = False, None
             return False
         cfg = self.cfg
+        split = sam and cfg["split_scene"]
+        lifts = (self._held_lifts(gray, points, descriptors) or [None]) if split else self._lifts(gray, points, descriptors)
+        if any(v is None for v in lifts):  # cannot measure a hand: hold the last reading, start over if it lasts
+            self.failed_s = stream_s if self.failed_s is None else self.failed_s
+            if stream_s - self.failed_s >= cfg["refresh_s"] and not self.lifted:
+                self._rebase(points, descriptors, masks, stream_s)
+            return self.lifted
+        self.failed_s = None
+        if self._smooth(lifts, max if split else min) and self.lift_cm < cfg["rest_cm"] and stream_s - self.base_s >= cfg["refresh_s"]:
+            self._rebase(points, descriptors, masks, stream_s)
+        return self.lifted
+
+    def held(self, gray, stream_s):
+        """The anchored hand regions while the reflex has lost the hand (a grip on a diaper hides its landmarks).
+        Returns None without an anchor, "on" while the regions stay where they rested, "lifted" once one rises
+        min_lift_cm, and "gone" when no region can be found for held_gone_s (the hands left). No rebase: the resting
+        anchor stays the reference until the reflex sees the hand again.
+        A SAM 3.1 hand mask also covers the forearm, which stays put while the hand and what it holds rise, so each
+        region's matches that move with the scene are set aside and the rest, if enough agree, give the hand's lift."""
+        if self.base is None:
+            return None
+        points, descriptors = self._features(gray)
+        lifts = None if descriptors is None else self._held_lifts(gray, points, descriptors)
+        if not lifts:
+            self.failed_s = stream_s if self.failed_s is None else self.failed_s
+            if stream_s - self.failed_s >= self.cfg["held_gone_s"]:
+                return "gone"
+            return "lifted" if self.lifted else "on"
+        self.failed_s = None
+        self._smooth(lifts, max)
+        return "lifted" if self.lifted else "on"
+
+    def _held_lifts(self, gray, points, descriptors):
+        """Each anchored region found again: 0 when its matches move with the scene, the lift of the group that does
+        not when enough of them agree on one similarity. Regions not found are left out."""
+        cfg = self.cfg
+        h, w = gray.shape[:2]
+        xy = np.clip(points.round().astype(int), 0, [w - 1, h - 1])
+        found = similarity(*self._match(self.base["scene_points"], self.base["scene_descriptors"], points, descriptors),
+                           cfg["ransac_px"], cfg["min_matches"])
+        scene, scene_matrix = found if found else (1.0, np.float32([[1, 0, 0], [0, 1, 0]]))
+        lifts = []
+        for hand in self.base["hands"]:
+            keep = hand["region"][xy[:, 1], xy[:, 0]]
+            p0, p1 = self._match(hand["points"], hand["descriptors"], points, descriptors, keep)
+            if len(p0) < cfg["min_matches"]:
+                continue
+            p0, p1 = np.float32(p0), np.float32(p1)
+            moved = np.hypot(*(p0 @ scene_matrix[:, :2].T + scene_matrix[:, 2] - p1).T)
+            still = moved < cfg["held_scene_px"]
+            group = similarity(p0[~still], p1[~still], cfg["ransac_px"], cfg["min_matches"]) if (~still).sum() >= cfg["min_matches"] else None
+            if group is not None:
+                lifts.append(cfg["camera_cm"] * (1 - scene / group[0]))
+            elif still.sum() >= cfg["min_matches"]:
+                lifts.append(0.0)
+        return lifts
+
+    def _smooth(self, lifts, pick=min):
+        """Adds a measure and updates the reading once smooth_frames are in. True when it read."""
+        self.recent.append(pick(lifts))
+        if len(self.recent) < self.recent.maxlen:
+            return False
+        self.lift_cm = float(np.median(self.recent))
+        if self.lift_cm >= self.cfg["min_lift_cm"]:
+            self.lifted = True
+        elif self.lift_cm < self.cfg["rest_cm"]:
+            self.lifted = False
+        return True
+
+    def _lifts(self, gray, points, descriptors):
+        """Each anchored hand's lift in cm against the baseline, None where it cannot be measured."""
+        cfg = self.cfg
         h, w = gray.shape[:2]
         xy = np.clip(points.round().astype(int), 0, [w - 1, h - 1])
         found = similarity(*self._match(self.base["scene_points"], self.base["scene_descriptors"], points, descriptors),
@@ -178,20 +250,4 @@ class LiftCheck:
                 lifts.append(None)
                 continue
             lifts.append(cfg["camera_cm"] * (1 - scene / found[0]))
-        if any(v is None for v in lifts):  # cannot measure a hand: hold the last reading, start over if it lasts
-            self.failed_s = stream_s if self.failed_s is None else self.failed_s
-            if stream_s - self.failed_s >= cfg["refresh_s"] and not self.lifted:
-                self._rebase(points, descriptors, masks, stream_s)
-            return self.lifted
-        self.failed_s = None
-        self.recent.append(min(lifts))
-        if len(self.recent) < self.recent.maxlen:
-            return self.lifted
-        self.lift_cm = float(np.median(self.recent))
-        if self.lift_cm >= cfg["min_lift_cm"]:
-            self.lifted = True
-        elif self.lift_cm < cfg["rest_cm"]:
-            self.lifted = False
-            if stream_s - self.base_s >= cfg["refresh_s"]:
-                self._rebase(points, descriptors, masks, stream_s)
-        return self.lifted
+        return lifts

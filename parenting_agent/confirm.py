@@ -65,12 +65,15 @@ class ConfirmStage:
         self.detector, self.bus, self.alarm = detector, bus, alarm
         self.pool = ThreadPoolExecutor(max_workers=1)
         self.pending = None
+        self.before_verdict = None  # (episode, verdict) -> verdict, run on the skill's thread before the alarm hears it
 
-    def request(self, episode, frame_bgr, stream_s):
+    def request(self, episode, frame_bgr, stream_s, judge=None, kind=None):
+        """judge replaces the detector's own judge for this request (the skill's held check)."""
         if isinstance(self.detector, NoConfirm) or self.pending:
             return
-        self.bus.publish("confirm_request", episode=episode, stream_s=stream_s, provider=self.detector.name)
-        self.pending = (episode, stream_s, self.pool.submit(self.detector.judge, frame_bgr))
+        self.bus.publish("confirm_request", episode=episode, stream_s=stream_s, provider=self.detector.name,
+                         **({"check": kind} if kind else {}))
+        self.pending = (episode, stream_s, self.pool.submit(judge or self.detector.judge, frame_bgr))
 
     def collect(self):
         if not self.pending or not self.pending[2].done():
@@ -82,6 +85,8 @@ class ConfirmStage:
         except Exception as error:  # a failed confirm never silences the alarm
             self.bus.publish("confirm_error", episode=episode, error=str(error)[:200])
             return
+        if self.before_verdict:
+            verdict = self.before_verdict(episode, verdict)
         self.bus.publish("confirm", episode=episode, stream_s=stream_s, verdict=verdict)
         self.alarm.on_confirm(episode, verdict, stream_s)
 

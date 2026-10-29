@@ -8,6 +8,13 @@ off answer then raises the alarm again. A hand the lift check finds held above t
 alarm skips the confirm detector, because SAM 3.1 reads a hovering hand as on (results/hover). While an alarm is
 raised or its confirm is due or pending, no lift anchor is sent, so the confirm never waits behind one on the shared
 SAM 3.1 worker (results/hero, take 1). A spoken prompt fires the on_voice actions.
+
+With lift.held (and SAM 3.1 regions) a hand on the baby that the reflex loses is followed by its SAM 3.1
+region instead: a grip on a diaper, a wipe or a bottle hides the hand from MediaPipe (results/hover/held). While the
+anchored region stays where it rested the frame counts as on, once it rises min_lift_cm it counts as lifted, and once
+it cannot be found for lift.held_gone_s it counts as off and the anchor is dropped. An alarm raised with no anchor yet
+(the hand was never seen) waits for one SAM 3.1 look, sent confirm.held_delay_s after the raise, that prompts for the
+hand and what it holds: a region on the baby becomes the anchor and cancels the alarm, none speaks it.
 Closing fires on_closed, logs the routine to tracking, and publishes skill_closed with the numbers.
 """
 import datetime
@@ -39,6 +46,9 @@ class Skill:
         self.lift = LiftCheck(lift) if lift.get("enabled") else None
         self.anchor_pool = ThreadPoolExecutor(max_workers=1) if self.masks else None
         self.anchor_job = None
+        self.held = bool(lift.get("held")) and self.lift is not None and self.masks is not None
+        self.held_lost, self.held_anchor = False, None
+        self.confirm.before_verdict = self._held_verdict if self.held else None
         source = getattr(getattr(detector, "impl", None), "source", None)
         if source:  # which weights answer the confirm and the anchors, and where they run
             self.bus.publish("confirm_model", provider=detector.name, **{k: v for k, v in source.items() if k != "ready"})
@@ -58,35 +68,59 @@ class Skill:
             frame_bgr = cv2.resize(frame_bgr, (width, round(frame_bgr.shape[0] * width / frame_bgr.shape[1])))
         state, hands, seconds = self.reflex.state(frame_bgr)
         self.frames += 1
-        lifted, lift_cm, lift_s = self._lift(frame_bgr, state, stream_s)
+        seen = state
+        state, held, lifted, lift_cm, lift_s = self._lift(frame_bgr, state, hands, stream_s)
         self.bus.publish("frame", stream_s=round(stream_s, 3), state="lifted" if lifted else state, hands=hands,
-                         seconds=round(seconds, 4), lift_cm=lift_cm, lift_s=lift_s)
+                         seconds=round(seconds, 4), lift_cm=lift_cm, lift_s=lift_s, **({"held": held} if held else {}))
+        unseen = self.held and seen != "on" and self.lift.base is None and not self.held_lost
         before = self.alarm.episode
-        self.alarm.on_reflex(state, round(stream_s, 3), near=getattr(self.reflex, "near", False), lifted=lifted)
+        self.alarm.on_reflex(state, round(stream_s, 3), near=getattr(self.reflex, "near", False), lifted=lifted, unseen=unseen)
         if self.alarm.episode != before and not lifted:
-            self.confirm_due = (self.alarm.episode, stream_s + self.cfg["confirm"].get("delay_s", 0))
+            delay = self.cfg["confirm"].get("held_delay_s", 0) if self.alarm.unseen else self.cfg["confirm"].get("delay_s", 0)
+            self.confirm_due = (self.alarm.episode, stream_s + delay, self.alarm.unseen)
         if self.confirm_due and stream_s >= self.confirm_due[1]:  # the first off frame often still shows the hands leaving
-            episode, self.confirm_due = self.confirm_due[0], None
+            episode, _, unseen_alarm = self.confirm_due
+            self.confirm_due = None
             if episode == self.alarm.episode and self.alarm.raised and not self.alarm.lifted:
                 self.retries = 0
-                self.confirm.request(episode, frame_bgr, round(stream_s, 3))
+                if unseen_alarm:
+                    import cv2
+                    gray = cv2.cvtColor(frame_bgr, cv2.COLOR_BGR2GRAY)
+                    self.confirm.request(episode, frame_bgr, round(stream_s, 3), kind="held",
+                                         judge=lambda frame, s=round(stream_s, 3): self._held_look(frame, gray, s))
+                else:
+                    self.confirm.request(episode, frame_bgr, round(stream_s, 3))
         elif (self.alarm.cancelled and state != "on" and not self.confirm.pending
               and self.retries < self.cfg["confirm"].get("retries", 0)):  # still off after a cancel: ask on a newer frame
             self.retries += 1
             self.confirm.request(self.alarm.episode, frame_bgr, round(stream_s, 3))
         self.confirm.collect()
 
-    def _lift(self, frame_bgr, state, stream_s):
-        """Whether every hand the reflex reads on is held above the baby, its lift in cm and the seconds it took."""
+    def _lift(self, frame_bgr, state, hands_seen, stream_s):
+        """The state after the lift check: on, off or unknown, the held reading (lift.held) or None, whether every hand
+        is held above the baby, its lift in cm and the seconds it took."""
         if self.lift is None:
-            return False, None, None
-        if state != "on":  # a short flicker keeps the resting baseline, a longer absence drops it
+            return state, None, False, None, None
+        import cv2
+        if state != "on":
+            if self.held and self.lift.base is not None:  # the reflex lost the hand on the baby: follow its region
+                started = time.monotonic()
+                held = self.lift.held(cv2.cvtColor(frame_bgr, cv2.COLOR_BGR2GRAY), stream_s)
+                seconds = round(time.monotonic() - started, 4)
+                if held == "gone":
+                    self.lift.reset()
+                    self.held_lost = True
+                else:
+                    self.off_since = None
+                    lift_cm = None if self.lift.lift_cm is None else round(self.lift.lift_cm, 2)
+                    return "on", held, held == "lifted", lift_cm, seconds
+            # a short flicker keeps the resting baseline, a longer absence drops it
             self.off_since = stream_s if self.off_since is None else self.off_since
             if stream_s - self.off_since >= self.lift.cfg["reset_after_off_s"]:
                 self.lift.reset()
-            return False, None, None
+            return state, None, False, None, None
         self.off_since = None
-        import cv2
+        self.held_lost = False
         started = time.monotonic()
         landmarks = getattr(self.reflex, "landmarks_px", [])
         hands = [landmarks[i] for i in getattr(self.reflex, "on_hands", []) if i < len(landmarks)]
@@ -94,7 +128,25 @@ class Skill:
         self._anchor(frame_bgr, gray, stream_s)
         lifted = self.lift.update(gray, hands, stream_s)
         lift_cm = None if self.lift.lift_cm is None else round(self.lift.lift_cm, 2)
-        return lifted, lift_cm, round(time.monotonic() - started, 4)
+        return state, None, lifted, lift_cm, round(time.monotonic() - started, 4)
+
+    def _held_look(self, frame_bgr, gray, stream_s):
+        """lift.held: SAM 3.1 hand regions with what they hold, on the confirm worker. The skill's thread lands them."""
+        hands, baby = self.masks(frame_bgr, held=True)
+        self.held_anchor = (gray, stream_s, hands, baby)
+        return "held"
+
+    def _held_verdict(self, episode, verdict):
+        """The held look's answer: its hand regions on the baby become the anchor (on), none means no hand on (off)."""
+        if verdict != "held" or self.held_anchor is None:
+            return verdict
+        gray, stream_s, hands, baby = self.held_anchor
+        self.held_anchor = None
+        self.lift.anchor(gray, hands, baby, stream_s)
+        based = self.lift.base is not None
+        self.held_lost = False
+        self.bus.publish("anchor", stream_s=round(stream_s, 3), hands=len(hands), based=based, held=True)
+        return "on" if based else "off"
 
     def _anchor(self, frame_bgr, gray, stream_s):
         """lift.regions sam3: land a finished SAM 3.1 anchor, and send a resting frame when the check asks for one."""

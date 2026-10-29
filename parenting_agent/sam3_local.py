@@ -16,8 +16,8 @@ from .confirm import Unavailable
 
 DEFAULT_PYTHON = Path.home() / "Engineering/gonza/sam3-native/venv/bin/python"
 WORKER = Path(__file__).with_name("sam3_worker.py")
-MASKS = 1 << 31  # same flag as sam3_worker.MASKS
-KEYS = ("device", "confidence", "hand_word", "baby_word", "ring_px", "ring_min", "min_hand_area", "autocast", "held_words", "held_touch_px")
+MASKS, HELD = 1 << 31, 1 << 30  # same flags as sam3_worker
+KEYS = ("device", "confidence", "hand_word", "baby_word", "ring_px", "ring_min", "min_hand_area", "autocast", "held_words", "held_touch_px", "held_mask_words", "batch_prompts", "worn_share", "held_min_hand_area")
 
 
 class Sam3Local:
@@ -40,10 +40,13 @@ class Sam3Local:
             raise Unavailable(f"sam3_local: {hello['blocked']}")
         self.source = hello
         self.lock = threading.Lock()
+        self.codec = config.get("frame_codec", "jpg")
 
     def _ask(self, frame_bgr, flag=0):
         import cv2
-        ok, jpeg = cv2.imencode(".jpg", frame_bgr, [cv2.IMWRITE_JPEG_QUALITY, 90])
+        # PNG keeps the frame as the camera gave it: a JPEG at quality 90 can halve a partly hidden hand's SAM 3.1 mask
+        ok, jpeg = (cv2.imencode(".png", frame_bgr) if self.codec == "png"
+                    else cv2.imencode(".jpg", frame_bgr, [cv2.IMWRITE_JPEG_QUALITY, 90]))
         if not ok:
             return {"verdict": "unknown"}
         data = jpeg.tobytes()
@@ -56,12 +59,13 @@ class Sam3Local:
         reply = self.last = self._ask(frame_bgr)
         return {"on": "on", "off": "off"}.get(reply.get("verdict"), "unsure")
 
-    def masks(self, frame_bgr):
-        """SAM 3.1 hand masks (each at least min_hand_area of the frame) and the baby mask, as bool arrays."""
+    def masks(self, frame_bgr, held=False):
+        """SAM 3.1 hand masks (each at least min_hand_area of the frame) and the baby mask, as bool arrays.
+        held draws each hand with the diaper, wipe or bottle it holds (held_mask_words)."""
         import base64
         import cv2
         import numpy as np
-        reply = self._ask(frame_bgr, MASKS)
+        reply = self._ask(frame_bgr, MASKS | (HELD if held else 0))
         decode = lambda text: cv2.imdecode(np.frombuffer(base64.b64decode(text), np.uint8), cv2.IMREAD_GRAYSCALE) > 0
         baby = decode(reply["baby"]) if reply.get("baby") else None
         return [decode(h) for h in reply.get("hands", [])], baby

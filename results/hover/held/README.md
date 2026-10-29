@@ -1,5 +1,52 @@
 # Hands holding a diaper, a wipe or a bottle above the baby, Oct 29 2026
 
+## Update Oct 29 evening: follow the hand's SAM 3.1 region when MediaPipe loses it (v3)
+
+Measured on Oct 29 2026 between 18:47 and 20:08 Montevideo, during the Meta hackathon, for issue #6. Synthetic clips only, no real child. Every run streamed in real time on the M3 Max, one SAM 3.1 process at a time, under the GPU lock. Other agents' work (a Docker sandbox, an iOS simulator) ran on the Mac all evening, so the 1 minute load average is given next to each number. Load matters: a SAM 3.1 answer that takes more than about 3 s pushes the prompt past the 2.5 s limit.
+
+| Fresh blind held set (`blind2`, 24 hovers, 12 touches) | Hovers spoken within 2.5 s | False "hand" on touches | Load | File |
+|---|---|---|---|---|
+| Target | at least 20 | at most 1 | | |
+| Before, origin/main 18160b5 (scored 20:03) | 6 (5 strict) | 10 | 6.0 | `blind2/before.json` |
+| **After, v3 (scored once, 19:52)** | **19** | **1** | 6.1 | `blind2/after.json` |
+
+**The hover target is missed by one: 19 of 24, not 20. The false voice target is met: 1 of 12.** The 5 missed hovers were all spoken, but late, 2.59 to 3.33 s after the cue: the SAM 3.1 look took 2.3 to 3.3 s, and the lift is read only once its anchor lands. The one false voice (`table-a-hold-touch-wipe-both-s0`) came after the followed region was lost while the hand still rested and MediaPipe flickered in and out: a new alarm was raised, and SAM 3.1 read that frame as off.
+
+The set was rendered with seed 1052 from table-a and table-b, hashed into `blind2/set.sha256` and committed (dd5813a) before any design change. It matched its hash (38 of 38) right before the run. Its per-clip results were not looked at until the design was final, and v3 was scored on it once. The before row was run after that, on main, as a baseline. The old blind set (PR #102, below) gave 5 of 24 and 10 of 12 on main.
+
+### Main hover set and bath, as regression checks
+
+| Check | Before (prior run) | After, v3 | Load |
+|---|---|---|---|
+| Main blind hover set, hovers of 32 | 22 (Oct 29 morning, `../blind/final.json`) | 20 at 19:46, **23** at 19:57 (same code, run twice) | 7.0, 4.8 |
+| Main blind hover set, false voices of 16 touches | 0 | **0 and 0** | |
+| Bath, both hands off spoken | 10 of 10 | **10 of 10** | 5.4 |
+| Bath, one hand on stays silent | 10 of 10 | **10 of 10** | |
+
+The main blind set was already scored before, so it is a regression check, not a blind test. The two runs of the same code (20 and 23) show the run to run spread from load. The two table hovers lost in the first run were lost on time, 2.51 and 3.15 s, with no SAM 3.1 call in them.
+
+### Dev, where v3 was tuned
+
+| Dev run | Held dev hovers of 36 | Held dev false of 18 | Main dev hovers of 19 | Main dev false of 12 | Load | Files |
+|---|---|---|---|---|---|---|
+| origin/main (held dev prior run 04:xx, main dev 19:08) | 9 | 11 | 13 | 4 | 7.0 | `dev/after-v2.json`, `dev/main-before.json` |
+| **v3**, 18:47 and 19:00 | **31** | **0** | **18** | **0** | 4.9, 7.1 | `dev/after-v3.json`, `dev/main-after-v3.json` |
+| v3, 14:23 (busier Mac) | 23 | 0 | | | 3.9 | `dev/after-v3-run2.json` |
+| v3 without the hand-return wait, 14:30 | 27 | 0 | | | 5.1 | `dev/after-v3-noreturn.json` |
+
+Tried and dropped, on dev:
+- **A shorter voice hold for lifted alarms**: 0.5 s gave 33 of 36 held hovers, but 2 false voices on main dev touches. 0.8 s gave 1 false on main dev. The same hold only for lifts read on a region the held look anchored gave 30 of 36 and 1 false: no gain. Not shipped.
+- **The hand-return wait from #102 is kept.** It was a wash on hovers (31 against 32, and 23 against 27, in paired runs), and without it held dev got 2 false voices of 18 in one run. With it, v3 never gave a false voice on dev.
+
+### What v3 does
+
+1. **The hidden hand is found by SAM 3.1, not MediaPipe.** When the reflex never saw a hand (a grip on a diaper hides every landmark), the alarm waits up to `alarm.unseen_wait_s` (4 s) for one SAM 3.1 look. That look prompts hand, baby, diaper, wipe and bottle, and draws each hand together with what it holds. A diaper that lies mostly inside the baby mask is worn, not held, and is left out. A hand region on the baby cancels the alarm and becomes the lift anchor. No hand speaks.
+2. **The region is followed while MediaPipe stays blind** (`lift.held`). The frame counts as on while the anchored region stays where it rested, as lifted once it rises 1.7 cm, and as off once it is not found for 0.6 s. A SAM 3.1 hand mask also covers the forearm, which stays put while the hand rises. So each region's matches that move with the scene are set aside, and the rest give the hand's lift (`lift.split_scene`).
+3. **One decoder pass for all the words.** The five prompts go through SAM 3.1's grounding head as one batch, 0.82 s against 1.79 s one word at a time on this Mac. The worker warms each batch size at start.
+4. **PNG frames to the worker.** A JPEG at quality 90 could halve a partly hidden hand's mask.
+
+## Earlier, Oct 29 04:00 to 05:00 (v2, PR #102)
+
 Measured on Oct 29 2026 between 04:00 and 05:00 Montevideo, during the Meta hackathon, for issue #6. Everything here is synthetic: generated changing-table clips of a generated baby with drawn objects, no real child.
 
 | Headline | Before | After |
