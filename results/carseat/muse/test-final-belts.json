@@ -1,0 +1,3061 @@
+{
+ "summary": {
+  "set": "test",
+  "tag": "final-belts",
+  "frames": 28,
+  "frame_at_s": 3.0,
+  "prompt": "v4-step-zoom",
+  "model": "meta-models/muse-spark-open-1026",
+  "host": "inference.baseten.co",
+  "reasoning_effort": "low",
+  "samples_per_step": 1,
+  "checks_asked": [
+   "lap_guides",
+   "shoulder_guide",
+   "no_twist"
+  ],
+  "muse_alone": {
+   "per_check": {
+    "lap_guides": {
+     "right": 15,
+     "wrong": 8,
+     "abstained": 5,
+     "false_pass": 4,
+     "false_fail": 4,
+     "of": 28
+    },
+    "shoulder_guide": {
+     "right": 12,
+     "wrong": 14,
+     "abstained": 2,
+     "false_pass": 1,
+     "false_fail": 13,
+     "of": 28
+    },
+    "no_twist": {
+     "right": 7,
+     "wrong": 19,
+     "abstained": 2,
+     "false_pass": 0,
+     "false_fail": 19,
+     "of": 28
+    },
+    "level_line": {
+     "right": 4,
+     "wrong": 0,
+     "abstained": 24,
+     "false_pass": 0,
+     "false_fail": 0,
+     "of": 28
+    },
+    "handle": {
+     "right": 4,
+     "wrong": 0,
+     "abstained": 24,
+     "false_pass": 0,
+     "false_fail": 0,
+     "of": 28
+    }
+   },
+   "frames": {
+    "wrong_installs_flagged": 11,
+    "wrong_installs_planted_check_passed": 0,
+    "wrong_installs_all_pass": 0,
+    "wrong_installs_not_passed": 4,
+    "wrong": 12,
+    "correct_all_pass": 0,
+    "false_alarms": 10,
+    "correct_with_unsure": 0,
+    "correct": 12,
+    "unseen_any_pass": 4,
+    "unseen": 4
+   }
+  },
+  "sam_alone": {
+   "per_check": {
+    "lap_guides": {
+     "right": 27,
+     "wrong": 1,
+     "abstained": 0,
+     "false_pass": 0,
+     "false_fail": 1,
+     "of": 28
+    },
+    "shoulder_guide": {
+     "right": 28,
+     "wrong": 0,
+     "abstained": 0,
+     "false_pass": 0,
+     "false_fail": 0,
+     "of": 28
+    },
+    "no_twist": {
+     "right": 27,
+     "wrong": 0,
+     "abstained": 1,
+     "false_pass": 0,
+     "false_fail": 0,
+     "of": 28
+    },
+    "level_line": {
+     "right": 28,
+     "wrong": 0,
+     "abstained": 0,
+     "false_pass": 0,
+     "false_fail": 0,
+     "of": 28
+    },
+    "handle": {
+     "right": 24,
+     "wrong": 1,
+     "abstained": 3,
+     "false_pass": 0,
+     "false_fail": 1,
+     "of": 28
+    }
+   },
+   "frames": {
+    "wrong_installs_flagged": 11,
+    "wrong_installs_planted_check_passed": 0,
+    "wrong_installs_all_pass": 0,
+    "wrong_installs_not_passed": 11,
+    "wrong": 12,
+    "correct_all_pass": 11,
+    "false_alarms": 1,
+    "correct_with_unsure": 0,
+    "correct": 12,
+    "unseen_any_pass": 0,
+    "unseen": 4
+   }
+  },
+  "second_opinion": {
+   "per_check": {
+    "lap_guides": {
+     "right": 27,
+     "wrong": 1,
+     "abstained": 0,
+     "false_pass": 0,
+     "false_fail": 1,
+     "of": 28
+    },
+    "shoulder_guide": {
+     "right": 28,
+     "wrong": 0,
+     "abstained": 0,
+     "false_pass": 0,
+     "false_fail": 0,
+     "of": 28
+    },
+    "no_twist": {
+     "right": 27,
+     "wrong": 0,
+     "abstained": 1,
+     "false_pass": 0,
+     "false_fail": 0,
+     "of": 28
+    },
+    "level_line": {
+     "right": 28,
+     "wrong": 0,
+     "abstained": 0,
+     "false_pass": 0,
+     "false_fail": 0,
+     "of": 28
+    },
+    "handle": {
+     "right": 24,
+     "wrong": 1,
+     "abstained": 3,
+     "false_pass": 0,
+     "false_fail": 1,
+     "of": 28
+    }
+   },
+   "frames": {
+    "wrong_installs_flagged": 11,
+    "wrong_installs_planted_check_passed": 0,
+    "wrong_installs_all_pass": 0,
+    "wrong_installs_not_passed": 11,
+    "wrong": 12,
+    "correct_all_pass": 11,
+    "false_alarms": 1,
+    "correct_with_unsure": 0,
+    "correct": 12,
+    "unseen_any_pass": 0,
+    "unseen": 4
+   }
+  },
+  "latency_s": {
+   "median": 7.146,
+   "max": 22.825,
+   "mean": 7.995
+  },
+  "usd": 0.4048,
+  "usd_per_frame": 0.01446,
+  "calls": 85,
+  "usd_per_call": 0.00476,
+  "errors": 0,
+  "muse_votes_on": [
+   "handle",
+   "level_line"
+  ]
+ },
+ "frames": [
+  {
+   "clip": "test-01-correct.mp4",
+   "error": "correct",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "pass",
+    "shoulder_guide": "fail",
+    "no_twist": "fail",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "fail"
+   },
+   "combined": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "fail"
+   },
+   "muse_steps": {
+    "lap_guides": {
+     "result": "pass",
+     "samples": [
+      "pass"
+     ],
+     "seen": [
+      "through_both"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "3d/low-poly rendering viewed from the near/side angle looking slightly down at the carrier. Lighting is dark, image is low resolution with blocky geometry. The carrier is light grey with a curved side wall visible in the foreground and a far rim in the background.",
+     "seconds": 6.813,
+     "usd": 0.004157,
+     "usage": {
+      "input_tokens": 1541,
+      "output_tokens": 525,
+      "audio_tokens": 0,
+      "reasoning_tokens": 426
+     },
+     "votes": false
+    },
+    "shoulder_guide": {
+     "result": "fail",
+     "samples": [
+      "fail"
+     ],
+     "seen": [
+      "clip_apart_from_belt"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "single frame, low-poly 3D render, dark interior background, viewed from slight side/above angle at the carrier",
+     "seconds": 6.445,
+     "usd": 0.004007,
+     "usage": {
+      "input_tokens": 1540,
+      "output_tokens": 490,
+      "audio_tokens": 0,
+      "reasoning_tokens": 412
+     },
+     "votes": false
+    },
+    "no_twist": {
+     "result": "fail",
+     "samples": [
+      "fail"
+     ],
+     "seen": [
+      "narrows_or_twists"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "One low-poly rendered image showing a rear-facing infant carrier on a dark vehicle seat viewed from the side/3-quarter angle. A vehicle seat belt crosses over the carrier near the middle handle area, and a gray strap with darker horizontal banding runs between two bright blue rectangular clips on th",
+     "seconds": 7.417,
+     "usd": 0.004417,
+     "usage": {
+      "input_tokens": 1531,
+      "output_tokens": 589,
+      "audio_tokens": 0,
+      "reasoning_tokens": 460
+     },
+     "votes": false
+    },
+    "level_line": {
+     "result": null,
+     "skipped": true
+    },
+    "handle": {
+     "result": null,
+     "skipped": true
+    }
+   }
+  },
+  {
+   "clip": "test-02-correct.mp4",
+   "error": "correct",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "fail",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse_steps": {
+    "lap_guides": {
+     "result": "pass",
+     "samples": [
+      "pass"
+     ],
+     "seen": [
+      "through_both"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "In the low-poly rendering of the tan infant carrier, viewed from a 3/4 side angle in a dark interior.\n\nAt the end of the carrier opposite the light-colored doll head is the leg end. There are two bright blue rectangular plastic belt guides at that end:\n\n* One near guide is on the foreground side wal",
+     "seconds": 9.643,
+     "usd": 0.006062,
+     "usage": {
+      "input_tokens": 1541,
+      "output_tokens": 973,
+      "audio_tokens": 0,
+      "reasoning_tokens": 625
+     },
+     "votes": false
+    },
+    "shoulder_guide": {
+     "result": "pass",
+     "samples": [
+      "pass"
+     ],
+     "seen": [
+      "belt_through_clip"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "beige_lowpoly_infant_carrier_center_frame_angled_view",
+     "seconds": 5.992,
+     "usd": 0.003531,
+     "usage": {
+      "input_tokens": 1540,
+      "output_tokens": 378,
+      "audio_tokens": 0,
+      "reasoning_tokens": 315
+     },
+     "votes": false
+    },
+    "no_twist": {
+     "result": "fail",
+     "samples": [
+      "fail"
+     ],
+     "seen": [
+      "narrows_or_twists"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "3D rendered low poly view of a beige infant carrier on a dark seat, viewed from the side. At the foot end of the carrier, opposite the light skinned doll head visible at the head end, there are two bright blue rectangular clips on the side wall of the carrier. A dark gray strap with lighter gray hor",
+     "seconds": 5.114,
+     "usd": 0.003741,
+     "usage": {
+      "input_tokens": 1531,
+      "output_tokens": 430,
+      "audio_tokens": 0,
+      "reasoning_tokens": 308
+     },
+     "votes": false
+    },
+    "level_line": {
+     "result": null,
+     "skipped": true
+    },
+    "handle": {
+     "result": null,
+     "skipped": true
+    }
+   }
+  },
+  {
+   "clip": "test-03-correct.mp4",
+   "error": "correct",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse_steps": {
+    "lap_guides": {
+     "result": "pass",
+     "samples": [
+      "pass"
+     ],
+     "seen": [
+      "through_both"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "You describe exactly what one photo shows. Be precise. You never say anything is safe.",
+     "seconds": 9.271,
+     "usd": 0.006317,
+     "usage": {
+      "input_tokens": 1541,
+      "output_tokens": 1033,
+      "audio_tokens": 0,
+      "reasoning_tokens": 955
+     },
+     "votes": false
+    },
+    "shoulder_guide": {
+     "result": "pass",
+     "samples": [
+      "pass"
+     ],
+     "seen": [
+      "belt_through_clip"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "head-end rim of the gray carrier is on the left side of the photo",
+     "seconds": 6.943,
+     "usd": 0.003838,
+     "usage": {
+      "input_tokens": 1540,
+      "output_tokens": 450,
+      "audio_tokens": 0,
+      "reasoning_tokens": 381
+     },
+     "votes": false
+    },
+    "no_twist": {
+     "result": "pass",
+     "samples": [
+      "pass"
+     ],
+     "seen": [
+      "even_flat"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "One photo shows a low-polygon 3D rendering of an infant in a gray infant carrier/car seat viewed from the side angle. The carrier is dark gray with a metallic U-shaped handle in the middle, a small black rectangle with a green horizontal line on the side, and a visible seat belt strap with blue squa",
+     "seconds": 7.618,
+     "usd": 0.003996,
+     "usage": {
+      "input_tokens": 1531,
+      "output_tokens": 490,
+      "audio_tokens": 0,
+      "reasoning_tokens": 332
+     },
+     "votes": false
+    },
+    "level_line": {
+     "result": null,
+     "skipped": true
+    },
+    "handle": {
+     "result": null,
+     "skipped": true
+    }
+   }
+  },
+  {
+   "clip": "test-04-correct.mp4",
+   "error": "correct",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "pass",
+    "shoulder_guide": "fail",
+    "no_twist": "fail",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse_steps": {
+    "lap_guides": {
+     "result": "pass",
+     "samples": [
+      "pass"
+     ],
+     "seen": [
+      "through_both"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "photo is a low-poly 3D render, dark lighting, viewed from obliquely above the leg / foot end of an infant carrier",
+     "seconds": 8.389,
+     "usd": 0.005173,
+     "usage": {
+      "input_tokens": 1541,
+      "output_tokens": 764,
+      "audio_tokens": 0,
+      "reasoning_tokens": 683
+     },
+     "votes": false
+    },
+    "shoulder_guide": {
+     "result": "fail",
+     "samples": [
+      "fail"
+     ],
+     "seen": [
+      "clip_apart_from_belt"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "head end (left side of image, doll's low-poly light-tan head visible at that end of gray carrier)",
+     "seconds": 6.855,
+     "usd": 0.003825,
+     "usage": {
+      "input_tokens": 1540,
+      "output_tokens": 447,
+      "audio_tokens": 0,
+      "reasoning_tokens": 373
+     },
+     "votes": false
+    },
+    "no_twist": {
+     "result": "fail",
+     "samples": [
+      "fail"
+     ],
+     "seen": [
+      "narrows_or_twists"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "the grey end of the carrier, opposite the doll's head, has a dark grey/black strap running vertically between two bright blue rectangular clips/brackets on the outer shell. Between the upper blue clip and the lower blue clip the strap lies flat against the grey plastic surface and appears as a unifo",
+     "seconds": 7.129,
+     "usd": 0.003856,
+     "usage": {
+      "input_tokens": 1531,
+      "output_tokens": 457,
+      "audio_tokens": 0,
+      "reasoning_tokens": 299
+     },
+     "votes": false
+    },
+    "level_line": {
+     "result": null,
+     "skipped": true
+    },
+    "handle": {
+     "result": null,
+     "skipped": true
+    }
+   }
+  },
+  {
+   "clip": "test-05-correct.mp4",
+   "error": "correct",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "pass",
+    "shoulder_guide": "fail",
+    "no_twist": "fail",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse_steps": {
+    "lap_guides": {
+     "result": "pass",
+     "samples": [
+      "pass"
+     ],
+     "seen": [
+      "through_both"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "low-poly 3D render, dark background, single frame",
+     "seconds": 6.21,
+     "usd": 0.003954,
+     "usage": {
+      "input_tokens": 1541,
+      "output_tokens": 477,
+      "audio_tokens": 0,
+      "reasoning_tokens": 413
+     },
+     "votes": false
+    },
+    "shoulder_guide": {
+     "result": "fail",
+     "samples": [
+      "fail"
+     ],
+     "seen": [
+      "clip_apart_from_belt"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "In the photo the infant carrier is viewed from the side angled toward the head end on the left.\nAt the head end of the carrier on the upper rim there is a small bright blue rectangular plastic clip.\nAcross the top of the photo, from left to right, a long dark gray/black strap with a flat, slightly r",
+     "seconds": 20.925,
+     "usd": 0.004135,
+     "usage": {
+      "input_tokens": 1540,
+      "output_tokens": 520,
+      "audio_tokens": 0,
+      "reasoning_tokens": 309
+     },
+     "votes": false
+    },
+    "no_twist": {
+     "result": "fail",
+     "samples": [
+      "fail"
+     ],
+     "seen": [
+      "narrows_or_twists"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "at the carrier as it rests in the vehicle, the upper and lower blue clips anchoring the strap on the side that sits farthest from the doll's visible head. One strap segment connects these two clips. Between the clips the visible portion shows as a grey and dark striped band with a ridged texture. Wi",
+     "seconds": 7.388,
+     "usd": 0.004468,
+     "usage": {
+      "input_tokens": 1531,
+      "output_tokens": 601,
+      "audio_tokens": 0,
+      "reasoning_tokens": 432
+     },
+     "votes": false
+    },
+    "level_line": {
+     "result": null,
+     "skipped": true
+    },
+    "handle": {
+     "result": null,
+     "skipped": true
+    }
+   }
+  },
+  {
+   "clip": "test-06-correct.mp4",
+   "error": "correct",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "fail",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse_steps": {
+    "lap_guides": {
+     "result": "pass",
+     "samples": [
+      "pass"
+     ],
+     "seen": [
+      "through_both"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "1",
+     "seconds": 6.707,
+     "usd": 0.004238,
+     "usage": {
+      "input_tokens": 1541,
+      "output_tokens": 544,
+      "audio_tokens": 0,
+      "reasoning_tokens": 501
+     },
+     "votes": false
+    },
+    "shoulder_guide": {
+     "result": "pass",
+     "samples": [
+      "pass"
+     ],
+     "seen": [
+      "belt_through_clip"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "photo_1",
+     "seconds": 5.166,
+     "usd": 0.002898,
+     "usage": {
+      "input_tokens": 1540,
+      "output_tokens": 229,
+      "audio_tokens": 0,
+      "reasoning_tokens": 178
+     },
+     "votes": false
+    },
+    "no_twist": {
+     "result": "fail",
+     "samples": [
+      "fail"
+     ],
+     "seen": [
+      "narrows_or_twists"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "photo_1",
+     "seconds": 6.459,
+     "usd": 0.003418,
+     "usage": {
+      "input_tokens": 1531,
+      "output_tokens": 354,
+      "audio_tokens": 0,
+      "reasoning_tokens": 300
+     },
+     "votes": false
+    },
+    "level_line": {
+     "result": null,
+     "skipped": true
+    },
+    "handle": {
+     "result": null,
+     "skipped": true
+    }
+   }
+  },
+  {
+   "clip": "test-07-correct.mp4",
+   "error": "correct",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "pass",
+    "shoulder_guide": "fail",
+    "no_twist": "fail",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse_steps": {
+    "lap_guides": {
+     "result": "pass",
+     "samples": [
+      "pass"
+     ],
+     "seen": [
+      "through_both"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "This single still image - low poly / low resolution, dark background, oblique overhead view of a gray infant carrier leg end.",
+     "seconds": 8.702,
+     "usd": 0.004825,
+     "usage": {
+      "input_tokens": 1541,
+      "output_tokens": 682,
+      "audio_tokens": 0,
+      "reasoning_tokens": 609
+     },
+     "votes": false
+    },
+    "shoulder_guide": {
+     "result": "fail",
+     "samples": [
+      "fail"
+     ],
+     "seen": [
+      "clip_apart_from_belt"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "top-three-quarter view of a gray infant carrier, low-poly render, dark background",
+     "seconds": 7.53,
+     "usd": 0.004942,
+     "usage": {
+      "input_tokens": 1540,
+      "output_tokens": 710,
+      "audio_tokens": 0,
+      "reasoning_tokens": 639
+     },
+     "votes": false
+    },
+    "no_twist": {
+     "result": "fail",
+     "samples": [
+      "fail"
+     ],
+     "seen": [
+      "narrows_or_twists"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "One low-poly rendered overhead view of a gray infant carrier with a light skinned doll head visible at one end and a light blue cushion inside. A dark gray strap with darker transverse banding crosses the top of the image, separate from the carrier.",
+     "seconds": 8.61,
+     "usd": 0.004204,
+     "usage": {
+      "input_tokens": 1531,
+      "output_tokens": 539,
+      "audio_tokens": 0,
+      "reasoning_tokens": 441
+     },
+     "votes": false
+    },
+    "level_line": {
+     "result": null,
+     "skipped": true
+    },
+    "handle": {
+     "result": null,
+     "skipped": true
+    }
+   }
+  },
+  {
+   "clip": "test-08-correct.mp4",
+   "error": "correct",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "pass",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse_steps": {
+    "lap_guides": {
+     "result": "pass",
+     "samples": [
+      "pass"
+     ],
+     "seen": [
+      "through_both"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "The provided image is a low-poly 3D rendering viewed from the side/leg-end angle of an infant carrier placed on a dark vehicle seat. The leg end is the end away from the doll's head, opposite the end with the light-colored rounded shape representing the head.",
+     "seconds": 8.114,
+     "usd": 0.005007,
+     "usage": {
+      "input_tokens": 1541,
+      "output_tokens": 725,
+      "audio_tokens": 0,
+      "reasoning_tokens": 621
+     },
+     "votes": false
+    },
+    "shoulder_guide": {
+     "result": "unseen",
+     "samples": [
+      "unseen"
+     ],
+     "seen": [
+      "cannot_see"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "photo shows gray infant carrier viewed from side angle",
+     "seconds": 9.457,
+     "usd": 0.004199,
+     "usage": {
+      "input_tokens": 1540,
+      "output_tokens": 535,
+      "audio_tokens": 0,
+      "reasoning_tokens": 478
+     },
+     "votes": false
+    },
+    "no_twist": {
+     "result": "unseen",
+     "samples": [
+      "unseen"
+     ],
+     "seen": [
+      "cannot_see"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "seat belt strap that runs between the two blue clips",
+     "seconds": 7.399,
+     "usd": 0.004064,
+     "usage": {
+      "input_tokens": 1531,
+      "output_tokens": 506,
+      "audio_tokens": 0,
+      "reasoning_tokens": 455
+     },
+     "votes": false
+    },
+    "level_line": {
+     "result": null,
+     "skipped": true
+    },
+    "handle": {
+     "result": null,
+     "skipped": true
+    }
+   }
+  },
+  {
+   "clip": "test-09-correct.mp4",
+   "error": "correct",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "pass",
+    "shoulder_guide": "fail",
+    "no_twist": "pass",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse_steps": {
+    "lap_guides": {
+     "result": "pass",
+     "samples": [
+      "pass"
+     ],
+     "seen": [
+      "through_both"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "image analysis: what is shown in this single frame",
+     "seconds": 6.985,
+     "usd": 0.004221,
+     "usage": {
+      "input_tokens": 1541,
+      "output_tokens": 540,
+      "audio_tokens": 0,
+      "reasoning_tokens": 476
+     },
+     "votes": false
+    },
+    "shoulder_guide": {
+     "result": "fail",
+     "samples": [
+      "fail"
+     ],
+     "seen": [
+      "clip_apart_from_belt"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "left end of carrier body, rim area beyond the pale rounded shape that is the doll's head",
+     "seconds": 6.239,
+     "usd": 0.004671,
+     "usage": {
+      "input_tokens": 1540,
+      "output_tokens": 646,
+      "audio_tokens": 0,
+      "reasoning_tokens": 579
+     },
+     "votes": false
+    },
+    "no_twist": {
+     "result": "pass",
+     "samples": [
+      "pass"
+     ],
+     "seen": [
+      "even_flat"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "In this single low-poly rendering, at the end of the carrier opposite the doll's head, there is a gray strap segment running vertically between two bright blue rectangular clips.\n",
+     "seconds": 6.84,
+     "usd": 0.003393,
+     "usage": {
+      "input_tokens": 1531,
+      "output_tokens": 348,
+      "audio_tokens": 0,
+      "reasoning_tokens": 270
+     },
+     "votes": false
+    },
+    "level_line": {
+     "result": null,
+     "skipped": true
+    },
+    "handle": {
+     "result": null,
+     "skipped": true
+    }
+   }
+  },
+  {
+   "clip": "test-10-correct.mp4",
+   "error": "correct",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "fail",
+    "shoulder_guide": "pass",
+    "no_twist": "fail",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse_steps": {
+    "lap_guides": {
+     "result": "fail",
+     "samples": [
+      "fail"
+     ],
+     "seen": [
+      "misses_near_clip"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "The image is a low-resolution, low-poly computer rendering of an infant carrier on a dark seat, with a grey vehicle belt crossing over it. At the leg end of the carrier, opposite the beige doll head, two bright blue rectangular pieces are visible.",
+     "seconds": 7.103,
+     "usd": 0.004965,
+     "usage": {
+      "input_tokens": 1541,
+      "output_tokens": 715,
+      "audio_tokens": 0,
+      "reasoning_tokens": 615
+     },
+     "votes": false
+    },
+    "shoulder_guide": {
+     "result": "pass",
+     "samples": [
+      "pass"
+     ],
+     "seen": [
+      "belt_through_clip"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "Single low-light, low-poly rendered image angled from above and to the side of a light gray infant carrier placed on a dark vehicle seat.",
+     "seconds": 14.102,
+     "usd": 0.003366,
+     "usage": {
+      "input_tokens": 1540,
+      "output_tokens": 339,
+      "audio_tokens": 0,
+      "reasoning_tokens": 260
+     },
+     "votes": false
+    },
+    "no_twist": {
+     "result": "fail",
+     "samples": [
+      "fail"
+     ],
+     "seen": [
+      "narrows_or_twists"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "From one blue clip to the other, the visible segment of the grey strap with darker banding appears as a single continuous strip. Between the two blue clips the strap is oriented roughly vertically in the frame.",
+     "seconds": 7.166,
+     "usd": 0.004234,
+     "usage": {
+      "input_tokens": 1531,
+      "output_tokens": 546,
+      "audio_tokens": 0,
+      "reasoning_tokens": 452
+     },
+     "votes": false
+    },
+    "level_line": {
+     "result": null,
+     "skipped": true
+    },
+    "handle": {
+     "result": null,
+     "skipped": true
+    }
+   }
+  },
+  {
+   "clip": "test-11-correct.mp4",
+   "error": "correct",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "fail",
+    "shoulder_guide": "unseen",
+    "no_twist": "fail",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse_steps": {
+    "lap_guides": {
+     "result": "fail",
+     "samples": [
+      "fail"
+     ],
+     "seen": [
+      "misses_near_clip"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "One digital render of an infant carrier is shown, viewed from an elevated angle slightly toward the side, in dark surroundings with a vehicle seat belt strap visible in the background.",
+     "seconds": 6.891,
+     "usd": 0.004497,
+     "usage": {
+      "input_tokens": 1541,
+      "output_tokens": 605,
+      "audio_tokens": 0,
+      "reasoning_tokens": 519
+     },
+     "votes": false
+    },
+    "shoulder_guide": {
+     "result": "unseen",
+     "samples": [
+      "unseen"
+     ],
+     "seen": [
+      "cannot_see"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "This is a low-poly 3D render of an infant carrier on a dark vehicle seat, viewed from a high three-quarter angle.",
+     "seconds": 5.72,
+     "usd": 0.003676,
+     "usage": {
+      "input_tokens": 1540,
+      "output_tokens": 412,
+      "audio_tokens": 0,
+      "reasoning_tokens": 332
+     },
+     "votes": false
+    },
+    "no_twist": {
+     "result": "fail",
+     "samples": [
+      "fail"
+     ],
+     "seen": [
+      "narrows_or_twists"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "The photo is a low-resolution, low-poly 3D rendering of an infant carrier / car seat viewed from a slightly elevated side angle in dark lighting.",
+     "seconds": 5.534,
+     "usd": 0.00369,
+     "usage": {
+      "input_tokens": 1531,
+      "output_tokens": 418,
+      "audio_tokens": 0,
+      "reasoning_tokens": 334
+     },
+     "votes": false
+    },
+    "level_line": {
+     "result": null,
+     "skipped": true
+    },
+    "handle": {
+     "result": null,
+     "skipped": true
+    }
+   }
+  },
+  {
+   "clip": "test-12-correct.mp4",
+   "error": "correct",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "pass",
+    "shoulder_guide": "fail",
+    "no_twist": "pass",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse_steps": {
+    "lap_guides": {
+     "result": "pass",
+     "samples": [
+      "pass"
+     ],
+     "seen": [
+      "through_both"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "photo is a low-poly 3D render viewed from a slightly elevated, oblique angle looking into a gray infant carrier. Lighting is dim, background is dark and indistinct",
+     "seconds": 7.486,
+     "usd": 0.005207,
+     "usage": {
+      "input_tokens": 1541,
+      "output_tokens": 772,
+      "audio_tokens": 0,
+      "reasoning_tokens": 684
+     },
+     "votes": false
+    },
+    "shoulder_guide": {
+     "result": "fail",
+     "samples": [
+      "fail"
+     ],
+     "seen": [
+      "clip_apart_from_belt"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "A single low-poly rendered photo of an infant carrier/car-seat placed in a dark vehicle interior, viewed from a high angle looking slightly down into the seat.",
+     "seconds": 6.435,
+     "usd": 0.003922,
+     "usage": {
+      "input_tokens": 1540,
+      "output_tokens": 470,
+      "audio_tokens": 0,
+      "reasoning_tokens": 384
+     },
+     "votes": false
+    },
+    "no_twist": {
+     "result": "pass",
+     "samples": [
+      "pass"
+     ],
+     "seen": [
+      "even_flat"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "In this single low-resolution 3D-rendered image, viewed from an overhead angle in dark lighting:\n\n* A gray infant carrier is visible. At the end opposite the light-tan doll head, there are two small bright-blue rectangular clips attached to the carrier shell.\n* A dark gray strap segment connects tho",
+     "seconds": 22.825,
+     "usd": 0.004285,
+     "usage": {
+      "input_tokens": 1531,
+      "output_tokens": 558,
+      "audio_tokens": 0,
+      "reasoning_tokens": 329
+     },
+     "votes": false
+    },
+    "level_line": {
+     "result": null,
+     "skipped": true
+    },
+    "handle": {
+     "result": null,
+     "skipped": true
+    }
+   }
+  },
+  {
+   "clip": "test-13-outside_guide.mp4",
+   "error": "outside_guide",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "fail",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "pass",
+    "shoulder_guide": "fail",
+    "no_twist": "fail",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "fail",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "pass",
+    "shoulder_guide": "fail",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse_steps": {
+    "lap_guides": {
+     "result": "pass",
+     "samples": [
+      "pass"
+     ],
+     "seen": [
+      "through_both"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "In this single still image, at the leg end of the carrier - the end opposite the light colored doll head visible on the left side of the carrier:",
+     "seconds": 5.152,
+     "usd": 0.004404,
+     "usage": {
+      "input_tokens": 1541,
+      "output_tokens": 583,
+      "audio_tokens": 0,
+      "reasoning_tokens": 505
+     },
+     "votes": false
+    },
+    "shoulder_guide": {
+     "result": "fail",
+     "samples": [
+      "fail"
+     ],
+     "seen": [
+      "clip_apart_from_belt"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "photo",
+     "seconds": 7.762,
+     "usd": 0.004785,
+     "usage": {
+      "input_tokens": 1540,
+      "output_tokens": 673,
+      "audio_tokens": 0,
+      "reasoning_tokens": 617
+     },
+     "votes": false
+    },
+    "no_twist": {
+     "result": "fail",
+     "samples": [
+      "fail"
+     ],
+     "seen": [
+      "narrows_or_twists"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "In the photo a low-poly rendered infant carrier is visible in dark surroundings. At the end of the carrier opposite the light-colored doll head, two bright blue rectangular clips are visible on the side wall of the carrier. A dark gray strap with lighter gray horizontal striping runs between those t",
+     "seconds": 8.057,
+     "usd": 0.004034,
+     "usage": {
+      "input_tokens": 1531,
+      "output_tokens": 499,
+      "audio_tokens": 0,
+      "reasoning_tokens": 391
+     },
+     "votes": false
+    },
+    "level_line": {
+     "result": null,
+     "skipped": true
+    },
+    "handle": {
+     "result": null,
+     "skipped": true
+    }
+   }
+  },
+  {
+   "clip": "test-14-outside_guide.mp4",
+   "error": "outside_guide",
+   "truth": {
+    "lap_guides": "fail",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "fail",
+    "no_twist": "fail",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "sam": {
+    "lap_guides": "fail",
+    "shoulder_guide": "pass",
+    "no_twist": "unseen",
+    "level_line": "pass",
+    "handle": "unseen"
+   },
+   "combined": {
+    "lap_guides": "fail",
+    "shoulder_guide": "pass",
+    "no_twist": "unseen",
+    "level_line": "pass",
+    "handle": "unseen"
+   },
+   "muse_steps": {
+    "lap_guides": {
+     "result": "unseen",
+     "samples": [
+      "unseen"
+     ],
+     "seen": [
+      "cannot_see"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "This one low resolution 3D rendered image shows a rear facing infant carrier on a dark vehicle seat.\n\nThe carrier is viewed from the side with the doll's head visible on the left side of the image tucked inside the shell. The opposite end of the carrier, the leg end, is on the right side of the imag",
+     "seconds": 7.845,
+     "usd": 0.006397,
+     "usage": {
+      "input_tokens": 1541,
+      "output_tokens": 1052,
+      "audio_tokens": 0,
+      "reasoning_tokens": 725
+     },
+     "votes": false
+    },
+    "shoulder_guide": {
+     "result": "fail",
+     "samples": [
+      "fail"
+     ],
+     "seen": [
+      "clip_apart_from_belt"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "left end of the carrier shown",
+     "seconds": 8.513,
+     "usd": 0.004756,
+     "usage": {
+      "input_tokens": 1540,
+      "output_tokens": 666,
+      "audio_tokens": 0,
+      "reasoning_tokens": 608
+     },
+     "votes": false
+    },
+    "no_twist": {
+     "result": "fail",
+     "samples": [
+      "fail"
+     ],
+     "seen": [
+      "narrows_or_twists"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "One low resolution dark 3D rendered view of a beige rear facing infant carrier on a dark vehicle seat. A light skinned doll head is visible at the left end of the carrier. A dark gray vehicle belt crosses horizontally near the top of the frame. A dark gray webbing strap is visible running diagonally",
+     "seconds": 9.961,
+     "usd": 0.007422,
+     "usage": {
+      "input_tokens": 1531,
+      "output_tokens": 1296,
+      "audio_tokens": 0,
+      "reasoning_tokens": 1104
+     },
+     "votes": false
+    },
+    "level_line": {
+     "result": null,
+     "skipped": true
+    },
+    "handle": {
+     "result": null,
+     "skipped": true
+    }
+   }
+  },
+  {
+   "clip": "test-15-outside_guide.mp4",
+   "error": "outside_guide",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "fail",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "pass",
+    "shoulder_guide": "fail",
+    "no_twist": "fail",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "fail",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "unseen"
+   },
+   "combined": {
+    "lap_guides": "pass",
+    "shoulder_guide": "fail",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "unseen"
+   },
+   "muse_steps": {
+    "lap_guides": {
+     "result": "pass",
+     "samples": [
+      "pass"
+     ],
+     "seen": [
+      "through_both"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "This is a low-poly 3D rendered image of a gray infant carrier viewed from the side at an oblique angle in low light. At the end opposite the light-colored doll head, which is visible at the left side of the carrier, is the foot or leg end on the right side of the image.\n\n",
+     "seconds": 7.127,
+     "usd": 0.005517,
+     "usage": {
+      "input_tokens": 1541,
+      "output_tokens": 845,
+      "audio_tokens": 0,
+      "reasoning_tokens": 732
+     },
+     "votes": false
+    },
+    "shoulder_guide": {
+     "result": "fail",
+     "samples": [
+      "fail"
+     ],
+     "seen": [
+      "clip_apart_from_belt"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "Left end of the gray infant carrier where the light-skinned doll head is visible inside the side wall",
+     "seconds": 6.907,
+     "usd": 0.003043,
+     "usage": {
+      "input_tokens": 1540,
+      "output_tokens": 263,
+      "audio_tokens": 0,
+      "reasoning_tokens": 191
+     },
+     "votes": false
+    },
+    "no_twist": {
+     "result": "fail",
+     "samples": [
+      "fail"
+     ],
+     "seen": [
+      "narrows_or_twists"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "In this single low-light, low-polygon 3D render you see a gray infant carrier viewed from the side, angled slightly. The carrier's shell, handle, and interior padding are visible against a dark background.",
+     "seconds": 7.163,
+     "usd": 0.004591,
+     "usage": {
+      "input_tokens": 1531,
+      "output_tokens": 630,
+      "audio_tokens": 0,
+      "reasoning_tokens": 535
+     },
+     "votes": false
+    },
+    "level_line": {
+     "result": null,
+     "skipped": true
+    },
+    "handle": {
+     "result": null,
+     "skipped": true
+    }
+   }
+  },
+  {
+   "clip": "test-16-twisted.mp4",
+   "error": "twisted",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "fail",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "pass",
+    "shoulder_guide": "fail",
+    "no_twist": "fail",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "fail",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "fail",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse_steps": {
+    "lap_guides": {
+     "result": "pass",
+     "samples": [
+      "pass"
+     ],
+     "seen": [
+      "through_both"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "This is a low-resolution, low-poly rendered image of a gray infant carrier on a dark vehicle seat, viewed from an elevated three-quarter angle. The doll's light-colored head is visible at the left end of the carrier, under a gray harness strap. The opposite end - the leg / foot end - is on the right",
+     "seconds": 6.734,
+     "usd": 0.004361,
+     "usage": {
+      "input_tokens": 1541,
+      "output_tokens": 573,
+      "audio_tokens": 0,
+      "reasoning_tokens": 456
+     },
+     "votes": false
+    },
+    "shoulder_guide": {
+     "result": "fail",
+     "samples": [
+      "fail"
+     ],
+     "seen": [
+      "clip_apart_from_belt"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "In this single low-poly rendered image, viewed from a slightly elevated side angle",
+     "seconds": 8.545,
+     "usd": 0.003876,
+     "usage": {
+      "input_tokens": 1540,
+      "output_tokens": 459,
+      "audio_tokens": 0,
+      "reasoning_tokens": 387
+     },
+     "votes": false
+    },
+    "no_twist": {
+     "result": "fail",
+     "samples": [
+      "fail"
+     ],
+     "seen": [
+      "narrows_or_twists"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "exactly what is in the one photo",
+     "seconds": 9.047,
+     "usd": 0.003533,
+     "usage": {
+      "input_tokens": 1531,
+      "output_tokens": 381,
+      "audio_tokens": 0,
+      "reasoning_tokens": 327
+     },
+     "votes": false
+    },
+    "level_line": {
+     "result": null,
+     "skipped": true
+    },
+    "handle": {
+     "result": null,
+     "skipped": true
+    }
+   }
+  },
+  {
+   "clip": "test-17-twisted.mp4",
+   "error": "twisted",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "fail",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "unseen",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "sam": {
+    "lap_guides": "fail",
+    "shoulder_guide": "pass",
+    "no_twist": "fail",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "fail",
+    "shoulder_guide": "pass",
+    "no_twist": "fail",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse_steps": {
+    "lap_guides": {
+     "result": "pass",
+     "samples": [
+      "pass"
+     ],
+     "seen": [
+      "through_both"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "what_is_visible_only",
+     "seconds": 4.405,
+     "usd": 0.003792,
+     "usage": {
+      "input_tokens": 1541,
+      "output_tokens": 439,
+      "audio_tokens": 0,
+      "reasoning_tokens": 389
+     },
+     "votes": false
+    },
+    "shoulder_guide": {
+     "result": "pass",
+     "samples": [
+      "pass"
+     ],
+     "seen": [
+      "belt_through_clip"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "Head end rim of the gray carrier with small protruding blue plastic clip at far end. A long flat black belt spans across the upper third of the picture, left to right, above the carrier and handle.",
+     "seconds": 7.1,
+     "usd": 0.003566,
+     "usage": {
+      "input_tokens": 1540,
+      "output_tokens": 386,
+      "audio_tokens": 0,
+      "reasoning_tokens": 297
+     },
+     "votes": false
+    },
+    "no_twist": {
+     "result": "unseen",
+     "samples": [
+      "unseen"
+     ],
+     "seen": [
+      "cannot_see"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "Find the doll's head on the left side of the gray carrier. Find the opposite short end of the carrier on the right side. On that right end there are two bright blue rectangular clip / guide pieces, one upper and one lower.",
+     "seconds": 6.593,
+     "usd": 0.002929,
+     "usage": {
+      "input_tokens": 1531,
+      "output_tokens": 239,
+      "audio_tokens": 0,
+      "reasoning_tokens": 140
+     },
+     "votes": false
+    },
+    "level_line": {
+     "result": null,
+     "skipped": true
+    },
+    "handle": {
+     "result": null,
+     "skipped": true
+    }
+   }
+  },
+  {
+   "clip": "test-18-twisted.mp4",
+   "error": "twisted",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "fail",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "pass",
+    "no_twist": "fail",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "fail",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "fail",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse_steps": {
+    "lap_guides": {
+     "result": "unseen",
+     "samples": [
+      "unseen"
+     ],
+     "seen": [
+      "cannot_see"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "leg end of carrier",
+     "seconds": 13.756,
+     "usd": 0.004251,
+     "usage": {
+      "input_tokens": 1541,
+      "output_tokens": 547,
+      "audio_tokens": 0,
+      "reasoning_tokens": 496
+     },
+     "votes": false
+    },
+    "shoulder_guide": {
+     "result": "pass",
+     "samples": [
+      "pass"
+     ],
+     "seen": [
+      "belt_through_clip"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "At the head end of the gray infant carrier - the left side of the image as viewed - a small blue rectangular clip is visible on the outer rim of the carrier shell.",
+     "seconds": 6.405,
+     "usd": 0.004262,
+     "usage": {
+      "input_tokens": 1540,
+      "output_tokens": 550,
+      "audio_tokens": 0,
+      "reasoning_tokens": 470
+     },
+     "votes": false
+    },
+    "no_twist": {
+     "result": "fail",
+     "samples": [
+      "fail"
+     ],
+     "seen": [
+      "narrows_or_twists"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "photo shows gray infant carrier car seat viewed from side angle, dark background, low-poly 3D rendering. Two blue clips are visible on the side/lip of the carrier at the end away from the doll's head - one near the top edge and one lower on the side. A dark gray striped strap runs between those two ",
+     "seconds": 6.951,
+     "usd": 0.003652,
+     "usage": {
+      "input_tokens": 1531,
+      "output_tokens": 409,
+      "audio_tokens": 0,
+      "reasoning_tokens": 296
+     },
+     "votes": false
+    },
+    "level_line": {
+     "result": null,
+     "skipped": true
+    },
+    "handle": {
+     "result": null,
+     "skipped": true
+    }
+   }
+  },
+  {
+   "clip": "test-19-recline.mp4",
+   "error": "recline",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "fail",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "fail",
+    "no_twist": "fail",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "fail",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "fail",
+    "handle": "pass"
+   },
+   "muse_steps": {
+    "lap_guides": {
+     "result": "unseen",
+     "samples": [
+      "unseen"
+     ],
+     "seen": [
+      "cannot_see"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "Photo shows a low-poly 3D render of a grey infant carrier on a dark vehicle seat, viewed from a high oblique angle looking down at the side and leg end. Lighting is dim, image is pixelated/low resolution.\n\nCarrier orientation: Head end is to the left/rear, where a small flesh-toned shape and dark in",
+     "seconds": 17.43,
+     "usd": 0.00627,
+     "usage": {
+      "input_tokens": 1541,
+      "output_tokens": 1022,
+      "audio_tokens": 0,
+      "reasoning_tokens": 584
+     },
+     "votes": false
+    },
+    "shoulder_guide": {
+     "result": "fail",
+     "samples": [
+      "fail"
+     ],
+     "seen": [
+      "clip_apart_from_belt"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "at the far end of the grey infant carrier in the center of the photo, the end where the light skinned doll head is partially visible protruding from the grey shell",
+     "seconds": 6.558,
+     "usd": 0.003668,
+     "usage": {
+      "input_tokens": 1540,
+      "output_tokens": 410,
+      "audio_tokens": 0,
+      "reasoning_tokens": 323
+     },
+     "votes": false
+    },
+    "no_twist": {
+     "result": "fail",
+     "samples": [
+      "fail"
+     ],
+     "seen": [
+      "narrows_or_twists"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "low-poly 3D render viewed from above at an angle in dim lighting",
+     "seconds": 8.364,
+     "usd": 0.004519,
+     "usage": {
+      "input_tokens": 1531,
+      "output_tokens": 613,
+      "audio_tokens": 0,
+      "reasoning_tokens": 542
+     },
+     "votes": false
+    },
+    "level_line": {
+     "result": null,
+     "skipped": true
+    },
+    "handle": {
+     "result": null,
+     "skipped": true
+    }
+   }
+  },
+  {
+   "clip": "test-20-recline.mp4",
+   "error": "recline",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "fail",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "fail",
+    "shoulder_guide": "pass",
+    "no_twist": "fail",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "fail",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "fail",
+    "handle": "pass"
+   },
+   "muse_steps": {
+    "lap_guides": {
+     "result": "fail",
+     "samples": [
+      "fail"
+     ],
+     "seen": [
+      "misses_near_clip"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "The image is a low-poly, dark 3D rendering of a rear-facing infant carrier viewed from above at an oblique angle. The doll's head, a pink/tan faceted sphere, is at the left end of the carrier. The opposite end, the foot/leg end, is toward the right side of the frame.",
+     "seconds": 9.159,
+     "usd": 0.005432,
+     "usage": {
+      "input_tokens": 1541,
+      "output_tokens": 825,
+      "audio_tokens": 0,
+      "reasoning_tokens": 705
+     },
+     "votes": false
+    },
+    "shoulder_guide": {
+     "result": "pass",
+     "samples": [
+      "pass"
+     ],
+     "seen": [
+      "belt_through_clip"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "In the photo, the beige infant carrier is viewed from above at an angle.",
+     "seconds": 12.614,
+     "usd": 0.003786,
+     "usage": {
+      "input_tokens": 1540,
+      "output_tokens": 438,
+      "audio_tokens": 0,
+      "reasoning_tokens": 370
+     },
+     "votes": false
+    },
+    "no_twist": {
+     "result": "fail",
+     "samples": [
+      "fail"
+     ],
+     "seen": [
+      "narrows_or_twists"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "From this single low-poly rendered view, the strap in question is the dark grey horizontal bar that spans across the upper portion of the infant carrier, with a small blue square clip visible at its left end and a second small blue clip partially visible near its right side where it crosses the carr",
+     "seconds": 6.382,
+     "usd": 0.004485,
+     "usage": {
+      "input_tokens": 1531,
+      "output_tokens": 605,
+      "audio_tokens": 0,
+      "reasoning_tokens": 497
+     },
+     "votes": false
+    },
+    "level_line": {
+     "result": null,
+     "skipped": true
+    },
+    "handle": {
+     "result": null,
+     "skipped": true
+    }
+   }
+  },
+  {
+   "clip": "test-21-recline.mp4",
+   "error": "recline",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "fail",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "fail",
+    "no_twist": "fail",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "fail",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "fail",
+    "handle": "pass"
+   },
+   "muse_steps": {
+    "lap_guides": {
+     "result": "unseen",
+     "samples": [
+      "unseen"
+     ],
+     "seen": [
+      "cannot_see"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "image_center_top",
+     "seconds": 6.156,
+     "usd": 0.00494,
+     "usage": {
+      "input_tokens": 1541,
+      "output_tokens": 709,
+      "audio_tokens": 0,
+      "reasoning_tokens": 661
+     },
+     "votes": false
+    },
+    "shoulder_guide": {
+     "result": "fail",
+     "samples": [
+      "fail"
+     ],
+     "seen": [
+      "clip_apart_from_belt"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "carrier is gray plastic with a central silver/gray handle. Interior holds a light-skinned doll in pink clothing, head at the left end of the carrier, feet toward the right. On the rim at the head end (left side) there is a small bright blue rectangular clip attached to the carrier edge. A long dark ",
+     "seconds": 12.935,
+     "usd": 0.003659,
+     "usage": {
+      "input_tokens": 1540,
+      "output_tokens": 408,
+      "audio_tokens": 0,
+      "reasoning_tokens": 272
+     },
+     "votes": false
+    },
+    "no_twist": {
+     "result": "fail",
+     "samples": [
+      "fail"
+     ],
+     "seen": [
+      "narrows_or_twists"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "The photo shows a low-poly rendered infant carrier viewed from a side angle. A gray strap with dark gray transverse bands runs diagonally between two bright blue rectangular clips on the far end of the carrier, opposite the end where the light skin-toned doll head is visible. A pink blanket or fabri",
+     "seconds": 7.65,
+     "usd": 0.003805,
+     "usage": {
+      "input_tokens": 1531,
+      "output_tokens": 445,
+      "audio_tokens": 0,
+      "reasoning_tokens": 313
+     },
+     "votes": false
+    },
+    "level_line": {
+     "result": null,
+     "skipped": true
+    },
+    "handle": {
+     "result": null,
+     "skipped": true
+    }
+   }
+  },
+  {
+   "clip": "test-22-handle.mp4",
+   "error": "handle",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "fail"
+   },
+   "muse": {
+    "lap_guides": "fail",
+    "shoulder_guide": "pass",
+    "no_twist": "fail",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "fail"
+   },
+   "combined": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "fail"
+   },
+   "muse_steps": {
+    "lap_guides": {
+     "result": "fail",
+     "samples": [
+      "fail"
+     ],
+     "seen": [
+      "misses_near_clip"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "What one photo shows, low resolution low-poly rendering",
+     "seconds": 5.606,
+     "usd": 0.004255,
+     "usage": {
+      "input_tokens": 1541,
+      "output_tokens": 548,
+      "audio_tokens": 0,
+      "reasoning_tokens": 487
+     },
+     "votes": false
+    },
+    "shoulder_guide": {
+     "result": "pass",
+     "samples": [
+      "pass"
+     ],
+     "seen": [
+      "belt_through_clip"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "This is a low-resolution 3D-rendered image viewed from an elevated angle over a rear-facing infant carrier sitting on a dark surface, likely a vehicle seat",
+     "seconds": 7.986,
+     "usd": 0.004671,
+     "usage": {
+      "input_tokens": 1540,
+      "output_tokens": 646,
+      "audio_tokens": 0,
+      "reasoning_tokens": 566
+     },
+     "votes": false
+    },
+    "no_twist": {
+     "result": "fail",
+     "samples": [
+      "fail"
+     ],
+     "seen": [
+      "narrows_or_twists"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "The photo is a low-resolution, low-polygon 3D render of an infant carrier viewed from above and slightly to the side in a dark environment.\n\nAt the end of the carrier opposite the small, light-colored rounded shape representing the doll's head, there are two bright blue rectangular clips attached to",
+     "seconds": 7.359,
+     "usd": 0.004502,
+     "usage": {
+      "input_tokens": 1531,
+      "output_tokens": 609,
+      "audio_tokens": 0,
+      "reasoning_tokens": 362
+     },
+     "votes": false
+    },
+    "level_line": {
+     "result": null,
+     "skipped": true
+    },
+    "handle": {
+     "result": null,
+     "skipped": true
+    }
+   }
+  },
+  {
+   "clip": "test-23-handle.mp4",
+   "error": "handle",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "fail"
+   },
+   "muse": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "fail",
+    "no_twist": "fail",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "fail"
+   },
+   "combined": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "fail"
+   },
+   "muse_steps": {
+    "lap_guides": {
+     "result": "unseen",
+     "samples": [
+      "unseen"
+     ],
+     "seen": [
+      "cannot_see"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "This single low-poly rendered image shows a beige infant carrier viewed from the side, oriented with the doll's peach-tone head visible at the left end tucked into the side wall. At the opposite end, the leg end, toward the right side of the image, there are two bright blue rectangular plastic clips",
+     "seconds": 7.349,
+     "usd": 0.005097,
+     "usage": {
+      "input_tokens": 1541,
+      "output_tokens": 746,
+      "audio_tokens": 0,
+      "reasoning_tokens": 473
+     },
+     "votes": false
+    },
+    "shoulder_guide": {
+     "result": "fail",
+     "samples": [
+      "fail"
+     ],
+     "seen": [
+      "clip_apart_from_belt"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "The image is a low-poly 3D rendering of an infant carrier on a dark vehicle seat, viewed from a slightly elevated side angle.",
+     "seconds": 5.996,
+     "usd": 0.004233,
+     "usage": {
+      "input_tokens": 1540,
+      "output_tokens": 543,
+      "audio_tokens": 0,
+      "reasoning_tokens": 461
+     },
+     "votes": false
+    },
+    "no_twist": {
+     "result": "fail",
+     "samples": [
+      "fail"
+     ],
+     "seen": [
+      "narrows_or_twists"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "You asked about the seat belt strap that runs between the two blue clips at the end of the carrier away from the doll's head, low-poly stylized rendering of an infant carrier seat on a dark surface.\n\nFollowing that strap from the upper blue clip near the top edge of the carrier shell down to the low",
+     "seconds": 6.71,
+     "usd": 0.00485,
+     "usage": {
+      "input_tokens": 1531,
+      "output_tokens": 691,
+      "audio_tokens": 0,
+      "reasoning_tokens": 439
+     },
+     "votes": false
+    },
+    "level_line": {
+     "result": null,
+     "skipped": true
+    },
+    "handle": {
+     "result": null,
+     "skipped": true
+    }
+   }
+  },
+  {
+   "clip": "test-24-handle.mp4",
+   "error": "handle",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "fail"
+   },
+   "muse": {
+    "lap_guides": "pass",
+    "shoulder_guide": "fail",
+    "no_twist": "fail",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "unseen"
+   },
+   "combined": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "unseen"
+   },
+   "muse_steps": {
+    "lap_guides": {
+     "result": "pass",
+     "samples": [
+      "pass"
+     ],
+     "seen": [
+      "through_both"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "In the single rendered image provided, viewed from the leg end of the carrier looking toward the head end, two blue rectangular belt guides are visible on the shell at the leg end. One is on the near side-wall in the lower right area of the image. One is on the far rim/side in the mid-upper right ar",
+     "seconds": 9.661,
+     "usd": 0.006376,
+     "usage": {
+      "input_tokens": 1541,
+      "output_tokens": 1047,
+      "audio_tokens": 0,
+      "reasoning_tokens": 814
+     },
+     "votes": false
+    },
+    "shoulder_guide": {
+     "result": "fail",
+     "samples": [
+      "fail"
+     ],
+     "seen": [
+      "clip_apart_from_belt"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "The photo shows a rear-facing infant carrier in low, blocky 3D rendering, viewed from a slightly elevated side angle. A long dark grey vehicle seat belt runs horizontally across the top third of the image, from left to right.",
+     "seconds": 8.673,
+     "usd": 0.003791,
+     "usage": {
+      "input_tokens": 1540,
+      "output_tokens": 439,
+      "audio_tokens": 0,
+      "reasoning_tokens": 340
+     },
+     "votes": false
+    },
+    "no_twist": {
+     "result": "fail",
+     "samples": [
+      "fail"
+     ],
+     "seen": [
+      "narrows_or_twists"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "Center and right side of the image. A gray infant carrier is visible in low, blocky 3D rendering against a very dark background. At the foot end of the carrier, away from the light pink shape at the head end, there are two bright blue rectangular clips on the outer side wall of the carrier.",
+     "seconds": 8.861,
+     "usd": 0.003609,
+     "usage": {
+      "input_tokens": 1531,
+      "output_tokens": 399,
+      "audio_tokens": 0,
+      "reasoning_tokens": 286
+     },
+     "votes": false
+    },
+    "level_line": {
+     "result": null,
+     "skipped": true
+    },
+    "handle": {
+     "result": null,
+     "skipped": true
+    }
+   }
+  },
+  {
+   "clip": "test-25-unseen.mp4",
+   "error": "unseen",
+   "truth": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "muse": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "unseen",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "sam": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "combined": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "muse_steps": {
+    "lap_guides": {
+     "result": "pass",
+     "samples": [
+      "pass"
+     ],
+     "seen": [
+      "through_both"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "One still frame from a low resolution, dark, blocky 3D rendered view",
+     "seconds": 6.822,
+     "usd": 0.00409,
+     "usage": {
+      "input_tokens": 1541,
+      "output_tokens": 509,
+      "audio_tokens": 0,
+      "reasoning_tokens": 443
+     },
+     "votes": false
+    },
+    "shoulder_guide": {
+     "result": "pass",
+     "samples": [
+      "pass"
+     ],
+     "seen": [
+      "belt_through_clip"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "The photo is a top-down view of a pink rectangular carrier shell against a dark background. A long dark flat belt runs across the upper third of the image from the left side, curving slightly, extending off the frame to the right.",
+     "seconds": 6.791,
+     "usd": 0.004479,
+     "usage": {
+      "input_tokens": 1540,
+      "output_tokens": 601,
+      "audio_tokens": 0,
+      "reasoning_tokens": 508
+     },
+     "votes": false
+    },
+    "no_twist": {
+     "result": "unseen",
+     "samples": [
+      "unseen"
+     ],
+     "seen": [
+      "cannot_see"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "one_low_resolution_image_only",
+     "seconds": 8.293,
+     "usd": 0.004324,
+     "usage": {
+      "input_tokens": 1531,
+      "output_tokens": 567,
+      "audio_tokens": 0,
+      "reasoning_tokens": 514
+     },
+     "votes": false
+    },
+    "level_line": {
+     "result": null,
+     "skipped": true
+    },
+    "handle": {
+     "result": null,
+     "skipped": true
+    }
+   }
+  },
+  {
+   "clip": "test-26-unseen.mp4",
+   "error": "unseen",
+   "truth": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "muse": {
+    "lap_guides": "pass",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "sam": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "combined": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "muse_steps": {
+    "lap_guides": {
+     "result": "pass",
+     "samples": [
+      "pass"
+     ],
+     "seen": [
+      "through_both"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "close",
+     "seconds": 6.455,
+     "usd": 0.004608,
+     "usage": {
+      "input_tokens": 1541,
+      "output_tokens": 631,
+      "audio_tokens": 0,
+      "reasoning_tokens": 583
+     },
+     "votes": false
+    },
+    "shoulder_guide": {
+     "result": "unseen",
+     "samples": [
+      "unseen"
+     ],
+     "seen": [
+      "cannot_see"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "one image only - extreme low light / near black frame - no discernible subject",
+     "seconds": 5.97,
+     "usd": 0.003769,
+     "usage": {
+      "input_tokens": 1540,
+      "output_tokens": 434,
+      "audio_tokens": 0,
+      "reasoning_tokens": 364
+     },
+     "votes": false
+    },
+    "no_twist": {
+     "result": "unseen",
+     "samples": [
+      "unseen"
+     ],
+     "seen": [
+      "cannot_see"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "The photo provided is extremely dark and under-exposed",
+     "seconds": 6.131,
+     "usd": 0.004013,
+     "usage": {
+      "input_tokens": 1531,
+      "output_tokens": 494,
+      "audio_tokens": 0,
+      "reasoning_tokens": 435
+     },
+     "votes": false
+    },
+    "level_line": {
+     "result": null,
+     "skipped": true
+    },
+    "handle": {
+     "result": null,
+     "skipped": true
+    }
+   }
+  },
+  {
+   "clip": "test-27-unseen.mp4",
+   "error": "unseen",
+   "truth": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "muse": {
+    "lap_guides": "pass",
+    "shoulder_guide": "unseen",
+    "no_twist": "fail",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "sam": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "combined": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "muse_steps": {
+    "lap_guides": {
+     "result": "pass",
+     "samples": [
+      "pass"
+     ],
+     "seen": [
+      "through_both"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "Photo shows predominantly a very dark, near-black field occupying most of the frame. In the lower right quadrant there is a flat, matte, dark gray rectangular plane seen at an oblique angle. Its top edge is slightly diagonal, horizontal but tilted down to the left, and its left edge is vertical but ",
+     "seconds": 6.619,
+     "usd": 0.004982,
+     "usage": {
+      "input_tokens": 1541,
+      "output_tokens": 719,
+      "audio_tokens": 0,
+      "reasoning_tokens": 520
+     },
+     "votes": false
+    },
+    "shoulder_guide": {
+     "result": "unseen",
+     "samples": [
+      "unseen"
+     ],
+     "seen": [
+      "cannot_see"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "The photo provided is extremely dark and lacks visible detail.\n\nWhat is actually in the frame:\n- The upper approximately two thirds of the image is solid black with no discernible objects, textures, or edges.\n- The lower right quadrant contains a flat, dim, dark gray rectangular shape with a straigh",
+     "seconds": 8.012,
+     "usd": 0.006247,
+     "usage": {
+      "input_tokens": 1540,
+      "output_tokens": 1017,
+      "audio_tokens": 0,
+      "reasoning_tokens": 790
+     },
+     "votes": false
+    },
+    "no_twist": {
+     "result": "fail",
+     "samples": [
+      "fail"
+     ],
+     "seen": [
+      "narrows_or_twists"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "one-photo",
+     "seconds": 5.186,
+     "usd": 0.003295,
+     "usage": {
+      "input_tokens": 1531,
+      "output_tokens": 325,
+      "audio_tokens": 0,
+      "reasoning_tokens": 275
+     },
+     "votes": false
+    },
+    "level_line": {
+     "result": null,
+     "skipped": true
+    },
+    "handle": {
+     "result": null,
+     "skipped": true
+    }
+   }
+  },
+  {
+   "clip": "test-28-unseen.mp4",
+   "error": "unseen",
+   "truth": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "muse": {
+    "lap_guides": "pass",
+    "shoulder_guide": "fail",
+    "no_twist": "fail",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "sam": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "combined": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "muse_steps": {
+    "lap_guides": {
+     "result": "pass",
+     "samples": [
+      "pass"
+     ],
+     "seen": [
+      "through_both"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "Look carefully at the photo.",
+     "seconds": 8.331,
+     "usd": 0.004825,
+     "usage": {
+      "input_tokens": 1541,
+      "output_tokens": 682,
+      "audio_tokens": 0,
+      "reasoning_tokens": 629
+     },
+     "votes": false
+    },
+    "shoulder_guide": {
+     "result": "fail",
+     "samples": [
+      "fail"
+     ],
+     "seen": [
+      "clip_apart_from_belt"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "overhead view, dark, of a pink rectangular block with a light grey circular base underneath. A flat black strip runs diagonally across the upper surface of the pink block, curving upward at the left end. The top end of the block, toward the top of the frame, is where the black strip originates. The ",
+     "seconds": 9.081,
+     "usd": 0.005707,
+     "usage": {
+      "input_tokens": 1540,
+      "output_tokens": 890,
+      "audio_tokens": 0,
+      "reasoning_tokens": 719
+     },
+     "votes": false
+    },
+    "no_twist": {
+     "result": "fail",
+     "samples": [
+      "fail"
+     ],
+     "seen": [
+      "narrows_or_twists"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "Single still 3D render, low-poly style, dark background. Top-down oblique view of a pink rectangular block, matte, with sharp edges, occupying most of the frame. A long flat black strap with thin lighter grey stripes lies diagonally across the top surface of the pink block, extending off the right e",
+     "seconds": 6.764,
+     "usd": 0.004047,
+     "usage": {
+      "input_tokens": 1531,
+      "output_tokens": 502,
+      "audio_tokens": 0,
+      "reasoning_tokens": 290
+     },
+     "votes": false
+    },
+    "level_line": {
+     "result": null,
+     "skipped": true
+    },
+    "handle": {
+     "result": null,
+     "skipped": true
+    }
+   }
+  }
+ ]
+}

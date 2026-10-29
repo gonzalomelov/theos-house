@@ -120,6 +120,9 @@ class Ear:
         self.open = {}
         self.episodes = 0
         self.rows = []
+        # Set by the house sounds plug-in when Muse listens to cries: it gets the cry's samples once, in memory,
+        # just before they are dropped. Nothing else ever sees samples.
+        self.on_cry_clip = None
 
     def feed(self, chunk):
         chunk = np.asarray(chunk, np.float32)
@@ -165,6 +168,8 @@ class Ear:
             samples = np.concatenate(episode["samples"]) if episode["samples"] else np.zeros(0, np.float32)
             fields["features"] = cry_features(samples, self._length(episode))
             episode["reported"], episode["samples"] = True, []
+            if self.on_cry_clip is not None and samples.size:
+                self.on_cry_clip(episode["id"], samples)
         return self.bus.publish("sound", **fields)
 
     def flush(self, seconds=None):

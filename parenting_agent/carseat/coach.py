@@ -49,6 +49,8 @@ CAMERA_STEPS = {
         "unseen": "I could not see the handle."},
 }
 FORBIDDEN = ("safe",)
+UNSURE = ("My two checks disagree here, so I am not counting it as passed. Show me another view, or check it by hand "
+          "against the manual.")
 
 
 def load_profiles(cfg, root="."):
@@ -88,8 +90,10 @@ def _yes_no(text):
 
 
 class Coach:
-    def __init__(self, cfg, bus, vision, source, seat, car, recheck=False, answer_timeout_s=None, clock=time.monotonic):
+    def __init__(self, cfg, bus, vision, source, seat, car, recheck=False, answer_timeout_s=None, clock=time.monotonic,
+                 muse=None):
         self.cfg, self.bus, self.vision, self.source = cfg, bus, vision, source
+        self.muse = muse  # a MuseSeatCheck: Muse Spark Open's second opinion on the same frame
         self.seat, self.car = seat, car
         self.recheck, self.answer_timeout_s, self.clock = recheck, answer_timeout_s, clock
         self.steps = plan(cfg, seat, car)
@@ -155,7 +159,7 @@ class Coach:
         prompts_cfg = self.cfg["prompts"]
         prompts = [prompts_cfg[k] for k in spec["prompts"]]
         deadline = self.clock() + self.cfg.get("step_timeout_s", 8.0)
-        seq, first = start_seq, None
+        seq, first, last_frame = start_seq, None, None
         while self.clock() < deadline and not self.stop_flag:
             got = self._latest(seq)
             if got is None:
@@ -164,6 +168,7 @@ class Coach:
                 time.sleep(0.005)
                 continue
             frame, seq, frame_s = got
+            last_frame = frame
             found, seconds = self.vision.masks(frame, prompts)
             verdict = checks_mod.analyze(found, prompts_cfg, frame.shape[:2], self.cfg.get("checks"))[step["id"]]
             self.bus.publish("carseat_frame", step=step["id"], frame_s=round(frame_s, 3), sam_s=seconds,
@@ -171,10 +176,11 @@ class Coach:
             if verdict["result"] == "unseen":
                 continue
             if first is None:
+                verdict = self.second_opinion(step["id"], frame, verdict)
                 first = verdict
                 missed = verdict.get("missed") or []
                 missed = "near and far side guides" if len(missed) == 2 else f"{missed[0] if missed else 'side'} side guide"
-                text = spec[verdict["result"]].format(missed=missed,
+                text = (spec[verdict["result"]] if verdict["result"] in spec else UNSURE).format(missed=missed,
                                                       angle=round(abs(verdict.get("angle_deg", 0))), position=position)
                 spoken_at = self.stream_now()
                 self.say(text, step=step["id"], result=verdict["result"])
@@ -184,8 +190,27 @@ class Coach:
             if first["result"] == "fail" and verdict["result"] == "pass":
                 return
         if first is None:
-            self.say(spec["unseen"] + " I am listing it as not checked.", step=step["id"], result="unseen")
-            self._record(step, {"result": "unseen"}, started_at, None, self.stream_now())
+            verdict = self.second_opinion(step["id"], last_frame, {"result": "unseen"}) if last_frame is not None else {"result": "unseen"}
+            if verdict["result"] == "unseen":
+                self.say(spec["unseen"] + " I am listing it as not checked.", step=step["id"], result="unseen")
+            else:
+                text = spec["fail"].format(missed="side guide", angle="a few", position=position) \
+                    if verdict["result"] == "fail" else UNSURE
+                self.say(text, step=step["id"], result=verdict["result"])
+            self._record(step, verdict, started_at, None, self.stream_now())
+
+    def second_opinion(self, check_id, frame, verdict):
+        """SAM's verdict combined with Muse's on the same frame, for the checks Muse votes on (muse_check.py)."""
+        from . import muse_check
+        if self.muse is None or check_id not in muse_check.MUSE_VOTES:
+            return verdict
+        muse = self.muse.look(frame, check_id)
+        both = muse_check.combine(verdict["result"], muse.get("result"))
+        self.bus.publish("carseat_muse", step=check_id, sam=verdict["result"], muse=muse.get("result"),
+                         result=both["result"], second_opinion=both["second_opinion"], muse_s=muse.get("seconds"),
+                         usd=muse.get("usd"), host=muse.get("host"), error=muse.get("error"))
+        return {**verdict, "result": both["result"], "sam_result": verdict["result"], "muse_result": muse.get("result"),
+                "second_opinion": both["second_opinion"]}
 
     def _record(self, step, verdict, started_at, frame_s, spoken_at):
         detail = {k: v for k, v in verdict.items() if k not in ("widths",)}
@@ -220,6 +245,7 @@ class Coach:
         for label, items in (("Visible checks that passed", group("camera", "pass")),
                              ("Visible checks that failed", group("camera", "fail")),
                              ("Visible checks I could not see", group("camera", "unseen")),
+                             ("Visible checks my two checks disagree on, check them by hand", group("camera", "unsure")),
                              ("Hand checks you confirmed", group("hand", "pass")),
                              ("Hand checks that need fixing", group("hand", "fail")),
                              ("Hand checks still open", group("hand", "open"))):

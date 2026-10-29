@@ -2,10 +2,13 @@
 
 Add "parenting_agent.carseat.plugin:CarSeatCoach" to the agent config plugins and the three tools to
 allowed_tools, with an optional "car_seat" block:
-    {"skill": "skills/car-seat.json", "source": "phone" | "0" | "clip.mp4"}
+    {"skill": "skills/car-seat.json", "source": "phone" | "0" | "clip.mp4",
+     "muse": {"enabled": true, "samples": 3}}
 The parent says "help me install the car seat": the brain calls start_car_seat_coach. Each spoken answer
 ("yes", "no") reaches the coach through answer_car_seat_check. car_seat_outgrow reads weight and height
-from Baby Buddy and compares them with the seat's limits. Frames stay on this Mac, the brain gets text only.
+from Baby Buddy and compares them with the seat's limits. Frames stay on this Mac, the brain gets text only, except
+with "muse" enabled: then one zoomed still per camera step goes to Muse Spark Open on Baseten for a second opinion
+(parenting_agent/carseat/muse_check.py).
 """
 import datetime
 import json
@@ -51,10 +54,19 @@ class CarSeatCoach(Plugin):
                 self.agent.bus.publish("head_camera", url=self.source.url)
             speaker = Speaker(self.source, quiet=self.quiet)
             self.agent.bus.subscribe(speaker.on_event, ["voice"])
-            self.coach = Coach(self.skill_cfg, self.agent.bus, vision, self.source, self.seat, self.car, recheck=True)
+            self.coach = Coach(self.skill_cfg, self.agent.bus, vision, self.source, self.seat, self.car, recheck=True,
+                               muse=self.muse_check())
             self.thread = threading.Thread(target=self._run, name="car-seat", daemon=True)
             self.thread.start()
             return f"coaching the {self.seat['seat']} install, one step at a time"
+
+    def muse_check(self):
+        muse = self.cfg.get("muse") or {}
+        if not muse.get("enabled"):
+            return None
+        from ..muse_senses import MuseSenses
+        from .muse_check import MuseSeatCheck
+        return MuseSeatCheck(MuseSenses(muse.get("senses")), samples=muse.get("samples", 3))
 
     def _run(self):
         self.coach.run()

@@ -23,7 +23,7 @@ The reason comes from the log, not the sound. `parenting_agent/cry_reason.py` re
 
 Cry length and voicing move a score by at most 0.05, a weak extra signal only. Example output: "Probably hungry: last feed 2 h 51 min ago, he eats about every 2 h 26 min."
 
-It never names pain, illness or any medical cause. Every text passes `no_medical()` and the rhythm's `no_advice()`, and a test runs both over every output. ChatterBaby was ruled out (audio goes to UCLA servers, and pain is a medical reading), and so is any cloud audio service. The Donate-a-cry corpus (ODbL, mostly hungry clips) is not used yet.
+It never names pain, illness or any medical cause. Every text passes `no_medical()` and the rhythm's `no_advice()`, and a test runs both over every output. ChatterBaby was ruled out (audio goes to UCLA servers, and pain is a medical reading), and so is any third-party cloud audio service. The one exception is Muse Spark Open, the agent's own brain, below. The Donate-a-cry corpus (ODbL, mostly hungry clips) is not used yet.
 
 **Evaluation on the simulated week**, where the true reason is known. The same rhythm assumptions build the week and the reasoner, so this checks the logic, not real cries. `simweek/cries.py` puts a cry 1 to 12 minutes before what the week does next: a feed (hungry), the diaper change after a feed (diaper), or falling asleep (tired).
 
@@ -33,6 +33,14 @@ It never names pain, illness or any medical cause. Every text passes `no_medical
 | Whole week | 166 of 184 (hungry 60 of 66, tired 55 of 63, diaper 51 of 55) |
 
 Details in `results/sounds/cry-eval.json`. The miss in the 10 is a night diaper cry read as tired, since night awake times are short.
+
+## Muse Spark Open listens to the cry (opt-in, blocked today)
+
+Built Oct 29 2026 (issue #14). PANNs stays the fast local reflex that hears "a baby is crying". On a cry, the first 5 s of that cry only can go to Muse Spark Open on Baseten, in one call with a strict schema: did it hear a baby crying, a guessed reason in the same four categories (hungry, tired, diaper, comfort, or cannot tell) and a confidence. The guess is framed as a guess from the sound alone, never medical, and adds one sentence to the log-based reason, for example "From the sound alone, a guess: hungry." It does not change the log's ranking. Code: `parenting_agent/cry_muse.py`, wired in `house_sounds.py` and `hearing.py`.
+
+**Privacy.** This is the one flow where house audio may leave: the first 5 s of a cry PANNs detected, as a WAV made in memory, to the brain host (inference.baseten.co), dropped after that call. No other room audio is ever sent. It is off by default (`"house_sounds": {"muse_audio": {"enabled": true}}` turns it on), and before any cry clip is sent a synthetic beep clip, never house audio, must be heard and counted right. Each call is a `cry_sound_guess` event with its host.
+
+**Result on Oct 29: Muse does not hear audio on this endpoint.** On the 46-clip hearing set PANNs got 41 of 46 labels right, Muse 10 of 46, and Muse said it heard sound on 1 clip, always with 0 audio tokens. The canary failed in WAV, MP3, FLAC and OGG. Every request shape in Baseten's audio guide was tried. So the canary blocks the call, and the cry reason stays PANNs plus the log. Details and every try in `results/sounds/muse/README.md`.
 
 ## White noise
 

@@ -1,0 +1,1124 @@
+{
+ "summary": {
+  "clips": 46,
+  "clip_s": 5.0,
+  "camera_channel": "8 kHz A-law",
+  "panns_right": 41,
+  "muse_model": "meta-models/muse-spark-open-1026",
+  "muse_host": "inference.baseten.co",
+  "muse_answered": 46,
+  "muse_heard_sound": 1,
+  "muse_audio_tokens": 0,
+  "muse_sound_right": 10,
+  "muse_cries_heard_as_cries": 1,
+  "cries": 4,
+  "canary_right": [],
+  "latency_s": {
+   "median": 4.9985,
+   "max": 6.659
+  },
+  "usd": 0.0935
+ },
+ "canary": [
+  {
+   "format": "wav",
+   "answer": {
+    "heard_sound": false,
+    "beeps": -1
+   },
+   "audio_tokens": 0,
+   "input_tokens": 200,
+   "right": false
+  },
+  {
+   "format": "mp3",
+   "answer": {
+    "heard_sound": false,
+    "beeps": -1
+   },
+   "audio_tokens": 0,
+   "input_tokens": 201,
+   "right": false
+  },
+  {
+   "format": "flac",
+   "answer": {
+    "heard_sound": false,
+    "beeps": 0
+   },
+   "audio_tokens": 0,
+   "input_tokens": 200,
+   "right": false
+  },
+  {
+   "format": "ogg",
+   "answer": {
+    "heard_sound": false,
+    "beeps": 0
+   },
+   "audio_tokens": 0,
+   "input_tokens": 200,
+   "right": false
+  }
+ ],
+ "clips": [
+  {
+   "id": "cry-01",
+   "split": "dev",
+   "truth": "baby_crying",
+   "license": "Public domain",
+   "panns": "baby_crying",
+   "panns_scores": {
+    "cry": 0.6183,
+    "dog": 0.0924,
+    "doorbell": 0.0029,
+    "splash": 0.0063
+   },
+   "muse": {
+    "heard_sound": false,
+    "sound": "baby_crying",
+    "reason_guess": "cannot_tell",
+    "confidence": 0.0,
+    "seconds": 4.996,
+    "usd": 0.001695,
+    "audio_tokens": 0,
+    "input_tokens": 302
+   }
+  },
+  {
+   "id": "cry-02",
+   "split": "test",
+   "truth": "baby_crying",
+   "license": "Public domain",
+   "panns": "baby_crying",
+   "panns_scores": {
+    "cry": 0.5758,
+    "dog": 0.0128,
+    "doorbell": 0.0023,
+    "splash": 0.0052
+   },
+   "muse": {
+    "heard_sound": false,
+    "sound": "silence",
+    "reason_guess": "cannot_tell",
+    "confidence": 0,
+    "seconds": 5.846,
+    "usd": 0.001444,
+    "audio_tokens": 0,
+    "input_tokens": 302
+   }
+  },
+  {
+   "id": "cry-03",
+   "split": "dev",
+   "truth": "baby_crying",
+   "license": "CC0",
+   "panns": "baby_crying",
+   "panns_scores": {
+    "cry": 1.0,
+    "dog": 0.0152,
+    "doorbell": 0.0016,
+    "splash": 0.0024
+   },
+   "muse": {
+    "heard_sound": false,
+    "sound": "silence",
+    "reason_guess": "cannot_tell",
+    "confidence": 0,
+    "seconds": 5.025,
+    "usd": 0.001903,
+    "audio_tokens": 0,
+    "input_tokens": 302
+   }
+  },
+  {
+   "id": "cry-04",
+   "split": "test",
+   "truth": "baby_crying",
+   "license": "CC BY-SA 4.0",
+   "panns": "baby_crying",
+   "panns_scores": {
+    "cry": 0.9627,
+    "dog": 0.0214,
+    "doorbell": 0.0023,
+    "splash": 0.0036
+   },
+   "muse": {
+    "heard_sound": false,
+    "sound": "silence",
+    "reason_guess": "cannot_tell",
+    "confidence": 0,
+    "seconds": 5.123,
+    "usd": 0.001754,
+    "audio_tokens": 0,
+    "input_tokens": 302
+   }
+  },
+  {
+   "id": "cough-01",
+   "split": "dev",
+   "truth": "coughing",
+   "license": "CC BY 2.0",
+   "panns": "other",
+   "panns_scores": {
+    "cry": 0.0074,
+    "dog": 0.2098,
+    "doorbell": 0.0012,
+    "splash": 0.0045
+   },
+   "muse": {
+    "heard_sound": false,
+    "sound": "silence",
+    "reason_guess": "cannot_tell",
+    "confidence": 0.0,
+    "seconds": 3.807,
+    "usd": 0.002038,
+    "audio_tokens": 0,
+    "input_tokens": 247
+   }
+  },
+  {
+   "id": "cough-02",
+   "split": "test",
+   "truth": "coughing",
+   "license": "CC BY 2.0",
+   "panns": "other",
+   "panns_scores": {
+    "cry": 0.0022,
+    "dog": 0.014,
+    "doorbell": 0.0023,
+    "splash": 0.0081
+   },
+   "muse": {
+    "heard_sound": false,
+    "sound": "silence",
+    "reason_guess": "cannot_tell",
+    "confidence": 0.0,
+    "seconds": 3.987,
+    "usd": 0.001846,
+    "audio_tokens": 0,
+    "input_tokens": 253
+   }
+  },
+  {
+   "id": "cough-03",
+   "split": "dev",
+   "truth": "coughing",
+   "license": "CC BY 2.0",
+   "panns": "other",
+   "panns_scores": {
+    "cry": 0.0013,
+    "dog": 0.017,
+    "doorbell": 0.0006,
+    "splash": 0.0041
+   },
+   "muse": {
+    "heard_sound": false,
+    "sound": "baby_crying",
+    "reason_guess": "cannot_tell",
+    "confidence": 0,
+    "seconds": 3.624,
+    "usd": 0.001698,
+    "audio_tokens": 0,
+    "input_tokens": 247
+   }
+  },
+  {
+   "id": "dog-01",
+   "split": "dev",
+   "truth": "dog_barking",
+   "license": "CC BY-SA 3.0",
+   "panns": "dog_barking",
+   "panns_scores": {
+    "cry": 0.0012,
+    "dog": 1.0,
+    "doorbell": 0.0038,
+    "splash": 0.0076
+   },
+   "muse": {
+    "heard_sound": false,
+    "sound": "dog_barking",
+    "reason_guess": "not_a_cry",
+    "confidence": 0.0,
+    "seconds": 4.937,
+    "usd": 0.001491,
+    "audio_tokens": 0,
+    "input_tokens": 302
+   }
+  },
+  {
+   "id": "dog-02",
+   "split": "test",
+   "truth": "dog_barking",
+   "license": "CC BY-SA 3.0",
+   "panns": "dog_barking",
+   "panns_scores": {
+    "cry": 0.0005,
+    "dog": 1.0,
+    "doorbell": 0.0106,
+    "splash": 0.003
+   },
+   "muse": {
+    "heard_sound": false,
+    "sound": "silence",
+    "reason_guess": "cannot_tell",
+    "confidence": 0,
+    "seconds": 4.408,
+    "usd": 0.001106,
+    "audio_tokens": 0,
+    "input_tokens": 290
+   }
+  },
+  {
+   "id": "dog-03",
+   "split": "dev",
+   "truth": "dog_barking",
+   "license": "CC BY-SA 3.0",
+   "panns": "dog_barking",
+   "panns_scores": {
+    "cry": 0.0005,
+    "dog": 1.0,
+    "doorbell": 0.0019,
+    "splash": 0.0035
+   },
+   "muse": {
+    "heard_sound": false,
+    "sound": "dog_barking",
+    "reason_guess": "not_a_cry",
+    "confidence": 0,
+    "seconds": 4.391,
+    "usd": 0.00119,
+    "audio_tokens": 0,
+    "input_tokens": 272
+   }
+  },
+  {
+   "id": "dog-04",
+   "split": "test",
+   "truth": "dog_barking",
+   "license": "CC BY-SA 4.0",
+   "panns": "dog_barking",
+   "panns_scores": {
+    "cry": 0.0008,
+    "dog": 1.0,
+    "doorbell": 0.0025,
+    "splash": 0.005
+   },
+   "muse": {
+    "heard_sound": false,
+    "sound": "dog_barking",
+    "reason_guess": "not_a_cry",
+    "confidence": 0.0,
+    "seconds": 5.809,
+    "usd": 0.002456,
+    "audio_tokens": 0,
+    "input_tokens": 302
+   }
+  },
+  {
+   "id": "doorbell-01",
+   "split": "test",
+   "truth": "doorbell",
+   "license": "Public domain",
+   "panns": "doorbell",
+   "panns_scores": {
+    "cry": 0.0001,
+    "dog": 0.0035,
+    "doorbell": 1.0,
+    "splash": 0.0032
+   },
+   "muse": {
+    "heard_sound": false,
+    "sound": "silence",
+    "reason_guess": "cannot_tell",
+    "confidence": 0.0,
+    "seconds": 5.36,
+    "usd": 0.001832,
+    "audio_tokens": 0,
+    "input_tokens": 272
+   }
+  },
+  {
+   "id": "doorbell-02",
+   "split": "dev",
+   "truth": "doorbell",
+   "license": "Public domain",
+   "panns": "doorbell",
+   "panns_scores": {
+    "cry": 0.0002,
+    "dog": 0.0042,
+    "doorbell": 0.6888,
+    "splash": 0.0049
+   },
+   "muse": {
+    "heard_sound": false,
+    "sound": "other",
+    "reason_guess": "cannot_tell",
+    "confidence": 0,
+    "seconds": 5.401,
+    "usd": 0.001461,
+    "audio_tokens": 0,
+    "input_tokens": 302
+   }
+  },
+  {
+   "id": "doorbell-03",
+   "split": "test",
+   "truth": "doorbell",
+   "license": "Public domain",
+   "panns": "doorbell",
+   "panns_scores": {
+    "cry": 0.0001,
+    "dog": 0.0049,
+    "doorbell": 0.1088,
+    "splash": 0.0018
+   },
+   "muse": {
+    "heard_sound": false,
+    "sound": "silence",
+    "reason_guess": "cannot_tell",
+    "confidence": 0.0,
+    "seconds": 6.276,
+    "usd": 0.002017,
+    "audio_tokens": 0,
+    "input_tokens": 294
+   }
+  },
+  {
+   "id": "doorbell-04",
+   "split": "test",
+   "truth": "doorbell",
+   "license": "CC0",
+   "panns": "doorbell",
+   "panns_scores": {
+    "cry": 0.0004,
+    "dog": 0.0065,
+    "doorbell": 1.0,
+    "splash": 0.0018
+   },
+   "muse": {
+    "heard_sound": false,
+    "sound": "silence",
+    "reason_guess": "not_a_cry",
+    "confidence": 0.0,
+    "seconds": 4.791,
+    "usd": 0.001589,
+    "audio_tokens": 0,
+    "input_tokens": 302
+   }
+  },
+  {
+   "id": "splash-01",
+   "split": "dev",
+   "truth": "water_splashing",
+   "license": "Public domain",
+   "panns": "other",
+   "panns_scores": {
+    "cry": 0.0007,
+    "dog": 0.035,
+    "doorbell": 0.0017,
+    "splash": 0.1067
+   },
+   "muse": {
+    "heard_sound": false,
+    "sound": "silence",
+    "reason_guess": "cannot_tell",
+    "confidence": 0.0,
+    "seconds": 5.001,
+    "usd": 0.002201,
+    "audio_tokens": 0,
+    "input_tokens": 302
+   }
+  },
+  {
+   "id": "splash-02",
+   "split": "dev",
+   "truth": "water_splashing",
+   "license": "Public domain",
+   "panns": "water_splashing",
+   "panns_scores": {
+    "cry": 0.0003,
+    "dog": 0.0037,
+    "doorbell": 0.0007,
+    "splash": 1.0
+   },
+   "muse": {
+    "heard_sound": false,
+    "sound": "silence",
+    "reason_guess": "not_a_cry",
+    "confidence": 0,
+    "seconds": 5.19,
+    "usd": 0.001975,
+    "audio_tokens": 0,
+    "input_tokens": 302
+   }
+  },
+  {
+   "id": "cough-04",
+   "split": "test",
+   "truth": "coughing",
+   "license": "CC BY 2.0",
+   "panns": "other",
+   "panns_scores": {
+    "cry": 0.001,
+    "dog": 0.0075,
+    "doorbell": 0.0007,
+    "splash": 0.0039
+   },
+   "muse": {
+    "heard_sound": false,
+    "sound": "silence",
+    "reason_guess": "not_a_cry",
+    "confidence": 0.0,
+    "seconds": 3.531,
+    "usd": 0.001912,
+    "audio_tokens": 0,
+    "input_tokens": 248
+   }
+  },
+  {
+   "id": "cough-05",
+   "split": "dev",
+   "truth": "coughing",
+   "license": "CC BY 2.0",
+   "panns": "other",
+   "panns_scores": {
+    "cry": 0.002,
+    "dog": 0.1002,
+    "doorbell": 0.0011,
+    "splash": 0.0009
+   },
+   "muse": {
+    "heard_sound": false,
+    "sound": "silence",
+    "reason_guess": "cannot_tell",
+    "confidence": 0.0,
+    "seconds": 2.072,
+    "usd": 0.001057,
+    "audio_tokens": 0,
+    "input_tokens": 244
+   }
+  },
+  {
+   "id": "cough-06",
+   "split": "test",
+   "truth": "coughing",
+   "license": "CC BY 2.0",
+   "panns": "other",
+   "panns_scores": {
+    "cry": 0.014,
+    "dog": 0.0291,
+    "doorbell": 0.0007,
+    "splash": 0.0044
+   },
+   "muse": {
+    "heard_sound": false,
+    "sound": "silence",
+    "reason_guess": "cannot_tell",
+    "confidence": 0.0,
+    "seconds": 3.626,
+    "usd": 0.002788,
+    "audio_tokens": 0,
+    "input_tokens": 248
+   }
+  },
+  {
+   "id": "cough-07",
+   "split": "dev",
+   "truth": "coughing",
+   "license": "CC BY 2.0",
+   "panns": "other",
+   "panns_scores": {
+    "cry": 0.0019,
+    "dog": 0.0201,
+    "doorbell": 0.001,
+    "splash": 0.0013
+   },
+   "muse": {
+    "heard_sound": false,
+    "sound": "coughing",
+    "reason_guess": "cannot_tell",
+    "confidence": 1.0,
+    "seconds": 2.654,
+    "usd": 0.001387,
+    "audio_tokens": 0,
+    "input_tokens": 246
+   }
+  },
+  {
+   "id": "cough-08",
+   "split": "test",
+   "truth": "coughing",
+   "license": "CC BY 2.0",
+   "panns": "other",
+   "panns_scores": {
+    "cry": 0.0033,
+    "dog": 0.2691,
+    "doorbell": 0.0011,
+    "splash": 0.0043
+   },
+   "muse": {
+    "heard_sound": false,
+    "sound": "coughing",
+    "reason_guess": "cannot_tell",
+    "confidence": 0,
+    "seconds": 3.551,
+    "usd": 0.001826,
+    "audio_tokens": 0,
+    "input_tokens": 250
+   }
+  },
+  {
+   "id": "cough-09",
+   "split": "dev",
+   "truth": "coughing",
+   "license": "CC BY 2.0",
+   "panns": "other",
+   "panns_scores": {
+    "cry": 0.0046,
+    "dog": 0.0384,
+    "doorbell": 0.0005,
+    "splash": 0.0043
+   },
+   "muse": {
+    "heard_sound": false,
+    "sound": "coughing",
+    "reason_guess": "not_a_cry",
+    "confidence": 0.0,
+    "seconds": 4.354,
+    "usd": 0.001792,
+    "audio_tokens": 0,
+    "input_tokens": 271
+   }
+  },
+  {
+   "id": "cough-10",
+   "split": "test",
+   "truth": "coughing",
+   "license": "CC BY 2.5",
+   "panns": "other",
+   "panns_scores": {
+    "cry": 0.0006,
+    "dog": 0.0208,
+    "doorbell": 0.0023,
+    "splash": 0.0105
+   },
+   "muse": {
+    "heard_sound": false,
+    "sound": "silence",
+    "reason_guess": "cannot_tell",
+    "confidence": 0,
+    "seconds": 3.952,
+    "usd": 0.001597,
+    "audio_tokens": 0,
+    "input_tokens": 302
+   }
+  },
+  {
+   "id": "dog-05",
+   "split": "test",
+   "truth": "dog_barking",
+   "license": "CC BY-SA 4.0",
+   "panns": "dog_barking",
+   "panns_scores": {
+    "cry": 0.0012,
+    "dog": 1.0,
+    "doorbell": 0.0077,
+    "splash": 0.0037
+   },
+   "muse": {
+    "heard_sound": true,
+    "sound": "dog_barking",
+    "reason_guess": "not_a_cry",
+    "confidence": 0.99,
+    "seconds": 4.314,
+    "usd": 0.001776,
+    "audio_tokens": 0,
+    "input_tokens": 302
+   }
+  },
+  {
+   "id": "dog-06",
+   "split": "dev",
+   "truth": "dog_barking",
+   "license": "CC BY-SA 4.0",
+   "panns": "dog_barking",
+   "panns_scores": {
+    "cry": 0.0012,
+    "dog": 1.0,
+    "doorbell": 0.0024,
+    "splash": 0.0014
+   },
+   "muse": {
+    "heard_sound": false,
+    "sound": "dog_barking",
+    "reason_guess": "not_a_cry",
+    "confidence": 0,
+    "seconds": 5.63,
+    "usd": 0.002367,
+    "audio_tokens": 0,
+    "input_tokens": 302
+   }
+  },
+  {
+   "id": "dog-07",
+   "split": "dev",
+   "truth": "dog_barking",
+   "license": "CC BY-SA 4.0",
+   "panns": "dog_barking",
+   "panns_scores": {
+    "cry": 0.0011,
+    "dog": 1.0,
+    "doorbell": 0.0032,
+    "splash": 0.0268
+   },
+   "muse": {
+    "heard_sound": false,
+    "sound": "baby_crying",
+    "reason_guess": "cannot_tell",
+    "confidence": 0.0,
+    "seconds": 5.401,
+    "usd": 0.002145,
+    "audio_tokens": 0,
+    "input_tokens": 302
+   }
+  },
+  {
+   "id": "dog-08",
+   "split": "dev",
+   "truth": "dog_barking",
+   "license": "CC BY-SA 4.0",
+   "panns": "other",
+   "panns_scores": {
+    "cry": 0.0003,
+    "dog": 0.0181,
+    "doorbell": 0.0012,
+    "splash": 0.0595
+   },
+   "muse": {
+    "heard_sound": false,
+    "sound": "silence",
+    "reason_guess": "cannot_tell",
+    "confidence": 0.0,
+    "seconds": 5.109,
+    "usd": 0.002205,
+    "audio_tokens": 0,
+    "input_tokens": 302
+   }
+  },
+  {
+   "id": "doorbell-05",
+   "split": "dev",
+   "truth": "doorbell",
+   "license": "CC BY 4.0",
+   "panns": "doorbell",
+   "panns_scores": {
+    "cry": 0.0002,
+    "dog": 0.007,
+    "doorbell": 1.0,
+    "splash": 0.0029
+   },
+   "muse": {
+    "heard_sound": false,
+    "sound": "silence",
+    "reason_guess": "not_a_cry",
+    "confidence": 0.0,
+    "seconds": 4.807,
+    "usd": 0.002034,
+    "audio_tokens": 0,
+    "input_tokens": 291
+   }
+  },
+  {
+   "id": "doorbell-06",
+   "split": "test",
+   "truth": "doorbell",
+   "license": "CC0",
+   "panns": "doorbell",
+   "panns_scores": {
+    "cry": 0.0,
+    "dog": 0.0035,
+    "doorbell": 0.8913,
+    "splash": 0.0026
+   },
+   "muse": {
+    "heard_sound": false,
+    "sound": "coughing",
+    "reason_guess": "cannot_tell",
+    "confidence": 0.0,
+    "seconds": 6.659,
+    "usd": 0.003578,
+    "audio_tokens": 0,
+    "input_tokens": 302
+   }
+  },
+  {
+   "id": "doorbell-07",
+   "split": "dev",
+   "truth": "doorbell",
+   "license": "CC BY-SA 3.0",
+   "panns": "doorbell",
+   "panns_scores": {
+    "cry": 0.0005,
+    "dog": 0.0093,
+    "doorbell": 0.3448,
+    "splash": 0.0039
+   },
+   "muse": {
+    "heard_sound": false,
+    "sound": "silence",
+    "reason_guess": "cannot_tell",
+    "confidence": 0,
+    "seconds": 5.395,
+    "usd": 0.002766,
+    "audio_tokens": 0,
+    "input_tokens": 292
+   }
+  },
+  {
+   "id": "doorbell-08",
+   "split": "dev",
+   "truth": "doorbell",
+   "license": "CC BY-SA 4.0",
+   "panns": "other",
+   "panns_scores": {
+    "cry": 0.0005,
+    "dog": 0.0079,
+    "doorbell": 0.0017,
+    "splash": 0.0036
+   },
+   "muse": {
+    "heard_sound": false,
+    "sound": "silence",
+    "reason_guess": "cannot_tell",
+    "confidence": 0.0,
+    "seconds": 5.337,
+    "usd": 0.002996,
+    "audio_tokens": 0,
+    "input_tokens": 265
+   }
+  },
+  {
+   "id": "doorbell-09",
+   "split": "dev",
+   "truth": "doorbell",
+   "license": "Public domain",
+   "panns": "doorbell",
+   "panns_scores": {
+    "cry": 0.0,
+    "dog": 0.0005,
+    "doorbell": 1.0,
+    "splash": 0.0001
+   },
+   "muse": {
+    "heard_sound": false,
+    "sound": "silence",
+    "reason_guess": "cannot_tell",
+    "confidence": 0.0,
+    "seconds": 4.47,
+    "usd": 0.001906,
+    "audio_tokens": 0,
+    "input_tokens": 270
+   }
+  },
+  {
+   "id": "splash-03",
+   "split": "dev",
+   "truth": "water_splashing",
+   "license": "CC BY-SA 4.0",
+   "panns": "other",
+   "panns_scores": {
+    "cry": 0.003,
+    "dog": 0.0537,
+    "doorbell": 0.004,
+    "splash": 0.0192
+   },
+   "muse": {
+    "heard_sound": false,
+    "sound": "silence",
+    "reason_guess": "not_a_cry",
+    "confidence": 0,
+    "seconds": 3.359,
+    "usd": 0.001515,
+    "audio_tokens": 0,
+    "input_tokens": 257
+   }
+  },
+  {
+   "id": "splash-04",
+   "split": "dev",
+   "truth": "water_splashing",
+   "license": "CC BY-SA 3.0",
+   "panns": "water_splashing",
+   "panns_scores": {
+    "cry": 0.0003,
+    "dog": 0.0217,
+    "doorbell": 0.0019,
+    "splash": 1.0
+   },
+   "muse": {
+    "heard_sound": false,
+    "sound": "silence",
+    "reason_guess": "cannot_tell",
+    "confidence": 0.0,
+    "seconds": 5.028,
+    "usd": 0.001699,
+    "audio_tokens": 0,
+    "input_tokens": 302
+   }
+  },
+  {
+   "id": "splash-05",
+   "split": "test",
+   "truth": "water_splashing",
+   "license": "Public domain",
+   "panns": "water_splashing",
+   "panns_scores": {
+    "cry": 0.0005,
+    "dog": 0.0452,
+    "doorbell": 0.0021,
+    "splash": 0.4935
+   },
+   "muse": {
+    "heard_sound": false,
+    "sound": "other",
+    "reason_guess": "cannot_tell",
+    "confidence": 0.0,
+    "seconds": 5.399,
+    "usd": 0.001784,
+    "audio_tokens": 0,
+    "input_tokens": 302
+   }
+  },
+  {
+   "id": "splash-06",
+   "split": "test",
+   "truth": "water_splashing",
+   "license": "Public domain",
+   "panns": "water_splashing",
+   "panns_scores": {
+    "cry": 0.0006,
+    "dog": 0.0266,
+    "doorbell": 0.0014,
+    "splash": 0.4351
+   },
+   "muse": {
+    "heard_sound": false,
+    "sound": "silence",
+    "reason_guess": "cannot_tell",
+    "confidence": 0.0,
+    "seconds": 4.032,
+    "usd": 0.002025,
+    "audio_tokens": 0,
+    "input_tokens": 257
+   }
+  },
+  {
+   "id": "splash-07",
+   "split": "test",
+   "truth": "water_splashing",
+   "license": "Public domain",
+   "panns": "water_splashing",
+   "panns_scores": {
+    "cry": 0.0017,
+    "dog": 0.1266,
+    "doorbell": 0.0013,
+    "splash": 1.0
+   },
+   "muse": {
+    "heard_sound": false,
+    "sound": "silence",
+    "reason_guess": "cannot_tell",
+    "confidence": 0.0,
+    "seconds": 4.487,
+    "usd": 0.00206,
+    "audio_tokens": 0,
+    "input_tokens": 302
+   }
+  },
+  {
+   "id": "negative-01",
+   "split": "test",
+   "truth": "other",
+   "license": "CC0",
+   "panns": "other",
+   "panns_scores": {
+    "cry": 0.0004,
+    "dog": 0.022,
+    "doorbell": 0.0019,
+    "splash": 0.0135
+   },
+   "muse": {
+    "heard_sound": false,
+    "sound": "other",
+    "reason_guess": "cannot_tell",
+    "confidence": 0.0,
+    "seconds": 5.565,
+    "usd": 0.001733,
+    "audio_tokens": 0,
+    "input_tokens": 302
+   }
+  },
+  {
+   "id": "negative-02",
+   "split": "test",
+   "truth": "other",
+   "license": "CC BY-SA 4.0",
+   "panns": "water_splashing",
+   "panns_scores": {
+    "cry": 0.0003,
+    "dog": 0.054,
+    "doorbell": 0.0016,
+    "splash": 0.7089
+   },
+   "muse": {
+    "heard_sound": false,
+    "sound": "silence",
+    "reason_guess": "cannot_tell",
+    "confidence": 0,
+    "seconds": 4.767,
+    "usd": 0.001546,
+    "audio_tokens": 0,
+    "input_tokens": 302
+   }
+  },
+  {
+   "id": "negative-03",
+   "split": "dev",
+   "truth": "other",
+   "license": "Public domain",
+   "panns": "other",
+   "panns_scores": {
+    "cry": 0.0005,
+    "dog": 0.0263,
+    "doorbell": 0.0031,
+    "splash": 0.0103
+   },
+   "muse": {
+    "heard_sound": false,
+    "sound": "silence",
+    "reason_guess": "cannot_tell",
+    "confidence": 0,
+    "seconds": 4.094,
+    "usd": 0.00198,
+    "audio_tokens": 0,
+    "input_tokens": 302
+   }
+  },
+  {
+   "id": "negative-04",
+   "split": "test",
+   "truth": "other",
+   "license": "Public domain",
+   "panns": "other",
+   "panns_scores": {
+    "cry": 0.0003,
+    "dog": 0.017,
+    "doorbell": 0.0042,
+    "splash": 0.0055
+   },
+   "muse": {
+    "heard_sound": false,
+    "sound": "silence",
+    "reason_guess": "cannot_tell",
+    "confidence": 0.0,
+    "seconds": 5.432,
+    "usd": 0.001942,
+    "audio_tokens": 0,
+    "input_tokens": 302
+   }
+  },
+  {
+   "id": "negative-05",
+   "split": "dev",
+   "truth": "other",
+   "license": "Public domain",
+   "panns": "other",
+   "panns_scores": {
+    "cry": 0.0006,
+    "dog": 0.0257,
+    "doorbell": 0.0024,
+    "splash": 0.0085
+   },
+   "muse": {
+    "heard_sound": false,
+    "sound": "silence",
+    "reason_guess": "cannot_tell",
+    "confidence": 0,
+    "seconds": 5.101,
+    "usd": 0.00181,
+    "audio_tokens": 0,
+    "input_tokens": 302
+   }
+  },
+  {
+   "id": "negative-06",
+   "split": "dev",
+   "truth": "other",
+   "license": "Public domain",
+   "panns": "other",
+   "panns_scores": {
+    "cry": 0.0005,
+    "dog": 0.022,
+    "doorbell": 0.0021,
+    "splash": 0.0151
+   },
+   "muse": {
+    "heard_sound": false,
+    "sound": "baby_crying",
+    "reason_guess": "not_a_cry",
+    "confidence": 0.0,
+    "seconds": 5.418,
+    "usd": 0.001716,
+    "audio_tokens": 0,
+    "input_tokens": 302
+   }
+  },
+  {
+   "id": "negative-07",
+   "split": "dev",
+   "truth": "other",
+   "license": "Public domain",
+   "panns": "other",
+   "panns_scores": {
+    "cry": 0.0005,
+    "dog": 0.0127,
+    "doorbell": 0.0091,
+    "splash": 0.01
+   },
+   "muse": {
+    "heard_sound": false,
+    "sound": "silence",
+    "reason_guess": "cannot_tell",
+    "confidence": 0.0,
+    "seconds": 5.73,
+    "usd": 0.0026,
+    "audio_tokens": 0,
+    "input_tokens": 302
+   }
+  },
+  {
+   "id": "negative-08",
+   "split": "test",
+   "truth": "other",
+   "license": "Public domain",
+   "panns": "other",
+   "panns_scores": {
+    "cry": 0.005,
+    "dog": 0.1094,
+    "doorbell": 0.0019,
+    "splash": 0.0117
+   },
+   "muse": {
+    "heard_sound": false,
+    "sound": "silence",
+    "reason_guess": "not_a_cry",
+    "confidence": 0,
+    "seconds": 5.703,
+    "usd": 0.002065,
+    "audio_tokens": 0,
+    "input_tokens": 302
+   }
+  }
+ ]
+}

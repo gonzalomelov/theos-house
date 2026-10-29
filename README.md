@@ -54,17 +54,19 @@ One long-running agent sits in the middle. Everything it sees, hears and does go
 |---|---|---|
 | Confirms or cancels the hand alarm at the changing table and in the bath. Touch versus a 2 to 5 cm hover not yet told apart, see `results/hover/README.md` (Oct 28) | **SAM 3.1**, Meta's open weights | On the Mac's GPU, 1.5 to 3 s per frame. Frames never leave the house |
 | The agent's brain, in the family agent, the families bot and the public demo | **Muse Spark Open** (`meta-models/muse-spark-open-1026`), Meta's open weights | Baseten's OpenAI-compatible API, synchronous calls only (`config/agent.json`, `config/agent.vostro.json`). Every call logs its model and host as a `brain_call` event. Per-call logs from Oct 28 runs in `results/muse/` |
+| Second pair of eyes in the car seat coach: one zoomed still per step, handle and level line, a pass needs SAM 3.1 and Muse both. On 28 test renders (Oct 29) 12 of 12 wrong installs not passed, 0 false alarms, see `results/carseat/muse/README.md` | **Muse Spark Open**, image input | Baseten, opt-in (`car_seat.muse`). The still is sent once and never saved |
+| Cry reason from the sound, a guess next to the log | **Muse Spark Open**, audio input | Built and off: on Oct 29 the Baseten endpoint did not hear audio (0 audio tokens, canary failed in 4 formats), so no cry audio is sent. See `results/sounds/muse/README.md` |
 | Fallback brain, only when a Muse call errors | Claude Haiku 5.5 | Anthropic API. Each fallback is a `brain_fallback` event and a stderr line, so it is counted, never silent |
 
 ## Private by design
 
 | Data | Where it goes |
 |---|---|
-| Camera frames | Stay in memory on the Mac. SAM 3.1 and the hand detector run locally. Nothing is saved, only numbers and states in `runs/` |
-| House audio | Labelled on the Mac by PANNs, never saved, only labels and numbers in `results/` (see `docs/house-sounds.md`) |
+| Camera frames | Stay in memory on the Mac. SAM 3.1 and the hand detector run locally. Nothing is saved, only numbers and states in `runs/`. Opt-in exception: with `car_seat.muse` on, one zoomed still per car seat step goes to Muse Spark Open on Baseten |
+| House audio | Labelled on the Mac by PANNs, never saved, only labels and numbers in `results/` (see `docs/house-sounds.md`). Opt-in exception, off by default: the first 5 s of a detected cry may go to Muse Spark Open on Baseten for a guess at the reason, and only after a synthetic audio canary passes. On Oct 28 and 29 the canary failed, so no house audio has been sent |
 | The baby's log | Baby Buddy on the family's server, reachable only on that server (see `docs/deploy-babybuddy.md`) |
 | The agent's memory | `data/memory.sqlite` and `data/events.jsonl` on the machine that runs it, on the Vostro in `~/apps/parenting-agent-data` |
-| **What leaves the house** | The brain call: the conversation text and tool results (baby log lines included) go to the configured brain, Baseten for Muse Spark Open, Anthropic only when a Muse call errors and Claude answers as the fallback. Every call logs its destination host as a `brain_call` event. Baseten's docs say it does not store inputs or outputs of synchronous calls by default (https://docs.baseten.co/observability/security). Anthropic deletes API inputs and outputs within 30 days by default (https://privacy.claude.com/en/articles/7996866). Telegram messages also go through Telegram's servers. No frame and no audio leaves |
+| **What leaves the house** | The brain call: the conversation text and tool results (baby log lines included) go to the configured brain, Baseten for Muse Spark Open, Anthropic only when a Muse call errors and Claude answers as the fallback. Every call logs its destination host as a `brain_call` event. Baseten's docs say it does not store inputs or outputs of synchronous calls by default (https://docs.baseten.co/observability/security). Anthropic deletes API inputs and outputs within 30 days by default (https://privacy.claude.com/en/articles/7996866). Telegram messages also go through Telegram's servers. No frame and no audio leaves, except two opt-in Muse senses that are part of the brain call to Baseten: one zoomed still frame per car seat camera step (`car_seat.muse`), and the first 5 s of a detected cry (`house_sounds.muse_audio`), each sent once in memory and dropped. See `docs/car-seat-coach.md` and `docs/house-sounds.md` |
 
 ## Run it
 

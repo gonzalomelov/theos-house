@@ -12,6 +12,7 @@ The coach never says the install is safe. It says which visible checks passed, w
 | Car profile | `skills/carseat/tesla-model-3.json` | Tesla Model 3 rules: never rear facing in front with the airbag on, ISOFIX on the outer rear seats only, the center seat takes a belted seat only |
 | Visible checks | `parenting_agent/carseat/checks.py` | From SAM 3.1 masks: lap belt in both side guides, shoulder belt in the rear guide, no twist, level line level, handle upright. Each check says pass, fail or unseen. Unseen is never turned into pass |
 | SAM 3.1 masks | `parenting_agent/carseat/sam3_masks.py`, `parenting_agent/sam3_prompts_worker.py` | Text prompts to masks on the Mac's GPU, same weights and setup as the changing table (`docs/sam3-local.md`). Frames go through a local pipe and are never saved |
+| Muse second opinion | `parenting_agent/carseat/muse_check.py`, `scripts/carseat_muse_eval.py` | One zoomed still per camera step to Muse Spark Open, neutral question, strict JSON, majority of 3. A pass needs SAM and Muse both. Opt-in |
 | Coach | `parenting_agent/carseat/coach.py`, `skills/car-seat.json` | Speaks each step, checks the newest frame taken after the step was spoken, asks the hand checks, speaks the summary |
 | Plug-in | `parenting_agent/carseat/plugin.py` | Tools `start_car_seat_coach`, `answer_car_seat_check`, `car_seat_outgrow` for the agent |
 | Outgrow watch | `parenting_agent/carseat/outgrow.py`, `simweek/growth.py` | Weight and height from Baby Buddy against the seat's limits, with a heads up 4 weeks before |
@@ -83,6 +84,16 @@ The 2 s target is not met for every step. One SAM 3.1 pass with two prompts take
 Dev set, used to choose the prompts and thresholds (`results/carseat/dev.md`): 12 of 12 flagged, 0 false alarms, 2 of 2 abstained, 86 of 95 steps within 2 s.
 
 These are renders, not a real car. The numbers say the checks work on clean geometry with exact labels. They do not say how SAM 3.1 does on a real belt in a real car, which needs the Tesla run.
+
+## Muse Spark Open as a second pair of eyes
+
+Built Oct 29 2026. With `"car_seat": {"muse": {"enabled": true, "samples": 3}}` in the agent config, the coach also sends one still frame per camera step to Muse Spark Open on Baseten (`parenting_agent/carseat/muse_check.py`). The frame is zoomed on the middle of the view and comes with one neutral question for that step and a strict JSON schema, for example "is the handle raised or lowered", three times in parallel, majority wins. Every schema holds `movement_under_1_inch`, which only accepts `cannot_judge`: a still cannot show movement, so the parent is asked.
+
+Second-opinion rule: a check passes only when SAM 3.1 and Muse both say pass. Both fail, or one fails and the other cannot see, is a fail. A pass against a fail or against "cannot see" is "unsure": the coach says its two checks disagree, does not count it as passed and asks for a check by hand. If Muse cannot be reached, SAM's verdict stands and is marked single. Muse votes on the handle and the level line only. On belt routing and twist it stayed near chance and passed covered views, so it is not asked there.
+
+On the 28 test renders, scored once (`results/carseat/muse/README.md`): Muse alone got the handle right 25 of 28 times and the level line 18 of 28, with no wrong install passed, but it passed 4 checks on covered or floor views. With the rule, 12 of 12 wrong installs were not passed (SAM alone 11 of 12, Muse caught the folded handle SAM never found), no false alarm (SAM alone 1), no unseen view passed, and 5 of 12 correct installs ended with a hand check instead of a pass. A Muse step takes a median 8.1 s and $0.011, so it answers well after the 2 s target.
+
+**Privacy.** With Muse on, frames leave the Mac: one zoomed still per voting step, made in memory, sent once to inference.baseten.co, never saved. Each call is a `carseat_muse` event with its host. With Muse off (the default), frames stay on the Mac as before.
 
 ## Outgrow watch
 

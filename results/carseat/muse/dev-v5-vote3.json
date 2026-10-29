@@ -1,0 +1,2272 @@
+{
+ "summary": {
+  "set": "dev",
+  "tag": "v5-vote3",
+  "frames": 22,
+  "frame_at_s": 3.0,
+  "prompt": "v4-step-zoom",
+  "model": "meta-models/muse-spark-open-1026",
+  "host": "inference.baseten.co",
+  "reasoning_effort": "low",
+  "samples_per_step": 3,
+  "checks_asked": [
+   "handle",
+   "level_line"
+  ],
+  "muse_alone": {
+   "per_check": {
+    "lap_guides": {
+     "right": 2,
+     "wrong": 0,
+     "abstained": 20,
+     "false_pass": 0,
+     "false_fail": 0,
+     "of": 22
+    },
+    "shoulder_guide": {
+     "right": 2,
+     "wrong": 0,
+     "abstained": 20,
+     "false_pass": 0,
+     "false_fail": 0,
+     "of": 22
+    },
+    "no_twist": {
+     "right": 2,
+     "wrong": 0,
+     "abstained": 20,
+     "false_pass": 0,
+     "false_fail": 0,
+     "of": 22
+    },
+    "level_line": {
+     "right": 17,
+     "wrong": 4,
+     "abstained": 1,
+     "false_pass": 4,
+     "false_fail": 0,
+     "of": 22
+    },
+    "handle": {
+     "right": 20,
+     "wrong": 2,
+     "abstained": 0,
+     "false_pass": 0,
+     "false_fail": 2,
+     "of": 22
+    }
+   },
+   "frames": {
+    "wrong_installs_flagged": 4,
+    "wrong_installs_planted_check_passed": 2,
+    "wrong_installs_all_pass": 0,
+    "wrong_installs_not_passed": 4,
+    "wrong": 12,
+    "correct_all_pass": 0,
+    "false_alarms": 0,
+    "correct_with_unsure": 0,
+    "correct": 8,
+    "unseen_any_pass": 2,
+    "unseen": 2
+   }
+  },
+  "sam_alone": {
+   "per_check": {
+    "lap_guides": {
+     "right": 22,
+     "wrong": 0,
+     "abstained": 0,
+     "false_pass": 0,
+     "false_fail": 0,
+     "of": 22
+    },
+    "shoulder_guide": {
+     "right": 22,
+     "wrong": 0,
+     "abstained": 0,
+     "false_pass": 0,
+     "false_fail": 0,
+     "of": 22
+    },
+    "no_twist": {
+     "right": 19,
+     "wrong": 0,
+     "abstained": 3,
+     "false_pass": 0,
+     "false_fail": 0,
+     "of": 22
+    },
+    "level_line": {
+     "right": 22,
+     "wrong": 0,
+     "abstained": 0,
+     "false_pass": 0,
+     "false_fail": 0,
+     "of": 22
+    },
+    "handle": {
+     "right": 20,
+     "wrong": 0,
+     "abstained": 2,
+     "false_pass": 0,
+     "false_fail": 0,
+     "of": 22
+    }
+   },
+   "frames": {
+    "wrong_installs_flagged": 12,
+    "wrong_installs_planted_check_passed": 0,
+    "wrong_installs_all_pass": 0,
+    "wrong_installs_not_passed": 12,
+    "wrong": 12,
+    "correct_all_pass": 8,
+    "false_alarms": 0,
+    "correct_with_unsure": 0,
+    "correct": 8,
+    "unseen_any_pass": 0,
+    "unseen": 2
+   }
+  },
+  "second_opinion": {
+   "per_check": {
+    "lap_guides": {
+     "right": 22,
+     "wrong": 0,
+     "abstained": 0,
+     "false_pass": 0,
+     "false_fail": 0,
+     "of": 22
+    },
+    "shoulder_guide": {
+     "right": 22,
+     "wrong": 0,
+     "abstained": 0,
+     "false_pass": 0,
+     "false_fail": 0,
+     "of": 22
+    },
+    "no_twist": {
+     "right": 19,
+     "wrong": 0,
+     "abstained": 3,
+     "false_pass": 0,
+     "false_fail": 0,
+     "of": 22
+    },
+    "level_line": {
+     "right": 19,
+     "wrong": 0,
+     "abstained": 3,
+     "false_pass": 0,
+     "false_fail": 0,
+     "of": 22
+    },
+    "handle": {
+     "right": 18,
+     "wrong": 2,
+     "abstained": 2,
+     "false_pass": 0,
+     "false_fail": 2,
+     "of": 22
+    }
+   },
+   "frames": {
+    "wrong_installs_flagged": 10,
+    "wrong_installs_planted_check_passed": 0,
+    "wrong_installs_all_pass": 0,
+    "wrong_installs_not_passed": 12,
+    "wrong": 12,
+    "correct_all_pass": 8,
+    "false_alarms": 0,
+    "correct_with_unsure": 0,
+    "correct": 8,
+    "unseen_any_pass": 0,
+    "unseen": 2
+   }
+  },
+  "latency_s": {
+   "median": 7.706,
+   "max": 24.748,
+   "mean": 8.715
+  },
+  "usd": 0.578,
+  "usd_per_frame": 0.02627,
+  "calls": 135,
+  "usd_per_call": 0.00428,
+  "errors": 0,
+  "muse_votes_on": [
+   "handle",
+   "level_line"
+  ]
+ },
+ "frames": [
+  {
+   "clip": "dev-01-correct.mp4",
+   "error": "correct",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse_steps": {
+    "lap_guides": {
+     "result": null,
+     "skipped": true
+    },
+    "shoulder_guide": {
+     "result": null,
+     "skipped": true
+    },
+    "no_twist": {
+     "result": null,
+     "skipped": true
+    },
+    "level_line": {
+     "result": "pass",
+     "samples": [
+      "pass",
+      "pass",
+      "fail"
+     ],
+     "seen": [
+      "horizontal",
+      "horizontal",
+      "slopes_down_to_the_right"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "single top-down angled view inside a dark vehicle",
+     "seconds": 13.648,
+     "usd": 0.013122,
+     "usage": {
+      "input_tokens": 1516,
+      "output_tokens": 613,
+      "audio_tokens": 0,
+      "reasoning_tokens": 559
+     },
+     "votes": true
+    },
+    "handle": {
+     "result": "pass",
+     "samples": [
+      "pass",
+      "pass",
+      "pass"
+     ],
+     "seen": [
+      "raised",
+      "raised",
+      "raised"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "low_poly_3d_rendering",
+     "seconds": 9.633,
+     "usd": 0.011345,
+     "usage": {
+      "input_tokens": 1518,
+      "output_tokens": 386,
+      "audio_tokens": 0,
+      "reasoning_tokens": 333
+     },
+     "votes": true
+    }
+   }
+  },
+  {
+   "clip": "dev-02-correct.mp4",
+   "error": "correct",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse_steps": {
+    "lap_guides": {
+     "result": null,
+     "skipped": true
+    },
+    "shoulder_guide": {
+     "result": null,
+     "skipped": true
+    },
+    "no_twist": {
+     "result": null,
+     "skipped": true
+    },
+    "level_line": {
+     "result": "pass",
+     "samples": [
+      "pass",
+      "pass",
+      "pass"
+     ],
+     "seen": [
+      "horizontal",
+      "horizontal",
+      "horizontal"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "small black window on carrier's side",
+     "seconds": 6.87,
+     "usd": 0.011555,
+     "usage": {
+      "input_tokens": 1516,
+      "output_tokens": 331,
+      "audio_tokens": 0,
+      "reasoning_tokens": 280
+     },
+     "votes": true
+    },
+    "handle": {
+     "result": "pass",
+     "samples": [
+      "pass",
+      "pass",
+      "pass"
+     ],
+     "seen": [
+      "raised",
+      "raised",
+      "raised"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "one",
+     "seconds": 7.974,
+     "usd": 0.008965,
+     "usage": {
+      "input_tokens": 1518,
+      "output_tokens": 206,
+      "audio_tokens": 0,
+      "reasoning_tokens": 157
+     },
+     "votes": true
+    }
+   }
+  },
+  {
+   "clip": "dev-03-correct.mp4",
+   "error": "correct",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse_steps": {
+    "lap_guides": {
+     "result": null,
+     "skipped": true
+    },
+    "shoulder_guide": {
+     "result": null,
+     "skipped": true
+    },
+    "no_twist": {
+     "result": null,
+     "skipped": true
+    },
+    "level_line": {
+     "result": "pass",
+     "samples": [
+      "pass",
+      "pass",
+      "unseen"
+     ],
+     "seen": [
+      "horizontal",
+      "horizontal",
+      "cannot_see"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "small black window on the gray side of the carrier",
+     "seconds": 8.479,
+     "usd": 0.013191,
+     "usage": {
+      "input_tokens": 1516,
+      "output_tokens": 668,
+      "audio_tokens": 0,
+      "reasoning_tokens": 615
+     },
+     "votes": true
+    },
+    "handle": {
+     "result": "pass",
+     "samples": [
+      "pass",
+      "pass",
+      "pass"
+     ],
+     "seen": [
+      "raised",
+      "raised",
+      "raised"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "The photo shows the carry handle in the raised position, standing up above the carrier like a basket handle. It is the curved silver and black bar attached at the two sides of the carrier, arching vertically over the center of the carrier.",
+     "seconds": 7.36,
+     "usd": 0.008833,
+     "usage": {
+      "input_tokens": 1518,
+      "output_tokens": 237,
+      "audio_tokens": 0,
+      "reasoning_tokens": 146
+     },
+     "votes": true
+    }
+   }
+  },
+  {
+   "clip": "dev-04-correct.mp4",
+   "error": "correct",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse_steps": {
+    "lap_guides": {
+     "result": null,
+     "skipped": true
+    },
+    "shoulder_guide": {
+     "result": null,
+     "skipped": true
+    },
+    "no_twist": {
+     "result": null,
+     "skipped": true
+    },
+    "level_line": {
+     "result": "pass",
+     "samples": [
+      "pass",
+      "pass",
+      "pass"
+     ],
+     "seen": [
+      "horizontal",
+      "horizontal",
+      "horizontal"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "In this single rendered image, the small black rectangular window on the outer side of the gray carrier contains a bright green horizontal bar.",
+     "seconds": 8.17,
+     "usd": 0.012582,
+     "usage": {
+      "input_tokens": 1516,
+      "output_tokens": 614,
+      "audio_tokens": 0,
+      "reasoning_tokens": 546
+     },
+     "votes": true
+    },
+    "handle": {
+     "result": "pass",
+     "samples": [
+      "pass",
+      "pass",
+      "pass"
+     ],
+     "seen": [
+      "raised",
+      "raised",
+      "raised"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "The curved bar is centered over and above the carrier, arching from one side to the other with clear space between the bar and the carrier shell.",
+     "seconds": 6.43,
+     "usd": 0.009105,
+     "usage": {
+      "input_tokens": 1518,
+      "output_tokens": 231,
+      "audio_tokens": 0,
+      "reasoning_tokens": 162
+     },
+     "votes": true
+    }
+   }
+  },
+  {
+   "clip": "dev-05-correct.mp4",
+   "error": "correct",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse_steps": {
+    "lap_guides": {
+     "result": null,
+     "skipped": true
+    },
+    "shoulder_guide": {
+     "result": null,
+     "skipped": true
+    },
+    "no_twist": {
+     "result": null,
+     "skipped": true
+    },
+    "level_line": {
+     "result": "pass",
+     "samples": [
+      "pass",
+      "fail",
+      "pass"
+     ],
+     "seen": [
+      "horizontal",
+      "slopes_up_to_the_right",
+      "horizontal"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "Look only at the small black window on the carrier's side with a green bar.",
+     "seconds": 7.192,
+     "usd": 0.011197,
+     "usage": {
+      "input_tokens": 1516,
+      "output_tokens": 561,
+      "audio_tokens": 0,
+      "reasoning_tokens": 499
+     },
+     "votes": true
+    },
+    "handle": {
+     "result": "pass",
+     "samples": [
+      "pass",
+      "pass",
+      "pass"
+     ],
+     "seen": [
+      "raised",
+      "raised",
+      "raised"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "The curved bar attached to the two sides of the carrier is in a raised position.",
+     "seconds": 6.99,
+     "usd": 0.007916,
+     "usage": {
+      "input_tokens": 1518,
+      "output_tokens": 193,
+      "audio_tokens": 0,
+      "reasoning_tokens": 129
+     },
+     "votes": true
+    }
+   }
+  },
+  {
+   "clip": "dev-06-correct.mp4",
+   "error": "correct",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse_steps": {
+    "lap_guides": {
+     "result": null,
+     "skipped": true
+    },
+    "shoulder_guide": {
+     "result": null,
+     "skipped": true
+    },
+    "no_twist": {
+     "result": null,
+     "skipped": true
+    },
+    "level_line": {
+     "result": "pass",
+     "samples": [
+      "pass",
+      "pass",
+      "pass"
+     ],
+     "seen": [
+      "horizontal",
+      "horizontal",
+      "horizontal"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "small black rectangular window on the light gray side of the carrier with a thin bright green horizontal bar inside",
+     "seconds": 7.321,
+     "usd": 0.011844,
+     "usage": {
+      "input_tokens": 1516,
+      "output_tokens": 439,
+      "audio_tokens": 0,
+      "reasoning_tokens": 374
+     },
+     "votes": true
+    },
+    "handle": {
+     "result": "pass",
+     "samples": [
+      "pass",
+      "pass",
+      "pass"
+     ],
+     "seen": [
+      "raised",
+      "raised",
+      "raised"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "The photo shows a gray infant carrier on what appears to be a vehicle seat. A curved bar is attached to the two sides of the carrier. In the photo that bar is in a raised, upright position, arching up above the carrier like a basket handle.",
+     "seconds": 5.759,
+     "usd": 0.008608,
+     "usage": {
+      "input_tokens": 1518,
+      "output_tokens": 220,
+      "audio_tokens": 0,
+      "reasoning_tokens": 129
+     },
+     "votes": true
+    }
+   }
+  },
+  {
+   "clip": "dev-07-correct.mp4",
+   "error": "correct",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse_steps": {
+    "lap_guides": {
+     "result": null,
+     "skipped": true
+    },
+    "shoulder_guide": {
+     "result": null,
+     "skipped": true
+    },
+    "no_twist": {
+     "result": null,
+     "skipped": true
+    },
+    "level_line": {
+     "result": "pass",
+     "samples": [
+      "pass",
+      "pass",
+      "pass"
+     ],
+     "seen": [
+      "horizontal",
+      "horizontal",
+      "horizontal"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "only",
+     "seconds": 7.658,
+     "usd": 0.01056,
+     "usage": {
+      "input_tokens": 1516,
+      "output_tokens": 374,
+      "audio_tokens": 0,
+      "reasoning_tokens": 339
+     },
+     "votes": true
+    },
+    "handle": {
+     "result": "pass",
+     "samples": [
+      "pass",
+      "pass",
+      "pass"
+     ],
+     "seen": [
+      "raised",
+      "raised",
+      "raised"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "The photo shows a low-poly rendering of an infant car seat/carrier viewed from a slightly elevated side angle in a dark interior. A metallic gray curved carry handle is attached at the two sides of the gray carrier shell.",
+     "seconds": 6.835,
+     "usd": 0.009089,
+     "usage": {
+      "input_tokens": 1518,
+      "output_tokens": 305,
+      "audio_tokens": 0,
+      "reasoning_tokens": 220
+     },
+     "votes": true
+    }
+   }
+  },
+  {
+   "clip": "dev-08-correct.mp4",
+   "error": "correct",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse_steps": {
+    "lap_guides": {
+     "result": null,
+     "skipped": true
+    },
+    "shoulder_guide": {
+     "result": null,
+     "skipped": true
+    },
+    "no_twist": {
+     "result": null,
+     "skipped": true
+    },
+    "level_line": {
+     "result": "pass",
+     "samples": [
+      "pass",
+      "fail",
+      "pass"
+     ],
+     "seen": [
+      "horizontal",
+      "slopes_down_to_the_right",
+      "horizontal"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "At the small black window on the carrier's side, the green bar is horizontal within the limits of the low-resolution, blocky rendering, and appears parallel to the bottom edge of the photo when viewed in this single still image. The black window itself has straight horizontal top and bottom borders,",
+     "seconds": 7.658,
+     "usd": 0.012047,
+     "usage": {
+      "input_tokens": 1516,
+      "output_tokens": 609,
+      "audio_tokens": 0,
+      "reasoning_tokens": 446
+     },
+     "votes": true
+    },
+    "handle": {
+     "result": "pass",
+     "samples": [
+      "pass",
+      "pass",
+      "pass"
+     ],
+     "seen": [
+      "raised",
+      "raised",
+      "raised"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "In this single photo the infant carrier is viewed from a slightly elevated angle",
+     "seconds": 6.266,
+     "usd": 0.008672,
+     "usage": {
+      "input_tokens": 1518,
+      "output_tokens": 297,
+      "audio_tokens": 0,
+      "reasoning_tokens": 241
+     },
+     "votes": true
+    }
+   }
+  },
+  {
+   "clip": "dev-09-outside_guide.mp4",
+   "error": "outside_guide",
+   "truth": {
+    "lap_guides": "fail",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "sam": {
+    "lap_guides": "fail",
+    "shoulder_guide": "pass",
+    "no_twist": "unseen",
+    "level_line": "pass",
+    "handle": "unseen"
+   },
+   "combined": {
+    "lap_guides": "fail",
+    "shoulder_guide": "pass",
+    "no_twist": "unseen",
+    "level_line": "pass",
+    "handle": "unsure"
+   },
+   "muse_steps": {
+    "lap_guides": {
+     "result": null,
+     "skipped": true
+    },
+    "shoulder_guide": {
+     "result": null,
+     "skipped": true
+    },
+    "no_twist": {
+     "result": null,
+     "skipped": true
+    },
+    "level_line": {
+     "result": "pass",
+     "samples": [
+      "fail",
+      "pass",
+      "pass"
+     ],
+     "seen": [
+      "slopes_up_to_the_right",
+      "horizontal",
+      "horizontal"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "In the photo, the small black rectangular window on the side of the carrier contains a bright green horizontal bar inside it. When compared to the straight bottom edge of the photo, the green bar is not perfectly parallel to that bottom edge.",
+     "seconds": 7.714,
+     "usd": 0.012944,
+     "usage": {
+      "input_tokens": 1516,
+      "output_tokens": 566,
+      "audio_tokens": 0,
+      "reasoning_tokens": 475
+     },
+     "votes": true
+    },
+    "handle": {
+     "result": "pass",
+     "samples": [
+      "pass",
+      "pass",
+      "pass"
+     ],
+     "seen": [
+      "raised",
+      "raised",
+      "raised"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "In the single photo provided, the curved carry handle is in the raised position",
+     "seconds": 6.622,
+     "usd": 0.010053,
+     "usage": {
+      "input_tokens": 1518,
+      "output_tokens": 374,
+      "audio_tokens": 0,
+      "reasoning_tokens": 311
+     },
+     "votes": true
+    }
+   }
+  },
+  {
+   "clip": "dev-10-outside_guide.mp4",
+   "error": "outside_guide",
+   "truth": {
+    "lap_guides": "fail",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "sam": {
+    "lap_guides": "fail",
+    "shoulder_guide": "pass",
+    "no_twist": "unseen",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "fail",
+    "shoulder_guide": "pass",
+    "no_twist": "unseen",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse_steps": {
+    "lap_guides": {
+     "result": null,
+     "skipped": true
+    },
+    "shoulder_guide": {
+     "result": null,
+     "skipped": true
+    },
+    "no_twist": {
+     "result": null,
+     "skipped": true
+    },
+    "level_line": {
+     "result": "pass",
+     "samples": [
+      "pass",
+      "fail",
+      "pass"
+     ],
+     "seen": [
+      "horizontal",
+      "slopes_up_to_the_right",
+      "horizontal"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "In the single image provided with a dark background and a gray infant carrier in the center, the green stripe seen inside that specific recessed element varies with the object's angle and the image's perspective; it runs nearly parallel to the lower boundary of the image, with no pronounced diagonal",
+     "seconds": 7.594,
+     "usd": 0.011473,
+     "usage": {
+      "input_tokens": 1516,
+      "output_tokens": 566,
+      "audio_tokens": 0,
+      "reasoning_tokens": 426
+     },
+     "votes": true
+    },
+    "handle": {
+     "result": "pass",
+     "samples": [
+      "pass",
+      "pass",
+      "pass"
+     ],
+     "seen": [
+      "raised",
+      "raised",
+      "raised"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "infant_carrier",
+     "seconds": 7.042,
+     "usd": 0.009623,
+     "usage": {
+      "input_tokens": 1518,
+      "output_tokens": 215,
+      "audio_tokens": 0,
+      "reasoning_tokens": 171
+     },
+     "votes": true
+    }
+   }
+  },
+  {
+   "clip": "dev-11-outside_guide.mp4",
+   "error": "outside_guide",
+   "truth": {
+    "lap_guides": "fail",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "sam": {
+    "lap_guides": "fail",
+    "shoulder_guide": "pass",
+    "no_twist": "unseen",
+    "level_line": "pass",
+    "handle": "unseen"
+   },
+   "combined": {
+    "lap_guides": "fail",
+    "shoulder_guide": "pass",
+    "no_twist": "unseen",
+    "level_line": "pass",
+    "handle": "unsure"
+   },
+   "muse_steps": {
+    "lap_guides": {
+     "result": null,
+     "skipped": true
+    },
+    "shoulder_guide": {
+     "result": null,
+     "skipped": true
+    },
+    "no_twist": {
+     "result": null,
+     "skipped": true
+    },
+    "level_line": {
+     "result": "pass",
+     "samples": [
+      "pass",
+      "pass",
+      "pass"
+     ],
+     "seen": [
+      "horizontal",
+      "horizontal",
+      "horizontal"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "center-bottom of the image, on the light gray infant carrier shell",
+     "seconds": 7.56,
+     "usd": 0.011992,
+     "usage": {
+      "input_tokens": 1516,
+      "output_tokens": 439,
+      "audio_tokens": 0,
+      "reasoning_tokens": 384
+     },
+     "votes": true
+    },
+    "handle": {
+     "result": "pass",
+     "samples": [
+      "pass",
+      "pass",
+      "pass"
+     ],
+     "seen": [
+      "raised",
+      "raised",
+      "raised"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "in this one photo the infant carrier is light gray and viewed from a slightly elevated front\u2011three\u2011quarter angle against a dark background. a thick light\u2011gray curved bar spans from one side of the carrier to the other, arching up and over the center of the carrier interior, in the upright basket\u2011han",
+     "seconds": 7.698,
+     "usd": 0.009067,
+     "usage": {
+      "input_tokens": 1518,
+      "output_tokens": 323,
+      "audio_tokens": 0,
+      "reasoning_tokens": 125
+     },
+     "votes": true
+    }
+   }
+  },
+  {
+   "clip": "dev-12-twisted.mp4",
+   "error": "twisted",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "fail",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "unseen",
+    "handle": "pass"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "fail",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "fail",
+    "level_line": "unsure",
+    "handle": "pass"
+   },
+   "muse_steps": {
+    "lap_guides": {
+     "result": null,
+     "skipped": true
+    },
+    "shoulder_guide": {
+     "result": null,
+     "skipped": true
+    },
+    "no_twist": {
+     "result": null,
+     "skipped": true
+    },
+    "level_line": {
+     "result": "unseen",
+     "samples": [
+      "pass",
+      "fail",
+      "unseen"
+     ],
+     "seen": [
+      "horizontal",
+      "slopes_up_to_the_right",
+      "cannot_see"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "in this single still image, the small black rectangular window on the tan carrier side contains a solid green bar. Compared to the straight bottom edge of the photo, which is horizontal, the green bar in the image appears very close to horizontal, with any deviation from horizontal in this low-resol",
+     "seconds": 7.824,
+     "usd": 0.013246,
+     "usage": {
+      "input_tokens": 1516,
+      "output_tokens": 675,
+      "audio_tokens": 0,
+      "reasoning_tokens": 530
+     },
+     "votes": true
+    },
+    "handle": {
+     "result": "pass",
+     "samples": [
+      "pass",
+      "pass",
+      "pass"
+     ],
+     "seen": [
+      "raised",
+      "raised",
+      "raised"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "low-poly rendered interior view of a rear-facing infant carrier on a dark vehicle seat",
+     "seconds": 13.405,
+     "usd": 0.008544,
+     "usage": {
+      "input_tokens": 1518,
+      "output_tokens": 210,
+      "audio_tokens": 0,
+      "reasoning_tokens": 155
+     },
+     "votes": true
+    }
+   }
+  },
+  {
+   "clip": "dev-13-twisted.mp4",
+   "error": "twisted",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "fail",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "fail",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "fail",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse_steps": {
+    "lap_guides": {
+     "result": null,
+     "skipped": true
+    },
+    "shoulder_guide": {
+     "result": null,
+     "skipped": true
+    },
+    "no_twist": {
+     "result": null,
+     "skipped": true
+    },
+    "level_line": {
+     "result": "pass",
+     "samples": [
+      "unseen",
+      "pass",
+      "pass"
+     ],
+     "seen": [
+      "cannot_see",
+      "horizontal",
+      "horizontal"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "In the photo a gray infant carrier is shown from the side",
+     "seconds": 8.047,
+     "usd": 0.011147,
+     "usage": {
+      "input_tokens": 1516,
+      "output_tokens": 414,
+      "audio_tokens": 0,
+      "reasoning_tokens": 354
+     },
+     "votes": true
+    },
+    "handle": {
+     "result": "pass",
+     "samples": [
+      "pass",
+      "fail",
+      "pass"
+     ],
+     "seen": [
+      "raised",
+      "lowered",
+      "raised"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "The curved handle is vertical, raised, standing up above the gray carrier like a basket handle.",
+     "seconds": 7.129,
+     "usd": 0.008064,
+     "usage": {
+      "input_tokens": 1518,
+      "output_tokens": 223,
+      "audio_tokens": 0,
+      "reasoning_tokens": 157
+     },
+     "votes": true
+    }
+   }
+  },
+  {
+   "clip": "dev-14-twisted.mp4",
+   "error": "twisted",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "fail",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "fail",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "fail",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse_steps": {
+    "lap_guides": {
+     "result": null,
+     "skipped": true
+    },
+    "shoulder_guide": {
+     "result": null,
+     "skipped": true
+    },
+    "no_twist": {
+     "result": null,
+     "skipped": true
+    },
+    "level_line": {
+     "result": "pass",
+     "samples": [
+      "pass",
+      "pass",
+      "pass"
+     ],
+     "seen": [
+      "horizontal",
+      "horizontal",
+      "horizontal"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "small black rectangular window on side of gray carrier with bright green horizontal bar inside",
+     "seconds": 10.392,
+     "usd": 0.011159,
+     "usage": {
+      "input_tokens": 1516,
+      "output_tokens": 417,
+      "audio_tokens": 0,
+      "reasoning_tokens": 357
+     },
+     "votes": true
+    },
+    "handle": {
+     "result": "pass",
+     "samples": [
+      "pass",
+      "pass",
+      "pass"
+     ],
+     "seen": [
+      "raised",
+      "raised",
+      "raised"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "The photo shows a gray infant carrier on a vehicle seat. A light gray/silver curved bar is attached at the two sides of the carrier and arches up and over the carrier body, standing upright above it like a basket handle.",
+     "seconds": 24.748,
+     "usd": 0.009862,
+     "usage": {
+      "input_tokens": 1518,
+      "output_tokens": 281,
+      "audio_tokens": 0,
+      "reasoning_tokens": 188
+     },
+     "votes": true
+    }
+   }
+  },
+  {
+   "clip": "dev-15-recline.mp4",
+   "error": "recline",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "fail",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "fail",
+    "handle": "pass"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "fail",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "fail",
+    "handle": "pass"
+   },
+   "muse_steps": {
+    "lap_guides": {
+     "result": null,
+     "skipped": true
+    },
+    "shoulder_guide": {
+     "result": null,
+     "skipped": true
+    },
+    "no_twist": {
+     "result": null,
+     "skipped": true
+    },
+    "level_line": {
+     "result": "fail",
+     "samples": [
+      "pass",
+      "fail",
+      "fail"
+     ],
+     "seen": [
+      "horizontal",
+      "slopes_up_to_the_right",
+      "slopes_down_to_the_right"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "single_image",
+     "seconds": 10.289,
+     "usd": 0.010271,
+     "usage": {
+      "input_tokens": 1516,
+      "output_tokens": 385,
+      "audio_tokens": 0,
+      "reasoning_tokens": 340
+     },
+     "votes": true
+    },
+    "handle": {
+     "result": "pass",
+     "samples": [
+      "pass",
+      "fail",
+      "pass"
+     ],
+     "seen": [
+      "raised",
+      "lowered",
+      "raised"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "The photo shows a rear-facing infant carrier viewed from an angled top-down perspective in low light",
+     "seconds": 7.67,
+     "usd": 0.009322,
+     "usage": {
+      "input_tokens": 1518,
+      "output_tokens": 271,
+      "audio_tokens": 0,
+      "reasoning_tokens": 211
+     },
+     "votes": true
+    }
+   }
+  },
+  {
+   "clip": "dev-16-recline.mp4",
+   "error": "recline",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "fail",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "fail",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "unsure",
+    "handle": "pass"
+   },
+   "muse_steps": {
+    "lap_guides": {
+     "result": null,
+     "skipped": true
+    },
+    "shoulder_guide": {
+     "result": null,
+     "skipped": true
+    },
+    "no_twist": {
+     "result": null,
+     "skipped": true
+    },
+    "level_line": {
+     "result": "pass",
+     "samples": [
+      "fail",
+      "pass",
+      "pass"
+     ],
+     "seen": [
+      "slopes_up_to_the_right",
+      "horizontal",
+      "horizontal"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "only at the small black window on the carrier's side with a green bar",
+     "seconds": 8.656,
+     "usd": 0.013387,
+     "usage": {
+      "input_tokens": 1516,
+      "output_tokens": 446,
+      "audio_tokens": 0,
+      "reasoning_tokens": 382
+     },
+     "votes": true
+    },
+    "handle": {
+     "result": "pass",
+     "samples": [
+      "pass",
+      "pass",
+      "pass"
+     ],
+     "seen": [
+      "raised",
+      "raised",
+      "raised"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "In the photo, the curved carry handle is in the raised position, standing up above the carrier like a basket handle. It is the light gray arched bar attached to the two sides of the carrier, extending vertically over the middle of the carrier.",
+     "seconds": 6.665,
+     "usd": 0.010189,
+     "usage": {
+      "input_tokens": 1518,
+      "output_tokens": 394,
+      "audio_tokens": 0,
+      "reasoning_tokens": 305
+     },
+     "votes": true
+    }
+   }
+  },
+  {
+   "clip": "dev-17-recline.mp4",
+   "error": "recline",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "fail",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "fail",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "unsure",
+    "handle": "pass"
+   },
+   "muse_steps": {
+    "lap_guides": {
+     "result": null,
+     "skipped": true
+    },
+    "shoulder_guide": {
+     "result": null,
+     "skipped": true
+    },
+    "no_twist": {
+     "result": null,
+     "skipped": true
+    },
+    "level_line": {
+     "result": "pass",
+     "samples": [
+      "pass",
+      "pass",
+      "pass"
+     ],
+     "seen": [
+      "horizontal",
+      "horizontal",
+      "horizontal"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "small black window on the side of the tan carrier with a green bar inside",
+     "seconds": 8.097,
+     "usd": 0.013012,
+     "usage": {
+      "input_tokens": 1516,
+      "output_tokens": 458,
+      "audio_tokens": 0,
+      "reasoning_tokens": 400
+     },
+     "votes": true
+    },
+    "handle": {
+     "result": "pass",
+     "samples": [
+      "pass",
+      "pass",
+      "pass"
+     ],
+     "seen": [
+      "raised",
+      "raised",
+      "raised"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "I looked for the carry handle in the image of a tan infant carrier with a low-poly style positioned on a dark vehicle seat",
+     "seconds": 14.204,
+     "usd": 0.008268,
+     "usage": {
+      "input_tokens": 1518,
+      "output_tokens": 199,
+      "audio_tokens": 0,
+      "reasoning_tokens": 130
+     },
+     "votes": true
+    }
+   }
+  },
+  {
+   "clip": "dev-18-handle.mp4",
+   "error": "handle",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "fail"
+   },
+   "muse": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "pass",
+    "handle": "fail"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "fail"
+   },
+   "combined": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "fail"
+   },
+   "muse_steps": {
+    "lap_guides": {
+     "result": null,
+     "skipped": true
+    },
+    "shoulder_guide": {
+     "result": null,
+     "skipped": true
+    },
+    "no_twist": {
+     "result": null,
+     "skipped": true
+    },
+    "level_line": {
+     "result": "pass",
+     "samples": [
+      "pass",
+      "pass",
+      "fail"
+     ],
+     "seen": [
+      "horizontal",
+      "horizontal",
+      "slopes_up_to_the_right"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "small black rectangular window on the outer side wall of the infant carrier",
+     "seconds": 7.867,
+     "usd": 0.011172,
+     "usage": {
+      "input_tokens": 1516,
+      "output_tokens": 346,
+      "audio_tokens": 0,
+      "reasoning_tokens": 289
+     },
+     "votes": true
+    },
+    "handle": {
+     "result": "fail",
+     "samples": [
+      "fail",
+      "fail",
+      "fail"
+     ],
+     "seen": [
+      "lowered",
+      "lowered",
+      "lowered"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "The photo shows a 3D-rendered infant carrier on a vehicle seat.\n",
+     "seconds": 8.059,
+     "usd": 0.010826,
+     "usage": {
+      "input_tokens": 1518,
+      "output_tokens": 315,
+      "audio_tokens": 0,
+      "reasoning_tokens": 253
+     },
+     "votes": true
+    }
+   }
+  },
+  {
+   "clip": "dev-19-handle.mp4",
+   "error": "handle",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "fail"
+   },
+   "muse": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "pass",
+    "handle": "fail"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "fail"
+   },
+   "combined": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "fail"
+   },
+   "muse_steps": {
+    "lap_guides": {
+     "result": null,
+     "skipped": true
+    },
+    "shoulder_guide": {
+     "result": null,
+     "skipped": true
+    },
+    "no_twist": {
+     "result": null,
+     "skipped": true
+    },
+    "level_line": {
+     "result": "pass",
+     "samples": [
+      "fail",
+      "pass",
+      "pass"
+     ],
+     "seen": [
+      "slopes_down_to_the_right",
+      "horizontal",
+      "horizontal"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "1",
+     "seconds": 9.35,
+     "usd": 0.013204,
+     "usage": {
+      "input_tokens": 1516,
+      "output_tokens": 426,
+      "audio_tokens": 0,
+      "reasoning_tokens": 371
+     },
+     "votes": true
+    },
+    "handle": {
+     "result": "fail",
+     "samples": [
+      "fail",
+      "pass",
+      "fail"
+     ],
+     "seen": [
+      "lowered",
+      "raised",
+      "lowered"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "center and lower portion of the carrier shell",
+     "seconds": 7.998,
+     "usd": 0.010274,
+     "usage": {
+      "input_tokens": 1518,
+      "output_tokens": 256,
+      "audio_tokens": 0,
+      "reasoning_tokens": 202
+     },
+     "votes": true
+    }
+   }
+  },
+  {
+   "clip": "dev-20-handle.mp4",
+   "error": "handle",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "fail"
+   },
+   "muse": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "pass",
+    "handle": "fail"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "fail"
+   },
+   "combined": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "fail"
+   },
+   "muse_steps": {
+    "lap_guides": {
+     "result": null,
+     "skipped": true
+    },
+    "shoulder_guide": {
+     "result": null,
+     "skipped": true
+    },
+    "no_twist": {
+     "result": null,
+     "skipped": true
+    },
+    "level_line": {
+     "result": "pass",
+     "samples": [
+      "pass",
+      "pass",
+      "fail"
+     ],
+     "seen": [
+      "horizontal",
+      "horizontal",
+      "slopes_down_to_the_right"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "only the photograph you provided",
+     "seconds": 7.468,
+     "usd": 0.011422,
+     "usage": {
+      "input_tokens": 1516,
+      "output_tokens": 456,
+      "audio_tokens": 0,
+      "reasoning_tokens": 404
+     },
+     "votes": true
+    },
+    "handle": {
+     "result": "fail",
+     "samples": [
+      "fail",
+      "fail",
+      "fail"
+     ],
+     "seen": [
+      "lowered",
+      "lowered",
+      "lowered"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": " In the single rendered image provided, a grey infant carrier is shown from a three-quarter side angle on a dark background. \n\nA light grey/white curved bar is visible attached at two points to the shell of the carrier. The bar is not arched up over the top of the carrier. It is positioned low, rest",
+     "seconds": 7.352,
+     "usd": 0.009665,
+     "usage": {
+      "input_tokens": 1518,
+      "output_tokens": 276,
+      "audio_tokens": 0,
+      "reasoning_tokens": 123
+     },
+     "votes": true
+    }
+   }
+  },
+  {
+   "clip": "dev-21-unseen.mp4",
+   "error": "unseen",
+   "truth": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "muse": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "pass",
+    "handle": "fail"
+   },
+   "sam": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "combined": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "unsure",
+    "handle": "fail"
+   },
+   "muse_steps": {
+    "lap_guides": {
+     "result": null,
+     "skipped": true
+    },
+    "shoulder_guide": {
+     "result": null,
+     "skipped": true
+    },
+    "no_twist": {
+     "result": null,
+     "skipped": true
+    },
+    "level_line": {
+     "result": "pass",
+     "samples": [
+      "pass",
+      "fail",
+      "pass"
+     ],
+     "seen": [
+      "horizontal",
+      "slopes_up_to_the_right",
+      "horizontal"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "only at the small black rectangular window on the carrier's side",
+     "seconds": 8.765,
+     "usd": 0.010619,
+     "usage": {
+      "input_tokens": 1516,
+      "output_tokens": 353,
+      "audio_tokens": 0,
+      "reasoning_tokens": 296
+     },
+     "votes": true
+    },
+    "handle": {
+     "result": "fail",
+     "samples": [
+      "fail",
+      "fail",
+      "fail"
+     ],
+     "seen": [
+      "lowered",
+      "lowered",
+      "lowered"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "The photo shows a close-up, top-down angled view of a pink rectangular carrier against a dark background.\n\nThe black carry handle is visible as a long, flat, segmented strip lying horizontally across the top surface of the pink carrier. It extends diagonally from the left side, where a small blue at",
+     "seconds": 7.011,
+     "usd": 0.01067,
+     "usage": {
+      "input_tokens": 1518,
+      "output_tokens": 517,
+      "audio_tokens": 0,
+      "reasoning_tokens": 280
+     },
+     "votes": true
+    }
+   }
+  },
+  {
+   "clip": "dev-22-unseen.mp4",
+   "error": "unseen",
+   "truth": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "muse": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "pass",
+    "handle": "fail"
+   },
+   "sam": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "combined": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "unsure",
+    "handle": "fail"
+   },
+   "muse_steps": {
+    "lap_guides": {
+     "result": null,
+     "skipped": true
+    },
+    "shoulder_guide": {
+     "result": null,
+     "skipped": true
+    },
+    "no_twist": {
+     "result": null,
+     "skipped": true
+    },
+    "level_line": {
+     "result": "pass",
+     "samples": [
+      "pass",
+      "pass",
+      "pass"
+     ],
+     "seen": [
+      "horizontal",
+      "horizontal",
+      "horizontal"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "small black window on light gray section just below the large pink block, centered left to right",
+     "seconds": 14.527,
+     "usd": 0.011146,
+     "usage": {
+      "input_tokens": 1516,
+      "output_tokens": 305,
+      "audio_tokens": 0,
+      "reasoning_tokens": 243
+     },
+     "votes": true
+    },
+    "handle": {
+     "result": "fail",
+     "samples": [
+      "fail",
+      "fail",
+      "fail"
+     ],
+     "seen": [
+      "lowered",
+      "lowered",
+      "lowered"
+     ],
+     "movement_under_1_inch": "cannot_judge",
+     "look": "low resolution blocky 3D render",
+     "seconds": 9.455,
+     "usd": 0.011036,
+     "usage": {
+      "input_tokens": 1518,
+      "output_tokens": 453,
+      "audio_tokens": 0,
+      "reasoning_tokens": 401
+     },
+     "votes": true
+    }
+   }
+  }
+ ]
+}

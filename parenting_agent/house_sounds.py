@@ -13,13 +13,16 @@ The log is read the way the daily rhythm reads it (the "rhythm" block: Baby Budd
   within fuss_wait_s.
 - Dog: a "house_sound" event only, for the log of the day.
 - White noise: on before the nap or bedtime the rhythm expects, timer down once he sleeps, all dry run.
-Audio never leaves the Ear in parenting_agent/hearing.py, only labels and numbers reach this plug-in.
+Audio never leaves the Ear in parenting_agent/hearing.py, only labels and numbers reach this plug-in. The one
+exception is opt-in ("muse_audio": {"enabled": true}): the first clip_s seconds of a cry go to Muse Spark Open on
+Baseten for a guess at the reason (parenting_agent/cry_muse.py), only after the audio canary passes, and the clip
+is dropped after that one call.
 """
 import datetime
 import os
 import threading
 
-from . import cry_reason, hearing
+from . import cry_muse, cry_reason, hearing
 from .agent.plugins import Plugin
 from .agent.tools import Tool, schema
 from .rhythm import patterns
@@ -27,7 +30,8 @@ from .rhythm.engine import DEFAULTS as RHYTHM_DEFAULTS
 from .rhythm.engine import make_log
 from .white_noise import SimulatedWhiteNoise, WhiteNoisePlan
 
-DEFAULTS = {"source": "none", "listener": {}, "pronoun": "he", "white_noise": {}, "poll_s": 60, "tell_agent": True}
+DEFAULTS = {"source": "none", "listener": {}, "pronoun": "he", "white_noise": {}, "poll_s": 60, "tell_agent": True,
+            "muse_audio": {"enabled": False}}
 
 
 def active_skill(agent):
@@ -41,7 +45,7 @@ class HouseSounds(Plugin):
     name = "house-sounds"
     kind = "ears"
 
-    def __init__(self, agent, config, listener=None, log=None, clock=None, device=None):
+    def __init__(self, agent, config, listener=None, log=None, clock=None, device=None, ears=None):
         super().__init__(agent, config)
         self.cfg = {**DEFAULTS, **config.get("house_sounds", {})}
         self.rhythm = {**RHYTHM_DEFAULTS, **config.get("rhythm", {})}
@@ -53,6 +57,11 @@ class HouseSounds(Plugin):
         self.plan = WhiteNoisePlan(self.device, {"utc_offset_h": self.rhythm["utc_offset_h"], **wn})
         self.fuss = None
         self.handled = set()
+        self.ears, self.clips = ears, {}
+        if self.ears is None and self.cfg["muse_audio"].get("enabled"):
+            from .cry_muse import CryEars
+            from .muse_senses import MuseSenses
+            self.ears = CryEars(MuseSenses(self.cfg["muse_audio"].get("muse")), self.cfg["muse_audio"])
         self.lock = threading.Lock()
         self.stopped = threading.Event()
         self.threads = []
@@ -72,6 +81,8 @@ class HouseSounds(Plugin):
         if self.ear is None:
             self.ear = hearing.Ear(self._listener or hearing.PannsListener(self.cfg["listener"]), self.agent.bus,
                                    self.cfg.get("ear"))
+            if self.ears is not None:
+                self.ear.on_cry_clip = self.keep_clip
         return self.ear
 
     def start(self):
@@ -114,6 +125,20 @@ class HouseSounds(Plugin):
         if self.ear is not None and hasattr(self.ear.listener, "close"):
             self.ear.listener.close()
 
+    def keep_clip(self, episode, samples):
+        """The cry's samples, in memory, until on_cry has asked Muse. Only the newest cry is kept."""
+        self.clips = {episode: samples}
+
+    def sound_guess(self, episode):
+        """Muse's guess from the cry clip, or None. The clip is dropped here whatever happens."""
+        samples = self.clips.pop(episode, None)
+        if self.ears is None or samples is None:
+            return None
+        guess = self.ears.guess(samples, hearing.RATE)
+        del samples
+        self.agent.bus.publish("cry_sound_guess", episode=episode, **{k: v for k, v in guess.items() if k != "usage"})
+        return guess
+
     def reason(self, features, now=None):
         return cry_reason.explain(self.log.entries(), now or self.clock(), self.tz, features, self.cfg["pronoun"])
 
@@ -147,8 +172,9 @@ class HouseSounds(Plugin):
     def on_cry(self, event):
         now = self.clock()
         features = event.get("features") or {}
+        guess = self.sound_guess(event["episode"])
         with self.lock:
-            result = self.reason(features, now)
+            result = cry_muse.blend(self.reason(features, now), guess)
             night = patterns.is_night(now.astimezone(self.tz))
             fussing_again = self.fuss is not None and now < self.fuss["until"]
             self.agent.bus.publish("cry_reason", episode=event["episode"], top=result["top"], text=result["text"],

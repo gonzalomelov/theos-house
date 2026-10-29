@@ -71,9 +71,11 @@ flowchart LR
 | Confirm or cancel | SAM 3.1 | Skill, then bus | No |
 | Baby log entries | Agent core | Baby Buddy on the family server | No |
 | Rhythm reads | Baby Buddy | Daily rhythm | No |
-| Conversation and tool results | Agent core | Brain | **Yes.** Baseten for Muse Spark Open, Anthropic only for a fallback call. With Telegram below and the car from Nov 5, the only flows that leave. No frame and no audio leaves. Each call logs its model and host as a `brain_call` event, each fallback a `brain_fallback` event |
+| Conversation and tool results | Agent core | Brain | **Yes.** Baseten for Muse Spark Open, Anthropic only for a fallback call. With Telegram below, the car from Nov 5 and the two opt-in Muse senses below, the only flows that leave. Each call logs its model and host as a `brain_call` event, each fallback a `brain_fallback` event |
 | House actions | Agent core | Home Assistant on the family server | No. Dry until `house.live` is true |
 | House sound labels | Camera microphone | Bus | No. Audio stays in memory, never saved |
+| Car seat second opinion (opt-in, `car_seat.muse`) | Head camera, one zoomed still per camera step | Muse Spark Open on Baseten | **Yes**, as part of the brain call. Only that still, made in memory, never saved. Each call is a `carseat_muse` event with its host |
+| Cry reason guess (opt-in, `house_sounds.muse_audio`, off by default) | The first 5 s of a cry PANNs detected | Muse Spark Open on Baseten | **Yes**, as part of the brain call, only after a synthetic canary clip passes. The clip is dropped after the one call. Each call is a `cry_sound_guess` event. No other room audio is ever sent |
 | Car readings and commands | Agent core | Simulated car today, Home Assistant `tesla_fleet` from Nov 5 | From Nov 5, yes: Home Assistant polls and commands the car through Tesla's Fleet API. Only the public key file is public |
 | Messages to parents | Agent core, router | Ear, kitchen speaker, Telegram | Telegram messages go through Telegram's servers. The ear and the speaker stay in the house |
 

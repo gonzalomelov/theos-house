@@ -1,0 +1,1242 @@
+{
+ "summary": {
+  "set": "dev",
+  "tag": "v1",
+  "frames": 22,
+  "frame_at_s": 3.0,
+  "model": "meta-models/muse-spark-open-1026",
+  "host": "inference.baseten.co",
+  "reasoning_effort": "low",
+  "muse_alone": {
+   "per_check": {
+    "lap_guides": {
+     "right": 10,
+     "wrong": 1,
+     "abstained": 11,
+     "false_pass": 1,
+     "false_fail": 0,
+     "of": 22
+    },
+    "shoulder_guide": {
+     "right": 6,
+     "wrong": 10,
+     "abstained": 6,
+     "false_pass": 0,
+     "false_fail": 10,
+     "of": 22
+    },
+    "no_twist": {
+     "right": 12,
+     "wrong": 2,
+     "abstained": 8,
+     "false_pass": 2,
+     "false_fail": 0,
+     "of": 22
+    },
+    "level_line": {
+     "right": 17,
+     "wrong": 3,
+     "abstained": 2,
+     "false_pass": 3,
+     "false_fail": 0,
+     "of": 22
+    },
+    "handle": {
+     "right": 20,
+     "wrong": 1,
+     "abstained": 1,
+     "false_pass": 0,
+     "false_fail": 1,
+     "of": 22
+    }
+   },
+   "frames": {
+    "wrong_installs_flagged": 5,
+    "wrong_installs_planted_check_passed": 5,
+    "wrong_installs_all_pass": 3,
+    "wrong": 12,
+    "correct_all_pass": 0,
+    "false_alarms": 7,
+    "correct": 8,
+    "unseen_any_pass": 1,
+    "unseen": 2
+   }
+  },
+  "sam_alone": {
+   "per_check": {
+    "lap_guides": {
+     "right": 22,
+     "wrong": 0,
+     "abstained": 0,
+     "false_pass": 0,
+     "false_fail": 0,
+     "of": 22
+    },
+    "shoulder_guide": {
+     "right": 22,
+     "wrong": 0,
+     "abstained": 0,
+     "false_pass": 0,
+     "false_fail": 0,
+     "of": 22
+    },
+    "no_twist": {
+     "right": 19,
+     "wrong": 0,
+     "abstained": 3,
+     "false_pass": 0,
+     "false_fail": 0,
+     "of": 22
+    },
+    "level_line": {
+     "right": 22,
+     "wrong": 0,
+     "abstained": 0,
+     "false_pass": 0,
+     "false_fail": 0,
+     "of": 22
+    },
+    "handle": {
+     "right": 20,
+     "wrong": 0,
+     "abstained": 2,
+     "false_pass": 0,
+     "false_fail": 0,
+     "of": 22
+    }
+   },
+   "frames": {
+    "wrong_installs_flagged": 12,
+    "wrong_installs_planted_check_passed": 0,
+    "wrong_installs_all_pass": 0,
+    "wrong": 12,
+    "correct_all_pass": 8,
+    "false_alarms": 0,
+    "correct": 8,
+    "unseen_any_pass": 0,
+    "unseen": 2
+   }
+  },
+  "second_opinion": {
+   "per_check": {
+    "lap_guides": {
+     "right": 12,
+     "wrong": 0,
+     "abstained": 10,
+     "false_pass": 0,
+     "false_fail": 0,
+     "of": 22
+    },
+    "shoulder_guide": {
+     "right": 6,
+     "wrong": 10,
+     "abstained": 6,
+     "false_pass": 0,
+     "false_fail": 10,
+     "of": 22
+    },
+    "no_twist": {
+     "right": 12,
+     "wrong": 0,
+     "abstained": 10,
+     "false_pass": 0,
+     "false_fail": 0,
+     "of": 22
+    },
+    "level_line": {
+     "right": 21,
+     "wrong": 0,
+     "abstained": 1,
+     "false_pass": 0,
+     "false_fail": 0,
+     "of": 22
+    },
+    "handle": {
+     "right": 19,
+     "wrong": 1,
+     "abstained": 2,
+     "false_pass": 0,
+     "false_fail": 1,
+     "of": 22
+    }
+   },
+   "frames": {
+    "wrong_installs_flagged": 12,
+    "wrong_installs_planted_check_passed": 0,
+    "wrong_installs_all_pass": 0,
+    "wrong": 12,
+    "correct_all_pass": 0,
+    "false_alarms": 7,
+    "correct": 8,
+    "unseen_any_pass": 0,
+    "unseen": 2
+   }
+  },
+  "latency_s": {
+   "median": 8.633,
+   "max": 10.587,
+   "mean": 8.684
+  },
+  "usd": 0.1577,
+  "usd_per_frame": 0.00717,
+  "errors": 0
+ },
+ "frames": [
+  {
+   "clip": "dev-01-correct.mp4",
+   "error": "correct",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "unsure",
+    "shoulder_guide": "unsure",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "seconds": 10.488,
+   "usd": 0.008981,
+   "usage": {
+    "input_tokens": 1520,
+    "output_tokens": 1666,
+    "audio_tokens": 0,
+    "reasoning_tokens": 1382
+   },
+   "error_text": null,
+   "looks": {
+    "lap_guides": "Leg end at bottom of image with green level window. Right-side blue lap guides visible with grey webbing threaded through them. Left-side blue guide is dim in shadow and lap belt path across the full width is not clearly visible to confirm both sides.",
+    "shoulder_guide": "Dark diagonal shoulder belt runs across head end behind the central handle post. Rear head-end area is very dark and low resolution, blue rear guide is not distinctly visible to confirm belt is seated inside it.",
+    "no_twist": "Visible segment of lap webbing between the two blue guides on the near side is flat, uniform width, with no narrowing to a thin edge or rope and no loose hanging.",
+    "level_line": "Green short line inside rectangular window on side of carrier at leg end appears horizontal and parallel to vehicle floor/seat horizon, with no visible tilt.",
+    "handle": "Central carry handle post is centered over carrier and pointing straight up vertically, not folded to front, back or down to the seat."
+   }
+  },
+  {
+   "clip": "dev-02-correct.mp4",
+   "error": "correct",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "fail"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "unsure",
+    "shoulder_guide": "unsure",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "fail"
+   },
+   "seconds": 10.587,
+   "usd": 0.008674,
+   "usage": {
+    "input_tokens": 1520,
+    "output_tokens": 1594,
+    "audio_tokens": 0,
+    "reasoning_tokens": 1258
+   },
+   "error_text": null,
+   "looks": {
+    "lap_guides": "Grey carrier occupies center of frame. Right side shows two blue side guides at foot end with a gray belt inside them. Left side guide is in deep shadow and off-angle; belt path there is not clearly visible to confirm it passes inside that guide.",
+    "shoulder_guide": "Head end of carrier is in darkness. A dark horizontal bar runs behind the carrier near a small blue patch at the top-left rear corner, but pixelation and shadow prevent confirming that the diagonal shoulder belt is seated inside the blue rear guide or that the guide is not empty.",
+    "no_twist": "Between the two visible blue side guides on the right side, the gray belt webbing appears flat with consistent width and no narrowing to a thin edge or rope.",
+    "level_line": "Green line in side window on carrier side is visible on the gray shell and appears horizontal, parallel to the car seat base and floor line.",
+    "handle": "Dark carry handle extends horizontally across the top of the image, lying flat over/around the carrier, not standing vertically upright over the center of the carrier."
+   }
+  },
+  {
+   "clip": "dev-03-correct.mp4",
+   "error": "correct",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "pass",
+    "shoulder_guide": "fail",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "pass",
+    "shoulder_guide": "fail",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "seconds": 7.252,
+   "usd": 0.004391,
+   "usage": {
+    "input_tokens": 1520,
+    "output_tokens": 586,
+    "audio_tokens": 0,
+    "reasoning_tokens": 334
+   },
+   "error_text": null,
+   "looks": {
+    "lap_guides": "A grey webbing strap is visible spanning the leg end of the carrier between two blue side guides, seated inside both guides as required for the lower horizontal belt path.",
+    "shoulder_guide": "A dark diagonal strap is visible crossing horizontally over the top/front of the carrier shell, not routed around the back at the head end, and the blue rear guide area at the head end does not contain the strap.",
+    "no_twist": "The webbing between the two blue side guides shows a constant flat width with no narrowing to a thin edge or rope and no loose hanging.",
+    "level_line": "The short green line in the side window on the carrier is visible and appears horizontal, parallel to the horizon of the car floor and seat.",
+    "handle": "The carry handle is visible standing vertically upright over the center of the carrier, pointing straight up."
+   }
+  },
+  {
+   "clip": "dev-04-correct.mp4",
+   "error": "correct",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "fail",
+    "no_twist": "unseen",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "unsure",
+    "shoulder_guide": "fail",
+    "no_twist": "unsure",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "seconds": 9.073,
+   "usd": 0.007535,
+   "usage": {
+    "input_tokens": 1520,
+    "output_tokens": 1326,
+    "audio_tokens": 0,
+    "reasoning_tokens": 964
+   },
+   "error_text": null,
+   "looks": {
+    "lap_guides": "Near side: grey webbing is visible passing inside both blue side guides at the leg end. Far side: blue guide is in deep shadow/darkness, the belt path there is not clearly resolved and lap vs shoulder belt cannot be distinguished with certainty.",
+    "shoulder_guide": "A dark diagonal shoulder belt crosses horizontally over the top of the carrier and over the upright handle, not wrapped around the back/head end. The blue rear guide at the head end is visible on the upper edge of the carrier and appears empty - no belt is seated inside it.",
+    "no_twist": "The short exposed section of grey webbing between the two near-side blue guides appears flat with constant width in this low-resolution render, but the rest of the belt between the sides is obscured by shadow and by the dark overlapping shoulder belt, and texture detail is limited by the poly render",
+    "level_line": "Side window on the carrier shows a short bright green line. Against the dark seat base/horizon, the line appears horizontal and parallel to the ground, with no visible tilt.",
+    "handle": "Silver U-shaped carry handle arches straight up over the centre of the carrier, pointing vertically upright in the car position."
+   }
+  },
+  {
+   "clip": "dev-05-correct.mp4",
+   "error": "correct",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "pass",
+    "shoulder_guide": "fail",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "pass",
+    "shoulder_guide": "fail",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "seconds": 7.333,
+   "usd": 0.005942,
+   "usage": {
+    "input_tokens": 1520,
+    "output_tokens": 951,
+    "audio_tokens": 0,
+    "reasoning_tokens": 690
+   },
+   "error_text": null,
+   "looks": {
+    "lap_guides": "leg end is on right side of image with two blue side guides facing forward; a dark diagonal lap belt is visible passing inside both blue guides across the leg end cover",
+    "shoulder_guide": "head end is on the left side of image; a blue rear guide is visible at the upper left edge of the carrier but the dark shoulder belt is seen as a horizontal bar running above the shell, not seated inside that blue rear guide which appears empty",
+    "no_twist": "lap belt span between the two blue side guides at the leg end is visible as flat webbing with consistent width, no narrowing to an edge or rope twist",
+    "level_line": "side window on the gray shell shows a short green line, visible and apparently horizontal relative to the car seat base and floor horizon",
+    "handle": "gray carry handle arch is visible in the center, standing vertically upright over the carrier"
+   }
+  },
+  {
+   "clip": "dev-06-correct.mp4",
+   "error": "correct",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "pass",
+    "shoulder_guide": "fail",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "pass",
+    "shoulder_guide": "fail",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "seconds": 7.748,
+   "usd": 0.006282,
+   "usage": {
+    "input_tokens": 1520,
+    "output_tokens": 1031,
+    "audio_tokens": 0,
+    "reasoning_tokens": 778
+   },
+   "error_text": null,
+   "looks": {
+    "lap_guides": "Lower belt is visible at the leg end passing through the blue side guide in the foreground on the near side and the matching blue guide on the far side, sitting inside both guides",
+    "shoulder_guide": "A long dark diagonal belt is seen crossing over the top/front of the carrier instead of wrapping around the back at the head end, the small blue rear guide at the head end is not containing the belt",
+    "no_twist": "The belt webbing visible between the two blue side guides at the leg end shows a constant flat width with no narrowing to a thin edge or rope",
+    "level_line": "The short green line in the side window on the carrier side is clearly visible and appears horizontal, parallel to the car floor horizon",
+    "handle": "The silver/grey carry handle arches upright over the center of the carrier pointing straight up"
+   }
+  },
+  {
+   "clip": "dev-07-correct.mp4",
+   "error": "correct",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "fail",
+    "no_twist": "unseen",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "unsure",
+    "shoulder_guide": "fail",
+    "no_twist": "unsure",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "seconds": 8.632,
+   "usd": 0.007841,
+   "usage": {
+    "input_tokens": 1520,
+    "output_tokens": 1398,
+    "audio_tokens": 0,
+    "reasoning_tokens": 1141
+   },
+   "error_text": null,
+   "looks": {
+    "lap_guides": "Right side shows brown webbing inside two blue side guides at the leg end, but left side blue guide is dark and blurry and routing inside it is not clearly visible in this still photo",
+    "shoulder_guide": "Dark diagonal/horizontal belt crosses over the top/front of the carrier over the handle area and through the left side blue guide, not routed around the back at the head end; blue rear guide at head end appears empty",
+    "no_twist": "Visible webbing between right side blue guides is dark, low-resolution and low-poly; flatness and consistent width between guides cannot be clearly verified",
+    "level_line": "Short green line in window on carrier side is visible and appears roughly horizontal parallel to car floor/seat horizon",
+    "handle": "Silver/grey carry handle is standing upright pointing straight up over the center of the carrier"
+   }
+  },
+  {
+   "clip": "dev-08-correct.mp4",
+   "error": "correct",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "fail",
+    "no_twist": "unseen",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "unsure",
+    "shoulder_guide": "fail",
+    "no_twist": "unsure",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "seconds": 8.423,
+   "usd": 0.007468,
+   "usage": {
+    "input_tokens": 1520,
+    "output_tokens": 1310,
+    "audio_tokens": 0,
+    "reasoning_tokens": 993
+   },
+   "error_text": null,
+   "looks": {
+    "lap_guides": "Two blue side guides are visible on the near side with a dark strap threaded through both. On the far side a blue guide is visible but the area is dark and shadowed and a separate dark horizontal strap crosses above the carrier. I cannot confirm the lap belt is seated inside BOTH blue side guides on",
+    "shoulder_guide": "A dark diagonal strap is seen crossing horizontally over the top of the carrier and over the handle, not routed around the back head-end. The blue rear guide at the head end is not shown holding the strap; the strap is above and in front of the carrier shell.",
+    "no_twist": "Between the two blue side guides on the near side the visible strap appears as flat webbing with constant width, no narrowing to a thin edge or rope is seen in that segment. Far side between guides is not clearly visible due to shadow.",
+    "level_line": "The short line in the side window is green and appears horizontal relative to the car floor and seat horizon in the photo.",
+    "handle": "The carry handle is visible standing vertically up over the center of the carrier, pointing straight up."
+   }
+  },
+  {
+   "clip": "dev-09-outside_guide.mp4",
+   "error": "outside_guide",
+   "truth": {
+    "lap_guides": "fail",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "fail",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "sam": {
+    "lap_guides": "fail",
+    "shoulder_guide": "pass",
+    "no_twist": "unseen",
+    "level_line": "pass",
+    "handle": "unseen"
+   },
+   "combined": {
+    "lap_guides": "fail",
+    "shoulder_guide": "pass",
+    "no_twist": "unsure",
+    "level_line": "pass",
+    "handle": "unsure"
+   },
+   "seconds": 8.634,
+   "usd": 0.008122,
+   "usage": {
+    "input_tokens": 1520,
+    "output_tokens": 1464,
+    "audio_tokens": 0,
+    "reasoning_tokens": 1092
+   },
+   "error_text": null,
+   "looks": {
+    "lap_guides": "Lower diagonal grey belt webbing is visible on the right side of the carrier crossing from mid-carrier down to the vehicle seat. The right side blue guide cube sits on the carrier edge above the belt - the belt runs below and beside the guide, not inside its slot. The left side blue guide is visible",
+    "shoulder_guide": "A dark horizontal belt is visible stretched across the very back/head-end of the carrier behind the handle. On the left side a blue rear guide cube is at the belt line and the belt appears to sit at that guide level going around the back, not crossing over the top or front of the infant opening.",
+    "no_twist": "The visible diagonal webbing between the center of the carrier and the lower right shows a consistent flat width with no narrowing to a thin edge or rope twist, and no slack loop.",
+    "level_line": "The rectangular indicator window on the side of the carrier shows a short bright green line that appears horizontal and parallel to the vehicle seat horizon in the photo.",
+    "handle": "The light grey U-shaped carry handle is seen standing upright over the center of the carrier, arching vertically above the shell, not folded down forward or rearward."
+   }
+  },
+  {
+   "clip": "dev-10-outside_guide.mp4",
+   "error": "outside_guide",
+   "truth": {
+    "lap_guides": "fail",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "sam": {
+    "lap_guides": "fail",
+    "shoulder_guide": "pass",
+    "no_twist": "unseen",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "fail",
+    "shoulder_guide": "pass",
+    "no_twist": "unsure",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "seconds": 9.386,
+   "usd": 0.007693,
+   "usage": {
+    "input_tokens": 1520,
+    "output_tokens": 1363,
+    "audio_tokens": 0,
+    "reasoning_tokens": 1038
+   },
+   "error_text": null,
+   "looks": {
+    "lap_guides": "Leg end of carrier is in foreground with two blue side guides visible on side walls. A dark diagonal belt crosses the side of the carrier between the guides. The strap appears to run low across the shell in the area of the guides but the exact entry into the far-side blue guide at the top left is hi",
+    "shoulder_guide": "Head end is at top of image with a blue rear guide visible. A horizontal dark strap runs behind and across the back of the carrier at the head end at the height of the rear guide, not crossing over the top or front of the shell.",
+    "no_twist": "The diagonal lower strap visible between the side-guide area shows as a flat band of even width with no narrowing to an edge or rope and no loose sag between the sides.",
+    "level_line": "Side window on carrier in foreground shows a short green line that appears horizontal and parallel to the vehicle seat cushion and floor horizon.",
+    "handle": "Carry handle is a light grey arch standing vertically upright over the center of the carrier, pointing straight up."
+   }
+  },
+  {
+   "clip": "dev-11-outside_guide.mp4",
+   "error": "outside_guide",
+   "truth": {
+    "lap_guides": "fail",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "sam": {
+    "lap_guides": "fail",
+    "shoulder_guide": "pass",
+    "no_twist": "unseen",
+    "level_line": "pass",
+    "handle": "unseen"
+   },
+   "combined": {
+    "lap_guides": "fail",
+    "shoulder_guide": "pass",
+    "no_twist": "unsure",
+    "level_line": "pass",
+    "handle": "unsure"
+   },
+   "seconds": 7.117,
+   "usd": 0.005555,
+   "usage": {
+    "input_tokens": 1520,
+    "output_tokens": 860,
+    "audio_tokens": 0,
+    "reasoning_tokens": 604
+   },
+   "error_text": null,
+   "looks": {
+    "lap_guides": "leg end of carrier has two light-blue side guides visible on left and right sides; dark webbing runs across the leg end and appears to pass inside both blue guides between them",
+    "shoulder_guide": "head end at far side shows a small blue rear guide; a dark diagonal shoulder belt runs horizontally behind the shell and appears seated in that rear guide, not crossing over the top or front of the carrier",
+    "no_twist": "the section of belt between the two blue side guides shows flat dark webbing with consistent width, no narrowing to an edge or rope-like twist and no loose sag between guides",
+    "level_line": "side window on carrier shows short green line; it appears horizontal and parallel to the dark car seat base/floor horizon",
+    "handle": "silver/light-grey carry handle arches vertically over the center of the carrier, pointing straight up"
+   }
+  },
+  {
+   "clip": "dev-12-twisted.mp4",
+   "error": "twisted",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "fail",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "fail",
+    "no_twist": "unseen",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "fail",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "unsure",
+    "shoulder_guide": "fail",
+    "no_twist": "fail",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "seconds": 9.94,
+   "usd": 0.008415,
+   "usage": {
+    "input_tokens": 1520,
+    "output_tokens": 1533,
+    "audio_tokens": 0,
+    "reasoning_tokens": 1205
+   },
+   "error_text": null,
+   "looks": {
+    "lap_guides": "Near-side blue side guide at the foot end has the grey webbing passing through its slot, but the far-side blue side guide is in deep shadow and the diagonal shadow obscures whether the lower horizontal belt is seated inside it or runs beside/above it. Both guides are not clearly confirmed inside the",
+    "shoulder_guide": "A dark horizontal shoulder belt runs across the image behind and above the carrier at the head end. The blue rear guide at the head-end edge is visible below that belt and appears empty, the belt sits above the guide not inside its slot, and does not wrap through it.",
+    "no_twist": "The grey belt segment between the two blue side guides is mostly in shadow and low resolution, width consistency cannot be tracked continuously, no clear flat webbing edge is visible for the whole span.",
+    "level_line": "The short green line in the black window on the side of the carrier is clearly visible and appears horizontal, parallel to the dark car seat base/floor line in the photo.",
+    "handle": "The light-coloured carry handle arch is centred over the carrier and points straight up, vertical in the frame, not folded forward or back."
+   }
+  },
+  {
+   "clip": "dev-13-twisted.mp4",
+   "error": "twisted",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "fail",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "fail",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "fail",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "seconds": 7.769,
+   "usd": 0.006086,
+   "usage": {
+    "input_tokens": 1520,
+    "output_tokens": 985,
+    "audio_tokens": 0,
+    "reasoning_tokens": 610
+   },
+   "error_text": null,
+   "looks": {
+    "lap_guides": "Leg end of grey carrier visible in center. Two blue side guides on the near side/right side leg end are visible with a grey patterned seat belt webbing threaded through both. The belt runs horizontally across the lower shell between the guides, lying flat over the carrier's leg area. Far side/left s",
+    "shoulder_guide": "Head end at upper left/rear of carrier has a blue rear guide. The dark diagonal shoulder portion of the vehicle belt is seen running horizontally behind and around the back of the carrier at the head end, seated inside that blue rear guide. Belt does not cross over the top or front of the infant are",
+    "no_twist": "Lap belt webbing between the blue side guides at the leg end appears as a flat grey strap with consistent width from one guide to the other. No narrowing to a thin edge or rope twist is visible in the exposed section between the guides, and belt is tensioned against shell, not hanging loose.",
+    "level_line": "Black window on side of grey carrier contains a bright green short horizontal line. The line appears horizontal and parallel to the dark car seat base and floor horizon in the image, with no visible tilt.",
+    "handle": "Silver/grey carry handle arches vertically over the center of the carrier, pointing straight up. Ends attach near middle of carrier sides. No fold down toward front or back is seen."
+   }
+  },
+  {
+   "clip": "dev-14-twisted.mp4",
+   "error": "twisted",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "fail",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "pass",
+    "shoulder_guide": "unseen",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "fail",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "pass",
+    "shoulder_guide": "unsure",
+    "no_twist": "fail",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "seconds": 7.731,
+   "usd": 0.006545,
+   "usage": {
+    "input_tokens": 1520,
+    "output_tokens": 1093,
+    "audio_tokens": 0,
+    "reasoning_tokens": 766
+   },
+   "error_text": null,
+   "looks": {
+    "lap_guides": "Leg end on right side of image. Two blue side guides visible on both sides of carrier at leg end. Dark seat belt webbing is visible inside both blue guides, running over the top of the carrier shell between them.",
+    "shoulder_guide": "Head end at left/far side of carrier in dark background. Small blue rear guide visible on left side of image but shoulder belt routing around the very back of the shell is in deep shadow and resolution is low. Cannot clearly trace the diagonal shoulder belt into the rear blue guide.",
+    "no_twist": "Lap belt segment between the two blue side guides is visible as flat webbing with consistent width. No narrowing to a thin edge or rope-like twist is visible between the guides.",
+    "level_line": "Side window on carrier shell shows short green line. Line appears horizontal and parallel to the car seat base/horizon, not visibly tilted.",
+    "handle": "Silver/white carry handle arch is visible centered over the carrier, pointing straight up from the sides. Not folded forward or backward."
+   }
+  },
+  {
+   "clip": "dev-15-recline.mp4",
+   "error": "recline",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "fail",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "fail",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "fail",
+    "handle": "pass"
+   },
+   "seconds": 7.024,
+   "usd": 0.005219,
+   "usage": {
+    "input_tokens": 1520,
+    "output_tokens": 781,
+    "audio_tokens": 0,
+    "reasoning_tokens": 485
+   },
+   "error_text": null,
+   "looks": {
+    "lap_guides": "Lower lap portion of belt is visible on near side running vertically through the blue side guide at the foot end; matching blue guide is visible on the opposite side with belt material inside it. Belt appears to cross over the carrier shell in the expected lap area, not running above or below the gu",
+    "shoulder_guide": "Diagonal shoulder section of vehicle belt runs horizontally across the image behind the carrier head end and is seated inside the blue rear guide at the top of the shell. Belt goes around the back of the carrier, not over the top opening or front.",
+    "no_twist": "Lap belt webbing between the two blue side guides shows a consistent flat width with no narrowing to a thin edge or rope-like twist visible in the photo.",
+    "level_line": "Green level line in side window on carrier is visible; orientation appears approximately horizontal relative to vehicle floor/seat horizon, with no obvious strong tilt in this viewpoint.",
+    "handle": "Carry handle forms an upright arch standing straight up over the carrier, centered above the shell, not folded forward or backward."
+   }
+  },
+  {
+   "clip": "dev-16-recline.mp4",
+   "error": "recline",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "fail",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "fail",
+    "no_twist": "unseen",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "fail",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "unsure",
+    "shoulder_guide": "fail",
+    "no_twist": "unsure",
+    "level_line": "fail",
+    "handle": "pass"
+   },
+   "seconds": 7.433,
+   "usd": 0.006392,
+   "usage": {
+    "input_tokens": 1520,
+    "output_tokens": 1057,
+    "audio_tokens": 0,
+    "reasoning_tokens": 745
+   },
+   "error_text": null,
+   "looks": {
+    "lap_guides": "Near-side blue guide at leg end shows grey webbing sitting inside it. Far-side blue guide at opposite leg end is visible but dark, low-resolution and partially obscured so the belt path inside it cannot be confirmed, and the horizontal dark belt crossing the frame is not clearly the lap section.",
+    "shoulder_guide": "A dark webbing crosses horizontally over the top/front of the carrier in front of the handle, not wrapped around the back head-end. The blue rear guide at the head end is not shown with a diagonal shoulder belt seated inside it.",
+    "no_twist": "The lap belt webbing between the side guides is not clearly resolved due to darkness, blur and low-poly rendering; width consistency and flatness between the guides cannot be determined.",
+    "level_line": "Short green line visible in black window on side of carrier shell. It appears horizontal relative to the carrier base and seat cushion horizon, with no obvious tilt visible in this view.",
+    "handle": "Carry handle silver/grey arch is seen standing upright pointing straight up over the carrier, above the shell sides, not folded down toward front or back."
+   }
+  },
+  {
+   "clip": "dev-17-recline.mp4",
+   "error": "recline",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "fail",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "unseen",
+    "handle": "pass"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "fail",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "unsure",
+    "shoulder_guide": "unsure",
+    "no_twist": "unsure",
+    "level_line": "fail",
+    "handle": "pass"
+   },
+   "seconds": 9.024,
+   "usd": 0.007978,
+   "usage": {
+    "input_tokens": 1520,
+    "output_tokens": 1430,
+    "audio_tokens": 0,
+    "reasoning_tokens": 1030
+   },
+   "error_text": null,
+   "looks": {
+    "lap_guides": "One blue side guide is visible on the near side of the carrier at the leg end with a dark belt segment passing through it. The opposite side guide on the far side is in deep shadow and out of clear view. I cannot see the full path of the lower horizontal belt across between both guides.",
+    "shoulder_guide": "A dark diagonal belt crosses horizontally near the head end of the carrier. A small blue element is visible at the far edge near the head end that may be the rear guide, but the belt routing around the back versus over the top is not clearly resolved due to darkness, low polygon render, and viewing ",
+    "no_twist": "Only a short segment of belt is visible on the near side exiting the blue side guide. Texture is low-resolution and stylized. I cannot clearly see a continuous flat width between both side guides to confirm absence of twists.",
+    "level_line": "The side window with a short green line is visible on the carrier side. The line itself appears roughly horizontal on the shell, but the car's floor/seat horizon reference is hidden in darkness and perspective is angled, so true parallel to ground cannot be reliably judged.",
+    "handle": "The carry handle arch is visible spanning over the carrier body, standing upright in a vertical orientation above the shell, not folded down toward front or back."
+   }
+  },
+  {
+   "clip": "dev-18-handle.mp4",
+   "error": "handle",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "fail"
+   },
+   "muse": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "fail"
+   },
+   "combined": {
+    "lap_guides": "unsure",
+    "shoulder_guide": "unsure",
+    "no_twist": "unsure",
+    "level_line": "unsure",
+    "handle": "fail"
+   },
+   "seconds": 9.058,
+   "usd": 0.006788,
+   "usage": {
+    "input_tokens": 1520,
+    "output_tokens": 1150,
+    "audio_tokens": 0,
+    "reasoning_tokens": 721
+   },
+   "error_text": null,
+   "looks": {
+    "lap_guides": "Dark, low-poly render. A dark grey horizontal belt is visible across the upper portion of the image behind/above the carrier. Blue side guides are visible on the carrier shell but the exact path of the belt into and through both guides at the leg end cannot be clearly resolved due to darkness and lo",
+    "shoulder_guide": "A grey strap with blue square guides is visible on the side/foot end of the carrier, but the rear head-end of the carrier where the shoulder belt should wrap around the back is mostly in shadow and out of clear view. Cannot confirm the diagonal shoulder belt is seated inside the blue rear guide.",
+    "no_twist": "Belt webbing is represented as a flat low-poly strip with no texture detail. Between the side guides the belt is not clearly visible at sufficient resolution to confirm flat width versus twisted narrow edge. Lighting is too dark to inspect for twists or slack.",
+    "level_line": "Small rectangular window on side of carrier is visible with a bright green horizontal line inside. The line appears roughly horizontal within the window, but the car's floor/seat horizon reference is not visible in the dark surrounding, and image perspective is angled, so true level to ground cannot",
+    "handle": "Beige carry handle arches over the carrier. Due to angled camera view and low-poly geometry it does not clearly point straight up in the upright car position, but also cannot be confirmed as fully folded down. Position is ambiguous."
+   }
+  },
+  {
+   "clip": "dev-19-handle.mp4",
+   "error": "handle",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "fail"
+   },
+   "muse": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "pass",
+    "handle": "fail"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "fail"
+   },
+   "combined": {
+    "lap_guides": "unsure",
+    "shoulder_guide": "unsure",
+    "no_twist": "unsure",
+    "level_line": "pass",
+    "handle": "fail"
+   },
+   "seconds": 10.197,
+   "usd": 0.008262,
+   "usage": {
+    "input_tokens": 1520,
+    "output_tokens": 1497,
+    "audio_tokens": 0,
+    "reasoning_tokens": 1209
+   },
+   "error_text": null,
+   "looks": {
+    "lap_guides": "low-poly dark render, a belt runs across the leg area with blue clips on both sides visible, but resolution and shadows make it hard to confirm the webbing is fully seated inside both blue side guides versus resting beside them",
+    "shoulder_guide": "a dark horizontal belt is behind the carrier at the head end near a blue clip on the left, but the rear guide area is dark, low detail and partly out of focus so seating inside the guide cannot be clearly confirmed",
+    "no_twist": "the belt segment between the blue clips appears as a flat dark strip in this low-resolution render, no obvious narrowing is seen but fine twist detail is blurred and not verifiable",
+    "level_line": "green line in the side window is visible on the carrier side and appears approximately horizontal relative to the seat base in this view",
+    "handle": "light coloured carry handle is visible along the side of the carrier, it appears low and angled along the shell rather than standing straight up over the carrier"
+   }
+  },
+  {
+   "clip": "dev-20-handle.mp4",
+   "error": "handle",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "fail"
+   },
+   "muse": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "fail"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "fail"
+   },
+   "combined": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "fail"
+   },
+   "seconds": 8.42,
+   "usd": 0.006728,
+   "usage": {
+    "input_tokens": 1520,
+    "output_tokens": 1136,
+    "audio_tokens": 0,
+    "reasoning_tokens": 782
+   },
+   "error_text": null,
+   "looks": {
+    "lap_guides": "Near side blue side guides are visible along the leg end edge of the carrier. A dark grey belt webbing is seen threaded inside both blue guides on the near side, lying flat over the shell at the leg end. Far side guide is not clearly visible due to angle and darkness, but near side routing is center",
+    "shoulder_guide": "The diagonal shoulder portion of the vehicle belt is visible extending horizontally around the head end behind the carrier. A blue rear guide is visible at the head end. The belt appears to be routed behind the shell and seated against/in that rear guide area, not crossing over the top or front of t",
+    "no_twist": "Between the blue side guides the lap belt section shows as a consistent width flat strap. No narrowing to a thin edge or rope, no visible fold or twist, and no loose hanging loop between the guides.",
+    "level_line": "Side window indicator on the carrier side shows a bright green horizontal line. The line appears level and parallel to the dark car seat base/floor horizon in the photo, with no visible tilt.",
+    "handle": "Carry handle is seen as a grey arch running horizontally low across and behind the carrier, nearly parallel to the belt, not standing vertically upright over the carrier. It is folded down toward the rear/head end position."
+   }
+  },
+  {
+   "clip": "dev-21-unseen.mp4",
+   "error": "unseen",
+   "truth": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "muse": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "fail",
+    "no_twist": "unseen",
+    "level_line": "pass",
+    "handle": "unseen"
+   },
+   "sam": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "combined": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "fail",
+    "no_twist": "unseen",
+    "level_line": "unsure",
+    "handle": "unseen"
+   },
+   "seconds": 10.304,
+   "usd": 0.008925,
+   "usage": {
+    "input_tokens": 1520,
+    "output_tokens": 1653,
+    "audio_tokens": 0,
+    "reasoning_tokens": 1194
+   },
+   "error_text": null,
+   "looks": {
+    "lap_guides": "Top view of pink carrier leg end. A black belt crosses over the top surface. A small blue rectangle (side guide) is visible on the left edge near the belt, but the right side guide is in shadow and out of clear view. Photo is low-resolution blocky render, so routing inside guides on both sides canno",
+    "shoulder_guide": "The black diagonal belt is seen lying across the top flat surface of the carrier, not wrapped around the back head end. The blue rear guide at the head end is not visible as an occupied guide - the area behind the carrier is dark and indistinct. The belt path over the top matches the fail condition ",
+    "no_twist": "The visible portion of the black belt over the pink surface appears as a flat band with roughly constant width. No obvious rope-like narrowing is seen where visible, but image is blurry, dark, and low-resolution render, and the section between both side guides is not fully in view to verify flatness",
+    "level_line": "On the beige side/base area under the pink carrier, a small window with a bright green short horizontal line is visible. The line appears roughly horizontal and parallel to the bottom edge of the carrier and the implied vehicle floor. No obvious tilt is visible in this blurred render.",
+    "handle": "Carry handle is not clearly seen in upright position over carrier. A faint grey vertical strip is visible on the right underside in shadow, but the full handle arch pointing straight up (position 1) cannot be identified. Photo is cropped dark and top view obscures handle position."
+   }
+  },
+  {
+   "clip": "dev-22-unseen.mp4",
+   "error": "unseen",
+   "truth": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "muse": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "fail",
+    "no_twist": "unseen",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "sam": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "combined": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "fail",
+    "no_twist": "unseen",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "seconds": 9.481,
+   "usd": 0.007841,
+   "usage": {
+    "input_tokens": 1520,
+    "output_tokens": 1398,
+    "audio_tokens": 0,
+    "reasoning_tokens": 1048
+   },
+   "error_text": null,
+   "looks": {
+    "lap_guides": "Pink carrier leg end visible at bottom facing camera. Central window with green line visible on light grey plastic. No blue side guides and no lap belt webbing can be distinguished between sides due to darkness, low resolution, and pixelation. Cannot trace belt path inside guides.",
+    "shoulder_guide": "A thick black diagonal strap crosses over the top flat surface of the pink carrier from the front edge toward the right side. It sits on top of the carrier, not wrapped around the back head end. No blue rear guide is visible holding a belt around the back.",
+    "no_twist": "Lap belt area between the sides at the leg end is not clearly visible. Dark shadows and low resolution obscure any flat webbing between side guides. No continuous belt width can be verified and no twist or flatness can be confirmed.",
+    "level_line": "A short green line is visible in the small black window on the side of the carrier at the leg end. However image is very low resolution, blocky, and dark with no clear view of the car floor or seat horizon for reference. Cannot reliably determine if the line is parallel to the ground.",
+    "handle": "No carry handle is visible standing upright over the carrier. Dark background on sides obscures handle position. Cannot identify handle upright or folded."
+   }
+  }
+ ]
+}

@@ -1,0 +1,1242 @@
+{
+ "summary": {
+  "set": "dev",
+  "tag": "v2",
+  "frames": 22,
+  "frame_at_s": 3.0,
+  "model": "meta-models/muse-spark-open-1026",
+  "host": "inference.baseten.co",
+  "reasoning_effort": "low",
+  "muse_alone": {
+   "per_check": {
+    "lap_guides": {
+     "right": 18,
+     "wrong": 1,
+     "abstained": 3,
+     "false_pass": 1,
+     "false_fail": 0,
+     "of": 22
+    },
+    "shoulder_guide": {
+     "right": 7,
+     "wrong": 13,
+     "abstained": 2,
+     "false_pass": 0,
+     "false_fail": 13,
+     "of": 22
+    },
+    "no_twist": {
+     "right": 18,
+     "wrong": 3,
+     "abstained": 1,
+     "false_pass": 3,
+     "false_fail": 0,
+     "of": 22
+    },
+    "level_line": {
+     "right": 17,
+     "wrong": 5,
+     "abstained": 0,
+     "false_pass": 5,
+     "false_fail": 0,
+     "of": 22
+    },
+    "handle": {
+     "right": 19,
+     "wrong": 3,
+     "abstained": 0,
+     "false_pass": 3,
+     "false_fail": 0,
+     "of": 22
+    }
+   },
+   "frames": {
+    "wrong_installs_flagged": 8,
+    "wrong_installs_planted_check_passed": 10,
+    "wrong_installs_all_pass": 3,
+    "wrong": 12,
+    "correct_all_pass": 1,
+    "false_alarms": 6,
+    "correct": 8,
+    "unseen_any_pass": 2,
+    "unseen": 2
+   }
+  },
+  "sam_alone": {
+   "per_check": {
+    "lap_guides": {
+     "right": 22,
+     "wrong": 0,
+     "abstained": 0,
+     "false_pass": 0,
+     "false_fail": 0,
+     "of": 22
+    },
+    "shoulder_guide": {
+     "right": 22,
+     "wrong": 0,
+     "abstained": 0,
+     "false_pass": 0,
+     "false_fail": 0,
+     "of": 22
+    },
+    "no_twist": {
+     "right": 19,
+     "wrong": 0,
+     "abstained": 3,
+     "false_pass": 0,
+     "false_fail": 0,
+     "of": 22
+    },
+    "level_line": {
+     "right": 22,
+     "wrong": 0,
+     "abstained": 0,
+     "false_pass": 0,
+     "false_fail": 0,
+     "of": 22
+    },
+    "handle": {
+     "right": 20,
+     "wrong": 0,
+     "abstained": 2,
+     "false_pass": 0,
+     "false_fail": 0,
+     "of": 22
+    }
+   },
+   "frames": {
+    "wrong_installs_flagged": 12,
+    "wrong_installs_planted_check_passed": 0,
+    "wrong_installs_all_pass": 0,
+    "wrong": 12,
+    "correct_all_pass": 8,
+    "false_alarms": 0,
+    "correct": 8,
+    "unseen_any_pass": 0,
+    "unseen": 2
+   }
+  },
+  "second_opinion": {
+   "per_check": {
+    "lap_guides": {
+     "right": 20,
+     "wrong": 0,
+     "abstained": 2,
+     "false_pass": 0,
+     "false_fail": 0,
+     "of": 22
+    },
+    "shoulder_guide": {
+     "right": 7,
+     "wrong": 13,
+     "abstained": 2,
+     "false_pass": 0,
+     "false_fail": 13,
+     "of": 22
+    },
+    "no_twist": {
+     "right": 18,
+     "wrong": 0,
+     "abstained": 4,
+     "false_pass": 0,
+     "false_fail": 0,
+     "of": 22
+    },
+    "level_line": {
+     "right": 22,
+     "wrong": 0,
+     "abstained": 0,
+     "false_pass": 0,
+     "false_fail": 0,
+     "of": 22
+    },
+    "handle": {
+     "right": 20,
+     "wrong": 0,
+     "abstained": 2,
+     "false_pass": 0,
+     "false_fail": 0,
+     "of": 22
+    }
+   },
+   "frames": {
+    "wrong_installs_flagged": 12,
+    "wrong_installs_planted_check_passed": 0,
+    "wrong_installs_all_pass": 0,
+    "wrong": 12,
+    "correct_all_pass": 1,
+    "false_alarms": 6,
+    "correct": 8,
+    "unseen_any_pass": 0,
+    "unseen": 2
+   }
+  },
+  "latency_s": {
+   "median": 8.692499999999999,
+   "max": 14.089,
+   "mean": 9.302
+  },
+  "usd": 0.1589,
+  "usd_per_frame": 0.00722,
+  "errors": 0
+ },
+ "frames": [
+  {
+   "clip": "dev-01-correct.mp4",
+   "error": "correct",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "pass",
+    "shoulder_guide": "fail",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "pass",
+    "shoulder_guide": "fail",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "seconds": 8.861,
+   "usd": 0.007007,
+   "usage": {
+    "input_tokens": 1689,
+    "output_tokens": 1152,
+    "audio_tokens": 0,
+    "reasoning_tokens": 827
+   },
+   "error_text": null,
+   "looks": {
+    "lap_guides": "leg end of carrier shown side-on. Near blue side guide on near wall and far blue side guide on far rim visible. Grey lap belt webbing runs vertically between them, entering the far blue guide at top and exiting the near blue guide at bottom toward buckle.",
+    "shoulder_guide": "long dark shoulder belt runs horizontally across top of photo from door pillar. At head end blue rear guide is visible on shell back but belt is suspended above it with clear gap, not touching or entering the guide, and does not wrap around back of shell.",
+    "no_twist": "lap belt webbing between the two blue side guides is visible as flat strap of uniform width, no narrowing to thin edge or rope between guides.",
+    "level_line": "small rectangular window on near side wall shows green line. Phone held level, line appears horizontal relative to photo top/bottom edges.",
+    "handle": "carry handle bar is centered over carrier standing straight up vertically over shell, not folded forward or back."
+   }
+  },
+  {
+   "clip": "dev-02-correct.mp4",
+   "error": "correct",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "pass",
+    "shoulder_guide": "fail",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "pass",
+    "shoulder_guide": "fail",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "seconds": 9.143,
+   "usd": 0.006638,
+   "usage": {
+    "input_tokens": 1689,
+    "output_tokens": 1065,
+    "audio_tokens": 0,
+    "reasoning_tokens": 719
+   },
+   "error_text": null,
+   "looks": {
+    "lap_guides": "Side-on view shows lap belt running between two blue side guides at leg end. Far blue guide higher in photo on far rim and near blue guide lower on near side wall both have belt webbing entering them, belt crosses diagonally down across carrier to buckle zone.",
+    "shoulder_guide": "Shoulder belt visible as long dark strap across top of photo from door pillar. At head end on far left, blue rear guide is visible on shell rim but belt runs high above the carrier in a straight line and does not enter or touch the blue guide. Clear gap between belt and blue guide.",
+    "no_twist": "Lap belt section between the two blue side guides is visible as flat webbing of consistent width, no narrowing to edge or rope-like twist between guides.",
+    "level_line": "Small side window on carrier side shows green line. Phone held level so compared to photo top/bottom edges line appears horizontal with no noticeable tilt.",
+    "handle": "Carry handle visible as light grey arch standing vertically over center of carrier, pointing straight up above shell, not folded toward front or back."
+   }
+  },
+  {
+   "clip": "dev-03-correct.mp4",
+   "error": "correct",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "unsure",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "seconds": 10.917,
+   "usd": 0.009825,
+   "usage": {
+    "input_tokens": 1689,
+    "output_tokens": 1815,
+    "audio_tokens": 0,
+    "reasoning_tokens": 1364
+   },
+   "error_text": null,
+   "looks": {
+    "lap_guides": "Near side wall shows two stacked blue side guides with a flat grey webbing running vertically through both blocks and down toward the buckle. Far side rim shows a single blue side guide higher in the photo with a dark horizontal webbing sitting in it. A clear diagonal run of webbing from the far blu",
+    "shoulder_guide": "Long dark webbing runs horizontally across the top of the photo from the car door pillar toward the head end. At the far side near the head end the webbing sits in and touches the blue rear guide on the back of the shell, with no visible gap between belt and guide. Belt is high above the carrier tow",
+    "no_twist": "The section of webbing captured between the two near blue side guides on the near side wall appears as a uniform flat width with no narrowing to a thin edge or rope-like twist visible between the guides.",
+    "level_line": "Small rectangular window on the near side wall of the carrier contains a bright green line. With the phone held level the line appears parallel to the photo's top and bottom edges.",
+    "handle": "Silver/grey carry handle rises vertically from the carrier sides and stands straight up over the centre of the carrier, pointing up away from the shell, not folded toward front or back."
+   }
+  },
+  {
+   "clip": "dev-04-correct.mp4",
+   "error": "correct",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "pass",
+    "shoulder_guide": "fail",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "pass",
+    "shoulder_guide": "fail",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "seconds": 8.504,
+   "usd": 0.006774,
+   "usage": {
+    "input_tokens": 1689,
+    "output_tokens": 1097,
+    "audio_tokens": 0,
+    "reasoning_tokens": 760
+   },
+   "error_text": null,
+   "looks": {
+    "lap_guides": "Two blue side guides visible on right side of carrier. A flat webbed belt runs vertically between them, entering the upper far blue guide at the rim and exiting through the lower near blue guide on the side wall before going to buckle.",
+    "shoulder_guide": "Long dark shoulder belt runs horizontally across top of photo from door pillar across carrier. At head end on far left a small blue rear guide is visible on the shell. The belt is spaced above that guide with a clear dark gap and does not appear to enter or wrap through the blue guide around back of",
+    "no_twist": "Lap belt segment between the two blue side guides is visible as flat webbing of consistent width with no narrowing to an edge or rope.",
+    "level_line": "Small rectangular window on side of carrier shows green line. Compared to top and bottom edges of photo while phone held level, the green line appears horizontal.",
+    "handle": "Carry handle silver arch is standing upright pointing straight up over center of carrier, not folded down toward front or back."
+   }
+  },
+  {
+   "clip": "dev-05-correct.mp4",
+   "error": "correct",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "pass",
+    "shoulder_guide": "fail",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "pass",
+    "shoulder_guide": "fail",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "seconds": 8.417,
+   "usd": 0.006506,
+   "usage": {
+    "input_tokens": 1689,
+    "output_tokens": 1034,
+    "audio_tokens": 0,
+    "reasoning_tokens": 610
+   },
+   "error_text": null,
+   "looks": {
+    "lap_guides": "Seen side on, the lap belt webbing runs from the far blue side guide on the far rim, higher in the photo, diagonally down across the carrier shell to the near blue side guide on the near side wall, lower in the photo. The belt is visible entering both blue guides and continuing down toward the buckl",
+    "shoulder_guide": "The shoulder belt is the long dark strap running horizontally across the top of the photo from the door pillar area. At the head end, on the left side of the image, the blue rear guide is visible on the shell rim but the belt runs high above it with a clear dark gap between the belt and the blue gui",
+    "no_twist": "The lap belt segment between the two blue side guides is visible across the side of the carrier. It appears as flat webbing of consistent width with no narrowing to a thin edge or rope-like twist between the guides. Low polygon rendering makes edges coarse but no twist is shown.",
+    "level_line": "Small rectangular window on the near side wall of the carrier shows a green indicator line. Compared to the photo's top and bottom edges with the phone held level, the green line appears essentially horizontal with only minor rendering coarse edges, well within level.",
+    "handle": "The grey carry handle arches over the center of the carrier and points straight up vertically above the shell, upright in the car position."
+   }
+  },
+  {
+   "clip": "dev-06-correct.mp4",
+   "error": "correct",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "pass",
+    "shoulder_guide": "fail",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "pass",
+    "shoulder_guide": "fail",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "seconds": 13.72,
+   "usd": 0.00869,
+   "usage": {
+    "input_tokens": 1689,
+    "output_tokens": 1548,
+    "audio_tokens": 0,
+    "reasoning_tokens": 1195
+   },
+   "error_text": null,
+   "looks": {
+    "lap_guides": "Lap belt strap with two blue side guides is visible near leg end. Far blue guide higher in photo on far rim and near blue guide lower on near side wall both have belt webbing entering/exiting them, belt runs straight across carrier between them then down to buckle area.",
+    "shoulder_guide": "Long shoulder belt runs horizontally across top of photo from door pillar toward head end. At head end left side the small blue rear guide on back of shell is visible below the belt with a dark gap between belt edge and blue guide, belt does not appear to touch or enter that blue guide and does not ",
+    "no_twist": "Lap belt section between the two blue side guides is visible as flat grey webbing of consistent width, no narrowing to thin edge or rope twist seen.",
+    "level_line": "Small rectangular window on near side wall of carrier shows green line. Compared to photo top/bottom edges (phone held level) the line is approximately horizontal.",
+    "handle": "Grey carry handle arch is visible standing upright over center of carrier, pointing straight up, not folded down toward front or back."
+   }
+  },
+  {
+   "clip": "dev-07-correct.mp4",
+   "error": "correct",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "seconds": 11.102,
+   "usd": 0.00985,
+   "usage": {
+    "input_tokens": 1689,
+    "output_tokens": 1821,
+    "audio_tokens": 0,
+    "reasoning_tokens": 1497
+   },
+   "error_text": null,
+   "looks": {
+    "lap_guides": "Leg end near right/lower side of carrier. Brown lap strap runs between two blue side guides: far blue guide at far rim near top-left and near blue guide on near wall at lower-right. Strap is visible entering both blue guides and spanning across the carrier between them with buckle below near guide.",
+    "shoulder_guide": "Long dark shoulder belt runs horizontally across top of photo from door pillar. At head end (left/far side) it drops to the shell and is seen at/through the blue rear guide on the far rim, wrapping around back of shell, not crossing baby's side. Belt touches/enters blue guide; no visible gap between",
+    "no_twist": "Lap strap between the two blue side guides shows as flat webbing of uniform width end-to-end, no narrowing to thin edge or rope between guides.",
+    "level_line": "Small window on near side wall of carrier shows green line. Compared to photo top/bottom edges with phone held level, green line appears horizontal.",
+    "handle": "Carry handle (light grey/silver arch) stands upright pointing straight up over carrier centre, vertical over shell."
+   }
+  },
+  {
+   "clip": "dev-08-correct.mp4",
+   "error": "correct",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "pass",
+    "shoulder_guide": "fail",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "pass",
+    "shoulder_guide": "fail",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "seconds": 7.41,
+   "usd": 0.005435,
+   "usage": {
+    "input_tokens": 1689,
+    "output_tokens": 782,
+    "audio_tokens": 0,
+    "reasoning_tokens": 439
+   },
+   "error_text": null,
+   "looks": {
+    "lap_guides": "Lap belt is visible on the carrier side wall between two blue guides: the far blue guide near the top/ leg end and the near blue guide on the lower near side. The webbing runs from the upper guide down across the carrier into the lower guide then toward the buckle, entering both blue guides.",
+    "shoulder_guide": "Shoulder belt is the long horizontal dark strap across the top of the photo. At the head end on the left, the blue rear guide is visible on the carrier rim below the belt. There is a clear gap between the belt and the blue guide - the belt passes high above the carrier and does not touch or enter th",
+    "no_twist": "The lap belt section between the two blue side guides is visible as a flat strap of consistent width, with no narrowing to a thin edge or rope-like twist.",
+    "level_line": "Small rectangular window on the near side of the carrier shows a green line. Compared to the photo's top and bottom edges with the phone held level, the line appears horizontal.",
+    "handle": "Carry handle is the silver/grey arch over the center of the carrier, standing upright pointing straight up above the shell, not folded toward front, back or seat."
+   }
+  },
+  {
+   "clip": "dev-09-outside_guide.mp4",
+   "error": "outside_guide",
+   "truth": {
+    "lap_guides": "fail",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "fail",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "sam": {
+    "lap_guides": "fail",
+    "shoulder_guide": "pass",
+    "no_twist": "unseen",
+    "level_line": "pass",
+    "handle": "unseen"
+   },
+   "combined": {
+    "lap_guides": "fail",
+    "shoulder_guide": "fail",
+    "no_twist": "unsure",
+    "level_line": "pass",
+    "handle": "unsure"
+   },
+   "seconds": 6.95,
+   "usd": 0.005541,
+   "usage": {
+    "input_tokens": 1689,
+    "output_tokens": 807,
+    "audio_tokens": 0,
+    "reasoning_tokens": 476
+   },
+   "error_text": null,
+   "looks": {
+    "lap_guides": "Low-resolution 3D render side view. Two blue side guides visible: far guide higher on far rim and near guide lower on near side wall. Dark diagonal lap belt runs from mid-carrier down to the right, appearing to cross the leg end area between the two guides.",
+    "shoulder_guide": "Long dark belt runs horizontally across top of photo from door pillar area. Blue rear guide visible at head end (left side, behind shell). In this render the horizontal belt appears above and separate from the blue rear guide with a visible dark gap between belt edge and blue guide; belt does not ap",
+    "no_twist": "Lap belt segment between the two blue side guides visible as flat dark webbing of consistent width, no narrowing to rope-like edge seen between guides in this low-detail render.",
+    "level_line": "Small rectangular window on near side wall of carrier shows green line inside. Compared to photo top/bottom edges (phone held level), green line appears horizontal with no obvious tilt.",
+    "handle": "Beige carry handle arches over center of carrier, standing near vertical upright over the shell, not folded down toward front or back."
+   }
+  },
+  {
+   "clip": "dev-10-outside_guide.mp4",
+   "error": "outside_guide",
+   "truth": {
+    "lap_guides": "fail",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "fail",
+    "shoulder_guide": "unseen",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "sam": {
+    "lap_guides": "fail",
+    "shoulder_guide": "pass",
+    "no_twist": "unseen",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "fail",
+    "shoulder_guide": "unsure",
+    "no_twist": "unsure",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "seconds": 9.833,
+   "usd": 0.008542,
+   "usage": {
+    "input_tokens": 1689,
+    "output_tokens": 1513,
+    "audio_tokens": 0,
+    "reasoning_tokens": 1100
+   },
+   "error_text": null,
+   "looks": {
+    "lap_guides": "Two blue side guides visible on leg end - far guide higher on far rim (upper middle-left of photo) and near guide lower on near side wall (lower right of carrier). Dark lap belt visible running diagonally across carrier from middle (near handle) down to buckle area. Belt does not appear seated insid",
+    "shoulder_guide": "Long dark shoulder belt runs horizontally across top of photo from door pillar. Blue rear guide visible at head end on left edge of shell. In this low-resolution rendered view belt appears high above carrier and very close to top edge, alignment to blue rear guide is blurred/blocky and contact point",
+    "no_twist": "Segment of lap belt between the two side-guide area is visible as flat dark webbing of consistent width, no narrowing to thin edge or rope-like section between guides.",
+    "level_line": "Small rectangular window on near side of carrier shows green level line. Phone held level at door, compared to photo top/bottom edges the green line appears near-horizontal.",
+    "handle": "Silver/grey U-shaped carry handle rises vertically from center of carrier, pointing straight up over the carrier, not folded forward or back."
+   }
+  },
+  {
+   "clip": "dev-11-outside_guide.mp4",
+   "error": "outside_guide",
+   "truth": {
+    "lap_guides": "fail",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "pass",
+    "shoulder_guide": "fail",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "sam": {
+    "lap_guides": "fail",
+    "shoulder_guide": "pass",
+    "no_twist": "unseen",
+    "level_line": "pass",
+    "handle": "unseen"
+   },
+   "combined": {
+    "lap_guides": "fail",
+    "shoulder_guide": "fail",
+    "no_twist": "unsure",
+    "level_line": "pass",
+    "handle": "unsure"
+   },
+   "seconds": 6.426,
+   "usd": 0.004857,
+   "usage": {
+    "input_tokens": 1689,
+    "output_tokens": 646,
+    "audio_tokens": 0,
+    "reasoning_tokens": 310
+   },
+   "error_text": null,
+   "looks": {
+    "lap_guides": "Side-on view shows dark webbing belt running from the far blue side guide at the top far rim down diagonally across the carrier shell into the near blue side guide on the lower near side wall and then down toward the buckle. Both blue side guides have the belt seated inside them with no empty guide ",
+    "shoulder_guide": "The long shoulder belt runs horizontally across the top of the photo above the carrier. At the head end the blue rear guide is visible on the far rim but there is a clear dark gap between the belt and the blue guide - the belt does not touch or enter the blue rear guide and does not wrap around the ",
+    "no_twist": "The lap belt section between the two blue side guides is visible as a flat band of consistent width across the carrier. No narrowing to a thin edge or rope-like twist is seen between the guides.",
+    "level_line": "Small black window on the near side of the carrier shows a bright green horizontal line. With the phone held level, the line appears parallel to the photo's top and bottom edges.",
+    "handle": "The silver/grey carry handle arches upright and points straight up over the center of the carrier."
+   }
+  },
+  {
+   "clip": "dev-12-twisted.mp4",
+   "error": "twisted",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "fail",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "pass",
+    "shoulder_guide": "fail",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "fail",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "pass",
+    "shoulder_guide": "fail",
+    "no_twist": "fail",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "seconds": 14.089,
+   "usd": 0.009209,
+   "usage": {
+    "input_tokens": 1689,
+    "output_tokens": 1670,
+    "audio_tokens": 0,
+    "reasoning_tokens": 1301
+   },
+   "error_text": null,
+   "looks": {
+    "lap_guides": "Near blue side guide low on near side wall on right side of image has grey webbing passing through it. Far blue side guide higher on far rim in middle of image also has same grey webbing passing through it. Webbing runs continuously between the two blue guides across the shell near the leg end where",
+    "shoulder_guide": "Long black shoulder belt runs horizontally across top of photo from door pillar. At head end on left, blue rear guide on back of shell is visible below the belt. There is a clear dark gap between the belt and the blue rear guide, belt does not touch or enter the guide, running high above it.",
+    "no_twist": "Grey lap webbing segment between the middle far blue guide and the lower near blue guide shows consistent flat width with no narrowing to a thin edge or rope.",
+    "level_line": "Small rectangular window on near side wall of carrier shows solid green line on black background. Compared to top and bottom edges of photo with phone held level, line appears nearly horizontal.",
+    "handle": "Carry handle is visible as light colored arch centered over carrier, standing vertically upright over the middle of the shell, not folded forward or backward."
+   }
+  },
+  {
+   "clip": "dev-13-twisted.mp4",
+   "error": "twisted",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "fail",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "pass",
+    "shoulder_guide": "fail",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "fail",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "pass",
+    "shoulder_guide": "fail",
+    "no_twist": "fail",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "seconds": 7.58,
+   "usd": 0.007725,
+   "usage": {
+    "input_tokens": 1689,
+    "output_tokens": 1321,
+    "audio_tokens": 0,
+    "reasoning_tokens": 956
+   },
+   "error_text": null,
+   "looks": {
+    "lap_guides": "Near leg end two blue side guides are visible. Lower near-side blue guide on carrier wall has dark webbing entering it and exiting downward to buckle. Higher far-side blue guide on far rim also has same webbing entering it. Webbing runs down across carrier between the two guides, aligning across the",
+    "shoulder_guide": "Long shoulder belt runs horizontally across top of photo from door pillar over carrier. At head end on left side the blue rear guide on shell rim is visible below the belt. There is a clear dark gap between the belt and the blue guide, belt runs high above carrier and does not touch or enter the blu",
+    "no_twist": "Lap belt segment between the two side guides on right/leg end is visible running between guides. Webbing appears as flat band of consistent width with no narrowing to thin edge or rope between guides.",
+    "level_line": "Small rectangular window on side of carrier shows green line. Compared to photo top and bottom edges with phone held level, line appears essentially horizontal.",
+    "handle": "Silver/grey carry handle forms arch over middle of carrier, standing vertically upward above shell, not folded down toward front or back."
+   }
+  },
+  {
+   "clip": "dev-14-twisted.mp4",
+   "error": "twisted",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "fail",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "pass",
+    "shoulder_guide": "fail",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "fail",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "pass",
+    "shoulder_guide": "fail",
+    "no_twist": "fail",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "seconds": 9.273,
+   "usd": 0.007394,
+   "usage": {
+    "input_tokens": 1689,
+    "output_tokens": 1243,
+    "audio_tokens": 0,
+    "reasoning_tokens": 878
+   },
+   "error_text": null,
+   "looks": {
+    "lap_guides": "Two blue side guides are visible on the carrier shell. The far blue guide higher in the photo on the far rim and the near blue guide lower on the near side wall both have the brown lap belt entering them. The belt runs down across the carrier from the far guide to the near guide and continues down t",
+    "shoulder_guide": "The shoulder belt is the long dark belt running horizontally across the top of the photo from the door pillar. At the head end on the left side the blue rear guide is visible on the back of the shell. The belt runs high above the carrier and does not touch or enter the blue rear guide, a clear gap i",
+    "no_twist": "The lap belt segment between the two blue side guides is visible as flat webbing of consistent width. It does not narrow to a thin edge or rope anywhere between the guides.",
+    "level_line": "The small rectangular window on the side of the carrier shows a green line. Compared to the top and bottom edges of the photo the green line appears horizontal with no obvious tilt.",
+    "handle": "The carry handle is the silver arch over the center of the carrier. It is standing upright pointing straight up over the carrier, not folded down toward the front or back."
+   }
+  },
+  {
+   "clip": "dev-15-recline.mp4",
+   "error": "recline",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "fail",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "fail",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "fail",
+    "handle": "pass"
+   },
+   "seconds": 11.85,
+   "usd": 0.008673,
+   "usage": {
+    "input_tokens": 1689,
+    "output_tokens": 1544,
+    "audio_tokens": 0,
+    "reasoning_tokens": 1139
+   },
+   "error_text": null,
+   "looks": {
+    "lap_guides": "At the leg end, dark webbing is seen entering the far blue side guide high on the far rim at the top left of the carrier, and a matching width of webbing is seen entering the near blue side guide low on the near side wall at the bottom right. The two blue guides line up across the width of the carri",
+    "shoulder_guide": "The long shoulder belt runs across the top of the photo from the door pillar. At the head end on the left side it drops and is seen touching and entering the blue rear guide on the back of the shell, wrapping around the back of the shell, not crossing the baby's side. No gap is seen between the belt",
+    "no_twist": "The visible lap belt segment between the two blue side guides shows as flat webbing of one consistent width. No narrowing to a thin edge or rope is seen anywhere between the guides.",
+    "level_line": "The small window on the carrier's side shows a green line. Compared to the photo's top and bottom edges with the phone held level, the green line appears essentially horizontal.",
+    "handle": "The carry handle forms an arch standing straight up over the carrier, pointing vertically upward, not folded down toward the front, back or seat."
+   }
+  },
+  {
+   "clip": "dev-16-recline.mp4",
+   "error": "recline",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "fail",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "fail",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "fail",
+    "handle": "pass"
+   },
+   "seconds": 7.975,
+   "usd": 0.005558,
+   "usage": {
+    "input_tokens": 1689,
+    "output_tokens": 811,
+    "audio_tokens": 0,
+    "reasoning_tokens": 430
+   },
+   "error_text": null,
+   "looks": {
+    "lap_guides": "Side-on view of carrier. Two blue side guides visible on carrier rim/wall - far guide higher in photo, near guide lower on near side wall. Grey belt webbing runs diagonally between them across carrier body, appearing to enter both blue guides and continue down to buckle area below carrier. Both guid",
+    "shoulder_guide": "Long shoulder belt runs horizontally across top of photo from car door pillar. At head end (left side of image) belt curves behind carrier shell and appears to contact/enter the blue rear guide on far rim. No visible gap between belt and blue rear guide, belt is behind shell not crossing baby's side",
+    "no_twist": "Lap belt segment between the two blue side guides is visible as flat grey webbing of consistent width across entire span, no narrowing to thin edge or rope-like twist visible.",
+    "level_line": "Small rectangular window on side of carrier contains green line. Compared to photo top/bottom edges (phone held level), green line appears approximately horizontal with slight tilt estimated.",
+    "handle": "Carry handle is visible as curved grey/white arch standing vertically upright over center of carrier, pointing straight up, not folded down toward front or back."
+   }
+  },
+  {
+   "clip": "dev-17-recline.mp4",
+   "error": "recline",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "fail",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "fail",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "unsure",
+    "shoulder_guide": "unsure",
+    "no_twist": "unsure",
+    "level_line": "fail",
+    "handle": "pass"
+   },
+   "seconds": 9.951,
+   "usd": 0.008716,
+   "usage": {
+    "input_tokens": 1689,
+    "output_tokens": 1554,
+    "audio_tokens": 0,
+    "reasoning_tokens": 1173
+   },
+   "error_text": null,
+   "looks": {
+    "lap_guides": "Photo is dark and low-resolution 3D render side view. Near blue side guide (lower on near wall) has dark webbing passing through it down toward buckle, but the webbing segment that should run across the carrier to the far blue side guide (higher on far rim) is not clearly traceable; far guide area i",
+    "shoulder_guide": "Long shoulder belt runs horizontally across top of photo. At head end (left side) there is a blue rear guide on the shell rim. Belt approaches the guide but image is pixelated, dark and viewed side-on; contact between belt and the blue guide entry slot cannot be confirmed - gap vs touching not resol",
+    "no_twist": "Only short section of lap belt near the near blue guide is visible; the span between the two side guides is mostly hidden by shadow and carrier sidewall. Visible webbing looks flat but full width between guides cannot be assessed.",
+    "level_line": "Small rectangular window on near sidewall shows green line. Compared to photo's top/bottom edges (phone held level), green line appears close to horizontal with slight tilt.",
+    "handle": "Carry handle is the light arch over the carrier, seen side on. It is standing upright, pointing straight up over the carrier, not folded forward or backward."
+   }
+  },
+  {
+   "clip": "dev-18-handle.mp4",
+   "error": "handle",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "fail"
+   },
+   "muse": {
+    "lap_guides": "pass",
+    "shoulder_guide": "fail",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "fail"
+   },
+   "combined": {
+    "lap_guides": "pass",
+    "shoulder_guide": "fail",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "fail"
+   },
+   "seconds": 8.524,
+   "usd": 0.006969,
+   "usage": {
+    "input_tokens": 1689,
+    "output_tokens": 1143,
+    "audio_tokens": 0,
+    "reasoning_tokens": 736
+   },
+   "error_text": null,
+   "looks": {
+    "lap_guides": "Side-on view of beige carrier. Two blue side belt guides visible on carrier rim near leg end - far guide higher in photo on far side, near guide lower on near side wall. Grey webbing runs diagonally down across the carrier shell between these two blue guides, entering the far blue guide at top and e",
+    "shoulder_guide": "Long grey shoulder belt runs horizontally across top of photo from door pillar area toward head end on left. Small blue rear guide is visible on the back of the shell at the head end. The belt is above the carrier and appears to hover above the blue rear guide with a visible dark gap between the bel",
+    "no_twist": "Lap belt section between the two blue side guides is visible crossing the side of the carrier. Webbing appears as flat strap of consistent width with no narrowing to an edge or rope-like twist between guides.",
+    "level_line": "Small rectangular window on side of carrier shows a green horizontal line. Phone held level, line appears parallel to photo top and bottom edges.",
+    "handle": "Carry handle arches upright over the top of the carrier, pointing straight up above the shell, with curved supports visible on both sides."
+   }
+  },
+  {
+   "clip": "dev-19-handle.mp4",
+   "error": "handle",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "fail"
+   },
+   "muse": {
+    "lap_guides": "pass",
+    "shoulder_guide": "fail",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "fail"
+   },
+   "combined": {
+    "lap_guides": "pass",
+    "shoulder_guide": "fail",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "fail"
+   },
+   "seconds": 7.874,
+   "usd": 0.005855,
+   "usage": {
+    "input_tokens": 1689,
+    "output_tokens": 881,
+    "audio_tokens": 0,
+    "reasoning_tokens": 572
+   },
+   "error_text": null,
+   "looks": {
+    "lap_guides": "The lap belt is visible running vertically across the carrier near the baby's legs from the far blue guide on the upper rim to the near blue guide on the lower side wall, entering both blue plastic guides with no gap.",
+    "shoulder_guide": "At the head end on the left side of the photo the small blue rear guide is visible on the back of the shell but the long shoulder belt runs high above it across the top of the image with a clear dark gap between the belt and the blue guide, not touching or entering it.",
+    "no_twist": "The webbing segment between the two blue side guides is visible as a flat strap of uniform width with no narrowing to a thin edge or rope-like twist.",
+    "level_line": "Small rectangular window on the near side wall of the carrier shows a bright green line that appears horizontal relative to the top and bottom edges of the photo while the phone is held level.",
+    "handle": "The light-colored carry handle arches up and over the carrier sides on both ends, standing vertically above the shell in the upright car position."
+   }
+  },
+  {
+   "clip": "dev-20-handle.mp4",
+   "error": "handle",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "fail"
+   },
+   "muse": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "fail"
+   },
+   "combined": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "fail"
+   },
+   "seconds": 7.793,
+   "usd": 0.004534,
+   "usage": {
+    "input_tokens": 1689,
+    "output_tokens": 570,
+    "audio_tokens": 0,
+    "reasoning_tokens": 313
+   },
+   "error_text": null,
+   "looks": {
+    "lap_guides": "Upper far rim shows blue side guide with belt entering it, belt runs down across carrier side to lower near side blue guide and continues down to buckle, both blue guides have belt in them",
+    "shoulder_guide": "Long diagonal belt across top of photo runs to head end and contacts the blue rear guide at back of shell, no gap between belt and blue guide, belt is behind shell not over baby side",
+    "no_twist": "Lap belt segment between the two blue side guides shows flat webbing of consistent width with no narrowing to edge or rope",
+    "level_line": "Small rectangular window on carrier side shows green line, line appears parallel to photo top and bottom edges",
+    "handle": "Carry handle arches upright over carrier, pointing straight up centered over shell, not folded down to front or back"
+   }
+  },
+  {
+   "clip": "dev-21-unseen.mp4",
+   "error": "unseen",
+   "truth": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "muse": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "pass",
+    "handle": "unseen"
+   },
+   "sam": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "combined": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "unsure",
+    "handle": "unseen"
+   },
+   "seconds": 10.166,
+   "usd": 0.008686,
+   "usage": {
+    "input_tokens": 1689,
+    "output_tokens": 1547,
+    "audio_tokens": 0,
+    "reasoning_tokens": 1111
+   },
+   "error_text": null,
+   "looks": {
+    "lap_guides": "Far blue side guide is visible at top left edge of carrier on the far rim. A dark belt enters near this guide but the lap portion across the carrier face between the far guide and the near side wall is not clearly visible. Near blue side guide on the lower near side wall is not clearly identifiable ",
+    "shoulder_guide": "Dark shoulder belt runs across the top of the photo from the right door pillar toward the head end left. A small blue rear guide is visible at the far left rim where the belt meets the shell. Due to blocky low resolution and shadow the contact between belt and blue guide is indistinct and a gap cann",
+    "no_twist": "The lap belt webbing between the two side guides is not clearly visible in the dark and low resolution image. No flat section of consistent width can be identified to check for narrowing or roping.",
+    "level_line": "Small rectangular window on the beige lower side of the carrier shows a bright green line. With the phone held level, the line appears horizontal relative to the photo top and bottom edges.",
+    "handle": "No clear carry handle is seen standing upright over the carrier. A grey linear element is visible low on the right side near the base but its shape and position are indistinct in shadow and low resolution. Cannot confirm handle is upright in position 1."
+   }
+  },
+  {
+   "clip": "dev-22-unseen.mp4",
+   "error": "unseen",
+   "truth": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "muse": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "pass",
+    "handle": "unseen"
+   },
+   "sam": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "combined": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "unsure",
+    "handle": "unseen"
+   },
+   "seconds": 8.292,
+   "usd": 0.005949,
+   "usage": {
+    "input_tokens": 1689,
+    "output_tokens": 903,
+    "audio_tokens": 0,
+    "reasoning_tokens": 534
+   },
+   "error_text": null,
+   "looks": {
+    "lap_guides": "Pink carrier side-on is visible but image is low-resolution, blocky and dark. The area near the leg end where the two blue side guides should be is not clearly resolved. No distinct blue guides or lap belt routing into both guides can be identified.",
+    "shoulder_guide": "A dark belt runs across the top of the pink shell from the right side. The head end and the blue rear guide at the back of the shell are not clearly visible due to darkness, blur and low resolution. Cannot confirm belt touching/entering the blue rear guide or gap.",
+    "no_twist": "Lap belt section between the two side guides cannot be clearly identified due to blur, blocky rendering and poor lighting. Flat webbing vs twist cannot be distinguished.",
+    "level_line": "Small dark window on light grey lower side panel shows a bright green line. Compared to top and bottom edges of photo, the line appears horizontal with no obvious tilt.",
+    "handle": "Carry handle position not clearly identifiable. A dark bar across top is the vehicle belt, not the handle. No upright handle standing over carrier is visible; handle area is hidden by angle, darkness and low resolution."
+   }
+  }
+ ]
+}

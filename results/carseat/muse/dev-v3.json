@@ -1,0 +1,1308 @@
+{
+ "summary": {
+  "set": "dev",
+  "tag": "v3",
+  "frames": 22,
+  "frame_at_s": 3.0,
+  "prompt": "v3-neutral",
+  "model": "meta-models/muse-spark-open-1026",
+  "host": "inference.baseten.co",
+  "reasoning_effort": "low",
+  "muse_alone": {
+   "per_check": {
+    "lap_guides": {
+     "right": 5,
+     "wrong": 6,
+     "abstained": 11,
+     "false_pass": 0,
+     "false_fail": 6,
+     "of": 22
+    },
+    "shoulder_guide": {
+     "right": 3,
+     "wrong": 7,
+     "abstained": 12,
+     "false_pass": 0,
+     "false_fail": 7,
+     "of": 22
+    },
+    "no_twist": {
+     "right": 12,
+     "wrong": 1,
+     "abstained": 9,
+     "false_pass": 0,
+     "false_fail": 1,
+     "of": 22
+    },
+    "level_line": {
+     "right": 3,
+     "wrong": 2,
+     "abstained": 17,
+     "false_pass": 2,
+     "false_fail": 0,
+     "of": 22
+    },
+    "handle": {
+     "right": 12,
+     "wrong": 1,
+     "abstained": 9,
+     "false_pass": 1,
+     "false_fail": 0,
+     "of": 22
+    }
+   },
+   "frames": {
+    "wrong_installs_flagged": 4,
+    "wrong_installs_planted_check_passed": 2,
+    "wrong_installs_all_pass": 0,
+    "wrong": 12,
+    "correct_all_pass": 0,
+    "false_alarms": 5,
+    "correct": 8,
+    "unseen_any_pass": 1,
+    "unseen": 2
+   }
+  },
+  "sam_alone": {
+   "per_check": {
+    "lap_guides": {
+     "right": 22,
+     "wrong": 0,
+     "abstained": 0,
+     "false_pass": 0,
+     "false_fail": 0,
+     "of": 22
+    },
+    "shoulder_guide": {
+     "right": 22,
+     "wrong": 0,
+     "abstained": 0,
+     "false_pass": 0,
+     "false_fail": 0,
+     "of": 22
+    },
+    "no_twist": {
+     "right": 19,
+     "wrong": 0,
+     "abstained": 3,
+     "false_pass": 0,
+     "false_fail": 0,
+     "of": 22
+    },
+    "level_line": {
+     "right": 22,
+     "wrong": 0,
+     "abstained": 0,
+     "false_pass": 0,
+     "false_fail": 0,
+     "of": 22
+    },
+    "handle": {
+     "right": 20,
+     "wrong": 0,
+     "abstained": 2,
+     "false_pass": 0,
+     "false_fail": 0,
+     "of": 22
+    }
+   },
+   "frames": {
+    "wrong_installs_flagged": 12,
+    "wrong_installs_planted_check_passed": 0,
+    "wrong_installs_all_pass": 0,
+    "wrong": 12,
+    "correct_all_pass": 8,
+    "false_alarms": 0,
+    "correct": 8,
+    "unseen_any_pass": 0,
+    "unseen": 2
+   }
+  },
+  "second_opinion": {
+   "per_check": {
+    "lap_guides": {
+     "right": 8,
+     "wrong": 6,
+     "abstained": 8,
+     "false_pass": 0,
+     "false_fail": 6,
+     "of": 22
+    },
+    "shoulder_guide": {
+     "right": 3,
+     "wrong": 7,
+     "abstained": 12,
+     "false_pass": 0,
+     "false_fail": 7,
+     "of": 22
+    },
+    "no_twist": {
+     "right": 14,
+     "wrong": 1,
+     "abstained": 7,
+     "false_pass": 0,
+     "false_fail": 1,
+     "of": 22
+    },
+    "level_line": {
+     "right": 7,
+     "wrong": 0,
+     "abstained": 15,
+     "false_pass": 0,
+     "false_fail": 0,
+     "of": 22
+    },
+    "handle": {
+     "right": 15,
+     "wrong": 0,
+     "abstained": 7,
+     "false_pass": 0,
+     "false_fail": 0,
+     "of": 22
+    }
+   },
+   "frames": {
+    "wrong_installs_flagged": 12,
+    "wrong_installs_planted_check_passed": 0,
+    "wrong_installs_all_pass": 0,
+    "wrong": 12,
+    "correct_all_pass": 0,
+    "false_alarms": 5,
+    "correct": 8,
+    "unseen_any_pass": 0,
+    "unseen": 2
+   }
+  },
+  "latency_s": {
+   "median": 8.559,
+   "max": 10.642,
+   "mean": 8.802
+  },
+  "usd": 0.1918,
+  "usd_per_frame": 0.00872,
+  "errors": 3
+ },
+ "frames": [
+  {
+   "clip": "dev-01-correct.mp4",
+   "error": "correct",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "unsure",
+    "shoulder_guide": "unsure",
+    "no_twist": "unsure",
+    "level_line": "unsure",
+    "handle": "unsure"
+   },
+   "seconds": 8.806,
+   "usd": 0.006247,
+   "usage": {
+    "input_tokens": 1356,
+    "output_tokens": 1071,
+    "audio_tokens": 0,
+    "reasoning_tokens": 666
+   },
+   "error_text": null,
+   "raw": {
+    "carrier_visible": false,
+    "level_line_tilt_deg": 0,
+    "movement_under_1_inch": "cannot_judge"
+   },
+   "looks": {
+    "lap_guides": "",
+    "shoulder_guide": "",
+    "no_twist": "",
+    "level_line": "",
+    "handle": ""
+   }
+  },
+  {
+   "clip": "dev-02-correct.mp4",
+   "error": "correct",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "unsure",
+    "shoulder_guide": "unsure",
+    "no_twist": "unsure",
+    "level_line": "unsure",
+    "handle": "unsure"
+   },
+   "seconds": 9.884,
+   "usd": 0.008164,
+   "usage": {
+    "input_tokens": 1356,
+    "output_tokens": 1522,
+    "audio_tokens": 0,
+    "reasoning_tokens": 1288
+   },
+   "error_text": null,
+   "raw": {
+    "carrier_visible": true,
+    "level_line_tilt_deg": 0,
+    "movement_under_1_inch": "cannot_judge"
+   },
+   "looks": {
+    "lap_guides": "not visible due to angle and darkness",
+    "shoulder_guide": "not visible due to angle and darkness",
+    "no_twist": "not visible due to angle and darkness",
+    "level_line": "not visible due to angle and darkness",
+    "handle": "not visible due to angle and darkness"
+   }
+  },
+  {
+   "clip": "dev-03-correct.mp4",
+   "error": "correct",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "fail",
+    "shoulder_guide": "fail",
+    "no_twist": "fail",
+    "level_line": "unseen",
+    "handle": "pass"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "fail",
+    "shoulder_guide": "fail",
+    "no_twist": "fail",
+    "level_line": "unsure",
+    "handle": "pass"
+   },
+   "seconds": 10.054,
+   "usd": 0.00844,
+   "usage": {
+    "input_tokens": 1356,
+    "output_tokens": 1587,
+    "audio_tokens": 0,
+    "reasoning_tokens": 1124
+   },
+   "error_text": null,
+   "raw": {
+    "carrier_visible": true,
+    "level_line_tilt_deg": 0,
+    "movement_under_1_inch": "cannot_judge"
+   },
+   "looks": {
+    "lap_guides": "Right side of the image, near the leg end of the carrier, two small blue rectangular guides are visible on the gray shell, with a dark gray webbing strap running vertically between them.",
+    "shoulder_guide": "Head end of carrier near top center, a small blue plastic guide on the left side of the shell, a dark horizontal strap crosses directly at its location. Low resolution and polygonal shading make the exact entry point indistinct.",
+    "no_twist": "Dark gray webbing running vertically between the two blue guides on the near side, lower portion below the lower guide. The webbing appears with a twisted, narrowed section between the two guides compared to the wider flat section above and below.",
+    "level_line": "Small black rectangular window on the side of the gray carrier with a thin bright green horizontal line inside it, centered on the shell. Compared to the top and bottom edges of the photo the line appears level.",
+    "handle": "Light gray/silver U-shaped carry handle rising vertically from the center of the carrier, with a dark grip section at the top, oriented upright and centered over the carrier in front view."
+   }
+  },
+  {
+   "clip": "dev-04-correct.mp4",
+   "error": "correct",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "pass",
+    "shoulder_guide": "fail",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "pass",
+    "shoulder_guide": "fail",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "seconds": 10.183,
+   "usd": 0.008138,
+   "usage": {
+    "input_tokens": 1356,
+    "output_tokens": 1516,
+    "audio_tokens": 0,
+    "reasoning_tokens": 1143
+   },
+   "error_text": null,
+   "raw": {
+    "carrier_visible": true,
+    "level_line_tilt_deg": 0.5,
+    "movement_under_1_inch": "cannot_judge"
+   },
+   "looks": {
+    "lap_guides": "gray infant carrier is visible centered on dark vehicle seat, foreground right side near leg end shows a bright blue plastic belt guide block on the shell edge with dark grey woven seat belt webbing passing directly through under it",
+    "shoulder_guide": "at the upper left head end of the carrier shell a third small blue plastic guide block is visible on the edge, the dark shoulder portion of the belt crosses horizontally well above it and no webbing is threaded through this blue block in the still frame",
+    "no_twist": "between the two side blue guides the dark grey lap portion of the webbing is visible as a continuous flat strap of uniform width with no narrowing or edge twisting visible in the photo pixels",
+    "level_line": "on the side of the gray carrier shell a small rectangular indicator window with a bright green horizontal bar inside is visible on the lower centre of the shell",
+    "handle": "silver grey carry handle arches vertically over the centre of the carrier between the head and leg ends, oriented upright above the occupant cavity"
+   }
+  },
+  {
+   "clip": "dev-05-correct.mp4",
+   "error": "correct",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "fail",
+    "shoulder_guide": "fail",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "fail",
+    "shoulder_guide": "fail",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "seconds": 10.642,
+   "usd": 0.008861,
+   "usage": {
+    "input_tokens": 1356,
+    "output_tokens": 1686,
+    "audio_tokens": 0,
+    "reasoning_tokens": 795
+   },
+   "error_text": null,
+   "raw": {
+    "carrier_visible": true,
+    "level_line_tilt_deg": 0,
+    "movement_under_1_inch": "cannot_judge"
+   },
+   "looks": {
+    "lap_guides": "on the right side of the carrier near the leg end two small blue rectangular guides are visible on the edge of the gray carrier shell. A dark gray webbing strap runs vertically between them and appears to sit inside both guides",
+    "shoulder_guide": "at the head end on the left side a small blue rectangular guide is visible on the edge of the gray carrier. A horizontal dark webbing strap is visible above the carrier crossing left to right. Between the strap and the blue guide there is a visible gap with dark background showing",
+    "no_twist": "the dark gray webbing crossing near the leg end between the two near-side blue guides. Between the guides the webbing edges appear parallel and the strap keeps a consistent width with no visible narrowing or twisting",
+    "level_line": "on the side of the gray carrier shell a small black rectangular window contains a bright green horizontal bar. The bar is parallel to the top and bottom edges of the photo with no visible tilt",
+    "handle": "light gray U-shaped carry handle rises vertically from the center of the carrier sides and arches over the middle of the carrier. The top of the handle is cut off by the shoulder belt that crosses the photo"
+   }
+  },
+  {
+   "clip": "dev-06-correct.mp4",
+   "error": "correct",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "pass",
+    "level_line": "unseen",
+    "handle": "pass"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "unsure",
+    "shoulder_guide": "unsure",
+    "no_twist": "pass",
+    "level_line": "unsure",
+    "handle": "pass"
+   },
+   "seconds": 8.122,
+   "usd": 0.006438,
+   "usage": {
+    "input_tokens": 1356,
+    "output_tokens": 1116,
+    "audio_tokens": 0,
+    "reasoning_tokens": 658
+   },
+   "error_text": null,
+   "raw": {
+    "carrier_visible": true,
+    "level_line_tilt_deg": 0,
+    "movement_under_1_inch": "cannot_judge"
+   },
+   "looks": {
+    "lap_guides": "on the side of the carrier closest to the camera near the leg end a blue plastic guide is visible and a dark grey webbing strap is seen coming out of the bottom of it and going up through it",
+    "shoulder_guide": "at the head end of the carrier on the left side a small blue shape is visible at the rim of the carrier and a dark webbing strap is seen above it but the exact interface between webbing and blue piece is in shadow and low resolution",
+    "no_twist": "the dark webbing that crosses the carrier near the leg end is visible between the two side areas, the portion that can be seen appears as a uniform width band, no narrowing or twisting is distinct in the visible segment between the guides, but the far side is not clearly visible",
+    "level_line": "on the side of the carrier facing the camera a small black rectangular window is visible with a bright green horizontal bar inside it, the bar appears roughly parallel to the bottom edge of the photo",
+    "handle": "a light grey U-shaped carry handle is visible arched over the center of the carrier, extending upward from the sides of the carrier"
+   }
+  },
+  {
+   "clip": "dev-07-correct.mp4",
+   "error": "correct",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "fail",
+    "shoulder_guide": "unseen",
+    "no_twist": "pass",
+    "level_line": "unseen",
+    "handle": "pass"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "fail",
+    "shoulder_guide": "unsure",
+    "no_twist": "pass",
+    "level_line": "unsure",
+    "handle": "pass"
+   },
+   "seconds": 9.14,
+   "usd": 0.006867,
+   "usage": {
+    "input_tokens": 1356,
+    "output_tokens": 1217,
+    "audio_tokens": 0,
+    "reasoning_tokens": 852
+   },
+   "error_text": null,
+   "raw": {
+    "carrier_visible": true,
+    "level_line_tilt_deg": 0,
+    "movement_under_1_inch": "cannot_judge"
+   },
+   "looks": {
+    "lap_guides": "on the lower right side of the gray carrier a blue square guide is visible with a brown webbing strap running vertically through the center of the blue guide",
+    "shoulder_guide": "at the left end of the carrier near the infants head a small blue rectangle is visible, no webbing is clearly inside it due to shadow and low resolution",
+    "no_twist": "the dark horizontal webbing crossing the carrier from left to right appears as a flat band with consistent width, no obvious narrowing or twist is distinguishable between the side areas",
+    "level_line": "on the side of the gray carrier near the bottom center a small black rectangular window contains a horizontal green bar",
+    "handle": "a light gray tubular carry handle arches vertically up from the center of the carrier"
+   }
+  },
+  {
+   "clip": "dev-08-correct.mp4",
+   "error": "correct",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "fail",
+    "shoulder_guide": "fail",
+    "no_twist": "pass",
+    "level_line": "unseen",
+    "handle": "pass"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "fail",
+    "shoulder_guide": "fail",
+    "no_twist": "pass",
+    "level_line": "unsure",
+    "handle": "pass"
+   },
+   "seconds": 8.225,
+   "usd": 0.006043,
+   "usage": {
+    "input_tokens": 1356,
+    "output_tokens": 1023,
+    "audio_tokens": 0,
+    "reasoning_tokens": 579
+   },
+   "error_text": null,
+   "raw": {
+    "carrier_visible": true,
+    "level_line_tilt_deg": 0,
+    "movement_under_1_inch": "cannot_judge"
+   },
+   "looks": {
+    "lap_guides": "Foreground right blue plastic block on carrier side near leg end, dark woven seat belt webbing is visible directly beneath and through the block, extending downward from it with no gap between webbing and block edges",
+    "shoulder_guide": "Small blue plastic block at head end of carrier on the left side wall, behind the infant's head area, no webbing is visible entering it, the webbing in view is further forward crossing over the carrier middle",
+    "no_twist": "Dark seat belt webbing is visible as a horizontal strip crossing the carrier near its middle and as a vertical strip on the near side, the portion crossing shows consistent width with even edges, no narrowing or twisted narrowing is discernible at this resolution between the visible side areas",
+    "level_line": "Small rectangular window on the side of the grey carrier shell containing a bright green horizontal line, the line spans the width of the black background inside the window",
+    "handle": "Silver/grey arched carry handle rising vertically from the sides of the carrier, centered over the infant, top is padded dark grey, oriented upright above the shell"
+   }
+  },
+  {
+   "clip": "dev-09-outside_guide.mp4",
+   "error": "outside_guide",
+   "truth": {
+    "lap_guides": "fail",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "sam": {
+    "lap_guides": "fail",
+    "shoulder_guide": "pass",
+    "no_twist": "unseen",
+    "level_line": "pass",
+    "handle": "unseen"
+   },
+   "combined": {
+    "lap_guides": "fail",
+    "shoulder_guide": "unsure",
+    "no_twist": "unseen",
+    "level_line": "unsure",
+    "handle": "unseen"
+   },
+   "seconds": 8.559,
+   "usd": 0.007071,
+   "usage": {
+    "input_tokens": 1356,
+    "output_tokens": 1265,
+    "audio_tokens": 0,
+    "reasoning_tokens": 751
+   },
+   "error_text": null,
+   "raw": {
+    "carrier_visible": true,
+    "level_line_tilt_deg": 0,
+    "movement_under_1_inch": "cannot_judge"
+   },
+   "looks": {
+    "lap_guides": "at the leg end on the near side the blue rectangular block is visible on the upper edge of the carrier shell, the dark grey seat belt webbing crosses diagonally below and forward of it, a gap of dark space is between the webbing and the block, no webbing is seated in the slot of the block",
+    "shoulder_guide": "at the head end on the near side a blue block is visible at the rim, the belt webbing does not extend to that area, the block slot is empty and no strap is in it",
+    "no_twist": "the lap portion of the dark grey webbing crossing near the leg end shows a consistent width from one side to the other where visible, no localized narrowing or twist tapering to a thin line is discernible in the visible segment, though resolution is low and texture is blocky",
+    "level_line": "on the side of the carrier shell a small dark rectangular window contains a horizontal green bar, the bar runs left to right, its top and bottom edges are parallel to the top and bottom edges of the photo within the pixelation limits, no obvious uphill or downhill slope is resolved",
+    "handle": "the light grey carry handle arches over the carrier from side to side, its apex is near the top third of the image, the bar is oriented roughly vertical in the foreground leg where it meets the shell and extends upward then across, consistent with an upright carry position above the carrier"
+   }
+  },
+  {
+   "clip": "dev-10-outside_guide.mp4",
+   "error": "outside_guide",
+   "truth": {
+    "lap_guides": "fail",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "sam": {
+    "lap_guides": "fail",
+    "shoulder_guide": "pass",
+    "no_twist": "unseen",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "fail",
+    "shoulder_guide": "unsure",
+    "no_twist": "unseen",
+    "level_line": "unsure",
+    "handle": "unsure"
+   },
+   "seconds": 10.353,
+   "usd": 0.008809,
+   "usage": {
+    "input_tokens": 1356,
+    "output_tokens": 1674,
+    "audio_tokens": 0,
+    "reasoning_tokens": 1253
+   },
+   "error_text": null,
+   "raw": {
+    "carrier_visible": true,
+    "level_line_tilt_deg": 2,
+    "movement_under_1_inch": "cannot_judge"
+   },
+   "looks": {
+    "lap_guides": "Blue rectangular guide on the lower right side of the gray carrier near the leg end is visible. The dark diagonal seat belt webbing crosses the carrier body above and to the left of this blue piece, with a dark gap between the webbing and the guide, the guide slot appears empty.",
+    "shoulder_guide": "Blue rectangular guide at the left head end of the carrier is visible. The long horizontal dark shoulder belt webbing runs across the top of the image and appears to go over/into this blue guide area, the area is dark and low resolution.",
+    "no_twist": "The lap part is the dark diagonal webbing crossing the carrier from the upper side down to the lower right buckle area between the two side blue guides. Between the guides the webbing appears to narrow and show diagonal creasing/twisting in its middle section rather than maintaining uniform width.",
+    "level_line": "The small rectangular window on the side of the gray carrier contains a bright green horizontal bar. The bar is seen against the dark interior of the window and is nearly parallel to the photo top and bottom edges with a very slight upward tilt on the right, low resolution and pixelated so exact ang",
+    "handle": "The gray U-shaped carry handle arches over the center of the carrier, its legs attached at the sides and the top of the arch pointing upward away from the carrier shell, oriented vertically in the frame."
+   }
+  },
+  {
+   "clip": "dev-11-outside_guide.mp4",
+   "error": "outside_guide",
+   "truth": {
+    "lap_guides": "fail",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "sam": {
+    "lap_guides": "fail",
+    "shoulder_guide": "pass",
+    "no_twist": "unseen",
+    "level_line": "pass",
+    "handle": "unseen"
+   },
+   "combined": {
+    "lap_guides": "fail",
+    "shoulder_guide": "unsure",
+    "no_twist": "unseen",
+    "level_line": "unsure",
+    "handle": "unseen"
+   },
+   "seconds": null,
+   "usd": null,
+   "usage": null,
+   "error_text": "muse senses: answer is not JSON: {\"carrier_visible\":",
+   "raw": {},
+   "looks": null
+  },
+  {
+   "clip": "dev-12-twisted.mp4",
+   "error": "twisted",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "fail",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "fail",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "unsure",
+    "shoulder_guide": "unsure",
+    "no_twist": "fail",
+    "level_line": "unsure",
+    "handle": "unsure"
+   },
+   "seconds": null,
+   "usd": null,
+   "usage": null,
+   "error_text": "muse senses: answer is not JSON: {\n  \"carrier_visible\":",
+   "raw": {},
+   "looks": null
+  },
+  {
+   "clip": "dev-13-twisted.mp4",
+   "error": "twisted",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "fail",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "pass",
+    "shoulder_guide": "fail",
+    "no_twist": "fail",
+    "level_line": "unseen",
+    "handle": "pass"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "fail",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "pass",
+    "shoulder_guide": "fail",
+    "no_twist": "fail",
+    "level_line": "unsure",
+    "handle": "pass"
+   },
+   "seconds": 9.4,
+   "usd": 0.007981,
+   "usage": {
+    "input_tokens": 1356,
+    "output_tokens": 1479,
+    "audio_tokens": 0,
+    "reasoning_tokens": 956
+   },
+   "error_text": null,
+   "raw": {
+    "carrier_visible": true,
+    "level_line_tilt_deg": 0,
+    "movement_under_1_inch": "cannot_judge"
+   },
+   "looks": {
+    "lap_guides": "blue square plastic piece on the side of the gray carrier nearest the camera, near the leg/foot end. A dark gray belt strap with lighter edge pattern runs vertically through the center of this blue piece, from above the carrier shell down below the side.",
+    "shoulder_guide": "blue plastic piece at the head end of the gray carrier on the far left side of the photo, near where the dark horizontal shoulder belt passes. The horizontal shoulder belt is visible as a dark band above the carrier, spanning left to right across the upper third of the image, with a small gap betwee",
+    "no_twist": "the vertical section of belt webbing between the two side blue guides, crossing the side of the gray carrier. The strap shows a narrowed and twisted appearance in the middle section between the guides compared to the wider flatter sections at the guide entry points, consistent with a twist narrowing",
+    "level_line": "small rectangular black window on the lower side of the gray carrier containing a bright green horizontal bar inside. The bar appears parallel to the top and bottom edges of the photo. No significant incline is discernible at this resolution.",
+    "handle": "light gray arched carry handle rising vertically from the sides of the carrier, centered over the infant area, with its top curve extending above the carrier shell toward the upper middle of the image. The handle is upright and roughly vertical in profile."
+   }
+  },
+  {
+   "clip": "dev-14-twisted.mp4",
+   "error": "twisted",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "fail",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "fail",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "unsure",
+    "shoulder_guide": "unsure",
+    "no_twist": "fail",
+    "level_line": "unsure",
+    "handle": "unsure"
+   },
+   "seconds": 6.421,
+   "usd": 0.007105,
+   "usage": {
+    "input_tokens": 1356,
+    "output_tokens": 1273,
+    "audio_tokens": 0,
+    "reasoning_tokens": 936
+   },
+   "error_text": null,
+   "raw": {
+    "carrier_visible": true,
+    "level_line_tilt_deg": 0,
+    "movement_under_1_inch": "cannot_judge"
+   },
+   "looks": {
+    "lap_guides": "blue rectangular guide on the near side of the carrier near the leg end is visible in profile, a dark strap is in front of it",
+    "shoulder_guide": "blue guide at the head end of the carrier is visible on the left edge of the image, a dark horizontal band is above it",
+    "no_twist": "a dark webbing strap crosses the carrier near the leg end between the two blue side guides, image is dark and pixelated and the strap edges are not sharp",
+    "level_line": "small dark window on the side of the carrier contains a horizontal green line, the line appears parallel to the top and bottom edges of the photo",
+    "handle": "grey arched carry handle rises vertically from the center of the carrier"
+   }
+  },
+  {
+   "clip": "dev-15-recline.mp4",
+   "error": "recline",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "fail",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "pass",
+    "level_line": "unseen",
+    "handle": "pass"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "fail",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "unsure",
+    "shoulder_guide": "unsure",
+    "no_twist": "pass",
+    "level_line": "fail",
+    "handle": "pass"
+   },
+   "seconds": 7.519,
+   "usd": 0.005656,
+   "usage": {
+    "input_tokens": 1356,
+    "output_tokens": 932,
+    "audio_tokens": 0,
+    "reasoning_tokens": 477
+   },
+   "error_text": null,
+   "raw": {
+    "carrier_visible": true,
+    "level_line_tilt_deg": 2,
+    "movement_under_1_inch": "cannot_judge"
+   },
+   "looks": {
+    "lap_guides": "blue rectangular guide visible on the side of the carrier closest to the camera near the leg end, dark gray webbing is seen passing vertically through it, webbing fills the guide opening with no gap visible at this resolution",
+    "shoulder_guide": "blue guide at the head end of the carrier at the top of the image, dark gray shoulder belt webbing passes near and appears to be positioned at the guide location, edge detail is blurred and exact engagement inside the slot is not clearly resolved",
+    "no_twist": "short lap portion of the webbing crossing the carrier near the leg end between the two side guides, webbing appears as a uniform dark band in the visible segment, no distinct narrowing or twisting is clearly visible in the segment that is not shadowed",
+    "level_line": "small rectangular window on the side of the carrier shell containing a bright green horizontal line, the line is seen against the dark window background",
+    "handle": "curved carry handle arching over the carrier sides, both ends attached near the middle of the carrier, the top of the arch is above the shell and oriented roughly vertical/upright relative to the carrier"
+   }
+  },
+  {
+   "clip": "dev-16-recline.mp4",
+   "error": "recline",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "fail",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "fail",
+    "shoulder_guide": "unseen",
+    "no_twist": "pass",
+    "level_line": "unseen",
+    "handle": "pass"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "fail",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "fail",
+    "shoulder_guide": "unsure",
+    "no_twist": "pass",
+    "level_line": "fail",
+    "handle": "pass"
+   },
+   "seconds": 8.33,
+   "usd": 0.006693,
+   "usage": {
+    "input_tokens": 1356,
+    "output_tokens": 1176,
+    "audio_tokens": 0,
+    "reasoning_tokens": 687
+   },
+   "error_text": null,
+   "raw": {
+    "carrier_visible": true,
+    "level_line_tilt_deg": 0,
+    "movement_under_1_inch": "cannot_judge"
+   },
+   "looks": {
+    "lap_guides": "blue plastic block on the near side of the carrier at the leg end is visible on the right side of the photo. A dark grey belt webbing passes vertically through it, the webbing fills the slot of the guide.",
+    "shoulder_guide": "blue plastic area at the head end of the carrier is partially visible in shadow on the left side near the rear of the seat, no belt webbing is clearly seated in it in this view, image is dark and pixelated low-poly render.",
+    "no_twist": "the dark grey lap/shoulder belt webbing that crosses horizontally over the carrier near the leg end appears as a flat band of uniform width from the left edge to the right edge of the photo, no narrowing or twist is visible between the two side guides.",
+    "level_line": "small rectangular window on the side of the grey carrier shell near the bottom center shows a bright green horizontal bar inside a black background, the bar appears parallel to the top and bottom edges of the photo.",
+    "handle": "light grey carry handle with black grip arches up over the carrier, its upright stands on the sides of the shell and the top bar is above the infant area, pointing upward away from the shell."
+   }
+  },
+  {
+   "clip": "dev-17-recline.mp4",
+   "error": "recline",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "fail",
+    "handle": "pass"
+   },
+   "muse": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "fail",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "pass"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "fail",
+    "handle": "pass"
+   },
+   "combined": {
+    "lap_guides": "unsure",
+    "shoulder_guide": "fail",
+    "no_twist": "pass",
+    "level_line": "fail",
+    "handle": "pass"
+   },
+   "seconds": 7.802,
+   "usd": 0.005716,
+   "usage": {
+    "input_tokens": 1356,
+    "output_tokens": 946,
+    "audio_tokens": 0,
+    "reasoning_tokens": 551
+   },
+   "error_text": null,
+   "raw": {
+    "carrier_visible": true,
+    "level_line_tilt_deg": 0,
+    "movement_under_1_inch": "cannot_judge"
+   },
+   "looks": {
+    "lap_guides": "On the right side of the image, near the leg end of the carrier, a blue plastic guide is visible on the side wall. A dark grey webbing passes vertically through it.",
+    "shoulder_guide": "At the head end of the carrier, at the back edge, a blue guide is visible. A dark grey webbing crosses horizontally above it.",
+    "no_twist": "The webbing crossing near the leg end between the two side guides is visible as a dark strap. In the center portion the strap appears as a uniform width, no clear narrowing or twist point is distinctly visible at this resolution.",
+    "level_line": "On the side of the carrier a small black rectangular window contains a bright green horizontal line.",
+    "handle": "A light colored U-shaped carry handle arches over the top of the carrier, with its apex pointing upward relative to the carrier."
+   }
+  },
+  {
+   "clip": "dev-18-handle.mp4",
+   "error": "handle",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "fail"
+   },
+   "muse": {
+    "lap_guides": "fail",
+    "shoulder_guide": "fail",
+    "no_twist": "unseen",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "fail"
+   },
+   "combined": {
+    "lap_guides": "fail",
+    "shoulder_guide": "fail",
+    "no_twist": "unsure",
+    "level_line": "unsure",
+    "handle": "fail"
+   },
+   "seconds": 10.216,
+   "usd": 0.009349,
+   "usage": {
+    "input_tokens": 1356,
+    "output_tokens": 1801,
+    "audio_tokens": 0,
+    "reasoning_tokens": 1342
+   },
+   "error_text": null,
+   "raw": {
+    "carrier_visible": true,
+    "level_line_tilt_deg": 0,
+    "movement_under_1_inch": "cannot_judge"
+   },
+   "looks": {
+    "lap_guides": "on the near side of the carrier at the leg end two blue plastic squares are visible on the carrier shell. A vertical gray webbing strap runs straight through the center of both squares with no gap between webbing and plastic.",
+    "shoulder_guide": "at the rear end of the carrier on the left side of the image one blue plastic guide is visible under the dark horizontal webbing. The horizontal webbing is above and separated from the blue plastic with a visible dark gap, the webbing is not inserted into the slot of the blue guide.",
+    "no_twist": "the vertical webbing segment that crosses the carrier near the leg end between the near side blue guides. The strap appears low resolution but maintains a uniform rectangular width along its visible length with no visible narrowing or twisting",
+    "level_line": "small rectangular window on the near side of the carrier shell containing a bright green horizontal bar against a black background. The bar's long axis is parallel to the top and bottom edges of the photo with no obvious rise at either end.",
+    "handle": "beige U-shaped carry handle with light colored handle covers, its arms attached near the midsection of the carrier shell and its arch extending upward and slightly forward over the side wall"
+   }
+  },
+  {
+   "clip": "dev-19-handle.mp4",
+   "error": "handle",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "fail"
+   },
+   "muse": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "fail"
+   },
+   "combined": {
+    "lap_guides": "unsure",
+    "shoulder_guide": "unsure",
+    "no_twist": "unsure",
+    "level_line": "unsure",
+    "handle": "fail"
+   },
+   "seconds": null,
+   "usd": null,
+   "usage": null,
+   "error_text": "muse senses: answer is not JSON: {\n  \"carrier_visible\":",
+   "raw": {},
+   "looks": null
+  },
+  {
+   "clip": "dev-20-handle.mp4",
+   "error": "handle",
+   "truth": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "fail"
+   },
+   "muse": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "unseen",
+    "handle": "pass"
+   },
+   "sam": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "pass",
+    "handle": "fail"
+   },
+   "combined": {
+    "lap_guides": "pass",
+    "shoulder_guide": "pass",
+    "no_twist": "pass",
+    "level_line": "unsure",
+    "handle": "fail"
+   },
+   "seconds": 8.103,
+   "usd": 0.006111,
+   "usage": {
+    "input_tokens": 1356,
+    "output_tokens": 1039,
+    "audio_tokens": 0,
+    "reasoning_tokens": 671
+   },
+   "error_text": null,
+   "raw": {
+    "carrier_visible": true,
+    "level_line_tilt_deg": 0,
+    "movement_under_1_inch": "cannot_judge"
+   },
+   "looks": {
+    "lap_guides": "blue plastic block on the near side near the leg end is visible, grey seat belt webbing is centered through it with no visible gap",
+    "shoulder_guide": "blue plastic block at the head end of the carrier on the far side is visible, the long grey shoulder belt section passes through it",
+    "no_twist": "the lap section of grey webbing crossing the carrier between the two side blue guides appears as a uniform flat strip with parallel edges, no narrowing or twist is distinct in this low resolution image",
+    "level_line": "small rectangular window on the grey side of the carrier contains a solid green horizontal bar, its edges appear parallel to the top and bottom edges of the photo",
+    "handle": "grey carry handle arches above and behind the carrier shell, extending from the sides upward and rearward"
+   }
+  },
+  {
+   "clip": "dev-21-unseen.mp4",
+   "error": "unseen",
+   "truth": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "muse": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "sam": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "combined": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "seconds": 7.68,
+   "usd": 0.006412,
+   "usage": {
+    "input_tokens": 1356,
+    "output_tokens": 1110,
+    "audio_tokens": 0,
+    "reasoning_tokens": 673
+   },
+   "error_text": null,
+   "raw": {
+    "carrier_visible": true,
+    "level_line_tilt_deg": 0,
+    "movement_under_1_inch": "cannot_judge"
+   },
+   "looks": {
+    "lap_guides": "Small blue tab visible on the left edge of the pink carrier near the top of the photo, underneath the dark seat belt webbing. The belt crosses directly over this blue tab.",
+    "shoulder_guide": "The top middle head end area of the pink carrier is obscured by shadows and low resolution and the head end blue guide is not clearly distinguishable. No blue guide is clearly visible there.",
+    "no_twist": "A dark gray-black webbing strap crosses diagonally across the top surface of the pink carrier from left to right. In the visible section across the top, the strap width appears relatively uniform with no narrowing or twisting seen. Resolution is low and pixelated.",
+    "level_line": "A small black rectangular window on the beige lower portion of the carrier below the pink cover contains a thin bright green horizontal line. The line appears level with the top and bottom edges of the photo.",
+    "handle": "No distinct carry handle is clearly visible in the dark surrounding areas. A faint grayish strap shape is visible on the right lower side but handle position and direction cannot be determined due to darkness, blur and cropping."
+   }
+  },
+  {
+   "clip": "dev-22-unseen.mp4",
+   "error": "unseen",
+   "truth": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "muse": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "pass",
+    "handle": "unseen"
+   },
+   "sam": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "unseen",
+    "handle": "unseen"
+   },
+   "combined": {
+    "lap_guides": "unseen",
+    "shoulder_guide": "unseen",
+    "no_twist": "unseen",
+    "level_line": "unsure",
+    "handle": "unseen"
+   },
+   "seconds": 7.805,
+   "usd": 0.005618,
+   "usage": {
+    "input_tokens": 1356,
+    "output_tokens": 923,
+    "audio_tokens": 0,
+    "reasoning_tokens": 551
+   },
+   "error_text": null,
+   "raw": {
+    "carrier_visible": true,
+    "level_line_tilt_deg": 0,
+    "movement_under_1_inch": "cannot_judge"
+   },
+   "looks": {
+    "lap_guides": "right side of image, area near lower edge of pink carrier where side guide would be is dark, shadowed and blocky, blue plastic guide not distinguishable from shadows",
+    "shoulder_guide": "top edge of pink carrier where head-end guide would be is covered by dark strap and pink surface, no blue plastic guide clearly visible",
+    "no_twist": "dark belt webbing crosses over pink carrier top and narrow strap visible near bottom right, resolution is blocky and edges of webbing are indistinct, cannot trace width between side guides",
+    "level_line": "small black window on light grey lower part of carrier contains a bright green horizontal line, line is visible against dark background",
+    "handle": "area around carrier where carry handle would be is dark and blocky, no distinct handle shape identifiable, dark strap across top may be belt not handle"
+   }
+  }
+ ]
+}
