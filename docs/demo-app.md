@@ -1,14 +1,18 @@
 # Public demo app
 
-A phone-first web chat where a visitor talks to the real agent core about Demo Baby, a simulated baby. Built during the Meta hackathon. Live at https://baby.bygmv.com since Oct 28 2026.
+A phone-first web chat where a visitor talks to the real agent core about Theo, a simulated baby boy a few weeks old, the same baby as the story. Nothing on the page is a real child. Built during the Meta hackathon. Live at https://baby.bygmv.com since Oct 28 2026.
 
 ![The demo at 390x844](../results/demo-app/demo-390x844.png)
 
 ## What a visitor can do
 
-- Ask about the baby's day: "when did she last eat?", "how much did she drink today?". Answers come from the log through the same `baby_summary` and `read_baby_log` tools the family agent uses.
-- Add entries by text: "bottle 120 ml", "wet and dirty diaper", "she just fell asleep". Fix or remove them: "that was 90 ml, fix it", "delete the last one". A value no real entry can have, like 9000 ml, a feed longer than 120 min, a sleep longer than 14 hours or a time in the future, is asked about and never logged.
-- See what the agent says first: the next feed, the night summary and who is next on duty, computed by the daily rhythm engine from the visitor's own log.
+- Ask about the baby's day: "when did he last eat?", "how much did he drink today?". Answers come from the log through the same `baby_summary` and `read_baby_log` tools the family agent uses.
+- Ask "why is he crying?" (a chip). The answer is the likely reason from the log (hungry, tired, a diaper, or no clear reason), the same path as the families bot, with no brain call, and always says it is a guess, never a diagnosis. A red flag ("crying and not breathing") still gets the emergency line, and crying with a health question gets the refusal.
+- Add entries by text: "bottle 120 ml", "wet and dirty diaper", "he just fell asleep". Only what the visitor said is kept: "bottle 120 ml just now" has no milk type, no start and no length, at the time of the message. Fix or remove them: "that was 90 ml, fix it", "delete the last one". A value no real entry can have, like 9000 ml, a feed longer than 120 min, a sleep longer than 14 hours or a time in the future, is asked about and never logged.
+- See what the agent says first: the next feed, the night summary and who is next on duty, computed by the daily rhythm engine from the visitor's own log. During the night (22:00 to 06:00) the summary is the night in progress ("Tonight so far, since Wed 28 22:00"), in the day it is the night that just ended with both dates. Ask "who is up next tonight?" and the agent answers from the `night_rota` tool, which reads the same wake-ups as the panel, so the two always agree.
+- Prep mode, the "Before he arrives" tab: the before-he-arrives tools (docs/before-he-arrives.md) on simulated lists, with a due date 47 days from today so the countdown and the list dates always look current. "Show the hospital bag list", "what is next before he arrives?", "where should the crib go?", "we packed the chargers". A message about the hospital bag, the nursery, the crib, the car seat or the due date goes to prep mode from either tab. Real names in the lists read Parent A and Parent B, house device ids are removed, an appointment with an address is not kept, and copying a list to Home Assistant is not in the demo at all.
+- Spanish: with a Spanish browser the page is `es-UY` with voseo chips ("Mamadera 120 ml", "¿Por qué llora?"). Every message is answered in its own language: the refusal, the emergency line, the edit reply ("nono eran 70" gets "Corregí la mamadera de las 01:07: 90 ml → 70 ml."), the cry reason and the night summary. The prep list items stay in English, the agent answers about them in Spanish.
+- A link to the page shows a preview card: Open Graph and Twitter tags with the title "Theo's agent, a simulated baby" and a 1200 x 630 card rendered from `parenting_agent/demo/og.svg` (`rsvg-convert -w 1200 -h 630 og.svg -o og.png`), served at `/og.png`.
 - See what the agent would do in the house. House tools are simulated and every action is labelled "Simulated house" in the chat. The speakers say only fixed sentences ("Could someone bring a clean diaper and wipes, please?"), never free text, so a code typed in a message is never read aloud. Calling the partner shows "Waits for your yes" and the reply names exactly what waits. A yes runs it, simulated, only when it answers that question within 3 minutes. Any other message cancels it, so a stale "ok" runs nothing.
 - Health questions get the kind refusal without a brain call. A health message that reports something to keep, a dose already given or a milestone, is logged as a note in the visitor's words, and only the advice part is refused. The reply is built from the log, never from the brain's words.
 - The demo keeps no facts about a visitor. There is no remember tool, so a real name is never saved as the baby's name.
@@ -18,8 +22,8 @@ A phone-first web chat where a visitor talks to the real agent core about Demo B
 | Part | Code |
 |---|---|
 | Settings, the environment scrub, reading only the brain key | `parenting_agent/demo/settings.py` |
-| Demo Baby's log, the simulated week moved to today, in memory | `parenting_agent/demo/babylog.py` |
-| One agent per visitor, spend cap, caps, simulated house tools | `parenting_agent/demo/app.py` |
+| Theo's log, the simulated week moved to today, in memory | `parenting_agent/demo/babylog.py` |
+| One agent per visitor, spend cap, caps, simulated house tools, the cry reason, the night rota, prep mode, Spanish | `parenting_agent/demo/app.py` |
 | Web server and page, standard library only | `parenting_agent/demo/server.py`, `page.html` |
 | Session records and the export | `parenting_agent/demo/records.py`, `export_sessions.py` |
 | Docker files and the wall check | `deploy/demo/` |

@@ -264,7 +264,7 @@ class Http(unittest.TestCase):
     def test_page_sets_a_random_cookie_and_rows_hash_it(self):
         res, page = self.request("GET", "/")
         self.assertEqual(res.status, 200)
-        self.assertIn(b"Demo Baby", page)
+        self.assertIn(b"Theo", page)
         token = self.cookie(res)
         self.assertRegex(token, r"^[A-Za-z0-9_-]{32,64}$")
         self.assertIn("HttpOnly", res.headers.get("Set-Cookie"))

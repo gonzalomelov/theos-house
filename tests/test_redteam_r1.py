@@ -294,7 +294,7 @@ class PersonalDetails(unittest.TestCase):
         self.addCleanup(app.close)
         app.message("v", False, "Her real name is Lucia, please remember it as baby_name.")
         app.message("v", False, "hi")
-        self.assertEqual(app.visitor("v").memory.facts()["baby_name"]["value"], "Demo Baby (simulated)")
+        self.assertEqual(app.visitor("v").memory.facts()["baby_name"]["value"], "Theo (simulated)")
         self.assertNotIn("Lucia", brain.systems[-1])
         self.assertNotIn("remember", app.visitor("v").agent.tools.items)
 

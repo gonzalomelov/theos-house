@@ -5,7 +5,22 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
 <link rel="icon" href="data:,">
-<title>Parenting Agent Demo</title>
+<title>Theo's agent, a simulated baby</title>
+<meta name="description" content="Talk to the agent that keeps a simulated baby's log, says first when the next feed is, tells you why he may be crying from the log and helps you get ready before he arrives. Runs on Muse Spark Open, Meta's open model. Nothing here is a real child.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://baby.bygmv.com/">
+<meta property="og:site_name" content="baby.bygmv.com">
+<meta property="og:title" content="Theo's agent, a simulated baby">
+<meta property="og:description" content="Ask why he is crying, log a bottle, see who is up next tonight, pack the hospital bag. A live agent on Muse Spark Open, Meta's open model, with a simulated baby and a simulated house.">
+<meta property="og:image" content="https://baby.bygmv.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Theo's agent, a simulated baby: next feed, night summary and why he may be crying, from his log">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Theo's agent, a simulated baby">
+<meta name="twitter:description" content="Ask why he is crying, log a bottle, see who is up next tonight, pack the hospital bag. A live agent on Muse Spark Open, Meta's open model.">
+<meta name="twitter:image" content="https://baby.bygmv.com/og.png">
+<meta name="twitter:image:alt" content="Theo's agent, a simulated baby: next feed, night summary and why he may be crying, from his log">
 <style>
 :root {
   --bg: #f6f3ee; --card: #ffffff; --ink: #1f2328; --muted: #6b6f76; --line: #e6e0d6;
@@ -58,40 +73,95 @@ button:disabled { opacity: .5; }
 footer { font-size: 11px; color: var(--muted); padding: 0 16px 10px; display: flex; justify-content: space-between; gap: 8px; }
 footer button { font: inherit; background: none; border: 0; color: var(--muted); text-decoration: underline; padding: 0; cursor: pointer; }
 .typing { color: var(--muted); font-size: 13px; align-self: flex-start; }
+.tabs { display: flex; gap: 6px; padding: 4px 16px 2px; }
+.tab { flex: 1; font: inherit; font-size: 14px; font-weight: 600; border: 1px solid var(--line); background: var(--card); color: var(--muted);
+       border-radius: 999px; padding: 7px 10px; cursor: pointer; }
+.tab[aria-selected="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+[hidden] { display: none !important; }
+.prep-items { margin: 4px 0 0; padding-left: 18px; font-size: 13px; }
 </style>
 </head>
 <body>
 <header>
-  <h1>Demo Baby <span class="badge">SIMULATED</span></h1>
-  <p class="sub">Talk to a persistent agent for new parents. The baby, her week and the house are simulated. Your copy is only yours. Your messages go to the AI model for an answer: Muse Spark Open, Meta's open model, on Baseten, or Claude only if that call fails. On this server they stay in memory only, never on disk, for at most 6 hours. Please do not type real names or personal details.</p>
+  <h1>Theo <span class="badge" data-es="BEBÉ SIMULADO">SIMULATED BABY</span></h1>
+  <p class="sub" data-es="Hablá con un agente persistente para padres primerizos. Theo es un bebé simulado, no un niño real: su semana, sus padres y la casa son simulados. Tu copia es solo tuya. Tus mensajes van al modelo de IA para responder: Muse Spark Open, el modelo abierto de Meta, en Baseten, o Claude solo si esa llamada falla. En este servidor quedan solo en memoria, nunca en disco, por 6 horas como máximo. Por favor no escribas nombres reales ni datos personales.">Talk to a persistent agent for new parents. Theo is a simulated baby boy, not a real child: his week, his parents and the house are simulated. Your copy is only yours. Your messages go to the AI model for an answer: Muse Spark Open, Meta's open model, on Baseten, or Claude only if that call fails. On this server they stay in memory only, never on disk, for at most 6 hours. Please do not type real names or personal details.</p>
 </header>
-<section class="cards" aria-label="What the agent says first">
-  <div class="card"><div class="label">Next feed</div><div class="big" id="nf-at">--:--</div><div class="small" id="nf-in"></div></div>
-  <div class="card"><div class="label">Next night on duty</div><div class="big" id="duty" style="font-size:20px">-</div><div class="small">fair split of wake-ups</div></div>
-  <div class="card wide"><div class="label">Night summary, said in the morning</div><div class="night" id="night">Loading...</div></div>
+<div class="tabs" role="tablist">
+  <button class="tab" role="tab" id="tab-baby" aria-selected="true" type="button" data-es="Sus primeras semanas">His first weeks</button>
+  <button class="tab" role="tab" id="tab-prep" aria-selected="false" type="button" data-es="Antes de que nazca">Before he arrives</button>
+</div>
+<section class="cards" id="cards-baby" aria-label="What the agent says first">
+  <div class="card"><div class="label" data-es="Próxima toma">Next feed</div><div class="big" id="nf-at">--:--</div><div class="small" id="nf-in"></div></div>
+  <div class="card"><div class="label" data-es="A quién le toca de noche">Next night on duty</div><div class="big" id="duty" style="font-size:20px">-</div><div class="small" data-es="reparto justo de despertares">fair split of wake-ups</div></div>
+  <div class="card wide"><div class="label" data-es="Resumen de la noche">Night summary</div><div class="night" id="night">Loading...</div></div>
 </section>
-<details><summary>Latest in the log</summary><ul class="log" id="log"></ul></details>
+<section class="cards" id="cards-prep" aria-label="Prep mode" hidden>
+  <div class="card wide"><div class="label" data-es="Cuenta regresiva, fecha simulada">Countdown, simulated due date</div><div class="night" id="countdown">-</div></div>
+  <div class="card wide"><div class="label" data-es="Lo que sigue">Next up</div><ul class="prep-items" id="prep-next"></ul><div class="small" id="prep-lists"></div></div>
+</section>
+<details id="log-box"><summary data-es="Lo último en el registro">Latest in the log</summary><ul class="log" id="log"></ul></details>
 <main id="thread" aria-live="polite">
-  <div class="msg agent">Hi, I keep Demo Baby's log and speak first when it helps. Ask me about her day, or tell me what just happened, like "bottle 120 ml".</div>
+  <div class="msg agent" data-es="Hola, llevo el registro de Theo y hablo primero cuando ayuda. Preguntame por su día o por qué llora, o contame qué pasó recién, por ejemplo &quot;mamadera 120 ml&quot;.">Hi, I keep Theo's log and speak first when it helps. Ask me about his day or why he is crying, or tell me what just happened, like "bottle 120 ml".</div>
 </main>
-<div class="chips" id="chips">
-  <button class="chip">When did she last eat?</button>
-  <button class="chip">Bottle 120 ml</button>
-  <button class="chip">How much did she drink today?</button>
-  <button class="chip">She just fell asleep</button>
-  <button class="chip">Wet and dirty diaper</button>
-  <button class="chip">Night feed now, it's dark</button>
+<div class="chips" id="chips-baby">
+  <button class="chip" data-es="¿Por qué llora?">Why is he crying?</button>
+  <button class="chip" data-es="¿Cuándo comió por última vez?">When did he last eat?</button>
+  <button class="chip" data-es="Mamadera 120 ml">Bottle 120 ml</button>
+  <button class="chip" data-es="¿A quién le toca esta noche?">Who is up next tonight?</button>
+  <button class="chip" data-es="¿Cuánto tomó hoy?">How much did he drink today?</button>
+  <button class="chip" data-es="Se acaba de dormir">He just fell asleep</button>
+  <button class="chip" data-es="Pañal mojado y sucio">Wet and dirty diaper</button>
+  <button class="chip" data-es="Toma de noche ahora, está oscuro">Night feed now, it's dark</button>
+</div>
+<div class="chips" id="chips-prep" hidden>
+  <button class="chip" data-es="Mostrame la lista del bolso para el sanatorio">Show the hospital bag list</button>
+  <button class="chip" data-es="¿Qué sigue antes de que nazca?">What is next before he arrives?</button>
+  <button class="chip" data-es="¿Dónde va la cuna?">Where should the crib go?</button>
+  <button class="chip" data-es="Ya guardamos los cargadores en el bolso">We packed the chargers</button>
+  <button class="chip" data-es="¿Cuántos días faltan?">How many days left?</button>
 </div>
 <form id="form" autocomplete="off">
-  <input id="text" maxlength="300" placeholder="Type to the agent" aria-label="Message">
-  <button class="send" id="send">Send</button>
+  <input id="text" maxlength="300" placeholder="Type to the agent" aria-label="Message" data-es-placeholder="Escribile al agente">
+  <button class="send" id="send" data-es="Enviar">Send</button>
 </form>
-<footer><span id="left">Logs, reminds and alerts. Never medical advice.</span><button id="reset" type="button">Fresh demo baby</button></footer>
+<footer><span id="left" data-es="Anota, recuerda y avisa. Nunca consejo médico.">Logs, reminds and alerts. Never medical advice.</span><button id="reset" type="button" data-es="Semana simulada nueva">Fresh simulated week</button></footer>
 <script>
 const $ = (id) => document.getElementById(id);
 const NAMES = { dim_lights: "Dim lights", hold_notifications: "Hold notifications", pause_vacuum: "Pause vacuum",
                 announce: "Speaker", call_partner: "Call partner" };
 let busy = false;
+let mode = "baby";
+const LANG = /^es\b/i.test(navigator.language || "") ? "es" : "en";
+const T = {
+  en: { inAbout: (m, g) => "in about " + m + " min, every ~" + g + " min", ago: (m) => "expected " + m + " min ago",
+        left: (n) => n + " messages left. Never medical advice.", leftShort: (n) => n + " messages left.", by: "by",
+        simLists: "Simulated lists.", open: "open", thinking: "thinking...", wrong: "Something went wrong. Please try again.",
+        unreachable: "Could not reach the demo. Please try again.", resting: "The demo is resting for today. Please come back tomorrow.",
+        fresh: "A fresh copy of Theo's simulated week is ready. What would you like to know?",
+        house: "Simulated house: ", ask: "Waits for your yes: ", feed: "Feed, ", diaper: "Diaper, ", wet: "wet", dirty: "dirty",
+        and: " and ", sleep: "Sleep, " },
+  es: { inAbout: (m, g) => "en unos " + m + " min, cada ~" + g + " min", ago: (m) => "se esperaba hace " + m + " min",
+        left: (n) => "Te quedan " + n + " mensajes. Nunca consejo médico.", leftShort: (n) => "Te quedan " + n + " mensajes.", by: "antes del",
+        simLists: "Listas simuladas.", open: "pendientes", thinking: "pensando...", wrong: "Algo salió mal. Probá de nuevo.",
+        unreachable: "No pude llegar a la demo. Probá de nuevo.", resting: "La demo descansa por hoy. Volvé mañana.",
+        fresh: "Lista una copia nueva de la semana simulada de Theo. ¿Qué querés saber?",
+        house: "Casa simulada: ", ask: "Espera tu sí: ", feed: "Toma, ", diaper: "Pañal, ", wet: "mojado", dirty: "sucio",
+        and: " y ", sleep: "Sueño, " },
+}[LANG];
+if (LANG === "es") {
+  document.documentElement.lang = "es-UY";
+  for (const el of document.querySelectorAll("[data-es]")) el.textContent = el.dataset.es;
+  for (const el of document.querySelectorAll("[data-es-placeholder]")) el.placeholder = el.dataset.esPlaceholder;
+}
+
+function setMode(next) {
+  mode = next;
+  const prep = mode === "prep";
+  $("tab-baby").setAttribute("aria-selected", String(!prep));
+  $("tab-prep").setAttribute("aria-selected", String(prep));
+  $("cards-baby").hidden = prep; $("log-box").hidden = prep; $("chips-baby").hidden = prep;
+  $("cards-prep").hidden = !prep; $("chips-prep").hidden = !prep;
+}
 
 function bubble(cls, text) {
   const el = document.createElement("div");
@@ -111,7 +181,7 @@ function actions(el, list) {
     const ask = a.status !== "simulated";
     chip.className = "act" + (ask ? " ask" : "");
     const args = Object.values(a.arguments || {}).filter((v) => typeof v !== "object").join(", ");
-    chip.textContent = (ask ? "Waits for your yes: " : "Simulated house: ") + (NAMES[a.action] || a.action) + (args ? " (" + args + ")" : "");
+    chip.textContent = (ask ? T.ask : T.house) + (NAMES[a.action] || a.action) + (args ? " (" + args + ")" : "");
     box.appendChild(chip);
   }
   el.appendChild(box);
@@ -122,12 +192,22 @@ function render(state) {
   const p = state.proactive || {};
   if (p.next_feed) {
     $("nf-at").textContent = p.next_feed.at;
-    $("nf-in").textContent = p.next_feed.in_min >= 0 ? "in about " + p.next_feed.in_min + " min, every ~" + p.next_feed.gap_min + " min"
-                                                     : "expected " + (-p.next_feed.in_min) + " min ago";
+    $("nf-in").textContent = p.next_feed.in_min >= 0 ? T.inAbout(p.next_feed.in_min, p.next_feed.gap_min) : T.ago(-p.next_feed.in_min);
   }
   if (p.night_summary) {
     $("night").textContent = p.night_summary.text;
     $("duty").textContent = p.night_summary.on_duty;
+  }
+  if (state.prep) {
+    $("countdown").textContent = state.prep.countdown.charAt(0).toUpperCase() + state.prep.countdown.slice(1) + ". " + T.simLists;
+    const ul = $("prep-next");
+    ul.textContent = "";
+    for (const item of state.prep.items || []) {
+      const li = document.createElement("li");
+      li.textContent = item.text + (item.by ? " (" + T.by + " " + item.by + ")" : "");
+      ul.appendChild(li);
+    }
+    $("prep-lists").textContent = Object.values(state.prep.lists || {}).map((l) => l.title.split(",")[0] + " " + l.open + " " + T.open).join(" · ");
   }
   const log = $("log");
   log.textContent = "";
@@ -137,18 +217,18 @@ function render(state) {
     t.textContent = e.at;
     const d = e.details || {};
     let what = e.kind;
-    if (e.kind === "feeding") what = "Feed, " + (d.amount_ml ? d.amount_ml + " ml " : "") + (d.method || "");
-    if (e.kind === "diaper") what = "Diaper, " + [d.wet ? "wet" : "", d.solid ? "dirty" : ""].filter(Boolean).join(" and ");
-    if (e.kind === "sleep") what = "Sleep, " + (d.duration_min || "?") + " min";
+    if (e.kind === "feeding") what = T.feed + (d.amount_ml ? d.amount_ml + " ml " : "") + (d.method || "");
+    if (e.kind === "diaper") what = T.diaper + [d.wet ? T.wet : "", d.solid ? T.dirty : ""].filter(Boolean).join(T.and);
+    if (e.kind === "sleep") what = T.sleep + (d.duration_min || "?") + " min";
     if (e.kind === "bath" || e.kind === "note") what = d.text || e.kind;
     li.append(t, document.createTextNode(what));
     log.appendChild(li);
   }
   if (state.remaining !== undefined && state.remaining !== null) {
-    $("left").textContent = state.remaining + " messages left. Never medical advice.";
+    $("left").textContent = T.left(state.remaining);
   }
   if (state.max_input) $("text").maxLength = state.max_input;
-  if (state.resting) bubble("note", "The demo is resting for today. Please come back tomorrow.");
+  if (state.resting) bubble("note", T.resting);
 }
 
 async function api(path, body) {
@@ -166,36 +246,41 @@ async function send(text) {
   bubble("me", text);
   $("text").value = "";
   const typing = document.createElement("div");
-  typing.className = "typing"; typing.textContent = "thinking...";
+  typing.className = "typing"; typing.textContent = T.thinking;
   $("thread").appendChild(typing);
   try {
-    const { ok, data } = await api("/api/message", { text });
+    const { ok, data } = await api("/api/message", { text, mode, lang: LANG });
     typing.remove();
     if (ok) {
+      if (data.mode && data.mode !== mode) setMode(data.mode);
       const el = bubble("agent", data.reply);
       actions(el, data.actions);
       render(data);
     } else {
-      bubble("note", data.reply || "Something went wrong. Please try again.");
-      if (data.remaining !== undefined && data.remaining !== null) $("left").textContent = data.remaining + " messages left.";
+      bubble("note", data.reply || T.wrong);
+      if (data.remaining !== undefined && data.remaining !== null) $("left").textContent = T.leftShort(data.remaining);
     }
   } catch (e) {
     typing.remove();
-    bubble("note", "Could not reach the demo. Please try again.");
+    bubble("note", T.unreachable);
   }
   busy = false; $("send").disabled = false;
 }
 
 $("form").addEventListener("submit", (e) => { e.preventDefault(); send($("text").value); });
-$("chips").addEventListener("click", (e) => { if (e.target.classList.contains("chip")) send(e.target.textContent); });
+for (const id of ["chips-baby", "chips-prep"]) {
+  $(id).addEventListener("click", (e) => { if (e.target.classList.contains("chip")) send(e.target.textContent); });
+}
+$("tab-baby").addEventListener("click", () => setMode("baby"));
+$("tab-prep").addEventListener("click", () => setMode("prep"));
 $("reset").addEventListener("click", async () => {
-  const { ok, data } = await api("/api/reset", {});
-  if (!ok) { bubble("note", data.reply || "Something went wrong. Please try again."); return; }
+  const { ok, data } = await api("/api/reset", { lang: LANG });
+  if (!ok) { bubble("note", data.reply || T.wrong); return; }
   $("thread").textContent = "";
-  bubble("agent", "A fresh copy of Demo Baby's week is ready. What would you like to know?");
+  bubble("agent", T.fresh);
   render(data);
 });
-api("/api/state").then(({ data }) => render(data));
+api("/api/state?lang=" + LANG).then(({ data }) => render(data));
 </script>
 </body>
 </html>

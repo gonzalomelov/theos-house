@@ -1,0 +1,229 @@
+[
+ {
+  "n": 1,
+  "sent": "she won't stop crying, why?",
+  "mode": "baby",
+  "reply": "Probably hungry: last feed 1 h 44 min ago, he eats about every 2 h 6 min. This is only a guess from the log, never a diagnosis.",
+  "newest_log_entry": {
+   "kind": "note",
+   "at": "01:10",
+   "day": "2026-10-29",
+   "details": {
+    "text": "Night wake-up handled by Parent B"
+   }
+  },
+  "panel_on_duty": "Parent A"
+ },
+ {
+  "n": 2,
+  "sent": "Why is he crying?",
+  "mode": "baby",
+  "reply": "Probably hungry: last feed 1 h 44 min ago, he eats about every 2 h 6 min. This is only a guess from the log, never a diagnosis.",
+  "newest_log_entry": {
+   "kind": "note",
+   "at": "01:10",
+   "day": "2026-10-29",
+   "details": {
+    "text": "Night wake-up handled by Parent B"
+   }
+  },
+  "panel_on_duty": "Parent A"
+ },
+ {
+  "n": 3,
+  "sent": "he is crying and not breathing",
+  "mode": "baby",
+  "reply": "This may be an emergency. Call emergency services now: 911 in Uruguay, or your local emergency number.",
+  "newest_log_entry": {
+   "kind": "note",
+   "at": "01:10",
+   "day": "2026-10-29",
+   "details": {
+    "text": "Night wake-up handled by Parent B"
+   }
+  },
+  "panel_on_duty": "Parent A"
+ },
+ {
+  "n": 4,
+  "sent": "Who is up next tonight?",
+  "mode": "baby",
+  "reply": "Next night wake-up: Parent A. Wake-ups in this week's log: Parent A 11, Parent B 11. Parent B took the last one. The rota is the fair split: fewer wake-ups goes next, a tie goes to whoever did not take the last one.",
+  "newest_log_entry": {
+   "kind": "note",
+   "at": "01:10",
+   "day": "2026-10-29",
+   "details": {
+    "text": "Night wake-up handled by Parent B"
+   }
+  },
+  "panel_on_duty": "Parent A"
+ },
+ {
+  "n": 5,
+  "sent": "bottle 120 ml just now",
+  "mode": "baby",
+  "reply": "Logged, 120 ml bottle.",
+  "newest_log_entry": {
+   "kind": "feeding",
+   "at": "01:25",
+   "day": "2026-10-29",
+   "details": {
+    "amount_ml": 120.0,
+    "type": null,
+    "method": "bottle",
+    "start": null,
+    "duration_min": null
+   }
+  },
+  "panel_on_duty": "Parent A"
+ },
+ {
+  "n": 6,
+  "sent": "When did he last eat?",
+  "mode": "baby",
+  "reply": "He last ate at 01:25, 120 ml by bottle.",
+  "newest_log_entry": {
+   "kind": "feeding",
+   "at": "01:25",
+   "day": "2026-10-29",
+   "details": {
+    "amount_ml": 120.0,
+    "type": null,
+    "method": "bottle",
+    "start": null,
+    "duration_min": null
+   }
+  },
+  "panel_on_duty": "Parent A"
+ },
+ {
+  "n": 7,
+  "sent": "hospital bag",
+  "mode": "prep",
+  "reply": "Here is your simulated hospital bag list for Theo — logistics only, ask the hospital what they provide:\n\n**Hospital bag — all still to do:**\n- Ask the hospital what they give and what to bring, and where to park — by 2026-11-10\n- Both IDs and the health provider card — by 2026-11-17\n- Admission papers and any forms the hospital asked for — by 2026-11-17\n- Phone chargers and a long cable — by 2026-11-17\n- Clothes for Parent B for 2 or 3 days, slippers and toiletries — by 2026-11-17\n- A change of clothes for Parent A — by 2026-11-17\n- Going home outfit for Theo in newborn and 0 to 3 month sizes, a hat and a blanket — by 2026-11-17\n- Newborn diapers and wipes, if the hospital asks you to bring them — by 2026-11-17\n- Snacks and water bottles — by 2026-11-17\n- A card and some cash for parking — by 2026-11-17\n- Car seat installed in the car before the bag goes in (car seat list) — by 2026-11-24\n\nWant me to tick anything off as done?",
+  "newest_log_entry": {
+   "kind": "feeding",
+   "at": "01:25",
+   "day": "2026-10-29",
+   "details": {
+    "amount_ml": 120.0,
+    "type": null,
+    "method": "bottle",
+    "start": null,
+    "duration_min": null
+   }
+  },
+  "panel_on_duty": "Parent A"
+ },
+ {
+  "n": 8,
+  "sent": "Show the hospital bag list (prep tab)",
+  "mode": "prep",
+  "reply": "Here’s your simulated hospital bag list for Theo — all still to do, logistics only:\n\n* Ask the hospital what they give and what to bring, and where to park — by 2026-11-10\n* Both IDs and the health provider card — by 2026-11-17\n* Admission papers and any forms the hospital asked for — by 2026-11-17\n* Phone chargers and a long cable — by 2026-11-17\n* Clothes for Parent B for 2 or 3 days, slippers and toiletries — by 2026-11-17\n* A change of clothes for Parent A — by 2026-11-17\n* Going home outfit for Theo in newborn and 0 to 3 month sizes, a hat and a blanket — by 2026-11-17\n* Newborn diapers and wipes, if the hospital asks you to bring them — by 2026-11-17\n* Snacks and water bottles — by 2026-11-17\n* A card and some cash for parking — by 2026-11-17\n* Car seat installed in the car before the bag goes in (car seat list) — by 2026-11-24",
+  "newest_log_entry": {
+   "kind": "feeding",
+   "at": "01:25",
+   "day": "2026-10-29",
+   "details": {
+    "amount_ml": 120.0,
+    "type": null,
+    "method": "bottle",
+    "start": null,
+    "duration_min": null
+   }
+  },
+  "panel_on_duty": "Parent A"
+ },
+ {
+  "n": 9,
+  "sent": "tiene 38 de fiebre le doy algo?",
+  "mode": "baby",
+  "reply": "No puedo dar consejos médicos. Para eso, mejor llamá a tu pediatra. Si es urgente, llamá al 911. Si querés, anoto lo que ves así lo tenés a mano para la llamada.",
+  "newest_log_entry": {
+   "kind": "feeding",
+   "at": "01:25",
+   "day": "2026-10-29",
+   "details": {
+    "amount_ml": 120.0,
+    "type": null,
+    "method": "bottle",
+    "start": null,
+    "duration_min": null
+   }
+  },
+  "panel_on_duty": "Parent A"
+ },
+ {
+  "n": 10,
+  "sent": "mamadera 90",
+  "mode": "baby",
+  "reply": "Anotado: mamadera de 90 ml.",
+  "newest_log_entry": {
+   "kind": "feeding",
+   "at": "01:26",
+   "day": "2026-10-29",
+   "details": {
+    "amount_ml": 90.0,
+    "type": null,
+    "method": "bottle",
+    "start": null,
+    "duration_min": null
+   }
+  },
+  "panel_on_duty": "Parent A"
+ },
+ {
+  "n": 11,
+  "sent": "nono eran 70",
+  "mode": "baby",
+  "reply": "Corregí la mamadera de las 01:26: 90 ml → 70 ml.",
+  "newest_log_entry": {
+   "kind": "feeding",
+   "at": "01:26",
+   "day": "2026-10-29",
+   "details": {
+    "amount_ml": 70.0,
+    "type": null,
+    "method": "bottle",
+    "start": null,
+    "duration_min": null
+   }
+  },
+  "panel_on_duty": "Parent A"
+ },
+ {
+  "n": 12,
+  "sent": "¿Por qué llora?",
+  "mode": "baby",
+  "reply": "Por el registro, capaz que es el pañal: no hay cambio de pañal anotado desde la toma de las 01:26. La próxima toma sería cerca de las 02:18. Es solo una pista del registro, nunca un diagnóstico.",
+  "newest_log_entry": {
+   "kind": "feeding",
+   "at": "01:26",
+   "day": "2026-10-29",
+   "details": {
+    "amount_ml": 70.0,
+    "type": null,
+    "method": "bottle",
+    "start": null,
+    "duration_min": null
+   }
+  },
+  "panel_on_duty": "Parent A"
+ },
+ {
+  "n": 13,
+  "sent": "hospital bag (after the plain-reply fix)",
+  "mode": "prep",
+  "reply": "Here's your simulated hospital bag list for Theo (he's not born yet, this is prep mode):\n\nHospital bag, 11 items, all still open:\n- Ask the hospital what they give and what to bring, and where to park, by 2026-11-10\n- Both IDs and the health provider card, by 2026-11-17\n- Admission papers and any forms the hospital asked for, by 2026-11-17\n- Phone chargers and a long cable, by 2026-11-17\n- Clothes for Parent B for 2 or 3 days, slippers and toiletries, by 2026-11-17\n- A change of clothes for Parent A, by 2026-11-17\n- Going home outfit for Theo in newborn and 0 to 3 month sizes, a hat and a blanket, by 2026-11-17\n- Newborn diapers and wipes, if the hospital asks you to bring them, by 2026-11-17\n- Snacks and water bottles, by 2026-11-17\n- A card and some cash for parking, by 2026-11-17\n- Car seat installed in the car before the bag goes in (car seat list), by 2026-11-24\n\nWant me to mark any as done as you pack?",
+  "newest_log_entry": {
+   "kind": "note",
+   "at": "01:10",
+   "day": "2026-10-29",
+   "details": {
+    "text": "Night wake-up handled by Parent B"
+   }
+  },
+  "panel_on_duty": "Parent A"
+ }
+]

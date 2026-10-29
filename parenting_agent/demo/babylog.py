@@ -1,8 +1,8 @@
 """The demo baby's log: the simulated week, moved to the visitor's days, kept in memory for one visitor.
 
 Every visitor gets their own DemoBabyLog built from the same deterministic week (simweek.generate), with the
-last simulated day placed on today and everything after the current time dropped, so "when did she last eat?"
-has a fresh answer. Nothing here talks to Baby Buddy or any server. Rows keep the simulated week's shape
+last simulated day placed on today and everything after the current time dropped, so "when did he last eat?"
+has a fresh answer. The simulated baby is Theo, a boy a few weeks old. Nothing here talks to Baby Buddy or any server. Rows keep the simulated week's shape
 (the rhythm engine reads them as they are) and the agent sees them through the same view as BabyBuddyLog.
 """
 import datetime
@@ -13,7 +13,6 @@ from simweek import generate as simweek
 from ..agent.memory import LOG_KINDS, BabyLog, parse_time
 
 TZ = simweek.TZ
-DEFAULT_FEED_MINUTES = 15
 MAX_ADDED = 300
 SIM_PREFIX = "[simulated] "
 
@@ -41,8 +40,11 @@ def view(row):
     """A simulated-week row as the agent's log entry: {ts, kind, details}, the same shape BabyBuddyLog returns."""
     kind = row["kind"]
     if kind == "feeding":
+        # A feed a visitor logged without a start or a length keeps both unknown, the same as an unnamed milk type.
+        timed = row.get("timed", True)
         details = {"amount_ml": row.get("amount"), "type": row.get("type"), "method": row.get("method"),
-                   "start": row["start"], "duration_min": minutes_between(row["start"], row["end"])}
+                   "start": row["start"] if timed else None,
+                   "duration_min": minutes_between(row["start"], row["end"]) if timed else None}
         return {"id": row["id"], "kind": "feeding", "ts": row["end"], "details": details}
     if kind == "change":
         details = {"wet": row.get("wet"), "solid": row.get("solid"), "color": row.get("color") or None}
@@ -92,11 +94,18 @@ class DemoBabyLog(BabyLog):
         self.check_bounds(kind, details, ts)
         when = self.at_or_before_now(ts or details.get("end") or details.get("time"))
         if kind == "feeding":
+            # Only what the parent said: no milk type, start or length is made up. A feed with neither a start nor a
+            # length is kept at the time of the message, with its start and length unknown.
             method = details.get("method") or "bottle"
-            milk = details.get("type") or ("breast milk" if "breast" in method else "formula")
-            length = float(details.get("duration_min") or DEFAULT_FEED_MINUTES)
-            start = self.at_or_before_now(details["start"]) if details.get("start") else when - datetime.timedelta(minutes=length)
-            row = {"kind": "feeding", "start": iso(start), "end": iso(when), "type": milk, "method": method, "notes": ""}
+            milk = details.get("type") or ("breast milk" if "breast" in method else None)
+            if details.get("start"):
+                start = self.at_or_before_now(details["start"])
+            elif details.get("duration_min"):
+                start = when - datetime.timedelta(minutes=float(details["duration_min"]))
+            else:
+                start = when
+            row = {"kind": "feeding", "start": iso(start), "end": iso(when), "type": milk, "method": method, "notes": "",
+                   "timed": bool(details.get("start") or details.get("duration_min"))}
             if details.get("amount_ml") is not None:
                 row["amount"] = float(details["amount_ml"])
             return self._append(row)
@@ -117,7 +126,7 @@ class DemoBabyLog(BabyLog):
             start, end = self.at_or_before_now(details["start"]), self.at_or_before_now(details["end"])
         elif action == "end" or (details.get("end") and not details.get("start")):
             if self.sleep_started is None:
-                raise ValueError("no sleep was started, tell me when she fell asleep")
+                raise ValueError("no sleep was started, tell me when he fell asleep")
             start, end, self.sleep_started = self.sleep_started, when, None
         else:
             self.sleep_started = when
@@ -155,6 +164,7 @@ class DemoBabyLog(BabyLog):
             end = self.at_or_before_now(ts) if ts else parse_time(row["end"])
             if new.get("duration_min") is not None:
                 start = end - datetime.timedelta(minutes=float(new["duration_min"]))
+                changed["timed"] = True
             else:
                 start = parse_time(row["start"]) + (end - parse_time(row["end"]))
             changed.update(start=iso(start), end=iso(end))

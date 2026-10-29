@@ -85,7 +85,7 @@ HEALTH = re.compile(r"\b(can i|could i|should i|is it ok|is it safe|safe to|pued
                     r"no (hizo|ha hecho) (caca|pis)|in \d+ days|\d+ d[ií]as sin|hace \d+ d[ií]as)\b", re.I)
 # A message that corrects or removes an entry already in the log.
 EDIT = re.compile(r"\b(perd[oó]n|correg\w*|corrij\w*|cambi[aá](la|lo)?|borr[aá](la|lo)?|elimin[aá](la|lo)?|sac[aá](la|lo)|"
-                  r"me equivoqu[eé]|no eran?|eran? \d+ no|fue de \d+|fue \d+|(dos|2) veces|sin querer|duplicad\w*|repetid\w*|"
+                  r"me equivoqu[eé]|no eran?|nono|eran? \d+(?! *(mamaderas|tomas|pa[ñn]ales))|fue de \d+|fue \d+|(dos|2) veces|sin querer|duplicad\w*|repetid\w*|"
                   r"(it|that) was \d+|was \d+ not|not \d+|delete|remove|undo|wrong|mistake|sent (it )?twice|twice by|"
                   r"correct (it|that)|fix (it|that)|change (it|that))\b", re.I)
 # The parent's answer to "did you send it twice or were there two bottles?"

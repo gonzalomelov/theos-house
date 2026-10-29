@@ -1,0 +1,68 @@
+{
+ "proactive": {
+  "next_feed": {
+   "at": "02:18",
+   "in_min": 52,
+   "gap_min": 52,
+   "text": "Next feed around 02:18, in about 52 min. Feeds have been about 52 min apart.",
+   "house": "dim_lights"
+  },
+  "night_summary": {
+   "text": "Esta noche hasta ahora, desde mié 28 22:00: 3 tomas a las 23:42, 01:25, 01:26, sueño más largo 1.1 h. Despertares: Parent A 1, Parent B 1. Le toca: Parent A. Próxima toma cerca de las 02:18.",
+   "on_duty": "Parent A"
+  },
+  "unusual": [
+   "Mon 26: 12.3 h of sleep in total, less than the usual 14.8 h.",
+   "Wed 28: feeds came 1 h 27 min apart around 01:37, usually at least 2 h 06 min."
+  ]
+ },
+ "prep": {
+  "countdown": "unos 47 días para la fecha de parto, 15 de dic (estimada)",
+  "items": [
+   {
+    "list": "car_seat",
+    "id": "model",
+    "text": "Check the Litetrax box carries the i-Snug 2 carrier (EU and NZ) and not the Gemm (US): the coach's profile is the i-Snug 2",
+    "by": "2026-11-04",
+    "late": false
+   },
+   {
+    "list": "car_seat",
+    "id": "buy",
+    "text": "Buy the Litetrax travel system (Parent A buys, the agent never pays)",
+    "by": "2026-11-04",
+    "late": false
+   },
+   {
+    "list": "car_seat",
+    "id": "manual",
+    "text": "Read the 'Installation without base' part of the manual: https://dl.joiebaby.com/Instruction_Manual/GL/i-Snug-2/Joie-carseat-i-snug-2-instruction-manual.pdf",
+    "by": "2026-11-05",
+    "late": false
+   }
+  ],
+  "open_total": 41,
+  "lists": {
+   "car_seat": {
+    "title": "Car seat, Joie Litetrax with the belt install",
+    "open": 10,
+    "done": 0
+   },
+   "nursery": {
+    "title": "Nursery setup",
+    "open": 12,
+    "done": 0
+   },
+   "white_noise": {
+    "title": "White noise machine, DIY",
+    "open": 8,
+    "done": 2
+   },
+   "hospital_bag": {
+    "title": "Hospital bag",
+    "open": 11,
+    "done": 0
+   }
+  }
+ }
+}

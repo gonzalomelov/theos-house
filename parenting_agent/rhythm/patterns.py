@@ -148,13 +148,21 @@ def split_nights(wake_times, parents):
     return handled
 
 
-def night_summary(entries, now, tz, parents):
-    """Summary of the last night (22:00 to 06:00 before now) plus who is on duty next and the next feed."""
+def night_summary(entries, now, tz, parents, current=False):
+    """Summary of the last night (22:00 to 06:00 before now) plus who is on duty next and the next feed.
+
+    With current, a summary asked during the night covers the night in progress up to now, and the label names both
+    dates, so a page that shows it at 01:00 never shows the night that ended a day ago."""
     local = now.astimezone(tz)
     end = local.replace(hour=NIGHT_END, minute=0, second=0, microsecond=0)
-    if local < end:
+    in_progress = current and is_night(local)
+    if in_progress and local.hour >= NIGHT_START:
+        end += datetime.timedelta(days=1)
+    elif local < end and not in_progress:
         end -= datetime.timedelta(days=1)
     start = end - datetime.timedelta(hours=24 - NIGHT_START + NIGHT_END)
+    if in_progress:
+        end = local
     in_night = [e for e in ordered(entries, now) if start <= when(e) < end]
     night_feeds = [e for e in in_night if e["kind"] == "feeding"]
     wakes = [w for w in night_wakeups(entries, tz) if start <= w["at"] < end]
@@ -164,7 +172,10 @@ def night_summary(entries, now, tz, parents):
     on_duty = next_on_duty(handled_all, parents)
     per_parent = ", ".join(f"{p} {sum(1 for w in wakes if w['parent'] == p)}" for p in parents)
     nxt = next_feed(entries, now)
-    text = (f"Night summary for {start:%a %d}: {len(night_feeds)} feeds"
+    label = (f"Tonight so far, since {start:%a %d} {start:%H:%M}" if in_progress
+             else f"Last night, {start:%a %d} to {(start + datetime.timedelta(days=1)):%a %d}" if current
+             else f"Night summary for {start:%a %d}")
+    text = (f"{label}: {len(night_feeds)} feeds"
             + (f" at {', '.join(hhmm(when(e).astimezone(tz)) for e in night_feeds)}" if night_feeds else "")
             + f", longest sleep {longest:.1f} h. Wake-ups: {per_parent}. Next on duty: {on_duty}.")
     if nxt:

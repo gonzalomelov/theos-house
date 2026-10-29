@@ -28,7 +28,6 @@ from pathlib import Path
 from ..agent import rules
 from ..agent.plugins import Plugin
 from ..agent.tools import Tool, schema
-from ..house import HomeAssistant, never_reason
 from . import lists as lists_mod
 from . import nursery
 
@@ -309,6 +308,7 @@ class Prep(Plugin):
     # Home Assistant, only with a yes
 
     def to_home_assistant(self, list):
+        from ..house import HomeAssistant, never_reason  # here, so code that never copies a list to the house never loads it
         entity = self.cfg["ha_todo"]
         items = [i for i in self.rows(list) if not i["done"]]
         held = [i for i in items if rules.holds_code(i["text"])]

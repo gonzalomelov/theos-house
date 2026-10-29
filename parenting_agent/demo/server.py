@@ -1,6 +1,6 @@
 """The demo's web server: one phone-first page and a small JSON API, on the standard library only.
 
-Routes: GET / (the page), GET /internal/<secret> (marks this browser as internal), GET /api/state, POST /api/message,
+Routes: GET / (the page), GET /og.png (the link preview card), GET /internal/<secret> (marks this browser as internal), GET /api/state, POST /api/message,
 POST /api/reset, GET /healthz. The secret is PA_DEMO_INTERNAL_SECRET. Any other /internal address is a plain 404,
 and the internal cookie is a signature of the secret, so a hand-made cookie does not count and a new secret unmarks
 every browser. Every visitor gets a random first-party cookie pa_vid, and only its sha256 is kept.
@@ -20,6 +20,7 @@ from .app import dumps
 from .records import visitor_id
 
 PAGE = Path(__file__).with_name("page.html")
+OG_IMAGE = Path(__file__).with_name("og.png")  # the link preview card, rendered from og.svg
 COOKIE = "pa_vid"
 INTERNAL_COOKIE = "pa_internal"
 COOKIE_RE = re.compile(r"^[A-Za-z0-9_-]{32,64}$")
@@ -106,13 +107,16 @@ def make_handler(app, settings):
             vid, internal, cookies = self.visitor()
             if path == "/":
                 return self.send(200, PAGE.read_bytes(), "text/html; charset=utf-8", cookies)
+            if path == "/og.png":
+                return self.send(200, OG_IMAGE.read_bytes(), "image/png")
             if internal_path and hmac.compare_digest(path.encode(), internal_path):
                 cookies = list(cookies) + [f"{INTERNAL_COOKIE}={marker}; Path=/; Max-Age={YEAR}; HttpOnly; SameSite=Lax{secure}"]
                 page = b"<!doctype html><meta name=viewport content='width=device-width'><p>This browser is marked as internal. " \
                        b"Its messages are not counted as strangers.</p><p><a href='/'>Open the demo</a></p>"
                 return self.send(200, page, "text/html; charset=utf-8", cookies)
             if path == "/api/state":
-                return self.send(200, app.state(vid, internal), cookies=cookies)
+                lang = "es" if "lang=es" in self.path.partition("?")[2].split("&") else "en"
+                return self.send(200, app.state(vid, internal, lang), cookies=cookies)
             return self.send(404, {"error": "not_found"})
 
         def read_json(self):
@@ -140,10 +144,11 @@ def make_handler(app, settings):
                 return self.send(status, {"error": "bad_request"})
             vid, internal, cookies = self.visitor()
             if path == "/api/reset":
-                status, out = app.reset(vid, internal, self.client())
+                status, out = app.reset(vid, internal, self.client(), lang="es" if body.get("lang") == "es" else "en")
                 return self.send(status, out, cookies=cookies)
-            text = body.get("text")
-            status, out = app.message(vid, internal, text if isinstance(text, str) else "", self.client())
+            text, mode, lang = body.get("text"), body.get("mode"), body.get("lang")
+            status, out = app.message(vid, internal, text if isinstance(text, str) else "", self.client(),
+                                      mode="prep" if mode == "prep" else "baby", lang="es" if lang == "es" else "en")
             return self.send(status, out, cookies=cookies)
 
         def do_PUT(self):
