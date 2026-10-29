@@ -69,6 +69,10 @@ class NightFeed(Plugin):
         self.warmer = warmer or VirtualSwitch(agent.bus, self.s["warmer_entity"], "bottle warmer",
                                               min(self.s["warmer_max_on_min"], WARMER_CAP_MIN), SHOPPING["bottle_warmer"])
         self.episode, self.done, self.last_skip = None, set(), None
+        # Set by the house brain (house_brain.py) from a checked Muse plan: {"prewarm": [moments], "on_duty": name}.
+        # With a plan the warmer goes on at the planned moments instead of the rhythm lead. The cry trigger, the
+        # warmer's hard auto off and the wind-down stay as they are. None runs the fixed rules.
+        self.plan = None
         self.lock = threading.Lock()
         self.stopped = threading.Event()
         agent.bus.subscribe(self.on_sound, ["sound"])
@@ -109,6 +113,8 @@ class NightFeed(Plugin):
             self.warmer.tick(now)
             if self.episode:
                 return self.follow(now)
+            if self.plan is not None and self.plan.get("prewarm") is not None:
+                return self.planned(now)
             nxt = self.next_night_feed(now)
             if not nxt or nxt["computed_from"][-1] in self.done:
                 return None
@@ -117,6 +123,15 @@ class NightFeed(Plugin):
             if nxt["at"] - lead <= now < nxt["at"] + late:
                 return self.prepare(now, nxt, f"night feed expected around {self.hhmm(nxt['at'])}")
             return None
+
+    def planned(self, now):
+        late = datetime.timedelta(minutes=self.s["late_window_min"])
+        for moment in self.plan.get("prewarm") or []:
+            key = f"plan@{moment.isoformat()}"
+            if key not in self.done and moment <= now < moment + late:
+                nxt = predict(self.log.entries(), now, self.s["max_gap_h"])
+                return self.prepare(now, nxt, f"Muse plan: warm at {self.hhmm(moment)}", trigger="plan", key=key)
+        return None
 
     def on_sound(self, event):
         if event.get("label") != "cry" or event.get("phase") not in ("start", "ongoing"):
@@ -165,12 +180,16 @@ class NightFeed(Plugin):
         return patterns.hhmm(moment.astimezone(self.tz))
 
     def on_duty(self, now):
+        if self.plan is not None and self.plan.get("on_duty") in self.rhythm["parents"]:
+            return self.plan["on_duty"]
         handled = [w["parent"] for w in patterns.night_wakeups(self.log.entries(), self.tz) if w["at"] < now]
         return patterns.next_on_duty(handled, self.rhythm["parents"])
 
-    def prepare(self, now, nxt, why, trigger="rhythm"):
-        key = nxt["computed_from"][-1] if nxt else f"cry@{now.isoformat()}"
+    def prepare(self, now, nxt, why, trigger="rhythm", key=None):
+        key = key or (nxt["computed_from"][-1] if nxt else f"cry@{now.isoformat()}")
         self.done.add(key)
+        if nxt and trigger == "plan":  # the rhythm lead does not prepare the same feed again after a fallback
+            self.done.add(nxt["computed_from"][-1])
         parent = self.on_duty(now)
         self.episode = {"key": key, "started": now, "expected": nxt["at"] if nxt else now, "parent": parent,
                         "reminded": False, "noise_before": None}

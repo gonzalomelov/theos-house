@@ -37,8 +37,16 @@
   "plugins": [
     "parenting_agent.agent.heartbeat:Heartbeat",
     "parenting_agent.channels.telegram:Telegram",
-    "parenting_agent.prep:Prep"
+    "parenting_agent.prep:Prep",
+    "parenting_agent.day_engine:DayEnginePlugin",
+    "parenting_agent.night_feed:NightFeed",
+    "parenting_agent.house_brain:HouseBrainPlugin"
   ],
+  "house_brain": {
+    "budget_usd": 0.5,
+    "bedtime": "20:30",
+    "explain_at": "07:30"
+  },
   "heartbeat": {
     "interval_s": 30
   },
@@ -57,7 +65,8 @@
     }
   },
   "house": {
-    "live": false
+    "live": false,
+    "ha_url": "http://relay:8123"
   },
   "voice": {
     "service": "http://pa-voice-family:8800",

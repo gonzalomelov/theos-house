@@ -133,6 +133,10 @@ The vacuum pauses and goes home when a nap starts and never starts when the run 
 python scripts/house_plan_check.py   # live and safe: reads the vacuum, dry runs pause and home, one test list item added and removed
 ```
 
+## Muse runs the house (issue #116)
+
+Muse Spark Open plans the house and plain code arms it: at bedtime, at each wake-up, after a night feed and before each predicted nap, Muse returns a plan in a strict JSON schema (who is on duty, bottle pre-warm times, floor clean and quiet door windows, a white noise boost, what to tell each parent). The schema has no device field. `parenting_agent/house_brain.py` checks each item against the clock and the safety gate, arms the day engine and the night feed, and falls back to the fixed rules on any error, logged. It re-plans at once on a long sleep, a parent asking to sleep, a dog or a visitor, posts tonight's plan to Telegram and explains the night each morning. Replayed on the simulated day and six nights, it matched the fixed rules on every safety check and passed 3 of 4 adaptation cases the fixed rules fail, see `results/muse-house/README.md`.
+
 ## The day engine: the whole house around the baby's day (issues #9 and #29)
 
 Every useful device in the house has a job: 17 devices, 38 device to job pairs, from one read-only read of all 389 Home Assistant entities on Oct 29 (`results/house-jobs/README.md`, with a list of cheap missing devices). `parenting_agent/day_engine.py` runs six routines from the log and the house state, all in dry run: nap mode for the whole house (vacuum docked and resumed after, TVs muted, Echo on do not disturb, the door as a silent push, white noise), a floor clean before tummy time that waits for Gonza's yes and never reaches a predicted nap, a morning brief on Telegram and the Echo, supplies onto the shopping list, and quick Thermomix recipes after a hard night. A simulated day with the real house as its start is in `results/house-day/README.md`.

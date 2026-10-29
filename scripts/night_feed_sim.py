@@ -73,10 +73,12 @@ def post(url, token, text):
         return json.loads(response.read())
 
 
-def run_night(rows, start, tmp, cries_on=True):
+def run_night(rows, start, tmp, cries_on=True, brain_factory=None, extra_before=()):
+    """brain_factory(agent, feed, white_noise) returns a house brain (house_brain.HouseBrain) that ticks each minute
+    before the night feed and explains the night at the end. extra_before adds log rows before the night."""
     end = start + datetime.timedelta(hours=8)
     truth = [r for r in rows if r["kind"] == "feeding" and start <= patterns.when(r) < end]
-    before = [r for r in rows if patterns.when(r) < start]
+    before = [r for r in rows if patterns.when(r) < start] + list(extra_before)
     clock = Clock(start)
     with mock.patch.object(memory_mod, "now", lambda: clock.moment.isoformat(timespec="seconds")):
         config = config_mod.load()
@@ -96,12 +98,18 @@ def run_night(rows, start, tmp, cries_on=True):
         bridge.start()
         url = f"http://127.0.0.1:{bridge.port}/ask"
         sounds.device.on("bedtime, before the night starts")
+        brain = brain_factory(agent, feed, sounds.device) if brain_factory else None
+        duty = []
+        agent.bus.subscribe(lambda e: duty.append({"at": clock.moment, "to": e["on_duty"], "rota": rota(log, clock.moment)})
+                            if e.get("step") == "prepare" else None, ["night_feed"])
         cries = {patterns.when(f) - datetime.timedelta(minutes=4): f for f in truth} if cries_on else {}
         logs = {patterns.when(f) + MINUTE: f for f in truth}
         spoken = []
         try:
             while clock.moment < end:
                 now = clock.moment
+                if brain is not None:  # the brain runs all along, so it has seen the log before a cry at this minute
+                    brain.tick(log.entries(), now, None)
                 if now in cries:
                     agent.bus.publish("sound", label="cry", phase="start", episode=len(spoken) + 1, seconds=0, source="sim")
                 feed.tick(now)
@@ -111,12 +119,22 @@ def run_night(rows, start, tmp, cries_on=True):
                     parent = (feed.episode or {}).get("parent") or feed.on_duty(now)
                     agent.baby_log.add("note", {"text": f"Night wake-up handled by {parent}"})
                 clock.moment = now + MINUTE
+            if brain is not None:
+                brain.explain(end, force=True)
         finally:
             bridge.stop()
             agent.stop()
-        history = [e for e in agent.bus.history if e["kind"] in ("night_feed", "virtual_device", "house_call", "white_noise")]
+        history = [e for e in agent.bus.history if e["kind"] in ("night_feed", "virtual_device", "house_call", "white_noise",
+                                                                 "house_plan", "house_brain_fallback", "house_explain",
+                                                                 "notify")]
         agent.close()
-    return truth, history, spoken
+    return truth, history, spoken, duty, brain
+
+
+def rota(log, moment):
+    """The parent the night rota names at a moment, from the wake-up notes in the log (the fixed rule)."""
+    handled = [w["parent"] for w in patterns.night_wakeups(log.entries(), TZ) if w["at"] < moment]
+    return patterns.next_on_duty(handled, ["Parent A", "Parent B"])
 
 
 def state_at(history, moment):
@@ -173,7 +191,7 @@ def main():
     for day in range(20, 26):
         start = datetime.datetime(2026, 10, day, 22, 0, tzinfo=TZ)
         with tempfile.TemporaryDirectory() as tmp:
-            truth, history, spoken = run_night(rows, start, tmp, cries_on=not args.no_cry)
+            truth, history, spoken, _, _ = run_night(rows, start, tmp, cries_on=not args.no_cry)
         feeds = summarize(truth, history)
         nights.append({"night": f"Oct {day} to {day + 1}", "feeds": feeds, "voice": spoken,
                        "prepares": sum(1 for e in history if e["kind"] == "night_feed" and e["step"] == "prepare"),

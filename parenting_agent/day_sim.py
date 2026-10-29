@@ -124,26 +124,42 @@ def asleep(entries, t):
     return any(e["kind"] == "sleep" and parse(e["start"]) <= t < parse(e["end"]) for e in entries if e.get("end"))
 
 
-def simulate_day(start=None, end=None, yes_after_min=2, house_start=None):
-    """Runs the day minute by minute. Returns the timeline rows, the bus and the checks."""
+def simulate_day(start=None, end=None, yes_after_min=2, house_start=None, entries=None, brain_factory=None, events=None,
+                 script_fn=None):
+    """Runs the day minute by minute. Returns the timeline rows, the bus and the checks.
+
+    brain_factory(bus, engine, white_noise) returns a house brain (house_brain.HouseBrain) that ticks each minute
+    before the engine, events maps a minute to bus events to publish then (kind, fields), script_fn replaces the
+    scripted people."""
     start = start or DAY
     end = end or at(1, 7, 0)
-    entries = day_entries()
+    entries = entries if entries is not None else day_entries()
+    events = events or {}
+    script_fn = script_fn or script
     house = SimHouse(house_start if house_start is not None else json.loads(HOUSE_START.read_text()))
     bus = Bus()
     writer = DayWriter(bus, client=None, live=False, mirror=house)
     white = SimulatedWhiteNoise(bus)
     engine = DayEngine(bus, writer, {"utc_offset_h": -3, "supplies": {}}, meals.FixtureRecipes(RECIPES), white)
+    clock = [start]
+    bus.subscribe(lambda e: e.__setitem__("sim_at", clock[0].isoformat()))
+    brain = brain_factory(bus, engine, white) if brain_factory else None
     rows, yes_at = [], {}
     stats = {"vacuum_cleaning_while_asleep_min": 0, "tv_unmuted_while_asleep_min": 0, "white_noise_max_db": 0.0,
              "echo_dnd_off_while_asleep_min": 0, "live_writes": 0}
     t = start
     while t < end:
-        scripted = script(t)
+        clock[0] = t
+        scripted = script_fn(t)
         if scripted:
             scripted[1](house.state)
             rows.append({"at": t, "routine": "house", "what": scripted[0]})
         before = len(bus.history)
+        for kind, fields in events.get(t, ()):
+            bus.publish(kind, **fields)
+            rows.append({"at": t, "routine": "house", "what": f"{kind} {fields.get('label', '')}".strip()})
+        if brain is not None:
+            brain.tick(entries, t, house.state)
         engine.tick(entries, t, house.state)
         house.state["door"] = []
         for event in list(bus.history)[before:]:
@@ -168,11 +184,16 @@ def simulate_day(start=None, end=None, yes_after_min=2, house_start=None):
     stats["dry_writes"] = sum(1 for e in bus.history if e["kind"] == "house_dry")
     stats["cap_db"] = CRIB_CAP_DB
     stats["sleeps_in_day"] = sum(1 for e in entries if e["kind"] == "sleep" and start <= parse(e["start"]) < end)
-    return {"rows": rows, "bus": bus, "stats": stats, "house": house, "engine": engine, "entries": entries}
+    return {"rows": rows, "bus": bus, "stats": stats, "house": house, "engine": engine, "entries": entries, "brain": brain}
 
 
 def describe(event, t):
     kind = event["kind"]
+    if kind == "house_plan":
+        return [{"at": t, "routine": "house_brain", "what": f"Muse plan {'armed' if event['accepted'] else 'refused'} "
+                 f"({event['trigger']})", "detail": event.get("plan") or {"errors": event.get("errors")}}]
+    if kind == "house_brain_fallback":
+        return [{"at": t, "routine": "house_brain", "what": "fallback to the fixed routines", "detail": event["reason"]}]
     if kind == "routine":
         detail = {k: v for k, v in event.items() if k not in ("kind", "t", "ts", "unix", "name", "trigger", "step", "at")}
         if event["name"] == "nap_mode" and event["step"] in ("on", "off"):

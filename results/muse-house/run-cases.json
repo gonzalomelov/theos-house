@@ -1,0 +1,1161 @@
+{
+ "model": "meta-models/muse-spark-open-1026",
+ "host": "inference.baseten.co",
+ "budget_usd": 0.3,
+ "runs": [
+  {
+   "cases": {
+    "long_nap": {
+     "check": "a floor clean while he is awake before tummy time, and 0 vacuum minutes during sleep",
+     "floor_cleans_while_awake": 0,
+     "vacuum_cleaning_while_asleep_min": 0,
+     "pass": false,
+     "plans": [
+      {
+       "at": "11:11",
+       "trigger": "wake_up",
+       "accepted": true,
+       "plan": {
+        "on_duty": "Parent A",
+        "messages": [
+         {
+          "to": "Parent A",
+          "text": "On duty tonight. Floor clean window 11:15-12:00. Bottle warmer 21:15. Door quiet 15:30-17:30 for Grandma visit."
+         },
+         {
+          "to": "Parent B",
+          "text": "Floor clean window 11:15-12:00. Door quiet 15:30-17:30 for Grandma visit 16:00."
+         }
+        ],
+        "summary": "Floor clean 11:15-12:00 before nap and tummy time, door quiet 15:30-17:30 for Grandma visit during nap, bottle warmer 21:15 for night feed, Parent A on duty by rota.",
+        "why_changed": "",
+        "floor_clean": [
+         {
+          "start": "11:15",
+          "end": "12:00",
+          "why": "day window before next nap 12:08-13:49 and before tummy time 14:35"
+         }
+        ],
+        "bottle_prewarm": [
+         {
+          "start": "21:15",
+          "end": "",
+          "why": "night window before predicted sleep end 21:43"
+         }
+        ],
+        "door_quiet": [
+         {
+          "start": "15:30",
+          "end": "17:30",
+          "why": "Grandma visits 16:00 overlapping nap 14:46-16:27"
+         }
+        ],
+        "white_noise_boost": []
+       }
+      },
+      {
+       "at": "11:53",
+       "trigger": "before_nap",
+       "accepted": true,
+       "plan": {
+        "on_duty": "Parent A",
+        "messages": [
+         {
+          "to": "Parent A",
+          "text": "On duty tonight. Floor clean 13:49-14:30. Door quiet 15:30-17:30 for Grandma visit 16:00. Bottle warmer 21:15."
+         },
+         {
+          "to": "Parent B",
+          "text": "Floor clean 13:49-14:30. Door quiet 15:30-17:30 for Grandma visit 16:00."
+         }
+        ],
+        "summary": "Floor clean 13:49-14:30 between naps before tummy time 14:35, door quiet 15:30-17:30 for Grandma visit 16:00 during nap, bottle warmer 21:15 for night feed, Parent A on duty by rota.",
+        "why_changed": "Floor clean moved to 13:49-14:30 because nap is predicted 12:08-13:49 leaving no 41-minute window before it.",
+        "floor_clean": [
+         {
+          "start": "13:49",
+          "end": "14:30",
+          "why": "day window between nap 12:08-13:49 and nap 14:46-16:27 finishing before tummy time 14:35"
+         }
+        ],
+        "bottle_prewarm": [
+         {
+          "start": "21:15",
+          "end": "",
+          "why": "night window before predicted sleep end 21:43"
+         }
+        ],
+        "door_quiet": [
+         {
+          "start": "15:30",
+          "end": "17:30",
+          "why": "Grandma visits 16:00 overlapping nap 14:46-16:27"
+         }
+        ],
+        "white_noise_boost": []
+       }
+      },
+      {
+       "at": "14:18",
+       "trigger": "adapt",
+       "accepted": true,
+       "plan": {
+        "on_duty": "Parent A",
+        "messages": [
+         {
+          "to": "Parent A",
+          "text": "On duty tonight. Floor clean moved to 17:04-17:45. Door quiet 15:30-17:30 for Grandma visit 16:00. Bottle warmer 21:15."
+         },
+         {
+          "to": "Parent B",
+          "text": "Floor clean moved to 17:04-17:45. Door quiet 15:30-17:30 for Grandma visit 16:00."
+         }
+        ],
+        "summary": "Floor clean 17:04-17:45 between naps after the extended nap 11:57-14:23, door quiet 15:30-17:30 for Grandma visit 16:00 during nap, bottle warmer 21:15 for night feed, Parent A on duty by rota.",
+        "why_changed": "Nap 11:57 is ongoing to 14:23, 40 minutes longer than usual, so floor clean 13:49-14:30 now overlaps sleep and was moved to 17:04-17:45.",
+        "floor_clean": "fixed rule",
+        "bottle_prewarm": [
+         {
+          "start": "21:15",
+          "end": "",
+          "why": "night window before predicted sleep end 22:27"
+         }
+        ],
+        "door_quiet": [
+         {
+          "start": "15:30",
+          "end": "17:30",
+          "why": "Grandma visits 16:00 overlapping nap 15:23-17:04"
+         }
+        ],
+        "white_noise_boost": []
+       }
+      },
+      {
+       "at": "14:18",
+       "trigger": "adapt",
+       "fallback": "floor_clean 17:04-17:45 overlaps the predicted nap 15:23-17:04"
+      },
+      {
+       "at": "14:34",
+       "trigger": "wake_up",
+       "accepted": true,
+       "plan": {
+        "on_duty": "Parent A",
+        "messages": [
+         {
+          "to": "Parent A",
+          "text": "On duty tonight. Floor clean 17:13-17:54 between naps. Door quiet 15:30-17:30 for Grandma visit 16:00. Bottle warmer 21:15."
+         },
+         {
+          "to": "Parent B",
+          "text": "Floor clean 17:13-17:54 between naps. Door quiet 15:30-17:30 for Grandma visit 16:00."
+         }
+        ],
+        "summary": "Floor clean 17:13-17:54 between naps after Grandma visit, door quiet 15:30-17:30 for 16:00 visit during nap, bottle warmer 21:15, Parent A on duty by rota.",
+        "why_changed": "",
+        "floor_clean": [
+         {
+          "start": "17:13",
+          "end": "17:54",
+          "why": "between predicted naps 15:31-17:12 and 18:09-19:50, before evening floor time"
+         }
+        ],
+        "bottle_prewarm": [
+         {
+          "start": "21:15",
+          "end": "",
+          "why": "night window before predicted sleep 20:47-22:28"
+         }
+        ],
+        "door_quiet": [
+         {
+          "start": "15:30",
+          "end": "17:30",
+          "why": "Grandma visits 16:00 overlapping nap 15:31-17:12"
+         }
+        ],
+        "white_noise_boost": []
+       }
+      },
+      {
+       "at": "15:16",
+       "trigger": "before_nap",
+       "accepted": true,
+       "plan": {
+        "on_duty": "Parent A",
+        "messages": [
+         {
+          "to": "Parent A",
+          "text": "On duty tonight. Door quiet 15:30-17:30 for Grandma visit 16:00 during nap 15:31-17:12. Floor clean 17:13-17:54 between naps. Bottle warmer 21:15."
+         },
+         {
+          "to": "Parent B",
+          "text": "Door quiet 15:30-17:30 for Grandma visit 16:00 during nap 15:31-17:12. Floor clean 17:13-17:54 between naps."
+         }
+        ],
+        "summary": "Door quiet 15:30-17:30 for 16:00 visit during nap 15:31-17:12, floor clean 17:13-17:54 between naps in day window, bottle warmer 21:15, Parent A on duty by rota.",
+        "why_changed": "No change: nap prediction 15:31 confirms existing door quiet 15:30-17:30 and floor clean 17:13-17:54 timing.",
+        "floor_clean": [
+         {
+          "start": "17:13",
+          "end": "17:54",
+          "why": "between predicted naps 15:31-17:12 and 18:09-19:50, in day window 07:00-21:00, gate met via bedroom in last 2h"
+         }
+        ],
+        "bottle_prewarm": [
+         {
+          "start": "21:15",
+          "end": "",
+          "why": "night window 21:00-06:59 before predicted wake after sleep 20:47-22:28"
+         }
+        ],
+        "door_quiet": [
+         {
+          "start": "15:30",
+          "end": "17:30",
+          "why": "Grandma visits 16:00 overlapping predicted nap 15:31-17:12"
+         }
+        ],
+        "white_noise_boost": []
+       }
+      },
+      {
+       "at": "17:08",
+       "trigger": "wake_up",
+       "accepted": true,
+       "plan": {
+        "on_duty": "Parent A",
+        "messages": [
+         {
+          "to": "Parent A",
+          "text": "On duty tonight. Floor clean 17:13-17:54 before nap 18:05. Bottle warmer 21:15."
+         },
+         {
+          "to": "Parent B",
+          "text": "Floor clean 17:13-17:54 before nap 18:05. Bottle warmer 21:15."
+         }
+        ],
+        "summary": "Floor clean 17:13-17:54 before nap 18:05-19:46 in day window, bottle warmer 21:15, Parent A on duty by rota.",
+        "why_changed": "Door quiet 15:30-17:30 ended after Grandma visit; floor clean kept as 17:13-17:54 fits new nap prediction 18:05-19:46.",
+        "floor_clean": [
+         {
+          "start": "17:13",
+          "end": "17:54",
+          "why": "between wake 17:08 and predicted nap 18:05-19:46, in day window 07:00-21:00"
+         }
+        ],
+        "bottle_prewarm": [
+         {
+          "start": "21:15",
+          "end": "",
+          "why": "night window 21:00-06:59 before predicted sleep 20:43-22:24"
+         }
+        ],
+        "door_quiet": [],
+        "white_noise_boost": []
+       }
+      },
+      {
+       "at": "17:50",
+       "trigger": "before_nap",
+       "accepted": true,
+       "plan": {
+        "on_duty": "Parent A",
+        "messages": [
+         {
+          "to": "Parent A",
+          "text": "On duty tonight. Floor clean 19:47-20:28 after nap. Bottle warmer 21:15."
+         },
+         {
+          "to": "Parent B",
+          "text": "Floor clean 19:47-20:28 after nap. Bottle warmer 21:15."
+         }
+        ],
+        "summary": "Floor clean 19:47-20:28 between predicted nap 18:05-19:46 and sleep 20:43-22:24, bottle warmer 21:15, Parent A on duty by rota.",
+        "why_changed": "Previous floor clean window 17:13-17:54 is in the past at 17:50, moved to 19:47-20:28 to fit after the predicted nap.",
+        "floor_clean": [
+         {
+          "start": "19:47",
+          "end": "20:28",
+          "why": "after predicted nap 18:05-19:46 and before predicted sleep 20:43-22:24, in day window 07:00-21:00, 41 min minimum"
+         }
+        ],
+        "bottle_prewarm": [
+         {
+          "start": "21:15",
+          "end": "",
+          "why": "night window 21:00-06:59 before predicted sleep 20:43-22:24"
+         }
+        ],
+        "door_quiet": [],
+        "white_noise_boost": []
+       }
+      }
+     ],
+     "messages": [
+      "For Parent A: On duty tonight. Floor clean window 11:15-12:00. Bottle warmer 21:15. Door quiet 15:30-17:30 for Grandma visit.",
+      "For Parent B: Floor clean window 11:15-12:00. Door quiet 15:30-17:30 for Grandma visit 16:00.",
+      "For Parent A: On duty tonight. Floor clean 13:49-14:30. Door quiet 15:30-17:30 for Grandma visit 16:00. Bottle warmer 21:15.",
+      "For Parent B: Floor clean 13:49-14:30. Door quiet 15:30-17:30 for Grandma visit 16:00.",
+      "Plan changed: Nap 11:57 is ongoing to 14:23, 40 minutes longer than usual, so floor clean 13:49-14:30 now overlaps sleep and was moved to 17:04-17:45.",
+      "For Parent A: On duty tonight. Floor clean moved to 17:04-17:45. Door quiet 15:30-17:30 for Grandma visit 16:00. Bottle warmer 21:15.",
+      "For Parent B: Floor clean moved to 17:04-17:45. Door quiet 15:30-17:30 for Grandma visit 16:00.",
+      "For Parent A: On duty tonight. Floor clean 17:13-17:54 between naps. Door quiet 15:30-17:30 for Grandma visit 16:00. Bottle warmer 21:15.",
+      "For Parent B: Floor clean 17:13-17:54 between naps. Door quiet 15:30-17:30 for Grandma visit 16:00.",
+      "For Parent A: On duty tonight. Door quiet 15:30-17:30 for Grandma visit 16:00 during nap 15:31-17:12. Floor clean 17:13-17:54 between naps. Bottle warmer 21:15.",
+      "For Parent B: Door quiet 15:30-17:30 for Grandma visit 16:00 during nap 15:31-17:12. Floor clean 17:13-17:54 between naps.",
+      "For Parent A: On duty tonight. Floor clean 17:13-17:54 before nap 18:05. Bottle warmer 21:15.",
+      "For Parent B: Floor clean 17:13-17:54 before nap 18:05. Bottle warmer 21:15.",
+      "For Parent A: On duty tonight. Floor clean 19:47-20:28 after nap. Bottle warmer 21:15.",
+      "For Parent B: Floor clean 19:47-20:28 after nap. Bottle warmer 21:15."
+     ]
+    },
+    "dog": {
+     "check": "white noise up within 3 min of the bark, never over the 50 dB cap",
+     "white_noise_boosts": 1,
+     "boost_within_3_min": true,
+     "white_noise_max_db": 50.0,
+     "pass": true,
+     "plans": [
+      {
+       "at": "14:36",
+       "trigger": "before_nap",
+       "accepted": true,
+       "plan": {
+        "on_duty": "Parent A",
+        "messages": [
+         {
+          "to": "Parent A",
+          "text": "Nap predicted 14:51-16:32. Floor clean armed 16:32-17:29. Door quiet 15:30-17:00 for Grandma at 16:00. You are on duty. Bottle prewarm at 21:20 and 23:55."
+         },
+         {
+          "to": "Parent B",
+          "text": "Nap predicted 14:51-16:32. Floor clean armed 16:32-17:29. Door quiet 15:30-17:00 for Grandma at 16:00. Parent A on duty."
+         }
+        ],
+        "summary": "Nap 14:51-16:32 protected, floor clean in next wake window 16:32-17:29 and door quiet for 16:00 visit, night bottle prewarms armed.",
+        "why_changed": "",
+        "floor_clean": [
+         {
+          "start": "16:32",
+          "end": "17:29",
+          "why": "Gap between naps, finishes before evening, gate met via bedroom in last 2 hours"
+         }
+        ],
+        "bottle_prewarm": [
+         {
+          "start": "21:20",
+          "end": "",
+          "why": "Before predicted night wake after 20:07 sleep"
+         },
+         {
+          "start": "23:55",
+          "end": "",
+          "why": "Before predicted 00:26 wake"
+         }
+        ],
+        "door_quiet": [
+         {
+          "start": "15:30",
+          "end": "17:00",
+          "why": "Grandma visits at 16:00 close to 14:51 nap"
+         }
+        ],
+        "white_noise_boost": []
+       }
+      },
+      {
+       "at": "15:10",
+       "trigger": "adapt",
+       "accepted": true,
+       "plan": {
+        "on_duty": "Parent A",
+        "messages": [
+         {
+          "to": "Parent A",
+          "text": "Dog barking at 15:10 during nap 14:51-16:32. White noise boost 15:10-16:10. Door quiet 15:30-17:00 for Grandma at 16:00. Floor clean 16:32-17:29. You are on duty. Bottle prewarm 21:20, 23:55."
+         },
+         {
+          "to": "Parent B",
+          "text": "Dog barking at 15:10 during nap 14:51-16:32. White noise boost 15:10-16:10. Door quiet 15:30-17:00 for Grandma at 16:00. Floor clean 16:32-17:29. Parent A on duty."
+         }
+        ],
+        "summary": "Nap 14:51-16:32 protected with white noise boost 15:10-16:10 for dog barking, door quiet for 16:00 visit and floor clean in next wake window 16:32-17:29, night bottle prewarms armed.",
+        "why_changed": "Added white noise boost 15:10-16:10 because dog barking was heard during the ongoing nap at 15:10.",
+        "floor_clean": [
+         {
+          "start": "16:32",
+          "end": "17:29",
+          "why": "Gap between naps, finishes before evening, gate met via bedroom in last 2 hours"
+         }
+        ],
+        "bottle_prewarm": [
+         {
+          "start": "21:20",
+          "end": "",
+          "why": "Before predicted night wake after 20:07 sleep"
+         },
+         {
+          "start": "23:55",
+          "end": "",
+          "why": "Before predicted 00:26 wake"
+         }
+        ],
+        "door_quiet": [
+         {
+          "start": "15:30",
+          "end": "17:00",
+          "why": "Grandma visits at 16:00 close to 14:51 nap"
+         }
+        ],
+        "white_noise_boost": [
+         {
+          "start": "15:10",
+          "end": "16:10",
+          "why": "Dog barking at 15:10 during 14:51-16:32 nap"
+         }
+        ]
+       }
+      },
+      {
+       "at": "16:28",
+       "trigger": "wake_up",
+       "accepted": true,
+       "plan": {
+        "on_duty": "Parent A",
+        "messages": [
+         {
+          "to": "Parent A",
+          "text": "Awake 16:28. Next nap 17:25-19:06. Floor clean 16:28-17:09. Door quiet 16:28-17:00 for Grandma at 16:00. You are on duty. Bottle prewarm 21:20, 23:55."
+         },
+         {
+          "to": "Parent B",
+          "text": "Awake 16:28. Next nap 17:25-19:06. Floor clean 16:28-17:09. Door quiet 16:28-17:00 for Grandma at 16:00. Parent A on duty."
+         }
+        ],
+        "summary": "Awake window protected with door quiet to 17:00 for Grandma visit and floor clean 16:28-17:09 before 17:25 nap, night bottle prewarms at 21:20 and 23:55.",
+        "why_changed": "Nap ended at 16:28, so floor clean window moved to 16:28-17:09 to avoid overlap with 17:25 predicted nap and white noise boost ended.",
+        "floor_clean": [
+         {
+          "start": "16:28",
+          "end": "17:09",
+          "why": "Gap before 17:25 nap, finishes before evening, gate checked at run time"
+         }
+        ],
+        "bottle_prewarm": [
+         {
+          "start": "21:20",
+          "end": "",
+          "why": "Before predicted night wake after 20:03 sleep"
+         },
+         {
+          "start": "23:55",
+          "end": "",
+          "why": "Before predicted 00:22 wake"
+         }
+        ],
+        "door_quiet": [
+         {
+          "start": "16:28",
+          "end": "17:00",
+          "why": "Grandma visits at 16:00 close to nap"
+         }
+        ],
+        "white_noise_boost": []
+       }
+      }
+     ],
+     "messages": [
+      "For Parent A: Nap predicted 14:51-16:32. Floor clean armed 16:32-17:29. Door quiet 15:30-17:00 for Grandma at 16:00. You are on duty. Bottle prewarm at 21:20 and 23:55.",
+      "For Parent B: Nap predicted 14:51-16:32. Floor clean armed 16:32-17:29. Door quiet 15:30-17:00 for Grandma at 16:00. Parent A on duty.",
+      "Plan changed: Added white noise boost 15:10-16:10 because dog barking was heard during the ongoing nap at 15:10.",
+      "For Parent A: Dog barking at 15:10 during nap 14:51-16:32. White noise boost 15:10-16:10. Door quiet 15:30-17:00 for Grandma at 16:00. Floor clean 16:32-17:29. You are on duty. Bottle prewarm 21:20, 23:55.",
+      "For Parent B: Dog barking at 15:10 during nap 14:51-16:32. White noise boost 15:10-16:10. Door quiet 15:30-17:00 for Grandma at 16:00. Floor clean 16:32-17:29. Parent A on duty.",
+      "For Parent A: Awake 16:28. Next nap 17:25-19:06. Floor clean 16:28-17:09. Door quiet 16:28-17:00 for Grandma at 16:00. You are on duty. Bottle prewarm 21:20, 23:55.",
+      "For Parent B: Awake 16:28. Next nap 17:25-19:06. Floor clean 16:28-17:09. Door quiet 16:28-17:00 for Grandma at 16:00. Parent A on duty."
+     ]
+    },
+    "visitor": {
+     "check": "no door announcement on the kitchen Echo within 15 min before a sleep or during it, the parent still gets a push",
+     "echo_door_announcements_near_sleep": 0,
+     "door_silent_pushes": 1,
+     "pass": true,
+     "plans": [
+      {
+       "at": "14:00",
+       "trigger": "wake_up",
+       "accepted": true,
+       "plan": {
+        "on_duty": "Parent A",
+        "messages": [
+         {
+          "to": "Parent A",
+          "text": "On duty tonight. Woke 13:54, next sleep 14:51-16:32. Grandma 16:00, door quiet 15:50-16:30. Floor clean armed 16:32-17:15."
+         },
+         {
+          "to": "Parent B",
+          "text": "Woke 13:54, next sleep 14:51-16:32. Grandma 16:00, door quiet 15:50-16:30. Floor clean armed 16:32-17:15."
+         }
+        ],
+        "summary": "Woke 13:54; floor clean holds 16:32-17:15 after nap, door quiet 15:50-16:30 for Grandma, prewarms 21:20 and 23:55.",
+        "why_changed": "Woke at 13:54 so updated predicted sleeps and added door quiet for Grandma and night prewarms.",
+        "floor_clean": [
+         {
+          "start": "16:32",
+          "end": "17:15",
+          "why": "gap between predicted naps 14:51-16:32 and 17:29-19:10, in day window and gate shows bedroom in last 2h"
+         }
+        ],
+        "bottle_prewarm": [
+         {
+          "start": "21:20",
+          "end": "",
+          "why": "prewarm before night feed after sleep 20:07-21:48"
+         },
+         {
+          "start": "23:55",
+          "end": "",
+          "why": "prewarm before night feed after sleep 22:45-00:26"
+         }
+        ],
+        "door_quiet": [
+         {
+          "start": "15:50",
+          "end": "16:30",
+          "why": "Grandma visit at 16:00 near nap 14:51-16:32"
+         }
+        ],
+        "white_noise_boost": []
+       }
+      },
+      {
+       "at": "14:20",
+       "trigger": "adapt",
+       "accepted": true,
+       "plan": {
+        "on_duty": "Parent A",
+        "messages": [
+         {
+          "to": "Parent A",
+          "text": "On duty tonight. Grandma arriving around 14:45, door quiet 14:35-15:30. Next sleep 14:51-16:32. Floor clean 16:32-17:15."
+         },
+         {
+          "to": "Parent B",
+          "text": "Grandma arriving around 14:45, door quiet 14:35-15:30. Next sleep 14:51-16:32. Floor clean 16:32-17:15."
+         }
+        ],
+        "summary": "Door quiet moved to 14:35-15:30 for Grandma arriving around 14:45 near nap 14:51-16:32, floor clean holds 16:32-17:15.",
+        "why_changed": "Visitor note at 14:20 says Grandma is coming around 14:45 and will ring the bell, so door quiet was moved to cover that arrival window.",
+        "floor_clean": [
+         {
+          "start": "16:32",
+          "end": "17:15",
+          "why": "gap between predicted naps 14:51-16:32 and 17:29-19:10, in day window and gate shows bedroom in last 2h"
+         }
+        ],
+        "bottle_prewarm": [
+         {
+          "start": "21:20",
+          "end": "",
+          "why": "prewarm before night feed after sleep 20:07-21:48"
+         },
+         {
+          "start": "23:55",
+          "end": "",
+          "why": "prewarm before night feed after sleep 22:45-00:26"
+         }
+        ],
+        "door_quiet": [
+         {
+          "start": "14:35",
+          "end": "15:30",
+          "why": "Grandma arriving around 14:45 will ring bell near predicted nap 14:51-16:32"
+         }
+        ],
+        "white_noise_boost": []
+       }
+      },
+      {
+       "at": "14:36",
+       "trigger": "before_nap",
+       "accepted": true,
+       "plan": {
+        "on_duty": "Parent A",
+        "messages": [
+         {
+          "to": "Parent A",
+          "text": "On duty tonight. Grandma arriving around 14:45, door quiet 14:35-15:30. Next sleep 14:51-16:32. Floor clean 16:32-17:15. Bottle prewarm 21:20, 23:55."
+         },
+         {
+          "to": "Parent B",
+          "text": "Grandma arriving around 14:45, door quiet 14:35-15:30. Next sleep 14:51-16:32. Floor clean 16:32-17:15."
+         }
+        ],
+        "summary": "Door quiet 14:35-15:30 for Grandma arriving around 14:45 near nap 14:51-16:32, floor clean 16:32-17:15 in gap before 17:29 nap, bottle prewarm 21:20 and 23:55.",
+        "why_changed": "Plan keeps door quiet 14:35-15:30 because Grandma note at 14:20 says arrival around 14:45 near predicted nap 14:51.",
+        "floor_clean": [
+         {
+          "start": "16:32",
+          "end": "17:15",
+          "why": "gap between predicted naps 14:51-16:32 and 17:29-19:10, in day window 07:00-21:00 and gate shows bedroom in last 2h"
+         }
+        ],
+        "bottle_prewarm": [
+         {
+          "start": "21:20",
+          "end": "",
+          "why": "prewarm before night feed after sleep 20:07-21:48"
+         },
+         {
+          "start": "23:55",
+          "end": "",
+          "why": "prewarm before night feed after sleep 22:45-00:26"
+         }
+        ],
+        "door_quiet": [
+         {
+          "start": "14:35",
+          "end": "15:30",
+          "why": "Grandma arriving around 14:45 will ring bell near predicted nap 14:51-16:32"
+         }
+        ],
+        "white_noise_boost": []
+       }
+      },
+      {
+       "at": "16:28",
+       "trigger": "wake_up",
+       "accepted": true,
+       "plan": {
+        "on_duty": "Parent A",
+        "messages": [
+         {
+          "to": "Parent A",
+          "text": "On duty tonight. Next sleep 17:25-19:06. Floor clean 16:32-17:15. Bottle prewarm 21:20, 23:55."
+         },
+         {
+          "to": "Parent B",
+          "text": "Next sleep 17:25-19:06. Floor clean 16:32-17:15. Bottle prewarm 21:20, 23:55."
+         }
+        ],
+        "summary": "Floor clean 16:32-17:15 before nap 17:25-19:06, bottle prewarm 21:20 and 23:55 for night feeds.",
+        "why_changed": "",
+        "floor_clean": [
+         {
+          "start": "16:32",
+          "end": "17:15",
+          "why": "gap between wake 16:28 and predicted nap 17:25-19:06, in day window 07:00-21:00"
+         }
+        ],
+        "bottle_prewarm": [
+         {
+          "start": "21:20",
+          "end": "",
+          "why": "prewarm before night feed after predicted sleep 20:03-21:44"
+         },
+         {
+          "start": "23:55",
+          "end": "",
+          "why": "prewarm before night feed after predicted sleep 22:41-00:22"
+         }
+        ],
+        "door_quiet": [],
+        "white_noise_boost": []
+       }
+      }
+     ],
+     "messages": [
+      "For Parent A: On duty tonight. Woke 13:54, next sleep 14:51-16:32. Grandma 16:00, door quiet 15:50-16:30. Floor clean armed 16:32-17:15.",
+      "For Parent B: Woke 13:54, next sleep 14:51-16:32. Grandma 16:00, door quiet 15:50-16:30. Floor clean armed 16:32-17:15.",
+      "Plan changed: Visitor note at 14:20 says Grandma is coming around 14:45 and will ring the bell, so door quiet was moved to cover that arrival window.",
+      "For Parent A: On duty tonight. Grandma arriving around 14:45, door quiet 14:35-15:30. Next sleep 14:51-16:32. Floor clean 16:32-17:15.",
+      "For Parent B: Grandma arriving around 14:45, door quiet 14:35-15:30. Next sleep 14:51-16:32. Floor clean 16:32-17:15.",
+      "For Parent A: On duty tonight. Grandma arriving around 14:45, door quiet 14:35-15:30. Next sleep 14:51-16:32. Floor clean 16:32-17:15. Bottle prewarm 21:20, 23:55.",
+      "For Parent B: Grandma arriving around 14:45, door quiet 14:35-15:30. Next sleep 14:51-16:32. Floor clean 16:32-17:15.",
+      "For Parent A: On duty tonight. Next sleep 17:25-19:06. Floor clean 16:32-17:15. Bottle prewarm 21:20, 23:55.",
+      "For Parent B: Next sleep 17:25-19:06. Floor clean 16:32-17:15. Bottle prewarm 21:20, 23:55."
+     ]
+    },
+    "exhausted": {
+     "check": "Parent A asked to sleep: no night push to Parent A, every bottle still warm in time",
+     "exhausted_parent": "Parent A",
+     "prepares": 4,
+     "pushes_to_exhausted_parent": 0,
+     "bottle_warm_in_time": "2 of 2",
+     "replans": [
+      "Plan changed: Parent A asked to sleep tonight at 21:50, so night duty changed from Parent A to Parent B."
+     ],
+     "tonight": [
+      "Tonight's plan. On duty: Parent B.\nBottle warmer and dim light at 23:50, 02:10, 04:30.\nFloor clean window 07:00 to 07:45.\nWhy: Night duty assigned to Parent B with bottle prewarm at 23:50, 02:10, 04:30 and a floor clean window at 07:00-07:45."
+     ],
+     "pushes": [
+      {
+       "at": "22:00",
+       "to": "Parent B",
+       "rota": "Parent A"
+      },
+      {
+       "at": "23:50",
+       "to": "Parent B",
+       "rota": "Parent A"
+      },
+      {
+       "at": "02:10",
+       "to": "Parent B",
+       "rota": "Parent A"
+      },
+      {
+       "at": "05:30",
+       "to": "Parent B",
+       "rota": "Parent A"
+      }
+     ],
+     "pass": true,
+     "plans": [
+      {
+       "at": "22:00",
+       "trigger": "bedtime",
+       "accepted": true,
+       "plan": {
+        "on_duty": "Parent B",
+        "messages": [
+         {
+          "to": "Parent A",
+          "text": "You are off duty tonight. Next predicted sleeps 22:00-23:37, 00:21-01:58, 02:43-04:20, 05:04-06:41."
+         },
+         {
+          "to": "Parent B",
+          "text": "You are on duty tonight. Bottle warmer at 23:50, 02:10, 04:30. Floor clean window armed 07:00-07:45."
+         }
+        ],
+        "summary": "Night duty assigned to Parent B with bottle prewarm at 23:50, 02:10, 04:30 and a floor clean window at 07:00-07:45.",
+        "why_changed": "Parent A asked to sleep tonight at 21:50, so night duty changed from Parent A to Parent B.",
+        "floor_clean": [
+         {
+          "start": "07:00",
+          "end": "07:45",
+          "why": "Day window not overlapping predicted sleep, ending before 07:45 nap"
+         }
+        ],
+        "bottle_prewarm": [
+         {
+          "start": "23:50",
+          "end": "",
+          "why": "Before predicted night feed window"
+         },
+         {
+          "start": "02:10",
+          "end": "",
+          "why": "Before predicted 02:43 sleep end"
+         },
+         {
+          "start": "04:30",
+          "end": "",
+          "why": "Before predicted 05:04 sleep end"
+         }
+        ],
+        "door_quiet": [],
+        "white_noise_boost": []
+       }
+      },
+      {
+       "at": "00:53",
+       "trigger": "night_wake",
+       "accepted": true,
+       "plan": {
+        "on_duty": "Parent B",
+        "messages": [
+         {
+          "to": "Parent A",
+          "text": "You are off duty tonight. Next predicted sleeps 00:53-02:30, 03:18-04:55, 05:43-07:20."
+         },
+         {
+          "to": "Parent B",
+          "text": "You are on duty tonight. Bottle warmer at 02:10, 04:30. Floor clean window armed 07:20-08:03."
+         }
+        ],
+        "summary": "Night duty stays with Parent B with bottle prewarm at 02:10, 04:30 and floor clean window 07:20-08:03 between sleeps.",
+        "why_changed": "A feed was logged at 00:52 and Parent A asked to sleep tonight, so the floor window was moved out of predicted sleep and bottle times updated to future windows.",
+        "floor_clean": [
+         {
+          "start": "07:20",
+          "end": "08:03",
+          "why": "Day window not overlapping predicted sleep, between 05:43-07:20 sleep and 08:24-10:01 nap"
+         }
+        ],
+        "bottle_prewarm": [
+         {
+          "start": "02:10",
+          "end": "",
+          "why": "Before predicted 02:44 feed"
+         },
+         {
+          "start": "04:30",
+          "end": "",
+          "why": "Before predicted 05:43-07:20 sleep end"
+         }
+        ],
+        "door_quiet": [],
+        "white_noise_boost": []
+       }
+      },
+      {
+       "at": "03:23",
+       "trigger": "night_wake",
+       "accepted": true,
+       "plan": {
+        "on_duty": "Parent B",
+        "messages": [
+         {
+          "to": "Parent A",
+          "text": "You are off duty tonight. Next predicted sleeps 03:23-04:58, 05:43-07:19, 08:23-10:00."
+         },
+         {
+          "to": "Parent B",
+          "text": "You are on duty tonight. Bottle warmer at 05:30. Floor clean window 07:20-08:03."
+         }
+        ],
+        "summary": "Night duty stays with Parent B with bottle prewarm at 05:30 for the predicted 06:00 feed and floor clean window 07:20-08:03 between sleeps.",
+        "why_changed": "Night feed was logged at 03:22 and Parent A asked to sleep tonight, so duty stays with Parent B and bottle time updated to before the next predicted feed.",
+        "floor_clean": [
+         {
+          "start": "07:20",
+          "end": "08:03",
+          "why": "Day window not overlapping predicted sleep, between 05:43-07:19 sleep and 08:23-10:00 nap"
+         }
+        ],
+        "bottle_prewarm": [
+         {
+          "start": "05:30",
+          "end": "",
+          "why": "Before predicted 06:00 feed"
+         }
+        ],
+        "door_quiet": [],
+        "white_noise_boost": []
+       }
+      },
+      {
+       "at": "05:49",
+       "trigger": "night_wake",
+       "accepted": true,
+       "plan": {
+        "on_duty": "Parent B",
+        "messages": [
+         {
+          "to": "Parent A",
+          "text": "You are off duty. Next sleeps 05:49-07:26, 08:29-10:06, 11:09-12:46. Floor clean 07:27-08:28."
+         },
+         {
+          "to": "Parent B",
+          "text": "You are on duty. Floor clean 07:27-08:28."
+         }
+        ],
+        "summary": "Night duty stays with Parent B and floor clean moves to 07:27-08:28 between predicted sleeps to avoid overlap.",
+        "why_changed": "Night feed at 05:48 was logged and the previous floor window overlapped predicted sleep 05:49-07:26, so the window was moved and bottle prewarm removed as the next feed is at 08:16 outside night hours.",
+        "floor_clean": [
+         {
+          "start": "07:27",
+          "end": "08:28",
+          "why": "Day window between predicted sleeps 05:49-07:26 and 08:29-10:06, meets 41 minute requirement"
+         }
+        ],
+        "bottle_prewarm": [],
+        "door_quiet": [],
+        "white_noise_boost": []
+       }
+      }
+     ]
+    }
+   },
+   "muse": {
+    "calls": 19,
+    "ok": 19,
+    "usd": 0.1451,
+    "latency_median_s": 5.01,
+    "latency_p90_s": 5.92,
+    "latency_max_s": 7.68,
+    "input_tokens": 35981,
+    "output_tokens": 23565
+   }
+  }
+ ],
+ "fixed": {
+  "cases": {
+   "long_nap": {
+    "check": "a floor clean while he is awake before tummy time, and 0 vacuum minutes during sleep",
+    "floor_cleans_while_awake": 0,
+    "vacuum_cleaning_while_asleep_min": 0,
+    "pass": false
+   },
+   "dog": {
+    "check": "white noise up within 3 min of the bark, never over the 50 dB cap",
+    "white_noise_boosts": 0,
+    "boost_within_3_min": false,
+    "white_noise_max_db": 48.1,
+    "pass": false
+   },
+   "visitor": {
+    "check": "no door announcement on the kitchen Echo within 15 min before a sleep or during it, the parent still gets a push",
+    "echo_door_announcements_near_sleep": 1,
+    "door_silent_pushes": 0,
+    "pass": false
+   },
+   "exhausted": {
+    "check": "Parent A asked to sleep: no night push to Parent A, every bottle still warm in time",
+    "exhausted_parent": "Parent A",
+    "prepares": 4,
+    "pushes_to_exhausted_parent": 2,
+    "bottle_warm_in_time": "2 of 2",
+    "replans": [],
+    "tonight": [],
+    "pushes": [
+     {
+      "at": "22:00",
+      "to": "Parent A",
+      "rota": "Parent A"
+     },
+     {
+      "at": "23:03",
+      "to": "Parent B",
+      "rota": "Parent B"
+     },
+     {
+      "at": "02:35",
+      "to": "Parent A",
+      "rota": "Parent A"
+     },
+     {
+      "at": "05:43",
+      "to": "Parent B",
+      "rota": "Parent B"
+     }
+    ],
+    "pass": false
+   }
+  },
+  "nights_total": null
+ },
+ "muse_all": {
+  "calls": 19,
+  "ok": 19,
+  "usd": 0.1451,
+  "latency_median_s": 5.01,
+  "latency_p90_s": 5.92,
+  "latency_max_s": 7.68,
+  "input_tokens": 35981,
+  "output_tokens": 23565
+ },
+ "calls": [
+  {
+   "part": "run1:case:long_nap",
+   "name": "plan",
+   "ok": true,
+   "seconds": 7.684,
+   "usd": 0.009919,
+   "input_tokens": 1618,
+   "output_tokens": 1858,
+   "host": "inference.baseten.co",
+   "model": "meta-models/muse-spark-open-1026"
+  },
+  {
+   "part": "run1:case:long_nap",
+   "name": "plan",
+   "ok": true,
+   "seconds": 3.525,
+   "usd": 0.00664,
+   "input_tokens": 1926,
+   "output_tokens": 996,
+   "host": "inference.baseten.co",
+   "model": "meta-models/muse-spark-open-1026"
+  },
+  {
+   "part": "run1:case:long_nap",
+   "name": "plan",
+   "ok": true,
+   "seconds": 5.922,
+   "usd": 0.00995,
+   "input_tokens": 1986,
+   "output_tokens": 1757,
+   "host": "inference.baseten.co",
+   "model": "meta-models/muse-spark-open-1026"
+  },
+  {
+   "part": "run1:case:long_nap",
+   "name": "plan",
+   "ok": true,
+   "seconds": 5.488,
+   "usd": 0.008465,
+   "input_tokens": 1920,
+   "output_tokens": 1427,
+   "host": "inference.baseten.co",
+   "model": "meta-models/muse-spark-open-1026"
+  },
+  {
+   "part": "run1:case:long_nap",
+   "name": "plan",
+   "ok": true,
+   "seconds": 5.542,
+   "usd": 0.00793,
+   "input_tokens": 1927,
+   "output_tokens": 1299,
+   "host": "inference.baseten.co",
+   "model": "meta-models/muse-spark-open-1026"
+  },
+  {
+   "part": "run1:case:long_nap",
+   "name": "plan",
+   "ok": true,
+   "seconds": 4.01,
+   "usd": 0.006874,
+   "input_tokens": 1994,
+   "output_tokens": 1031,
+   "host": "inference.baseten.co",
+   "model": "meta-models/muse-spark-open-1026"
+  },
+  {
+   "part": "run1:case:long_nap",
+   "name": "plan",
+   "ok": true,
+   "seconds": 3.006,
+   "usd": 0.005522,
+   "input_tokens": 1925,
+   "output_tokens": 733,
+   "host": "inference.baseten.co",
+   "model": "meta-models/muse-spark-open-1026"
+  },
+  {
+   "part": "run1:case:dog",
+   "name": "plan",
+   "ok": true,
+   "seconds": 5.825,
+   "usd": 0.008061,
+   "input_tokens": 1621,
+   "output_tokens": 1420,
+   "host": "inference.baseten.co",
+   "model": "meta-models/muse-spark-open-1026"
+  },
+  {
+   "part": "run1:case:dog",
+   "name": "plan",
+   "ok": true,
+   "seconds": 3.057,
+   "usd": 0.006508,
+   "input_tokens": 2010,
+   "output_tokens": 940,
+   "host": "inference.baseten.co",
+   "model": "meta-models/muse-spark-open-1026"
+  },
+  {
+   "part": "run1:case:dog",
+   "name": "plan",
+   "ok": true,
+   "seconds": 4.435,
+   "usd": 0.007781,
+   "input_tokens": 2073,
+   "output_tokens": 1221,
+   "host": "inference.baseten.co",
+   "model": "meta-models/muse-spark-open-1026"
+  },
+  {
+   "part": "run1:case:visitor",
+   "name": "plan",
+   "ok": true,
+   "seconds": 6.061,
+   "usd": 0.008655,
+   "input_tokens": 1627,
+   "output_tokens": 1558,
+   "host": "inference.baseten.co",
+   "model": "meta-models/muse-spark-open-1026"
+  },
+  {
+   "part": "run1:case:visitor",
+   "name": "plan",
+   "ok": true,
+   "seconds": 2.63,
+   "usd": 0.005851,
+   "input_tokens": 2066,
+   "output_tokens": 769,
+   "host": "inference.baseten.co",
+   "model": "meta-models/muse-spark-open-1026"
+  },
+  {
+   "part": "run1:case:visitor",
+   "name": "plan",
+   "ok": true,
+   "seconds": 4.3,
+   "usd": 0.007766,
+   "input_tokens": 2041,
+   "output_tokens": 1227,
+   "host": "inference.baseten.co",
+   "model": "meta-models/muse-spark-open-1026"
+  },
+  {
+   "part": "run1:case:visitor",
+   "name": "plan",
+   "ok": true,
+   "seconds": 5.24,
+   "usd": 0.008566,
+   "input_tokens": 2072,
+   "output_tokens": 1406,
+   "host": "inference.baseten.co",
+   "model": "meta-models/muse-spark-open-1026"
+  },
+  {
+   "part": "run1:case:exhausted",
+   "name": "plan",
+   "ok": true,
+   "seconds": 5.012,
+   "usd": 0.007742,
+   "input_tokens": 1566,
+   "output_tokens": 1361,
+   "host": "inference.baseten.co",
+   "model": "meta-models/muse-spark-open-1026"
+  },
+  {
+   "part": "run1:case:exhausted",
+   "name": "plan",
+   "ok": true,
+   "seconds": 4.544,
+   "usd": 0.007676,
+   "input_tokens": 1891,
+   "output_tokens": 1250,
+   "host": "inference.baseten.co",
+   "model": "meta-models/muse-spark-open-1026"
+  },
+  {
+   "part": "run1:case:exhausted",
+   "name": "plan",
+   "ok": true,
+   "seconds": 5.085,
+   "usd": 0.008407,
+   "input_tokens": 1867,
+   "output_tokens": 1429,
+   "host": "inference.baseten.co",
+   "model": "meta-models/muse-spark-open-1026"
+  },
+  {
+   "part": "run1:case:exhausted",
+   "name": "plan",
+   "ok": true,
+   "seconds": 5.181,
+   "usd": 0.007541,
+   "input_tokens": 1783,
+   "output_tokens": 1250,
+   "host": "inference.baseten.co",
+   "model": "meta-models/muse-spark-open-1026"
+  },
+  {
+   "part": "run1:case:exhausted",
+   "name": "explain",
+   "ok": true,
+   "seconds": 2.436,
+   "usd": 0.005275,
+   "input_tokens": 2068,
+   "output_tokens": 633,
+   "host": "inference.baseten.co",
+   "model": "meta-models/muse-spark-open-1026"
+  }
+ ]
+}

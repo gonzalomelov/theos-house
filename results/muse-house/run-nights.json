@@ -1,0 +1,1685 @@
+{
+ "model": "meta-models/muse-spark-open-1026",
+ "host": "inference.baseten.co",
+ "budget_usd": 0.6,
+ "runs": [
+  {
+   "nights": [
+    {
+     "night": "Oct 20 to 21",
+     "feeds": 3,
+     "bottle_feeds": 1,
+     "bottle_warm_in_time": 1,
+     "light_on_at_feed_start": 3,
+     "breast_feeds_warmer_on": 2,
+     "prepares": 3,
+     "right_parent_pushed": 3,
+     "pushes_to_exhausted_parent": 0,
+     "live_calls": 0,
+     "explanations": [
+      "House ran night plan from 22:00 with Parent B on duty. Bottle warmer was on at 22:35, 23:23, 01:26, 02:09, 04:28 and 04:36. Feeds were logged at 23:28, 02:14 and 04:41 and on duty rotated after each feed. Floor clean was set for 09:24 to 10:05 after the predicted nap."
+     ],
+     "explanation_source": [
+      "muse"
+     ],
+     "echo": [
+      "Good morning. The house got ready for 3 night feeds."
+     ],
+     "tonight": [
+      "Tonight's plan. On duty: Parent B.\nBottle warmer and dim light at 22:35, 01:15, 04:00.\nFloor clean window 07:00 to 07:45.\nWhy: Plan covers 22:00 to 10:00 with Parent B on duty, three night prewarms aligned to predicted feeds and a morning floor clean 07:00-07:45 before the nap."
+     ],
+     "replans": [],
+     "plans": [
+      {
+       "at": "22:00",
+       "trigger": "bedtime",
+       "accepted": true,
+       "plan": {
+        "on_duty": "Parent B",
+        "messages": [
+         {
+          "to": "Parent A",
+          "text": "On duty: Parent B. Next feed predicted 23:05. Bottle warmer armed 22:35, 01:15, 04:00. Floor clean window 07:00-07:45."
+         },
+         {
+          "to": "Parent B",
+          "text": "You are on duty. Next feed predicted 23:05. Bottle warmer armed 22:35, 01:15, 04:00. Sleep now 21:34-23:12 ongoing. Floor clean window 07:00-07:45."
+         }
+        ],
+        "summary": "Plan covers 22:00 to 10:00 with Parent B on duty, three night prewarms aligned to predicted feeds and a morning floor clean 07:00-07:45 before the nap.",
+        "why_changed": "",
+        "floor_clean": [
+         {
+          "start": "07:00",
+          "end": "07:45",
+          "why": "day window 07:00-07:45 before nap 07:48-09:26, 45 minutes for 31+10 run, aims to finish before floor time"
+         }
+        ],
+        "bottle_prewarm": [
+         {
+          "start": "22:35",
+          "end": "",
+          "why": "30 minutes before predicted feed 23:05, night window"
+         },
+         {
+          "start": "01:15",
+          "end": "",
+          "why": "between sleeps 23:54-01:44 and 02:26-04:16 for overnight feed"
+         },
+         {
+          "start": "04:00",
+          "end": "",
+          "why": "between sleeps 02:26-04:16 and 04:58-06:48 for overnight feed"
+         }
+        ],
+        "door_quiet": [],
+        "white_noise_boost": []
+       }
+      },
+      {
+       "at": "23:29",
+       "trigger": "night_wake",
+       "accepted": true,
+       "plan": {
+        "on_duty": "Parent A",
+        "messages": [
+         {
+          "to": "Parent A",
+          "text": "On duty: Parent A. Next feed predicted 01:56. Bottle warmer armed 01:26, 03:58. Floor clean window 07:00-07:45."
+         },
+         {
+          "to": "Parent B",
+          "text": "Off duty. Next feed predicted 01:56. Sleep window 00:05-01:55."
+         }
+        ],
+        "summary": "Plan covers 23:29 to 11:29 with Parent A on duty, two night prewarms aligned to predicted feeds and a morning floor clean 07:00-07:45 before the nap.",
+        "why_changed": "Night feed logged at 23:28 handled by Parent B keeps counts even so rota moves on duty to Parent A and past prewarm cleared.",
+        "floor_clean": [
+         {
+          "start": "07:00",
+          "end": "07:45",
+          "why": "day window 07:00-07:45 before nap 07:58-09:47, 45 minutes for 31+10 run, aims to finish before floor time"
+         }
+        ],
+        "bottle_prewarm": [
+         {
+          "start": "01:26",
+          "end": "",
+          "why": "30 minutes before predicted feed 01:56, night window"
+         },
+         {
+          "start": "03:58",
+          "end": "",
+          "why": "between sleeps 02:37-04:27 and 05:09-06:59 for overnight feed"
+         }
+        ],
+        "door_quiet": [],
+        "white_noise_boost": []
+       }
+      },
+      {
+       "at": "02:15",
+       "trigger": "night_wake",
+       "accepted": true,
+       "plan": {
+        "on_duty": "Parent B",
+        "messages": [
+         {
+          "to": "Parent A",
+          "text": "Off duty. Next feed predicted 04:58. Bottle warmer armed 04:28. Floor clean window 09:24-10:05."
+         },
+         {
+          "to": "Parent B",
+          "text": "On duty: Parent B. Next feed predicted 04:58. Bottle warmer armed 04:28. Floor clean window 09:24-10:05."
+         }
+        ],
+        "summary": "Plan covers 02:15 to 14:15 with Parent B on duty, one night prewarm at 04:28 for predicted feed 04:58 and a morning floor clean 09:24-10:05 between naps.",
+        "why_changed": "Night feed at 02:14 handled by Parent A updated next feed to 04:58 and sleep predictions, so prewarms reset to 04:28 and floor window moved to 09:24-10:05 to avoid overlap.",
+        "floor_clean": "fixed rule",
+        "bottle_prewarm": [
+         {
+          "start": "04:28",
+          "end": "",
+          "why": "30 minutes before predicted feed 04:58, night window"
+         }
+        ],
+        "door_quiet": [],
+        "white_noise_boost": []
+       }
+      },
+      {
+       "at": "02:15",
+       "trigger": "night_wake",
+       "fallback": "floor_clean 09:24-10:05 overlaps the predicted nap 07:35-09:24"
+      },
+      {
+       "at": "04:42",
+       "trigger": "night_wake",
+       "accepted": true,
+       "plan": {
+        "on_duty": "Parent A",
+        "messages": [
+         {
+          "to": "Parent A",
+          "text": "On duty: Parent A. Next feed predicted 07:17. Floor clean window 09:24-10:05."
+         },
+         {
+          "to": "Parent B",
+          "text": "Off duty. Next feed predicted 07:17. Floor clean window 09:24-10:05."
+         }
+        ],
+        "summary": "Plan covers 04:42 to 16:42 with Parent A on duty, floor clean 09:24-10:05 between predicted naps and no night prewarms for predicted day feed 07:17.",
+        "why_changed": "Night feed at 04:41 shifted next feed to 07:17 and updated sleep predictions, so the 04:28 prewarm expired and the floor window 09:24-10:05 is kept in the next available gap.",
+        "floor_clean": [
+         {
+          "start": "09:24",
+          "end": "10:05",
+          "why": "gap between predicted naps 07:30-09:19 and 10:18-12:07, day window"
+         }
+        ],
+        "bottle_prewarm": [],
+        "door_quiet": [],
+        "white_noise_boost": []
+       }
+      }
+     ]
+    },
+    {
+     "night": "Oct 21 to 22",
+     "feeds": 3,
+     "bottle_feeds": 2,
+     "bottle_warm_in_time": 2,
+     "light_on_at_feed_start": 3,
+     "breast_feeds_warmer_on": 1,
+     "prepares": 3,
+     "right_parent_pushed": 3,
+     "pushes_to_exhausted_parent": 0,
+     "live_calls": 0,
+     "explanations": [
+      "At 22:00 house armed plan with prewarms at 23:58, 02:45, 05:15 and floor clean 07:32 to 08:15. Fixed routines ran because floor clean overlapped predicted sleep 06:01 to 07:32. Feeds logged at 00:06, 02:21, 04:45 with warmer on off and white noise 42.0 to 48.1 db. On duty rotated Parent A to Parent B after each wake and study light showed dry."
+     ],
+     "explanation_source": [
+      "muse"
+     ],
+     "echo": [
+      "Good morning. The house got ready for 3 night feeds."
+     ],
+     "tonight": [
+      "Tonight's plan. On duty: Parent A.\nBottle warmer and dim light at 23:58, 02:45, 05:15.\nWhy: Armed 3 bottle prewarms for night feeds and a morning floor clean window 07:32-08:15 between sleeps; on duty Parent A per rota."
+     ],
+     "replans": [],
+     "plans": [
+      {
+       "at": "22:00",
+       "trigger": "bedtime",
+       "accepted": true,
+       "plan": {
+        "on_duty": "Parent A",
+        "messages": [
+         {
+          "to": "Parent A",
+          "text": "You are on duty tonight. Bottle warmer starts at 23:58, 02:45, 05:15. Next predicted sleep 22:28-00:17. Floor clean window 07:32-08:15 tomorrow."
+         },
+         {
+          "to": "Parent B",
+          "text": "Parent A is on duty tonight. Next predicted sleep 22:28-00:17. Floor clean window 07:32-08:15 tomorrow."
+         }
+        ],
+        "summary": "Armed 3 bottle prewarms for night feeds and a morning floor clean window 07:32-08:15 between sleeps; on duty Parent A per rota.",
+        "why_changed": "",
+        "floor_clean": "fixed rule",
+        "bottle_prewarm": [
+         {
+          "start": "23:58",
+          "end": "",
+          "why": "before predicted feed around 00:13, night window 21:00-06:59, warmer off after 30 minutes"
+         },
+         {
+          "start": "02:45",
+          "end": "",
+          "why": "before predicted feed after sleep ending 02:48, at least 60 minutes from previous start"
+         },
+         {
+          "start": "05:15",
+          "end": "",
+          "why": "before predicted feed after sleep ending 05:19, at least 60 minutes from previous start"
+         }
+        ],
+        "door_quiet": [],
+        "white_noise_boost": []
+       }
+      },
+      {
+       "at": "22:00",
+       "trigger": "bedtime",
+       "fallback": "floor_clean 07:32-08:15 overlaps the predicted sleep 06:01-07:32"
+      },
+      {
+       "at": "00:07",
+       "trigger": "night_wake",
+       "accepted": true,
+       "plan": {
+        "on_duty": "Parent B",
+        "messages": [
+         {
+          "to": "Parent A",
+          "text": "Night feed at 00:06 logged. On duty is Parent B. Next predicted sleeps 00:07-01:56, 02:38-04:27. Bottle warmer at 02:30, 04:50."
+         },
+         {
+          "to": "Parent B",
+          "text": "You are on duty. Night feed at 00:06 logged. Next predicted sleeps 00:07-01:56, 02:38-04:27. Bottle warmer at 02:30, 04:50. Floor clean 07:00-07:45."
+         }
+        ],
+        "summary": "On duty Parent B per rota, 2 bottle prewarms at 02:30 and 04:50 for night feeds, floor clean 07:00-07:45 between morning naps.",
+        "why_changed": "Night feed at 00:06 logged, updated on-duty to Parent B per rota and re-armed bottle prewarms for predicted feeds at 02:45 and after 04:27.",
+        "floor_clean": [
+         {
+          "start": "07:00",
+          "end": "07:45",
+          "why": "fixed rule: 45 minute window (31 min run + 10 min margin) between predicted sleeps, daytime 07:00-21:00, no overlap, ends before next nap"
+         }
+        ],
+        "bottle_prewarm": [
+         {
+          "start": "02:30",
+          "end": "",
+          "why": "before predicted feed around 02:45, night window 21:00-06:59, warmer off after 30 minutes"
+         },
+         {
+          "start": "04:50",
+          "end": "",
+          "why": "before predicted feed in awake window 04:27-05:09, at least 60 minutes from previous start, night window"
+         }
+        ],
+        "door_quiet": [],
+        "white_noise_boost": []
+       }
+      },
+      {
+       "at": "02:22",
+       "trigger": "night_wake",
+       "accepted": true,
+       "plan": {
+        "on_duty": "Parent A",
+        "messages": [
+         {
+          "to": "Parent A",
+          "text": "You are on duty. Night feed at 02:21 logged. Next sleeps 02:22-04:12, 04:55-06:45. Bottle warmer at 04:15. Floor clean 07:00-07:45."
+         },
+         {
+          "to": "Parent B",
+          "text": "Night feed at 02:21 logged. On duty is Parent A. Next sleeps 02:22-04:12, 04:55-06:45. Bottle warmer at 04:15. Floor clean 07:00-07:45."
+         }
+        ],
+        "summary": "On duty Parent A per rota, bottle prewarm at 04:15 for predicted feed at 04:46, floor clean 07:00-07:45 between sleeps.",
+        "why_changed": "Night feed at 02:21 logged, updated on-duty per rota and re-armed bottle prewarm for predicted 04:46 feed.",
+        "floor_clean": [
+         {
+          "start": "07:00",
+          "end": "07:45",
+          "why": "between predicted sleeps 06:45-07:48, day time 07:00-21:00, 45 min for 31 min run plus 10 min margin, ends before nap 07:48"
+         }
+        ],
+        "bottle_prewarm": [
+         {
+          "start": "04:15",
+          "end": "",
+          "why": "before predicted feed at 04:46 in night window 21:00-06:59, warmer off after 30 min"
+         }
+        ],
+        "door_quiet": [],
+        "white_noise_boost": []
+       }
+      },
+      {
+       "at": "04:46",
+       "trigger": "night_wake",
+       "accepted": true,
+       "plan": {
+        "on_duty": "Parent B",
+        "messages": [
+         {
+          "to": "Parent A",
+          "text": "Night feed at 04:45 logged, handled by you. On duty is Parent B. Next sleep 04:46-06:35, next feed predicted 07:04."
+         },
+         {
+          "to": "Parent B",
+          "text": "You are on duty. Night feed at 04:45 logged. Next sleep 04:46-06:35, next feed predicted 07:04."
+         }
+        ],
+        "summary": "On duty Parent B per rota, no floor clean or bottle prewarm armed for next 12 hours with sleeps 04:46-06:35 and 07:37-09:08.",
+        "why_changed": "Night feed at 04:45 logged, updated on-duty to Parent B per rota and cleared expired windows.",
+        "floor_clean": [],
+        "bottle_prewarm": [],
+        "door_quiet": [],
+        "white_noise_boost": []
+       }
+      }
+     ]
+    },
+    {
+     "night": "Oct 22 to 23",
+     "feeds": 3,
+     "bottle_feeds": 1,
+     "bottle_warm_in_time": 1,
+     "light_on_at_feed_start": 3,
+     "breast_feeds_warmer_on": 2,
+     "prepares": 3,
+     "right_parent_pushed": 3,
+     "pushes_to_exhausted_parent": 0,
+     "live_calls": 0,
+     "explanations": [
+      "House armed night plan at 22:00 with Parent B on duty. Feeds logged at 23:08, 01:50 and 04:04 each 35 minutes with duty rotated. Bottle warmer ran at 22:35 and 01:31 by plan and rewarmed at 23:03 and 01:45 on cry. White noise was 42.0 then 48.1 after each feed."
+     ],
+     "explanation_source": [
+      "muse"
+     ],
+     "echo": [
+      "Good morning. The house got ready for 3 night feeds."
+     ],
+     "tonight": [
+      "Tonight's plan. On duty: Parent B.\nBottle warmer and dim light at 22:35, 00:45, 03:15, 05:35.\nFloor clean window 08:08 to 09:00.\nWhy: Night feeds covered with 4 prewarms and Parent B on duty, floor clean set for 08:08-09:00 between morning sleeps."
+     ],
+     "replans": [],
+     "plans": [
+      {
+       "at": "22:00",
+       "trigger": "bedtime",
+       "accepted": true,
+       "plan": {
+        "on_duty": "Parent B",
+        "messages": [
+         {
+          "to": "Parent A",
+          "text": "On duty: Parent B. Next feed predicted 23:05. Floor clean armed 08:08-09:00. Bottle warmer 22:35, 00:45, 03:15, 05:35."
+         },
+         {
+          "to": "Parent B",
+          "text": "You are on duty tonight. Next feed predicted 23:05. Bottle warmer 22:35, 00:45, 03:15, 05:35. Floor clean 08:08-09:00."
+         }
+        ],
+        "summary": "Night feeds covered with 4 prewarms and Parent B on duty, floor clean set for 08:08-09:00 between morning sleeps.",
+        "why_changed": "",
+        "floor_clean": [
+         {
+          "start": "08:08",
+          "end": "09:00",
+          "why": "Daytime window between predicted sleeps, ending before next nap"
+         }
+        ],
+        "bottle_prewarm": [
+         {
+          "start": "22:35",
+          "end": "",
+          "why": "Before predicted 23:05 feed"
+         },
+         {
+          "start": "00:45",
+          "end": "",
+          "why": "Before next night wake window"
+         },
+         {
+          "start": "03:15",
+          "end": "",
+          "why": "Before next night wake window"
+         },
+         {
+          "start": "05:35",
+          "end": "",
+          "why": "Before next night wake window"
+         }
+        ],
+        "door_quiet": [],
+        "white_noise_boost": []
+       }
+      },
+      {
+       "at": "23:09",
+       "trigger": "night_wake",
+       "accepted": true,
+       "plan": {
+        "on_duty": "Parent A",
+        "messages": [
+         {
+          "to": "Parent A",
+          "text": "On duty: Parent A. Next feed predicted 02:01. Bottle warmer 01:31, 03:52, 05:30. Floor clean 08:42-09:30."
+         },
+         {
+          "to": "Parent B",
+          "text": "Off duty. Next feed predicted 02:01. Bottle warmer 01:31, 03:52, 05:30. Floor clean 08:42-09:30."
+         }
+        ],
+        "summary": "Night feeds covered with 3 prewarms and Parent A on duty, floor clean set for 08:42-09:30 between morning naps.",
+        "why_changed": "A night feed at 23:08 shifted the next predicted feed to 02:01, so prewarm times were moved and duty rotated to Parent A.",
+        "floor_clean": [
+         {
+          "start": "08:42",
+          "end": "09:30",
+          "why": "Daytime window between predicted naps that does not overlap sleep"
+         }
+        ],
+        "bottle_prewarm": [
+         {
+          "start": "01:31",
+          "end": "",
+          "why": "Before predicted 02:01 feed"
+         },
+         {
+          "start": "03:52",
+          "end": "",
+          "why": "Before predicted 04:22 feed"
+         },
+         {
+          "start": "05:30",
+          "end": "",
+          "why": "Before predicted 06:00 feed"
+         }
+        ],
+        "door_quiet": [],
+        "white_noise_boost": []
+       }
+      },
+      {
+       "at": "01:51",
+       "trigger": "night_wake",
+       "accepted": true,
+       "plan": {
+        "on_duty": "Parent B",
+        "messages": [
+         {
+          "to": "Parent A",
+          "text": "Off duty. Next feed predicted 04:37. Bottle warmer 04:07, 06:00. Floor clean 08:05-08:46."
+         },
+         {
+          "to": "Parent B",
+          "text": "On duty: Parent B. Next feed predicted 04:37. Bottle warmer 04:07, 06:00. Floor clean 08:05-08:46."
+         }
+        ],
+        "summary": "Night feed 04:37 covered with prewarms at 04:07 and 06:00 with Parent B on duty, floor clean set for 08:05-08:46 between predicted sleeps.",
+        "why_changed": "Night feed at 01:50 by Parent A set next predicted feed to 04:37, so prewarm times moved and duty set to Parent B by rota.",
+        "floor_clean": [
+         {
+          "start": "08:05",
+          "end": "08:46",
+          "why": "Daytime window between predicted sleeps 08:04-09:10 that does not overlap sleep"
+         }
+        ],
+        "bottle_prewarm": [
+         {
+          "start": "04:07",
+          "end": "",
+          "why": "Before predicted 04:37 feed"
+         },
+         {
+          "start": "06:00",
+          "end": "",
+          "why": "Before next night feed, 60+ minutes after prior prewarm"
+         }
+        ],
+        "door_quiet": [],
+        "white_noise_boost": []
+       }
+      },
+      {
+       "at": "04:05",
+       "trigger": "night_wake",
+       "accepted": true,
+       "plan": {
+        "on_duty": "Parent A",
+        "messages": [
+         {
+          "to": "Parent A",
+          "text": "On duty: Parent A. Next feed predicted 06:32. Bottle warmer 06:00. Floor clean 08:05-08:46."
+         },
+         {
+          "to": "Parent B",
+          "text": "Off duty. Next feed predicted 06:32. Bottle warmer 06:00. Floor clean 08:05-08:46."
+         }
+        ],
+        "summary": "Next feed predicted 06:32 covered with prewarm at 06:00 with Parent A on duty, floor clean set for 08:05-08:46 between predicted sleeps.",
+        "why_changed": "Night feed at 04:04 by Parent B updated next predicted feed to 06:32, so on duty moved to Parent A by rota and prewarm times updated.",
+        "floor_clean": [
+         {
+          "start": "08:05",
+          "end": "08:46",
+          "why": "Daytime window between predicted sleeps 07:57-09:03 that does not overlap sleep"
+         }
+        ],
+        "bottle_prewarm": [
+         {
+          "start": "06:00",
+          "end": "",
+          "why": "Before predicted 06:32 feed"
+         }
+        ],
+        "door_quiet": [],
+        "white_noise_boost": []
+       }
+      }
+     ]
+    },
+    {
+     "night": "Oct 23 to 24",
+     "feeds": 4,
+     "bottle_feeds": 2,
+     "bottle_warm_in_time": 2,
+     "light_on_at_feed_start": 4,
+     "breast_feeds_warmer_on": 2,
+     "prepares": 4,
+     "right_parent_pushed": 4,
+     "pushes_to_exhausted_parent": 0,
+     "live_calls": 0,
+     "explanations": [
+      "House ran overnight feeds on Sat 22:00 to 06:00. Bottle warmer turned on at 22:00, 23:20, 00:47, 02:12, 03:17, 04:37 and 05:43 and turned off at 22:06, 23:50, 00:53, 02:42, 03:23, 05:07 and 05:49. Feeds were logged at 22:05, 00:52, 03:22 and 05:48 with pushes to Parent A and Parent B and white noise at 42.0 and 48.1 dB. Study light showed dry overnight."
+     ],
+     "explanation_source": [
+      "muse"
+     ],
+     "echo": [
+      "Good morning. The house got ready for 4 night feeds."
+     ],
+     "tonight": [
+      "Tonight's plan. On duty: Parent A.\nBottle warmer and dim light at 23:20, 01:40, 04:02, 06:23.\nFloor clean window 07:00 to 07:41.\nWhy: Night feeds covered with 4 bottle prewarms before predicted wakes and morning floor clean 07:00-07:41 outside sleep windows."
+     ],
+     "replans": [],
+     "plans": [
+      {
+       "at": "22:00",
+       "trigger": "bedtime",
+       "accepted": true,
+       "plan": {
+        "on_duty": "Parent A",
+        "messages": [
+         {
+          "to": "Parent A",
+          "text": "You are on duty. Predicted sleeps: 22:00-23:37, 00:21-01:58, 02:43-04:20, 05:04-06:41, 07:45-09:22. Bottle warmer armed at 23:20, 01:40, 04:02, 06:23. Floor clean armed 07:00-07:41."
+         },
+         {
+          "to": "Parent B",
+          "text": "Parent A is on duty. Predicted sleeps: 22:00-23:37, 00:21-01:58, 02:43-04:20, 05:04-06:41, 07:45-09:22. Bottle warmer armed at 23:20, 01:40, 04:02, 06:23. Floor clean armed 07:00-07:41."
+         }
+        ],
+        "summary": "Night feeds covered with 4 bottle prewarms before predicted wakes and morning floor clean 07:00-07:41 outside sleep windows.",
+        "why_changed": "",
+        "floor_clean": [
+         {
+          "start": "07:00",
+          "end": "07:41",
+          "why": "day window 07:00-07:41 avoids predicted sleeps 05:04-06:41 and 07:45-09:22, 41 minutes for 31-minute run plus 10-minute margin"
+         }
+        ],
+        "bottle_prewarm": [
+         {
+          "start": "23:20",
+          "end": "",
+          "why": "17 minutes before predicted sleep end 23:37, night window"
+         },
+         {
+          "start": "01:40",
+          "end": "",
+          "why": "18 minutes before predicted sleep end 01:58, night window"
+         },
+         {
+          "start": "04:02",
+          "end": "",
+          "why": "18 minutes before predicted sleep end 04:20, night window"
+         },
+         {
+          "start": "06:23",
+          "end": "",
+          "why": "18 minutes before predicted sleep end 06:41, night window"
+         }
+        ],
+        "door_quiet": [],
+        "white_noise_boost": []
+       }
+      },
+      {
+       "at": "00:53",
+       "trigger": "night_wake",
+       "accepted": true,
+       "plan": {
+        "on_duty": "Parent A",
+        "messages": [
+         {
+          "to": "Parent A",
+          "text": "You are on duty. Predicted sleeps: 00:53-02:30, 03:18-04:55, 05:43-07:20, 08:24-10:01, 11:05-12:42. Bottle warmer armed at 02:12, 04:37, 06:23. Floor clean armed 07:20-08:01."
+         },
+         {
+          "to": "Parent B",
+          "text": "Parent A is on duty. Predicted sleeps: 00:53-02:30, 03:18-04:55, 05:43-07:20, 08:24-10:01, 11:05-12:42. Bottle warmer armed at 02:12, 04:37, 06:23. Floor clean armed 07:20-08:01."
+         }
+        ],
+        "summary": "Night feeds covered with 3 bottle prewarms before predicted wakes and morning floor clean 07:20-08:01 outside sleep windows.",
+        "why_changed": "Plan updated after night feed at 00:52 to align bottle prewarms with current predicted sleeps and move floor clean to next valid day window.",
+        "floor_clean": [
+         {
+          "start": "07:20",
+          "end": "08:01",
+          "why": "day window 07:20-08:01 avoids predicted sleeps 05:43-07:20 and 08:24-10:01, 41 minutes for 31-minute run plus 10-minute margin"
+         }
+        ],
+        "bottle_prewarm": [
+         {
+          "start": "02:12",
+          "end": "",
+          "why": "18 minutes before predicted sleep end 02:30, night window"
+         },
+         {
+          "start": "04:37",
+          "end": "",
+          "why": "18 minutes before predicted sleep end 04:55, night window"
+         },
+         {
+          "start": "06:23",
+          "end": "",
+          "why": "57 minutes before predicted sleep end 07:20, start within night window 21:00-06:59"
+         }
+        ],
+        "door_quiet": [],
+        "white_noise_boost": []
+       }
+      },
+      {
+       "at": "03:23",
+       "trigger": "night_wake",
+       "accepted": true,
+       "plan": {
+        "on_duty": "Parent B",
+        "messages": [
+         {
+          "to": "Parent A",
+          "text": "Parent B is on duty. Predicted sleeps: 03:23-04:58, 05:43-07:19, 08:23-10:00, 11:04-12:41, 13:45-15:22. Bottle prewarm at 04:37, 06:23. Floor clean 07:20-08:01. Feed at 03:22 logged."
+         },
+         {
+          "to": "Parent B",
+          "text": "You are on duty. Predicted sleeps: 03:23-04:58, 05:43-07:19, 08:23-10:00, 11:04-12:41, 13:45-15:22. Bottle prewarm at 04:37, 06:23. Floor clean 07:20-08:01. Feed at 03:22 logged."
+         }
+        ],
+        "summary": "Night feeds covered with bottle prewarms at 04:37 and 06:23 and floor clean 07:20-08:01 outside sleep windows.",
+        "why_changed": "Removed past prewarm at 02:12 after night feed at 03:22 and aligned on-duty to rota.",
+        "floor_clean": [
+         {
+          "start": "07:20",
+          "end": "08:01",
+          "why": "day window 07:20-08:01 avoids predicted sleeps 05:43-07:19 and 08:23-10:00, 41 minutes for 31-minute run plus 10-minute margin"
+         }
+        ],
+        "bottle_prewarm": [
+         {
+          "start": "04:37",
+          "end": "",
+          "why": "18 minutes before predicted sleep end 04:55, night window"
+         },
+         {
+          "start": "06:23",
+          "end": "",
+          "why": "57 minutes before predicted sleep end 07:20, start within night window 21:00-06:59"
+         }
+        ],
+        "door_quiet": [],
+        "white_noise_boost": []
+       }
+      },
+      {
+       "at": "05:49",
+       "trigger": "night_wake",
+       "accepted": true,
+       "plan": {
+        "on_duty": "Parent A",
+        "messages": [
+         {
+          "to": "Parent A",
+          "text": "You are on duty. Predicted sleeps: 05:49-07:26, 08:29-10:06, 11:09-12:46, 13:49-15:26, 16:29-18:06. Feed at 05:48 logged. Floor clean window 07:27-08:08."
+         },
+         {
+          "to": "Parent B",
+          "text": "Parent A is on duty. Predicted sleeps: 05:49-07:26, 08:29-10:06, 11:09-12:46, 13:49-15:26, 16:29-18:06. Feed at 05:48 logged. Floor clean window 07:27-08:08."
+         }
+        ],
+        "summary": "On duty Parent A, floor clean 07:27-08:08 outside predicted sleeps, no bottle prewarm in day period.",
+        "why_changed": "Updated after night feed at 05:48 and removed past and overlapping windows.",
+        "floor_clean": [
+         {
+          "start": "07:27",
+          "end": "08:08",
+          "why": "day window 07:27-08:08 avoids predicted sleeps 05:49-07:26 and 08:29-10:06, 41 minutes for 31-minute run plus 10-minute margin"
+         }
+        ],
+        "bottle_prewarm": [],
+        "door_quiet": [],
+        "white_noise_boost": []
+       }
+      }
+     ]
+    },
+    {
+     "night": "Oct 24 to 25",
+     "feeds": 4,
+     "bottle_feeds": 1,
+     "bottle_warm_in_time": 1,
+     "light_on_at_feed_start": 3,
+     "breast_feeds_warmer_on": 2,
+     "prepares": 3,
+     "right_parent_pushed": 3,
+     "pushes_to_exhausted_parent": 0,
+     "live_calls": 0,
+     "explanations": [
+      "House ran night plan with feeds logged at 00:11, 03:09 and 04:55. Bottle warmer ran at 23:20, 00:06, 03:04, 04:08 and 04:50. Floor clean window updated to 09:16-10:13 and on-duty rotated between Parent A and Parent B."
+     ],
+     "explanation_source": [
+      "muse"
+     ],
+     "echo": [
+      "Good morning. The house got ready for 3 night feeds."
+     ],
+     "tonight": [
+      "Tonight's plan. On duty: Parent A.\nBottle warmer and dim light at 23:20, 02:10, 04:40.\nFloor clean window 07:25 to 08:10.\nWhy: Plan covers night feeds with three prewarms and a morning floor clean in the 07:25-08:10 gap between sleeps."
+     ],
+     "replans": [],
+     "plans": [
+      {
+       "at": "22:00",
+       "trigger": "bedtime",
+       "accepted": true,
+       "plan": {
+        "on_duty": "Parent A",
+        "messages": [
+         {
+          "to": "Parent A",
+          "text": "You are on duty tonight. Bottle warmer: 23:20, 02:10, 04:40. Floor clean armed 07:25-08:10."
+         },
+         {
+          "to": "Parent B",
+          "text": "On duty is Parent A tonight. Bottle warmer: 23:20, 02:10, 04:40. Floor clean armed 07:25-08:10."
+         }
+        ],
+        "summary": "Plan covers night feeds with three prewarms and a morning floor clean in the 07:25-08:10 gap between sleeps.",
+        "why_changed": "",
+        "floor_clean": [
+         {
+          "start": "07:25",
+          "end": "08:10",
+          "why": "Daytime gap between predicted sleeps 05:42-07:24 and 08:21-09:58, 45-minute window meets 41-minute minimum."
+         }
+        ],
+        "bottle_prewarm": [
+         {
+          "start": "23:20",
+          "end": "",
+          "why": "Before predicted feed at 23:50"
+         },
+         {
+          "start": "02:10",
+          "end": "",
+          "why": "Before predicted wake between sleeps 00:45-02:27 and 03:14-04:55"
+         },
+         {
+          "start": "04:40",
+          "end": "",
+          "why": "Before predicted wake between sleeps 03:14-04:55 and 05:42-07:24"
+         }
+        ],
+        "door_quiet": [],
+        "white_noise_boost": []
+       }
+      },
+      {
+       "at": "00:12",
+       "trigger": "night_wake",
+       "accepted": true,
+       "plan": {
+        "on_duty": "Parent B",
+        "messages": [
+         {
+          "to": "Parent A",
+          "text": "On duty is Parent B tonight. Bottle warmer: 02:10, 04:40. Floor clean armed 09:08-10:05."
+         },
+         {
+          "to": "Parent B",
+          "text": "You are on duty tonight. Bottle warmer: 02:10, 04:40. Floor clean armed 09:08-10:05."
+         }
+        ],
+        "summary": "Plan covers night feeds with two prewarms and a morning floor clean in the 09:08-10:05 gap between naps.",
+        "why_changed": "Night feed at 00:11 updated predictions, moving on-duty to Parent B by rota and shifting floor clean to the next valid daytime gap.",
+        "floor_clean": [
+         {
+          "start": "09:08",
+          "end": "10:05",
+          "why": "Daytime gap between predicted naps 07:31-09:08 and 10:05-11:42, 57-minute window meets 41-minute minimum and avoids sleep."
+         }
+        ],
+        "bottle_prewarm": [
+         {
+          "start": "02:10",
+          "end": "",
+          "why": "Before predicted feed at 02:49"
+         },
+         {
+          "start": "04:40",
+          "end": "",
+          "why": "Before predicted feed between sleeps 04:11 and 04:57"
+         }
+        ],
+        "door_quiet": [],
+        "white_noise_boost": []
+       }
+      },
+      {
+       "at": "01:39",
+       "trigger": "night_wake",
+       "accepted": true,
+       "plan": {
+        "on_duty": "Parent A",
+        "messages": [
+         {
+          "to": "Parent A",
+          "text": "On duty is Parent A tonight. Bottle warmer: 03:14, 05:08. Floor clean armed 08:01-08:58."
+         },
+         {
+          "to": "Parent B",
+          "text": "On duty is Parent A tonight. Bottle warmer: 03:14, 05:08. Floor clean armed 08:01-08:58."
+         }
+        ],
+        "summary": "Plan covers night feeds with two prewarms and a morning floor clean in the 08:01-08:58 gap between sleeps.",
+        "why_changed": "Night feed at 01:38 updated predictions, moving on-duty to Parent A by rota and shifting floor clean to the next valid daytime gap.",
+        "floor_clean": [
+         {
+          "start": "08:01",
+          "end": "08:58",
+          "why": "Daytime gap between predicted sleeps 06:24-08:01 and 08:58-10:35, 57-minute window meets 41-minute minimum and avoids sleep."
+         }
+        ],
+        "bottle_prewarm": [
+         {
+          "start": "03:14",
+          "end": "",
+          "why": "Before predicted feed at 03:44"
+         },
+         {
+          "start": "05:08",
+          "end": "",
+          "why": "Before predicted feed after sleep 04:01-05:38"
+         }
+        ],
+        "door_quiet": [],
+        "white_noise_boost": []
+       }
+      },
+      {
+       "at": "03:10",
+       "trigger": "night_wake",
+       "accepted": true,
+       "plan": {
+        "on_duty": "Parent B",
+        "messages": [
+         {
+          "to": "Parent A",
+          "text": "On duty is Parent B tonight. Bottle warmer: 04:08. Floor clean armed 07:20-08:17."
+         },
+         {
+          "to": "Parent B",
+          "text": "On duty is Parent B tonight. Bottle warmer: 04:08. Floor clean armed 07:20-08:17."
+         }
+        ],
+        "summary": "Plan covers night feed with one prewarm and a morning floor clean in the 07:20-08:17 gap between sleeps.",
+        "why_changed": "Night feed at 03:09 shifted predictions so floor clean moved to 07:20-08:17 and on-duty returned to rota Parent B.",
+        "floor_clean": [
+         {
+          "start": "07:20",
+          "end": "08:17",
+          "why": "Daytime gap between predicted sleeps 05:38-07:20 and 08:17-09:54, 57-minute window meets 41-minute minimum and avoids sleep."
+         }
+        ],
+        "bottle_prewarm": [
+         {
+          "start": "04:08",
+          "end": "",
+          "why": "Before predicted feed at 04:38"
+         }
+        ],
+        "door_quiet": [],
+        "white_noise_boost": []
+       }
+      },
+      {
+       "at": "04:56",
+       "trigger": "night_wake",
+       "accepted": true,
+       "plan": {
+        "on_duty": "Parent A",
+        "messages": [
+         {
+          "to": "Parent A",
+          "text": "On duty is Parent A. Bottle warmer: 06:03. Floor clean armed 09:16-10:13."
+         },
+         {
+          "to": "Parent B",
+          "text": "On duty is Parent A. Bottle warmer: 06:03. Floor clean armed 09:16-10:13."
+         }
+        ],
+        "summary": "One prewarm at 06:03 before the 06:33 predicted feed and a floor clean in the 09:16-10:13 gap between naps.",
+        "why_changed": "Night feed at 04:55 shifted predictions so floor clean moved to the 09:16-10:13 gap and on-duty set to rota Parent A.",
+        "floor_clean": [
+         {
+          "start": "09:16",
+          "end": "10:13",
+          "why": "Daytime gap between predicted sleeps 07:39-09:16 and 10:13-11:50, 57-minute window meets 41-minute minimum and avoids sleep."
+         }
+        ],
+        "bottle_prewarm": [
+         {
+          "start": "06:03",
+          "end": "",
+          "why": "Before predicted feed at 06:33"
+         }
+        ],
+        "door_quiet": [],
+        "white_noise_boost": []
+       }
+      }
+     ]
+    },
+    {
+     "night": "Oct 25 to 26",
+     "feeds": 3,
+     "bottle_feeds": 1,
+     "bottle_warm_in_time": 1,
+     "light_on_at_feed_start": 3,
+     "breast_feeds_warmer_on": 2,
+     "prepares": 4,
+     "right_parent_pushed": 4,
+     "pushes_to_exhausted_parent": 0,
+     "live_calls": 0,
+     "explanations": [
+      "Overnight the house got ready for 4 night feeds, the bottle warmer went on 6 times. Muse armed 4 plans, the fixed routines ran 2 times instead."
+     ],
+     "explanation_source": [
+      "fixed"
+     ],
+     "echo": [
+      "Good morning. The house got ready for 4 night feeds."
+     ],
+     "tonight": [
+      "Tonight's plan. On duty: Parent A.\nBottle warmer and dim light at 23:35, 01:24, 03:33, 05:42.\nFloor clean window 08:47 to 09:28.\nWhy: Plan covers night feeds with 4 prewarms and a morning vacuum window between naps."
+     ],
+     "replans": [],
+     "plans": [
+      {
+       "at": "22:00",
+       "trigger": "bedtime",
+       "accepted": true,
+       "plan": {
+        "on_duty": "Parent A",
+        "messages": [
+         {
+          "to": "Parent A",
+          "text": "You are on duty. Bottle warmer at 23:35, 01:24, 03:33, 05:42. Vacuum window 08:47-09:28."
+         },
+         {
+          "to": "Parent B",
+          "text": "On duty is Parent A. Bottle warmer at 23:35, 01:24, 03:33, 05:42. Vacuum window 08:47-09:28."
+         }
+        ],
+        "summary": "Plan covers night feeds with 4 prewarms and a morning vacuum window between naps.",
+        "why_changed": "",
+        "floor_clean": [
+         {
+          "start": "08:47",
+          "end": "09:28",
+          "why": "day window between predicted naps, finishing before time on the floor"
+         }
+        ],
+        "bottle_prewarm": [
+         {
+          "start": "23:35",
+          "end": "",
+          "why": "before predicted waking around 23:45"
+         },
+         {
+          "start": "01:24",
+          "end": "",
+          "why": "30 minutes before predicted waking around 01:54"
+         },
+         {
+          "start": "03:33",
+          "end": "",
+          "why": "30 minutes before predicted waking around 04:03"
+         },
+         {
+          "start": "05:42",
+          "end": "",
+          "why": "30 minutes before predicted waking around 06:12"
+         }
+        ],
+        "door_quiet": [],
+        "white_noise_boost": []
+       }
+      },
+      {
+       "at": "23:44",
+       "trigger": "night_wake",
+       "accepted": true,
+       "plan": {
+        "on_duty": "Parent B",
+        "messages": [
+         {
+          "to": "Parent A",
+          "text": "On duty is Parent B. Bottle warmer at 01:24, 03:33, 05:42. Vacuum window 09:05-09:46."
+         },
+         {
+          "to": "Parent B",
+          "text": "You are on duty. Bottle warmer at 01:24, 03:33, 05:42. Vacuum window 09:05-09:46."
+         }
+        ],
+        "summary": "Night feeds covered with 3 prewarms and morning vacuum between naps with Parent B on duty.",
+        "why_changed": "Feed at 23:43 handled by Parent A so rota moves on-duty to Parent B and past prewarm removed.",
+        "floor_clean": [
+         {
+          "start": "09:05",
+          "end": "09:46",
+          "why": "day window between predicted naps, finishing before time on the floor"
+         }
+        ],
+        "bottle_prewarm": [
+         {
+          "start": "01:24",
+          "end": "",
+          "why": "before predicted feed around 01:50"
+         },
+         {
+          "start": "03:33",
+          "end": "",
+          "why": "before predicted waking around 04:36"
+         },
+         {
+          "start": "05:42",
+          "end": "",
+          "why": "before predicted waking around 06:29"
+         }
+        ],
+        "door_quiet": [],
+        "white_noise_boost": []
+       }
+      },
+      {
+       "at": "01:12",
+       "trigger": "night_wake",
+       "accepted": true,
+       "plan": {
+        "on_duty": "Parent A",
+        "messages": [
+         {
+          "to": "Parent A",
+          "text": "On duty is Parent A. Bottle warmer at 02:28, 04:29, 05:40. Vacuum window 08:38-09:30."
+         },
+         {
+          "to": "Parent B",
+          "text": "On duty is Parent A. Bottle warmer at 02:28, 04:29, 05:40. Vacuum window 08:38-09:30."
+         }
+        ],
+        "summary": "Night feeds covered with 3 prewarms and morning vacuum between naps with Parent A on duty.",
+        "why_changed": "Feed at 01:11 handled by Parent B so on-duty moves to Parent A by rota and times updated to predicted sleeps and next feed.",
+        "floor_clean": "fixed rule",
+        "bottle_prewarm": [
+         {
+          "start": "02:28",
+          "end": "",
+          "why": "before predicted feed around 02:58"
+         },
+         {
+          "start": "04:29",
+          "end": "",
+          "why": "before predicted waking around 04:59"
+         },
+         {
+          "start": "05:40",
+          "end": "",
+          "why": "before predicted waking around 06:10"
+         }
+        ],
+        "door_quiet": [],
+        "white_noise_boost": []
+       }
+      },
+      {
+       "at": "01:12",
+       "trigger": "night_wake",
+       "fallback": "floor_clean 08:38-09:30 overlaps the predicted nap 07:01-08:38"
+      },
+      {
+       "at": "04:04",
+       "trigger": "night_wake",
+       "accepted": true,
+       "plan": {
+        "on_duty": "Parent B",
+        "messages": [
+         {
+          "to": "Parent A",
+          "text": "On duty is Parent B. Bottle warmer at 05:43. Vacuum window 09:24-10:05."
+         },
+         {
+          "to": "Parent B",
+          "text": "On duty is Parent B. Bottle warmer at 05:43. Vacuum window 09:24-10:05."
+         }
+        ],
+        "summary": "Parent B on duty with one night prewarm at 05:43 and vacuum 09:24-10:05 between naps.",
+        "why_changed": "Feed at 04:03 handled by Parent A so rota moves on-duty to Parent B and windows updated to avoid predicted sleeps.",
+        "floor_clean": "fixed rule",
+        "bottle_prewarm": [
+         {
+          "start": "05:43",
+          "end": "",
+          "why": "before predicted feed around 06:13"
+         }
+        ],
+        "door_quiet": [],
+        "white_noise_boost": []
+       }
+      },
+      {
+       "at": "04:04",
+       "trigger": "night_wake",
+       "fallback": "floor_clean 09:24-10:05 overlaps the predicted nap 07:47-09:24"
+      }
+     ]
+    }
+   ],
+   "nights_total": {
+    "feeds": 20,
+    "bottle_feeds": 8,
+    "bottle_warm_in_time": 8,
+    "light_on_at_feed_start": 19,
+    "breast_feeds_warmer_on": 11,
+    "prepares": 20,
+    "right_parent_pushed": 20,
+    "live_calls": 0
+   },
+   "muse": {
+    "calls": 31,
+    "ok": 31,
+    "usd": 0.2252,
+    "latency_median_s": 4.88,
+    "latency_p90_s": 5.99,
+    "latency_max_s": 6.42,
+    "input_tokens": 55447,
+    "output_tokens": 36679
+   }
+  }
+ ],
+ "fixed": {
+  "nights": [
+   {
+    "night": "Oct 20 to 21",
+    "feeds": 3,
+    "bottle_feeds": 1,
+    "bottle_warm_in_time": 1,
+    "light_on_at_feed_start": 3,
+    "breast_feeds_warmer_on": 2,
+    "prepares": 3,
+    "right_parent_pushed": 3,
+    "pushes_to_exhausted_parent": 0,
+    "live_calls": 0,
+    "explanations": [],
+    "explanation_source": [],
+    "echo": [],
+    "tonight": [],
+    "replans": [],
+    "plans": []
+   },
+   {
+    "night": "Oct 21 to 22",
+    "feeds": 3,
+    "bottle_feeds": 2,
+    "bottle_warm_in_time": 2,
+    "light_on_at_feed_start": 3,
+    "breast_feeds_warmer_on": 1,
+    "prepares": 3,
+    "right_parent_pushed": 3,
+    "pushes_to_exhausted_parent": 0,
+    "live_calls": 0,
+    "explanations": [],
+    "explanation_source": [],
+    "echo": [],
+    "tonight": [],
+    "replans": [],
+    "plans": []
+   },
+   {
+    "night": "Oct 22 to 23",
+    "feeds": 3,
+    "bottle_feeds": 1,
+    "bottle_warm_in_time": 1,
+    "light_on_at_feed_start": 3,
+    "breast_feeds_warmer_on": 2,
+    "prepares": 3,
+    "right_parent_pushed": 3,
+    "pushes_to_exhausted_parent": 0,
+    "live_calls": 0,
+    "explanations": [],
+    "explanation_source": [],
+    "echo": [],
+    "tonight": [],
+    "replans": [],
+    "plans": []
+   },
+   {
+    "night": "Oct 23 to 24",
+    "feeds": 4,
+    "bottle_feeds": 2,
+    "bottle_warm_in_time": 2,
+    "light_on_at_feed_start": 4,
+    "breast_feeds_warmer_on": 2,
+    "prepares": 4,
+    "right_parent_pushed": 4,
+    "pushes_to_exhausted_parent": 0,
+    "live_calls": 0,
+    "explanations": [],
+    "explanation_source": [],
+    "echo": [],
+    "tonight": [],
+    "replans": [],
+    "plans": []
+   },
+   {
+    "night": "Oct 24 to 25",
+    "feeds": 4,
+    "bottle_feeds": 1,
+    "bottle_warm_in_time": 1,
+    "light_on_at_feed_start": 3,
+    "breast_feeds_warmer_on": 2,
+    "prepares": 3,
+    "right_parent_pushed": 3,
+    "pushes_to_exhausted_parent": 0,
+    "live_calls": 0,
+    "explanations": [],
+    "explanation_source": [],
+    "echo": [],
+    "tonight": [],
+    "replans": [],
+    "plans": []
+   },
+   {
+    "night": "Oct 25 to 26",
+    "feeds": 3,
+    "bottle_feeds": 1,
+    "bottle_warm_in_time": 1,
+    "light_on_at_feed_start": 3,
+    "breast_feeds_warmer_on": 2,
+    "prepares": 3,
+    "right_parent_pushed": 3,
+    "pushes_to_exhausted_parent": 0,
+    "live_calls": 0,
+    "explanations": [],
+    "explanation_source": [],
+    "echo": [],
+    "tonight": [],
+    "replans": [],
+    "plans": []
+   }
+  ],
+  "nights_total": {
+   "feeds": 20,
+   "bottle_feeds": 8,
+   "bottle_warm_in_time": 8,
+   "light_on_at_feed_start": 19,
+   "breast_feeds_warmer_on": 11,
+   "prepares": 19,
+   "right_parent_pushed": 19,
+   "live_calls": 0
+  }
+ },
+ "muse_all": {
+  "calls": 31,
+  "ok": 31,
+  "usd": 0.2252,
+  "latency_median_s": 4.88,
+  "latency_p90_s": 5.99,
+  "latency_max_s": 6.42,
+  "input_tokens": 55447,
+  "output_tokens": 36679
+ },
+ "calls": [
+  {
+   "part": "run1:nights",
+   "name": "plan",
+   "ok": true,
+   "seconds": 5.018,
+   "usd": 0.007351,
+   "input_tokens": 1515,
+   "output_tokens": 1284,
+   "host": "inference.baseten.co",
+   "model": "meta-models/muse-spark-open-1026"
+  },
+  {
+   "part": "run1:nights",
+   "name": "plan",
+   "ok": true,
+   "seconds": 5.32,
+   "usd": 0.008009,
+   "input_tokens": 1902,
+   "output_tokens": 1325,
+   "host": "inference.baseten.co",
+   "model": "meta-models/muse-spark-open-1026"
+  },
+  {
+   "part": "run1:nights",
+   "name": "plan",
+   "ok": true,
+   "seconds": 5.242,
+   "usd": 0.008594,
+   "input_tokens": 1836,
+   "output_tokens": 1482,
+   "host": "inference.baseten.co",
+   "model": "meta-models/muse-spark-open-1026"
+  },
+  {
+   "part": "run1:nights",
+   "name": "plan",
+   "ok": true,
+   "seconds": 3.999,
+   "usd": 0.006546,
+   "input_tokens": 1752,
+   "output_tokens": 1025,
+   "host": "inference.baseten.co",
+   "model": "meta-models/muse-spark-open-1026"
+  },
+  {
+   "part": "run1:nights",
+   "name": "explain",
+   "ok": true,
+   "seconds": 2.896,
+   "usd": 0.005225,
+   "input_tokens": 1892,
+   "output_tokens": 673,
+   "host": "inference.baseten.co",
+   "model": "meta-models/muse-spark-open-1026"
+  },
+  {
+   "part": "run1:nights",
+   "name": "plan",
+   "ok": true,
+   "seconds": 5.151,
+   "usd": 0.007458,
+   "input_tokens": 1475,
+   "output_tokens": 1321,
+   "host": "inference.baseten.co",
+   "model": "meta-models/muse-spark-open-1026"
+  },
+  {
+   "part": "run1:nights",
+   "name": "plan",
+   "ok": true,
+   "seconds": 5.801,
+   "usd": 0.00838,
+   "input_tokens": 1815,
+   "output_tokens": 1438,
+   "host": "inference.baseten.co",
+   "model": "meta-models/muse-spark-open-1026"
+  },
+  {
+   "part": "run1:nights",
+   "name": "plan",
+   "ok": true,
+   "seconds": 5.791,
+   "usd": 0.009201,
+   "input_tokens": 1877,
+   "output_tokens": 1613,
+   "host": "inference.baseten.co",
+   "model": "meta-models/muse-spark-open-1026"
+  },
+  {
+   "part": "run1:nights",
+   "name": "plan",
+   "ok": true,
+   "seconds": 2.53,
+   "usd": 0.005033,
+   "input_tokens": 1813,
+   "output_tokens": 651,
+   "host": "inference.baseten.co",
+   "model": "meta-models/muse-spark-open-1026"
+  },
+  {
+   "part": "run1:nights",
+   "name": "explain",
+   "ok": true,
+   "seconds": 2.887,
+   "usd": 0.004941,
+   "input_tokens": 1682,
+   "output_tokens": 668,
+   "host": "inference.baseten.co",
+   "model": "meta-models/muse-spark-open-1026"
+  },
+  {
+   "part": "run1:nights",
+   "name": "plan",
+   "ok": true,
+   "seconds": 5.279,
+   "usd": 0.008259,
+   "input_tokens": 1517,
+   "output_tokens": 1497,
+   "host": "inference.baseten.co",
+   "model": "meta-models/muse-spark-open-1026"
+  },
+  {
+   "part": "run1:nights",
+   "name": "plan",
+   "ok": true,
+   "seconds": 3.628,
+   "usd": 0.00613,
+   "input_tokens": 1824,
+   "output_tokens": 906,
+   "host": "inference.baseten.co",
+   "model": "meta-models/muse-spark-open-1026"
+  },
+  {
+   "part": "run1:nights",
+   "name": "plan",
+   "ok": true,
+   "seconds": 6.419,
+   "usd": 0.009955,
+   "input_tokens": 1827,
+   "output_tokens": 1805,
+   "host": "inference.baseten.co",
+   "model": "meta-models/muse-spark-open-1026"
+  },
+  {
+   "part": "run1:nights",
+   "name": "plan",
+   "ok": true,
+   "seconds": 4.309,
+   "usd": 0.007716,
+   "input_tokens": 1804,
+   "output_tokens": 1285,
+   "host": "inference.baseten.co",
+   "model": "meta-models/muse-spark-open-1026"
+  },
+  {
+   "part": "run1:nights",
+   "name": "explain",
+   "ok": true,
+   "seconds": 3.769,
+   "usd": 0.006217,
+   "input_tokens": 1672,
+   "output_tokens": 971,
+   "host": "inference.baseten.co",
+   "model": "meta-models/muse-spark-open-1026"
+  },
+  {
+   "part": "run1:nights",
+   "name": "plan",
+   "ok": true,
+   "seconds": 4.878,
+   "usd": 0.007836,
+   "input_tokens": 1526,
+   "output_tokens": 1395,
+   "host": "inference.baseten.co",
+   "model": "meta-models/muse-spark-open-1026"
+  },
+  {
+   "part": "run1:nights",
+   "name": "plan",
+   "ok": true,
+   "seconds": 6.016,
+   "usd": 0.009166,
+   "input_tokens": 2015,
+   "output_tokens": 1564,
+   "host": "inference.baseten.co",
+   "model": "meta-models/muse-spark-open-1026"
+  },
+  {
+   "part": "run1:nights",
+   "name": "plan",
+   "ok": true,
+   "seconds": 3.776,
+   "usd": 0.007299,
+   "input_tokens": 2004,
+   "output_tokens": 1128,
+   "host": "inference.baseten.co",
+   "model": "meta-models/muse-spark-open-1026"
+  },
+  {
+   "part": "run1:nights",
+   "name": "plan",
+   "ok": true,
+   "seconds": 5.988,
+   "usd": 0.008372,
+   "input_tokens": 1924,
+   "output_tokens": 1404,
+   "host": "inference.baseten.co",
+   "model": "meta-models/muse-spark-open-1026"
+  },
+  {
+   "part": "run1:nights",
+   "name": "explain",
+   "ok": true,
+   "seconds": 2.774,
+   "usd": 0.005032,
+   "input_tokens": 2091,
+   "output_tokens": 569,
+   "host": "inference.baseten.co",
+   "model": "meta-models/muse-spark-open-1026"
+  },
+  {
+   "part": "run1:nights",
+   "name": "plan",
+   "ok": true,
+   "seconds": 6.038,
+   "usd": 0.009329,
+   "input_tokens": 1527,
+   "output_tokens": 1746,
+   "host": "inference.baseten.co",
+   "model": "meta-models/muse-spark-open-1026"
+  },
+  {
+   "part": "run1:nights",
+   "name": "plan",
+   "ok": true,
+   "seconds": 4.962,
+   "usd": 0.007278,
+   "input_tokens": 1851,
+   "output_tokens": 1168,
+   "host": "inference.baseten.co",
+   "model": "meta-models/muse-spark-open-1026"
+  },
+  {
+   "part": "run1:nights",
+   "name": "plan",
+   "ok": true,
+   "seconds": 5.742,
+   "usd": 0.007629,
+   "input_tokens": 1809,
+   "output_tokens": 1263,
+   "host": "inference.baseten.co",
+   "model": "meta-models/muse-spark-open-1026"
+  },
+  {
+   "part": "run1:nights",
+   "name": "plan",
+   "ok": true,
+   "seconds": 5.418,
+   "usd": 0.008878,
+   "input_tokens": 1836,
+   "output_tokens": 1549,
+   "host": "inference.baseten.co",
+   "model": "meta-models/muse-spark-open-1026"
+  },
+  {
+   "part": "run1:nights",
+   "name": "plan",
+   "ok": true,
+   "seconds": 3.524,
+   "usd": 0.006384,
+   "input_tokens": 1748,
+   "output_tokens": 988,
+   "host": "inference.baseten.co",
+   "model": "meta-models/muse-spark-open-1026"
+  },
+  {
+   "part": "run1:nights",
+   "name": "explain",
+   "ok": true,
+   "seconds": 2.411,
+   "usd": 0.004668,
+   "input_tokens": 1875,
+   "output_tokens": 547,
+   "host": "inference.baseten.co",
+   "model": "meta-models/muse-spark-open-1026"
+  },
+  {
+   "part": "run1:nights",
+   "name": "plan",
+   "ok": true,
+   "seconds": 3.791,
+   "usd": 0.006304,
+   "input_tokens": 1558,
+   "output_tokens": 1025,
+   "host": "inference.baseten.co",
+   "model": "meta-models/muse-spark-open-1026"
+  },
+  {
+   "part": "run1:nights",
+   "name": "plan",
+   "ok": true,
+   "seconds": 5.922,
+   "usd": 0.008231,
+   "input_tokens": 1920,
+   "output_tokens": 1372,
+   "host": "inference.baseten.co",
+   "model": "meta-models/muse-spark-open-1026"
+  },
+  {
+   "part": "run1:nights",
+   "name": "plan",
+   "ok": true,
+   "seconds": 3.977,
+   "usd": 0.007005,
+   "input_tokens": 1854,
+   "output_tokens": 1103,
+   "host": "inference.baseten.co",
+   "model": "meta-models/muse-spark-open-1026"
+  },
+  {
+   "part": "run1:nights",
+   "name": "plan",
+   "ok": true,
+   "seconds": 4.505,
+   "usd": 0.007607,
+   "input_tokens": 1764,
+   "output_tokens": 1271,
+   "host": "inference.baseten.co",
+   "model": "meta-models/muse-spark-open-1026"
+  },
+  {
+   "part": "run1:nights",
+   "name": "explain",
+   "ok": true,
+   "seconds": 2.643,
+   "usd": 0.00516,
+   "input_tokens": 1942,
+   "output_tokens": 643,
+   "host": "inference.baseten.co",
+   "model": "meta-models/muse-spark-open-1026"
+  }
+ ]
+}

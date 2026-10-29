@@ -171,6 +171,10 @@ class DayEngine:
         self.seen_door = set()
         self.floor_why = {}
         self.last_door = None
+        # Set by the house brain (house_brain.py) from a checked Muse plan: {"floor_clean": [windows], "door_quiet":
+        # [windows]}. None runs the fixed rules. A plan only moves when a routine may run, never its safety checks.
+        self.plan = None
+        self.cleaned = []  # when each floor clean started
 
     def _local(self, now, hhmm):
         h, m = map(int, hhmm.split(":"))
@@ -292,7 +296,15 @@ class DayEngine:
                 continue
             self.last_door = moment
             what = "the doorbell rang" if event["source"] == "doorbell" else "a person at the door (camera)"
-            if self.mode is not None:
+            quiet = next((w for w in (self.plan or {}).get("door_quiet") or [] if w["start"] <= now < w["end"]), None)
+            if self.mode is None and quiet is not None:
+                out.append(self.routine("door", "silent_push", now, source=event["source"], by="plan", why=quiet["why"]))
+                out.append(self.write("door", PUSH, None,
+                                      {"title": "Door", "message": f"{what.capitalize()} at {self._hm(now)}. The Echo "
+                                       "stays quiet, the plan has the door on silent.",
+                                       "data": {"push": {"interruption-level": "passive"}}},
+                                      f"{what}, door quiet in the plan: {quiet['why']}"[:200], now))
+            elif self.mode is not None:
                 out.append(self.routine("door", "silent_push", now, source=event["source"]))
                 out.append(self.write("door", PUSH, None,
                                       {"title": "Door", "message": f"{what.capitalize()} at {self._hm(now)}. He is asleep, "
@@ -305,15 +317,25 @@ class DayEngine:
 
     # Floor clean
 
+    def floor_slots(self, entries, now):
+        """(key, floor time, earliest start, latest start): the plan's windows when a plan is armed, else the fixed
+        window before each predicted tummy time."""
+        run = datetime.timedelta(minutes=self.s["run_min"])
+        if self.plan is not None and self.plan.get("floor_clean") is not None:
+            return [(("floor", w["end"].isoformat()), w["end"], w["start"], w["end"] - run) for w in self.plan["floor_clean"]]
+        slots = []
+        for floor in tummy_times(entries, now, self.tz, self.s["tummy_days"]):
+            latest = floor - run - datetime.timedelta(minutes=self.s["floor_lead_min"])
+            slots.append((("floor", floor.isoformat()), floor, latest - datetime.timedelta(minutes=self.s["floor_window_min"]),
+                          latest))
+        return slots
+
     def floor_clean(self, entries, now, house):
         out = []
         run = datetime.timedelta(minutes=self.s["run_min"])
-        for floor in tummy_times(entries, now, self.tz, self.s["tummy_days"]):
-            key = ("floor", floor.isoformat())
+        for key, floor, earliest, latest in self.floor_slots(entries, now):
             if key in self.done:
                 continue
-            latest = floor - run - datetime.timedelta(minutes=self.s["floor_lead_min"])
-            earliest = latest - datetime.timedelta(minutes=self.s["floor_window_min"])
             if now < earliest:
                 continue
             ok, why = self.floor_ok(entries, now, house)
@@ -335,7 +357,9 @@ class DayEngine:
                 out.append(self.bus.publish("ask_parent", action="floor_clean", key=list(key), at=now.isoformat(),
                                             floor_at=floor.isoformat()))
                 out.append(self.routine("floor_clean", "ask", now, floor_at=floor.isoformat()))
-                out.append(self.notify("floor_clean", f"Tummy time is usually around {self._hm(floor)}. {where.capitalize()}, "
+                lead = (f"The plan has a floor clean window until {self._hm(floor)}." if self.plan and
+                        self.plan.get("floor_clean") is not None else f"Tummy time is usually around {self._hm(floor)}.")
+                out.append(self.notify("floor_clean", f"{lead} {where.capitalize()}, "
                                        f"I can run the vacuum now: {self.s['run_min']} min, done by {done}, before the next "
                                        "predicted nap. Reply yes to start it.", now, ask="floor_clean"))
         return out
@@ -375,6 +399,7 @@ class DayEngine:
 
     def floor_start(self, key, floor, now, by):
         self.done.add(key)
+        self.cleaned.append(now)
         return [self.routine("floor_clean", "start", now, by=by, floor_at=floor.isoformat()),
                 self.write("floor_clean", "vacuum.start", VACUUM, None,
                            f"floor clean before tummy time around {self._hm(floor)}, {by}", now)]
