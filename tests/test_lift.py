@@ -63,6 +63,14 @@ class LiftTest(unittest.TestCase):
         self.assertIsNone(check.base)
 
 
+    def test_bath_asks_for_both_hands_one_hand_never_reads_lifted(self):
+        background, texture = scene(1), scene(2)
+        check = LiftCheck({"camera_cm": CAMERA_CM, "refresh_s": 100, "min_hands": 2})
+        out = [check.update(*frame(lift, background, texture), i / 15) for i, lift in enumerate([0.0] * 8 + [3.0] * 8)]
+        self.assertFalse(any(out))
+        self.assertIsNone(check.base)
+
+
 class LiftedAlarmTest(unittest.TestCase):
     def setUp(self):
         self.bus = Bus()

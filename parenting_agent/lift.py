@@ -20,7 +20,8 @@ import cv2
 import numpy as np
 
 DEFAULTS = {"camera_cm": 45.0, "min_lift_cm": 1.0, "rest_cm": 0.5, "refresh_s": 1.0, "smooth_frames": 5, "reset_after_off_s": 1.0,
-            "min_matches": 8, "hull_grow": 1.18, "scene_margin_px": 30, "search_px": 60, "ratio": 0.8, "ransac_px": 2.0}
+            "min_matches": 8, "hull_grow": 1.18, "scene_margin_px": 30, "search_px": 60, "ratio": 0.8, "ransac_px": 2.0,
+            "min_hands": 1}
 
 
 def hand_masks(hands_px, shape, grow):
@@ -95,7 +96,7 @@ class LiftCheck:
 
     def update(self, gray, hands_px, stream_s):
         """gray frame, the parent's hands over the baby as landmark arrays in pixels. Returns lifted or not."""
-        if not len(hands_px):
+        if len(hands_px) < self.cfg["min_hands"]:  # the bath asks for both hands: one hand on is never a hover
             self.reset()
             return False
         masks = hand_masks(hands_px, gray.shape[:2], self.cfg["hull_grow"])
