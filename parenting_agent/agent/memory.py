@@ -6,6 +6,7 @@ and LocalBabyLog keeps the same shape for offline runs and tests.
 """
 import datetime
 import json
+import re
 import sqlite3
 import threading
 
@@ -16,6 +17,7 @@ create table if not exists baby_log (id integer primary key, ts text, kind text,
 """
 
 LOG_KINDS = ("feeding", "diaper", "sleep", "bath", "note")
+HHMM = re.compile(r"^(\d{1,2})[:.h](\d{2})$")
 
 
 def now():
@@ -55,6 +57,16 @@ class Memory:
             rows = self.db.execute("select ts, channel, role, text from messages order by id desc limit ?", (limit,)).fetchall()
         return [{"ts": ts, "channel": channel, "role": role, "text": text} for ts, channel, role, text in reversed(rows)]
 
+    def forget_messages_before(self, moment):
+        """Drop conversation lines older than moment. The agent only ever reads the last few, so older ones are not kept."""
+        with self.lock:
+            rows = self.db.execute("select id, ts from messages").fetchall()
+            old = [i for i, ts in rows if ts and parse_time(ts) < moment]
+            if old:
+                self.db.executemany("delete from messages where id = ?", [(i,) for i in old])
+                self.db.commit()
+        return len(old)
+
     def remember(self, key, value):
         with self.lock:
             self.db.execute("insert into facts (key, value, ts) values (?, ?, ?) on conflict(key) do update set value = excluded.value, ts = excluded.ts",
@@ -83,6 +95,34 @@ class BabyLog:
 
     def entries(self, kind=None, since=None, limit=50):
         raise NotImplementedError
+
+    def find(self, entry_id=None, kind=None, at=None, last=None):
+        """One entry, by id, by kind and local time (HH:MM, the most recent one at that time), or the last one."""
+        if entry_id is not None:
+            entry = self.get(entry_id)
+            if entry is None:
+                raise ValueError(f"no entry with id {entry_id}")
+            return entry
+        items = self.entries(kind, None, 100_000)
+        if at:
+            match = HHMM.match(str(at).strip())
+            if not match:
+                raise ValueError("at must be a local time like 01:30")
+            wanted = f"{int(match.group(1)):02d}:{match.group(2)}"
+            items = [e for e in items if wanted in (e["ts"][11:16], str(e["details"].get("start") or "")[11:16])]
+        elif not last:
+            raise ValueError("name the entry by id, by kind and at, or by last")
+        if not items:
+            raise ValueError("no such entry in the log")
+        return items[-1]
+
+    def check_bounds(self, kind, details, ts=None):
+        """The second wall behind the agent's own check: a value no real entry can have is never stored. A time in the
+        future is the agent's question to ask, the log itself moves it to now."""
+        from . import rules  # rules imports nothing from here, the late import only keeps the module order simple
+        bad = rules.out_of_bounds(kind, details, ts, self.now(), parse_time, future=False)
+        if bad:
+            raise ValueError(f"{bad[0]} {bad[1]} is outside what one entry can be, nothing was logged")
 
     def summary(self, since=None):
         """Totals since an instant (default midnight today) and the last of each kind, computed from the log, never guessed."""

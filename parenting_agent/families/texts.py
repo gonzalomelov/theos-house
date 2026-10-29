@@ -46,7 +46,9 @@ EN = {
                         "I never give medical advice. Send /privacy to read what I store.\n\n"),
     "PARTNER_MAX": "{name}'s log already has {n} people, the most it can have.",
     "PRIVACY": ("What I store: your baby's name and birth date, what you log (feeds, diapers, sleep, baths, notes), "
-                "our conversation, and your Telegram chat id so I can answer you. For counting real use I keep one row per "
+                "our conversation of the last 7 days, and your Telegram chat id so I can answer you. The only fact I keep is the "
+                "baby's name: other names, phone numbers, addresses or codes are never saved as facts, but what you type stays "
+                "in the conversation for 7 days, so please leave them out. For counting real use I keep one row per "
                 "message with the time and a scrambled id, never the text.\n"
                 "Where: one private file for your family on Gonza's home server in Uruguay. Other families cannot see it. "
                 "To write replies, the conversation text is sent to Anthropic's API (Claude). Anthropic does not train on "
@@ -138,7 +140,9 @@ ES = {
                         "registro privado. Nunca doy consejos médicos. Mandá /privacidad para ver qué guardo.\n\n"),
     "PARTNER_MAX": "El registro de {name} ya tiene {n} personas, que es el máximo.",
     "PRIVACY": ("Qué guardo: el nombre y la fecha de nacimiento de tu bebé, lo que anotás (tomas, pañales, sueño, baños, notas), "
-                "nuestra conversación y tu id de chat de Telegram para poder responderte. Para contar el uso real guardo una "
+                "nuestra conversación de los últimos 7 días y tu id de chat de Telegram para poder responderte. El único dato "
+                "que guardo es el nombre de tu bebé: otros nombres, teléfonos, direcciones o códigos nunca se guardan como dato, "
+                "pero lo que escribís queda en la conversación 7 días, así que mejor no los mandes. Para contar el uso real guardo una "
                 "fila por mensaje con la hora y un id mezclado, nunca el texto.\n"
                 "Dónde: un archivo privado para tu familia en el servidor de la casa de Gonza, en Uruguay. Otras familias "
                 "no lo pueden ver. Para escribir las respuestas, el texto de la conversación se manda a la API de Anthropic "

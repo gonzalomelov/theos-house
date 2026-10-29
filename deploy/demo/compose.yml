@@ -36,6 +36,8 @@ services:
       PA_DEMO_BRAIN: ${PA_DEMO_BRAIN:-baseten}
       PA_DEMO_DAILY_USD: ${PA_DEMO_DAILY_USD:-2}
       PA_DEMO_INTERNAL_SECRET: ${PA_DEMO_INTERNAL_SECRET:?set PA_DEMO_INTERNAL_SECRET in the env file}
+      # Limits count by the address Cloudflare puts here, which a visitor cannot set or reset (issue #60).
+      PA_DEMO_CLIENT_HEADER: CF-Connecting-IP
       HTTPS_PROXY: http://egress:8888
       NO_PROXY: localhost,127.0.0.1
     volumes:

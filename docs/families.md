@@ -6,7 +6,7 @@ It is a separate service, walled off like the public demo. Other families never 
 
 ## For parents: your data in 1 minute
 
-- **What is stored.** Your baby's name or nickname and birth date. What you log: feeds, diapers, sleep, baths and notes. Our conversation. Your Telegram chat id, so the bot can answer you. To count real use, one row per message with the time and a scrambled id (a hash of your Telegram id), never the text.
+- **What is stored.** Your baby's name or nickname and birth date. What you log: feeds, diapers, sleep, baths and notes. Our conversation of the last 7 days, older lines are deleted. Your Telegram chat id, so the bot can answer you. The only fact the bot keeps is the baby's name: other names, phone numbers, addresses or codes are never saved as facts, but what you type stays in the conversation for 7 days, so please leave them out. To count real use, one row per message with the time and a scrambled id (a hash of your Telegram id), never the text.
 - **Where.** One private file for your family on Gonza's home server in Uruguay. No other family can see it, and it is not mixed with Gonza's own family data.
 - **Who else sees the text.** To write replies, the conversation text is sent to Anthropic's API (Claude). Anthropic does not train on API data by default and keeps it for a limited time under its policy: https://www.anthropic.com/legal/privacy. Telegram carries the messages, like any Telegram chat.
 - **What it never does.** It never gives medical advice. Health questions get a kind refusal and a suggestion to call your pediatrician, or emergency services (911 in Uruguay) if it is urgent.
@@ -16,7 +16,7 @@ The bot sends the same text when a parent sends `/privacy`.
 
 ## Para las familias: tus datos en 1 minuto
 
-- **Qué se guarda.** El nombre o apodo de tu bebé y su fecha de nacimiento. Lo que anotás: tomas, pañales, sueño, baños y notas. Nuestra conversación. Tu id de chat de Telegram, para que el bot te pueda responder. Para contar el uso real, una fila por mensaje con la hora y un id mezclado (un hash de tu id de Telegram), nunca el texto.
+- **Qué se guarda.** El nombre o apodo de tu bebé y su fecha de nacimiento. Lo que anotás: tomas, pañales, sueño, baños y notas. Nuestra conversación de los últimos 7 días, lo más viejo se borra. Tu id de chat de Telegram, para que el bot te pueda responder. El único dato que guarda es el nombre de tu bebé: otros nombres, teléfonos, direcciones o códigos nunca se guardan como dato, pero lo que escribís queda en la conversación 7 días, así que mejor no los mandes. Para contar el uso real, una fila por mensaje con la hora y un id mezclado (un hash de tu id de Telegram), nunca el texto.
 - **Dónde.** Un archivo privado para tu familia en el servidor de la casa de Gonza, en Uruguay. Ninguna otra familia lo puede ver, y no se mezcla con los datos de la familia de Gonza.
 - **Quién más ve el texto.** Para escribir las respuestas, el texto de la conversación se manda a la API de Anthropic (Claude). Anthropic no entrena con los datos de su API por defecto y los guarda un tiempo limitado según su política: https://www.anthropic.com/legal/privacy. Telegram lleva los mensajes, como en cualquier chat de Telegram.
 - **Lo que nunca hace.** Nunca da consejos médicos. Si preguntás algo de salud, te responde con cariño que no puede y te sugiere llamar a tu pediatra, o al 911 si es urgente.
@@ -57,6 +57,8 @@ For Gonza's own test accounts: `invite --internal` makes a code whose parent, an
 | `no para de llorar, ¿por qué?` | The likely reason from the log (the cry reason from #32), a guess and never a diagnosis, without a brain call |
 | Red flags: not breathing, blue lips, limp, choking, won't wake, a fall, a hit to the head, a seizure, and the Spanish forms | "Call emergency services now" with 911 for Uruguay, at once, without a brain call |
 | Health questions | The kind refusal, with "if it is urgent, call emergency services", without a brain call |
+| `le di 5 ml de ibuprofeno a las 14, anotalo`, `se dio vuelta por primera vez, ¿es normal?` | Logged as a note in the parent's words, never as a feed, and only the advice part is refused. The reply comes from the log, not the brain (issue #60) |
+| `mamadera 9000 ml` | Asked about, never logged: a feed is 1 to 300 ml and 1 to 120 min, a sleep at most 14 hours, nothing in the future (issue #60) |
 | `/summary` | Today so far, computed from the log, no brain call |
 | `/next` | The next feed from the rhythm engine (`patterns.next_feed`) |
 | `/invite` | A code for the other parent |

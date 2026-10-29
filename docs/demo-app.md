@@ -7,10 +7,11 @@ A phone-first web chat where a visitor talks to the real agent core about Demo B
 ## What a visitor can do
 
 - Ask about the baby's day: "when did she last eat?", "how much did she drink today?". Answers come from the log through the same `baby_summary` and `read_baby_log` tools the family agent uses.
-- Add entries by text: "bottle 120 ml", "wet and dirty diaper", "she just fell asleep".
+- Add entries by text: "bottle 120 ml", "wet and dirty diaper", "she just fell asleep". Fix or remove them: "that was 90 ml, fix it", "delete the last one". A value no real entry can have, like 9000 ml, a feed longer than 120 min, a sleep longer than 14 hours or a time in the future, is asked about and never logged.
 - See what the agent says first: the next feed, the night summary and who is next on duty, computed by the daily rhythm engine from the visitor's own log.
-- See what the agent would do in the house. House tools are simulated and every action is labelled "Simulated house" in the chat. Calling the partner shows "Waits for your yes" and runs, simulated, only after the visitor says yes.
-- Health questions get the same kind refusal as the family agent, without a brain call.
+- See what the agent would do in the house. House tools are simulated and every action is labelled "Simulated house" in the chat. The speakers say only fixed sentences ("Could someone bring a clean diaper and wipes, please?"), never free text, so a code typed in a message is never read aloud. Calling the partner shows "Waits for your yes" and the reply names exactly what waits. A yes runs it, simulated, only when it answers that question within 3 minutes. Any other message cancels it, so a stale "ok" runs nothing.
+- Health questions get the kind refusal without a brain call. A health message that reports something to keep, a dose already given or a milestone, is logged as a note in the visitor's words, and only the advice part is refused. The reply is built from the log, never from the brain's words.
+- The demo keeps no facts about a visitor. There is no remember tool, so a real name is never saved as the baby's name.
 
 ## How it is built
 
@@ -38,11 +39,17 @@ Each visitor gets their own agent with its own bus, an in-memory memory file and
 | Cap | Default | Setting |
 |---|---|---|
 | Messages per visitor | 25 (internal visitors are not capped) | `PA_DEMO_MAX_MESSAGES` |
+| Messages per connection per day, whatever the cookie | 100 | `PA_DEMO_MAX_CLIENT_MESSAGES` |
+| New demo babies per connection per hour (first message or reset) | 10 | `PA_DEMO_MAX_CLIENT_VISITORS` |
+| Visitors in memory, then "the demo is full" | 1000 | `PA_DEMO_MAX_VISITORS` |
+| A visitor quiet for less than this is never evicted to make room | 10 min | `PA_DEMO_PROTECT_S` |
 | Brain spend per UTC day, then "the demo is resting" | $2.00 | `PA_DEMO_DAILY_USD` |
 | Messages per day from strangers, a second guard | 1500 | `PA_DEMO_MAX_DAILY_MESSAGES` |
 | Message length | 300 characters | `PA_DEMO_MAX_INPUT` |
 | Request body | 4 KB of JSON, no uploads, multipart refused | fixed |
 | Brain calls at once | 4 | `PA_DEMO_PARALLEL` |
+
+A connection is the address in `CF-Connecting-IP`, which Cloudflare sets on every request through the tunnel and a visitor cannot change (`PA_DEMO_CLIENT_HEADER`, the socket address when unset). An IPv6 address counts by its /64. It is held only as an HMAC under a key made at start, in memory, never stored or logged, and a restart forgets it. Page loads (`GET /api/state`) never create a visitor: a browser with no demo yet sees a fresh copy built once a minute, so cookie-less requests cannot fill the demo or push anyone out (issue #60).
 
 The brain is Muse Spark Open on Baseten, with Claude Haiku 5.5 only when a Muse call errors (a `brain_fallback` event). Spend is computed from the tokens each call reports, at the price of the brain that answered: Muse Spark Open $1.25 input and $4.25 output per million tokens (Baseten library page, read Oct 28 2026), Claude Haiku 5.5 $0.10 and $0.50 (Anthropic pricing page, read Oct 28 2026). A call that reports no usage is charged a fallback of 4000 input and 400 output tokens. A local run of 22 brain calls cost $0.006.
 
@@ -89,3 +96,7 @@ sh deploy/public.sh backup install | run
 ```
 
 A deploy fails, stops the demo and starts the previous commit again when the health check or the wall check fails. The wall check probes every address of the Vostro on ports 22, 80, 8123 and 8790, the family agent's relay, the router, the Mac and the internet, directly and through the proxy, and checks the env holds no secret but the brain key and the internal secret. On Oct 28 all 103 probes were blocked or refused.
+
+## Red team, round 1 (issue #60)
+
+The agentic red-teamer judge landed 8 attacks on Oct 28. Each is now a test in `tests/test_redteam_r1.py` that replays it, failed on main before the fix and passes after. See `results/redteam/README.md`.

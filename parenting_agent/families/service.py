@@ -29,6 +29,10 @@ from .store import Store, visitor_id
 ALLOWED = ["log_baby_event", "edit_baby_event", "delete_baby_event", "read_baby_log", "baby_summary", "next_feed",
            "remember", "current_time"]
 CHANNEL = "telegram"
+# The only fact the brain may keep, the one the privacy note names. The birth date comes from onboarding only.
+REMEMBER_KEYS = {"baby_name"}
+# The conversation is kept for the agent's context only, for this long. The baby log is kept until the family deletes it.
+CONVERSATION_DAYS = 7
 MAX_PARENTS = 4
 DELETE_WINDOW_S = 600
 SEEN_MESSAGES = 1000
@@ -71,6 +75,8 @@ def parse_birth(text, today):
 
 
 class FamilyAgent(Agent):
+    health_gate = True
+
     def system_prompt(self):
         """The core prompt with the family's own facts only, and the family's language. Keys starting with _ are the
         service's bookkeeping."""
@@ -89,6 +95,12 @@ class FamilyAgent(Agent):
 
     def emergency(self, request):
         return t(self.lang(), "EMERGENCY")
+
+    def refusal(self, request):
+        return t(self.lang(), "REFUSAL")
+
+    def no_advice(self, request):
+        return rules.NO_ADVICE[self.lang()]
 
     def saved_before_fail(self, entries):
         lang = self.memory.facts().get("_lang", {}).get("value") or "en"
@@ -189,7 +201,7 @@ class Family:
         self.memory = babylog.open_memory(service.s["data_dir"], family_id)
         self.log = babylog.FamilyBabyLog(self.memory, service.now)
         self.bus = Bus(None)
-        tools = core_tools(self.memory, self.log, ALLOWED)
+        tools = core_tools(self.memory, self.log, ALLOWED, remember_keys=REMEMBER_KEYS)
         tools.add(Tool("next_feed", "When the next feed is expected, from the rhythm of this family's own log, the same as "
                        "/proxima. Use it for 'a qué hora le toca?' or 'when is the next feed?' and answer with its text.",
                        schema({}), lambda: service.next_feed(self)["text"]))
@@ -215,13 +227,12 @@ class Family:
         return self.fact("baby_name", "tu bebé" if self.lang == "es" else "your baby")
 
     def talk(self, text):
-        """Red flags go straight to the emergency line (inside the agent), other health questions to the refusal,
-        "why is she crying?" to the likely reason from the log, all three with no brain call."""
+        """Red flags go straight to the emergency line and health advice to the refusal, both inside the agent with no
+        brain call. A dose given or a milestone is logged as a note, with only the advice part refused. "Why is she
+        crying?" gets the likely reason from the log, with no brain call."""
         self.replies.clear()
-        if texts.is_medical(text) and not rules.is_emergency(text):
-            self.memory.add_message(CHANNEL, "user", text, ts=self.log.now())
-            self.agent.say(CHANNEL, self.t("REFUSAL"))
-        elif rules.is_cry_question(text) and not texts.is_medical(text) and not rules.is_log_request(text):
+        self.memory.forget_messages_before(self.log.now() - datetime.timedelta(days=CONVERSATION_DAYS))
+        if rules.is_cry_question(text) and not texts.is_medical(text) and not rules.is_log_request(text):
             self.memory.add_message(CHANNEL, "user", text, ts=self.log.now())
             self.agent.say(CHANNEL, self.service.cry_text(self))
         else:

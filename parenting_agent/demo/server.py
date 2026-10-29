@@ -79,6 +79,13 @@ def make_handler(app, settings):
             marked = bool(marker) and hmac.compare_digest(jar.get(INTERNAL_COOKIE, "").encode(), marker.encode())
             return visitor_id(token), marked or local, headers
 
+        def client(self):
+            """The address the limits count by. Behind the tunnel it is CF-Connecting-IP, set by Cloudflare, so a
+            visitor cannot change it. Never stored or logged, only an HMAC of it is kept in memory."""
+            header = settings.get("client_header") or ""
+            value = (self.headers.get(header) or "").strip() if header else ""
+            return value or self.client_address[0]
+
         def send(self, status, body, content_type="application/json; charset=utf-8", cookies=()):
             data = body if isinstance(body, bytes) else dumps(body)
             self.send_response(status)
@@ -133,9 +140,10 @@ def make_handler(app, settings):
                 return self.send(status, {"error": "bad_request"})
             vid, internal, cookies = self.visitor()
             if path == "/api/reset":
-                return self.send(200, app.reset(vid, internal), cookies=cookies)
+                status, out = app.reset(vid, internal, self.client())
+                return self.send(status, out, cookies=cookies)
             text = body.get("text")
-            status, out = app.message(vid, internal, text if isinstance(text, str) else "")
+            status, out = app.message(vid, internal, text if isinstance(text, str) else "", self.client())
             return self.send(status, out, cookies=cookies)
 
         def do_PUT(self):

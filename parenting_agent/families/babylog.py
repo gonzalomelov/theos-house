@@ -11,7 +11,6 @@ from pathlib import Path
 
 from ..agent.memory import LOG_KINDS, BabyLog, Memory, parse_time
 
-HHMM = re.compile(r"^(\d{1,2})[:.h](\d{2})$")
 FEEDING_FIELDS = ("amount_ml", "method", "type", "duration_min")
 FAMILY_ID = re.compile(r"^[0-9a-f]{16}$")
 
@@ -64,6 +63,7 @@ class FamilyBabyLog(BabyLog):
         if kind not in LOG_KINDS:
             raise ValueError(f"unknown log kind {kind}, expected one of {', '.join(LOG_KINDS)}")
         details = dict(details or {})
+        self.check_bounds(kind, details, ts)
         when = self.at_or_before_now(ts or details.get("end") or details.get("time"))
         if kind == "feeding":
             return self._store("feeding", when, self._feeding(details, when))
@@ -98,32 +98,13 @@ class FamilyBabyLog(BabyLog):
             row = self.memory.db.execute("select id, ts, kind, details from baby_log where id = ?", (int(entry_id),)).fetchone()
         return {"id": row[0], "ts": row[1], "kind": row[2], "details": json.loads(row[3])} if row else None
 
-    def find(self, entry_id=None, kind=None, at=None, last=None):
-        """One entry, by id, by kind and local time (HH:MM, the most recent one at that time), or the last one."""
-        if entry_id is not None:
-            entry = self.get(entry_id)
-            if entry is None:
-                raise ValueError(f"no entry with id {entry_id}")
-            return entry
-        items = self.entries(kind, None, 100_000)
-        if at:
-            match = HHMM.match(str(at).strip())
-            if not match:
-                raise ValueError("at must be a local time like 01:30")
-            wanted = f"{int(match.group(1)):02d}:{match.group(2)}"
-            items = [e for e in items if wanted in (e["ts"][11:16], str(e["details"].get("start") or "")[11:16])]
-        elif not last:
-            raise ValueError("name the entry by id, by kind and at, or by last")
-        if not items:
-            raise ValueError("no such entry in the log")
-        return items[-1]
-
     def update(self, entry_id, details=None, ts=None):
         """Change an entry in place. Returns the entry before and after, so the reply can say exactly what changed."""
         before = self.get(entry_id)
         if before is None:
             raise ValueError(f"no entry with id {entry_id}")
         new = dict(details or {})
+        self.check_bounds(before["kind"], {k: v for k, v in new.items() if k in ("amount_ml", "duration_min", "start", "end")}, ts)
         when = self.at_or_before_now(ts) if ts else parse_time(before["ts"])
         d = dict(before["details"])
         if before["kind"] == "feeding":

@@ -11,7 +11,8 @@ ML = re.compile(r"(\d+(?:\.\d+)?)\s*ml", re.I)
 MINUTES = re.compile(r"(\d+)\s*(?:min|minutes)", re.I)
 SPAN = re.compile(r"from\s+(\d{1,2})[:.](\d{2})\s+(?:to|until)\s+(\d{1,2})[:.](\d{2})", re.I)
 MEDICAL = re.compile(r"\b(fever|temperature|medicine|medication|dose|dosage|paracetamol|ibuprofen|rash|vomit|sick|"
-                     r"diagnos|should i give|is it normal|cough|infection|antibiotic)", re.I)
+                     r"diagnos|should i give|is it normal|cough|infection|antibiotic|tylenol|acetaminophen|motrin|advil|"
+                     r"calpol|nurofen|simethicone|gripe water|teething gel)", re.I)
 QUESTION_START = re.compile(r"^(when|how|what|did|has|have|is|was|why|cu[aá]nd[oa]|cu[aá]nt[oa]s?|qu[eé]|a qu[eé]|c[oó]mo|"
                             r"d[oó]nde|por qu[eé]|para cu[aá]ndo)\b", re.I)
 # Health words in Spanish, on top of the English ones in MEDICAL. A bottle the parent gives ("le doy la mamadera") is
@@ -66,8 +67,58 @@ SPANISH = re.compile(r"[ñáéíóú¿¡]|\b(se|le|la|el|de|del|un|una|y|con|ya|
 # A reply that says something went into the log. "Noted" and "OK" are not claims, so small talk is never one.
 CLAIMS_LOGGED = re.compile(r"\b(logged|recorded|added (it )?to the log|anot[eé]|anotad[oa]s?|registr[eé]|registrad[oa]s?)\b", re.I)
 
+# A medicine the parent gave, a milestone, or an explicit ask to log: a health message with one of these is logged
+# first (a medicine or a symptom goes in as a note), and only the advice part is refused.
+MEDICINE = re.compile(r"\b(medicine|medication|dose|dosage|paracetamol|acetaminophen|tylenol|ibuprofen|motrin|advil|drops|"
+                      r"syrup|antibiotic|vitamin|medicamento|medicina|remedio|dosis|ibuprofeno|gotas|jarabe|antibi[oó]tic\w*|"
+                      r"vitamina)\b", re.I)
+SYMPTOM = re.compile(r"\b(fever|temperature|rash|vomit\w*|sick|cough\w*|infection|diarrh\w*|fiebre|temperatura|sarpullido|"
+                     r"erupci\w*|v[oó]mit\w*|enferm\w*|tos|infecci\w*|diarrea)\b", re.I)
+LOG_ASK = re.compile(r"\b(log|logged|note (it|that|down)|write (it|that)? ?down|add (it|that)|record (it|that)|keep a note|"
+                     r"save (it|that)|anot[aá]\w*|registr[aá]\w*|apunt[aá]\w*|guard[aá]\w*)\b", re.I)
+GAVE = re.compile(r"\b(i gave|we gave|i just gave|gave (him|her|the baby|it)|was given|she had (her|the)|he had (his|the)|"
+                  r"le di|le dimos|le dio|le acabo de dar|le administr\w*|tom[oó] (el|la|su|las|los))\b", re.I)
+MILESTONE = re.compile(r"\b(rolled over|roll(ed)? over|first time|first smile|smiled|laughed|milestone|sat up|crawl\w*|"
+                       r"first tooth|por primera vez|se dio vuelta|se di[oó] vuelta|sonri[oó]|se ri[oó]|primer\w* (sonrisa|diente)|"
+                       r"gate[oó]|se sent[oó])\b", re.I)
+ADVICE = re.compile(r"\?|\b(should i|should we|can i|can we|could i|is it normal|is that normal|is this normal|is it ok|"
+                    r"is it safe|how much (should|do|can)|what (dose|should)|do i need|puedo|debo|deber[ií]a|es normal|"
+                    r"le puedo dar|qu[eé] le doy|cu[aá]nto le doy|le doy)\b", re.I)
+# What a parent's message may never carry into the transcript: the square brackets the agent uses for its own lines,
+# "[observation from ...]" and "[check from the agent ...]". A parent can never pose as a sensor or as the agent.
+BRACKETS = str.maketrans({c: "(" for c in "[\uff3b\u27e6\u3010\u3014\u2045\u3016\u301a"} | {c: ")" for c in "]\uff3d\u27e7\u3011\u3015\u2046\u3017\u301b"})
+# Secrets and codes: never read aloud on a shared speaker, never sent in a free-text push, never kept as a fact.
+SECRET = re.compile(r"\b(code|c[oó]digo|pin|password|passcode|passwd|contrase[ñn]a|clave|alarm|alarma|gate|port[oó]n|"
+                    r"wi-?fi|key|llave|lock|combination|combinaci[oó]n|cvv|card|tarjeta|account|cuenta|token)\b|"
+                    r"\d(?:[\s.-]?\d){3,}|@\w+\.\w+", re.I)
+CONTACT = re.compile(r"@|\+?\d(?:[\s.-]?\d){5,}|\b(street|st\.|avenue|ave\.|road|calle|avenida|apto|apt|esquina|"
+                     r"barrio|zip|postal)\b", re.I)
+# The only sentences a house speaker says, in the demo and in the family's kitchen. Free text never reaches a speaker,
+# so a gate code or a name typed in a message is never read aloud.
+ANNOUNCEMENTS = {
+    "come_help": "Can someone come and help with the baby, please?",
+    "bring_diaper": "Could someone bring a clean diaper and wipes, please?",
+    "bring_bottle": "Could someone bring a bottle, please?",
+    "bring_clothes": "Could someone bring clean baby clothes, please?",
+    "baby_asleep": "The baby is asleep, please keep it quiet.",
+    "feed_soon": "The next feed is coming up soon.",
+    "bath_time": "It is bath time.",
+    "door": "Someone is at the door, the parent's hands are busy.",
+    "dinner_ready": "Dinner is ready.",
+    "start_dinner": "Time to start dinner.",
+}
+# Bounds per event type. A value outside them is asked about, never logged.
+BOUNDS = {"amount_ml": (1, 300), "duration_min": (1, 120), "sleep_hours": 14, "future_min": 5}
+WORD = re.compile(r"[a-záéíóúñü]{4,}", re.I)
+STOP = {"that", "this", "with", "from", "have", "your", "what", "when", "were", "will", "just", "they", "them", "then",
+        "there", "about", "baby", "para", "como", "pero", "esta", "este", "todo", "tiene"}
+
 REFUSAL = ("I can't give medical advice. Please call your pediatrician about that. If it is urgent, call emergency "
-           "services (911 in Uruguay, or your local emergency number). I can log what you see so you have it ready for the call.")
+           "services (911 in Uruguay, or your local emergency number). If you tell me what you saw or gave, I will note it "
+           "so you have it ready for the call.")
+NO_ADVICE = {"en": "I can't give medical advice on it: please ask your pediatrician, or call emergency services (911 in "
+                   "Uruguay) if it is urgent.",
+             "es": "No puedo darte consejo médico sobre eso: consultá a tu pediatra, o llamá al 911 si es urgente."}
 EMERGENCY_REPLY = {
     "en": "This may be an emergency. Call emergency services now: 911 in Uruguay, or your local emergency number.",
     "es": "Puede ser una emergencia. Llamá ya al 911 (emergencias en Uruguay) y contales lo que ves.",
@@ -146,6 +197,8 @@ def today_at(hour, minute):
 def parse_note(text):
     """(kind, details) for a parent's note, or None when it is not about the baby's day."""
     low = text.lower()
+    if medicine_only(text) or (MILESTONE.search(text) and not ML.search(text)):
+        return "note", {"text": text}  # a medicine given or a milestone is a note in the parent's words, never a feed
     if "diaper" in low or "nappy" in low or "poop" in low or "pee" in low:
         solid = any(w in low for w in ("dirty", "poop", "solid", "messy"))
         wet = "wet" in low or "pee" in low or not solid
@@ -238,3 +291,111 @@ def answer(question, summary):
     if "eat" in q or "fed" in q or "feed" in q:
         return f"The last feed was at {feeds['last_at']}." if feeds["last_at"] else "No feed in the log yet."
     return None
+
+
+def parent_text(text):
+    """A parent's message as the transcript may carry it: no square brackets, so it can never pose as an observation
+    from a skill or a check from the agent."""
+    return str(text or "").translate(BRACKETS)
+
+
+def has_secret(text):
+    """True when the text names a code, a password, a key or a card, or holds a run of four or more digits."""
+    return bool(SECRET.search(str(text or "")))
+
+
+def personal_detail(text):
+    """True for a secret or a contact detail: an email, a phone number, an address."""
+    return has_secret(text) or bool(CONTACT.search(str(text or "")))
+
+
+def health_route(text):
+    """None for a message with no health talk. "refuse" for health advice with nothing to log: the kind refusal, no
+    brain call. "log" for a health message that also reports something the parent wants kept, a medicine given, a
+    milestone or an explicit ask to log: it is logged as a note and only the advice part is refused."""
+    if not text or is_emergency(text) or not (is_medical(text) or is_medical_es(text)):
+        return None
+    if LOG_ASK.search(text) or GAVE.search(text) or MILESTONE.search(text):
+        return "log"
+    return "refuse"
+
+
+def asks_advice(text):
+    return bool(ADVICE.search(text or "")) or bool(SYMPTOM.search(text or ""))
+
+
+FEED_WORDS = re.compile(r"\b(bottle|breast|feed|fed|nursed|formula|milk|mamadera|biber[oó]n|teta|pecho|toma|tom[oó] \d|"
+                        r"leche|f[oó]rmula)\b", re.I)
+NAME = re.compile(r"^[^\W\d_](?:[^\W\d_]|[' .-]){0,39}$")
+
+
+def mentions_medicine(text):
+    return bool(MEDICINE.search(text or ""))
+
+
+def medicine_only(text):
+    """A medicine with no feed in the same message: "I gave her 2.5 ml of paracetamol" is a note, never a 2.5 ml feed,
+    while "bottle 120 ml, then vitamin D drops" still logs the bottle."""
+    return mentions_medicine(text) and not FEED_WORDS.search(text or "")
+
+
+def plain_name(value):
+    """A baby's name or nickname: letters, at most 6 words, no digits, no codes. Anything else would ride along in
+    every prompt as a "fact"."""
+    value = str(value or "").strip()
+    return bool(NAME.match(value)) and len(value.split()) <= 6 and not personal_detail(value)
+
+
+def _number_or_none(value):
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def out_of_bounds(kind, details, ts=None, now=None, parse=None, future=True):
+    """(field, value) when a log call holds a value no real entry can have, else None: a feed outside 1 to 300 ml or
+    1 to 120 min, a sleep longer than 14 hours or ending before it starts, or, with future, a time in the future."""
+    details = details if isinstance(details, dict) else {}
+    if kind == "feeding":
+        for name in ("amount_ml", "duration_min"):
+            if details.get(name) is None:
+                continue
+            value = _number_or_none(details[name])
+            low, high = BOUNDS[name]
+            if value is None or not low <= value <= high:
+                return name, details[name]
+    if parse is not None and now is not None:
+        moments = {}
+        for name, value in (("ts", ts), ("start", details.get("start")), ("end", details.get("end"))):
+            if value:
+                try:
+                    moments[name] = parse(value)
+                except (TypeError, ValueError):
+                    return name, value
+        for name, moment in moments.items():
+            if future and moment > now + datetime.timedelta(minutes=BOUNDS["future_min"]):
+                return "future", value_hhmm(moment)
+        if kind == "sleep" and "start" in moments and "end" in moments:
+            hours = (moments["end"] - moments["start"]).total_seconds() / 3600
+            if not 0 < hours <= BOUNDS["sleep_hours"]:
+                return "sleep_hours", round(hours, 1)
+    return None
+
+
+def value_hhmm(moment):
+    return moment.strftime("%Y-%m-%d %H:%M")
+
+
+def content_words(text):
+    return {w.lower() for w in WORD.findall(str(text or ""))} - STOP
+
+
+def from_earlier(note, request, earlier):
+    """True when a note the brain wants to log repeats an earlier message and shares nothing with the newest one, which
+    asks for nothing to be logged: the "log only what the newest message says" rule, kept by the harness."""
+    words = content_words(note)
+    if not words or LOG_ASK.search(request or "") or words & content_words(request):
+        return False
+    need = max(2, (len(words) + 1) // 2)
+    return any(len(words & content_words(text)) >= need for text in earlier)

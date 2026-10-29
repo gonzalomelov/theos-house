@@ -20,6 +20,7 @@ import threading
 import time
 import urllib.error
 
+from .agent import rules
 from .agent.plugins import Plugin
 from .agent.tools import Tool, schema
 from .house import HomeAssistant, never_reason
@@ -81,12 +82,13 @@ class HouseTools(Plugin):
                  self.study_light))
         add(Tool("echo_do_not_disturb", "Do not disturb on the kitchen Echo: on to hold its notifications, off after.",
                  schema({"on": on}, ["on"]), self.echo_do_not_disturb))
-        add(Tool("announce_kitchen", "Say a short sentence on the kitchen Echo at low volume.",
-                 schema({"text": {"type": "string"}}, ["text"]), self.announce_kitchen))
+        add(Tool("announce_kitchen", "Say one fixed sentence on the kitchen Echo at low volume, never free text. "
+                 + " ".join(f"{k}: {v}" for k, v in rules.ANNOUNCEMENTS.items()),
+                 schema({"message": {"type": "string", "enum": list(rules.ANNOUNCEMENTS)}}, ["message"]), self.announce_kitchen))
         add(Tool("tv_mute", "Mute or unmute a TV.", schema({"tv": tv, "muted": on}, ["tv", "muted"]), self.tv_mute))
         add(Tool("vacuum_pause", "Pause the robot vacuum, for a nap or while a skill runs.", schema({}), self.vacuum_pause))
         add(Tool("vacuum_dock", "Send the robot vacuum back to its base.", schema({}), self.vacuum_dock))
-        add(Tool("push_gonza", "Send a push notification to Gonza's iPhone.",
+        add(Tool("push_gonza", "Send a push notification to Gonza's iPhone. Never a code, a password or a phone number.",
                  schema({"text": {"type": "string"}, "title": {"type": "string"}}, ["text"]), self.push_gonza))
         add(Tool("add_to_list", "Add an item to the family to-do list or the shopping list, for example diapers.",
                  schema({"item": {"type": "string"}, "list": {"type": "string", "enum": list(LISTS)}}, ["item"]),
@@ -156,7 +158,12 @@ class HouseTools(Plugin):
         return self.call("echo_do_not_disturb", "switch.turn_on" if on else "switch.turn_off", ECHO_DND,
                          expect="on" if on else "off")
 
-    def announce_kitchen(self, text):
+    def announce_kitchen(self, message):
+        """Only a fixed sentence from rules.ANNOUNCEMENTS: free text from a message never reaches the speaker."""
+        if message not in rules.ANNOUNCEMENTS:
+            self.log("announce_kitchen", "notify.send_message", ECHO_ANNOUNCE, "refused", reason="not a fixed sentence")
+            return f"announce_kitchen: refused, it says only one of {', '.join(rules.ANNOUNCEMENTS)}"
+        text = rules.ANNOUNCEMENTS[message]
         volume = min(float(self.cfg["announce_volume"]), MAX_ANNOUNCE_VOLUME)
         before = None
         if self.live and self.client is not None:
@@ -183,6 +190,9 @@ class HouseTools(Plugin):
         return self.call("vacuum_dock", "vacuum.return_to_base", VACUUM)
 
     def push_gonza(self, text, title=None):
+        if rules.has_secret(text) or rules.has_secret(title):
+            self.log("push_gonza", PUSH_GONZA, None, "refused", reason="holds a code or a number")
+            return "push_gonza: refused, a code, a password or a long number is never sent in a push"
         data = {"message": str(text)[:500], **({"title": str(title)[:80]} if title else {})}
         return self.call("push_gonza", PUSH_GONZA, None, data)
 

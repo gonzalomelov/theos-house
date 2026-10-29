@@ -93,8 +93,8 @@ class FakeBrain:
             return Reply("Done, logged.")
         if last["text"].startswith("[observation from"):
             return Reply("Noted.")  # a skill reports what it already logged, nothing to log again
-        text = last["text"].split("] ", 1)[-1]
-        if rules.is_medical(text):
+        text = last["text"].split("] ", 1)[-1].split("\n[check from the agent", 1)[0]
+        if rules.is_medical(text) and rules.health_route(text) != "log":
             return Reply(rules.REFUSAL)
         named = trigger(text, tools)
         if named:

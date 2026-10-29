@@ -139,9 +139,9 @@ class AloneRunsLive(unittest.TestCase):
     def test_announce_is_low_volume_and_the_volume_comes_back(self):
         with tempfile.TemporaryDirectory() as tmp:
             agent, plugin, ha = make(tmp, house={"live": True, "announce_volume": 0.9, "restore_after_s": 60})
-            plugin.announce_kitchen("Dinner is ready")
+            plugin.announce_kitchen("dinner_ready")
             self.assertEqual(ha.calls[0], ("media_player.volume_set", "media_player.gonza_s_echo_dot", {"volume_level": 0.3}))
-            self.assertEqual(ha.calls[1], ("notify.send_message", "notify.gonza_s_echo_dot_announce", {"message": "Dinner is ready"}))
+            self.assertEqual(ha.calls[1], ("notify.send_message", "notify.gonza_s_echo_dot_announce", {"message": "Dinner is ready."}))
             plugin.stop()
             self.assertEqual(ha.calls[2], ("media_player.volume_set", "media_player.gonza_s_echo_dot", {"volume_level": 0.47}))
             agent.close()

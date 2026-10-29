@@ -6,6 +6,7 @@ brain's word: the agent records it as a proposal and asks the parent first.
 """
 import datetime
 
+from . import rules
 from .memory import LOG_KINDS
 
 
@@ -48,7 +49,8 @@ def schema(properties, required=()):
     return {"type": "object", "properties": properties, "required": list(required)}
 
 
-def core_tools(memory, baby_log, allowed):
+def core_tools(memory, baby_log, allowed, remember_keys=None):
+    """The log, read and memory tools. remember_keys limits what remember may keep, () leaves remember out."""
     tools = Tools(allowed)
     tools.add(Tool(
         "log_baby_event", f"Record something about the baby in the baby log. kind is one of: {', '.join(LOG_KINDS)}. details by kind: "
@@ -74,14 +76,41 @@ def core_tools(memory, baby_log, allowed):
         "sleep minutes, the last bath. Counts cover since (ISO) or today from midnight. Use it for how much, how many, when was the last.",
         schema({"since": {"type": "string", "description": "ISO start of the period, omit for today"}}),
         lambda since=None: baby_log.summary(since)))
-    tools.add(Tool(
-        "remember", "Keep a fact about the family for later, for example the baby's name or the partner's name.",
-        schema({"key": {"type": "string"}, "value": {"type": "string"}}, ["key", "value"]),
-        lambda key, value: memory.remember(key, value) or "remembered"))
+    if remember_keys != ():
+        tools.add(Tool(
+            "remember", "Keep a fact about the family for later, for example the baby's name or the partner's name. "
+            "Never a code, a password, a phone number, an email or an address." +
+            (f" Only these keys: {', '.join(sorted(remember_keys))}." if remember_keys else ""),
+            schema({"key": {"type": "string"}, "value": {"type": "string"}}, ["key", "value"]),
+            lambda key, value: remember(memory, key, value, remember_keys)))
     tools.add(Tool(
         "current_time", "The current local date and time.", schema({}),
-        lambda: datetime.datetime.now().astimezone().isoformat(timespec="minutes")))
+        lambda: local_now(baby_log).isoformat(timespec="minutes")))
     return tools
+
+
+def local_now(baby_log):
+    """The baby log's clock, so a server on UTC and the family's time zone agree."""
+    try:
+        return baby_log.now()
+    except (AttributeError, NotImplementedError):
+        return datetime.datetime.now().astimezone()
+
+
+def remember(memory, key, value, keys=None):
+    """A fact kept for every later prompt. A code, a password or a contact detail is never kept, and a service can
+    limit the keys to what its privacy note says it stores."""
+    key, value = str(key or "").strip(), str(value or "").strip()
+    if keys and key not in keys:
+        raise ValueError(f"only {', '.join(sorted(keys))} can be remembered here, nothing was kept")
+    if not key or key.startswith("_") or len(value) > 120:
+        raise ValueError("that cannot be remembered, nothing was kept")
+    if rules.personal_detail(key.replace("_", " ")) or rules.personal_detail(value):
+        raise ValueError("codes, passwords, phone numbers, emails and addresses are never remembered, nothing was kept")
+    if key.endswith("name") and not rules.plain_name(value):
+        raise ValueError("a name is a few words with letters only, nothing was kept")
+    memory.remember(key, value)
+    return "remembered"
 
 
 WHICH = {"id": {"type": "integer", "description": "the entry id from read_baby_log"},

@@ -29,6 +29,7 @@ import time
 import urllib.error
 from dataclasses import dataclass
 
+from ..agent import rules
 from ..agent.plugins import Plugin
 from ..house import HomeAssistant
 
@@ -154,6 +155,9 @@ class Router(Plugin):
 
     def deliver(self, text, situation):
         channel, reason = pick(situation)
+        if channel in ("home_speaker", "ear") and rules.has_secret(text):
+            # A code or a long number is never read aloud in the house: it goes to the parent's phone instead.
+            channel, reason = "telegram", "holds a code, never read aloud"
         started = time.monotonic()
         try:
             result = self.outputs[channel](text)

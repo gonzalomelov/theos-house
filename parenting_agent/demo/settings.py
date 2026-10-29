@@ -119,6 +119,12 @@ def load(environ=None):
         "max_visitors_in_memory": _number(environ, "PA_DEMO_MAX_VISITORS", 1000, int),
         "visitor_idle_s": _number(environ, "PA_DEMO_IDLE_S", 6 * 3600, int),
         "max_parallel_brain": _number(environ, "PA_DEMO_PARALLEL", 4, int),
+        "protect_s": _number(environ, "PA_DEMO_PROTECT_S", 600, int),
+        "max_messages_per_client": _number(environ, "PA_DEMO_MAX_CLIENT_MESSAGES", 100, int),
+        "max_new_visitors_per_client": _number(environ, "PA_DEMO_MAX_CLIENT_VISITORS", 10, int),
+        # The header that names the client's address. Set to CF-Connecting-IP behind the Cloudflare tunnel, which
+        # Cloudflare always overwrites. Empty means the socket address.
+        "client_header": environ.get("PA_DEMO_CLIENT_HEADER", ""),
         "max_steps": 5,
         "history": 16,
     }
