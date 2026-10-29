@@ -167,6 +167,24 @@ class SharedLoop(unittest.TestCase):
                 agent.handle({"kind": "message", "channel": "test", "text": NOTES["en"][kind]})
                 self.assertEqual(len(baby_log.entries(kind)), 1)
 
+    def test_plain_agent_logs_a_nap_named_while_its_hours_come_round_again(self):
+        """"She napped from 13 to 14" sent at 13:20 is yesterday's nap: the end rolls back and the start follows it."""
+        for hour, minute in ((13, 0), (13, 20), (13, 59), (14, 0), (0, 30), (12, 0)):
+            with self.subTest(at=f"{hour:02d}:{minute:02d}"):
+                at = datetime.datetime(2026, 10, 29, hour, minute, tzinfo=TZ)
+                memory = Memory(":memory:")
+                self.addCleanup(memory.close)
+                baby_log = LocalBabyLog(memory)
+                baby_log.now = lambda at=at: at
+                agent = Agent(Bus(None), memory, baby_log, core_tools(memory, baby_log, ["log_baby_event"]),
+                              ScriptedBrain(REPEATS["sleep"]))
+                agent.handle({"kind": "message", "channel": "test", "text": NOTES["en"]["sleep"]})
+                sleeps = baby_log.entries("sleep")
+                self.assertEqual(len(sleeps), 1)
+                start, end = (datetime.datetime.fromisoformat(sleeps[0]["details"][k]) for k in ("start", "end"))
+                self.assertEqual(end - start, datetime.timedelta(hours=1))
+                self.assertLessEqual(end, at)
+
     def test_plain_agent_answers_with_what_it_kept_when_the_brain_fails(self):
         memory = Memory(":memory:")
         self.addCleanup(memory.close)

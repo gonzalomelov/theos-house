@@ -627,6 +627,24 @@ def latest_time(ts, now, request=""):
     return latest.isoformat(timespec="seconds")
 
 
+def latest_start_end(details, now, request=""):
+    """A start and an end the parent named as clock times: the end is the latest such time not after now and the start
+    the latest such time not after the end, so the pair keeps its order whatever the hour the message came."""
+    details = dict(details)
+    anchor = now
+    if details.get("end"):
+        details["end"] = latest_time(details["end"], now, request)
+        try:
+            anchor = datetime.datetime.fromisoformat(str(details["end"]))
+        except ValueError:
+            anchor = now
+        if anchor.tzinfo is None:
+            anchor = anchor.replace(tzinfo=now.tzinfo)
+    if details.get("start"):
+        details["start"] = latest_time(details["start"], anchor, request)
+    return details
+
+
 MANY_DIAPERS = re.compile(r"\b(dos|tres|2|3|two|three|otro|another|second|segundo)\b.{0,20}(pa[nñ]al|diaper)|"
                           r"(pa[nñ]al|diaper)es.{0,10}\b(dos|tres|2|3)|\bdiapers\b|pa[nñ]ales", re.I)
 

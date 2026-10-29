@@ -62,6 +62,18 @@ class SpanAcrossMidnight(unittest.TestCase):
         self.assertEqual(rules.latest_span(12, 0, 13, 0, at(15, 0)), ("2026-10-29T12:00:00-03:00", "2026-10-29T13:00:00-03:00"))
         self.assertEqual(rules.latest_span(12, 0, 13, 0, at(0, 30)), ("2026-10-28T12:00:00-03:00", "2026-10-28T13:00:00-03:00"))
 
+    def test_a_nap_the_brain_gave_as_start_and_end_keeps_its_order_inside_its_own_hours(self):
+        at = lambda h, m: datetime.datetime(2026, 10, 29, h, m, tzinfo=FAMILY)  # noqa: E731
+        nap = {"start": "2026-10-29T13:00:00-03:00", "end": "2026-10-29T14:00:00-03:00", "nap": True}
+        self.assertEqual(rules.latest_start_end(nap, at(13, 20)),
+                         {"start": "2026-10-28T13:00:00-03:00", "end": "2026-10-28T14:00:00-03:00", "nap": True})
+        self.assertEqual(rules.latest_start_end(nap, at(15, 0))["start"], "2026-10-29T13:00:00-03:00")
+        night = {"start": "2026-10-29T22:30:00-03:00", "end": "2026-10-29T06:00:00-03:00"}
+        self.assertEqual(rules.latest_start_end(night, at(7, 0)),
+                         {"start": "2026-10-28T22:30:00-03:00", "end": "2026-10-29T06:00:00-03:00"})
+        self.assertEqual(rules.latest_start_end({"start": "2026-10-29T13:00:00-03:00"}, at(13, 20))["start"],
+                         "2026-10-29T13:00:00-03:00")
+
 
 if __name__ == "__main__":
     unittest.main()

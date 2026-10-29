@@ -1222,9 +1222,9 @@ class Agent:
                         if isinstance(arguments["details"], dict):
                             # "she napped from 22:30 to 23:30" sent after midnight: a nap's start and end roll back to
                             # the latest such time, like ts, so last night's nap is never refused as in the future.
-                            for name in ("start", "end"):
-                                if arguments["details"].get(name):
-                                    arguments["details"][name] = rules.latest_time(arguments["details"][name], self.now(), request)
+                            # The end rolls back first and the start from the end: "from 13 to 14" sent at 13:20 is
+                            # yesterday's nap, never one that ends a day before it starts.
+                            arguments["details"] = rules.latest_start_end(arguments["details"], self.now(), request)
                         if ts:
                             ts = rules.latest_time(ts, self.now(), request)
                         named = rules.named_time(request, self.now())
@@ -1324,7 +1324,7 @@ class Agent:
                         # start to 03:21. A sleep that is already open keeps its start.
                         self.bus.publish("guard", status="already_asleep")
                         name = self.baby_name() or TEXTS.get(lang, TEXTS["en"])["THE_BABY"]
-                        at = parse_time(opened).strftime("%H:%M")
+                        at = parse_time(opened, self.now().tzinfo).strftime("%H:%M")  # the family clock, never the server zone
                         return finish(self.text("STILL_ASLEEP", request, name=name[:1].upper() + name[1:], at=at), fixed=True)
                 if (key is not None and call["arguments"].get("kind") == "sleep"
                         and any(e.get("kind") == "sleep" and (e.get("details") or {}).get("start") for e in stored)):

@@ -1,5 +1,6 @@
 import importlib.util
 import json
+import os
 import tempfile
 import threading
 import time
@@ -104,8 +105,21 @@ class ChangingTablePlugin(unittest.TestCase):
 
     def test_the_brain_tools_log_the_content_and_read_it_back(self):
         """The brain arms through its tool, no fallback fires, and finish_changing_table(solid=True) logs a dirty diaper
-        and returns the entry read back from Baby Buddy for the spoken summary."""
+        and returns the entry read back from Baby Buddy for the spoken summary. Baby Buddy answers in UTC and the parent
+        hears the house clock, which deploy/compose.yml sets to America/Montevideo, so the test runs on that clock."""
         from parenting_agent.tracking import Tracker
+
+        before = os.environ.get("TZ")
+        os.environ["TZ"] = "America/Montevideo"
+        time.tzset()
+
+        def restore():
+            if before is None:
+                os.environ.pop("TZ", None)
+            else:
+                os.environ["TZ"] = before
+            time.tzset()
+        self.addCleanup(restore)
 
         class FakeBabyBuddy:
             def __init__(self):
@@ -116,7 +130,7 @@ class ChangingTablePlugin(unittest.TestCase):
                 return {"id": len(self.saved)}
 
             def get(self, path, entry_id):
-                return {"id": entry_id, **self.saved[entry_id], "time": "2026-10-29T03:46:58-03:00"}
+                return {"id": entry_id, **self.saved[entry_id], "time": "2026-10-29T06:46:58Z"}
 
         with tempfile.TemporaryDirectory() as tmp:
             agent, plugin = agent_with_skill(tmp, FakeReflex(on_frames=4), FakeSource(frames=12, step=0.2))

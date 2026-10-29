@@ -71,9 +71,10 @@ class Rules(unittest.TestCase):
         memory = Memory(":memory:")
         self.addCleanup(memory.close)
         baby_log = LocalBabyLog(memory)
-        baby_log.add("feeding", {"amount_ml": 100}, "2026-10-28T10:00:00-03:00")
-        baby_log.add("feeding", {"amount_ml": 50}, "2026-10-29T01:00:00-03:00")
-        s = baby_log.summary("2026-10-28T00:00:00-03:00", "2026-10-29T00:00:00-03:00")
+        # Dates in the past: the log clamps a future time to now, so a date near today would make this hang on the clock.
+        baby_log.add("feeding", {"amount_ml": 100}, "2026-10-20T10:00:00-03:00")
+        baby_log.add("feeding", {"amount_ml": 50}, "2026-10-21T01:00:00-03:00")
+        s = baby_log.summary("2026-10-20T00:00:00-03:00", "2026-10-21T00:00:00-03:00")
         self.assertEqual((s["feedings"]["count"], s["feedings"]["total_ml"]), (1, 100))
 
 
