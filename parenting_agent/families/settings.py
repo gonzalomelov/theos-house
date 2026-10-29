@@ -100,6 +100,9 @@ def load(environ=None):
         "summary_hour": _number(environ, "PA_FAMILIES_SUMMARY_HOUR", 20, int),
         "poll_timeout_s": _number(environ, "PA_FAMILIES_POLL_S", 25, int),
         "tick_s": _number(environ, "PA_FAMILIES_TICK_S", 60, int),
+        # Voice notes: "none", or the voice service URL on the internal network (deploy/voice). Hearing uses Muse on
+        # Baseten, so it also needs BASETEN_API_KEY.
+        "voice": environ.get("PA_FAMILIES_VOICE", "none"),
         "max_steps": 5,
         "history": 16,
     }

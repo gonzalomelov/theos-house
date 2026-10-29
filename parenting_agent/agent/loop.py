@@ -104,6 +104,8 @@ EDIT_TOOLS = {"edit_baby_event", "delete_baby_event"}
 ONE_AFTER_CHECK = "not logged: after the check only the newest message is logged, once. Earlier messages were already handled."
 ASKED_ONLY = ("not logged: this message is a question about the log, it reports nothing new. Answer it from baby_summary "
               "or read_baby_log.")
+OTHER_KIND = ("not logged: the newest message does not report this kind of entry. Earlier messages were already "
+              "handled, never log them again.")
 NOT_NEW = ("not logged: this message corrects or removes an earlier entry. Use edit_baby_event or delete_baby_event, "
            "never a new entry.")
 DOUBLE_WINDOW = datetime.timedelta(minutes=3)
@@ -592,6 +594,8 @@ class Agent:
                     self.bus.publish("guard", status="not_logged", failed=failed)
                     return finish(self.not_logged(request), fixed=True)
                 return finish(reply.text or "OK.")
+            if request is not None:
+                reply.tool_calls = rules.one_diaper(reply.tool_calls, request)
             transcript.append({"role": "assistant", "text": reply.text, "tool_calls": reply.tool_calls})
             for call in reply.tool_calls:
                 if call["name"] in ("log_baby_event", "edit_baby_event") and request is not None:
@@ -599,6 +603,13 @@ class Agent:
                     if call["name"] == "log_baby_event":
                         arguments["details"], ts = rules.said_only(request, arguments.get("kind"), arguments.get("details"), arguments.get("ts"))
                         arguments.pop("ts", None)
+                        if ts:
+                            ts = rules.latest_time(ts, self.now(), request)
+                        named = rules.named_time(request, self.now())
+                        if named and (ts or "")[:16] != named[:16]:
+                            # "le di 90 ml a las 3": the time the parent named, not the time the message came.
+                            self.bus.publish("guard", status="named_time")
+                            ts = named
                         if ts:
                             arguments["ts"] = ts
                     call = {**call, "arguments": arguments}
@@ -612,6 +623,12 @@ class Agent:
                         value = _ml(bad[1]) if bad[0] in ("amount_ml", "duration_min") and _ml(bad[1]) else bad[1]
                         return finish(BOUNDS_ASK[lang][bad[0]].format(value=value), fixed=True)
                 key = entry_key(call["arguments"] or {}) if call["name"] == "log_baby_event" else None
+                said_kinds = rules.kinds_said(request) if key is not None and request is not None else set()
+                if said_kinds and (call["arguments"] or {}).get("kind") not in said_kinds | {"note"}:
+                    # "she fell asleep at 3:15" logs the sleep, never the 02:00 bottle from an earlier message again.
+                    self.bus.publish("tool", name=call["name"], status="held")
+                    transcript.append({"role": "tool", "id": call["id"], "name": call["name"], "result": OTHER_KIND})
+                    continue
                 if key is not None and asking:
                     self.bus.publish("tool", name=call["name"], status="held")
                     transcript.append({"role": "tool", "id": call["id"], "name": call["name"], "result": ASKED_ONLY})

@@ -20,6 +20,7 @@ from ..agent import rules
 from ..agent.loop import SYSTEM, Agent
 from ..agent.tools import Tool, core_tools, schema
 from ..bus import Bus
+from ..demo.settings import PRICES
 from ..rhythm import patterns
 from . import babylog
 from . import texts
@@ -81,7 +82,7 @@ class FamilyAgent(Agent):
         """The core prompt with the family's own facts only, and the family's language. Keys starting with _ are the
         service's bookkeeping."""
         facts = {k: v["value"] for k, v in self.memory.facts().items() if not k.startswith("_")}
-        base = SYSTEM.format(today=datetime.date.today().isoformat(), facts=json.dumps(facts or "none yet", ensure_ascii=False))
+        base = SYSTEM.format(today=self.now().date().isoformat(), facts=json.dumps(facts or "none yet", ensure_ascii=False))
         lang = self.memory.facts().get("_lang", {}).get("value") or "en"
         return (base + FAMILY_NOTE.format(name=facts.get("baby_name", "the baby"), born=facts.get("birth_date", "recently"))
                 + LANGUAGE_NOTE.get(lang, LANGUAGE_NOTE["en"]))
@@ -339,6 +340,28 @@ class Families:
                 f.bus.publish("agent_error", error=str(error)[:300])
                 f.memory.add_message(CHANNEL, "assistant", f.t("THINK_FAIL"))
                 return [(chat_id, f.t("THINK_FAIL"))]
+
+    def may_hear(self, user_id):
+        """A voice note costs a Muse call, so only a parent of a family under its caps is heard. Strangers are not."""
+        parent = self.store.parent(visitor_id(user_id)) if user_id else None
+        if parent is None or parent["step"] != "ready":
+            return False
+        family_id = parent["family_id"]
+        return (self.store.spent_today() < self.s["daily_usd_cap"]
+                and self.store.spent_today(family_id) < self.s["family_daily_usd"])
+
+    def heard_spend(self, user_id, usage):
+        """The Muse hearing call counts against the family's daily cap, at Muse Spark Open's Baseten price."""
+        parent = self.store.parent(visitor_id(user_id))
+        if parent is None or not usage:
+            return
+        price_in, price_out = PRICES["baseten"]
+        tokens_in, tokens_out = usage.get("input_tokens") or 4000, usage.get("output_tokens") or 400
+        self.store.add_spend(parent["family_id"], (tokens_in * price_in + tokens_out * price_out) / 1_000_000)
+
+    def family_lang(self, user_id, language_code=""):
+        parent = self.store.parent(visitor_id(user_id)) if user_id else None
+        return self.family(parent["family_id"]).lang if parent else texts.lang_for(language_code)
 
     def gate(self, vid, user_id, chat_id, text, lang="en"):
         """Strangers: only a valid invite code gets in. Nothing about a stranger is stored on disk."""

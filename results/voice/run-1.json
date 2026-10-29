@@ -1,0 +1,504 @@
+{
+  "summary": {
+    "ear": "meta-models/muse-spark-open-1026",
+    "brain": "meta-models/muse-spark-open-1026",
+    "voice": "facebook/mms-tts-spa, facebook/mms-tts-eng (CC-BY-NC 4.0)",
+    "notes": 20,
+    "ok": 20,
+    "ok_es": 10,
+    "ok_en": 10,
+    "voice_replies": 20,
+    "hear_s_median": 4.311,
+    "total_s_median": 8.541,
+    "tts_sentences": 24,
+    "tts_s_per_sentence_median": 0.35,
+    "tts_s_per_sentence_max": 0.728,
+    "spend_usd": 0.2164,
+    "synthetic_audio": true,
+    "failed": []
+  },
+  "steps": [
+    {
+      "id": "es01",
+      "said": "Le di noventa mililitros de mamadera a las tres.",
+      "voice": "Paulina",
+      "heard": "Le di 90 ml de mamadera a las 3",
+      "reply": "«Le di 90 ml de mamadera a las 3»\nAnotado, 90 ml en mamadera a las 3 para Tomi.",
+      "voice_reply_bytes": 17725,
+      "tools": [
+        "log_baby_event({\"kind\": \"feeding\", \"details\": {\"amount_ml\": 90, \"method\": \"bottle\"}, \"ts\": \"2026-10-29T03:00:00-03:00\"})"
+      ],
+      "check": "last feed is 90 ml at 03:00",
+      "ok": true,
+      "hear_s": 4.334,
+      "speak_s": 2.501,
+      "speak_sentences": [
+        {
+          "sentence": "Anotado, 90 ml en mamadera a las 3 para Tomi.",
+          "seconds": 0.375,
+          "audio_s": 4.48
+        }
+      ],
+      "total_s": 9.372
+    },
+    {
+      "id": "es02",
+      "said": "Le cambié el pañal, estaba mojado.",
+      "voice": "Mónica",
+      "heard": "Le cambié el pañal, estaba mojado.",
+      "reply": "«Le cambié el pañal, estaba mojado.»\nRegistrado el pañal mojado de Tomi.",
+      "voice_reply_bytes": 11735,
+      "tools": [
+        "log_baby_event({\"kind\": \"diaper\", \"details\": {\"wet\": true}})"
+      ],
+      "check": "last diaper wet=True solid=False, 1 diapers in the log, got 1",
+      "ok": true,
+      "hear_s": 4.06,
+      "speak_s": 0.313,
+      "speak_sentences": [
+        {
+          "sentence": "Registrado el pañal mojado de Tomi.",
+          "seconds": 0.237,
+          "audio_s": 2.98
+        }
+      ],
+      "total_s": 9.44
+    },
+    {
+      "id": "es03",
+      "said": "Recién hizo caca, pañal sucio.",
+      "voice": "Paulina",
+      "heard": "Recién hizo caca, pañal sucio",
+      "reply": "«Recién hizo caca, pañal sucio»\nAnotado el pañal sucio de Tomi.",
+      "voice_reply_bytes": 10937,
+      "tools": [
+        "log_baby_event({\"kind\": \"diaper\", \"details\": {\"solid\": true}})"
+      ],
+      "check": "last diaper wet=False solid=True, 2 diapers in the log, got 2",
+      "ok": true,
+      "hear_s": 3.883,
+      "speak_s": 0.302,
+      "speak_sentences": [
+        {
+          "sentence": "Anotado el pañal sucio de Tomi.",
+          "seconds": 0.229,
+          "audio_s": 2.67
+        }
+      ],
+      "total_s": 8.145
+    },
+    {
+      "id": "es04",
+      "said": "Se durmió a las cuatro y media.",
+      "voice": "Mónica",
+      "heard": "Se durmió a las 4 y media",
+      "reply": "«Se durmió a las 4 y media»\nTomi se durmió a las 4:30, anotado.",
+      "voice_reply_bytes": 13922,
+      "tools": [
+        "log_baby_event({\"kind\": \"sleep\", \"details\": {\"action\": \"start\"}, \"ts\": \"2026-10-29T04:30:00-03:00\"})"
+      ],
+      "check": "a sleep started at 04:30 today",
+      "ok": true,
+      "hear_s": 4.711,
+      "speak_s": 0.388,
+      "speak_sentences": [
+        {
+          "sentence": "Tomi se durmió a las 4:30, anotado.",
+          "seconds": 0.305,
+          "audio_s": 3.68
+        }
+      ],
+      "total_s": 7.724
+    },
+    {
+      "id": "es05",
+      "said": "Se despertó recién.",
+      "voice": "Paulina",
+      "heard": "Se despertó recién",
+      "reply": "«Se despertó recién»\nSe despertó Tomi, anotado.",
+      "voice_reply_bytes": 9248,
+      "tools": [
+        "log_baby_event({\"kind\": \"sleep\", \"details\": {\"action\": \"end\"}})"
+      ],
+      "check": "one sleep from 04:30 to now, got start 2026-10-29T04:30:00-03:00 and 105 min",
+      "ok": true,
+      "hear_s": 3.286,
+      "speak_s": 0.285,
+      "speak_sentences": [
+        {
+          "sentence": "Se despertó Tomi, anotado.",
+          "seconds": 0.212,
+          "audio_s": 2.42
+        }
+      ],
+      "total_s": 6.86
+    },
+    {
+      "id": "es06",
+      "said": "Le di la teta del lado izquierdo, diez minutos.",
+      "voice": "Mónica",
+      "heard": "Le di la teta del lado izquierdo, 10 minutos.",
+      "reply": "«Le di la teta del lado izquierdo, 10 minutos.»\nAnotado la teta izquierda 10 minutos para Tomi.",
+      "voice_reply_bytes": 16552,
+      "tools": [
+        "log_baby_event({\"kind\": \"feeding\", \"details\": {\"method\": \"left breast\", \"duration_min\": 10}})"
+      ],
+      "check": "last feed is left breast, 10 min",
+      "ok": true,
+      "hear_s": 4.958,
+      "speak_s": 0.413,
+      "speak_sentences": [
+        {
+          "sentence": "Anotado la teta izquierda 10 minutos para Tomi.",
+          "seconds": 0.328,
+          "audio_s": 4.13
+        }
+      ],
+      "total_s": 8.615
+    },
+    {
+      "id": "es07",
+      "said": "Tomó una mamadera de ciento veinte.",
+      "voice": "Paulina",
+      "heard": "Tomó una mamadera de 120",
+      "reply": "«Tomó una mamadera de 120»\nAnotado, 120 ml en mamadera para Tomi.",
+      "voice_reply_bytes": 18656,
+      "tools": [
+        "log_baby_event({\"kind\": \"feeding\", \"details\": {\"amount_ml\": 120, \"method\": \"bottle\"}})"
+      ],
+      "check": "last feed is 120 ml",
+      "ok": true,
+      "hear_s": 5.284,
+      "speak_s": 0.469,
+      "speak_sentences": [
+        {
+          "sentence": "Anotado, 120 ml en mamadera para Tomi.",
+          "seconds": 0.377,
+          "audio_s": 4.67
+        }
+      ],
+      "total_s": 9.608
+    },
+    {
+      "id": "es08",
+      "said": "¿Cuánto tomó de mamadera hoy?",
+      "voice": "Mónica",
+      "heard": "Cuánto tomó de mamadera hoy?",
+      "reply": "«Cuánto tomó de mamadera hoy?»\nHoy Tomi tomó 210 ml de mamadera, en 2 tomas. La última fue a las 7:30 con 120 ml.",
+      "voice_reply_bytes": 37908,
+      "tools": [
+        "baby_summary({})"
+      ],
+      "check": "the answer says 210 ml",
+      "ok": true,
+      "hear_s": 4.674,
+      "speak_s": 0.86,
+      "speak_sentences": [
+        {
+          "sentence": "Hoy Tomi tomó 210 ml de mamadera, en 2 tomas.",
+          "seconds": 0.358,
+          "audio_s": 4.45
+        },
+        {
+          "sentence": "La última fue a las 7:30 con 120 ml.",
+          "seconds": 0.368,
+          "audio_s": 5.04
+        }
+      ],
+      "total_s": 9.927
+    },
+    {
+      "id": "es09",
+      "said": "Perdón, la última mamadera fue de cien, no de ciento veinte.",
+      "voice": "Paulina",
+      "heard": "Perdón, la última mamadera fue de 100, no de 120.",
+      "reply": "«Perdón, la última mamadera fue de 100, no de 120.»\nCorregí la mamadera de las 07:30: 120 ml → 100 ml.",
+      "voice_reply_bytes": 23733,
+      "tools": [
+        "edit_baby_event({\"kind\": \"feeding\", \"last\": true, \"details\": {\"amount_ml\": 100}})"
+      ],
+      "check": "bottles in the log are [90.0, 100.0], got [90.0, 100.0]",
+      "ok": true,
+      "hear_s": 5.087,
+      "speak_s": 0.561,
+      "speak_sentences": [
+        {
+          "sentence": "Corregí la mamadera de las 07:30: 120 ml → 100 ml.",
+          "seconds": 0.457,
+          "audio_s": 6.1
+        }
+      ],
+      "total_s": 8.675
+    },
+    {
+      "id": "es10",
+      "said": "Pañal mojado y con caca.",
+      "voice": "Mónica",
+      "heard": "pañal mojado y con caca",
+      "reply": "«pañal mojado y con caca»\nAnotado pañal mojado con caca de Tomi.",
+      "voice_reply_bytes": 13257,
+      "tools": [
+        "log_baby_event({\"kind\": \"diaper\", \"details\": {\"wet\": true, \"solid\": true}})"
+      ],
+      "check": "last diaper wet=True solid=True, 3 diapers in the log, got 3",
+      "ok": true,
+      "hear_s": 4.084,
+      "speak_s": 0.349,
+      "speak_sentences": [
+        {
+          "sentence": "Anotado pañal mojado con caca de Tomi.",
+          "seconds": 0.269,
+          "audio_s": 3.36
+        }
+      ],
+      "total_s": 7.883
+    },
+    {
+      "id": "en01",
+      "said": "Gave her a sixty milliliter bottle at two.",
+      "voice": "Samantha",
+      "heard": "Gave her a 60 ml bottle at 2.",
+      "reply": "«Gave her a 60 ml bottle at 2.»\nLogged 60 ml bottle for Mia at 2:00.",
+      "voice_reply_bytes": 18049,
+      "tools": [
+        "log_baby_event({\"kind\": \"feeding\", \"details\": {\"amount_ml\": 60, \"method\": \"bottle\"}, \"ts\": \"2026-10-29T02:00:00-03:00\"})"
+      ],
+      "check": "last feed is 60 ml at 02:00",
+      "ok": true,
+      "hear_s": 5.106,
+      "speak_s": 0.943,
+      "speak_sentences": [
+        {
+          "sentence": "Logged 60 ml bottle for Mia at 2:00.",
+          "seconds": 0.392,
+          "audio_s": 4.48
+        }
+      ],
+      "total_s": 9.858
+    },
+    {
+      "id": "en02",
+      "said": "Changed a wet diaper.",
+      "voice": "Daniel",
+      "heard": "Change the wet diaper",
+      "reply": "«Change the wet diaper»\nGot it, logged wet diaper for Mia at 2:45.",
+      "voice_reply_bytes": 16143,
+      "tools": [
+        "log_baby_event({\"kind\": \"diaper\", \"details\": {\"wet\": true}})"
+      ],
+      "check": "last diaper wet=True solid=False, 1 diapers in the log, got 1",
+      "ok": true,
+      "hear_s": 4.344,
+      "speak_s": 0.412,
+      "speak_sentences": [
+        {
+          "sentence": "Got it, logged wet diaper for Mia at 2:45.",
+          "seconds": 0.321,
+          "audio_s": 3.71
+        }
+      ],
+      "total_s": 15.792
+    },
+    {
+      "id": "en03",
+      "said": "She just pooped, dirty diaper.",
+      "voice": "Samantha",
+      "heard": "She just pooped. Dirty diaper.",
+      "reply": "«She just pooped. Dirty diaper.»\nLogged dirty diaper for Mia at 3:10.",
+      "voice_reply_bytes": 13322,
+      "tools": [
+        "log_baby_event({\"kind\": \"diaper\", \"details\": {\"solid\": true}})"
+      ],
+      "check": "last diaper wet=False solid=True, 2 diapers in the log, got 2",
+      "ok": true,
+      "hear_s": 3.787,
+      "speak_s": 0.369,
+      "speak_sentences": [
+        {
+          "sentence": "Logged dirty diaper for Mia at 3:10.",
+          "seconds": 0.286,
+          "audio_s": 3.12
+        }
+      ],
+      "total_s": 6.811
+    },
+    {
+      "id": "en04",
+      "said": "She fell asleep at three fifteen.",
+      "voice": "Daniel",
+      "heard": "She fell asleep at 3:15",
+      "reply": "«She fell asleep at 3:15»\nLogged Mia fell asleep at 3:15.",
+      "voice_reply_bytes": 10955,
+      "tools": [
+        "log_baby_event({\"kind\": \"sleep\", \"details\": {\"action\": \"start\"}, \"ts\": \"2026-10-29T03:15:00-03:00\"})"
+      ],
+      "check": "a sleep started at 03:15 today",
+      "ok": true,
+      "hear_s": 4.082,
+      "speak_s": 0.359,
+      "speak_sentences": [
+        {
+          "sentence": "Logged Mia fell asleep at 3:15.",
+          "seconds": 0.281,
+          "audio_s": 2.78
+        }
+      ],
+      "total_s": 8.054
+    },
+    {
+      "id": "en05",
+      "said": "She just woke up.",
+      "voice": "Samantha",
+      "heard": "She just woke up",
+      "reply": "«She just woke up»\nLogged Mia woke up at 5:30.",
+      "voice_reply_bytes": 10702,
+      "tools": [
+        "log_baby_event({\"kind\": \"sleep\", \"details\": {\"action\": \"end\"}})"
+      ],
+      "check": "one sleep from 03:15 to now, got start 2026-10-29T03:15:00-03:00 and 135 min",
+      "ok": true,
+      "hear_s": 4.227,
+      "speak_s": 0.33,
+      "speak_sentences": [
+        {
+          "sentence": "Logged Mia woke up at 5:30.",
+          "seconds": 0.253,
+          "audio_s": 2.62
+        }
+      ],
+      "total_s": 7.32
+    },
+    {
+      "id": "en06",
+      "said": "Breastfed on the right side for twelve minutes.",
+      "voice": "Daniel",
+      "heard": "Breastfed on the right side for 12 minutes",
+      "reply": "«Breastfed on the right side for 12 minutes»\nLogged right breast for 12 minutes for Mia.",
+      "voice_reply_bytes": 16333,
+      "tools": [
+        "log_baby_event({\"kind\": \"feeding\", \"details\": {\"method\": \"right breast\", \"duration_min\": 12}})"
+      ],
+      "check": "last feed is right breast, 12 min",
+      "ok": true,
+      "hear_s": 5.36,
+      "speak_s": 0.454,
+      "speak_sentences": [
+        {
+          "sentence": "Logged right breast for 12 minutes for Mia.",
+          "seconds": 0.362,
+          "audio_s": 3.86
+        }
+      ],
+      "total_s": 8.205
+    },
+    {
+      "id": "en07",
+      "said": "Bottle, one hundred fifty milliliters.",
+      "voice": "Samantha",
+      "heard": "Bottle, 150 milliliters",
+      "reply": "«Bottle, 150 milliliters»\nLogged 150 ml bottle for Mia.",
+      "voice_reply_bytes": 15675,
+      "tools": [
+        "log_baby_event({\"kind\": \"feeding\", \"details\": {\"amount_ml\": 150, \"method\": \"bottle\"}})"
+      ],
+      "check": "last feed is 150 ml",
+      "ok": true,
+      "hear_s": 4.011,
+      "speak_s": 0.432,
+      "speak_sentences": [
+        {
+          "sentence": "Logged 150 ml bottle for Mia.",
+          "seconds": 0.341,
+          "audio_s": 3.81
+        }
+      ],
+      "total_s": 7.36
+    },
+    {
+      "id": "en08",
+      "said": "How much did she drink from bottles today?",
+      "voice": "Daniel",
+      "heard": "How much did she drink from bottles today?",
+      "reply": "«How much did she drink from bottles today?»\nMia drank 210 ml from bottles today, in 2 bottles: 60 ml at 2:00 and 150 ml at 6:30. She also had one breastfeeding on the right side for 12 minutes.",
+      "voice_reply_bytes": 58471,
+      "tools": [
+        "baby_summary({})"
+      ],
+      "check": "the answer says 210 ml",
+      "ok": true,
+      "hear_s": 4.289,
+      "speak_s": 1.272,
+      "speak_sentences": [
+        {
+          "sentence": "Mia drank 210 ml from bottles today, in 2 bottles: 60 ml at 2:00 and 150 ml at 6:30.",
+          "seconds": 0.728,
+          "audio_s": 9.63
+        },
+        {
+          "sentence": "She also had one breastfeeding on the right side for 12 minutes.",
+          "seconds": 0.363,
+          "audio_s": 4.62
+        }
+      ],
+      "total_s": 9.683
+    },
+    {
+      "id": "en09",
+      "said": "Sorry, that last bottle was one hundred thirty, not one hundred fifty.",
+      "voice": "Samantha",
+      "heard": "Sorry that last bottle was 130, not 150",
+      "reply": "«Sorry that last bottle was 130, not 150»\nFixed the 06:30 bottle: 150 ml → 130 ml.",
+      "voice_reply_bytes": 25888,
+      "tools": [
+        "edit_baby_event({\"kind\": \"feeding\", \"last\": true, \"details\": {\"amount_ml\": 130}})"
+      ],
+      "check": "bottles in the log are [60.0, 130.0], got [60.0, 130.0]",
+      "ok": true,
+      "hear_s": 5.511,
+      "speak_s": 0.651,
+      "speak_sentences": [
+        {
+          "sentence": "Fixed the 06:30 bottle: 150 ml → 130 ml.",
+          "seconds": 0.539,
+          "audio_s": 6.59
+        }
+      ],
+      "total_s": 8.468
+    },
+    {
+      "id": "en10",
+      "said": "Wet and dirty diaper.",
+      "voice": "Daniel",
+      "heard": "Wet and dirty diaper",
+      "reply": "«Wet and dirty diaper»\nThe 06:30 bottle of 130 ml already says that, nothing changed. The 06:30 bottle of 130 ml already says that, nothing changed. Logged wet and dirty diaper for Mia at 7:40.",
+      "voice_reply_bytes": 68217,
+      "tools": [
+        "log_baby_event({\"kind\": \"diaper\", \"details\": {\"wet\": true, \"solid\": true}})",
+        "edit_baby_event({\"kind\": \"feeding\", \"at\": \"06:30\", \"details\": {\"amount_ml\": 130}})",
+        "edit_baby_event({\"at\": \"06:30\", \"details\": {\"amount_ml\": 130}, \"kind\": \"feeding\"})"
+      ],
+      "check": "last diaper wet=True solid=True, 3 diapers in the log, got 3",
+      "ok": true,
+      "hear_s": 3.4,
+      "speak_s": 1.503,
+      "speak_sentences": [
+        {
+          "sentence": "The 06:30 bottle of 130 ml already says that, nothing changed.",
+          "seconds": 0.539,
+          "audio_s": 6.29
+        },
+        {
+          "sentence": "The 06:30 bottle of 130 ml already says that, nothing changed.",
+          "seconds": 0.456,
+          "audio_s": 6.29
+        },
+        {
+          "sentence": "Logged wet and dirty diaper for Mia at 7:40.",
+          "seconds": 0.307,
+          "audio_s": 3.86
+        }
+      ],
+      "total_s": 10.04
+    }
+  ]
+}

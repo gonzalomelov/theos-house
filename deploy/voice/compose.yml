@@ -1,0 +1,53 @@
+# The voice service on the Vostro (issue #58). Started by deploy/voice.sh:
+#
+#   docker compose -f deploy/voice/compose.yml up -d
+#
+# One image, two containers, so the family's private agent and the families bot never share one:
+#   pa-voice-family    on parenting-agent-internal, for the family agent (config/agent.vostro.json)
+#   pa-voice-families  on pa-families-internal, for the families bot (PA_FAMILIES_VOICE)
+# Both networks are internal with no gateway, so the voice service has no internet, no host and no LAN. It needs
+# none: the weights are in the image. It holds no secret. Nothing is published on the host.
+name: pa-voice
+
+x-voice: &voice
+  image: pa-voice:${APP_TAG:-latest}
+  restart: unless-stopped
+  read_only: true
+  cap_drop: [ALL]
+  security_opt: ["no-new-privileges:true"]
+  logging:
+    driver: json-file
+    options: { max-size: 10m, max-file: "3" }
+  tmpfs: ["/tmp:rw,size=64m"]
+  mem_limit: 1200m
+  memswap_limit: 1200m
+  cpus: 2
+  pids_limit: 64
+  healthcheck:
+    test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8800/health', timeout=4)"]
+    interval: 30s
+    timeout: 5s
+    retries: 3
+    start_period: 120s
+
+services:
+  family:
+    <<: *voice
+    build:
+      context: ../..
+      dockerfile: deploy/voice/Dockerfile
+    container_name: pa-voice-family
+    networks: [family]
+
+  families:
+    <<: *voice
+    container_name: pa-voice-families
+    networks: [families]
+
+networks:
+  family:
+    external: true
+    name: parenting-agent-internal
+  families:
+    external: true
+    name: pa-families-internal

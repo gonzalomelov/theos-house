@@ -30,6 +30,10 @@ Telegram allows one poller per bot. While the Vostro agent runs, do not run `pyt
 
 Docker already runs every other app on the Vostro, starts at boot, and gives the network wall for free: an internal network and two proxies keep the agent away from the LAN, the host and every other container. A systemd service would run on the host network and see all of them.
 
+### Voice notes
+
+A voice note on Telegram is heard by Muse Spark Open and answered in text and as a voice note (issue #58, `docs/voice.md`). ffmpeg and MMS-TTS run in the voice service, `pa-voice-family`, a separate container on `parenting-agent-internal` with the weights baked in and no secret (`deploy/voice/`, `sh deploy/voice.sh deploy`). The agent image stays standard library only. The agent reaches it at `http://pa-voice-family:8800` without the proxy. Hearing is the Muse call through the egress proxy, like the brain.
+
 ## The wall
 
 The agent is the private family agent, so it reaches only what it needs:

@@ -87,7 +87,7 @@ The agent runs 24/7 on the Vostro in its own walled-off container: it reaches Ba
 
 ## Baby log in Baby Buddy (issue #2)
 
-Notes like "bottle, 120 ml", "wet and dirty diaper", "she napped from 14:00 to 15:00" or "just gave her a bath" become Baby Buddy entries. Questions like "when was the last dirty diaper?" or "how much did she drink today?" are answered from Baby Buddy through the `baby_summary` and `read_baby_log` tools. Health questions get a kind refusal and a suggestion to call the pediatrician. Notes arrive as typed text. Voice notes on Telegram are being built and are not merged yet.
+Notes like "bottle, 120 ml", "wet and dirty diaper", "she napped from 14:00 to 15:00" or "just gave her a bath" become Baby Buddy entries. Questions like "when was the last dirty diaper?" or "how much did she drink today?" are answered from Baby Buddy through the `baby_summary` and `read_baby_log` tools. Health questions get a kind refusal and a suggestion to call the pediatrician. Notes arrive as text or as Telegram voice notes: Muse Spark Open hears the voice note itself and the answer comes back as text and as a voice note in Meta's MMS-TTS voice, see `docs/voice.md`.
 
 - `parenting_agent/agent/babybuddy.py`: Baby Buddy as the baby log. Baths are notes that start with "Bath". "Asleep" starts a timer and "awake" turns it into a sleep record. Entries are never timed in the future. A feed whose estimated start overlaps the previous feed starts right after it.
 - `config/agent.json` and `config/agent.muse-baseten.json` use Baby Buddy (`baby_log.provider: babybuddy`, URL and token from the env file, reached through the tunnel in `docs/deploy-babybuddy.md`). `config/agent.fake.json` keeps the offline log in the agent's memory file.
@@ -133,7 +133,8 @@ python scripts/house_plan_check.py   # live and safe: reads the vacuum, dry runs
 The agent hears and speaks on Telegram through @home_agent_example_bot, with long polling over plain HTTPS, so nothing is exposed. Only the family's chat ids (`TELEGRAM_CHAT_ID` in the env file, comma separated) are accepted. Other senders are ignored and logged as `channel_ignored` with their chat id only. Messages reach the same agent and the same memory as every other channel.
 
 - `parenting_agent/channels/messaging.py`: one messaging adapter interface and the channel plug-in that runs it. WhatsApp later is a new adapter only.
-- `parenting_agent/channels/telegram.py`: the Telegram adapter. Text for now, voice notes later.
+- `parenting_agent/channels/telegram.py`: the Telegram adapter. Text and voice notes (getFile download, sendVoice reply).
+- `parenting_agent/voice/`: the ears and the voice. `ear.py` sends the voice note to Muse Spark Open as audio input, `tts.py` speaks with MMS-TTS, `server.py` is the walled voice service on the Vostro. See `docs/voice.md`.
 - `parenting_agent/channels/router.py`: picks one channel for each `notify` event and each agent reply on the channel `auto`. Help needed goes to the partner (a stub, Ceci has no phone channel yet). Away or unknown presence goes to Telegram. At home with a skill armed, or with the baby asleep, it goes to the ear (the Mac speaker for now). At home with hands free it goes to the kitchen Echo at low volume, and the volume is put back after. Presence comes from `person.gonza`, then `device_tracker.gonzas_iphone`.
 - `scripts/channels_check.py`: the real checks, a Telegram round trip, one Echo announce and a reminder routed with presence simulated as away. Results in `results/channels/check.json`.
 
@@ -216,13 +217,14 @@ The repo was created on Oct 26 2026 at 15:03 Montevideo time (14:03 ET), after t
 | Daily house plan: vacuum around naps, shopping list, fast dinners, white noise | #29, #32 | #44 | see PR |
 | Car seat coach: manual to steps, SAM 3.1 visible checks, hand checks, outgrow watch, rendered test clips | #30 | #47 | see PR |
 | Touch versus hover ablation, reflex only against SAM 3.1, the voice waits for SAM 3.1 on near readings (Oct 28) | #6, #10 | see PR | see PR |
+| Voice notes heard by Muse Spark Open, answers spoken with Meta MMS-TTS, walled voice service (Oct 28) | #58 | see PR | see PR |
 
 | Muse Spark Open as the brain of the family agent, the families bot and the demo, Claude only as a logged fallback | #4 | #61 | 115dc2e |
 | Red team round 1 closed, a regression test per attack | #60 | #63 | ed6c488 |
 
 The first commits of Oct 26 (4f1898a to 90ca5a3) are an early skeleton that the issues above reviewed and partly rewrote. Commit f41acfa ports the reflex and the chime then voice alarm from the prior work below.
 
-**Planned, not built yet:** voice notes on Telegram, the glasses app on real glasses, live Home Assistant actions (#9, dry run today), demo and submission (#11).
+**Planned, not built yet:** the glasses app on real glasses, live Home Assistant actions (#9, dry run today), demo and submission (#11).
 
 ## Prior work (Oct 21 to 25 2026, before the event)
 
@@ -239,4 +241,4 @@ Built in the prep repo `gonzalomelov/meta-hackathon-2026` (64 commits from Oct 2
 | Generated changing-table clips (Oct 22), the generated bath clip and the hover clip (Oct 23) | Oct 22 to 23 | test clips outside git, the bath set was re-cut from it on Oct 28 |
 | Positioning, the Baby Buddy safety vet, the day 1 runbook | Oct 23 to 25 | planning only |
 
-**Public open-source tools used, not written by us:** Meta SAM 3.1 weights and code, PANNs CNN14 (code MIT, weights CC BY 4.0), MediaPipe hand landmarker, OpenCV, NumPy, Baby Buddy (BSD-2-Clause), Home Assistant.
+**Public open-source tools used, not written by us:** Meta SAM 3.1 weights and code, Meta MMS-TTS weights (facebook/mms-tts-spa and facebook/mms-tts-eng, CC-BY-NC 4.0, non-commercial), FFmpeg, PyTorch and Hugging Face Transformers, PANNs CNN14 (code MIT, weights CC BY 4.0), MediaPipe hand landmarker, OpenCV, NumPy, Baby Buddy (BSD-2-Clause), Home Assistant.

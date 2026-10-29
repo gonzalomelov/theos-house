@@ -36,10 +36,12 @@ def run(settings):
     messenger = TelegramMessenger(os.environ.get(settings_mod.BOT_TOKEN, ""))
     if messenger.me() == settings_mod.FAMILY_BOT_USERNAME:
         raise SystemExit("this token belongs to the family bot. Use the second bot.")
+    from ..voice import client as voice_client
     service = Families(settings)
-    bot = FamiliesBot(service, messenger, settings["poll_timeout_s"], settings["tick_s"])
+    voice = voice_client.build({"service": settings.get("voice", "none")})
+    bot = FamiliesBot(service, messenger, settings["poll_timeout_s"], settings["tick_s"], voice=voice)
     print(f"families: brain {settings['brain_name']} ({service.brain.destination}), {service.store.family_count()} families, "
-          f"cap ${settings['daily_usd_cap']:.2f} a day", flush=True)
+          f"cap ${settings['daily_usd_cap']:.2f} a day, voice notes {'on' if voice else 'off'}", flush=True)
     try:
         bot.run()
     except KeyboardInterrupt:

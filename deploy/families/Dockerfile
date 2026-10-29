@@ -12,6 +12,7 @@ COPY parenting_agent/rhythm parenting_agent/rhythm
 COPY parenting_agent/channels parenting_agent/channels
 COPY parenting_agent/demo parenting_agent/demo
 COPY parenting_agent/families parenting_agent/families
+COPY parenting_agent/voice parenting_agent/voice
 COPY simweek simweek
 RUN useradd --uid 10002 --no-create-home families && mkdir /data && chown families /data && chmod 700 /data
 USER families

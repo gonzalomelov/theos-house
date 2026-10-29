@@ -13,7 +13,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 IMAGES = {"families": ("parenting_agent.families.service", "parenting_agent.families.__main__",
-                       "parenting_agent.families.export_sessions"),
+                       "parenting_agent.families.export_sessions", "parenting_agent.families.bot"),
+          "voice": ("parenting_agent.voice.server", "parenting_agent.voice.client", "parenting_agent.voice.tts"),
           "demo": ("parenting_agent.demo.app", "parenting_agent.demo.__main__", "parenting_agent.demo.export_sessions")}
 
 

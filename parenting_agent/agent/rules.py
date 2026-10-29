@@ -159,6 +159,10 @@ def is_cry_question(text):
     return bool(CRY.search(text or "")) and not is_emergency(text)
 
 
+WET_SAID = re.compile(r"wet|pee|wee|pis|mojad|orin|me[oó]\b|meado|both|ambos|los dos|y (con )?caca|and dirty|and poo", re.I)
+SOLID_SAID = re.compile(r"dirty|poo|solid|caca|sucio|pop[oó]|deposici|cacona|both|ambos|los dos", re.I)
+
+
 def said_only(request, kind, details, ts=None):
     """The log call's details and time, without anything the parent did not say: no breast side, milk type, duration,
     amount, diaper color or time the brain made up. Returns (details, ts)."""
@@ -183,7 +187,95 @@ def said_only(request, kind, details, ts=None):
             details.pop("amount_ml", None)
     if kind == "diaper" and details.get("color") and not COLOR_SAID.search(request):
         details.pop("color", None)
+    if kind == "diaper" and details.get("wet") and details.get("solid"):
+        # Both only when the parent said both: "she pooped, dirty diaper" is not a wet diaper.
+        if not WET_SAID.search(request):
+            details.pop("wet", None)
+        elif not SOLID_SAID.search(request):
+            details.pop("solid", None)
     return details, ts
+
+
+DAY_SAID = re.compile(r"\b(ayer|anoche|anteayer|yesterday|last night|lunes|martes|mi[eé]rcoles|jueves|viernes|s[aá]bado|"
+                      r"domingo|monday|tuesday|wednesday|thursday|friday|saturday|sunday)\b|\d{1,2}/\d{1,2}", re.I)
+
+
+def latest_time(ts, now, request=""):
+    """A clock time the parent named, "a las 4 y media", is the latest such time not after now. The brain sometimes
+    puts it on the wrong day, so its date is kept only when the parent named a day."""
+    if not ts or DAY_SAID.search(request or ""):
+        return ts
+    try:
+        moment = datetime.datetime.fromisoformat(str(ts))
+    except ValueError:
+        return ts
+    if moment.tzinfo is None:
+        moment = moment.replace(tzinfo=now.tzinfo)
+    moment = moment.astimezone(now.tzinfo)
+    latest = now.replace(hour=moment.hour, minute=moment.minute, second=moment.second, microsecond=0)
+    if latest > now:
+        latest -= datetime.timedelta(days=1)
+    return latest.isoformat(timespec="seconds")
+
+
+MANY_DIAPERS = re.compile(r"\b(dos|tres|2|3|two|three|otro|another|second|segundo)\b.{0,20}(pa[nñ]al|diaper)|"
+                          r"(pa[nñ]al|diaper)es.{0,10}\b(dos|tres|2|3)|\bdiapers\b|pa[nñ]ales", re.I)
+
+
+def one_diaper(calls, request):
+    """One diaper the parent reported is one entry. A brain can split "she pooped, dirty diaper" into a wet call and a
+    dirty call, so the diaper calls of one reply become one call with both, unless the parent named more diapers."""
+    diapers = [c for c in calls if c.get("name") == "log_baby_event" and (c.get("arguments") or {}).get("kind") == "diaper"]
+    if len(diapers) < 2 or MANY_DIAPERS.search(request or ""):
+        return calls
+    merged = {}
+    for call in diapers:
+        for key, value in ((call["arguments"] or {}).get("details") or {}).items():
+            merged[key] = merged.get(key) or value
+    first = {**diapers[0], "arguments": {**diapers[0]["arguments"], "details": merged}}
+    return [first if c is diapers[0] else c for c in calls if c is diapers[0] or c not in diapers]
+
+
+KIND_WORDS = {
+    "feeding": re.compile(r"\b(bottle|breast|feed|fed|nursed|formula|milk|ml|mamadera|biber[oó]n|teta|pecho|toma|tom[oó]|leche|"
+                          r"f[oó]rmula|mililitros|milliliters?)\b|\d+\s*ml\b|breastfed", re.I),
+    "diaper": re.compile(r"diaper|pa[nñ]al|\bwet\b|dirty|poo|\bpee\b|caca|\bpis\b|mojad|sucio|pop[oó]", re.I),
+    "sleep": re.compile(r"sleep|slept|asleep|\bnap|woke|wake|awake|dorm|durm|siest|despert|sue[nñ]o", re.I),
+    "bath": re.compile(r"\bbath|ba[nñ][oóé]|ba[nñ]amos|ba[nñ]ar", re.I),
+}
+
+
+def kinds_said(text):
+    """The log kinds a message talks about. A brain can log earlier messages again inside a new one: a sleep note
+    that also logs the 02:00 bottle. Only the kinds in the newest message are logged for it."""
+    return {kind for kind, words in KIND_WORDS.items() if words.search(text or "")}
+
+
+CLOCK_ES = re.compile(r"\ba las? (\d{1,2})(?:[:.](\d{2})| y (media|cuarto))?(?!\s*(?:min|ml|hs?\b))", re.I)
+RANGE_SAID = re.compile(r"\bde (las? )?\d{1,2}.{0,12}\ba (las? )?\d|\bfrom \d{1,2}.{0,12}\b(to|until|till) \d|\bdesde\b|\bhasta\b", re.I)
+CLOCK_EN = re.compile(r"\bat (\d{1,2})(?:[:.](\d{2}))?\s*(am|pm)?\b(?!\s*(?:min|ml))", re.I)
+
+
+def named_time(request, now):
+    """The clock time a note names, "a las 3", "a las 4 y media", "at 3:15", as the latest such moment not after now,
+    or None when it names none or more than one. "a las 3" at 15:20 is 15:00, at 03:20 it is 03:00."""
+    found = [(m.group(1), m.group(2), m.group(3)) for m in CLOCK_ES.finditer(request or "")] + \
+            [(m.group(1), m.group(2), m.group(3)) for m in CLOCK_EN.finditer(request or "")]
+    if len(found) != 1 or DAY_SAID.search(request or "") or RANGE_SAID.search(request or ""):
+        return None
+    hour, minute, extra = found[0]
+    hour, minute = int(hour), int(minute) if minute else {"media": 30, "cuarto": 15}.get((extra or "").lower(), 0)
+    if hour > 23 or minute > 59:
+        return None
+    if (extra or "").lower() in ("am", "pm"):
+        hours = [hour % 12 + (12 if extra.lower() == "pm" else 0)]
+    else:
+        hours = [hour] if hour >= 12 or hour == 0 else [hour, hour + 12]
+    moments = []
+    for h in hours:
+        moment = now.replace(hour=h, minute=minute, second=0, microsecond=0)
+        moments.append(moment if moment <= now else moment - datetime.timedelta(days=1))
+    return max(moments).isoformat(timespec="seconds")
 
 
 def is_question(text):

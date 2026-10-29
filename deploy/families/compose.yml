@@ -35,6 +35,8 @@ services:
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:?set ANTHROPIC_API_KEY in the env file}
       TELEGRAM_FAMILIES_BOT_TOKEN: ${TELEGRAM_FAMILIES_BOT_TOKEN:?set TELEGRAM_FAMILIES_BOT_TOKEN in the env file}
       PA_FAMILIES_BRAIN: ${PA_FAMILIES_BRAIN:-baseten}
+      # Voice notes: heard by Muse, answered with MMS-TTS from the voice service on this internal network (deploy/voice).
+      PA_FAMILIES_VOICE: ${PA_FAMILIES_VOICE:-http://pa-voice-families:8800}
       PA_FAMILIES_BOT_USERNAME: ${PA_FAMILIES_BOT_USERNAME:-}
       PA_FAMILIES_INTERNAL_USERS: ${PA_FAMILIES_INTERNAL_USERS:-}
       PA_FAMILIES_DAILY_USD: ${PA_FAMILIES_DAILY_USD:-3}

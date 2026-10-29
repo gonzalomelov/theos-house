@@ -61,6 +61,10 @@
   "house": {
     "live": false
   },
+  "voice": {
+    "service": "http://pa-voice-family:8800",
+    "reply_with_voice": true
+  },
   "prep": {
     "due_date": "2026-12-15",
     "due_date_estimate": true,

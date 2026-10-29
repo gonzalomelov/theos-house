@@ -1,0 +1,162 @@
+[
+  {
+    "id": "es01",
+    "voice": "Paulina",
+    "sent_at": "03:20",
+    "text": "Le di noventa mililitros de mamadera a las tres.",
+    "synthetic": true,
+    "made_with": "macOS say -v Paulina"
+  },
+  {
+    "id": "es02",
+    "voice": "Mónica",
+    "sent_at": "03:45",
+    "text": "Le cambié el pañal, estaba mojado.",
+    "synthetic": true,
+    "made_with": "macOS say -v Mónica"
+  },
+  {
+    "id": "es03",
+    "voice": "Paulina",
+    "sent_at": "04:10",
+    "text": "Recién hizo caca, pañal sucio.",
+    "synthetic": true,
+    "made_with": "macOS say -v Paulina"
+  },
+  {
+    "id": "es04",
+    "voice": "Mónica",
+    "sent_at": "04:50",
+    "text": "Se durmió a las cuatro y media.",
+    "synthetic": true,
+    "made_with": "macOS say -v Mónica"
+  },
+  {
+    "id": "es05",
+    "voice": "Paulina",
+    "sent_at": "06:15",
+    "text": "Se despertó recién.",
+    "synthetic": true,
+    "made_with": "macOS say -v Paulina"
+  },
+  {
+    "id": "es06",
+    "voice": "Mónica",
+    "sent_at": "06:40",
+    "text": "Le di la teta del lado izquierdo, diez minutos.",
+    "synthetic": true,
+    "made_with": "macOS say -v Mónica"
+  },
+  {
+    "id": "es07",
+    "voice": "Paulina",
+    "sent_at": "07:30",
+    "text": "Tomó una mamadera de ciento veinte.",
+    "synthetic": true,
+    "made_with": "macOS say -v Paulina"
+  },
+  {
+    "id": "es08",
+    "voice": "Mónica",
+    "sent_at": "07:55",
+    "text": "¿Cuánto tomó de mamadera hoy?",
+    "synthetic": true,
+    "made_with": "macOS say -v Mónica"
+  },
+  {
+    "id": "es09",
+    "voice": "Paulina",
+    "sent_at": "08:05",
+    "text": "Perdón, la última mamadera fue de cien, no de ciento veinte.",
+    "synthetic": true,
+    "made_with": "macOS say -v Paulina"
+  },
+  {
+    "id": "es10",
+    "voice": "Mónica",
+    "sent_at": "08:40",
+    "text": "Pañal mojado y con caca.",
+    "synthetic": true,
+    "made_with": "macOS say -v Mónica"
+  },
+  {
+    "id": "en01",
+    "voice": "Samantha",
+    "sent_at": "02:20",
+    "text": "Gave her a sixty milliliter bottle at two.",
+    "synthetic": true,
+    "made_with": "macOS say -v Samantha"
+  },
+  {
+    "id": "en02",
+    "voice": "Daniel",
+    "sent_at": "02:45",
+    "text": "Changed a wet diaper.",
+    "synthetic": true,
+    "made_with": "macOS say -v Daniel"
+  },
+  {
+    "id": "en03",
+    "voice": "Samantha",
+    "sent_at": "03:10",
+    "text": "She just pooped, dirty diaper.",
+    "synthetic": true,
+    "made_with": "macOS say -v Samantha"
+  },
+  {
+    "id": "en04",
+    "voice": "Daniel",
+    "sent_at": "03:40",
+    "text": "She fell asleep at three fifteen.",
+    "synthetic": true,
+    "made_with": "macOS say -v Daniel"
+  },
+  {
+    "id": "en05",
+    "voice": "Samantha",
+    "sent_at": "05:30",
+    "text": "She just woke up.",
+    "synthetic": true,
+    "made_with": "macOS say -v Samantha"
+  },
+  {
+    "id": "en06",
+    "voice": "Daniel",
+    "sent_at": "05:50",
+    "text": "Breastfed on the right side for twelve minutes.",
+    "synthetic": true,
+    "made_with": "macOS say -v Daniel"
+  },
+  {
+    "id": "en07",
+    "voice": "Samantha",
+    "sent_at": "06:30",
+    "text": "Bottle, one hundred fifty milliliters.",
+    "synthetic": true,
+    "made_with": "macOS say -v Samantha"
+  },
+  {
+    "id": "en08",
+    "voice": "Daniel",
+    "sent_at": "06:55",
+    "text": "How much did she drink from bottles today?",
+    "synthetic": true,
+    "made_with": "macOS say -v Daniel"
+  },
+  {
+    "id": "en09",
+    "voice": "Samantha",
+    "sent_at": "07:05",
+    "text": "Sorry, that last bottle was one hundred thirty, not one hundred fifty.",
+    "synthetic": true,
+    "made_with": "macOS say -v Samantha"
+  },
+  {
+    "id": "en10",
+    "voice": "Daniel",
+    "sent_at": "07:40",
+    "text": "Wet and dirty diaper.",
+    "synthetic": true,
+    "made_with": "macOS say -v Daniel"
+  }
+]

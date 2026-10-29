@@ -11,13 +11,19 @@ Each family chat can be tied to a person in the config, so the log says who spok
     "people": {"gonza": {"chat_ids_env": "TELEGRAM_CHAT_ID"}, "ceci": {"chat_ids_env": "TELEGRAM_CECI_CHAT_ID"}}
 A person's chats are also family chats. At start the channel logs a "family_channels" event that says which people
 have a chat on it, so a person with no chat shows as not connected instead of silently counting zero.
+
+Voice notes: when the agent config has a "voice" block (parenting_agent/voice/client.py), a voice note is downloaded,
+heard by Muse and handed to the agent as the words it heard, so it takes the same path as a typed note. The reply to
+it goes back as text that starts with the words heard, so a mishearing is easy to correct, and as a voice note.
 """
 import os
 import threading
+import time
 from dataclasses import dataclass
 from pathlib import Path
 
 from ..agent.plugins import Plugin
+from ..voice import client as voice_client
 
 
 @dataclass
@@ -29,6 +35,17 @@ class Incoming:
     user_id: str = ""
     chat_type: str = ""
     language_code: str = ""
+    voice_file_id: str = ""
+
+
+NO_VOICE = {"en": "I can only read text here for now. Please type it.", "es": "Por ahora acá solo leo texto. ¿Me lo escribís?"}
+NOT_HEARD = {"en": "I could not hear that voice note. Please send it again or type it.",
+             "es": "No pude escuchar ese audio. ¿Me lo mandás de nuevo o me lo escribís?"}
+
+
+def heard_text(heard, reply):
+    """The text answer to a voice note: the words heard first, so the parent sees what the agent understood."""
+    return f"\u00ab{heard}\u00bb\n{reply}"
 
 
 class MessagingError(Exception):
@@ -45,6 +62,12 @@ class Messenger:
     def send(self, chat_id, text):
         raise NotImplementedError
 
+    def download(self, file_id):
+        raise MessagingError(f"{self.name} cannot download files")
+
+    def send_voice(self, chat_id, ogg):
+        raise MessagingError(f"{self.name} cannot send voice notes")
+
 
 class MessagingChannel(Plugin):
     """Runs a Messenger as an agent channel. Subclasses set name and build the adapter in make_messenger()."""
@@ -59,6 +82,8 @@ class MessagingChannel(Plugin):
         self.allowed = {str(c) for c in self.cfg.get("allowed_chat_ids", [])} | self.env_chat_ids() | set().union(*self.people.values())
         self.default_chat = str(self.cfg.get("default_chat_id") or next(iter(sorted(self.env_chat_ids())), "")) or None
         self.last_chat = None
+        self.voice = voice_client.build(config.get("voice"))
+        self.heard = {}  # chat id -> the words of its last voice note, until the agent answers it
         self.offset_path = Path(config.get("data_dir", "data")) / f"{self.name}.offset"
         self.stopped = threading.Event()
         self.thread = None
@@ -124,13 +149,58 @@ class MessagingChannel(Plugin):
             if item.chat_id not in self.allowed:
                 self.agent.bus.publish("channel_ignored", channel=self.name, chat_id=item.chat_id)
                 continue
-            if not item.text.strip():
+            text = item.text.strip()
+            if not text and item.voice_file_id:
+                text = self.hear(item)
+                if text:
+                    self.heard[item.chat_id] = text
+            else:
+                self.heard.pop(item.chat_id, None)
+            if not text:
                 continue
             self.last_chat = item.chat_id
-            self.agent.bus.publish("message", channel=self.name, text=item.text.strip(), chat_id=item.chat_id,
-                                   person=self.person_of(item.chat_id))
+            self.agent.bus.publish("message", channel=self.name, text=text, chat_id=item.chat_id,
+                                   person=self.person_of(item.chat_id), voice=item.chat_id in self.heard)
             accepted.append(item)
         return accepted
+
+    def hear(self, item):
+        """The words of a voice note, or "" after telling the parent it could not be heard."""
+        lang = "es" if (item.language_code or "").startswith("es") else "en"
+        if self.voice is None:
+            self.send_text(item.chat_id, NO_VOICE[lang])
+            return ""
+        started = time.monotonic()
+        try:
+            text = self.voice.hear(self.messenger.download(item.voice_file_id))
+        except (MessagingError, voice_client.VoiceError) as error:
+            self.agent.bus.publish("channel_error", channel=self.name, error=f"voice note: {str(error)[:180]}")
+            self.send_text(item.chat_id, NOT_HEARD[lang])
+            return ""
+        self.agent.bus.publish("voice_heard", channel=self.name, ear=self.voice.ear.model, chars=len(text),
+                               seconds=round(time.monotonic() - started, 3))
+        if not text:
+            self.send_text(item.chat_id, NOT_HEARD[lang])
+        return text
+
+    def send_text(self, chat, text):
+        try:
+            sent = self.messenger.send(chat, self.cfg["prefix"] + text)
+            self.agent.bus.publish("channel_sent", channel=self.name, chat_id=chat, message_id=sent)
+        except MessagingError as error:
+            self.agent.bus.publish("channel_error", channel=self.name, error=str(error)[:200])
+
+    def send_spoken(self, chat, text):
+        """The reply as a voice note too, in a Meta open voice. A failure here never stops the text answer."""
+        started = time.monotonic()
+        try:
+            ogg = self.voice.speak(text, voice_client.lang_of(text))
+            sent = self.messenger.send_voice(chat, ogg)
+        except (MessagingError, voice_client.VoiceError) as error:
+            self.agent.bus.publish("channel_error", channel=self.name, error=f"voice reply: {str(error)[:180]}")
+            return
+        self.agent.bus.publish("channel_sent", channel=self.name, chat_id=chat, message_id=sent, voice=True,
+                               seconds=round(time.monotonic() - started, 3))
 
     def speak(self, event):
         if event.get("channel") != self.name:
@@ -140,8 +210,7 @@ class MessagingChannel(Plugin):
             self.agent.bus.publish("channel_error", channel=self.name, error="no family chat to send to")
             return
         text = event["text"] if event["kind"] == "reply" else f"I want to use {event['name']}. Say yes to let me."
-        try:
-            sent = self.messenger.send(chat, self.cfg["prefix"] + text)
-            self.agent.bus.publish("channel_sent", channel=self.name, chat_id=chat, message_id=sent)
-        except MessagingError as error:
-            self.agent.bus.publish("channel_error", channel=self.name, error=str(error)[:200])
+        heard = self.heard.pop(chat, None)
+        self.send_text(chat, heard_text(heard, text) if heard else text)
+        if heard and self.voice is not None and self.voice.reply_with_voice:
+            self.spoken_thread = voice_client.in_background(self.send_spoken, chat, text)
