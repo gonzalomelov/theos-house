@@ -1,0 +1,619 @@
+[
+ [
+  29,
+  "00:15",
+  "A",
+  "recien termino la mamadera, 110 de formula",
+  [
+   "add",
+   {
+    "kind": "feeding",
+    "method": "bottle",
+    "ml": 110.0,
+    "type": "formula",
+    "min": 0,
+    "at": null
+   }
+  ],
+  null
+ ],
+ [
+  29,
+  "00:17",
+  "A",
+  "recien termino la mamadera, 110 de formula",
+  null,
+  null
+ ],
+ [
+  29,
+  "00:50",
+  "A",
+  "por fin frita, desde las 12 y 40",
+  null,
+  "asleep 00:40"
+ ],
+ [
+  29,
+  "03:20",
+  "B",
+  "she woke up at 3:10",
+  [
+   "add",
+   {
+    "kind": "sleep",
+    "start": "00:40",
+    "at": "03:10"
+   }
+  ],
+  null
+ ],
+ [
+  29,
+  "03:25",
+  "B",
+  "le di el lado izq, 12 min",
+  [
+   "add",
+   {
+    "kind": "feeding",
+    "method": "left breast",
+    "ml": null,
+    "type": "breast milk",
+    "min": 12,
+    "at": null
+   }
+  ],
+  null
+ ],
+ [
+  29,
+  "03:40",
+  "B",
+  "panal con pis solamente",
+  [
+   "add",
+   {
+    "kind": "diaper",
+    "wet": true,
+    "solid": false,
+    "at": null
+   }
+  ],
+  null
+ ],
+ [
+  29,
+  "04:10",
+  "A",
+  "che cuanto tomo en total esta noche?",
+  null,
+  "q"
+ ],
+ [
+  29,
+  "06:30",
+  "A",
+  "la cambie, tenia caca",
+  [
+   "add",
+   {
+    "kind": "diaper",
+    "wet": false,
+    "solid": true,
+    "at": null
+   }
+  ],
+  null
+ ],
+ [
+  29,
+  "06:32",
+  "A",
+  "y pis tambien, me olvide de decirte",
+  [
+   "edit",
+   29,
+   "06:30",
+   "diaper",
+   {
+    "wet": true
+   }
+  ],
+  null
+ ],
+ [
+  29,
+  "07:15",
+  "B",
+  "3 onzas de leche materna en mamadera",
+  [
+   "add",
+   {
+    "kind": "feeding",
+    "method": "bottle",
+    "ml": 90.0,
+    "type": "breast milk",
+    "min": 0,
+    "at": null
+   }
+  ],
+  null
+ ],
+ [
+  29,
+  "07:17",
+  "B",
+  "eran 4 onzas, no 3",
+  [
+   "edit",
+   29,
+   "07:15",
+   "feeding",
+   {
+    "ml": 120
+   }
+  ],
+  null
+ ],
+ [
+  29,
+  "09:00",
+  "A",
+  "para cuando la siguiente mamadera mas o menos?",
+  null,
+  "next"
+ ],
+ [
+  29,
+  "10:30",
+  "A",
+  "la bañe recien, le encanto el agua tibia",
+  [
+   "add",
+   {
+    "kind": "bath",
+    "at": null
+   }
+  ],
+  null
+ ],
+ [
+  29,
+  "11:45",
+  "B",
+  "she gave me the biggest smile this morning",
+  null,
+  null
+ ],
+ [
+  29,
+  "12:20",
+  "B",
+  "pecho derecho 20 min a las 12",
+  [
+   "add",
+   {
+    "kind": "feeding",
+    "method": "right breast",
+    "ml": null,
+    "type": "breast milk",
+    "min": 20,
+    "at": "12:00"
+   }
+  ],
+  null
+ ],
+ [
+  30,
+  "00:30",
+  "B",
+  "teta izquierda, arranco 00:10 y termino 00:25",
+  [
+   "add",
+   {
+    "kind": "feeding",
+    "method": "left breast",
+    "ml": null,
+    "type": "breast milk",
+    "min": 15,
+    "at": "00:10"
+   }
+  ],
+  null
+ ],
+ [
+  30,
+  "01:05",
+  "A",
+  "cambiada, tenia pis y un poquito de caca",
+  [
+   "add",
+   {
+    "kind": "diaper",
+    "wet": true,
+    "solid": true,
+    "at": null
+   }
+  ],
+  null
+ ],
+ [
+  30,
+  "01:30",
+  "A",
+  "se durmio sola en el moises 1:20",
+  null,
+  "asleep 01:20"
+ ],
+ [
+  30,
+  "04:40",
+  "A",
+  "despierta desde las 4 y media",
+  [
+   "add",
+   {
+    "kind": "sleep",
+    "start": "01:20",
+    "at": "04:30"
+   }
+  ],
+  null
+ ],
+ [
+  30,
+  "04:50",
+  "A",
+  "120 de mamadera, no dejo nada",
+  [
+   "add",
+   {
+    "kind": "feeding",
+    "method": "bottle",
+    "ml": 120.0,
+    "type": "unknown",
+    "min": 0,
+    "at": null
+   }
+  ],
+  null
+ ],
+ [
+  30,
+  "04:52",
+  "A",
+  "leche de formula, me falto decir",
+  [
+   "edit",
+   30,
+   "04:50",
+   "feeding",
+   {
+    "type": "formula"
+   }
+  ],
+  null
+ ],
+ [
+  30,
+  "05:30",
+  "B",
+  "anota: estrenamos el portabebe nuevo, se banco 20 min tranqui",
+  [
+   "add",
+   {
+    "kind": "note",
+    "at": null
+   }
+  ],
+  null
+ ],
+ [
+  30,
+  "06:15",
+  "B",
+  "how long since her last feed?",
+  null,
+  "q"
+ ],
+ [
+  30,
+  "07:00",
+  "A",
+  "tomo 2 onzas y media de la mamadera",
+  [
+   "add",
+   {
+    "kind": "feeding",
+    "method": "bottle",
+    "ml": 75.0,
+    "type": "unknown",
+    "min": 0,
+    "at": null
+   }
+  ],
+  null
+ ],
+ [
+  30,
+  "07:02",
+  "A",
+  "tomo 2 onzas y media de la mamadera",
+  null,
+  null
+ ],
+ [
+  30,
+  "07:03",
+  "A",
+  "perdon repeti, fue una",
+  null,
+  null
+ ],
+ [
+  30,
+  "09:40",
+  "B",
+  "pañal empapado, lo cambie recien",
+  [
+   "add",
+   {
+    "kind": "diaper",
+    "wet": true,
+    "solid": false,
+    "at": null
+   }
+  ],
+  null
+ ],
+ [
+  30,
+  "09:41",
+  "B",
+  "uy no, borra ese pañal, fue sin querer",
+  [
+   "del",
+   30,
+   "09:40",
+   "diaper"
+  ],
+  null
+ ],
+ [
+  30,
+  "11:10",
+  "A",
+  "durmio la siesta de 10 a 11",
+  [
+   "add",
+   {
+    "kind": "sleep",
+    "start": "10:00",
+    "at": "11:00"
+   }
+  ],
+  null
+ ],
+ [
+  30,
+  "13:00",
+  "A",
+  "a q hora deberia comer otra vez",
+  null,
+  "next"
+ ],
+ [
+  31,
+  "00:05",
+  "B",
+  "both sides, 10 min each",
+  [
+   "add",
+   {
+    "kind": "feeding",
+    "method": "both breasts",
+    "ml": null,
+    "type": "breast milk",
+    "min": 20,
+    "at": null
+   }
+  ],
+  null
+ ],
+ [
+  31,
+  "00:40",
+  "B",
+  "caca sola, nada de pis",
+  [
+   "add",
+   {
+    "kind": "diaper",
+    "wet": false,
+    "solid": true,
+    "at": null
+   }
+  ],
+  null
+ ],
+ [
+  31,
+  "01:15",
+  "A",
+  "se durmio a la una menos diez",
+  null,
+  "asleep 00:50"
+ ],
+ [
+  31,
+  "03:55",
+  "A",
+  "arriba otra vez, se desperto 3:45",
+  [
+   "add",
+   {
+    "kind": "sleep",
+    "start": "00:50",
+    "at": "03:45"
+   }
+  ],
+  null
+ ],
+ [
+  31,
+  "04:00",
+  "A",
+  "le di 100 de materna",
+  [
+   "add",
+   {
+    "kind": "feeding",
+    "method": "bottle",
+    "ml": 100.0,
+    "type": "breast milk",
+    "min": 0,
+    "at": null
+   }
+  ],
+  null
+ ],
+ [
+  31,
+  "04:03",
+  "A",
+  "no fue a las 4, fue 3:50",
+  [
+   "edit",
+   31,
+   "04:00",
+   "feeding",
+   {
+    "at": "03:50"
+   }
+  ],
+  null
+ ],
+ [
+  31,
+  "06:20",
+  "B",
+  "izquierdo, 14 minutitos",
+  [
+   "add",
+   {
+    "kind": "feeding",
+    "method": "left breast",
+    "ml": null,
+    "type": "breast milk",
+    "min": 14,
+    "at": null
+   }
+  ],
+  null
+ ],
+ [
+  31,
+  "06:22",
+  "B",
+  "ah no, era el derecho",
+  [
+   "edit",
+   31,
+   "06:20",
+   "feeding",
+   {
+    "method": "right breast"
+   }
+  ],
+  null
+ ],
+ [
+  31,
+  "07:30",
+  "A",
+  "cuantos pañales con caca hizo ayer?",
+  null,
+  "q"
+ ],
+ [
+  31,
+  "08:45",
+  "B",
+  "she had 5 oz of formula",
+  [
+   "add",
+   {
+    "kind": "feeding",
+    "method": "bottle",
+    "ml": 150.0,
+    "type": "formula",
+    "min": 0,
+    "at": null
+   }
+  ],
+  null
+ ],
+ [
+  31,
+  "08:47",
+  "B",
+  "sorry, 4 oz, she left some",
+  [
+   "edit",
+   31,
+   "08:45",
+   "feeding",
+   {
+    "ml": 120
+   }
+  ],
+  null
+ ],
+ [
+  31,
+  "10:00",
+  "A",
+  "bañito listo, quedo re limpita",
+  [
+   "add",
+   {
+    "kind": "bath",
+    "at": null
+   }
+  ],
+  null
+ ],
+ [
+  31,
+  "11:20",
+  "A",
+  "mira como se rie con el sonajero jajaja",
+  null,
+  null
+ ],
+ [
+  31,
+  "12:30",
+  "B",
+  "pañal de pis a las 12 y cuarto",
+  [
+   "add",
+   {
+    "kind": "diaper",
+    "wet": true,
+    "solid": false,
+    "at": "12:15"
+   }
+  ],
+  null
+ ],
+ [
+  31,
+  "13:10",
+  "B",
+  "when's she due to eat next?",
+  null,
+  "next"
+ ]
+]

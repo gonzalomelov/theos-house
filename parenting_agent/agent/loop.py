@@ -116,6 +116,8 @@ ACT_CHECK = ("[check from the agent, not the parent] Your answer says something 
              "house, but no tool that acts ran in this turn. If it should happen, call the tool for it now (a tool that "
              "waits for the parent's yes is called too, the parent is asked). If not, answer without saying it "
              "happened. " + QUIET)
+EMPTY_CHECK = ("[check from the agent, not the parent] Your answer was empty: no text and no tool call. Answer the parent's "
+               "newest message now, with the tool call it needs if it reports something about the baby. " + QUIET)
 READ_TOOLS = {"read_baby_log", "baby_summary", "current_time", "next_feed"}
 EDIT_TOOLS = {"edit_baby_event", "delete_baby_event"}
 ONE_AFTER_CHECK = "not logged: after the check only the newest message is logged, once. Earlier messages were already handled."
@@ -142,6 +144,9 @@ NO_SLEEP_SAID = ("not logged: the newest message says nothing about sleep, so no
 NOT_A_NOTE = ("not logged: the newest message is a moment shared, not something to keep in the log. Answer it warmly, "
               "log nothing.")
 ASLEEP_AGAIN = datetime.timedelta(minutes=60)
+SAME_MINUTE = datetime.timedelta(seconds=60)
+DID_NOT_HAPPEN = ("not logged: the newest message says this did not happen. Log nothing for it and answer the parent "
+                  "in one short line.")
 LANG_CHECK = ("[check from the agent, not the parent] Your answer is not in the language of the parent's newest message. "
               "Write the same answer again in {language}. " + QUIET)
 LANG_NAMES = {"es": "Spanish (Uruguay, voseo)", "en": "English"}
@@ -844,6 +849,9 @@ class Agent:
         without the brain: in run 1 of the held-out set Muse logged each of these as a new entry or not at all.
         Returns True when it changed the entry."""
         found = rules.addendum(request)
+        amount = rules.amount_followup(request) if not found else None
+        if amount:
+            found = ("feeding", {"amount_ml": amount}, 15)
         if not found:
             return False
         kind, patch, minutes = found
@@ -853,13 +861,22 @@ class Agent:
             return False
         if not recent or recent[-1].get("id") is None:
             return False
-        target = recent[-1]
+        target = max(recent, key=lambda e: e.get("id") or 0)
         d = target.get("details") or {}
+        if "amount_ml" in patch:
+            # "ponele 100" sets the bottle just logged, "sobraron 20" takes 20 from it. A breast feed has no amount.
+            ml, mode = patch["amount_ml"]
+            if "breast" in str(d.get("method") or "") or (mode == "left" and not _number(d.get("amount_ml"))):
+                return False
+            ml = float(d["amount_ml"]) - ml if mode == "left" else ml
+            if ml <= 0 or _ml(ml) == _ml(d.get("amount_ml")):
+                return False
+            patch = {"amount_ml": float(round(ml))}
         if "duration_min" in patch and ("breast" not in str(d.get("method") or "") or _number(d.get("duration_min"))):
             return False
         if "type" in patch and ("breast" in str(d.get("method") or "") or d.get("type") == patch["type"]):
             return False
-        if kind == "diaper" and all(d.get(name) for name in patch):
+        if kind == "diaper" and all(bool(d.get(name)) == value for name, value in patch.items()):
             return False
         status, _ = self.tools.run("edit_baby_event", {"id": target["id"], "details": patch})
         self.bus.publish("guard", status="addendum", entry=kind, ran=status)
@@ -964,6 +981,20 @@ class Agent:
             return self.text("NOT_CHANGED" if editing else "NOT_IN_LOG", request)
         return text
 
+    def unbacked_value(self, text, before, request, editing, ran):
+        """A brain reply that states the parent's new value as settled ("Entendido, lo dejamos en 100 ml") on a turn
+        where the log did not change goes out as the honest "nothing changed". The third blind set sent that line
+        for "no wait, dejo un poco, ponele 100" and the bottle stayed at 110."""
+        if request is None or before is None or ran or rules.is_question(request) or (text or "").rstrip().endswith("?"):
+            return text
+        said = set(rules.plain_numbers(request))
+        if not said or not said & set(rules.plain_numbers(text)):
+            return text
+        if not diff_empty(log_diff(before, self.log_state())):
+            return text
+        self.bus.publish("guard", status="value_without_diff")
+        return self.text("NOT_CHANGED" if editing else "NOT_IN_LOG", request)
+
     def after_fail(self, before, request, editing):
         """The reply when the brain stops after the log may have changed: the diff of the turn, so the parent knows what
         was kept, or the honest "not logged" when nothing was."""
@@ -1011,6 +1042,7 @@ class Agent:
         system, specs = self.system_prompt(), self.tools.specs()
         logged, kept, changed, stored = {}, [], [], []
         failed, acted, checked, edit_checked = False, None, False, False
+        empty_checked = False
         actors, act_checked = set(), False
         read, next_text, held_delete = set(), None, None
         asked = 0
@@ -1032,6 +1064,7 @@ class Agent:
         def finish(text, fixed=False, log_failed=False):
             if not fixed:
                 text = strip_codes(BRAIN_ASK_LINE.sub("", text or "").strip() or "OK.")
+                text = self.unbacked_value(text, before, request, editing, ran)
             text = self.honest(text, before, request, editing, ran)
             if request is not None:
                 self.last_log_failed = self.now() if log_failed else None
@@ -1041,7 +1074,9 @@ class Agent:
             ran.add("edit_baby_event")
             return finish(diff_text(log_diff(before, self.log_state()), lang, self.baby_name())
                           or self.text("NOT_CHANGED", request), fixed=True)
-        for _ in range(self.max_steps):
+        rounds, limit = 0, self.max_steps
+        while rounds < limit:
+            rounds += 1
             try:
                 reply, seconds = brain_mod.timed(self.brain, system, transcript, specs)
             except brain_mod.BrainError as error:
@@ -1061,6 +1096,15 @@ class Agent:
                              fallback=bool(reply.fallback))
             if reply.fallback:
                 self.bus.publish("brain_fallback", **reply.fallback)
+            if not reply.tool_calls and request is not None and not (reply.text or "").strip() and not empty_checked:
+                # An empty answer went out as "OK." and logged nothing: on the tuned judge set after the third blind
+                # set's fixes, Muse answered "tiene la nariz tapada y le cuesta tomar" with nothing at all.
+                empty_checked = True
+                self.bus.publish("guard", status="empty_answer")
+                transcript.append({"role": "assistant", "text": "(no answer)"})
+                transcript.append({"role": "user", "text": EMPTY_CHECK})
+                limit += 1  # a check is one more brain call, never a lost tool round
+                continue
             if not reply.tool_calls:
                 # "Corregido" with no edit that ran is never sent. On Oct 29 Muse logged a new 70 ml bottle for "nono eran
                 # 70" and said "corregido a 70 ml": what this turn logged is taken back and the brain is asked to edit.
@@ -1088,6 +1132,7 @@ class Agent:
                         self.bus.publish("guard", status="asked_to_edit")
                         transcript.append({"role": "assistant", "text": reply.text or "(no answer)"})
                         transcript.append({"role": "user", "text": EDIT_CHECK.format(request=request.replace('"', "'"))})
+                        limit += 1  # a check is one more brain call, never a lost tool round
                         continue
                     if not kept:
                         self.bus.publish("guard", status="not_changed")
@@ -1104,6 +1149,7 @@ class Agent:
                         self.bus.publish("guard", status="asked_to_log", failed=failed)
                         transcript.append({"role": "assistant", "text": reply.text or "(no answer)"})
                         transcript.append({"role": "user", "text": LOG_CHECK.format(request=request.replace('"', "'"))})
+                        limit += 1  # a check is one more brain call, never a lost tool round
                         continue
                     self.bus.publish("guard", status="not_logged", failed=failed)
                     return finish(self.not_logged(request), fixed=True, log_failed=True)
@@ -1117,6 +1163,7 @@ class Agent:
                         self.bus.publish("guard", status="asked_to_act", asked=bool(asked))
                         transcript.append({"role": "assistant", "text": reply.text or "(no answer)"})
                         transcript.append({"role": "user", "text": ACT_CHECK})
+                        limit += 1  # a check is one more brain call, never a lost tool round
                         continue
                     self.bus.publish("guard", status="claimed_action", asked=bool(asked), unmet=sorted(unmet))
                     if actors and not asked:
@@ -1149,6 +1196,7 @@ class Agent:
                     self.bus.publish("guard", status="wrong_language", said=said_lang, wanted=lang)
                     transcript.append({"role": "assistant", "text": reply.text or "(no answer)"})
                     transcript.append({"role": "user", "text": LANG_CHECK.format(language=LANG_NAMES[lang])})
+                    limit += 1  # a check is one more brain call, never a lost tool round
                     continue
                 return finish(reply.text or "OK.")
             if request is not None:
@@ -1175,6 +1223,12 @@ class Agent:
                             ts = named
                         if ts:
                             arguments["ts"] = ts
+                        feed = arguments["details"] if isinstance(arguments["details"], dict) and arguments.get("kind") == "feeding" else None
+                        if feed is not None and "breast" in str(feed.get("method") or "") and not feed.get("duration_min"):
+                            minutes = rules.feed_minutes(request, self.now())
+                            if minutes:
+                                # "arranque 2:15 y largo recien": the length from the times the parent gave.
+                                feed["duration_min"] = minutes
                         if isinstance(arguments["details"], dict) and arguments.get("kind") == "feeding" and rules.half_ml(request):
                             # "tomo la mitad de la mamadera de 120" is 60 ml.
                             arguments["details"]["amount_ml"] = rules.half_ml(request)
@@ -1216,6 +1270,11 @@ class Agent:
                     self.bus.publish("tool", name=call["name"], status="held")
                     transcript.append({"role": "tool", "id": call["id"], "name": call["name"], "result": OTHER_KIND})
                     continue
+                if key is not None and request is not None and (call["arguments"] or {}).get("kind") in rules.denied_kinds(request):
+                    # "mire el pañal y esta seco, no la cambie": what the parent says did not happen is never logged.
+                    self.bus.publish("tool", name=call["name"], status="held", reason="did_not_happen")
+                    transcript.append({"role": "tool", "id": call["id"], "name": call["name"], "result": DID_NOT_HAPPEN})
+                    continue
                 if key is not None and asking:
                     self.bus.publish("tool", name=call["name"], status="held")
                     transcript.append({"role": "tool", "id": call["id"], "name": call["name"], "result": ASKED_ONLY})
@@ -1238,11 +1297,15 @@ class Agent:
                     continue
                 sleep_details = call["arguments"].get("details") if key is not None else None
                 if (key is not None and call["arguments"].get("kind") == "sleep" and isinstance(sleep_details, dict)
-                        and not sleep_details.get("start") and sleep_details.get("action", "start") == "start"
-                        and not call["arguments"].get("ts")):
+                        and not sleep_details.get("start") and sleep_details.get("action", "start") == "start"):
                     opened = self.open_sleep()
                     try:
-                        recent_start = opened and self.now() - parse_time(opened) <= ASLEEP_AGAIN
+                        if call["arguments"].get("ts"):
+                            # "se durmio a las 3 y cuarto" sent twice: the second blind set answered "Anoté" for a
+                            # start already open at 03:15.
+                            recent_start = opened and abs(parse_time(call["arguments"]["ts"]) - parse_time(opened)) < SAME_MINUTE
+                        else:
+                            recent_start = opened and self.now() - parse_time(opened) <= ASLEEP_AGAIN
                     except (TypeError, ValueError):
                         recent_start = False
                     if recent_start:

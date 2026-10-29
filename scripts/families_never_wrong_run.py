@@ -368,8 +368,11 @@ def run_set(args, name, STEPS):
             reply_misses.append({"step": n, "what": "a question got 'No pude anotarlo'", "reply": reply})
         if tag == "next" and not HAS_TIME.search(reply):
             reply_misses.append({"step": n, "what": "a next-feed answer with no time and no 'hace'", "reply": reply})
-        if rules.message_lang(reply) == "en":
-            reply_misses.append({"step": n, "what": "an English reply to a Spanish parent", "reply": reply})
+        # A reply follows the language of the parent's message, and the family's Spanish when the message says neither.
+        wanted, got = rules.message_lang(text) or "es", rules.message_lang(reply)
+        if got and got != wanted:
+            what = "an English reply to a Spanish message" if got == "en" else "a Spanish reply to an English message"
+            reply_misses.append({"step": n, "what": what, "reply": reply})
         if rules.claims_change(reply) and not (changed and op and op[0] in ("edit", "del")):
             reply_misses.append({"step": n, "what": "a claimed change that did not happen", "reply": reply})
         if tag and tag.startswith("asleep"):

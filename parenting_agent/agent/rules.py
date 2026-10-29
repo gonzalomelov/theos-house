@@ -473,7 +473,7 @@ def said_only(request, kind, details, ts=None):
     amount, diaper color or time the brain made up. Returns (details, ts)."""
     details = dict(details or {}) if isinstance(details, dict) else {}
     request = request or ""
-    timed = bool(TIME_SAID.search(request))
+    timed = bool(TIME_SAID.search(request) or clock_times(request))
     if not timed:
         ts = None
         if kind != "sleep":
@@ -660,35 +660,114 @@ def kinds_said(text):
     return {kind for kind, words in KIND_WORDS.items() if words.search(text or "")}
 
 
-CLOCK_ES = re.compile(r"\b(?:a|desde) las? (\d{1,2})(?:[:.](\d{2})| y (media|cuarto|diez|veinte|cinco|\d{1,2}\b(?!\s*(?:min|ml))))?"
-                      r"(?!\s*(?:min|ml|hs?\b))", re.I)
-MINUTE_WORDS = {"media": 30, "cuarto": 15, "diez": 10, "veinte": 20, "cinco": 5}
+MINUTE_WORDS = {"media": 30, "cuarto": 15, "diez": 10, "veinte": 20, "cinco": 5, "veinticinco": 25}
 RANGE_SAID = re.compile(r"\bde (las? )?\d{1,2}.{0,12}\ba (las? )?\d|\bfrom \d{1,2}.{0,12}\b(to|until|till) \d|\bdesde\b.{0,30}\bhasta\b|\bhasta\b", re.I)
-CLOCK_EN = re.compile(r"\bat (\d{1,2})(?:[:.](\d{2}))?\s*(am|pm)?\b(?!\s*(?:min|ml))", re.I)
+# A number that is an amount or a length, never a clock time: "4 onzas", "10 min", "2 horas".
+NOT_A_CLOCK = r"(?!\s*(?:min\w*|m\b|ml|cc|oz|onz\w*|hs?\b|horas?|hours?|hrs?\b|g\b|gr\b|kg|%))"
+MINUTE_WORD = r"(media|cuarto|diez|veinticinco|veinte|cinco|\d{2})"
+# Every form a tired parent types a clock time in, in the order they are tried. A later form never reads a part of the
+# message an earlier one already read, so "a las 3:15" is 03:15 and never also 03:00. The third blind set lost
+# "se desperto 4 y 55" and "wet diaper at noon": the old parser only knew "a las 3" and "at 3".
+CLOCK_FORMS = [
+    ("menos", re.compile(r"(?<![\d.,:])(\d{1,2}) menos (cuarto|diez|veinte|cinco|\d{1,2})\b", re.I)),
+    ("las", re.compile(r"\b(?:a|desde|hasta|de) las? (\d{1,2})(?:[:.](\d{2})| y " + MINUTE_WORD + r"\b)?" + NOT_A_CLOCK, re.I)),
+    ("hm", re.compile(r"(?<![\d.,:])(\d{1,2})[:.h](\d{2})(?![\d.,])" + NOT_A_CLOCK + r"(?:\s*(am|pm)\b)?", re.I)),
+    ("y", re.compile(r"(?<![\d.,:])(\d{1,2}) y " + MINUTE_WORD + r"\b" + NOT_A_CLOCK, re.I)),
+    ("ampm", re.compile(r"(?<![\d.,:])(\d{1,2})\s*(am|pm)\b", re.I)),
+    ("at", re.compile(r"\b(?:at|since) (\d{1,2})(?![\d:.])\b" + NOT_A_CLOCK, re.I)),
+    ("noon", re.compile(r"\b(noon|midday|mediod[ií]a)\b", re.I)),
+    ("midnight", re.compile(r"\b(midnight|medianoche)\b", re.I)),
+]
 
 
-def named_time(request, now):
-    """The clock time a note names, "a las 3", "a las 4 y media", "at 3:15", as the latest such moment not after now,
-    or None when it names none or more than one. "a las 3" at 15:20 is 15:00, at 03:20 it is 03:00."""
-    found = [(m.group(1), m.group(2), m.group(3)) for m in CLOCK_ES.finditer(request or "")] + \
-            [(m.group(1), m.group(2), m.group(3)) for m in CLOCK_EN.finditer(request or "")]
-    if len(found) != 1 or DAY_SAID.search(request or "") or RANGE_SAID.search(request or ""):
-        return None
-    hour, minute, extra = found[0]
-    extra_low = (extra or "").lower()
-    hour = int(hour)
-    minute = int(minute) if minute else (int(extra_low) if extra_low.isdigit() else MINUTE_WORDS.get(extra_low, 0))
-    if hour > 23 or minute > 59:
-        return None
-    if (extra or "").lower() in ("am", "pm"):
-        hours = [hour % 12 + (12 if extra.lower() == "pm" else 0)]
-    else:
-        hours = [hour] if hour >= 12 or hour == 0 else [hour, hour + 12]
+def clock_times(text):
+    """The clock times a message names, as (hour, minute, fixed) in the order said, each once. fixed is True when the
+    hour is not 12-hour ambiguous ("3pm", "noon", "15:20"). A bare "10 y 10" in a breast feed is minutes per side, never
+    10:10, so the bare "H y MM" form needs a message with no breast side and no minutes."""
+    text = text or ""
+    taken, found = [], []
+    bare_ok = not (BREAST_WORDS.search(text) or SIDE_SAID.search(text) or MINUTES_SAID.search(text))
+    for form, pattern in CLOCK_FORMS:
+        if form == "y" and not bare_ok:
+            continue
+        for m in pattern.finditer(text):
+            if any(m.start() < end and start < m.end() for start, end in taken):
+                continue
+            taken.append(m.span())
+            if form == "noon":
+                value = (12, 0, True)
+            elif form == "midnight":
+                value = (0, 0, True)
+            elif form == "menos":
+                word = m.group(2).lower()
+                minus = int(word) if word.isdigit() else MINUTE_WORDS[word]
+                hour = (int(m.group(1)) - 1) % 24
+                value = (hour, 60 - minus, False) if 0 < minus < 60 else None
+            else:
+                hour, ampm = int(m.group(1)), ""
+                if form == "las":
+                    word = m.group(2) or m.group(3) or ""
+                elif form == "hm":
+                    word, ampm = m.group(2), m.group(3) or ""
+                elif form == "y":
+                    word = m.group(2)
+                elif form == "ampm":
+                    word, ampm = "", m.group(2)
+                else:
+                    word = ""
+                word = word.lower()
+                minute = int(word) if word.isdigit() else MINUTE_WORDS.get(word, 0)
+                if ampm:
+                    hour = hour % 12 + (12 if ampm.lower() == "pm" else 0)
+                value = (hour, minute, bool(ampm) or hour >= 13 or hour == 0) if hour <= 23 and minute <= 59 else None
+            if value is not None and value not in found:
+                found.append(value)
+    return found
+
+
+def latest_clock(hour, minute, fixed, now):
+    """The latest moment not after now with that clock time: "a las 3" at 15:20 is 15:00, at 03:20 it is 03:00."""
+    hours = [hour] if fixed or hour >= 12 else [hour, hour + 12]
     moments = []
     for h in hours:
         moment = now.replace(hour=h, minute=minute, second=0, microsecond=0)
         moments.append(moment if moment <= now else moment - datetime.timedelta(days=1))
-    return max(moments).isoformat(timespec="seconds")
+    return max(moments)
+
+
+def named_time(request, now):
+    """The clock time a note names, "a las 3", "4 y 55", "at 3:15", "at noon", as the latest such moment not after now,
+    or None when it names none or more than one, names a day, or gives a range."""
+    found = clock_times(request)
+    if len(found) != 1 or DAY_SAID.search(request or "") or RANGE_SAID.search(request or ""):
+        return None
+    return latest_clock(*found[0], now).isoformat(timespec="seconds")
+
+
+# A breast feed that ended as the message was sent: "arranque 2:15 y largo recien", "from 2:15 until now".
+FEED_ENDED = re.compile(r"\b(larg[oó]|solt[oó]|termin[oó]|acab[oó]|se desprendi[oó]|hasta (ahora|reci[eé]n)|finished|"
+                        r"stopped|let go|unlatched|until now|just (now|finished|stopped))\b", re.I)
+
+
+def feed_minutes(text, now):
+    """How long a breast feed lasted when the parent gave it as times, not minutes: "de 2:15 a 2:35" is 20, and
+    "arranque 2:15 y largo recien" sent at 02:35 is 20. None when the message gives no such span. The said-only guard
+    dropped every length that was not "N min", so the third blind set lost this 20."""
+    found = clock_times(text)
+    if len(found) == 2 and RANGE_SAID.search(text or ""):
+        end = latest_clock(*found[1], now)
+        start = latest_clock(*found[0], end)
+    elif len(found) == 1 and FEED_ENDED.search(text or ""):
+        start, end = latest_clock(*found[0], now), now
+    else:
+        return None
+    minutes = round((end - start).total_seconds() / 60)
+    return minutes if 1 <= minutes <= 90 else None
+
+
+def plain_numbers(text):
+    """The numbers of a text that are not part of a clock time: "lo dejamos en 100 ml a las 05:50" holds 100."""
+    return [float(n.replace(",", ".")) for n in re.findall(r"(?<![\d:.,])\d+(?:[.,]\d+)?(?![\d:])", re.sub(r"\d{1,2}:\d{2}", " ", text or ""))]
 
 
 def is_question(text):
@@ -764,6 +843,9 @@ def log_kind(text):
     if is_question(text) or is_question(english) or is_health(text):
         return None
     parsed = parse_note(text) or parse_note(english)
+    denied = denied_kinds(text)
+    if parsed and denied and (kinds_said(text) or {parsed[0]}) <= denied:
+        return None
     return parsed[0] if parsed else None
 
 
@@ -838,9 +920,10 @@ def looks_spanish(text):
     return bool(re.search(r"[ñáéíóú¿¡]", NAME_WORD.sub("", " " + text)))
 
 
+# "took 75ml of formula" had none of the old words, so the third blind set answered it in Spanish.
 ENGLISH = re.compile(r"\b(the|she|he|his|her|him|is|was|did|gave|had|just|when|how|what|why|it|that|bottle|diaper|"
                      r"nappy|feed|fed|nursed|breast|woke|asleep|slept|nap|crying|poop|pee|wet|dirty|bath|left|right|"
-                     r"at|ago|hello|hi|thanks|please|delete|fix|sorry)\b", re.I)
+                     r"at|ago|hello|hi|thanks|please|delete|fix|sorry|took|drank|ate|finished|of|with|and|after|again)\b", re.I)
 
 
 def message_lang(text):
@@ -1036,14 +1119,9 @@ def addendum(text):
         return ("feeding", {"duration_min": value}, 60) if 1 <= value <= 90 else None
     if numbers:
         return None
-    if ADD_START.search(text) and not re.search(r"pa[nñ]al|diaper|otro|another", text, re.I):
-        patch = {}
-        if WET_ADD.search(text):
-            patch["wet"] = True
-        if SOLID_ADD.search(text):
-            patch["solid"] = True
-        if patch:
-            return "diaper", patch, 15
+    patch = diaper_patch(text)
+    if patch:
+        return "diaper", patch, 15
     m = TYPE_ADD.search(text)
     # A short message whose only detail is a milk type, in any frame: "ah y era formula", "de materna, la q sacaste
     # ayer", "la de recien fue con formula". The old rule wanted "era" or "fue" right before the type, so the second
@@ -1053,6 +1131,84 @@ def addendum(text):
         milk = "formula" if TYPE_SAID["formula"].search(m.group(1)) else "breast milk"
         return "feeding", {"type": milk}, 20
     return None
+
+
+# A follow-up that points back at the entry just logged, wherever the word sits: "uh no, tambien tenia pis", "y pis tmb",
+# "estaba con caca tambien". The old rule wanted the word first or last, so a filler ("uh no,") sent it to the brain.
+REFERS_BACK = re.compile(r"\b(tambi[eé]n|tmb|tb|too|also|adem[aá]s|ten[ií]a|estaba|had|was)\b|^\W*(ah,?\s+)?(y|and)\b", re.I)
+NEW_DIAPER = re.compile(r"pa[nñ]al|diaper|otro|another|cambi|chang", re.I)
+NOT_BEFORE = re.compile(r"\b(sin|no|ni|without|not|no ten[ií]a|no hab[ií]a|no hizo|no had)\s+(\w+\s+)?$", re.I)
+
+
+def diaper_patch(text):
+    """The wet and dirty details a short follow-up adds to or takes from the diaper just logged: "uh no, tambien tenia
+    pis" is wet, "no tenia caca" is not dirty. {} when the message is not such a follow-up."""
+    if NEW_DIAPER.search(text) or not (REFERS_BACK.search(text) or EDIT.search(text)):
+        return {}
+    patch = {}
+    for name, pattern in (("wet", WET_ADD), ("solid", SOLID_ADD)):
+        m = pattern.search(text)
+        if m:
+            patch[name] = not NOT_BEFORE.search(text[max(0, m.start() - 20):m.start()])
+    return patch
+
+
+# A follow-up that gives the bottle just logged its real amount: "no wait, dejo un poco, ponele 100" sets it,
+# "dejo como media onza igual" and "sobraron 20" take what was left from it.
+SET_AMOUNT = re.compile(r"\b(ponele|pon[eé]|pone|eran?|fue|fueron|son|ser[ií]an?|make it|it was|was)\b|^\W*no\b", re.I)
+LEFT_OVER = re.compile(r"\b(sobr\w*|dej[oó]|qued[oó]|left( over)?)\b", re.I)
+HALF_OUNCE_ONLY = re.compile(r"\b(media|half an?) " + OUNCE_WORD + r"\b", re.I)
+NEW_BOTTLE = re.compile(r"\b(took|had|another|new|nueva|prepar\w*)\b", re.I)
+
+
+def amount_followup(text):
+    """(ml, "set" or "left") for a short message that only gives an amount for the bottle just logged, or None. It never
+    reads a message that starts a feed ("le di 100", "mamadera 90", "took 75 ml"), names a time or a breast, or asks."""
+    text = (text or "").strip()
+    if not text or "?" in text or len(text) > 70:
+        return None
+    if (NEW_FEED.search(text) or NEW_BOTTLE.search(text) or BREAST_WORDS.search(text) or SIDE_SAID.search(text)
+            or KIND_WORDS["diaper"].search(text) or KIND_WORDS["sleep"].search(text) or KIND_WORDS["bath"].search(text)
+            or clock_times(text) or DAY_SAID.search(text) or MINUTES_SAID.search(text) or TIME_SAID.search(text)):
+        return None
+    numbers = re.findall(r"\d+(?:[.,]\d+)?", text)
+    if len(numbers) > 1:
+        return None
+    if numbers:
+        ml = ounces_ml(text) or float(numbers[0].replace(",", "."))
+    elif HALF_OUNCE_ONLY.search(text):
+        ml = ML_PER_OUNCE / 2
+    else:
+        return None
+    if not 5 <= ml <= BOUNDS["amount_ml"][1]:
+        return None
+    mode = "set" if SET_AMOUNT.search(text) or not LEFT_OVER.search(text) else "left"
+    return float(ml), mode
+
+
+# A message that says something did not happen: "mire el pañal y esta seco, no la cambie" is no diaper. Each match
+# names the kind it denies, so "se durmio, no tomo la teta" still logs the sleep.
+NOT_HAPPENED = [
+    ("diaper", re.compile(r"\b(no|nunca|todav[ií]a no|a[uú]n no)\s+(la |lo |le )?(cambi[eé]|cambiamos|cambi[oó]|hizo)\b|"
+                          r"\b(est[aá]|estaba|segu[ií]a|sigue)\s+(\w+\s+)?sec[oa]\b|\bpa[nñ]al sec[oa]\b|\b(still |was |is )?dry\b|"
+                          r"\b(didn'?t|did not|haven'?t|hasn'?t) (change|need)", re.I)),
+    ("feeding", re.compile(r"\b(no|nunca|todav[ií]a no|a[uú]n no)\s+(le )?(di|dimos|dio|tom[oó]|comi[oó])\b(?!\s+(m[aá]s|todo|toda|entera))|"
+                           r"\b(didn'?t|did not|hasn'?t|has not) (eat|feed|drink|take)\b(?!\s+(more|all))", re.I)),
+    ("sleep", re.compile(r"\b(no|nunca|todav[ií]a no|a[uú]n no)\s+(se )?(durmi[oó]|duerme)\b|\b(didn'?t|did not|hasn'?t|has not|won'?t) (sleep|nap)", re.I)),
+    ("bath", re.compile(r"\b(no|todav[ií]a no|a[uú]n no)\s+(la |lo )?(ba[nñ][eé]|ba[nñ]amos)\b", re.I)),
+]
+
+
+# A feed with an amount or a length did happen: "no tomo mucho, 60 nomas" and "no le di teta, le di 90" are feeds.
+FEED_AMOUNT_SAID = re.compile(r"(?<!las )(?<!la )(?<![\d:.,])\d{2,3}(?![\d:.,])|\b(mitad|half|onzas?|oz|ounces?)\b|\d+\s*min", re.I)
+
+
+def denied_kinds(text):
+    """The log kinds a message says did not happen."""
+    denied = {kind for kind, pattern in NOT_HAPPENED if pattern.search(text or "")}
+    if "feeding" in denied and FEED_AMOUNT_SAID.search(text or ""):
+        denied.discard("feeding")
+    return denied
 
 
 def says_sleep(text):

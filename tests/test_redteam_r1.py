@@ -209,8 +209,8 @@ class DemoCorrections(unittest.TestCase):
     """Attack 5. 'it was 90 ml. fix it' logged a second bottle, and the agent said it could not remove entries."""
 
     def test_the_demo_edits_and_deletes(self):
+        # "it was 90 ml" right after the bottle is a follow-up of that bottle: the agent fixes it without the brain.
         brain = ScriptedBrain([[log("feeding", {"amount_ml": 120, "method": "bottle"})], "Logged."],
-                              [[call("edit_baby_event", kind="feeding", last=True, details={"amount_ml": 90})], "Fixed."],
                               [[call("delete_baby_event", kind="feeding", last=True)], "Deleted."])
         app = demo(brain)
         self.addCleanup(app.close)

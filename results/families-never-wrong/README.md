@@ -2,16 +2,32 @@
 
 ## Blind numbers first
 
-Two sets of 45 messages were written by agents that changed no code, and each was scored once before anyone read it.
+Four sets of 45 messages were written by agents that changed no code, and each was scored once before anyone read it.
 
 | Blind set | Code | Wrong log states | Reply problems | Files |
 |---|---|---|---|---|
 | First | main at `ee4c401`, before the fixes of PR #103 | **8 of 45** | 1 | [heldout/](heldout/README.md) |
 | Second | main at `24bd72b`, after every families fix of Oct 29 | **8 of 45** | 5 (4 are English replies to English messages) | [heldout2/](heldout2/README.md) |
+| Third | main at `1417505`, after the meaning based guards of PR #105 | **5 of 45** | 3 (all English replies to English messages) | [heldout3/](heldout3/README.md) |
+| Fourth | merged main after the third set's fixes | see [heldout4/](heldout4/README.md) | | [heldout4/](heldout4/README.md) |
 
 The fixes after the first set did not carry over to new phrasings. Six of the 8 second-set misses have one cause, the
 guards decide what the parent said from fixed word lists, and that is what the next fix targets. Everything below this
 section is on sets the fixes were tuned on, so those numbers are tuned numbers, not blind ones.
+
+## After the third set's fixes (Oct 29)
+
+The third set's misses had six causes (clock forms, a feed length given as times, follow-ups whose words sat anywhere,
+a reply stating a value the log never took, a message saying something did not happen, the agent's checks using up the
+brain's rounds) plus an English message not seen as English. Each has a test in `tests/test_heldout3_misses.py`, see
+[heldout3/](heldout3/README.md). The scorer now flags a reply in a different language from the parent's message, not
+every English reply.
+
+`heldout3-fixes-old-1`: one run of `--sets old,judge` on that code, Muse Spark Open, 0 fallbacks, 0.81 USD. Old set 0 of
+70 wrong, judge set 1 of 37 wrong, 0 reply problems. The one miss, judge step 26, "tiene la nariz tapada y le cuesta
+tomar": Muse answered with no text and no tool call, so the parent got "OK." and no note. The same message was noted in
+the three earlier runs of this set. Fix after the run: an empty answer is asked again once, as one more brain call
+(`test_empty_an_empty_answer_is_asked_again`). It was not rerun, the brief allowed one run.
 
 ## Tuned sets
 
