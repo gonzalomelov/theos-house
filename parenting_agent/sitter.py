@@ -386,6 +386,8 @@ class SitterHandover(Plugin):
     def prepare(self, sitter, start, end):
         """Builds the draft, opens the guest window, sends the draft to the parent. Returns a short result for the brain."""
         now = self.clock()
+        sitter = sitter.strip()
+        sitter = sitter[:1].upper() + sitter[1:]  # a name in the brief, "Mom" or "Ana", however the brain wrote it
         a, b = resolve_window(start, end, now, self.tz)
         if b <= now:
             raise ValueError("that time window has already ended")

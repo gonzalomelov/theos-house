@@ -18,7 +18,7 @@ flowchart LR
     ha["Home Assistant<br/>tools, dry until house.live (#9)"]
     chan["Channels<br/>console, Telegram, ear, kitchen speaker<br/>router picks one (#3 #8)"]
   end
-  brain["Brain<br/>Muse Spark Open on Baseten<br/>Claude stand-in"]
+  brain["Brain<br/>Muse Spark Open on Baseten<br/>Claude only as a logged fallback"]
 
   cam -->|frames, in memory only| reflex
   reflex -->|alert| skills
@@ -44,7 +44,7 @@ flowchart LR
 | Agent core | `parenting_agent/agent/` | Decide-act loop, tools with an allowed list, swappable brain, plug-ins |
 | Agent memory | `parenting_agent/agent/memory.py` | Conversation and facts in `data/memory.sqlite` |
 | Baby Buddy | `docs/deploy-babybuddy.md` | The baby's log on the family server, only on localhost there |
-| Brain | `parenting_agent/agent/brain.py` | Fake, Claude stand-in, or any OpenAI-compatible endpoint (Muse Spark Open on Baseten) |
+| Brain | `parenting_agent/agent/brain.py` | Muse Spark Open on Baseten through the OpenAI-compatible provider, Claude as a logged fallback when a Muse call errors, or the fake rule-based brain for tests |
 | Changing-table skill | `parenting_agent/changing_table.py`, `reflex.py`, `alarm.py`, `skill.py` | Arms, holds notifications, chimes then says "hand", logs the change |
 | Camera skills from config | `parenting_agent/camera_skill.py`, `skills/bath.json` | A skill file with an agent block becomes tools, arm and finish phrases, reminders and prompt facts. The bath is the first, see `docs/bath.md` |
 | SAM 3.1 confirm | `parenting_agent/sam3_local.py`, `sam3_worker.py` | Confirms or cancels the hand alarm, locally. Touch versus a 2 to 5 cm hover is not solved yet, see `results/hover/README.md` and `docs/sam3-local.md` |
@@ -70,7 +70,7 @@ flowchart LR
 | Confirm or cancel | SAM 3.1 | Skill, then bus | No |
 | Baby log entries | Agent core | Baby Buddy on the family server | No |
 | Rhythm reads | Baby Buddy | Daily rhythm | No |
-| Conversation and tool results | Agent core | Brain | **Yes, the only flow that does.** Baseten for Muse Spark Open, Anthropic for the stand-in. Each call logs its host as a `brain_call` event |
+| Conversation and tool results | Agent core | Brain | **Yes, the only flow that does.** Baseten for Muse Spark Open, Anthropic only for a fallback call. Each call logs its model and host as a `brain_call` event, each fallback a `brain_fallback` event |
 | House actions | Agent core | Home Assistant on the family server | No. Dry until `house.live` is true |
 | House sound labels | Camera microphone | Bus | No. Audio stays in memory, never saved |
 | Car readings and commands | Agent core | Simulated car today, Home Assistant `tesla_fleet` from Nov 5 | From Nov 5, yes: Home Assistant polls and commands the car through Tesla's Fleet API. Only the public key file is public |

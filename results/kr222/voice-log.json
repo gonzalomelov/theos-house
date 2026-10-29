@@ -1,39 +1,39 @@
 {
-  "generated_at": "2026-10-27T17:12:49-03:00",
+  "generated_at": "2026-10-28T22:37:35-03:00",
   "brain": {
-    "provider": "claude",
-    "model": "claude-haiku-5-5",
-    "destination": "api.anthropic.com"
+    "provider": "openai_compatible",
+    "model": "meta-models/muse-spark-open-1026",
+    "destination": "inference.baseten.co"
   },
   "baby_log": "babybuddy",
   "entries": [
     {
       "utterance": "bottle, 120 ml",
       "expected_type": "feeding",
-      "spoken_at": "2026-10-27T17:12:30-03:00",
-      "reply": "Logged: bottle, 120 ml at 17:12.",
+      "spoken_at": "2026-10-28T22:36:52-03:00",
+      "reply": "Got it, 120 ml bottle at 22:36.",
       "babybuddy": {
-        "id": 145,
+        "id": 159,
         "type": "feeding",
-        "time": "2026-10-27T17:12:00-03:00",
+        "time": "2026-10-28T22:36:54-03:00",
         "details": {
           "amount_ml": 120.0,
           "type": "formula",
           "method": "bottle",
-          "start": "2026-10-27T16:57:00-03:00",
-          "duration_min": 15
+          "start": "2026-10-28T22:27:02-03:00",
+          "duration_min": 10
         }
       }
     },
     {
       "utterance": "wet and dirty diaper",
       "expected_type": "diaper",
-      "spoken_at": "2026-10-27T17:12:33-03:00",
-      "reply": "Logged: wet and dirty diaper at 17:12.",
+      "spoken_at": "2026-10-28T22:37:00-03:00",
+      "reply": "Logged wet and dirty diaper.",
       "babybuddy": {
-        "id": 125,
+        "id": 134,
         "type": "diaper",
-        "time": "2026-10-27T17:12:34-03:00",
+        "time": "2026-10-28T22:37:05-03:00",
         "details": {
           "wet": true,
           "solid": true,
@@ -44,26 +44,26 @@
     {
       "utterance": "just gave her a bath",
       "expected_type": "bath",
-      "spoken_at": "2026-10-27T17:12:37-03:00",
-      "reply": "Logged: bath at 17:12. 🛁",
+      "spoken_at": "2026-10-28T22:37:11-03:00",
+      "reply": "Logged her bath at 22:37.",
       "babybuddy": {
-        "id": 65,
+        "id": 104,
         "type": "bath",
-        "time": "2026-10-27T17:12:38-03:00",
+        "time": "2026-10-28T22:37:13-03:00",
         "details": {
-          "text": "Bath. Baby had a bath"
+          "text": "bath"
         }
       }
     },
     {
       "utterance": "wet diaper",
       "expected_type": "diaper",
-      "spoken_at": "2026-10-27T17:12:40-03:00",
-      "reply": "Logged: wet diaper at 17:12.",
+      "spoken_at": "2026-10-28T22:37:15-03:00",
+      "reply": "Logged wet diaper at 10:37pm.",
       "babybuddy": {
-        "id": 126,
+        "id": 135,
         "type": "diaper",
-        "time": "2026-10-27T17:12:00-03:00",
+        "time": "2026-10-28T22:37:18-03:00",
         "details": {
           "wet": true,
           "solid": false,
@@ -75,11 +75,11 @@
   "answers": [
     {
       "question": "How much did she drink today?",
-      "answer": "She's had **1 feed today: 120 ml** by bottle, the last one at 17:12."
+      "answer": "Today she drank 240 ml in 2 feedings. Last bottle was 120 ml at 22:36."
     },
     {
       "question": "When was the last dirty diaper?",
-      "answer": "The last dirty diaper was today at 17:12."
+      "answer": "Last dirty diaper was today at 22:37."
     }
   ]
 }

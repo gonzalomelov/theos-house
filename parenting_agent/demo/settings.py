@@ -20,16 +20,22 @@ HOUSE_VALUES = re.compile(r"(babybuddy|homeassistant|home-assistant|:8123\b|:879
                           r"\b10\.\d+\.\d+\.\d+|\b192\.168\.\d+\.\d+|\b172\.(1[6-9]|2\d|3[01])\.\d+\.\d+|\b100\.(6[4-9]|[7-9]\d|1[01]\d|12[0-7])\.\d+\.\d+)",
                           re.I)
 
-BRAINS = {
-    "claude": {"provider": "claude", "model": "claude-haiku-5-5", "max_tokens": 400},
-    "baseten": {"provider": "openai_compatible", "model": "meta-models/muse-spark-open",
-                "base_url": "https://inference.baseten.co/v1", "key_env": "BASETEN_API_KEY", "max_tokens": 1200,
-                "reasoning_effort": "low"},
-    "fake": {"provider": "fake"},
-}
 # USD per million tokens, input and output. Claude Haiku 5.5 from the Anthropic pricing page, read 2026-10-28.
 # Muse Spark Open from the Baseten model library page, read 2026-10-28. It always reasons, so output runs long.
 PRICES = {"claude": (0.10, 0.50), "baseten": (1.25, 4.25), "fake": (0.0, 0.0)}
+CLAUDE = {"provider": "claude", "model": "claude-haiku-5-5", "max_tokens": 400,
+          "price_in_per_mtok": PRICES["claude"][0], "price_out_per_mtok": PRICES["claude"][1]}
+# Muse Spark Open is the brain. Claude answers only when a Muse call errors, and each time is a brain_fallback event.
+BRAINS = {
+    "claude": CLAUDE,
+    "baseten": {"provider": "openai_compatible", "model": "meta-models/muse-spark-open-1026",
+                "base_url": "https://inference.baseten.co/v1", "key_env": "BASETEN_API_KEY", "max_tokens": 2048,
+                "reasoning_effort": "low", "timeout_s": 45,
+                "price_in_per_mtok": PRICES["baseten"][0], "price_out_per_mtok": PRICES["baseten"][1],
+                "fallback": CLAUDE},
+    "fake": {"provider": "fake"},
+}
+DEFAULT_BRAIN = "baseten"
 # Charged when a provider reports no usage, so a missing number never makes a call free.
 FALLBACK_TOKENS = (4000, 400)
 
@@ -86,13 +92,15 @@ def _number(environ, name, default, cast=float):
 def load(environ=None):
     """The demo settings, from PA_DEMO_* variables only. No URL in here points anywhere but the brain."""
     environ = os.environ if environ is None else environ
-    brain_name = environ.get("PA_DEMO_BRAIN", "claude")
+    brain_name = environ.get("PA_DEMO_BRAIN", DEFAULT_BRAIN)
     if brain_name not in BRAINS:
         raise ValueError(f"PA_DEMO_BRAIN must be one of {', '.join(BRAINS)}")
     brain = dict(BRAINS[brain_name])
     if environ.get("PA_DEMO_MODEL") and brain_name != "fake":
         brain["model"] = environ["PA_DEMO_MODEL"]
     price_in, price_out = PRICES[brain_name]
+    if environ.get("PA_DEMO_PRICE_IN") or environ.get("PA_DEMO_PRICE_OUT"):
+        brain.pop("price_in_per_mtok", None)  # an explicit price knob wins over the brain's own prices
     return {
         "brain_name": brain_name,
         "brain": brain,

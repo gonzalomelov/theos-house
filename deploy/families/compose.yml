@@ -30,9 +30,11 @@ services:
     networks: [internal]
     depends_on: [egress]
     environment:
+      # Muse Spark Open on Baseten is the brain. Claude answers only when a Muse call errors, logged as brain_fallback.
+      BASETEN_API_KEY: ${BASETEN_API_KEY:?set BASETEN_API_KEY in the env file}
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:?set ANTHROPIC_API_KEY in the env file}
       TELEGRAM_FAMILIES_BOT_TOKEN: ${TELEGRAM_FAMILIES_BOT_TOKEN:?set TELEGRAM_FAMILIES_BOT_TOKEN in the env file}
-      PA_FAMILIES_BRAIN: ${PA_FAMILIES_BRAIN:-claude}
+      PA_FAMILIES_BRAIN: ${PA_FAMILIES_BRAIN:-baseten}
       PA_FAMILIES_BOT_USERNAME: ${PA_FAMILIES_BOT_USERNAME:-}
       PA_FAMILIES_INTERNAL_USERS: ${PA_FAMILIES_INTERNAL_USERS:-}
       PA_FAMILIES_DAILY_USD: ${PA_FAMILIES_DAILY_USD:-3}

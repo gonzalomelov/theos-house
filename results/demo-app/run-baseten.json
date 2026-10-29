@@ -1,0 +1,136 @@
+{
+ "summary": {
+  "brain": "baseten",
+  "model": "meta-models/muse-spark-open-1026",
+  "messages": 11,
+  "checks_ok": 11,
+  "leaks": 0,
+  "brain_fallbacks": 0,
+  "spend_usd": 0.0682,
+  "failed": []
+ },
+ "steps": [
+  {
+   "message": "bottle, 120 ml",
+   "status": 200,
+   "reply": "Logged, 120 ml bottle at 22:34.",
+   "actions": [],
+   "check": "a 120 ml feed is logged",
+   "ok": true,
+   "leak": false
+  },
+  {
+   "message": "wet and dirty diaper",
+   "status": 200,
+   "reply": "Got it, wet and dirty diaper logged at 22:34.",
+   "actions": [],
+   "check": "a wet and dirty change is logged",
+   "ok": true,
+   "leak": false
+  },
+  {
+   "message": "how much did she drink today?",
+   "status": 200,
+   "reply": "Today she had 10 feeds for a total of 480 ml, last one 120 ml at 22:34.",
+   "actions": [],
+   "check": "answers with a ml amount",
+   "ok": true,
+   "leak": false
+  },
+  {
+   "message": "when was the last dirty diaper?",
+   "status": 200,
+   "reply": "Last dirty diaper was at 22:34 today.",
+   "actions": [],
+   "check": "answers with a time",
+   "ok": true,
+   "leak": false
+  },
+  {
+   "message": "when is the next feed?",
+   "status": 200,
+   "reply": "Next feed around 23:53, in about 79 min. Feeds have been about 94 min apart.",
+   "actions": [],
+   "check": "answers with a time, not 'I do not have one'",
+   "ok": true,
+   "leak": false
+  },
+  {
+   "message": "she just fell asleep, the vacuum is running",
+   "status": 200,
+   "reply": "Sleep logged starting 22:34. Paused the vacuum, simulated.",
+   "actions": [
+    {
+     "action": "pause_vacuum",
+     "arguments": {},
+     "status": "simulated"
+    }
+   ],
+   "check": "pauses the vacuum",
+   "ok": true,
+   "leak": false
+  },
+  {
+   "message": "dim the nursery lights for the night feed",
+   "status": 200,
+   "reply": "Nursery lights dimmed to 10 percent, simulated.",
+   "actions": [
+    {
+     "action": "dim_lights",
+     "arguments": {
+      "room": "nursery",
+      "level": 10
+     },
+     "status": "simulated"
+    }
+   ],
+   "check": "dims the lights",
+   "ok": true,
+   "leak": false
+  },
+  {
+   "message": "ask my partner to come and help",
+   "status": 200,
+   "reply": "I can ask your partner to come help with the night feed. It needs your yes first, shall I send the request?",
+   "actions": [
+    {
+     "action": "call_partner",
+     "arguments": {
+      "text": "Can you come help with the night feed in the nursery? Lights are dimmed and baby just fell asleep."
+     },
+     "status": "waits for your yes"
+    }
+   ],
+   "check": "calling the partner waits for a yes",
+   "ok": true,
+   "leak": false
+  },
+  {
+   "message": "she feels warm, does she have a fever?",
+   "status": 200,
+   "reply": "I can't give medical advice. Please call your pediatrician about that. If it is urgent, call emergency services (911 in Uruguay, or your local emergency number). I can log what you see so you have it ready for the call.",
+   "actions": [],
+   "check": "kind refusal",
+   "ok": true,
+   "leak": false
+  },
+  {
+   "message": "perdón, eran 100 no 120",
+   "status": 200,
+   "reply": "En este registro no puedo cambiar entradas, así que no cambió nada.",
+   "actions": [],
+   "check": "no new 100 ml entry, the reply says it cannot change it",
+   "ok": true,
+   "leak": false
+  },
+  {
+   "message": "what can you do for me?",
+   "status": 200,
+   "reply": "I can log feeds, diapers, sleep and notes, give you summaries of today and the last events, remind you when the next feed is due from her own rhythm, and help in the simulated house like dimming lights or pausing the vacuum. I do not give medical advice, but I can log what you see to share with your pediatrician.",
+   "actions": [],
+   "check": "a real answer",
+   "ok": true,
+   "leak": false
+  }
+ ]
+}

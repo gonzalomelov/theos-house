@@ -7,7 +7,7 @@ could open a route to the house is removed before anything starts, including Gon
 import os
 from pathlib import Path
 
-from ..demo.settings import BRAINS, HOUSE_VALUES, HOUSE_WORDS, PRICES, SAFE_NAMES
+from ..demo.settings import BRAINS, DEFAULT_BRAIN, HOUSE_VALUES, HOUSE_WORDS, PRICES, SAFE_NAMES
 
 BOT_TOKEN = "TELEGRAM_FAMILIES_BOT_TOKEN"
 BRAIN_KEYS = ("ANTHROPIC_API_KEY", "BASETEN_API_KEY")
@@ -70,13 +70,15 @@ def _ids(raw):
 def load(environ=None):
     """The service settings, from PA_FAMILIES_* variables only. No URL in here points anywhere but the brain."""
     environ = os.environ if environ is None else environ
-    brain_name = environ.get("PA_FAMILIES_BRAIN", "claude")
+    brain_name = environ.get("PA_FAMILIES_BRAIN", DEFAULT_BRAIN)
     if brain_name not in BRAINS:
         raise ValueError(f"PA_FAMILIES_BRAIN must be one of {', '.join(BRAINS)}")
     brain = dict(BRAINS[brain_name])
     if environ.get("PA_FAMILIES_MODEL") and brain_name != "fake":
         brain["model"] = environ["PA_FAMILIES_MODEL"]
     price_in, price_out = PRICES[brain_name]
+    if environ.get("PA_FAMILIES_PRICE_IN") or environ.get("PA_FAMILIES_PRICE_OUT"):
+        brain.pop("price_in_per_mtok", None)  # an explicit price knob wins over the brain's own prices
     return {
         "brain_name": brain_name,
         "brain": brain,

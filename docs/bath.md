@@ -21,7 +21,7 @@ The skill only listens for the parent's hands. It never watches the baby in the 
 ## Run it on the clips
 
 ```bash
-python scripts/bath_run.py --baths 10        # Claude brain, Baby Buddy, SAM 3.1, the bath clips streamed live
+python scripts/bath_run.py --baths 10        # Muse brain, Baby Buddy, SAM 3.1, the bath clips streamed live
 python scripts/bath_run.py --wipe-only       # remove the entries earlier runs wrote (tag bath-sim)
 ```
 

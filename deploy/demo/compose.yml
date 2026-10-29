@@ -30,8 +30,10 @@ services:
     networks: [internal]
     depends_on: [egress]
     environment:
+      # Muse Spark Open on Baseten is the brain. Claude answers only when a Muse call errors, logged as brain_fallback.
+      BASETEN_API_KEY: ${BASETEN_API_KEY:?set BASETEN_API_KEY in the env file}
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:?set ANTHROPIC_API_KEY in the env file}
-      PA_DEMO_BRAIN: ${PA_DEMO_BRAIN:-claude}
+      PA_DEMO_BRAIN: ${PA_DEMO_BRAIN:-baseten}
       PA_DEMO_DAILY_USD: ${PA_DEMO_DAILY_USD:-2}
       PA_DEMO_INTERNAL_SECRET: ${PA_DEMO_INTERNAL_SECRET:?set PA_DEMO_INTERNAL_SECRET in the env file}
       HTTPS_PROXY: http://egress:8888

@@ -21,7 +21,7 @@ from ..rhythm import patterns
 from .babylog import TZ, DemoBabyLog
 from .records import Records
 
-ALLOWED = ["log_baby_event", "read_baby_log", "baby_summary", "remember", "current_time",
+ALLOWED = ["log_baby_event", "read_baby_log", "baby_summary", "next_feed", "remember", "current_time",
            "dim_lights", "hold_notifications", "pause_vacuum", "announce"]
 PARENTS = ["Parent A", "Parent B"]
 SIMULATED = "Simulated in the demo, nothing ran in a real house"
@@ -65,7 +65,12 @@ class MeteredBrain:
         if self.resting():
             raise SpendCapReached("daily spend cap reached")
         reply = self.brain.step(system, transcript, tools)
-        self.records.add_spend(self.cost(reply.usage) if self.brain.name != "fake" else 0.0)
+        self.name, self.model, self.destination = self.brain.name, self.brain.model, self.brain.destination
+        if self.brain.name == "fake":
+            spend = 0.0
+        else:
+            spend = reply.usd if reply.usd is not None else self.cost(reply.usage)
+        self.records.add_spend(spend)
         return reply
 
 
@@ -86,6 +91,8 @@ class Visitor:
         self.baby_log = DemoBabyLog(clock=clock)
         tools = core_tools(self.memory, self.baby_log, ALLOWED)
         self.add_house_tools(tools)
+        tools.add(Tool("next_feed", "When the next feed is expected, from the rhythm of this baby's own log. Use it for "
+                       "'when is the next feed?' and answer with its text.", schema({}), self.next_feed_text))
         self.agent = DemoAgent(self.bus, self.memory, self.baby_log, tools, brain,
                                max_steps=settings["max_steps"], history=settings["history"])
         self.memory.remember("baby_name", "Demo Baby (simulated)")
@@ -149,6 +156,10 @@ class Visitor:
         notes = patterns.unusual_notes(rows, TZ)
         out["unusual"] = [n["text"] for n in notes[-2:]]
         return out
+
+    def next_feed_text(self):
+        nxt = self.proactive().get("next_feed")
+        return nxt["text"] if nxt else "Not enough feeds in the log yet to tell when the next one is."
 
     def recent(self, limit=6):
         return [{"kind": e["kind"], "at": e["ts"][11:16], "day": e["ts"][:10], "details": e["details"]}

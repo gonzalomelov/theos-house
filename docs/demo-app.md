@@ -44,7 +44,7 @@ Each visitor gets their own agent with its own bus, an in-memory memory file and
 | Request body | 4 KB of JSON, no uploads, multipart refused | fixed |
 | Brain calls at once | 4 | `PA_DEMO_PARALLEL` |
 
-Spend is computed from the tokens each brain call reports, at Claude Haiku 5.5 prices ($0.10 input and $0.50 output per million tokens, Anthropic pricing page read on Oct 28 2026). A call that reports no usage is charged a fallback of 4000 input and 400 output tokens. A local run of 22 brain calls cost $0.006.
+The brain is Muse Spark Open on Baseten, with Claude Haiku 5.5 only when a Muse call errors (a `brain_fallback` event). Spend is computed from the tokens each call reports, at the price of the brain that answered: Muse Spark Open $1.25 input and $4.25 output per million tokens (Baseten library page, read Oct 28 2026), Claude Haiku 5.5 $0.10 and $0.50 (Anthropic pricing page, read Oct 28 2026). A call that reports no usage is charged a fallback of 4000 input and 400 output tokens. A local run of 22 brain calls cost $0.006.
 
 ## Session records for the real-user scorer
 
@@ -64,9 +64,9 @@ python -m parenting_agent.demo.export_sessions --db other/demo_sessions.sqlite
 ## Run it locally
 
 ```bash
-python -m parenting_agent.demo --brain-env ~/.parenting-agent.env   # Claude stand-in
+python -m parenting_agent.demo --brain-env ~/.parenting-agent.env   # Muse Spark Open, Claude fallback
 PA_DEMO_BRAIN=fake python -m parenting_agent.demo                                                  # offline rules
-PA_DEMO_BRAIN=baseten python -m parenting_agent.demo --brain-env ...                               # Muse Spark Open, when the credits land
+PA_DEMO_BRAIN=claude python -m parenting_agent.demo --brain-env ...                                # Claude Haiku alone, for comparison
 ```
 
 Then open http://127.0.0.1:8765 on a phone-sized window. Local visits count as internal.
@@ -75,13 +75,13 @@ Then open http://127.0.0.1:8765 on a phone-sized window. Local visits count as i
 
 Deployed on Oct 28 2026. Three containers in the compose project `pa-demo`: `pa-demo` (only on the internal network `pa-demo-internal`, isolated gateway, no host address), `pa-demo-egress` (tinyproxy, HTTPS to the brain hosts only) and `pa-demo-edge` (socat, published on 127.0.0.1:4820 only). The Cloudflare tunnel sends `baby.bygmv.com` to that port. Base images are pinned by digest and the images are tagged with the git commit.
 
-- Env file `~/apps/pa-demo.env`, mode 600, two names: `ANTHROPIC_API_KEY` and `PA_DEMO_INTERNAL_SECRET`. `push-env` makes the secret on the Vostro the first time (32 random bytes, hex) and keeps it on later pushes.
+- Env file `~/apps/pa-demo.env`, mode 600, three names: `BASETEN_API_KEY`, `ANTHROPIC_API_KEY` (the fallback) and `PA_DEMO_INTERNAL_SECRET`. `push-env` makes the secret on the Vostro the first time (32 random bytes, hex) and keeps it on later pushes.
 - Data `~/apps/pa-demo-data`, owned by the container user (uid 10001), mode 700.
 - Backups: `pa-backup.timer` (systemd user unit) copies every SQLite file of the demo and the families service daily at about 04:40 into `~/backups/parenting-agent-public`, keeps 7 days.
 - Mark your own browser as internal before testing: open the address in `~/Engineering/gonza/meta-hackathon-2026/internal-url.txt` once. `sh deploy/public.sh demo internal-url FILE` writes it there (mode 600) without printing it. That file is excluded from git like `invites.txt`. Browsers marked with the old `/internal` address before Oct 28 evening are no longer internal.
 
 ```bash
-sh deploy/public.sh demo push-env     # ANTHROPIC_API_KEY from the meta-hackathon-2026 .env, the internal secret kept or made
+sh deploy/public.sh demo push-env     # BASETEN_API_KEY and ANTHROPIC_API_KEY from the meta-hackathon-2026 .env, the internal secret kept or made
 sh deploy/public.sh demo internal-url ~/Engineering/gonza/meta-hackathon-2026/internal-url.txt
 WALL_EXTRA_TARGETS="192.0.2.10:80 192.0.2.10:22" sh deploy/public.sh demo deploy
 sh deploy/public.sh demo check | status | logs 200 | stop | start

@@ -125,13 +125,13 @@ class FamilyBrain:
 
     def step(self, system, transcript, tools):
         if self.real.name == "fake" or self.capped():
-            self.name, self.destination = "fake", self.rules.destination
+            self.name, self.model, self.destination = "fake", self.rules.model, self.rules.destination
             if self.lang() == "es":
                 return self.rules_in_spanish(system, transcript, tools)
             return self.rules.step(system, transcript, tools)
-        self.name, self.destination = self.real.name, self.real.destination
         reply = self.real.step(system, transcript, tools)
-        self.service.store.add_spend(self.family_id, self.cost(reply.usage))
+        self.name, self.model, self.destination = self.real.name, self.real.model, self.real.destination
+        self.service.store.add_spend(self.family_id, reply.usd if reply.usd is not None else self.cost(reply.usage))
         return reply
 
     def rules_in_spanish(self, system, transcript, tools):

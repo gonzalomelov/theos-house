@@ -6,12 +6,16 @@ Which model runs is one setting (brain.provider in the agent config), so swappin
 - openai_compatible: any OpenAI-compatible chat endpoint. This is how Muse Spark Open runs on Baseten
   (issue #4), and Meta's Model API speaks it too. Key from the env variable named in brain.key_env.
 
+A brain config with a "fallback" block runs that second brain only when the first one errors. Every fallback is
+printed to stderr and carried on the reply, and the agent logs it as a brain_fallback event, so it can be counted.
+
 The agent keeps its own neutral transcript and each provider converts it. Every network call reports
 its destination host so the agent can log where data went.
 """
 import json
 import os
 import re
+import sys
 import time
 import urllib.error
 import urllib.parse
@@ -25,10 +29,25 @@ class BrainError(Exception):
 
 
 class Reply:
-    """usage is {"input_tokens", "output_tokens"} when the provider reports it, else None (the fake brain)."""
+    """usage is {"input_tokens", "output_tokens"} when the provider reports it, else None (the fake brain).
+    usd is the call's cost when the brain knows its prices. fallback is set when the fallback brain answered."""
 
-    def __init__(self, text="", tool_calls=None, usage=None):
-        self.text, self.tool_calls, self.usage = text, tool_calls or [], usage
+    def __init__(self, text="", tool_calls=None, usage=None, usd=None, fallback=None):
+        self.text, self.tool_calls, self.usage, self.usd, self.fallback = text, tool_calls or [], usage, usd, fallback
+
+
+THINKING = re.compile(r"<think(?:ing)?>.*?(?:</think(?:ing)?>|\Z)", re.S | re.I)
+
+
+def without_thinking(text):
+    """A reasoning model's thoughts never reach a parent, even when an endpoint puts them in the answer text."""
+    return THINKING.sub("", text or "").strip()
+
+
+def priced(reply, prices):
+    if prices and reply.usage:
+        reply.usd = (reply.usage.get("input_tokens", 0) * prices[0] + reply.usage.get("output_tokens", 0) * prices[1]) / 1_000_000
+    return reply
 
 
 def post_json(url, headers, body, timeout):
@@ -93,11 +112,11 @@ class ClaudeBrain:
     name = "claude"
     url = "https://api.anthropic.com/v1/messages"
 
-    def __init__(self, model, max_tokens=800, thinking=None, timeout=30):
+    def __init__(self, model, max_tokens=800, thinking=None, timeout=30, prices=None):
         key = os.environ.get("ANTHROPIC_API_KEY")
         if not key:
             raise BrainError("claude: ANTHROPIC_API_KEY is not set")
-        self.model, self.max_tokens, self.timeout = model, max_tokens, timeout
+        self.model, self.max_tokens, self.timeout, self.prices = model, max_tokens, timeout, prices
         # Thinking off by default: with it on, small models answered with thinking only (meta-hackathon-2026 PR #10).
         self.thinking = thinking or {"type": "disabled"}
         self.headers = {"x-api-key": key, "anthropic-version": "2023-06-01", "content-type": "application/json"}
@@ -130,20 +149,21 @@ class ClaudeBrain:
         calls = [{"id": b["id"], "name": b["name"], "arguments": b.get("input") or {}}
                  for b in reply.get("content", []) if b.get("type") == "tool_use"]
         usage = reply.get("usage") or {}
-        return Reply(text.strip(), calls, {"input_tokens": usage.get("input_tokens", 0) + usage.get("cache_creation_input_tokens", 0)
-                                           + usage.get("cache_read_input_tokens", 0), "output_tokens": usage.get("output_tokens", 0)})
+        return priced(Reply(without_thinking(text), calls,
+                            {"input_tokens": usage.get("input_tokens", 0) + usage.get("cache_creation_input_tokens", 0)
+                             + usage.get("cache_read_input_tokens", 0), "output_tokens": usage.get("output_tokens", 0)}), self.prices)
 
 
 class OpenAICompatibleBrain:
     name = "openai_compatible"
 
-    def __init__(self, model, base_url, key_env, max_tokens=800, timeout=30, reasoning_effort=None):
+    def __init__(self, model, base_url, key_env, max_tokens=800, timeout=30, reasoning_effort=None, prices=None):
         self.url = base_url.rstrip("/") + "/chat/completions"
         key = os.environ.get(key_env)
         if not key:
             raise BrainError(f"openai_compatible: {key_env} is not set. Put {key_env}=... in the git-ignored env file "
                              f"named by env_file to run {model} on {urllib.parse.urlparse(self.url).hostname}")
-        self.model, self.max_tokens, self.timeout = model, max_tokens, timeout
+        self.model, self.max_tokens, self.timeout, self.prices = model, max_tokens, timeout, prices
         # Muse Spark Open on Baseten always reasons, xhigh by default, and reasoning counts against max_tokens.
         self.reasoning_effort = reasoning_effort
         self.headers = {"Authorization": f"Bearer {key}", "Content-Type": "application/json"}
@@ -182,30 +202,84 @@ class OpenAICompatibleBrain:
                 arguments = {}
             calls.append({"id": call.get("id"), "name": function.get("name"), "arguments": arguments})
         usage = reply.get("usage") or {}
-        return Reply((message.get("content") or "").strip(), calls,
-                     {"input_tokens": usage.get("prompt_tokens", 0), "output_tokens": usage.get("completion_tokens", 0)})
+        reasoning = (usage.get("completion_tokens_details") or {}).get("reasoning_tokens", 0)
+        # The reasoning comes back apart, in message.reasoning_content, and is never read here.
+        return Reply(without_thinking(message.get("content")), calls,
+                     {"input_tokens": usage.get("prompt_tokens", 0), "output_tokens": usage.get("completion_tokens", 0),
+                      "reasoning_tokens": reasoning})
 
     def step(self, system, transcript, tools):
         body = {"model": self.model, "max_tokens": self.max_tokens, "messages": self.messages(system, transcript),
                 "tools": [{"type": "function", "function": t} for t in tools]}
         if self.reasoning_effort:
             body["reasoning_effort"] = self.reasoning_effort
-        return self.parse(post_json(self.url, self.headers, body, self.timeout))
+        return priced(self.parse(post_json(self.url, self.headers, body, self.timeout)), self.prices)
 
 
-def build(config):
+class FallbackBrain:
+    """The configured brain first. Only when it errors, the fallback answers, and that is never silent: it is printed
+    to stderr, counted in self.fallbacks and carried on the reply as reply.fallback for the agent to log.
+    name, model and destination always say which brain answered the last call."""
+
+    def __init__(self, primary, fallback, log=None):
+        self.primary, self.backup, self.fallbacks = primary, fallback, 0
+        self.log = log or (lambda line: print(line, file=sys.stderr, flush=True))
+        self.use(primary)
+
+    def use(self, brain):
+        self.name, self.model, self.destination = brain.name, brain.model, brain.destination
+
+    def step(self, system, transcript, tools):
+        try:
+            reply = self.primary.step(system, transcript, tools)
+            self.use(self.primary)
+            return reply
+        except BrainError as error:
+            self.fallbacks += 1
+            note = {"from_model": self.primary.model, "to_model": self.backup.model, "error": str(error)[:300]}
+            self.log("brain_fallback " + json.dumps(note))
+            reply = self.backup.step(system, transcript, tools)
+            self.use(self.backup)
+            reply.fallback = note
+            return reply
+
+
+def build_one(config):
     provider = config.get("provider", "fake")
+    prices = (config["price_in_per_mtok"], config["price_out_per_mtok"]) if "price_in_per_mtok" in config else None
     if provider == "fake":
         return FakeBrain()
     if provider == "claude":
-        return ClaudeBrain(config.get("model", "claude-haiku-5-5"), config.get("max_tokens", 800), config.get("thinking"))
+        return ClaudeBrain(config.get("model", "claude-haiku-5-5"), config.get("max_tokens", 800), config.get("thinking"),
+                           timeout=config.get("timeout_s", 30), prices=prices)
     if provider == "openai_compatible":
         return OpenAICompatibleBrain(config["model"], config["base_url"], config["key_env"], config.get("max_tokens", 800),
-                                     reasoning_effort=config.get("reasoning_effort"))
+                                     timeout=config.get("timeout_s", 30), reasoning_effort=config.get("reasoning_effort"),
+                                     prices=prices)
     raise BrainError(f"unknown brain provider {provider}")
 
 
+def build(config):
+    primary = build_one(config)
+    if not config.get("fallback"):
+        return primary
+    try:
+        backup = build_one(config["fallback"])
+    except BrainError as error:
+        print(f"brain_fallback_unavailable {error}", file=sys.stderr, flush=True)
+        return primary
+    return FallbackBrain(primary, backup)
+
+
 def timed(brain, system, transcript, tools):
+    """One brain call and its seconds. With PA_BRAIN_LOG set, each call also appends one JSON line there (model,
+    seconds, tokens, cost, fallback), never any text, so a run's latency and cost per call can be measured."""
     started = time.monotonic()
     reply = brain.step(system, transcript, tools)
-    return reply, round(time.monotonic() - started, 3)
+    seconds = round(time.monotonic() - started, 3)
+    if os.environ.get("PA_BRAIN_LOG"):
+        line = {"ts": time.time(), "provider": brain.name, "model": brain.model, "seconds": seconds,
+                "tool_calls": len(reply.tool_calls), **(reply.usage or {}), "usd": reply.usd, "fallback": reply.fallback}
+        with open(os.path.expanduser(os.environ["PA_BRAIN_LOG"]), "a") as log:
+            log.write(json.dumps(line) + "\n")
+    return reply, seconds

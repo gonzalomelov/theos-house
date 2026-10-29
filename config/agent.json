@@ -2,9 +2,17 @@
   "data_dir": "data",
   "env_file": "~/.parenting-agent.env",
   "brain": {
-    "provider": "claude",
-    "model": "claude-haiku-5-5",
-    "max_tokens": 800
+    "provider": "openai_compatible",
+    "model": "meta-models/muse-spark-open-1026",
+    "base_url": "https://inference.baseten.co/v1",
+    "key_env": "BASETEN_API_KEY",
+    "max_tokens": 2048,
+    "reasoning_effort": "low",
+    "timeout_s": 45,
+    "price_in_per_mtok": 1.25,
+    "price_out_per_mtok": 4.25,
+    "fallback": {"provider": "claude", "model": "claude-haiku-5-5", "max_tokens": 800,
+                 "price_in_per_mtok": 0.10, "price_out_per_mtok": 0.50}
   },
   "baby_log": {
     "provider": "babybuddy",

@@ -36,7 +36,8 @@ Rules:
 - Answer the parent's message itself. Never talk about your own bookkeeping: never say a message has nothing new to log,
   never say "ahora sí" or "now it is logged", never apologize for or mention an answer the parent did not see, never
   comment on the time the log gave an entry.
-- Keep replies short, the parent's hands are often on the baby.
+- Keep replies short, the parent's hands are often on the baby. Confirm only what this message changed, never list
+  earlier entries again. Write plain sentences with commas and periods, never an em dash.
 Today is {today}. Facts you were told: {facts}
 """
 
@@ -413,8 +414,14 @@ class Agent:
                 self.bus.publish("agent_error", error=str(error)[:300])
                 self.say(channel, self.saved_before_fail(kept))
                 return
+            usage = reply.usage or {}
             self.bus.publish("brain_call", provider=self.brain.name, model=self.brain.model,
-                             destination=self.brain.destination, seconds=seconds, tool_calls=len(reply.tool_calls))
+                             destination=self.brain.destination, seconds=seconds, tool_calls=len(reply.tool_calls),
+                             input_tokens=usage.get("input_tokens"), output_tokens=usage.get("output_tokens"),
+                             reasoning_tokens=usage.get("reasoning_tokens"), usd=reply.usd,
+                             fallback=bool(reply.fallback))
+            if reply.fallback:
+                self.bus.publish("brain_fallback", **reply.fallback)
             if not reply.tool_calls:
                 if editing and not changed:
                     if can_edit and not edit_checked:

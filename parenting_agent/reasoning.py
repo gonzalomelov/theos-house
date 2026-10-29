@@ -2,9 +2,9 @@
 
 Providers, chosen by skill config reasoning.provider:
 - none: no reasoning calls.
-- claude: the stand-in until the Meta key works. Needs ANTHROPIC_API_KEY.
-- muse: Muse Spark or Wonder on the Meta Model API. Needs MODEL_API_KEY. Use Standard tier models only,
-  because Contributor tier models may train on inputs and forbid personal data.
+- muse: Muse Spark Open, Meta's open weights, on Baseten's OpenAI-compatible endpoint. Needs BASETEN_API_KEY.
+  It always reasons. Its thoughts come back apart (reasoning_content) and are never read.
+- claude: the fallback stand-in. Needs ANTHROPIC_API_KEY.
 
 decide() never acts. It returns a proposal ({"action": name or None, "ask_parent": bool, "why": text}) and
 the house layer checks it against the allowed list.
@@ -14,6 +14,8 @@ import os
 import time
 import urllib.error
 import urllib.request
+
+from .agent.brain import without_thinking
 
 
 class Unavailable(Exception):
@@ -81,13 +83,14 @@ def build(config):
             lambda user: {"model": model, "max_tokens": 300, "system": PROMPT, "messages": [{"role": "user", "content": user}]},
             lambda reply: "".join(b.get("text", "") for b in reply.get("content", []) if b.get("type") == "text"))
     if provider == "muse":
-        key = os.environ.get("MODEL_API_KEY")
+        key = os.environ.get("BASETEN_API_KEY")
         if not key:
-            raise Unavailable("muse: MODEL_API_KEY is not set")
-        model = config.get("model", "muse-spark-1.3")
+            raise Unavailable("muse: BASETEN_API_KEY is not set")
+        model = config.get("model", "meta-models/muse-spark-open-1026")
         return HttpReasoning(
-            "muse", config.get("url", "https://api.meta.ai/v1/responses"),
+            "muse", config.get("url", "https://inference.baseten.co/v1/chat/completions"),
             {"Authorization": f"Bearer {key}", "Content-Type": "application/json"},
-            lambda user: {"model": model, "instructions": PROMPT, "input": user},
-            lambda reply: reply.get("output_text") or json.dumps(reply.get("output", "")))
+            lambda user: {"model": model, "max_tokens": 1500, "reasoning_effort": config.get("reasoning_effort", "low"),
+                          "messages": [{"role": "system", "content": PROMPT}, {"role": "user", "content": user}]},
+            lambda reply: without_thinking(((reply.get("choices") or [{}])[0].get("message") or {}).get("content")))
     raise Unavailable(f"unknown reasoning provider {provider}")

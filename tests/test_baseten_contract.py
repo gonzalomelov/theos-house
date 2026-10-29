@@ -85,7 +85,7 @@ class MuseConfig(unittest.TestCase):
     def test_model_id_and_endpoint_are_baseten_s(self):
         brain = MUSE["brain"]
         self.assertEqual(brain["provider"], "openai_compatible")
-        self.assertEqual(brain["model"], "meta-models/muse-spark-open")  # slug on baseten.co/library/muse-spark-open
+        self.assertEqual(brain["model"], "meta-models/muse-spark-open-1026")  # the model id Baseten serves, checked with a real call on 2026-10-28
         self.assertEqual(brain["base_url"], "https://inference.baseten.co/v1")
         self.assertEqual(brain["key_env"], "BASETEN_API_KEY")
         self.assertGreaterEqual(brain["max_tokens"], 2000)  # it always reasons, and reasoning counts against max_tokens
@@ -97,7 +97,7 @@ class MuseConfig(unittest.TestCase):
                 OpenAICompatibleBrain(MUSE["brain"]["model"], MUSE["brain"]["base_url"], "BASETEN_API_KEY")
         message = str(raised.exception)
         self.assertIn("BASETEN_API_KEY is not set", message)
-        self.assertIn("meta-models/muse-spark-open on inference.baseten.co", message)
+        self.assertIn("meta-models/muse-spark-open-1026 on inference.baseten.co", message)
 
 
 @mock.patch.dict(os.environ, {"BASETEN_API_KEY": KEY})
@@ -114,7 +114,7 @@ class BasetenContract(unittest.TestCase):
             self.assertEqual(first["path"], "/v1/chat/completions")
             self.assertEqual(first["auth"], f"Bearer {KEY}")
             body = first["body"]
-            self.assertEqual(body["model"], "meta-models/muse-spark-open")
+            self.assertEqual(body["model"], "meta-models/muse-spark-open-1026")
             self.assertEqual(body["max_tokens"], MUSE["brain"]["max_tokens"])
             self.assertEqual(body["reasoning_effort"], "low")
             self.assertNotIn("n", body)  # Muse Spark Open returns HTTP 400 for n above 1

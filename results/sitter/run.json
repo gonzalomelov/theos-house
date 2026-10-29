@@ -1,8 +1,8 @@
 {
   "sentence": "My mom is watching him tonight from 19:00 to 23:00",
   "simulated_now": "2026-10-26T18:40:00-03:00",
-  "brain": "claude",
-  "model": "claude-haiku-5-5",
+  "brain": "openai_compatible",
+  "model": "meta-models/muse-spark-open-1026",
   "tools": [
     [
       "sitter_handover",
@@ -10,7 +10,7 @@
     ]
   ],
   "drafts": 1,
-  "sent": true,
+  "sent": false,
   "draft": "Test: Draft handover for Mom, 19:00 to 23:00. Nothing goes to Mom unless you say so.\n\nHi Mom, thank you for looking after Theo from 19:00 to 23:00.\n\nFood\n- Last feed at 16:53, breastfed (right side), 31 min.\n- Next feed expected around 19:22. He has been eating about every 2 h 29 min.\n- Today so far: 7 feeds, 170 ml from bottles.\n\nSleep\n- He has been asleep since 17:50.\n- In the evening he usually falls asleep around 20:39 and sleeps about 1 h 31 min.\n\nDiapers\n- Last diaper at 17:28, wet. Last dirty one at 12:19.\n\nToday\n- Bath at 18:35.\n- Yesterday, feeds came 1 h 27 min apart around 01:37, usually at least 2 h 06 min.\n\nWhere things are\n- Bottles and formula: kitchen, the shelf above the kettle.\n- Diapers and wipes: the changing table in his room, top drawer.\n- Spare clothes and sleep bags: his room, second drawer.\n- Pacifier: on the nightstand next to his crib.\n\nHow to reach us\n- Gonza: +598 9X XXX XXX.\n- Ceci: +598 9X XXX XXX.\n\nHealth\n- For anything about his health, call us first. If you cannot reach us, call his pediatrician on +598 2X XX XX XX. In an emergency call 911.",
   "computed_from": [
     "feeding@2026-10-26T16:53:00-03:00#216",
@@ -22,6 +22,5 @@
   "window": [
     "2026-10-26T19:00:00-03:00",
     "2026-10-26T23:00:00-03:00"
-  ],
-  "message_id": 6
+  ]
 }

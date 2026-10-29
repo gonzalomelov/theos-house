@@ -21,8 +21,8 @@ One long-running agent sits in the middle. Everything it sees, hears and does go
 | Job | Model | Where it runs |
 |---|---|---|
 | Confirms or cancels the hand alarm at the changing table and in the bath. Touch versus a 2 to 5 cm hover not yet told apart, see `results/hover/README.md` (Oct 28) | **SAM 3.1**, Meta's open weights | On the Mac's GPU, 1.5 to 3 s per frame. Frames never leave the house |
-| The agent's brain | **Muse Spark Open**, Meta's open weights | Baseten, data terms still to be checked (`config/agent.muse-baseten.json`, waiting for the partner credits) |
-| Stand-in brain until then | Claude | Anthropic API, temporary only (`config/agent.json`) |
+| The agent's brain, in the family agent, the families bot and the public demo | **Muse Spark Open** (`meta-models/muse-spark-open-1026`), Meta's open weights | Baseten's OpenAI-compatible API, synchronous calls only (`config/agent.json`, `config/agent.vostro.json`). Every call logs its model and host as a `brain_call` event. Numbers in `results/muse/README.md` |
+| Fallback brain, only when a Muse call errors | Claude Haiku 5.5 | Anthropic API. Each fallback is a `brain_fallback` event and a stderr line, so it is counted, never silent |
 
 ## Private by design
 
@@ -32,15 +32,15 @@ One long-running agent sits in the middle. Everything it sees, hears and does go
 | House audio | Labelled on the Mac by PANNs, never saved, only labels and numbers in `results/` (see `docs/house-sounds.md`) |
 | The baby's log | Baby Buddy on the family's server, reachable only on that server (see `docs/deploy-babybuddy.md`) |
 | The agent's memory | `data/memory.sqlite` and `data/events.jsonl` on the machine that runs it, on the Vostro in `~/apps/parenting-agent-data` |
-| **What leaves the house** | Only the brain call: the conversation text and tool results go to the configured brain (Baseten for Muse Spark Open, Anthropic for the stand-in). Every call logs its destination host as a `brain_call` event |
+| **What leaves the house** | Only the brain call: the conversation text and tool results go to the configured brain (Baseten for Muse Spark Open, Anthropic only when a Muse call errors and Claude answers as the fallback). Every call logs its destination host as a `brain_call` event |
 
 ## Run it
 
 ```bash
 python -m parenting_agent --check                                  # load everything, print brain, plug-ins and tools, exit
-python -m parenting_agent                                          # Claude stand-in, type to it in the terminal
+python -m parenting_agent                                          # Muse Spark Open, Claude only as a logged fallback
 python -m parenting_agent --config config/agent.fake.json          # offline, rule-based brain
-python -m parenting_agent --config config/agent.muse-baseten.json  # Muse Spark Open on Baseten (needs BASETEN_API_KEY)
+python -m parenting_agent --config config/agent.muse-baseten.json  # Muse Spark Open alone, no fallback (needs BASETEN_API_KEY)
 ```
 
 Keys are read from a git-ignored `.env` (path in `config/agent.json`). Baby Buddy is reached through an SSH tunnel:
@@ -71,7 +71,7 @@ python scripts/kr222_table.py --clips ~/Engineering/gonza/meta-hackathon-2026-sy
 Bath skill (issue #10), armed by "bath time" and logged by "bath done", the second camera skill and config only (`skills/bath.json`). See `docs/bath.md`.
 
 ```bash
-python scripts/bath_run.py --baths 10   # bath clips streamed live, Claude brain, Baby Buddy, SAM 3.1
+python scripts/bath_run.py --baths 10   # bath clips streamed live, Muse brain, Baby Buddy, SAM 3.1
 ```
 
 Simulated baby week and daily rhythm: see `docs/simulated-week.md` and `docs/daily-rhythm.md`.
@@ -81,7 +81,7 @@ Sitter handover: one message briefs a grandparent or a sitter from the log, the 
 Simulated full day, 06:10 to 02:30 (issue #17), the demo rehearsal in one command:
 
 ```bash
-python -m parenting_agent.fullday              # Claude brain, Baby Buddy, SAM 3.1, the clips streamed live
+python -m parenting_agent.fullday              # Muse brain, Baby Buddy, SAM 3.1, the clips streamed live
 python -m parenting_agent.fullday --no-video   # skip the two clip steps
 python -m parenting_agent.fullday --wipe-only  # remove the entries earlier runs wrote (tag full-day-sim)
 ```

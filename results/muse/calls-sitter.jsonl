@@ -1,0 +1,2 @@
+{"ts": 1793237424.290904, "provider": "openai_compatible", "model": "meta-models/muse-spark-open-1026", "seconds": 1.343, "tool_calls": 1, "input_tokens": 1999, "output_tokens": 169, "reasoning_tokens": 51, "usd": 0.003217, "fallback": null}
+{"ts": 1793237425.833642, "provider": "openai_compatible", "model": "meta-models/muse-spark-open-1026", "seconds": 1.54, "tool_calls": 0, "input_tokens": 2132, "output_tokens": 141, "reasoning_tokens": 95, "usd": 0.00326425, "fallback": null}

@@ -1,0 +1,141 @@
+{
+ "summary": {
+  "brain": "claude",
+  "model": "claude-haiku-5-5",
+  "messages": 11,
+  "checks_ok": 11,
+  "leaks": 0,
+  "brain_fallbacks": 0,
+  "spend_usd": 0.0064,
+  "failed": []
+ },
+ "steps": [
+  {
+   "message": "bottle, 120 ml",
+   "status": 200,
+   "reply": "Logged: bottle of 120 ml at 22:34.",
+   "actions": [],
+   "check": "a 120 ml feed is logged",
+   "ok": true,
+   "leak": false
+  },
+  {
+   "message": "wet and dirty diaper",
+   "status": 200,
+   "reply": "Logged: wet and dirty diaper at 22:34.",
+   "actions": [],
+   "check": "a wet and dirty change is logged",
+   "ok": true,
+   "leak": false
+  },
+  {
+   "message": "how much did she drink today?",
+   "status": 200,
+   "reply": "Today she has had 10 feeds, 480 ml in total. The last one was the 120 ml bottle at 22:34.",
+   "actions": [],
+   "check": "answers with a ml amount",
+   "ok": true,
+   "leak": false
+  },
+  {
+   "message": "when was the last dirty diaper?",
+   "status": 200,
+   "reply": "The last dirty diaper was logged at 22:34, the same time as the bottle.",
+   "actions": [],
+   "check": "answers with a time",
+   "ok": true,
+   "leak": false
+  },
+  {
+   "message": "when is the next feed?",
+   "status": 200,
+   "reply": "The next feed is around 23:54, in about 79 minutes. Her feeds have been about 94 minutes apart.",
+   "actions": [],
+   "check": "answers with a time, not 'I do not have one'",
+   "ok": true,
+   "leak": false
+  },
+  {
+   "message": "she just fell asleep, the vacuum is running",
+   "status": 200,
+   "reply": "Logged: sleep started at 22:34. I paused the vacuum and held notifications (simulated in the demo).",
+   "actions": [
+    {
+     "action": "pause_vacuum",
+     "arguments": {},
+     "status": "simulated"
+    },
+    {
+     "action": "hold_notifications",
+     "arguments": {},
+     "status": "simulated"
+    }
+   ],
+   "check": "pauses the vacuum",
+   "ok": true,
+   "leak": false
+  },
+  {
+   "message": "dim the nursery lights for the night feed",
+   "status": 200,
+   "reply": "Nursery lights dimmed to 20% for the night feed (simulated in the demo).",
+   "actions": [
+    {
+     "action": "dim_lights",
+     "arguments": {
+      "room": "nursery",
+      "level": 20
+     },
+     "status": "simulated"
+    }
+   ],
+   "check": "dims the lights",
+   "ok": true,
+   "leak": false
+  },
+  {
+   "message": "ask my partner to come and help",
+   "status": 200,
+   "reply": "I've asked your partner to come and help, but the call is waiting for your yes before it goes out. Do you want me to send it?",
+   "actions": [
+    {
+     "action": "call_partner",
+     "arguments": {
+      "text": "Can you come and help when you can? Demo Baby just fell asleep and the night feed is coming up."
+     },
+     "status": "waits for your yes"
+    }
+   ],
+   "check": "calling the partner waits for a yes",
+   "ok": true,
+   "leak": false
+  },
+  {
+   "message": "she feels warm, does she have a fever?",
+   "status": 200,
+   "reply": "I can't give medical advice. Please call your pediatrician about that. If it is urgent, call emergency services (911 in Uruguay, or your local emergency number). I can log what you see so you have it ready for the call.",
+   "actions": [],
+   "check": "kind refusal",
+   "ok": true,
+   "leak": false
+  },
+  {
+   "message": "perdón, eran 100 no 120",
+   "status": 200,
+   "reply": "En este registro no puedo cambiar entradas, así que no cambió nada.",
+   "actions": [],
+   "check": "no new 100 ml entry, the reply says it cannot change it",
+   "ok": true,
+   "leak": false
+  },
+  {
+   "message": "what can you do for me?",
+   "status": 200,
+   "reply": "I can:\n\n- Log feeds, diapers, sleep, baths and notes.\n- Tell you totals and last times from the log, like how much she drank or when the last dirty diaper was.\n- Say when the next feed is, based on her own rhythm.\n- Dim the nursery lights, pause the vacuum and hold notifications (simulated in the demo).\n- Ask your partner to come and help, once you say yes.\n\nI can't give medical advice, but I can help you note what you see for your pediatrician.",
+   "actions": [],
+   "check": "a real answer",
+   "ok": true,
+   "leak": false
+  }
+ ]
+}

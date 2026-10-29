@@ -140,7 +140,7 @@ Each family gets its own agent with its own bus and its own file, `family-<id>.s
 | Families | 20 | `PA_FAMILIES_MAX_FAMILIES` |
 | Wrong invite codes per account per day | 5 | `PA_FAMILIES_MAX_BAD_CODES` |
 
-Over a spend cap the service does not go silent: the free rule-based brain takes over, so "bottle 120 ml" and "when did she last eat?" keep working until the next day. Spend is priced like the demo (Claude Haiku 5.5, $0.10 and $0.50 per million tokens). A local run of onboarding, 4 messages through Claude, a refusal and a summary cost $0.002.
+Over a spend cap the service does not go silent: the free rule-based brain takes over, so "bottle 120 ml" and "when did she last eat?" keep working until the next day. Spend is priced like the demo, at the price of the brain that answered (Muse Spark Open $1.25 and $4.25 per million tokens, Claude Haiku 5.5 $0.10 and $0.50 when it answers as the fallback). A local run of onboarding, 4 messages through Claude, a refusal and a summary cost $0.002.
 
 ## Session records for the real-user scorer
 
@@ -169,7 +169,7 @@ Checked on Oct 28 with a simulated export: 3 parents on 3 days, 1 parent on 2 da
 
 Deployed on Oct 28 2026 with `deploy/public.sh`, from the Mac in a clean checkout. Two containers in the compose project `pa-families`: `pa-families` (only on `pa-families-internal`, isolated gateway, nothing published) and `pa-families-egress` (HTTPS to the brain and api.telegram.org only).
 
-- Env file `~/apps/pa-families.env`, mode 600, written by `push-env` with only `ANTHROPIC_API_KEY`, `TELEGRAM_FAMILIES_BOT_TOKEN`, `PA_FAMILIES_BOT_USERNAME` and `PA_FAMILIES_INTERNAL_USERS` (Gonza's Telegram user id, taken from `TELEGRAM_CHAT_ID`).
+- Env file `~/apps/pa-families.env`, mode 600, written by `push-env` with only `BASETEN_API_KEY`, `ANTHROPIC_API_KEY` (the fallback), `TELEGRAM_FAMILIES_BOT_TOKEN`, `PA_FAMILIES_BOT_USERNAME` and `PA_FAMILIES_INTERNAL_USERS` (Gonza's Telegram user id, taken from `TELEGRAM_CHAT_ID`).
 - Data `~/apps/pa-families-data`, owned by the container user (uid 10002), mode 700. Backed up daily with the demo (see `docs/demo-app.md`).
 - Health: the container runs with no restarts and its log says `families: polling started`, then `families check` inside.
 

@@ -1,0 +1,3 @@
+families 3-day estimate: 34 messages x ~2 calls x ~0.006 USD = ~0.40 USD
+sitter estimate: 1 turn x ~3 calls = ~0.02 USD
+demo estimate: 11 msgs x ~2 calls x 0.004 = ~0.10 USD on Muse, ~0.01 on Haiku

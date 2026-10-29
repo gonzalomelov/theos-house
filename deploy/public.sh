@@ -27,8 +27,9 @@ remote() { ssh "$HOST" "$@"; }
 usage() { sed -n '3,18p' "$0" | sed 's/^# \{0,1\}//' >&2; exit 2; }
 
 case "$SERVICE" in
-  demo)     UID_IN=10001; SOURCE_NAMES="ANTHROPIC_API_KEY"; REQUIRED_NAMES="ANTHROPIC_API_KEY PA_DEMO_INTERNAL_SECRET" ;;
-  families) UID_IN=10002; SOURCE_NAMES="ANTHROPIC_API_KEY TELEGRAM_FAMILIES_BOT_TOKEN PA_FAMILIES_INTERNAL_USERS"
+  demo)     UID_IN=10001; SOURCE_NAMES="BASETEN_API_KEY ANTHROPIC_API_KEY"
+            REQUIRED_NAMES="BASETEN_API_KEY ANTHROPIC_API_KEY PA_DEMO_INTERNAL_SECRET" ;;
+  families) UID_IN=10002; SOURCE_NAMES="BASETEN_API_KEY ANTHROPIC_API_KEY TELEGRAM_FAMILIES_BOT_TOKEN PA_FAMILIES_INTERNAL_USERS"
             REQUIRED_NAMES="$SOURCE_NAMES" ;;
   backup)   ;;
   *)        usage ;;
@@ -122,10 +123,10 @@ send_code() {
 push_env() {
   [ -f "$SOURCE_ENV" ] || { echo "no $SOURCE_ENV" >&2; exit 1; }
   if [ "$SERVICE" = demo ]; then
-    LINES="$(grep -E '^ANTHROPIC_API_KEY=.+' "$SOURCE_ENV" || true)"
+    LINES="$(grep -E '^(BASETEN_API_KEY|ANTHROPIC_API_KEY)=.+' "$SOURCE_ENV" || true)"
   else
     # Gonza's chat id with the bot is his Telegram user id: his own rows are internal and never count.
-    LINES="$(grep -E '^(ANTHROPIC_API_KEY|TELEGRAM_FAMILIES_BOT_TOKEN)=.+' "$SOURCE_ENV" || true)
+    LINES="$(grep -E '^(BASETEN_API_KEY|ANTHROPIC_API_KEY|TELEGRAM_FAMILIES_BOT_TOKEN)=.+' "$SOURCE_ENV" || true)
 PA_FAMILIES_BOT_USERNAME=bygmv_parenting_families_bot
 $(sed -n 's/^TELEGRAM_CHAT_ID=/PA_FAMILIES_INTERNAL_USERS=/p' "$SOURCE_ENV")"
   fi

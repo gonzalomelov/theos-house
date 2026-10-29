@@ -98,7 +98,7 @@ A deploy that fails its health check or its wall check stops the new agent and s
 | Health check | healthy |
 | `kill -9` of the agent process from the host | running and healthy again 2 s later, restart count 1 |
 | `docker restart` | healthy again after 11 s |
-| `python -m parenting_agent --check` inside the container | Claude brain, heartbeat plug-in, five tools, Baby Buddy log |
+| `python -m parenting_agent --check` inside the container | Muse Spark Open brain with the Claude fallback, heartbeat plug-in, five tools, Baby Buddy log |
 | Read Baby Buddy from inside | child found, 20 entries read |
 | Read Home Assistant from inside | HTTP 200, house dry run |
 | One question through the brain from inside | "When was the last diaper?" answered from Baby Buddy, brain host api.anthropic.com |

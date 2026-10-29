@@ -3,11 +3,14 @@
   "env_file": "~/.parenting-agent.env",
   "brain": {
     "provider": "openai_compatible",
-    "model": "meta-models/muse-spark-open",
+    "model": "meta-models/muse-spark-open-1026",
     "base_url": "https://inference.baseten.co/v1",
     "key_env": "BASETEN_API_KEY",
-    "max_tokens": 4096,
-    "reasoning_effort": "low"
+    "max_tokens": 2048,
+    "reasoning_effort": "low",
+    "timeout_s": 45,
+    "price_in_per_mtok": 1.25,
+    "price_out_per_mtok": 4.25
   },
   "baby_log": {
     "provider": "babybuddy",

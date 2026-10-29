@@ -32,6 +32,9 @@ BOOKKEEPING = re.compile(r"no reporta nada|nada (nuevo )?(que|para) anotar|ahora
                          re.I)
 LATE = re.compile(r"se esperaba", re.I)
 EMERGENCY = re.compile(r"\b911\b")
+# Tuteo where a Rioplatense parent expects voseo: "tienes" for "tenés", "puedes" for "podés", "dime" for "decime".
+TUTEO = re.compile(r"\b(tienes|puedes|quieres|sabes|eres|necesitas|debes|llamas|avisas|dime|cuéntame|escríbeme|"
+                   r"avísame|llámame|recuerdas|prefieres|haces|vienes|dices)\b", re.I)
 
 
 def feeds(app, family_id, day=None):
@@ -103,14 +106,20 @@ def script():
     ]
 
 
-def run(out, keys_env, model):
+def run(out, keys_env, model, brain="baseten"):
     environ = {}
     settings_mod.read_keys(keys_env, environ)
-    if "ANTHROPIC_API_KEY" not in environ:
-        raise SystemExit("no ANTHROPIC_API_KEY in the keys file")
-    os.environ["ANTHROPIC_API_KEY"] = environ["ANTHROPIC_API_KEY"]
+    needed = "BASETEN_API_KEY" if brain == "baseten" else "ANTHROPIC_API_KEY"
+    if needed not in environ:
+        raise SystemExit(f"no {needed} in the keys file")
+    for name in settings_mod.BRAIN_KEYS:
+        if name in environ:
+            os.environ[name] = environ[name]
     data = tempfile.mkdtemp(prefix="families-3day-")
-    s = settings_mod.load({"PA_FAMILIES_BRAIN": "claude", "PA_FAMILIES_MODEL": model, "PA_FAMILIES_DATA_DIR": data})
+    knobs = {"PA_FAMILIES_BRAIN": brain, "PA_FAMILIES_DATA_DIR": data, **({"PA_FAMILIES_MODEL": model} if model else {})}
+    s = settings_mod.load(knobs)
+    model = s["brain"]["model"]
+    fallbacks = []
     clock = {"now": at(28, "23:50")}
     app = Families(s, clock=lambda: clock["now"])
     lines, steps = [f"# Families bot, 3 scripted days in Spanish, real brain ({model})", "",
@@ -123,6 +132,7 @@ def run(out, keys_env, model):
     family_id = app.store.parent(visitor_id(A))["family_id"]
     pushed, calls = [], []
     family = app.family(family_id)
+    family.agent.bus.subscribe(fallbacks.append, ["brain_fallback"])
     run_tool = family.agent.tools.run
     family.agent.tools.run = lambda name, arguments: (calls.append(f"{name}({json.dumps(arguments, ensure_ascii=False)})"),
                                                       run_tool(name, arguments))[1]
@@ -148,12 +158,14 @@ def run(out, keys_env, model):
         except IndexError:
             ok, what = False, "the entry the check looks for is missing"
         bookkeeping = bool(BOOKKEEPING.search(reply))
-        steps.append({"at": moment.isoformat(), "who": "A" if who == A else "B", "message": text, "reply": reply,
+        tuteo = TUTEO.findall(reply)
+        steps.append({"tuteo": tuteo, "at": moment.isoformat(), "who": "A" if who == A else "B", "message": text, "reply": reply,
                       "tools": list(calls), "check": what, "ok": bool(ok), "bookkeeping_talk": bookkeeping, "late_wording": bool(LATE.search(reply))})
         mark = "ok" if ok else "FAIL"
         lines += [f"**{moment:%a %d %H:%M} {'A' if who == A else 'B'}:** {text}", "", f"> {reply}", "",
                   *([f"Tools: `{'`, `'.join(calls)}`", ""] if calls else []),
-                  f"Check ({mark}): {what or 'none'}{' · bookkeeping talk' if bookkeeping else ''}", ""]
+                  f"Check ({mark}): {what or 'none'}{' · bookkeeping talk' if bookkeeping else ''}"
+                  f"{' · tuteo: ' + ', '.join(tuteo) if tuteo else ''}", ""]
     final = feeds(app, family_id)
     lines += ["## Final feeds in the log", "", "| ts | ml | method | type | start |", "|---|---|---|---|---|"]
     lines += [f"| {r[0]} | {r[1]} | {r[2]} | {r[3]} | {r[4]} |" for r in final]
@@ -161,10 +173,14 @@ def run(out, keys_env, model):
     summary = {"model": model, "messages": len(steps), "checks": len(checked), "checks_ok": sum(s["ok"] for s in checked),
                "bookkeeping_replies": sum(s["bookkeeping_talk"] for s in steps),
                "late_wording": sum(s["late_wording"] for s in steps) + sum(bool(LATE.search(p)) for _, p in pushed),
+               "tuteo_replies": sum(bool(s["tuteo"]) for s in steps) + sum(bool(TUTEO.search(p)) for _, p in pushed),
+               "brain_fallbacks": len(fallbacks),
                "spend_usd": round(sum_spend(app), 4),
                "failed": [f"{s['at'][5:16]} {s['message']}: {s['check']}" for s in checked if not s["ok"]]}
     lines = lines[:4] + [f"Checks passed: {summary['checks_ok']} of {summary['checks']}. Replies with bookkeeping talk: "
-                         f"{summary['bookkeeping_replies']}. Late 'se esperaba' wording: {summary['late_wording']}.", ""] + lines[4:]
+                         f"{summary['bookkeeping_replies']}. Late 'se esperaba' wording: {summary['late_wording']}. "
+                         f"Replies with tuteo instead of voseo: {summary['tuteo_replies']}. Brain fallbacks to Claude: "
+                         f"{summary['brain_fallbacks']}.", ""] + lines[4:]
     app.close()
     out = Path(out)
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -182,6 +198,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--keys-env", required=True)
     parser.add_argument("--out", required=True)
-    parser.add_argument("--model", default="claude-haiku-5-5")
+    parser.add_argument("--brain", choices=["baseten", "claude"], default="baseten", help="baseten is Muse Spark Open")
+    parser.add_argument("--model", help="override the brain's model")
     args = parser.parse_args()
-    run(args.out, args.keys_env, args.model)
+    run(args.out, args.keys_env, args.model, args.brain)
