@@ -1,0 +1,70 @@
+{
+  "sample_fps_set": 10.0,
+  "watch_s": 60.0,
+  "frames_processed": 491,
+  "processed_fps": 8.0,
+  "reflex_ms_median": 45.1,
+  "armed_s": 61.2,
+  "hands_off_moments_expected": 5,
+  "chimes": 5,
+  "voices": 5,
+  "voices_dropped": 0,
+  "chime_to_voice_s": [
+    1.27,
+    1.24,
+    1.26,
+    1.24,
+    1.27
+  ],
+  "skill_closed": true,
+  "brain_calls": [
+    {
+      "destination": "inference.baseten.co",
+      "seconds": 1.007
+    },
+    {
+      "destination": "inference.baseten.co",
+      "seconds": 3.685
+    },
+    {
+      "destination": "inference.baseten.co",
+      "seconds": 2.655
+    },
+    {
+      "destination": "inference.baseten.co",
+      "seconds": 1.949
+    }
+  ],
+  "tools": [
+    {
+      "name": "start_changing_table",
+      "status": "ran"
+    },
+    {
+      "name": "finish_changing_table",
+      "status": "ran"
+    }
+  ],
+  "conversation": [
+    {
+      "t": 9.326,
+      "who": "parent",
+      "text": "changing time"
+    },
+    {
+      "t": 14.47,
+      "who": "agent",
+      "text": "Watching the changing table \u2014 tell me when you're done."
+    },
+    {
+      "t": 69.344,
+      "who": "parent",
+      "text": "done"
+    },
+    {
+      "t": 73.951,
+      "who": "agent",
+      "text": "Logged \u2014 diaper change at 22:54."
+    }
+  ]
+}

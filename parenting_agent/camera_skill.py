@@ -100,7 +100,7 @@ class CameraSkill:
 
     def __init__(self, owner, entry, reflex=None, confirm_detector=None, source=None, quiet=False):
         self.owner, self.agent = owner, owner.agent
-        self.cfg = {"source": "phone", **entry}
+        self.cfg = {"source": "phone", "channel": "console", **entry}
         self.skill_cfg = check(config_mod.load(self.cfg["skill"]))
         self.text = self.skill_cfg["agent"]
         self.name = self.skill_cfg["name"]
@@ -165,7 +165,7 @@ class CameraSkill:
             record = self.read_back(self.tracker.record)
             if record is not None:
                 self.agent.bus.publish("read_back", entry=record["kind"], id=record.get("id"), ts=record["ts"])
-            self.agent.bus.publish("observation", source=self.name, channel="console",
+            self.agent.bus.publish("observation", source=self.name, channel=self.cfg["channel"],
                                    text=self.text["closed_observation"].format(voices=voices))
             if self.text.get("idle_fact"):
                 self.agent.memory.remember(self.name, self.text["idle_fact"])

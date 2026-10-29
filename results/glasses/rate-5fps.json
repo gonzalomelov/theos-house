@@ -1,0 +1,78 @@
+{
+  "sample_fps_set": 5.0,
+  "watch_s": 60.0,
+  "frames_processed": 290,
+  "processed_fps": 4.8,
+  "reflex_ms_median": 47.2,
+  "armed_s": 60.2,
+  "hands_off_moments_expected": 4,
+  "chimes": 8,
+  "voices": 4,
+  "voices_dropped": 4,
+  "chime_to_voice_s": [
+    1.26,
+    1.25,
+    1.27,
+    1.22
+  ],
+  "skill_closed": true,
+  "brain_calls": [
+    {
+      "destination": "inference.baseten.co",
+      "seconds": 1.673
+    },
+    {
+      "destination": "inference.baseten.co",
+      "seconds": 1.225
+    },
+    {
+      "destination": "inference.baseten.co",
+      "seconds": 2.387
+    },
+    {
+      "destination": "inference.baseten.co",
+      "seconds": 1.077
+    },
+    {
+      "destination": "inference.baseten.co",
+      "seconds": 1.297
+    }
+  ],
+  "tools": [
+    {
+      "name": "start_changing_table",
+      "status": "ran"
+    },
+    {
+      "name": "finish_changing_table",
+      "status": "ran"
+    }
+  ],
+  "conversation": [
+    {
+      "t": 9.156,
+      "who": "parent",
+      "text": "changing time"
+    },
+    {
+      "t": 12.576,
+      "who": "agent",
+      "text": "Watching \u2014 let me know when you're done."
+    },
+    {
+      "t": 69.162,
+      "who": "parent",
+      "text": "done"
+    },
+    {
+      "t": 72.631,
+      "who": "agent",
+      "text": "Logged \u2014 diaper change at 22:53."
+    },
+    {
+      "t": 73.931,
+      "who": "agent",
+      "text": "Noted \u2014 another change logged at 22:53. Was it wet, dirty, or both?"
+    }
+  ]
+}

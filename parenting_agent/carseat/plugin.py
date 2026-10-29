@@ -26,7 +26,7 @@ class CarSeatCoach(Plugin):
 
     def __init__(self, agent, config, vision=None, source=None, quiet=False):
         super().__init__(agent, config)
-        self.cfg = {"skill": "skills/car-seat.json", "source": "phone", **config.get("car_seat", {})}
+        self.cfg = {"skill": "skills/car-seat.json", "source": "phone", "channel": "console", **config.get("car_seat", {})}
         self.skill_cfg = json.loads(Path(self.cfg["skill"]).read_text())
         self.seat, self.car = load_profiles(self.skill_cfg)
         self._vision, self._source, self.quiet = vision, source, quiet
@@ -59,7 +59,7 @@ class CarSeatCoach(Plugin):
     def _run(self):
         self.coach.run()
         summary = next(e for e in reversed(self.agent.bus.history) if e["kind"] == "carseat_summary")
-        self.agent.bus.publish("observation", source=self.name, channel="console", text="Car seat coach finished. " + summary["text"])
+        self.agent.bus.publish("observation", source=self.name, channel=self.cfg["channel"], text="Car seat coach finished. " + summary["text"])
 
     def answer(self, check, answer):
         if self.coach is None:

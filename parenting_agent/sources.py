@@ -1,5 +1,5 @@
-"""Where frames come from: a camera index, a video file played back at real time and looped, or the head
-camera page (the phone today, the Ray-Ban glasses relay later).
+"""Where frames come from: a camera index, a video file played back at real time and looped, the head
+camera page on the phone, or the Ray-Ban Meta glasses through the companion app (parenting_agent/glasses.py).
 
 Every source keeps only the newest frame, so a slow detector skips stale frames instead of falling
 behind. Frames live in memory only, nothing is written to disk.
@@ -219,7 +219,11 @@ class PhoneSource(Latest):
 
 
 def open_source(spec):
-    """'phone' or 'phone:PORT' for the head camera page, anything else for VideoSource."""
+    """'phone' or 'phone:PORT' for the head camera page, 'glasses' or 'glasses:PORT' for the Ray-Ban Meta app
+    (a view on the one shared glasses endpoint), anything else for VideoSource."""
+    if spec.split(":")[0] == "glasses":
+        from .glasses import DEFAULT_PORT, GlassesHub
+        return GlassesHub.shared(int(spec.split(":", 1)[1]) if ":" in spec else DEFAULT_PORT).view()
     if spec.split(":")[0] == "phone":
         port = int(spec.split(":", 1)[1]) if ":" in spec else 8443
         return PhoneSource(port)

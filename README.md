@@ -115,6 +115,14 @@ Theo is not born yet, so the family agent helps get ready: prep lists for the nu
 
 The agent coaches an infant carrier install with the car's seat belt, one step at a time by voice. SAM 3.1 on the Mac checks what the head camera can see: the lap belt in both side guides, the shoulder belt in the rear guide, no twist, the level line, the handle upright. The movement test at the belt path and the harness pinch test are asked and logged. It never says "safe", it lists what passed and what remains and suggests one check by a certified technician. The steps and limits come from the maker's manual (Joie i-Snug 2), the car rules from the Tesla Model 3 manual. An outgrow watch compares Baby Buddy weight and height with the seat's limits. Tested on 3D-rendered clips with planted mistakes, see `docs/car-seat-coach.md` and `results/carseat/`.
 
+## Ray-Ban Meta glasses (issue #57)
+
+`apps/glasses` is an iPhone app on Meta's Wearables Device Access Toolkit. It streams the glasses camera, sends 10 frames a second to the agent on the family's Mac over the home network (`parenting_agent/glasses.py`, pairing token, never a public address), sends what the parent says, and shows and speaks what the agent answers. On Oct 28 the full loop ran in the iOS 27 simulator with DAT's mock Ray-Ban Meta playing the synthetic changing-table clip: "changing time", both hands off, "hand" spoken, "done", change logged. Real glasses are not paired yet. See `apps/glasses/README.md` and `results/glasses/README.md`.
+
+```bash
+python -m parenting_agent --config config/agent.glasses.json   # Muse Spark Open brain, glasses channel, changing table and bath on the glasses
+```
+
 ## Public demo app
 
 A phone-first web chat where anyone can talk to the real agent core about Demo Baby, a simulated baby on the simulated week, with a simulated house. Each visitor gets their own copy, health questions get the kind refusal, and the process carries only the brain key. Local only until Gonza says "OK public". See `docs/demo-app.md`.

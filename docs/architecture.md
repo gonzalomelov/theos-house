@@ -5,7 +5,7 @@ One persistent agent. Every part publishes to and listens on one event bus. Part
 ```mermaid
 flowchart LR
   subgraph House["Inside the house"]
-    cam["Head camera<br/>iPhone page over Tailscale"]
+    cam["Head camera<br/>Ray-Ban Meta app (DAT) or iPhone page<br/>home network only"]
     mic["Camera microphone<br/>PANNs labels #14"]
     reflex["Local reflex<br/>MediaPipe hands"]
     sam["SAM 3.1 open weights<br/>Mac GPU"]
@@ -50,6 +50,7 @@ flowchart LR
 | SAM 3.1 confirm | `parenting_agent/sam3_local.py`, `sam3_worker.py` | Confirms or cancels the hand alarm, locally. Touch versus a 2 to 5 cm hover is not solved yet, see `results/hover/README.md` and `docs/sam3-local.md` |
 | Car seat coach | `parenting_agent/carseat/`, `sam3_prompts_worker.py`, `skills/car-seat.json` | Seat belt install coached by voice, SAM 3.1 checks the belt path, level line and handle, hand checks asked and logged, see `docs/car-seat-coach.md` |
 | Head camera | `parenting_agent/sources.py`, `phone.html` | iPhone page streaming frames to the Mac over Tailscale |
+| Ray-Ban Meta glasses | `apps/glasses`, `parenting_agent/glasses.py` | iPhone app on Meta's Wearables Device Access Toolkit: glasses camera sampled to 10 fps and sent to the Mac on the home network with a pairing token, the agent's replies and "hand" spoken back. Simulator with DAT's mock glasses so far, see `results/glasses/README.md` |
 | Daily rhythm | `parenting_agent/rhythm/` | Next feed, unusual days, night summary, night shifts |
 | Channels | `parenting_agent/channels/` | Messaging adapter interface, Telegram long polling with a family allowlist, router for ear, speaker, Telegram or partner |
 | House | `parenting_agent/house.py`, `house_tools.py` | Home Assistant tools behind the policy: alone, only with a yes, never. Dry until `house.live` is true, every call logged as a `house_call` event |

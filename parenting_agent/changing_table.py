@@ -1,7 +1,11 @@
 """Changing-table skill as a plug-in of the persistent agent.
 
 Add "parenting_agent.changing_table:ChangingTable" to the agent config plugins, with a "changing_table" block:
-    {"skill": "skills/changing-table.json", "source": "phone" | "0" | "loop.mp4", "arm": "start" | "command"}
+    {"skill": "skills/changing-table.json", "source": "phone" | "glasses" | "0" | "loop.mp4", "arm": "start" | "command",
+     "channel": "console" | "glasses"}  # the channel the agent answers on when the change is logged
+Exact phrases ("changing time", "change done", see START_PHRASES and FINISH_PHRASES, or start_phrases and
+finish_phrases in the block) arm and finish it as a reflex, without waiting for the brain to pick the tool, and
+the agent's memory holds whether the watch is on, so a bare "done" is not read as a new change.
 With arm "start" the skill arms when the agent starts. With arm "command" it waits for the agent's
 start_changing_table and finish_changing_table tools, so the parent can say "changing time" and "done".
 
@@ -13,6 +17,7 @@ the agent can answer "when was the last diaper?" from its own memory too.
 import threading
 
 from . import config as config_mod
+from .camera_skill import phrase
 from .agent.plugins import Plugin
 from .agent.tools import Tool, schema
 from .reflex import MediaPipeReflex
@@ -21,13 +26,21 @@ from .sources import PhoneSource, open_source
 from .speaker import Speaker
 
 
+START_PHRASES = ["changing time", "diaper change", "time for a change", "changing her", "changing him"]
+FINISH_PHRASES = ["done", "all done", "change done", "done with the change", "changing done", "finished the change"]
+ARMED_FACT = ("The changing-table watch is on now. When the parent says done, call finish_changing_table, "
+              "never start_changing_table again.")
+IDLE_FACT = "No diaper change in progress, the changing-table watch is off."
+
+
 class ChangingTable(Plugin):
     name = "changing-table"
     kind = "skill"
 
     def __init__(self, agent, config, reflex=None, confirm_detector=None, source=None, quiet=False):
         super().__init__(agent, config)
-        self.cfg = {"skill": "skills/changing-table.json", "source": "phone", "arm": "command", **config.get("changing_table", {})}
+        self.cfg = {"skill": "skills/changing-table.json", "source": "phone", "arm": "command", "channel": "console",
+                    **config.get("changing_table", {})}
         self.skill_cfg = config_mod.load(self.cfg["skill"])
         self._reflex, self._confirm, self._source, self.quiet = reflex, confirm_detector, source, quiet
         self.skill, self.source, self.thread = None, None, None
@@ -36,6 +49,18 @@ class ChangingTable(Plugin):
                              schema({}), self.arm))
         agent.tools.add(Tool("finish_changing_table", "Stop watching the changing table and log the diaper change.",
                              schema({}), self.finish))
+        self.phrases = {**{phrase(p): self.arm for p in self.cfg.get("start_phrases", START_PHRASES)},
+                        **{phrase(p): self.finish for p in self.cfg.get("finish_phrases", FINISH_PHRASES)}}
+        agent.bus.subscribe(self.on_message, ["message"])
+        agent.memory.remember(self.name, IDLE_FACT)
+
+    def on_message(self, event):
+        """The exact phrases arm and finish the watch at once. A finish phrase does nothing while nothing is watched."""
+        action = self.phrases.get(phrase(event.get("text", "")))
+        if action is None or (action == self.finish and self.skill is None):
+            return
+        self.agent.bus.publish("phrase", skill=self.name, action=action.__name__)
+        threading.Thread(target=action, name=f"{self.name}-{action.__name__}", daemon=True).start()
 
     def start(self):
         if self.cfg["arm"] == "start":
@@ -55,6 +80,7 @@ class ChangingTable(Plugin):
             self.skill.arm()
             self.thread = threading.Thread(target=watch, args=(self.skill, self.source), name="changing-table", daemon=True)
             self.thread.start()
+            self.agent.memory.remember(self.name, ARMED_FACT)
             return "watching the changing table"
 
     def finish(self):
@@ -65,9 +91,10 @@ class ChangingTable(Plugin):
             self.thread.join(timeout=5)
             self.skill.close()
             closed = next(e for e in reversed(self.agent.bus.history) if e["kind"] == "skill_closed")
-            self.agent.bus.publish("observation", source=self.name, channel="console",
+            self.agent.bus.publish("observation", source=self.name, channel=self.cfg["channel"],
                                    text=f"A diaper change just finished at the changing table. Hand alerts spoken: {closed['voices']}.")
             self.skill, self.source, self.thread = None, None, None
+            self.agent.memory.remember(self.name, IDLE_FACT)
             return "diaper change logged"
 
     def stop(self):

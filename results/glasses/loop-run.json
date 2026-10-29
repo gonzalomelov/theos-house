@@ -1,0 +1,76 @@
+{
+  "sample_fps_set": 10.0,
+  "watch_s": 26.0,
+  "frames_processed": 206,
+  "processed_fps": 7.98,
+  "reflex_ms_median": 46.2,
+  "armed_s": 25.6,
+  "hands_off_moments_expected": 2,
+  "chimes": 3,
+  "voices": 2,
+  "voices_dropped": 1,
+  "chime_to_voice_s": [
+    1.26,
+    1.25
+  ],
+  "skill_closed": true,
+  "brain_calls": [
+    {
+      "destination": "inference.baseten.co",
+      "seconds": 1.882
+    },
+    {
+      "destination": "inference.baseten.co",
+      "seconds": 1.366
+    },
+    {
+      "destination": "inference.baseten.co",
+      "seconds": 1.578
+    },
+    {
+      "destination": "inference.baseten.co",
+      "seconds": 4.183
+    },
+    {
+      "destination": "inference.baseten.co",
+      "seconds": 3.25
+    }
+  ],
+  "tools": [
+    {
+      "name": "start_changing_table",
+      "status": "ran"
+    },
+    {
+      "name": "finish_changing_table",
+      "status": "ran"
+    }
+  ],
+  "conversation": [
+    {
+      "t": 11.096,
+      "who": "parent",
+      "text": "changing time"
+    },
+    {
+      "t": 14.35,
+      "who": "agent",
+      "text": "Watching \u2014 let me know when you're done."
+    },
+    {
+      "t": 37.141,
+      "who": "parent",
+      "text": "done"
+    },
+    {
+      "t": 42.905,
+      "who": "agent",
+      "text": "Logged \u2014 diaper change at 23:00."
+    },
+    {
+      "t": 46.157,
+      "who": "agent",
+      "text": "Noted \u2014 diaper change finished."
+    }
+  ]
+}
