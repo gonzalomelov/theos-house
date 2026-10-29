@@ -8,7 +8,7 @@ Target: at least 24 of 26 hovers and at most 1 false voice on 16 touches.
 
 ## Result
 
-The blind number first: on a fresh render made after the design was frozen, the lift check caught **15 of 16 hovers, with 2 false alarms on 16 touches**. The test set below was used to fix the method, so its 24 and 23 of 26 are not blind.
+The blind number of this first version (an earlier, smaller blind render, superseded by the 48-moment blind set in `../blind/README.md`): on a fresh render made after the design was frozen, the lift check caught **15 of 16 hovers, with 2 false alarms on 16 touches**. The test set below was used to fix the method, so its 24 and 23 of 26 are not blind.
 
 | Run (real time, M3 Max, SAM 3.1 confirm on) | Hovers spoken within 2.5 s | False voices on touch | Latency to "hand", median and max |
 |---|---|---|---|

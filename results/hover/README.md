@@ -1,6 +1,6 @@
 # Touch versus hover ablation, Oct 28 2026
 
-Update Oct 29: the lift check now catches these hovers: 15 of 16 on a fresh blind render, 2 false alarms on 16 touches, and 24 and 23 of 26 on this test set, which it was tuned against, 1 false voice on 16 touches, see `lift/README.md`.
+Update Oct 29: the lift check now catches these hovers. On a blind set frozen before the design: 22 of 32 hovers with 0 false alarms on 16 touches (`blind/README.md`). Earlier, in `lift/README.md`: a smaller blind render gave 15 of 16 hovers with 2 false alarms on 16 touches, and this test set, which it was tuned against, gave 24 and 23 of 26 with 1 false voice on 16 touches.
 
 Measured on Oct 28 2026, during the Meta hackathon (Oct 26 12 PM ET to Nov 4 9 PM ET), for issues #6 (changing table) and #10 (bath). Numbers in `ablation.json`. It replaces the pre-event number (21 of 21 hovers, Oct 23 and 24, one Kling clip with the forearm far above the baby).
 
