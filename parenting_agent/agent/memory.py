@@ -24,14 +24,16 @@ def now():
     return datetime.datetime.now().astimezone().isoformat(timespec="seconds")
 
 
-def parse_time(value):
-    """An ISO instant as an aware datetime in local time. A time with no offset is local."""
+def parse_time(value, tz=None):
+    """An ISO instant as an aware datetime in the zone given, or in local time. A time with no offset is in that zone."""
     moment = datetime.datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+    if tz is not None:
+        return moment.astimezone(tz) if moment.tzinfo else moment.replace(tzinfo=tz)
     return moment.astimezone() if moment.tzinfo else moment.astimezone(datetime.datetime.now().astimezone().tzinfo)
 
 
-def hhmm(ts):
-    return parse_time(ts).strftime("%H:%M") if ts else None
+def hhmm(ts, tz=None):
+    return parse_time(ts, tz).strftime("%H:%M") if ts else None
 
 
 class Memory:
@@ -123,7 +125,8 @@ class BabyLog:
     def summary(self, since=None):
         """Totals since an instant (default midnight today on the log's own clock, so a family clock and a server on UTC
         agree) and the last of each kind, computed from the log, never guessed."""
-        since = since or self.now().replace(hour=0, minute=0, second=0, microsecond=0).isoformat(timespec="seconds")
+        current = self.now()
+        since = since or current.replace(hour=0, minute=0, second=0, microsecond=0).isoformat(timespec="seconds")
         recent = self.entries(None, None, 200)
         window = [e for e in recent if parse_time(e["ts"]) >= parse_time(since)]
 
@@ -137,22 +140,26 @@ class BabyLog:
         last_feed, last_sleep, last_bath = last("feeding"), last("sleep"), last("bath")
         last_dirty = last("diaper", lambda e: e["details"].get("solid"))
         last_wet = last("diaper", lambda e: e["details"].get("wet"))
+
+        def at(ts):
+            return hhmm(ts, current.tzinfo)
+
         return {
-            "since": since, "now": now(),
+            "since": since, "now": current.isoformat(timespec="seconds"),
             "feedings": {"count": len(feeds), "total_ml": round(sum(float(e["details"].get("amount_ml") or 0) for e in feeds)),
-                         "last_at": hhmm(last_feed["ts"]) if last_feed else None,
+                         "last_at": at(last_feed["ts"]) if last_feed else None,
                          "last_amount_ml": last_feed["details"].get("amount_ml") if last_feed else None,
                          "last_method": last_feed["details"].get("method") if last_feed else None},
             "diapers": {"count": len(diapers), "wet": sum(1 for e in diapers if e["details"].get("wet")),
                         "dirty": sum(1 for e in diapers if e["details"].get("solid")),
-                        "last_dirty_at": hhmm(last_dirty["ts"]) if last_dirty else None,
+                        "last_dirty_at": at(last_dirty["ts"]) if last_dirty else None,
                         "last_dirty_date": last_dirty["ts"][:10] if last_dirty else None,
-                        "last_wet_at": hhmm(last_wet["ts"]) if last_wet else None},
+                        "last_wet_at": at(last_wet["ts"]) if last_wet else None},
             "sleep": {"count": len(sleeps), "total_min": sum(int(e["details"].get("duration_min") or 0) for e in sleeps),
-                      "last_start_at": hhmm(last_sleep["details"].get("start")) if last_sleep and last_sleep["details"].get("start") else None,
-                      "last_end_at": hhmm(last_sleep["ts"]) if last_sleep else None},
+                      "last_start_at": at(last_sleep["details"].get("start")) if last_sleep and last_sleep["details"].get("start") else None,
+                      "last_end_at": at(last_sleep["ts"]) if last_sleep else None},
             "baths": {"count": sum(1 for e in window if e["kind"] == "bath"),
-                      "last_at": hhmm(last_bath["ts"]) if last_bath else None,
+                      "last_at": at(last_bath["ts"]) if last_bath else None,
                       "last_date": last_bath["ts"][:10] if last_bath else None},
         }
 

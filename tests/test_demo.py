@@ -94,10 +94,11 @@ class Isolation(unittest.TestCase):
     def test_questions_are_answered_from_the_demo_log(self):
         app = DemoApp(settings())
         self.addCleanup(app.close)
-        last = app.visitor("v").baby_log.entries("feeding", None, 1)[-1]
+        log = app.visitor("v").baby_log
+        last = log.entries("feeding", None, 1)[-1]
         status, body = app.message("v", False, "When did she last eat?")
         self.assertEqual(status, 200)
-        self.assertIn(datetime.datetime.fromisoformat(last["ts"]).astimezone().strftime("%H:%M"), body["reply"])
+        self.assertIn(datetime.datetime.fromisoformat(last["ts"]).astimezone(log.now().tzinfo).strftime("%H:%M"), body["reply"])
         self.assertIn("next_feed", body["proactive"])
         self.assertIn("Next on duty", body["proactive"]["night_summary"]["text"])
 

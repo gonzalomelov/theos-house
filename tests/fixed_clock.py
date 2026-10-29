@@ -7,14 +7,19 @@ in the standard library, so .astimezone() gives the same instant.
 import datetime
 import unittest.mock
 
-MONTEVIDEO = datetime.timezone(datetime.timedelta(hours=-3))
-# Mid afternoon: two hours back and three hours back are still today, whatever date the tests run on.
-AFTERNOON = datetime.datetime(2026, 10, 28, 15, 0, tzinfo=MONTEVIDEO)
 REAL = datetime.datetime
 
 
-def frozen(moment=AFTERNOON):
+def afternoon():
+    """Mid afternoon in the process's own zone, which is the house agent's zone (deploy/compose.yml sets TZ): two
+    hours back and three hours back are still today, whatever date and zone the tests run on."""
+    return REAL(2026, 10, 28, 15, 0).astimezone()
+
+
+def frozen(moment=None):
     """A patch that makes datetime.datetime.now() return moment (in tz when one is given)."""
+    moment = moment or afternoon()
+
     class Fixed(REAL):
         @classmethod
         def now(cls, tz=None):

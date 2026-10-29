@@ -46,9 +46,13 @@ class FamilyBabyLog(BabyLog):
     def now(self):
         return self.clock()
 
+    def time(self, ts):
+        """An ISO instant in the family's time zone, never the server's, so stored and shown clock times are theirs."""
+        return parse_time(ts, self.now().tzinfo)
+
     def at_or_before_now(self, ts):
         current = self.now()
-        moment = parse_time(ts) if ts else None
+        moment = parse_time(ts, current.tzinfo) if ts else None
         return current if moment is None or moment > current else moment
 
     def _store(self, kind, when, details):
@@ -105,23 +109,23 @@ class FamilyBabyLog(BabyLog):
             raise ValueError(f"no entry with id {entry_id}")
         new = dict(details or {})
         self.check_bounds(before["kind"], {k: v for k, v in new.items() if k in ("amount_ml", "duration_min", "start", "end")}, ts)
-        when = self.at_or_before_now(ts) if ts else parse_time(before["ts"])
+        when = self.at_or_before_now(ts) if ts else self.time(before["ts"])
         d = dict(before["details"])
         if before["kind"] == "feeding":
-            shift = when - parse_time(before["ts"])
+            shift = when - self.time(before["ts"])
             merged = {k: d.get(k) for k in FEEDING_FIELDS if d.get(k) is not None}
             if "method" in new and "type" not in new and d.get("type") == ("breast milk" if "breast" in str(d.get("method")) else "unknown"):
                 merged.pop("type", None)
             merged.update({k: v for k, v in new.items() if k in FEEDING_FIELDS and v is not None})
             if "duration_min" not in new and d.get("start"):
-                merged["start"] = (parse_time(d["start"]) + shift).isoformat(timespec="seconds")
+                merged["start"] = (self.time(d["start"]) + shift).isoformat(timespec="seconds")
                 merged.pop("duration_min", None)
             after = self._feeding(merged, when)
         elif before["kind"] == "diaper":
             wet, solid = bool(new.get("wet", d.get("wet"))), bool(new.get("solid", d.get("solid")))
             after = {"wet": wet or not solid, "solid": solid, "color": new.get("color", d.get("color"))}
         elif before["kind"] == "sleep":
-            start = self.at_or_before_now(new["start"]) if new.get("start") else parse_time(d["start"])
+            start = self.at_or_before_now(new["start"]) if new.get("start") else self.time(d["start"])
             if new.get("end"):
                 when = self.at_or_before_now(new["end"])
             if when <= start:
@@ -152,7 +156,7 @@ class FamilyBabyLog(BabyLog):
         elif action == "end" or (details.get("end") and not details.get("start")):
             if not started:
                 raise ValueError("no sleep was started, tell me when the baby fell asleep")
-            start, end = parse_time(started), when
+            start, end = self.time(started), when
             self.memory.remember("_sleep_started", "")
         else:
             self.memory.remember("_sleep_started", when.isoformat(timespec="seconds"))

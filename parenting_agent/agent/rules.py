@@ -347,8 +347,17 @@ def is_question(text):
     return "?" in text or bool(QUESTION_START.search(text.strip()))
 
 
-def today_at(hour, minute):
-    return datetime.datetime.now().astimezone().replace(hour=hour, minute=minute, second=0, microsecond=0).isoformat(timespec="seconds")
+def latest_span(h1, m1, h2, m2, now=None):
+    """A "from 23:00 to 00:00" span as the latest one already over: it ends at the latest such time not after now and
+    starts before its end, so a span across midnight keeps its start on the day before."""
+    now = now or datetime.datetime.now().astimezone()
+    end = now.replace(hour=h2, minute=m2, second=0, microsecond=0)
+    if end > now:
+        end -= datetime.timedelta(days=1)
+    start = end.replace(hour=h1, minute=m1)
+    if start >= end:
+        start -= datetime.timedelta(days=1)
+    return start.isoformat(timespec="seconds"), end.isoformat(timespec="seconds")
 
 
 def parse_note(text):
@@ -369,7 +378,8 @@ def parse_note(text):
     span = SPAN.search(text)
     if span and ("nap" in low or "slept" in low or "sleep" in low):
         h1, m1, h2, m2 = (int(g) for g in span.groups())
-        return "sleep", {"start": today_at(h1, m1), "end": today_at(h2, m2)}
+        start, end = latest_span(h1, m1, h2, m2)
+        return "sleep", {"start": start, "end": end}
     amount, minutes = ML.search(text), MINUTES.search(text)
     if "breast" in low or amount or "bottle" in low or "fed" in low or "drank" in low:
         details = {}

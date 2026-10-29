@@ -229,7 +229,7 @@ class Isolation(unittest.TestCase):
         app = make(self)
         onboard(app, "111", name="Zelda")
         app.handle("111", "111", "bottle 133 ml with a secret word banana")
-        registry = app.store.path.read_bytes()
+        registry = re.sub(rb"[0-9a-f]{16,}", b"", app.store.path.read_bytes())  # hashes and ids can hold "133" by chance
         for word in (b"Zelda", b"banana", b"133", b"2026-10-12"):
             self.assertNotIn(word, registry)
 
