@@ -1,5 +1,35 @@
 # parenting-agent
 
+## For judges
+
+Built with Muse Spark Open. Every number below is from a run during the event, and each folder's files say how it was measured. Every claim is checked in [results/honesty/claims.md](results/honesty/claims.md).
+
+| Result | Headline | Run |
+|---|---|---|
+| [results/kr222/](results/kr222/) | Changing table on generated clips streamed live: both hands off spoken 15 of 15, max 1.68 s, SAM 3.1 confirming | Oct 27 |
+| [results/hover/](results/hover/README.md) | Touch versus a 2 to 5 cm hover: 0 of 24 rendered hovers caught, by the reflex or by SAM 3.1. Not solved yet | Oct 28 |
+| [results/carseat/](results/carseat/test.md) | Car seat coach on rendered clips: 11 of 12 wrong installs flagged, 1 of 12 false alarms, 4 of 4 unseen clips abstained | Oct 28 |
+| [results/redteam/](results/redteam/README.md) | Red team round 1: 29 regression tests, all fail on the attacked code and pass after the fixes | Oct 28 |
+| [results/glasses/](results/glasses/README.md) | Full glasses loop in the iOS simulator with Meta's mock Ray-Ban Meta. Real glasses not paired yet | Oct 28 |
+| [results/muse/](results/muse/) | Per-call logs of Muse Spark Open as the brain | Oct 28 |
+
+Run the tests with Python 3.11. No keys and no network needed, the live brain tests skip unless `PA_LIVE=1`:
+
+```bash
+python3.11 -m venv .venv && .venv/bin/pip install -r requirements.txt
+.venv/bin/python -m unittest discover -s tests
+```
+
+What runs where:
+
+| Machine | What runs there |
+|---|---|
+| Mac (M3 Max) | SAM 3.1 on the GPU, the MediaPipe hand reflex, PANNs house sounds, the glasses endpoint and the iOS simulator. Frames and audio stay here |
+| Vostro (the family's home server) | The always-on family agent, the public demo at baby.bygmv.com and the families bot, each in a walled-off container, next to Baby Buddy and Home Assistant |
+| Baseten | Muse Spark Open, the brain. It gets conversation text and tool results only |
+
+Licenses: our code is MIT ([LICENSE](LICENSE)). Models and SDKs keep their own terms, see [THIRD_PARTY.md](THIRD_PARTY.md).
+
 **A persistent agent built for new parents. It knows your baby, stays with you all day through your phone, glasses and home speakers, reminds you before you have to remember, and acts in your home while your hands stay on the baby. Video and audio stay in your house. Only the conversation text goes to the brain.**
 
 What runs today: the phone (Telegram and a web page) and the kitchen Echo. The glasses app ran the full loop only in the iOS simulator with Meta's mock Ray-Ban Meta, real glasses are not paired yet (`results/glasses/README.md`). House actions run dry, except reading the house, one Echo announcement and one test shopping list item (`results/channels/check.json`, `results/house-plan/live-check.json`). Every claim in this repo is checked in [results/honesty/claims.md](results/honesty/claims.md).

@@ -24,7 +24,7 @@ from parenting_agent.demo.records import Records, visitor_id
 from parenting_agent.demo import server as server_mod
 from parenting_agent.demo.server import serve
 
-SECRET = "test-secret-0123456789abcdef0123456789abcdef"
+SECRET = "test-fixture-not-a-real-secret-0000000000"
 DEMO_DIR = Path(__file__).resolve().parent.parent / "parenting_agent" / "demo"
 
 
