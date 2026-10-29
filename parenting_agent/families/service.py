@@ -134,11 +134,16 @@ class FamilyAgent(Agent):
         service's bookkeeping."""
         facts = {k: v["value"] for k, v in self.memory.facts().items() if not k.startswith("_")}
         base = SYSTEM.format(today=self.now().date().isoformat(), facts=json.dumps(facts or "none yet", ensure_ascii=False))
-        lang = self.memory.facts().get("_lang", {}).get("value") or "en"
+        lang = self.lang()
         return (base + FAMILY_NOTE.format(name=facts.get("baby_name", "the baby"), born=facts.get("birth_date", "recently"))
                 + LANGUAGE_NOTE.get(lang, LANGUAGE_NOTE["en"]))
 
+    family_lang = None
+
     def lang(self, request=None):
+        """The language of this turn, from the family: the message's own language unless a parent set one."""
+        if self.family_lang is not None:
+            return self.family_lang()
         lang = self.memory.facts().get("_lang", {}).get("value") or "en"
         return lang if lang in texts.LANGS else "en"
 
@@ -158,7 +163,7 @@ class FamilyAgent(Agent):
         return rules.SAFE_SLEEP_FACT[self.lang()]
 
     def saved_before_fail(self, entries):
-        lang = self.memory.facts().get("_lang", {}).get("value") or "en"
+        lang = self.lang()
         words = []
         for entry in entries:
             kind = str(entry.get("kind") or "note").upper()
@@ -263,6 +268,8 @@ class Family:
         self.service = service
         self.agent = FamilyAgent(self.bus, self.memory, self.log, tools, FamilyBrain(service, family_id, lambda: self.lang),
                                  max_steps=service.s["max_steps"], history=service.s["history"])
+        self.agent.family_lang = lambda: self.lang
+        self.turn_lang = None
         self.replies = collections.deque()
         self.bus.subscribe(self.replies.append, ["reply"])
 
@@ -271,7 +278,12 @@ class Family:
 
     @property
     def lang(self):
+        """The family's language. While a parent's message is handled it is that message's language, unless a parent
+        chose one with /idioma or /language: an English voice note in a family that started in Spanish is answered in
+        English. Pushes and summaries use the family's language."""
         lang = self.fact("_lang", "en")
+        if self.turn_lang and not self.fact("_lang_chosen"):
+            lang = self.turn_lang
         return lang if lang in texts.LANGS else "en"
 
     def t(self, key, **values):
@@ -285,6 +297,13 @@ class Family:
         """Red flags go straight to the emergency line and health advice to the refusal, both inside the agent with no
         brain call. A dose given or a milestone is logged as a note, with only the advice part refused. "Why is she
         crying?" gets the likely reason from the log, with no brain call."""
+        self.turn_lang = rules.message_lang(text)
+        try:
+            return self.answer(text)
+        finally:
+            self.turn_lang = None
+
+    def answer(self, text):
         self.replies.clear()
         self.memory.forget_messages_before(self.log.now() - datetime.timedelta(days=CONVERSATION_DAYS))
         if rules.is_cry_question(text) and not texts.is_medical(text) and not rules.is_log_request(text):
@@ -491,6 +510,7 @@ class Families:
             # /idioma alone means Spanish, /language alone means English, or name one: /idioma en, /language es.
             wanted = texts.LANGUAGE_ARGS.get(arg.lower().split(" ")[0] if arg else "")
             f.memory.remember("_lang", wanted or ("es" if typed == "idioma" else "en"))
+            f.memory.remember("_lang_chosen", "1")
             note = f.t("LANG_SET")
             return note if ready else note + "\n\n" + self.onboard_prompt(f, parent)
         if not ready:

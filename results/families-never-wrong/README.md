@@ -47,7 +47,16 @@ The miss in `main-1`, step 31, "se desperto a las 5" while a sleep from 03:20 wa
 
 Only one run was done on the fix. Three more runs at about 0.55 USD each would have taken tonight's spend past the 3 USD cap (1.89 USD before the fix, 2.43 USD after `fix-1`). The 3 runs on main with no fix had 1 wrong state, and the one run with the fix had 0.
 
+## A first entry is never a correction, and the reply follows the message's language (Oct 29)
+
+On the live families bot at `845463d` the voice agent saw two bugs. A brand-new test family's first bottle note was answered "Corregí ... 15:00 → 02:15", a correction on a log with no earlier entry. An English voice note was answered in Spanish.
+
+- First entry: the brain logged the bottle at the current time (15:00) and then edited that same new entry to the time the parent said, and the edit was reported as a correction. Now an edit or delete of an entry logged by the same message is part of logging it, and the reply says what the log holds, with the final time and no "→". A message with correction words ("perdon, eran 90") on an empty log is logged, never held as a fix. It did not happen again in 6 live tries (3 messages, before and after the fix), so the tests script the brain (`tests/test_log_edit.py`, `FirstEntry`, they fail without the fix).
+- Language: a family kept the language it started in for every reply. Now each reply is in the language of the parent's message, and a message whose words say neither ("120") gets the family's language. A language chosen with /idioma or /language wins over the message. Pushes and summaries keep the family's language. Live before the fix (`scripts/families_first_entry_live.py`, Muse): "Gave her a 60 ml bottle at 2:15" in a family that started in Spanish was answered "Anoté la mamadera de 60 ml de las 14:15." After the fix it was answered "Logged the 14:15 bottle of 60 ml." Tests: `ReplyLanguage`. Two old tests changed with the rule: an English red flag in a Spanish family now gets the English emergency line, and the Spanish-mode leak test sends a Spanish fever message instead of "she has a fever".
+
+On this code the 29-check script passed 29 of 29 with 0 fallbacks (0.246 USD, `results/families/three-day-first-entry.md`). The never-wrong eval was not rerun on it, because one run would have reached the 3 USD cap for tonight and three would have passed it. Spend tonight: 2.68 USD in eval runs plus about 0.03 USD in live checks.
+
 ## What did not get tested
 
-- Three Muse-only runs in a row on the wake-up fix (one was run, see above).
+- Three Muse-only never-wrong runs in a row on the wake-up fix (one was run) and on the first-entry and language fix (none).
 - No real parent, no voice notes, no Telegram in these runs.

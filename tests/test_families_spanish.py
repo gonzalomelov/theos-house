@@ -112,7 +112,7 @@ class NoEnglishLeak(unittest.TestCase):
         say("/resumen")  # nothing logged yet
         say("/proxima")  # fewer than two feeds
         for message in ("/privacidad", "/ayuda", "/start", "/algo", "/avisos off", "/avisos on", "/invitar", "x" * 501,
-                        "¿tiene fiebre, le doy paracetamol?", "she has a fever", "¿es normal que llore tanto?"):
+                        "¿tiene fiebre, le doy paracetamol?", "le subio la fiebre", "¿es normal que llore tanto?"):
             say(message)
         say("hola")
         say("hola")  # the brain is over the family cap from here, the free rules answer in Spanish

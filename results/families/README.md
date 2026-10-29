@@ -9,6 +9,8 @@
 
 Rerun on main at `5af5300` (after #78 to #86, Oct 29): **29 of 29**, 0 bookkeeping talk, 0 tuteo, 0.227 USD (`three-day-main.md`). It ran in parallel with three never-wrong runs, so 5 brain turns fell back to Claude Haiku after Baseten rate limits (HTTP 429).
 
+After the first-entry and language fix (#77, Oct 29): **29 of 29**, 0 fallbacks, 0.246 USD (`three-day-first-entry.md`).
+
 Muse costs about 10 times more per run and passed every check in all four runs. The Haiku misses were a missing tool call ("teta 10 min" once, "borrá la última" once).
 
 Tuteo is counted with a word list (`tienes`, `puedes`, `dime` and 16 more) on every reply and every message the bot sent first.

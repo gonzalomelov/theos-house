@@ -301,6 +301,17 @@ def change_text(result, lang):
     return words["EDITED"].format(entry=describe(before, lang, with_ml=False), changes=what)
 
 
+def own_entry(result, stored):
+    """The entry in stored (logged by this message) that an edit or delete result touched, or None."""
+    if not isinstance(result, dict):
+        return None
+    before = result.get("before") or result.get("deleted") or {}
+    for entry in stored:
+        if isinstance(entry, dict) and entry.get("id") is not None and entry.get("id") == before.get("id"):
+            return entry
+    return None
+
+
 def changes_text(changed, lang):
     """The replies for every edit and delete that ran. An edit that changed nothing is left out when another one did:
     a brain that also touches the wrong entry ("perdón, eran 100 no 120" editing a diaper too) never adds noise."""
@@ -691,6 +702,12 @@ class Agent:
         except (TypeError, ValueError, KeyError, AttributeError):
             return None
 
+    def log_has_entries(self):
+        try:
+            return bool(self.baby_log.entries(limit=1))
+        except Exception:  # noqa: BLE001 a log that cannot be read keeps the correction path, as before
+            return True
+
     def delete_held(self, request, arguments):
         """Why a delete must not run, or None. A delete runs when the parent asks for one ("borrá la última"), or for a
         "sent twice" only when the log really holds the entry twice. Anything else keeps the entry: a feed that happened
@@ -777,7 +794,9 @@ class Agent:
         read, next_text, held_delete = set(), None, None
         asked = 0
         wanted = rules.log_kind(request) if request is not None else None
-        editing = request is not None and rules.is_edit_request(request)
+        # A first entry is never a correction: with nothing in the log there is nothing to correct.
+        editing = request is not None and rules.is_edit_request(request) and self.log_has_entries()
+        self_fixed = False
         # "¿cuánto tomó hoy?" asks about the log. A brain that logs a feed for it (Muse did once, Oct 28) adds a bottle
         # that never happened. A question with no number in it that reports nothing is never logged.
         asking = (request is not None and bool(rules.QUESTION_START.search(request.strip().lstrip("¿¡ ")))
@@ -810,7 +829,7 @@ class Agent:
             if not reply.tool_calls:
                 # "Corregido" with no edit that ran is never sent. On Oct 29 Muse logged a new 70 ml bottle for "nono eran
                 # 70" and said "corregido a 70 ml": what this turn logged is taken back and the brain is asked to edit.
-                claim = request is not None and not changed and rules.claims_change(reply.text)
+                claim = request is not None and not changed and not self_fixed and rules.claims_change(reply.text)
                 if claim and not editing and can_edit and not edit_checked:
                     self.bus.publish("guard", status="claimed_change", logged=len(stored))
                     for entry in stored:
@@ -1013,7 +1032,18 @@ class Agent:
                     if self.health_turn is not None and isinstance(result, dict):
                         self.health_turn["entries"].append(result)
                 if call["name"] in EDIT_TOOLS and status == "ran":
-                    changed.append(result)
+                    own = own_entry(result, stored)
+                    if own is None:
+                        changed.append(result)
+                    else:
+                        # An edit of an entry this same message logged is part of logging it, not a correction:
+                        # on Oct 29 a new family's first bottle got "Corregí ... 15:00 → 02:15". The reply says
+                        # what the log now holds.
+                        self_fixed = True
+                        if "deleted" in result:
+                            stored.remove(own)
+                        else:
+                            stored[stored.index(own)] = result["after"]
                 if status == "ask_parent":
                     self.pending = [c for c in self.pending if c["name"] != call["name"]]
                     self.wait_for_yes(call, channel)

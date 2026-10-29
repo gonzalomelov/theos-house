@@ -553,6 +553,18 @@ def looks_spanish(text):
     return note_to_english(text) != text or bool(SPANISH.search(text))
 
 
+ENGLISH = re.compile(r"\b(the|she|he|his|her|him|is|was|did|gave|had|just|when|how|what|why|it|that|bottle|diaper|"
+                     r"nappy|feed|fed|nursed|breast|woke|asleep|slept|nap|crying|poop|pee|wet|dirty|bath|left|right|"
+                     r"at|ago|hello|hi|thanks|please|delete|fix|sorry)\b", re.I)
+
+
+def message_lang(text):
+    """The language of one parent message, "es" or "en", or None when its words say neither ("120", "ok")."""
+    if looks_spanish(text):
+        return "es"
+    return "en" if ENGLISH.search(text or "") else None
+
+
 def answer(question, summary):
     """A short answer to a parent's question from baby_summary, or None when the rules do not know the question."""
     q = question.lower()

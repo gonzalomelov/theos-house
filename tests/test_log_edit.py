@@ -300,7 +300,8 @@ class Safety(Base):
                     brain = CountingBrain()
                     app, f, clock = self.family(brain, lang=code)
                     reply = self.send(app, clock, "08:00", text, code)
-                    self.assertEqual(reply, (ES if lang == "es" else EN)["EMERGENCY"])
+                    # The emergency line is in the language of the message, whatever the family's language.
+                    self.assertEqual(reply, (ES if (rules.message_lang(text) or lang) == "es" else EN)["EMERGENCY"])
                     self.assertIn("911", reply)
                     self.assertEqual(brain.calls, 0)
         self.assertIn("local emergency number", EN["EMERGENCY"])
@@ -393,3 +394,57 @@ class WakeUp(Base):
         self.assertTrue(rules.says_woke_only("she woke up at 5"))
         self.assertFalse(rules.says_woke_only("se desperto y se volvio a dormir"))
         self.assertFalse(rules.says_woke_only("se durmio recien"))
+
+
+class FirstEntry(Base):
+    def test_a_new_familys_first_bottle_is_never_a_correction(self):
+        # Oct 29 live families bot: a new test family's first bottle note got "Corregí ... 15:00 → 02:15". The brain
+        # logged the bottle at the current time and then edited that same new entry to the time the parent said.
+        for lang, text, said in ((ES_UY, "le di una mamadera de 60 a las 2:15", "Corregí"),
+                                 ("en-US", "gave her a 60 ml bottle at 2:15", "Fixed")):
+            with self.subTest(lang=lang):
+                brain = Recording([[log("feeding", {"amount_ml": 60, "method": "bottle"})],
+                                   [{"name": "edit_baby_event", "arguments": {"kind": "feeding", "last": True, "details": {}, "ts": "2026-10-28T02:15:00-03:00"}}],
+                                   "Corregido, quedó a las 02:15."])
+                app, f, clock = self.family(brain, lang=lang)
+                reply = self.send(app, clock, "15:00", text, lang=lang)
+                self.assertNotIn(said, reply)
+                self.assertNotIn("→", reply)
+                self.assertIn("02:15", reply)
+                self.assertEqual([(e["ts"][11:16], e["details"]["amount_ml"]) for e in f.log.entries("feeding")],
+                                 [("02:15", 60.0)])
+
+    def test_a_correction_word_on_an_empty_log_logs_the_entry(self):
+        # "perdón" or "eran" in a first message cannot correct anything: the entry is logged, never held as a fix.
+        brain = Recording([[log("feeding", {"amount_ml": 90, "method": "bottle"})], "Anoté la mamadera de 90 ml."])
+        app, f, clock = self.family(brain)
+        reply = self.send(app, clock, "03:00", "perdon, eran 90 de mamadera")
+        self.assertEqual(self.ml(f), [90.0])
+        self.assertNotIn("Corregí", reply)
+
+
+class ReplyLanguage(Base):
+    def test_an_english_message_in_a_spanish_family_gets_english(self):
+        # Oct 29 live: an English voice note in a family that started in Spanish was answered in Spanish.
+        brain = Recording([[log("feeding", {"amount_ml": 60, "method": "bottle"})], "Logged."],
+                          [[log("feeding", {"amount_ml": 90, "method": "bottle"})], "Anoté."])
+        app, f, clock = self.family(brain)
+        english = self.send(app, clock, "15:00", "gave her a 60 ml bottle")
+        self.assertIn("Logged", english)
+        self.assertNotIn("Anoté", english)
+        spanish = self.send(app, clock, "16:00", "le di una mamadera de 90")
+        self.assertIn("Anoté", spanish)
+        self.assertEqual(f.lang, "es")  # pushes and summaries keep the family's language
+
+    def test_a_language_chosen_with_idioma_wins_over_the_message(self):
+        brain = Recording([[log("feeding", {"amount_ml": 60, "method": "bottle"})], "Logged."])
+        app, f, clock = self.family(brain)
+        app.handle(7, 7, "/idioma es", "private", ES_UY)
+        reply = self.send(app, clock, "15:00", "gave her a 60 ml bottle")
+        self.assertIn("Anoté", reply)
+
+    def test_message_lang(self):
+        self.assertEqual(rules.message_lang("Gave her a 60 ml bottle at 2:15"), "en")
+        self.assertEqual(rules.message_lang("le di una mamadera de 60"), "es")
+        self.assertEqual(rules.message_lang("teta izq 15 min"), "es")
+        self.assertIsNone(rules.message_lang("120"))
