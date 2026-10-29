@@ -132,6 +132,14 @@ The vacuum pauses and goes home when a nap starts and never starts when the run 
 python scripts/house_plan_check.py   # live and safe: reads the vacuum, dry runs pause and home, one test list item added and removed
 ```
 
+## The day engine: the whole house around the baby's day (issues #9 and #29)
+
+Every useful device in the house has a job: 17 devices, 38 device to job pairs, from one read-only read of all 389 Home Assistant entities on Oct 29 (`results/house-jobs/README.md`, with a list of cheap missing devices). `parenting_agent/day_engine.py` runs six routines from the log and the house state, all in dry run: nap mode for the whole house (vacuum docked and resumed after, TVs muted, Echo on do not disturb, the door as a silent push, white noise), a floor clean before tummy time that waits for Gonza's yes and never reaches a predicted nap, a morning brief on Telegram and the Echo, supplies onto the shopping list, and quick Thermomix recipes after a hard night. A simulated day with the real house as its start is in `results/house-day/README.md`.
+
+```bash
+python scripts/house_day_sim.py   # the simulated day, dry run, add --read-house to read the real house first (read only)
+```
+
 ## Telegram and channel picking (issues #3 and #8)
 
 The agent hears and speaks on Telegram through @home_agent_example_bot, with long polling over plain HTTPS, so nothing is exposed. Only the family's chat ids (`TELEGRAM_CHAT_ID` in the env file, comma separated) are accepted. Other senders are ignored and logged as `channel_ignored` with their chat id only. Messages reach the same agent and the same memory as every other channel.

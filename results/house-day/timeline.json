@@ -1,0 +1,755 @@
+{
+ "stats": {
+  "vacuum_cleaning_while_asleep_min": 0,
+  "tv_unmuted_while_asleep_min": 0,
+  "white_noise_max_db": 48.1,
+  "echo_dnd_off_while_asleep_min": 0,
+  "live_writes": 0,
+  "dry_writes": 31,
+  "cap_db": 50.0,
+  "sleeps_in_day": 11
+ },
+ "rows": [
+  {
+   "at": "2026-10-24T06:28:00-03:00",
+   "routine": "nap_mode",
+   "what": "on",
+   "detail": "sleep started, the house goes quiet"
+  },
+  {
+   "at": "2026-10-24T06:28:00-03:00",
+   "routine": "nap_mode",
+   "what": "dry run switch.turn_on switch.gonza_s_echo_dot_do_not_disturb",
+   "detail": {
+    "data": {},
+    "reason": "sleep started at 06:28"
+   }
+  },
+  {
+   "at": "2026-10-24T06:28:00-03:00",
+   "routine": "nap_mode",
+   "what": "white noise on (simulated device)",
+   "detail": {
+    "crib_db": 48.1,
+    "reason": "sleep started at 06:28"
+   }
+  },
+  {
+   "at": "2026-10-24T07:30:00-03:00",
+   "routine": "morning_brief",
+   "what": "telegram",
+   "detail": {}
+  },
+  {
+   "at": "2026-10-24T07:30:00-03:00",
+   "routine": "morning_brief",
+   "what": "message to Gonza (telegram)",
+   "detail": {
+    "text": "Good morning. Night summary for Fri 23: 4 feeds at 22:04, 00:51, 03:21, 05:47, longest sleep 2.1 h. Wake-ups: Parent A 2, Parent B 2. Next on duty: Parent A. Next feed expected around 08:15. Weather: sunny, 15 to 20 C, 0.8 mm of rain. Kitchen 18 C. Running low: Diapers (about 2.3 days left), Formula (about 2.6 days left). 2 appointments today: 11:30 Newborn photos at home, 16:00 Grandma visits."
+   }
+  },
+  {
+   "at": "2026-10-24T07:30:00-03:00",
+   "routine": "parents_meals",
+   "what": "suggest",
+   "detail": {
+    "wakeups": 4,
+    "recipes": [
+     "Cogumelos salteados",
+     "Langostinos salteados al oporto"
+    ],
+    "window": {
+     "start": "2026-10-24T09:08:00-03:00",
+     "end": "2026-10-24T10:45:00-03:00"
+    }
+   }
+  },
+  {
+   "at": "2026-10-24T07:30:00-03:00",
+   "routine": "parents_meals",
+   "what": "message to Gonza (telegram)",
+   "detail": {
+    "text": "Hard night: 4 wake-ups, longest sleep 2.1 h. Next quiet window: his nap around 09:08 to 10:45. Quick Thermomix options from Cookidoo: Cogumelos salteados (20 min), Langostinos salteados al oporto (25 min). Already cooked in the freezer: Cooked Pascualina, Cooked Torta de Pollo. Nothing is written to Cookidoo, the Thermomix waits for your press of the dial."
+   }
+  },
+  {
+   "at": "2026-10-24T08:05:00-03:00",
+   "routine": "floor_clean",
+   "what": "hold",
+   "detail": {
+    "floor_at": "2026-10-24T08:40:00-03:00",
+    "why": "he is asleep"
+   }
+  },
+  {
+   "at": "2026-10-24T08:11:00-03:00",
+   "routine": "nap_mode",
+   "what": "off",
+   "detail": "sleep ended, the house goes back"
+  },
+  {
+   "at": "2026-10-24T08:11:00-03:00",
+   "routine": "nap_mode",
+   "what": "dry run switch.turn_off switch.gonza_s_echo_dot_do_not_disturb",
+   "detail": {
+    "data": {},
+    "reason": "he woke up, sleep since 06:28"
+   }
+  },
+  {
+   "at": "2026-10-24T08:11:00-03:00",
+   "routine": "nap_mode",
+   "what": "white noise off (simulated device)",
+   "detail": {
+    "crib_db": 0.0,
+    "reason": "he woke up, sleep since 06:28"
+   }
+  },
+  {
+   "at": "2026-10-24T08:15:00-03:00",
+   "routine": "house",
+   "what": "Someone turns on the living room TV",
+   "detail": null
+  },
+  {
+   "at": "2026-10-24T08:20:00-03:00",
+   "routine": "house",
+   "what": "Someone moves in the kitchen (Echo motion)",
+   "detail": null
+  },
+  {
+   "at": "2026-10-24T08:20:00-03:00",
+   "routine": "morning_brief",
+   "what": "echo",
+   "detail": {}
+  },
+  {
+   "at": "2026-10-24T08:20:00-03:00",
+   "routine": "morning_brief",
+   "what": "dry run notify.send_message notify.gonza_s_echo_dot_announce",
+   "detail": {
+    "data": {
+     "message": "Good morning. Last night he woke 4 times, longest sleep 2.1 hours. Today sunny, up to 20 degrees. 2 appointments today, the first at 11:30. Running low: Diapers, Formula."
+    },
+    "reason": "morning brief, someone is in the kitchen"
+   }
+  },
+  {
+   "at": "2026-10-24T08:45:00-03:00",
+   "routine": "house",
+   "what": "Someone starts the vacuum by hand in the Xiaomi app",
+   "detail": null
+  },
+  {
+   "at": "2026-10-24T09:03:00-03:00",
+   "routine": "nap_mode",
+   "what": "on",
+   "detail": "nap started, the house goes quiet"
+  },
+  {
+   "at": "2026-10-24T09:03:00-03:00",
+   "routine": "nap_mode",
+   "what": "dry run vacuum.pause vacuum.xiaomi_ov71gl_0681_robot_cleaner",
+   "detail": {
+    "data": {},
+    "reason": "nap started at 09:03"
+   }
+  },
+  {
+   "at": "2026-10-24T09:03:00-03:00",
+   "routine": "nap_mode",
+   "what": "dry run vacuum.return_to_base vacuum.xiaomi_ov71gl_0681_robot_cleaner",
+   "detail": {
+    "data": {},
+    "reason": "nap started at 09:03"
+   }
+  },
+  {
+   "at": "2026-10-24T09:03:00-03:00",
+   "routine": "nap_mode",
+   "what": "dry run media_player.volume_mute media_player.lg_webos_tv_oled55b3psa",
+   "detail": {
+    "data": {
+     "is_volume_muted": true
+    },
+    "reason": "nap started at 09:03"
+   }
+  },
+  {
+   "at": "2026-10-24T09:03:00-03:00",
+   "routine": "nap_mode",
+   "what": "dry run switch.turn_on switch.gonza_s_echo_dot_do_not_disturb",
+   "detail": {
+    "data": {},
+    "reason": "nap started at 09:03"
+   }
+  },
+  {
+   "at": "2026-10-24T09:03:00-03:00",
+   "routine": "nap_mode",
+   "what": "white noise on (simulated device)",
+   "detail": {
+    "crib_db": 48.1,
+    "reason": "nap started at 09:03"
+   }
+  },
+  {
+   "at": "2026-10-24T10:20:00-03:00",
+   "routine": "house",
+   "what": "The doorbell rings and the outdoor camera sees a person",
+   "detail": null
+  },
+  {
+   "at": "2026-10-24T10:20:00-03:00",
+   "routine": "door",
+   "what": "silent push",
+   "detail": {
+    "source": "doorbell"
+   }
+  },
+  {
+   "at": "2026-10-24T10:20:00-03:00",
+   "routine": "door",
+   "what": "dry run notify.mobile_app_gonzas_iphone",
+   "detail": {
+    "data": {
+     "title": "Door",
+     "message": "The doorbell rang at 10:20. He is asleep, the Echo stays quiet.",
+     "data": {
+      "push": {
+       "interruption-level": "passive"
+      }
+     }
+    },
+    "reason": "the doorbell rang during the nap"
+   }
+  },
+  {
+   "at": "2026-10-24T10:20:00-03:00",
+   "routine": "door",
+   "what": "same visit",
+   "detail": {
+    "source": "person_detection"
+   }
+  },
+  {
+   "at": "2026-10-24T11:11:00-03:00",
+   "routine": "nap_mode",
+   "what": "off",
+   "detail": "nap ended, the house goes back"
+  },
+  {
+   "at": "2026-10-24T11:11:00-03:00",
+   "routine": "nap_mode",
+   "what": "dry run media_player.volume_mute media_player.lg_webos_tv_oled55b3psa",
+   "detail": {
+    "data": {
+     "is_volume_muted": false
+    },
+    "reason": "he woke up, nap since 09:03"
+   }
+  },
+  {
+   "at": "2026-10-24T11:11:00-03:00",
+   "routine": "nap_mode",
+   "what": "dry run switch.turn_off switch.gonza_s_echo_dot_do_not_disturb",
+   "detail": {
+    "data": {},
+    "reason": "he woke up, nap since 09:03"
+   }
+  },
+  {
+   "at": "2026-10-24T11:11:00-03:00",
+   "routine": "nap_mode",
+   "what": "white noise off (simulated device)",
+   "detail": {
+    "crib_db": 0.0,
+    "reason": "he woke up, nap since 09:03"
+   }
+  },
+  {
+   "at": "2026-10-24T11:11:00-03:00",
+   "routine": "nap_mode",
+   "what": "dry run vacuum.start vacuum.xiaomi_ov71gl_0681_robot_cleaner",
+   "detail": {
+    "data": {},
+    "reason": "resume the run the nap paused, 13 min left, done before the next predicted sleep"
+   }
+  },
+  {
+   "at": "2026-10-24T11:57:00-03:00",
+   "routine": "nap_mode",
+   "what": "on",
+   "detail": "nap started, the house goes quiet"
+  },
+  {
+   "at": "2026-10-24T11:57:00-03:00",
+   "routine": "nap_mode",
+   "what": "dry run media_player.volume_mute media_player.lg_webos_tv_oled55b3psa",
+   "detail": {
+    "data": {
+     "is_volume_muted": true
+    },
+    "reason": "nap started at 11:57"
+   }
+  },
+  {
+   "at": "2026-10-24T11:57:00-03:00",
+   "routine": "nap_mode",
+   "what": "dry run switch.turn_on switch.gonza_s_echo_dot_do_not_disturb",
+   "detail": {
+    "data": {},
+    "reason": "nap started at 11:57"
+   }
+  },
+  {
+   "at": "2026-10-24T11:57:00-03:00",
+   "routine": "nap_mode",
+   "what": "white noise on (simulated device)",
+   "detail": {
+    "crib_db": 48.1,
+    "reason": "nap started at 11:57"
+   }
+  },
+  {
+   "at": "2026-10-24T12:00:00-03:00",
+   "routine": "house",
+   "what": "Someone turns off the living room TV",
+   "detail": null
+  },
+  {
+   "at": "2026-10-24T12:40:00-03:00",
+   "routine": "house",
+   "what": "Someone turns on the bedroom TV mid-nap",
+   "detail": null
+  },
+  {
+   "at": "2026-10-24T12:40:00-03:00",
+   "routine": "nap_mode",
+   "what": "dry run media_player.volume_mute media_player.43_crystal_uhd_un43u8000fgxpr",
+   "detail": {
+    "data": {
+     "is_volume_muted": true
+    },
+    "reason": "bedroom TV turned on while he sleeps"
+   }
+  },
+  {
+   "at": "2026-10-24T13:54:00-03:00",
+   "routine": "nap_mode",
+   "what": "off",
+   "detail": "nap ended, the house goes back"
+  },
+  {
+   "at": "2026-10-24T13:54:00-03:00",
+   "routine": "nap_mode",
+   "what": "dry run media_player.volume_mute media_player.43_crystal_uhd_un43u8000fgxpr",
+   "detail": {
+    "data": {
+     "is_volume_muted": false
+    },
+    "reason": "he woke up, nap since 11:57"
+   }
+  },
+  {
+   "at": "2026-10-24T13:54:00-03:00",
+   "routine": "nap_mode",
+   "what": "dry run switch.turn_off switch.gonza_s_echo_dot_do_not_disturb",
+   "detail": {
+    "data": {},
+    "reason": "he woke up, nap since 11:57"
+   }
+  },
+  {
+   "at": "2026-10-24T13:54:00-03:00",
+   "routine": "nap_mode",
+   "what": "white noise off (simulated device)",
+   "detail": {
+    "crib_db": 0.0,
+    "reason": "he woke up, nap since 11:57"
+   }
+  },
+  {
+   "at": "2026-10-24T13:56:00-03:00",
+   "routine": "floor_clean",
+   "what": "ask",
+   "detail": {
+    "floor_at": "2026-10-24T14:35:00-03:00"
+   }
+  },
+  {
+   "at": "2026-10-24T13:56:00-03:00",
+   "routine": "floor_clean",
+   "what": "message to Gonza (telegram)",
+   "detail": {
+    "text": "Tummy time is usually around 14:35. He is awake in the bedroom, I can run the vacuum now: 31 min, done by 14:27, before the next predicted nap. Reply yes to start it."
+   }
+  },
+  {
+   "at": "2026-10-24T13:58:00-03:00",
+   "routine": "floor_clean",
+   "what": "Gonza replies yes",
+   "detail": null
+  },
+  {
+   "at": "2026-10-24T13:58:00-03:00",
+   "routine": "floor_clean",
+   "what": "start",
+   "detail": {
+    "by": "Gonza's yes",
+    "floor_at": "2026-10-24T14:35:00-03:00"
+   }
+  },
+  {
+   "at": "2026-10-24T13:58:00-03:00",
+   "routine": "floor_clean",
+   "what": "dry run vacuum.start vacuum.xiaomi_ov71gl_0681_robot_cleaner",
+   "detail": {
+    "data": {},
+    "reason": "floor clean before tummy time around 14:35, Gonza's yes"
+   }
+  },
+  {
+   "at": "2026-10-24T14:03:00-03:00",
+   "routine": "supplies",
+   "what": "low",
+   "detail": {
+    "item": "formula",
+    "left": 170,
+    "per_day": 135.2,
+    "computed_from": [
+     "note@2026-10-22T07:01:00-03:00"
+    ]
+   }
+  },
+  {
+   "at": "2026-10-24T14:03:00-03:00",
+   "routine": "supplies",
+   "what": "dry run todo.add_item todo.shopping_list",
+   "detail": {
+    "data": {
+     "item": "Formula",
+     "description": "About 170 ml left, 135.2 ml a day, runs out around Sun 20:13"
+    },
+    "reason": "formula running low"
+   }
+  },
+  {
+   "at": "2026-10-24T14:03:00-03:00",
+   "routine": "supplies",
+   "what": "message to Gonza (telegram)",
+   "detail": {
+    "text": "Formula added to the shopping list. About 170 ml left, 135.2 ml a day, runs out around Sun 20:13."
+   }
+  },
+  {
+   "at": "2026-10-24T14:30:00-03:00",
+   "routine": "house",
+   "what": "Someone turns off the bedroom TV",
+   "detail": null
+  },
+  {
+   "at": "2026-10-24T14:51:00-03:00",
+   "routine": "nap_mode",
+   "what": "on",
+   "detail": "nap started, the house goes quiet"
+  },
+  {
+   "at": "2026-10-24T14:51:00-03:00",
+   "routine": "nap_mode",
+   "what": "dry run switch.turn_on switch.gonza_s_echo_dot_do_not_disturb",
+   "detail": {
+    "data": {},
+    "reason": "nap started at 14:51"
+   }
+  },
+  {
+   "at": "2026-10-24T14:51:00-03:00",
+   "routine": "nap_mode",
+   "what": "white noise on (simulated device)",
+   "detail": {
+    "crib_db": 48.1,
+    "reason": "nap started at 14:51"
+   }
+  },
+  {
+   "at": "2026-10-24T16:28:00-03:00",
+   "routine": "nap_mode",
+   "what": "off",
+   "detail": "nap ended, the house goes back"
+  },
+  {
+   "at": "2026-10-24T16:28:00-03:00",
+   "routine": "nap_mode",
+   "what": "dry run switch.turn_off switch.gonza_s_echo_dot_do_not_disturb",
+   "detail": {
+    "data": {},
+    "reason": "he woke up, nap since 14:51"
+   }
+  },
+  {
+   "at": "2026-10-24T16:28:00-03:00",
+   "routine": "nap_mode",
+   "what": "white noise off (simulated device)",
+   "detail": {
+    "crib_db": 0.0,
+    "reason": "he woke up, nap since 14:51"
+   }
+  },
+  {
+   "at": "2026-10-24T16:35:00-03:00",
+   "routine": "house",
+   "what": "A courier rings the doorbell while he is awake",
+   "detail": null
+  },
+  {
+   "at": "2026-10-24T16:35:00-03:00",
+   "routine": "door",
+   "what": "announce",
+   "detail": {
+    "source": "doorbell"
+   }
+  },
+  {
+   "at": "2026-10-24T16:35:00-03:00",
+   "routine": "door",
+   "what": "dry run notify.send_message notify.gonza_s_echo_dot_announce",
+   "detail": {
+    "data": {
+     "message": "Someone is at the door."
+    },
+    "reason": "the doorbell rang"
+   }
+  },
+  {
+   "at": "2026-10-24T17:18:00-03:00",
+   "routine": "supplies",
+   "what": "low",
+   "detail": {
+    "item": "diapers",
+    "left": 16,
+    "per_day": 8.2,
+    "computed_from": [
+     "note@2026-10-22T07:00:00-03:00"
+    ]
+   }
+  },
+  {
+   "at": "2026-10-24T17:18:00-03:00",
+   "routine": "supplies",
+   "what": "dry run todo.add_item todo.shopping_list",
+   "detail": {
+    "data": {
+     "item": "Diapers",
+     "description": "About 16 left, 8.2 a day, runs out around Mon 15:56"
+    },
+    "reason": "diapers running low"
+   }
+  },
+  {
+   "at": "2026-10-24T17:18:00-03:00",
+   "routine": "supplies",
+   "what": "message to Gonza (telegram)",
+   "detail": {
+    "text": "Diapers added to the shopping list. About 16 left, 8.2 a day, runs out around Mon 15:56."
+   }
+  },
+  {
+   "at": "2026-10-24T17:40:00-03:00",
+   "routine": "nap_mode",
+   "what": "on",
+   "detail": "nap started, the house goes quiet"
+  },
+  {
+   "at": "2026-10-24T17:40:00-03:00",
+   "routine": "nap_mode",
+   "what": "dry run switch.turn_on switch.gonza_s_echo_dot_do_not_disturb",
+   "detail": {
+    "data": {},
+    "reason": "nap started at 17:40"
+   }
+  },
+  {
+   "at": "2026-10-24T17:40:00-03:00",
+   "routine": "nap_mode",
+   "what": "white noise on (simulated device)",
+   "detail": {
+    "crib_db": 48.1,
+    "reason": "nap started at 17:40"
+   }
+  },
+  {
+   "at": "2026-10-24T18:47:00-03:00",
+   "routine": "nap_mode",
+   "what": "off",
+   "detail": "nap ended, the house goes back"
+  },
+  {
+   "at": "2026-10-24T18:47:00-03:00",
+   "routine": "nap_mode",
+   "what": "dry run switch.turn_off switch.gonza_s_echo_dot_do_not_disturb",
+   "detail": {
+    "data": {},
+    "reason": "he woke up, nap since 17:40"
+   }
+  },
+  {
+   "at": "2026-10-24T18:47:00-03:00",
+   "routine": "nap_mode",
+   "what": "white noise off (simulated device)",
+   "detail": {
+    "crib_db": 0.0,
+    "reason": "he woke up, nap since 17:40"
+   }
+  },
+  {
+   "at": "2026-10-24T19:55:00-03:00",
+   "routine": "nap_mode",
+   "what": "on",
+   "detail": "sleep started, the house goes quiet"
+  },
+  {
+   "at": "2026-10-24T19:55:00-03:00",
+   "routine": "nap_mode",
+   "what": "dry run switch.turn_on switch.gonza_s_echo_dot_do_not_disturb",
+   "detail": {
+    "data": {},
+    "reason": "sleep started at 19:55"
+   }
+  },
+  {
+   "at": "2026-10-24T19:55:00-03:00",
+   "routine": "nap_mode",
+   "what": "white noise on (simulated device)",
+   "detail": {
+    "crib_db": 48.1,
+    "reason": "sleep started at 19:55"
+   }
+  },
+  {
+   "at": "2026-10-24T20:30:00-03:00",
+   "routine": "house",
+   "what": "Someone turns on the living room TV",
+   "detail": null
+  },
+  {
+   "at": "2026-10-24T20:30:00-03:00",
+   "routine": "nap_mode",
+   "what": "dry run media_player.volume_mute media_player.lg_webos_tv_oled55b3psa",
+   "detail": {
+    "data": {
+     "is_volume_muted": true
+    },
+    "reason": "living room TV turned on while he sleeps"
+   }
+  },
+  {
+   "at": "2026-10-24T21:20:00-03:00",
+   "routine": "nap_mode",
+   "what": "off",
+   "detail": "sleep ended, the house goes back"
+  },
+  {
+   "at": "2026-10-24T21:20:00-03:00",
+   "routine": "nap_mode",
+   "what": "dry run media_player.volume_mute media_player.lg_webos_tv_oled55b3psa",
+   "detail": {
+    "data": {
+     "is_volume_muted": false
+    },
+    "reason": "he woke up, sleep since 19:55"
+   }
+  },
+  {
+   "at": "2026-10-24T21:20:00-03:00",
+   "routine": "nap_mode",
+   "what": "dry run switch.turn_off switch.gonza_s_echo_dot_do_not_disturb",
+   "detail": {
+    "data": {},
+    "reason": "he woke up, sleep since 19:55"
+   }
+  },
+  {
+   "at": "2026-10-24T21:20:00-03:00",
+   "routine": "nap_mode",
+   "what": "white noise off (simulated device)",
+   "detail": {
+    "crib_db": 0.0,
+    "reason": "he woke up, sleep since 19:55"
+   }
+  },
+  {
+   "at": "2026-10-24T22:10:00-03:00",
+   "routine": "nap_mode",
+   "what": "on",
+   "detail": "sleep started, the house goes quiet"
+  },
+  {
+   "at": "2026-10-24T22:10:00-03:00",
+   "routine": "nap_mode",
+   "what": "dry run media_player.volume_mute media_player.lg_webos_tv_oled55b3psa",
+   "detail": {
+    "data": {
+     "is_volume_muted": true
+    },
+    "reason": "sleep started at 22:10"
+   }
+  },
+  {
+   "at": "2026-10-24T22:10:00-03:00",
+   "routine": "nap_mode",
+   "what": "dry run switch.turn_on switch.gonza_s_echo_dot_do_not_disturb",
+   "detail": {
+    "data": {},
+    "reason": "sleep started at 22:10"
+   }
+  },
+  {
+   "at": "2026-10-24T22:10:00-03:00",
+   "routine": "nap_mode",
+   "what": "white noise on (simulated device)",
+   "detail": {
+    "crib_db": 48.1,
+    "reason": "sleep started at 22:10"
+   }
+  },
+  {
+   "at": "2026-10-24T23:00:00-03:00",
+   "routine": "house",
+   "what": "Someone turns off the living room TV",
+   "detail": null
+  },
+  {
+   "at": "2026-10-25T00:04:00-03:00",
+   "routine": "nap_mode",
+   "what": "night wake stays quiet",
+   "detail": {
+    "detail": "a night wake-up, the house stays quiet until morning"
+   }
+  },
+  {
+   "at": "2026-10-25T06:43:00-03:00",
+   "routine": "nap_mode",
+   "what": "off",
+   "detail": "sleep ended, the house goes back"
+  },
+  {
+   "at": "2026-10-25T06:43:00-03:00",
+   "routine": "nap_mode",
+   "what": "dry run switch.turn_off switch.gonza_s_echo_dot_do_not_disturb",
+   "detail": {
+    "data": {},
+    "reason": "he woke up, sleep since 22:10"
+   }
+  },
+  {
+   "at": "2026-10-25T06:43:00-03:00",
+   "routine": "nap_mode",
+   "what": "white noise off (simulated device)",
+   "detail": {
+    "crib_db": 0.0,
+    "reason": "he woke up, sleep since 22:10"
+   }
+  }
+ ]
+}
