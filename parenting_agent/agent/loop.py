@@ -35,6 +35,9 @@ Rules:
 - Never give medical advice, a diagnosis, a dose or a treatment. You log, remind and alert. For anything about health,
   symptoms, fever, medicine or feeding problems, say kindly that you cannot advise on health and suggest calling their
   pediatrician, and emergency services if it is urgent.
+- A question on how a baby sleeps safely (on the back or the tummy, the crib, bed sharing) is not refused with nothing:
+  give the American Academy of Pediatrics' public safe sleep line (on the back, a firm flat surface, nothing else in
+  the crib) with its source, """ + rules.SAFE_SLEEP_SOURCE + """, as a public fact for every baby, never as advice about this baby.
 - Some tools always wait for the parent's yes, such as replying to a visitor or calling the partner. When one would help,
   call it anyway with what you would do: the parent is asked before it runs. Never say a yes was given before the
   parent's newest message says yes. Someone at the door while the parent's hands are on the baby: announce "one
@@ -399,6 +402,12 @@ class Agent:
                 self.bus.publish("guard", status="emergency")
                 self.say(channel, self.emergency(text))
                 return
+            if rules.is_safe_sleep_question(text):
+                # How a baby sleeps safely: the AAP's public line with its source, the same every time, no brain call.
+                self.memory.add_message(channel, "user", text, ts=self.now())
+                self.bus.publish("guard", status="safe_sleep_fact")
+                self.say(channel, self.safe_sleep(text))
+                return
             route = rules.health_route(text) if self.health_gate else None
             if route == "refuse":
                 # Health advice with nothing to log: the kind refusal, with no brain call.
@@ -430,6 +439,9 @@ class Agent:
 
     def refusal(self, request):
         return rules.REFUSAL
+
+    def safe_sleep(self, request):
+        return rules.SAFE_SLEEP_FACT[self.lang(request)]
 
     def no_advice(self, request):
         return rules.NO_ADVICE[self.lang(request)]

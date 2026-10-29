@@ -30,7 +30,55 @@ EMERGENCY = re.compile(
     r"no respira|dej[oó] de respirar|le cuesta respirar|no puede respirar|morad[oa]s?|labios azules|se puso azul|"
     r"se (est[aá] )?ahog\w*|atragant\w*|no se despierta|no reacciona|no responde|"
     r"se (me )?cay[oó](?! (el|la) (chupete|mamadera|biber[oó]n|tete|juguete))|"
-    r"se golpe[oó]|golpe en la cabeza|convulsi\w*)", re.I)
+    r"se golpe[oó]|golpe en la cabeza|convulsi\w*|"
+    # Bath, changing table and breathing red flags a safety audit found missing (round 2), English then rioplatense.
+    r"gasp\w*|(trouble|difficulty|hard time|problems?) breathing|breath(ing|es) (really |very |so |too )?(fast|hard|rapid\w*|weird\w*|strange\w*)|"
+    r"labou?red breathing|went under(?! (the |his |her |a )?(blanket|covers|sheets?|table|bed|crib|cot|sofa|couch|chair))|(head|face) went under|slipped under|under (the )?water|drown\w*|"
+    r"(swallowed|ate|ingested|put) (a |an |the |some |one of the |two )?(button |coin )?(battery|batteries|magnets?)\b|"
+    r"(swallowed|drank|ate) (some )?(bleach|detergent|a (laundry |detergent )?pod)|poison\w*|"
+    r"(bulging|swollen) (soft spot|fontanel\w*)|(soft spot|fontanel\w*) (is |looks |seems )?(bulging|swollen|puffy)|"
+    r"(pale|grey|gray) and cold|cold and (pale|grey|gray)|scald\w*|burn(ed|t) (him|her|the baby|his|her)|"
+    r"unconscious|passed out|faint(ed|ing)|(he|she|baby)('s| is)? (not|isn'?t) moving|"
+    r"boque\w*|le falta (el )?aire|(dificultad|le cuesta) (para )?respirar|"
+    r"respira (muy |re |demasiado )?(r[aá]pido|agitad\w*|raro|con dificultad)|"
+    r"se (me )?hundi[oó]|(bajo|abajo|debajo) (del|el) agua|ahogad\w*|"
+    r"(trag[oó]|se comi[oó]|se trag[oó]) (una |un |la |el |unas |unos )?(pila|pilas|bater[ií]a\w*|im[aá]n|imanes|lavandina|detergente)|"
+    r"(pila|pilas|bater[ií]a\w*|im[aá]n|imanes)\b.{0,25}\b(se )?(lo |la |los |las )?trag[oó]|pila de bot[oó]n|envenen\w*|intoxic\w*|"
+    r"(fontanela|mollera) (est[aá] |se ve |muy )?(abultad\w*|hinchad\w*|inflad\w*)|"
+    r"p[aá]lid[oa] y fr[ií][oa]|fr[ií][oa] y p[aá]lid[oa]|se (me )?quem[oó]|quemadura|"
+    r"se desmay[oó]|desmayad[oa]|inconsciente|no se mueve)", re.I)
+# A question on how a baby sleeps safely gets the AAP's public safe sleep line, the same every time, never the brain's
+# words and never a refusal with no fact. Anything that also names a symptom stays refused.
+SLEEP_WORD = r"(sleep\w*|slept|asleep|nap\w*|put (him|her|the baby|my baby|them) down|crib|cot|bassinet|dorm\w*|duerm\w*|siesta\w*|cuna|mois[eé]s|acost\w*)"
+SLEEP_POSITION = (r"(tumm(y|ies)|stomach|belly|on (his|her|its|their|the) (side|back|front|face)|side[ -]?sleep\w*|face ?down|"
+                  r"prone|boca (abajo|arriba)|de (costado|lado|panza|espaldas)|panza (abajo|arriba))")
+SAFE_SLEEP = re.compile(
+    SLEEP_WORD + r".{0,40}" + SLEEP_POSITION + "|" + SLEEP_POSITION + r".{0,40}" + SLEEP_WORD + "|"
+    r"safe(st|ly|r)? (way|position|place) (for (him|her|the baby|a baby|my baby) )?to (sleep|nap)|safe sleep|sleep\w* safely|"
+    r"what position .{0,30}" + SLEEP_WORD + "|"
+    r"(pillows?|blankets?|bumpers?|stuffed|toys?|quilts?|duvets?|almohad\w*|mantas?|frazadas?|chichoneras?|peluches?|acolchad\w*)"
+    r".{0,40}" + SLEEP_WORD + "|" + SLEEP_WORD + r".{0,40}(pillows?|blankets?|bumpers?|stuffed|toys?|quilts?|duvets?|"
+    r"almohad\w*|mantas?|frazadas?|chichoneras?|peluches?|acolchad\w*)|"
+    r"co-?sleep\w*|bed[ -]?shar\w*|colecho|" + SLEEP_WORD + r".{0,30}(in|on) (our|my|the) (bed|couch|sofa)|"
+    + SLEEP_WORD + r".{0,30}(en|con) (nuestra|mi|la) cama|" + SLEEP_WORD + r".{0,30}(sill[oó]n|sof[aá])|"
+    + SLEEP_WORD + r".{0,40}(car ?seat|swing|sling|incline\w*|sillita|silla del auto|hamaca|mecedora)|"
+    r"(car ?seat|swing|sling|sillita|silla del auto|hamaca).{0,40}" + SLEEP_WORD + "|"
+    r"(forma|manera|posici[oó]n) (m[aá]s )?segur\w* (de|para) (dormir|acostar\w*)|sue[ñn]o seguro|dormir segur\w*", re.I)
+SAFE_SLEEP_ASK = re.compile(r"\?|\b(can|could|should|is it|is that|ok|okay|safe\w*|how|what|which|where|puedo|debo|"
+                            r"deber[ií]a|est[aá] bien|es seguro|segur\w*|c[oó]mo|qu[eé]|cu[aá]l|d[oó]nde|conviene|hay que)\b", re.I)
+SAFE_SLEEP_SOURCE = "https://www.healthychildren.org/English/ages-stages/baby/sleep/Pages/a-parents-guide-to-safe-sleep.aspx"
+SAFE_SLEEP_FACT = {
+    "en": ("This is the public safe sleep guidance of the American Academy of Pediatrics, for every baby, not advice about "
+           "yours: on the back for every nap and at night, on a firm, flat surface, with nothing else in the crib (no pillows, "
+           "blankets, bumpers or toys). Room sharing yes, bed sharing no. A baby who falls asleep in a car seat, swing or "
+           f"sling is moved to a firm, flat surface, on the back. Source: {SAFE_SLEEP_SOURCE} "
+           "For anything about your baby's health, ask your pediatrician."),
+    "es": ("Esta es la guía pública de sueño seguro de la Academia Estadounidense de Pediatría (AAP), para todos los bebés, "
+           "no un consejo sobre el tuyo: boca arriba en todas las siestas y de noche, sobre una superficie firme y plana, sin "
+           "nada más en la cuna (ni almohadas, ni mantas, ni chichoneras, ni juguetes). Dormir en el mismo cuarto sí, en la "
+           "misma cama no. Si se duerme en la sillita del auto, la hamaca o el fular, se pasa a una superficie firme y plana, "
+           f"boca arriba. Fuente: {SAFE_SLEEP_SOURCE} Para cualquier cosa de la salud de tu bebé, consultá a tu pediatra."),
+}
 # Health and feeding-safety talk. Never a log request, so the not-logged check never answers it with "send it again".
 HEALTH = re.compile(r"\b(can i|could i|should i|is it ok|is it safe|safe to|puedo|debo|deber[ií]a|es seguro|"
                     r"cereal|honey|miel|water|agua|not (pooped|peed|eaten)|hasn'?t (pooped|peed|eaten)|"
@@ -131,6 +179,13 @@ def is_medical(text):
 
 def is_emergency(text):
     return bool(EMERGENCY.search(text or ""))
+
+
+def is_safe_sleep_question(text):
+    """A question on how a baby sleeps safely, with no symptom, medicine or red flag in it."""
+    text = text or ""
+    return (bool(SAFE_SLEEP.search(text)) and bool(SAFE_SLEEP_ASK.search(text)) and not is_emergency(text)
+            and not is_medical(text) and not is_medical_es(text) and not SYMPTOM.search(text))
 
 
 def is_medical_es(text):

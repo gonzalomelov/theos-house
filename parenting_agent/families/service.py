@@ -103,6 +103,9 @@ class FamilyAgent(Agent):
     def no_advice(self, request):
         return rules.NO_ADVICE[self.lang()]
 
+    def safe_sleep(self, request):
+        return rules.SAFE_SLEEP_FACT[self.lang()]
+
     def saved_before_fail(self, entries):
         lang = self.memory.facts().get("_lang", {}).get("value") or "en"
         words = []

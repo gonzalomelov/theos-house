@@ -55,7 +55,7 @@ Numbers: MMS-TTS reads letters only and drops digits, so `parenting_agent/voice/
 
 The voice service holds no secret and has no proxy settings, and its networks are internal with no gateway, so it has no internet, no host and no LAN. `deploy/voice/voice_check.py` proves it on every deploy: it speaks and converts in both languages, and fails if `1.1.1.1:443`, `huggingface.co:443` or the host answer. Like every container on those networks, it could open a TCP connection to the relay and the egress proxy next to it. It never does, and it has no token for anything behind them.
 
-No audio leaves the house except the voice note to Muse on Baseten, the configured brain. The replies are spoken in the house.
+No audio leaves the house except the voice note to Muse on Baseten, the configured brain. Voice is on by default in the family agent and the families bot, so every voice note a parent sends goes to inference.baseten.co as audio, once, held in memory and never saved. Baseten's docs say it does not store inputs or outputs by default: https://docs.baseten.co/observability/security. The replies are spoken in the house.
 
 ```bash
 sh deploy/voice.sh deploy     # build, run both containers, health, wall and speak checks

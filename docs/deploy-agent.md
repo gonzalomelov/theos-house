@@ -32,7 +32,7 @@ Docker already runs every other app on the Vostro, starts at boot, and gives the
 
 ### Voice notes
 
-A voice note on Telegram is heard by Muse Spark Open and answered in text and as a voice note (issue #58, `docs/voice.md`). ffmpeg and MMS-TTS run in the voice service, `pa-voice-family`, a separate container on `parenting-agent-internal` with the weights baked in and no secret (`deploy/voice/`, `sh deploy/voice.sh deploy`). The agent image stays standard library only. The agent reaches it at `http://pa-voice-family:8800` without the proxy. Hearing is the Muse call through the egress proxy, like the brain.
+A voice note on Telegram is heard by Muse Spark Open and answered in text and as a voice note (issue #58, `docs/voice.md`). ffmpeg and MMS-TTS run in the voice service, `pa-voice-family`, a separate container on `parenting-agent-internal` with the weights baked in and no secret (`deploy/voice/`, `sh deploy/voice.sh deploy`). The agent image stays standard library only. The agent reaches it at `http://pa-voice-family:8800` without the proxy. Hearing is the Muse call through the egress proxy, like the brain. So a voice note leaves the house as audio, to Muse Spark Open on Baseten, once and never saved (Baseten keeps no inputs by default, https://docs.baseten.co/observability/security). Video and house audio stay in the house.
 
 ## The wall
 

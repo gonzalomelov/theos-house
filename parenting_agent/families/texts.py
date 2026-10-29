@@ -28,7 +28,7 @@ EN = {
     "OK": "OK.",
     "ASK_NAME": "1 of 3. What is your baby's name or nickname?",
     "WELCOME": ("Welcome. I keep a private log of your baby's feeds, diapers, sleep and baths, answer questions from it, "
-                "remind you of the next feed and send a short summary each evening. I never give medical advice. "
+                "remind you of the next feed and send a short summary each evening. I am built to refuse medical advice. "
                 "Three quick questions and you are logging. Send /privacy to read what I store. "
                 "Para español mandá /idioma.\n\n"),
     "ASK_BORN": "2 of 3. When was {name} born? For example 2026-10-12 or 12/10/2026.",
@@ -43,7 +43,7 @@ EN = {
     "PARTNER_CODE": ("Here is the invite for the other parent, valid for {days} days and for one person:\n{code}\n{link}"
                      "They send /start {code} to this bot and join {name}'s log."),
     "PARTNER_WELCOME": ("Welcome. You joined {name}'s log. You and the other parent see and add to the same private log. "
-                        "I never give medical advice. Send /privacy to read what I store.\n\n"),
+                        "I am built to refuse medical advice. Send /privacy to read what I store.\n\n"),
     "PARTNER_MAX": "{name}'s log already has {n} people, the most it can have.",
     "PRIVACY": ("What I store: your baby's name and birth date, what you log (feeds, diapers, sleep, baths, notes), "
                 "our conversation of the last 7 days, and your Telegram chat id so I can answer you. The only fact I keep is the "
@@ -52,7 +52,8 @@ EN = {
                 "message with the time and a scrambled id, never the text.\n"
                 "Where: one private file for your family on Gonza's home server in Uruguay. Other families cannot see it. "
                 "To write replies, the conversation text and your log lines are sent to Muse Spark Open, Meta's open model, "
-                "on Baseten. Baseten's docs say it does not store them by default: https://docs.baseten.co/observability/security. "
+                "on Baseten. Voice notes you send are heard by Muse on Baseten too: the audio is sent once, never saved by me. "
+                "Baseten's docs say it does not store inputs or outputs by default: https://docs.baseten.co/observability/security. "
                 "Only when that call fails, Claude on Anthropic's API answers instead. By default Anthropic does not train on API data "
                 "and deletes it within 30 days: https://privacy.claude.com/en/articles/7996866. Telegram carries the messages.\n"
                 "Delete: send /deletemydata. It removes your family's file, the conversation, the rows and both parents' access, at once."),
@@ -123,8 +124,8 @@ ES = {
     "OK": "Listo.",
     "ASK_NAME": "1 de 3. ¿Cómo se llama tu bebé, o cómo le dicen?",
     "WELCOME": ("Te doy la bienvenida. Llevo un registro privado de las tomas, pañales, sueño y baños de tu bebé, respondo lo que "
-                "preguntes sobre eso, te aviso la próxima toma y te mando un resumen corto cada noche. Nunca doy consejos "
-                "médicos. Son tres preguntas rápidas y ya podés anotar. Mandá /privacidad para ver qué guardo. "
+                "preguntes sobre eso, te aviso la próxima toma y te mando un resumen corto cada noche. Estoy hecho para no dar "
+                "consejos médicos. Son tres preguntas rápidas y ya podés anotar. Mandá /privacidad para ver qué guardo. "
                 "For English send /language.\n\n"),
     "ASK_BORN": "2 de 3. ¿Cuándo nació {name}? Por ejemplo 12/10/2026 o 2026-10-12.",
     "BAD_BORN": "No entendí la fecha. Escribila así: 12/10/2026 o 2026-10-12. No puede ser en el futuro.",
@@ -138,7 +139,7 @@ ES = {
     "PARTNER_CODE": ("Acá tenés la invitación para el otro papá o mamá, sirve {days} días y para una persona:\n{code}\n{link}"
                      "Que le mande /start {code} a este bot y se suma al registro de {name}."),
     "PARTNER_WELCOME": ("Te doy la bienvenida. Te sumaste al registro de {name}. Vos y el otro papá o mamá ven y anotan en el mismo "
-                        "registro privado. Nunca doy consejos médicos. Mandá /privacidad para ver qué guardo.\n\n"),
+                        "registro privado. Estoy hecho para no dar consejos médicos. Mandá /privacidad para ver qué guardo.\n\n"),
     "PARTNER_MAX": "El registro de {name} ya tiene {n} personas, que es el máximo.",
     "PRIVACY": ("Qué guardo: el nombre y la fecha de nacimiento de tu bebé, lo que anotás (tomas, pañales, sueño, baños, notas), "
                 "nuestra conversación de los últimos 7 días y tu id de chat de Telegram para poder responderte. El único dato "
@@ -147,7 +148,8 @@ ES = {
                 "fila por mensaje con la hora y un id mezclado, nunca el texto.\n"
                 "Dónde: un archivo privado para tu familia en el servidor de la casa de Gonza, en Uruguay. Otras familias "
                 "no lo pueden ver. Para escribir las respuestas, el texto de la conversación y lo que anotaste se mandan a Muse "
-                "Spark Open, el modelo abierto de Meta, en Baseten. Según su documentación, por defecto Baseten no almacena lo que entra ni lo que sale: "
+                "Spark Open, el modelo abierto de Meta, en Baseten. Los audios que mandás también los escucha Muse en Baseten: el audio se manda una vez y yo no lo guardo. "
+                "Según su documentación, por defecto Baseten no almacena lo que entra ni lo que sale: "
                 "https://docs.baseten.co/observability/security. Solo si esa llamada falla responde Claude, en la API de "
                 "Anthropic. Por defecto Anthropic no entrena con los datos de su API y los borra en 30 días: "
                 "https://privacy.claude.com/en/articles/7996866. Telegram lleva los mensajes.\n"
