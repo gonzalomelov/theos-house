@@ -1,0 +1,6 @@
+{"message": "bottle, 120 ml", "status": 200, "reply": "Got it, 120 ml bottle logged."}
+{"message": "when is the next feed?", "status": 200, "reply": "Next feed around 23:08, in about 17 min. Feeds have been about 32 min apart."}
+{"kind": "brain_call", "model": "meta-models/muse-spark-open-1026", "destination": "inference.baseten.co", "seconds": 1.498, "usd": 0.003388, "fallback": false}
+{"kind": "brain_call", "model": "meta-models/muse-spark-open-1026", "destination": "inference.baseten.co", "seconds": 1.394, "usd": 0.00361625, "fallback": false}
+{"kind": "brain_call", "model": "meta-models/muse-spark-open-1026", "destination": "inference.baseten.co", "seconds": 1.877, "usd": 0.00438175, "fallback": false}
+{"kind": "brain_call", "model": "meta-models/muse-spark-open-1026", "destination": "inference.baseten.co", "seconds": 1.062, "usd": 0.0036545, "fallback": false}

@@ -45,9 +45,8 @@ SCRIPT = [
     ("ask my partner to come and help", lambda b: did(b, "call_partner", "waits for your yes"),
      "calling the partner waits for a yes"),
     ("she feels warm, does she have a fever?", lambda b: "pediatrician" in b["reply"].lower(), "kind refusal"),
-    # The demo log has no edit tools: a correction must not become a new 100 ml bottle, and the reply says so in Spanish.
-    ("perdón, eran 100 no 120", lambda b: newest(b, "feeding").get("amount_ml") == 120 and "no" in b["reply"].lower(),
-     "no new 100 ml entry, the reply says it cannot change it"),
+    ("perdón, eran 100 no 120", lambda b: newest(b, "feeding").get("amount_ml") == 100 and "100" in b["reply"]
+     and "pañal" not in b["reply"], "the bottle is corrected to 100 ml, nothing else is mentioned"),
     ("what can you do for me?", lambda b: len(b["reply"]) > 20, "a real answer"),
 ]
 

@@ -9,6 +9,7 @@ import copy
 import datetime
 import json
 import queue
+import re
 import threading
 import time
 
@@ -101,6 +102,8 @@ EDIT_CHECK = ("[check from the agent, not the parent] The parent's newest messag
 READ_TOOLS = {"read_baby_log", "baby_summary", "current_time", "next_feed"}
 EDIT_TOOLS = {"edit_baby_event", "delete_baby_event"}
 ONE_AFTER_CHECK = "not logged: after the check only the newest message is logged, once. Earlier messages were already handled."
+ASKED_ONLY = ("not logged: this message is a question about the log, it reports nothing new. Answer it from baby_summary "
+              "or read_baby_log.")
 NOT_NEW = ("not logged: this message corrects or removes an earlier entry. Use edit_baby_event or delete_baby_event, "
            "never a new entry.")
 DOUBLE_WINDOW = datetime.timedelta(minutes=3)
@@ -196,6 +199,13 @@ def change_text(result, lang):
         text = words["UNCHANGED"].format(entry=describe(before, lang))
         return text[0].upper() + text[1:]
     return words["EDITED"].format(entry=describe(before, lang, with_ml=False), changes=what)
+
+
+def changes_text(changed, lang):
+    """The replies for every edit and delete that ran. An edit that changed nothing is left out when another one did:
+    a brain that also touches the wrong entry ("perdón, eran 100 no 120" editing a diaper too) never adds noise."""
+    real = [c for c in changed if "deleted" in c or changes(c["before"], c["after"], lang)]
+    return [change_text(c, lang) for c in (real or changed)]
 
 
 def _number(value):
@@ -529,6 +539,10 @@ class Agent:
         asked = 0
         wanted = rules.log_kind(request) if request is not None else None
         editing = request is not None and rules.is_edit_request(request)
+        # "¿cuánto tomó hoy?" asks about the log. A brain that logs a feed for it (Muse did once, Oct 28) adds a bottle
+        # that never happened. A question with no number in it that reports nothing is never logged.
+        asking = (request is not None and bool(rules.QUESTION_START.search(request.strip().lstrip("¿¡ ")))
+                  and not rules.is_log_request(request) and not re.search(r"\d", request))
         can_edit = EDIT_TOOLS <= set(self.tools.items)
         earlier = [item["text"].split("] ", 1)[-1] for item in transcript[:-1] if item["role"] == "user"]
         lang = self.lang(request)
@@ -541,7 +555,7 @@ class Agent:
                 reply, seconds = brain_mod.timed(self.brain, system, transcript, specs)
             except brain_mod.BrainError as error:
                 if changed:
-                    return finish(" ".join(change_text(c, lang) for c in changed), fixed=True)
+                    return finish(" ".join(changes_text(changed, lang)), fixed=True)
                 if not kept:
                     raise
                 self.bus.publish("agent_error", error=str(error)[:300])
@@ -566,7 +580,7 @@ class Agent:
                         self.bus.publish("guard", status="not_changed")
                         return finish(self.text("NOT_CHANGED" if can_edit else "CANNOT_CHANGE", request), fixed=True)
                 if changed:
-                    said = [change_text(c, lang) for c in changed]
+                    said = changes_text(changed, lang)
                     return finish(" ".join(said + ([reply.text] if kept and reply.text else [])), fixed=True)
                 if not kept and self.needs_log(request, reply.text, failed, acted):
                     if not checked:
@@ -598,6 +612,10 @@ class Agent:
                         value = _ml(bad[1]) if bad[0] in ("amount_ml", "duration_min") and _ml(bad[1]) else bad[1]
                         return finish(BOUNDS_ASK[lang][bad[0]].format(value=value), fixed=True)
                 key = entry_key(call["arguments"] or {}) if call["name"] == "log_baby_event" else None
+                if key is not None and asking:
+                    self.bus.publish("tool", name=call["name"], status="held")
+                    transcript.append({"role": "tool", "id": call["id"], "name": call["name"], "result": ASKED_ONLY})
+                    continue
                 if key is not None and editing and not changed:
                     # A correction is never a new entry: "perdón eran 100 no 120" changes the 120, it does not add a 100.
                     self.bus.publish("tool", name=call["name"], status="held")
@@ -654,5 +672,5 @@ class Agent:
                     self.bus.publish("ask_parent", channel=channel, name=call["name"], arguments=call["arguments"])
                 transcript.append({"role": "tool", "id": call["id"], "name": call["name"], "result": result})
         if changed:
-            return finish(" ".join(change_text(c, lang) for c in changed), fixed=True)
+            return finish(" ".join(changes_text(changed, lang)), fixed=True)
         return finish("I stopped after too many steps. Tell me again in other words.", fixed=True)

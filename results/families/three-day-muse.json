@@ -8,7 +8,7 @@
   "late_wording": 0,
   "tuteo_replies": 0,
   "brain_fallbacks": 0,
-  "spend_usd": 0.2094,
+  "spend_usd": 0.2174,
   "failed": []
  },
  "steps": [
@@ -17,7 +17,7 @@
    "at": "2026-10-29T01:30:00-03:00",
    "who": "A",
    "message": "mamadera 120",
-   "reply": "Anotado, mamadera de 120 ml para Tomi a la 1:30.",
+   "reply": "Anotado, mamadera de 120 para Tomi a la 01:30.",
    "tools": [
     "log_baby_event({\"kind\": \"feeding\", \"details\": {\"amount_ml\": 120, \"method\": \"bottle\"}})"
    ],
@@ -45,9 +45,10 @@
    "at": "2026-10-29T04:40:00-03:00",
    "who": "A",
    "message": "tomó 110 ml de mamadera",
-   "reply": "Anotado, mamadera de 110 ml para Tomi a las 4:40.",
+   "reply": "Anotado, mamadera de 110 para Tomi a las 04:40.",
    "tools": [
-    "log_baby_event({\"kind\": \"feeding\", \"details\": {\"amount_ml\": 110, \"method\": \"bottle\"}})"
+    "log_baby_event({\"kind\": \"feeding\", \"details\": {\"amount_ml\": 110, \"method\": \"bottle\"}})",
+    "read_baby_log({})"
    ],
    "check": "a 110 ml bottle",
    "ok": true,
@@ -83,9 +84,8 @@
    "at": "2026-10-29T07:50:00-03:00",
    "who": "A",
    "message": "pañal mojado y sucio",
-   "reply": "Anotado pañal mojado y sucio de Tomi a las 7:50.",
+   "reply": "Anotado, pañal mojado y sucio de Tomi a las 07:50.",
    "tools": [
-    "current_time({})",
     "log_baby_event({\"kind\": \"diaper\", \"details\": {\"wet\": true, \"solid\": true}})"
    ],
    "check": "",
@@ -98,9 +98,9 @@
    "at": "2026-10-29T08:00:00-03:00",
    "who": "B",
    "message": "teta 10 min",
-   "reply": "Anotada teta de 10 min para Tomi a las 8:00.",
+   "reply": "Anotado, teta 10 min para Tomi a las 08:00.",
    "tools": [
-    "log_baby_event({\"kind\": \"feeding\", \"details\": {\"method\": \"breast\", \"duration_min\": 10}})"
+    "log_baby_event({\"kind\": \"feeding\", \"details\": {\"duration_min\": 10, \"method\": \"breast\"}})"
    ],
    "check": "a breast feed with no side invented",
    "ok": true,
@@ -112,7 +112,7 @@
    "at": "2026-10-29T09:35:00-03:00",
    "who": "A",
    "message": "cuanto tomo hoy",
-   "reply": "Hoy Tomi tomó 3 veces. En mamadera 210 ml en total, 100 ml a las 01:30 y 110 ml a las 04:40, más teta de 10 min a las 08:00.",
+   "reply": "Hoy Tomi tomó 3 veces, con un total de 210 ml en mamadera, de 100 ml a las 01:30 y 110 ml a las 04:40, más teta de 10 min a las 08:00.",
    "tools": [
     "baby_summary({})"
    ],
@@ -126,7 +126,7 @@
    "at": "2026-10-29T12:10:00-03:00",
    "who": "A",
    "message": "mamadera 90",
-   "reply": "Anotada mamadera de 90 ml para Tomi a las 12:10.",
+   "reply": "Anotado, mamadera de 90 para Tomi a las 12:10.",
    "tools": [
     "log_baby_event({\"kind\": \"feeding\", \"details\": {\"amount_ml\": 90, \"method\": \"bottle\"}})"
    ],
@@ -142,7 +142,7 @@
    "message": "la de la 1 y media fue 80, corregila",
    "reply": "Corregí la mamadera de las 01:30: 100 ml → 80 ml.",
    "tools": [
-    "edit_baby_event({\"at\": \"01:30\", \"kind\": \"feeding\", \"details\": {\"amount_ml\": 80}})"
+    "edit_baby_event({\"kind\": \"feeding\", \"at\": \"01:30\", \"details\": {\"amount_ml\": 80}})"
    ],
    "check": "the 01:30 bottle is now 80 ml",
    "ok": true,
@@ -168,7 +168,7 @@
    "at": "2026-10-29T16:00:00-03:00",
    "who": "A",
    "message": "se durmió",
-   "reply": "Anotado que Tomi se durmió a las 16:00.",
+   "reply": "Anotado, Tomi se durmió a las 16:00.",
    "tools": [
     "log_baby_event({\"kind\": \"sleep\", \"details\": {\"action\": \"start\"}})"
    ],
@@ -182,7 +182,7 @@
    "at": "2026-10-29T17:10:00-03:00",
    "who": "A",
    "message": "se despertó",
-   "reply": "Anotado que Tomi se despertó a las 17:10, durmió 1 hora 10 min.",
+   "reply": "Anotado, Tomi se despertó a las 17:10. Siestita de 70 minutos.",
    "tools": [
     "log_baby_event({\"kind\": \"sleep\", \"details\": {\"action\": \"end\"}})"
    ],
@@ -208,7 +208,7 @@
    "at": "2026-10-30T00:15:00-03:00",
    "who": "A",
    "message": "mamadera 100",
-   "reply": "Anotada mamadera de 100 ml para Tomi a las 00:15.",
+   "reply": "Anotado, mamadera de 100 para Tomi a las 00:15.",
    "tools": [
     "log_baby_event({\"kind\": \"feeding\", \"details\": {\"amount_ml\": 100, \"method\": \"bottle\"}})"
    ],
@@ -248,7 +248,7 @@
    "at": "2026-10-30T03:30:00-03:00",
    "who": "A",
    "message": "pañal sucio",
-   "reply": "Anotado pañal sucio de Tomi a las 03:30.",
+   "reply": "Anotado, pañal sucio de Tomi a las 03:30.",
    "tools": [
     "log_baby_event({\"kind\": \"diaper\", \"details\": {\"solid\": true}})"
    ],
@@ -276,7 +276,7 @@
    "at": "2026-10-30T06:00:00-03:00",
    "who": "A",
    "message": "mamadera de fórmula 120 ml",
-   "reply": "Anotada mamadera de fórmula de 120 ml para Tomi a las 06:00.",
+   "reply": "Anotado, mamadera de 120 de Tomi.",
    "tools": [
     "log_baby_event({\"kind\": \"feeding\", \"details\": {\"amount_ml\": 120, \"method\": \"bottle\", \"type\": \"formula\"}})"
    ],
@@ -290,7 +290,7 @@
    "at": "2026-10-30T09:00:00-03:00",
    "who": "B",
    "message": "pecho izquierdo 15 min",
-   "reply": "Anotado pecho izquierdo 15 min de Tomi a las 09:00.",
+   "reply": "Anotado, pecho izquierdo 15 min para Tomi a las 09:00.",
    "tools": [
     "log_baby_event({\"kind\": \"feeding\", \"details\": {\"method\": \"left breast\", \"duration_min\": 15}})"
    ],
@@ -306,8 +306,7 @@
    "message": "¿cuándo comió por última vez?",
    "reply": "Tomi comió por última vez hoy a las 09:00, pecho izquierdo 15 min.",
    "tools": [
-    "baby_summary({})",
-    "read_baby_log({\"kind\": \"feeding\", \"limit\": 10})"
+    "baby_summary({})"
    ],
    "check": "09:00",
    "ok": true,
@@ -331,7 +330,7 @@
    "at": "2026-10-30T13:05:00-03:00",
    "who": "A",
    "message": "le doy la mamadera, 120 ml",
-   "reply": "Anotada mamadera de 120 ml para Tomi a las 13:05.",
+   "reply": "Anotado, mamadera de 120 de Tomi.",
    "tools": [
     "log_baby_event({\"kind\": \"feeding\", \"details\": {\"amount_ml\": 120, \"method\": \"bottle\"}})"
    ],
@@ -383,7 +382,7 @@
    "at": "2026-10-31T01:00:00-03:00",
    "who": "A",
    "message": "mamadera 110",
-   "reply": "Anotada mamadera de 110 ml para Tomi a la 01:00.",
+   "reply": "Anotado, mamadera de 110 de Tomi.",
    "tools": [
     "log_baby_event({\"kind\": \"feeding\", \"details\": {\"amount_ml\": 110, \"method\": \"bottle\"}})"
    ],
@@ -411,7 +410,7 @@
    "at": "2026-10-31T05:30:00-03:00",
    "who": "B",
    "message": "teta derecha",
-   "reply": "Anotado pecho derecho de Tomi a las 05:30.",
+   "reply": "Anotado, teta derecha de Tomi a las 05:30.",
    "tools": [
     "log_baby_event({\"kind\": \"feeding\", \"details\": {\"method\": \"right breast\"}})"
    ],
@@ -437,7 +436,7 @@
    "at": "2026-10-31T12:10:00-03:00",
    "who": "A",
    "message": "pañal mojado",
-   "reply": "Anotado pañal mojado de Tomi a las 12:10.",
+   "reply": "Anotado, pañal mojado de Tomi.",
    "tools": [
     "log_baby_event({\"kind\": \"diaper\", \"details\": {\"wet\": true}})"
    ],

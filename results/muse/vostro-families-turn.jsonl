@@ -1,0 +1,6 @@
+{"message": "mamadera 120", "reply": "Anotada la mamadera de 120 ml para Tomi."}
+{"message": "¿cuánto tomó hoy?", "reply": "Hoy tomó 120 ml en total, en 2 tomas. La última fue a las 22:51, mamadera de 120 ml."}
+{"kind": "brain_call", "model": "meta-models/muse-spark-open-1026", "destination": "inference.baseten.co", "seconds": 1.815, "usd": 0.0036215, "fallback": false}
+{"kind": "brain_call", "model": "meta-models/muse-spark-open-1026", "destination": "inference.baseten.co", "seconds": 0.91, "usd": 0.00352, "fallback": false}
+{"kind": "brain_call", "model": "meta-models/muse-spark-open-1026", "destination": "inference.baseten.co", "seconds": 2.282, "usd": 0.00446, "fallback": false}
+{"kind": "brain_call", "model": "meta-models/muse-spark-open-1026", "destination": "inference.baseten.co", "seconds": 1.207, "usd": 0.0042425, "fallback": false}

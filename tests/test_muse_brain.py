@@ -142,5 +142,41 @@ class MuseReasoningNeverLeaks(unittest.TestCase):
         fake.close()
 
 
+class AQuestionIsNeverLogged(unittest.TestCase):
+    """On the Vostro on Oct 28, Muse answered "¿cuánto tomó hoy?" by logging a second bottle with no amount."""
+
+    def run_turn(self, text, calls):
+        with tempfile.TemporaryDirectory() as tmp:
+            config = config_mod.load()
+            config.update({"data_dir": tmp, "env_file": "/nonexistent", "brain": {"provider": "fake"},
+                           "baby_log": {"provider": "local"}, "plugins": []})
+            agent = build(config)
+            agent.brain = Scripted("muse", MUSE_MODEL, calls)
+            agent.handle({"kind": "message", "channel": "console", "text": text})
+            entries = agent.baby_log.entries("feeding", None, 10)
+            agent.close()
+        return entries
+
+    def test_a_question_holds_a_log_call(self):
+        log = Reply(tool_calls=[{"id": "1", "name": "log_baby_event", "arguments": {"kind": "feeding", "details": {}}}])
+        self.assertEqual(self.run_turn("¿cuánto tomó hoy?", [log, Reply("Hoy no hay tomas anotadas.")]), [])
+
+    def test_a_note_with_a_question_mark_and_an_amount_still_logs(self):
+        log = Reply(tool_calls=[{"id": "1", "name": "log_baby_event",
+                                 "arguments": {"kind": "feeding", "details": {"amount_ml": 120, "method": "bottle"}}}])
+        self.assertEqual(len(self.run_turn("le di 120 ml de mamadera, ¿está bien?", [log, Reply("Anotada.")])), 1)
+
+
+class OnlyRealChangesAreSaid(unittest.TestCase):
+    def test_a_no_op_edit_beside_a_real_one_is_not_said(self):
+        from parenting_agent.agent.loop import changes_text
+        bottle = {"kind": "feeding", "ts": "2026-10-28T22:56:00-03:00", "details": {"amount_ml": 120, "method": "bottle"}}
+        diaper = {"kind": "diaper", "ts": "2026-10-28T22:56:00-03:00", "details": {"wet": True, "solid": True}}
+        said = changes_text([{"before": diaper, "after": diaper},
+                             {"before": bottle, "after": {**bottle, "details": {**bottle["details"], "amount_ml": 100}}}], "es")
+        self.assertEqual(len(said), 1)
+        self.assertIn("100 ml", said[0])
+
+
 if __name__ == "__main__":
     unittest.main()
