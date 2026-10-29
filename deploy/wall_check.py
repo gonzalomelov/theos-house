@@ -47,7 +47,9 @@ def tcp(host, port):
 def main(hosts):
     must_work = [
         ("Baby Buddy through the relay", lambda: http("http://relay:8790/api/", DIRECT)),
-        ("Home Assistant through the relay", lambda: http("http://relay:8123/api/", DIRECT)),
+        # A TCP connect, never an HTTP request: a request without a token counts as a failed login in Home
+        # Assistant, and a few of them ban the relay's address.
+        ("Home Assistant through the relay", lambda: tcp("relay", 8123)),
         ("Anthropic through the egress proxy", lambda: http("https://api.anthropic.com/v1/models", PROXY)),
         ("Baseten through the egress proxy", lambda: http("https://inference.baseten.co/v1/models", PROXY)),
         ("Telegram through the egress proxy", lambda: http("https://api.telegram.org/bot0/getMe", PROXY)),

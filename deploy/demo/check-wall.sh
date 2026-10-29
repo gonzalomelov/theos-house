@@ -20,6 +20,7 @@ fail=0
 for target in "$@" parenting-agent-relay:8790 parenting-agent-relay:8123 1.1.1.1:443 host.docker.internal:22; do
   probe "$target" || fail=1
 done
+via_proxy inference.baseten.co:443 allow || fail=1
 via_proxy api.anthropic.com:443 allow || fail=1
 via_proxy api.telegram.org:443 refuse || fail=1
 via_proxy example.com:443 refuse || fail=1

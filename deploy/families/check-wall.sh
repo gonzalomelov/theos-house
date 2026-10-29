@@ -20,6 +20,7 @@ for target in "$@" parenting-agent-relay:8790 parenting-agent-relay:8123 1.1.1.1
   probe "$target" || fail=1
 done
 via_proxy api.telegram.org:443 allow || fail=1
+via_proxy inference.baseten.co:443 allow || fail=1
 via_proxy api.anthropic.com:443 allow || fail=1
 via_proxy example.com:443 refuse || fail=1
 via_proxy babybuddy:8000 refuse || fail=1
