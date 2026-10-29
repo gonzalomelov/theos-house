@@ -56,8 +56,9 @@ services:
     cpus: 0.5
     pids_limit: 64
     healthcheck:
-      # The heartbeat plug-in writes this file only while the decide-act loop is alive.
-      test: ["CMD", "python", "-m", "parenting_agent.agent.heartbeat", "/data/heartbeat.json", "90"]
+      # The heartbeat plug-in writes this file only while the decide-act loop is alive. The check reads it with the
+      # standard library only: importing parenting_agent takes 5.5 s at 0.5 CPU (Oct 29), over the 5 s timeout.
+      test: ["CMD", "python", "-I", "-S", "-c", "import json,sys,time; sys.exit(0 if time.time() - json.load(open('/data/heartbeat.json')).get('ts', 0) <= 90 else 1)"]
       interval: 30s
       timeout: 5s
       retries: 3
