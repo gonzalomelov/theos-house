@@ -253,6 +253,16 @@ def asks_delete(text):
     return bool(DELETE_SAID.search(text or ""))
 
 
+WOKE_SAID = re.compile(r"despert|despiert|\bwoke\b|\bwakes?\b|\bawake\b", re.I)
+ASLEEP_SAID = re.compile(r"durm|dorm|asleep|\bnap", re.I)
+
+
+def says_woke_only(text):
+    """True when the parent reports a wake-up and no falling asleep: "se desperto a las 5", not "se desperto y se durmio"."""
+    text = text or ""
+    return bool(WOKE_SAID.search(text)) and not ASLEEP_SAID.search(text)
+
+
 def says_twice(text):
     return bool(TWICE_SAID.search(text or ""))
 

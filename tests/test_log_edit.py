@@ -372,3 +372,24 @@ class Privacy(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class WakeUp(Base):
+    def test_a_wake_up_with_a_time_ends_the_open_sleep_and_never_starts_a_new_one(self):
+        # Oct 29 never-wrong run 1: "se desperto a las 5" made Muse start a 05:00 sleep over the open 03:20 one and
+        # then end it at 05:00, so the night's sleep was lost.
+        at = "2026-10-28T{}:00-03:00".format
+        brain = Recording([[log("sleep", {"action": "start"}, at("03:20"))], "Anoté que se durmió a las 03:20."],
+                          [[log("sleep", {"action": "start"}, at("05:00")), log("sleep", {"action": "end"}, at("05:00"))],
+                           "Anoté que se despertó a las 05:00."])
+        app, f, clock = self.family(brain)
+        self.send(app, clock, "03:25", "se quedo dormida a las 3 y 20")
+        self.send(app, clock, "05:10", "se desperto a las 5")
+        sleeps = [e["details"] for e in f.log.entries("sleep")]
+        self.assertEqual([(s["start"][11:16], s["duration_min"]) for s in sleeps], [("03:20", 100)])
+
+    def test_woke_only_reads_wake_ups_and_not_a_wake_up_and_back_to_sleep(self):
+        self.assertTrue(rules.says_woke_only("se desperto a las 5"))
+        self.assertTrue(rules.says_woke_only("she woke up at 5"))
+        self.assertFalse(rules.says_woke_only("se desperto y se volvio a dormir"))
+        self.assertFalse(rules.says_woke_only("se durmio recien"))

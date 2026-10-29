@@ -132,6 +132,8 @@ NOT_AN_EDIT = ("not changed: the newest message corrects no earlier entry. Earli
                "change their entries now. Log only what the newest message says.")
 NOT_NEW = ("not logged: this message corrects or removes an earlier entry. Use edit_baby_event or delete_baby_event, "
            "never a new entry.")
+NOT_STARTED = ("not logged: the newest message says the baby woke up, so no new sleep starts. Log the wake-up with "
+               "kind sleep and action end at the time the parent said, it closes the sleep already started.")
 DOUBLE_WINDOW = datetime.timedelta(minutes=3)
 DOUBLE_ANSWER_WINDOW = datetime.timedelta(minutes=30)
 TEXTS = {
@@ -935,6 +937,13 @@ class Agent:
                     # A correction is never a new entry: "perdón eran 100 no 120" changes the 120, it does not add a 100.
                     self.bus.publish("tool", name=call["name"], status="held")
                     transcript.append({"role": "tool", "id": call["id"], "name": call["name"], "result": NOT_NEW})
+                    continue
+                if (key is not None and call["arguments"].get("kind") == "sleep" and rules.says_woke_only(request)
+                        and isinstance(call["arguments"].get("details"), dict) and call["arguments"]["details"].get("action") == "start"):
+                    # "se desperto a las 5": on Oct 29 Muse started a new 05:00 sleep over the open 03:20 one, then
+                    # could not end it, and the night's sleep was lost.
+                    self.bus.publish("tool", name=call["name"], status="held", reason="woke")
+                    transcript.append({"role": "tool", "id": call["id"], "name": call["name"], "result": NOT_STARTED})
                     continue
                 if key is not None and call["arguments"].get("kind") == "feeding" and rules.medicine_only(request):
                     # "I gave her 2.5 ml of paracetamol" is a note, never a 2.5 ml feed.
