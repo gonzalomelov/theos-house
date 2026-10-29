@@ -1,5 +1,20 @@
 # The families log is never wrong (issue #77)
 
+## Blind numbers first
+
+Two sets of 45 messages were written by agents that changed no code, and each was scored once before anyone read it.
+
+| Blind set | Code | Wrong log states | Reply problems | Files |
+|---|---|---|---|---|
+| First | main at `ee4c401`, before the fixes of PR #103 | **8 of 45** | 1 | [heldout/](heldout/README.md) |
+| Second | main at `24bd72b`, after every families fix of Oct 29 | **8 of 45** | 5 (4 are English replies to English messages) | [heldout2/](heldout2/README.md) |
+
+The fixes after the first set did not carry over to new phrasings. Six of the 8 second-set misses have one cause, the
+guards decide what the parent said from fixed word lists, and that is what the next fix targets. Everything below this
+section is on sets the fixes were tuned on, so those numbers are tuned numbers, not blind ones.
+
+## Tuned sets
+
 All runs on Oct 29 2026, Muse Spark Open (`meta-models/muse-spark-open-1026` on Baseten), 0 fallbacks to Claude.
 
 The round 2 real-new-parent judge found that in 1 of 3 nights the bot logged 90 plus 70 ml for one bottle while saying "corregido", and that "se mando doble perdon" deleted the only breast feed. This run asks the same question on new phrasings: after each message, is the log what a careful parent would have written?
@@ -10,7 +25,7 @@ The round 2 real-new-parent judge found that in 1 of 3 nights the bot logged 90 
 
 After every message the whole log (kind, time, method and side, ml, milk type, duration, diaper contents, sleep start, notes) is compared with the expected log. A difference is one wrong log state, recorded with its diff, and the real log becomes the new truth so a miss is counted once. Replies are checked too: a claimed change that did not happen, a claimed log with nothing logged, "No pude anotarlo" for a question, a next-feed answer with neither a time nor how long ago.
 
-## Results
+### Results on the tuned 70 messages
 
 | Round | Code | Run 1 | Run 2 | Run 3 | Reply problems | Spend |
 |---|---|---|---|---|---|---|
