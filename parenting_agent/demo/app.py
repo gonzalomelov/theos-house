@@ -27,6 +27,7 @@ from ..agent.tools import Tool, core_tools, schema
 from ..bus import Bus
 from ..prep import DEFAULTS as PREP_DEFAULTS
 from ..prep import Prep
+from ..prep import lists as prep_lists
 from ..rhythm import patterns
 from .babylog import TZ, DemoBabyLog
 from .records import Records
@@ -45,6 +46,7 @@ PREP_WORDS = re.compile(r"\b(hospital bag|before (he|she|the baby) (arrives|is b
 # The prep lists come from the real family plan. In the demo the parents are Parent A and Parent B, and no house device
 # id or address is ever shown.
 DEMO_NAMES = (("Gonza", "Parent A"), ("Ceci", "Parent B"))
+DEMO_NAMES_ES = (("Gonza", "Persona A"), ("Ceci", "Persona B"))
 DEVICE_ID = re.compile(r"\s*\(?\b(light|switch|sensor|todo|media_player)\.[A-Za-z0-9_]+\)?")
 # Replies the demo builds itself, in the visitor's language. Spanish is es-UY: voseo, "mamadera", "pañal".
 TEXTS = {
@@ -379,10 +381,27 @@ class Visitor:
                 for e in self.baby_log.entries(None, None, limit)][::-1]
 
 
-def scrub(text):
-    for real, simulated in DEMO_NAMES:
+def scrub(text, names=DEMO_NAMES):
+    for real, simulated in names:
         text = re.sub(rf"\b{real}\b", simulated, text)
     return DEVICE_ID.sub("", text)
+
+
+def demo_item_id(item_id):
+    return item_id.replace("gonza_", "parent_a_").replace("ceci_", "parent_b_")
+
+
+# The prep lists in es-UY for a Spanish page: (list, demo item id) -> (the English text as the demo seeds it, the Spanish).
+PREP_TITLES_ES = {"nursery": "Cuarto del bebé", "hospital_bag": "Bolso para el sanatorio",
+                  "car_seat": "Silla del auto, Joie Litetrax con cinturón", "white_noise": "Máquina de ruido blanco, casera"}
+PREP_ITEMS_ES = {(name, demo_item_id(row[0])): (scrub(row[1]), scrub(prep_lists.ES[name][row[0]], DEMO_NAMES_ES))
+                 for name, spec in prep_lists.LISTS.items() for row in spec["items"] if row[0] in prep_lists.ES.get(name, {})}
+
+
+def prep_text_es(list_name, item_id, text):
+    """A seeded prep item in Spanish. An item the visitor added or reworded keeps its own words."""
+    seeded = PREP_ITEMS_ES.get((list_name, item_id))
+    return seeded[1] if seeded and seeded[0] == text else text
 
 
 class PrepMode:
@@ -414,6 +433,8 @@ class PrepMode:
                 raise ValueError("not kept: the demo never keeps an address, a phone number or a code")
             return add_appointment(title, when, place, bring)
         tools.items["add_appointment"].handler = keep_appointment
+        self.wrap_spanish(tools)
+        self.reply_lang = "en"
         self.agent.page_lang = "en"
         self.agent.reply_guards.append(plain_reply)
         self.memory.remember("baby_name", "Theo (simulated, not born yet)")
@@ -428,12 +449,48 @@ class PrepMode:
         with self.plugin.lock:
             for row_id, item_id, by, text in self.plugin.db.execute("select id, item_id, by, text from prep_items").fetchall():
                 moved = (datetime.date.fromisoformat(by) + datetime.timedelta(days=offset)).isoformat() if by else None
-                item_id = item_id.replace("gonza_", "parent_a_").replace("ceci_", "parent_b_")
+                item_id = demo_item_id(item_id)
                 self.plugin.db.execute("update prep_items set by = ?, text = ?, item_id = ? where id = ?",
                                        (moved, scrub(text), item_id, row_id))
             self.plugin.db.commit()
 
+    def wrap_spanish(self, tools):
+        """For a Spanish message the brain reads the lists in Spanish, and a few Spanish words tick an item."""
+        prep_list, prep_next, prep_check = (tools.items[n].handler for n in ("prep_list", "prep_next", "prep_check"))
+
+        def check(item, list=None, done=True):
+            try:
+                return prep_check(item, list, done)
+            except ValueError:
+                words = str(item).lower().strip()
+                hits = [key for key, (_, es) in PREP_ITEMS_ES.items()
+                        if list in (None, key[0]) and words and words in es.lower()]
+                if len(hits) != 1:
+                    raise
+                return prep_check(hits[0][1], hits[0][0], done)
+        tools.items["prep_list"].handler = lambda list=None: self.translate(prep_list(list), self.reply_lang)
+        tools.items["prep_next"].handler = lambda: self.translate(prep_next(), self.reply_lang)
+        tools.items["prep_check"].handler = check
+
+    @staticmethod
+    def translate(out, lang):
+        """prep_list or prep_next output with the seeded texts and the list titles in Spanish when lang is es."""
+        if lang != "es":
+            return out
+        out = json.loads(json.dumps(out))
+        if isinstance(out.get("items"), list):
+            name = next((k for k, v in prep_lists.LISTS.items() if v["title"] == out.get("title")), None)
+            for item in out["items"]:
+                item["text"] = prep_text_es(item.get("list", name), item["id"], item["text"])
+            if name:
+                out["title"] = PREP_TITLES_ES[name]
+        else:
+            for name, summary in out.items():
+                summary["title"] = PREP_TITLES_ES.get(name, summary["title"])
+        return out
+
     def talk(self, text):
+        self.reply_lang = self.agent.lang(text)
         start = len(self.bus.history)
         self.replies.clear()
         self.agent.handle({"kind": "message", "channel": "demo", "text": text})
@@ -443,9 +500,10 @@ class PrepMode:
         return " ".join(e["text"] for e in self.replies) or "OK.", actions
 
     def state(self, lang="en"):
-        nxt = self.plugin.next(items=3)
-        lists = self.plugin.list()
-        return {"countdown": countdown_es(nxt["countdown"]) if lang == "es" else nxt["countdown"], "items": nxt["items"], "open_total": nxt["open_total"],
+        nxt = self.translate(self.plugin.next(items=3), lang)
+        lists = self.translate(self.plugin.list(), lang)
+        return {"countdown": countdown_es(nxt["countdown"]) if lang == "es" else nxt["countdown"], "items": nxt["items"],
+                "open_total": nxt["open_total"],
                 "lists": {name: {"title": v["title"], "open": v["open"], "done": v["done"]} for name, v in lists.items()}}
 
 

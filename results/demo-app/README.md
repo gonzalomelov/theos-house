@@ -40,9 +40,25 @@ Every complaint was replayed through the internal link with curl, brain Muse Spa
 Not fixed or not shown:
 
 - Muse still writes markdown and em dashes in long answers. The page now strips `**` and turns dashes into commas (05e1ef9, replayed live once), the words are the brain's.
-- The prep list items stay in English for a Spanish visitor. The agent answers about them in Spanish.
+- The prep list items stay in English for a Spanish visitor. The agent answers about them in Spanish. Fixed in round 3 below.
 - "1 feeds" in the night summary is the rhythm engine's old wording, untouched.
-- The page in a real phone browser was not screenshotted tonight. The script passes `node --check` and the tests check the tags, chips and language switch.
+- The page in a real phone browser was not screenshotted tonight (done in round 3 below). The script passes `node --check` and the tests check the tags, chips and language switch.
 - `test_families.Isolation.test_registry_holds_no_baby_data_or_text` failed once in three full runs: it looks for the bytes "133" in a binary SQLite file, which random page bytes can hold. Unrelated to this change, it passed in isolation and in the next two full runs.
 
 Tests: `tests/test_demo_r2.py`, 30 tests. Full suite 564 tests, 5 failures, the 5 known clock-dependent ones another agent is fixing (test_redteam_r1 PreciseRefusal x2, test_voice_log x2, test_families_spanish), 4 skipped.
+
+## Round 3: the Spanish prep tab and the footer claim (issue #76)
+
+Deployed on Oct 29 2026 with `sh deploy/public.sh demo deploy` under the deploy lock (commit dc7de06). `sh deploy/public.sh demo check` afterwards: healthy, 103 of 103 wall probes refused or blocked, the proxy allows only `inference.baseten.co:443` and `api.anthropic.com:443`, env ok.
+
+Screenshots of the live page, headless Chromium at 390x844 through the internal link, the "Before he arrives" tab open:
+
+| English browser (`en-US`) | Spanish browser (`es-UY`) |
+|---|---|
+| ![English](demo-prep-en-390x844.png) | ![Spanish](demo-prep-es-390x844.png) |
+
+- With `es-UY` the page is `lang="es-UY"`, the tabs, chips, list titles and the three next items are in Spanish ("Revisar que la caja de la Litetrax traiga el huevito i-Snug 2 ...", "antes del 04/11"), and Parent A reads Persona A.
+- The footer reads "Built to refuse medical advice. Red flags go to 911." and "Hecho para no dar consejos médicos. Las señales de alarma van al 911." The refusal is a word list plus the prompt (`results/honesty/claims.md` rows 41 and 66), so the page no longer says "never". The preview card, the README and docs/architecture.md use the same short form.
+- Two live Spanish prep messages on Muse Spark Open (`run-prep-es-live.json`): "Mostrame la lista del bolso para el sanatorio" listed the 11 items in Spanish ("Las cédulas de los dos y el carné de la mutualista"), and "Ya guardamos los cargadores en el bolso" ticked `hospital_bag/chargers` and said 10 are left. Muse wrote the dates as ISO in that reply.
+
+Tests: 5 new in `tests/test_demo_r2.py` (Spanish panel, every seeded item has Spanish with no real name, Spanish tool output and ticking by Spanish words, a visitor's own item keeps its words, the footer text). Full suite 658 tests, all pass, 4 skipped.

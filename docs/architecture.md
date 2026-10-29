@@ -84,6 +84,6 @@ flowchart LR
 ## Rules the code keeps
 
 - Anything not on the allowed list waits for a parent's yes.
-- No medical advice and no diagnosis in anything the agent says. A rule gate (`parenting_agent/agent/rules.py`) refuses health questions and answers red flags with emergency services without a brain call. What the word lists miss rests on the brain's prompt.
+- Built to refuse medical advice and diagnosis, and red flags go to 911. A rule gate (`parenting_agent/agent/rules.py`) refuses health questions and answers red flags with emergency services without a brain call. What the word lists miss rests on the brain's prompt.
 - Baby log entries are never timed in the future.
 - A camera skill never says or implies the baby can be left alone, and never offers to watch the baby in the parent's place. Checked when the skill loads.

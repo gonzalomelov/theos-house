@@ -1,0 +1,23 @@
+[
+ {
+  "text": "Mostrame la lista del bolso para el sanatorio",
+  "reply": "Acá tenés la lista simulada del bolso para el sanatorio para Theo:\n- Preguntar en el sanatorio qué dan, qué llevar y dónde estacionar - para el 2026-11-10\n- Las cédulas de los dos y el carné de la mutualista - para el 2026-11-17\n- Los papeles de ingreso y lo que haya pedido el sanatorio - para el 2026-11-17\n- Cargadores del celular y un cable largo - para el 2026-11-17\n- Ropa para Persona B para 2 o 3 días, pantuflas y cosas de baño - para el 2026-11-17\n- Una muda de ropa para Persona A - para el 2026-11-17\n- La ropa de salida de Theo en talle recién nacido y de 0 a 3 meses, un gorro y una manta - para el 2026-11-17\n- Pañales de recién nacido y toallitas, si el sanatorio pide llevarlos - para el 2026-11-17\n- Algo para picar y botellas de agua - para el 2026-11-17\n- Una tarjeta y algo de efectivo para el estacionamiento - para el 2026-11-17\n- La silla del auto instalada antes de cargar el bolso (lista de la silla) - para el 2026-11-24\n\n¿Querés que tachemos algo que ya tengan pronto?",
+  "actions": [],
+  "mode": "prep"
+ },
+ {
+  "text": "Ya guardamos los cargadores en el bolso",
+  "reply": "Listo, tildé los cargadores del celular y el cable largo como prontos en el bolso para el sanatorio.\n\nTe quedan 10 pendientes en esa lista simulada. ¿Querés que sigamos con otro?",
+  "actions": [
+   {
+    "action": "check",
+    "arguments": {
+     "list": "hospital_bag",
+     "item": "chargers"
+    },
+    "status": "simulated"
+   }
+  ],
+  "mode": "prep"
+ }
+]

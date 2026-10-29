@@ -321,6 +321,56 @@ class VisitorLanguage(unittest.TestCase):
         self.assertIn("Le toca:", state["proactive"]["night_summary"]["text"])
         self.assertIn("días para la fecha de parto", state["prep"]["countdown"])
 
+    def test_the_spanish_prep_tab_shows_the_lists_in_spanish(self):
+        app, _ = demo()
+        self.addCleanup(app.close)
+        state = app.state("v", True, lang="es")["prep"]
+        self.assertEqual(state["lists"]["hospital_bag"]["title"], "Bolso para el sanatorio")
+        self.assertTrue(all(item["text"] == app_mod.prep_text_es(item["list"], item["id"], item["text"])
+                            and item["text"] != app_mod.PREP_ITEMS_ES[(item["list"], item["id"])][0]
+                            for item in state["items"]))
+        english = app.state("v", True)["prep"]
+        self.assertEqual(english["lists"]["hospital_bag"]["title"], "Hospital bag")
+        self.assertEqual([i["id"] for i in english["items"]], [i["id"] for i in state["items"]])
+
+    def test_every_seeded_prep_item_has_spanish_without_a_real_name(self):
+        prep = demo()[0]
+        self.addCleanup(prep.close)
+        rows = prep.visitor("v").prep().plugin.rows()
+        for row in rows:
+            spanish = app_mod.prep_text_es(row["list"], row["item_id"], row["text"])
+            self.assertNotEqual(spanish, row["text"], row["item_id"])
+            for word in ("Ceci", "Gonza", "Parent", "light.wiz"):
+                self.assertNotIn(word, spanish)
+        self.assertIn("Las cédulas de los dos y el carné de la mutualista", [
+            app_mod.prep_text_es(r["list"], r["item_id"], r["text"]) for r in rows])
+
+    def test_a_spanish_message_reads_the_lists_in_spanish_and_ticks_by_spanish_words(self):
+        app, _ = demo(CountingBrain())
+        self.addCleanup(app.close)
+        prep = app.visitor("v").prep()
+        prep.reply_lang = "es"
+        status, bag = prep.agent.tools.run("prep_list", {"list": "hospital_bag"})
+        self.assertEqual(bag["title"], "Bolso para el sanatorio")
+        self.assertIn("Cargadores del celular y un cable largo", [i["text"] for i in bag["items"]])
+        self.assertIn("Ropa para Persona B", json.dumps(bag, ensure_ascii=False))
+        status, done = prep.agent.tools.run("prep_check", {"item": "cargadores"})
+        self.assertEqual(status, "ran")
+        self.assertTrue(done.startswith("done: Phone chargers"))
+        prep.reply_lang = "en"
+        self.assertEqual(prep.agent.tools.run("prep_list", {"list": "hospital_bag"})[1]["title"], "Hospital bag")
+
+    def test_an_item_the_visitor_added_keeps_their_words(self):
+        self.assertEqual(app_mod.prep_text_es("hospital_bag", "chargers", "my own words"), "my own words")
+        self.assertEqual(app_mod.prep_text_es("hospital_bag", "new_item", "pañuelos"), "pañuelos")
+
+    def test_the_footer_claims_what_is_built(self):
+        page = PAGE.read_text()
+        self.assertNotIn("Never medical advice", page)
+        self.assertNotIn("Nunca consejo médico", page)
+        self.assertEqual(page.count("Built to refuse medical advice. Red flags go to 911."), 2)
+        self.assertEqual(page.count("Hecho para no dar consejos médicos. Las señales de alarma van al 911."), 2)
+
     def test_the_page_switches_to_es_uy_with_voseo_chips(self):
         page = PAGE.read_text()
         self.assertIn('document.documentElement.lang = "es-UY"', page)

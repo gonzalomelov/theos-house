@@ -124,7 +124,7 @@ footer button { font: inherit; background: none; border: 0; color: var(--muted);
   <input id="text" maxlength="300" placeholder="Type to the agent" aria-label="Message" data-es-placeholder="Escribile al agente">
   <button class="send" id="send" data-es="Enviar">Send</button>
 </form>
-<footer><span id="left" data-es="Anota, recuerda y avisa. Nunca consejo médico.">Logs, reminds and alerts. Never medical advice.</span><button id="reset" type="button" data-es="Semana simulada nueva">Fresh simulated week</button></footer>
+<footer><span id="left" data-es="Anota, recuerda y avisa. Hecho para no dar consejos médicos. Las señales de alarma van al 911.">Logs, reminds and alerts. Built to refuse medical advice. Red flags go to 911.</span><button id="reset" type="button" data-es="Semana simulada nueva">Fresh simulated week</button></footer>
 <script>
 const $ = (id) => document.getElementById(id);
 const NAMES = { dim_lights: "Dim lights", hold_notifications: "Hold notifications", pause_vacuum: "Pause vacuum",
@@ -134,14 +134,14 @@ let mode = "baby";
 const LANG = /^es\b/i.test(navigator.language || "") ? "es" : "en";
 const T = {
   en: { inAbout: (m, g) => "in about " + m + " min, every ~" + g + " min", ago: (m) => "expected " + m + " min ago",
-        left: (n) => n + " messages left. Never medical advice.", leftShort: (n) => n + " messages left.", by: "by",
+        left: (n) => n + " messages left. Built to refuse medical advice. Red flags go to 911.", leftShort: (n) => n + " messages left.", by: "by", day: (iso) => iso,
         simLists: "Simulated lists.", open: "open", thinking: "thinking...", wrong: "Something went wrong. Please try again.",
         unreachable: "Could not reach the demo. Please try again.", resting: "The demo is resting for today. Please come back tomorrow.",
         fresh: "A fresh copy of Theo's simulated week is ready. What would you like to know?",
         house: "Simulated house: ", ask: "Waits for your yes: ", feed: "Feed, ", diaper: "Diaper, ", wet: "wet", dirty: "dirty",
         and: " and ", sleep: "Sleep, " },
   es: { inAbout: (m, g) => "en unos " + m + " min, cada ~" + g + " min", ago: (m) => "se esperaba hace " + m + " min",
-        left: (n) => "Te quedan " + n + " mensajes. Nunca consejo médico.", leftShort: (n) => "Te quedan " + n + " mensajes.", by: "antes del",
+        left: (n) => "Te quedan " + n + " mensajes. Hecho para no dar consejos médicos. Las señales de alarma van al 911.", leftShort: (n) => "Te quedan " + n + " mensajes.", by: "antes del", day: (iso) => iso.slice(8, 10) + "/" + iso.slice(5, 7),
         simLists: "Listas simuladas.", open: "pendientes", thinking: "pensando...", wrong: "Algo salió mal. Probá de nuevo.",
         unreachable: "No pude llegar a la demo. Probá de nuevo.", resting: "La demo descansa por hoy. Volvé mañana.",
         fresh: "Lista una copia nueva de la semana simulada de Theo. ¿Qué querés saber?",
@@ -204,7 +204,7 @@ function render(state) {
     ul.textContent = "";
     for (const item of state.prep.items || []) {
       const li = document.createElement("li");
-      li.textContent = item.text + (item.by ? " (" + T.by + " " + item.by + ")" : "");
+      li.textContent = item.text + (item.by ? " (" + T.by + " " + T.day(item.by) + ")" : "");
       ul.appendChild(li);
     }
     $("prep-lists").textContent = Object.values(state.prep.lists || {}).map((l) => l.title.split(",")[0] + " " + l.open + " " + T.open).join(" · ");
