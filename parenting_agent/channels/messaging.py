@@ -15,6 +15,8 @@ have a chat on it, so a person with no chat shows as not connected instead of si
 Voice notes: when the agent config has a "voice" block (parenting_agent/voice/client.py), a voice note is downloaded,
 heard by Muse and handed to the agent as the words it heard, so it takes the same path as a typed note. The reply to
 it goes back as text that starts with the words heard, so a mishearing is easy to correct, and as a voice note.
+The words are screened first (parenting_agent/voice/screen.py): when Muse answered instead of writing down, nothing is
+echoed or acted on and the parent is asked to say it again, and heard words with a dose are never echoed.
 """
 import os
 import threading
@@ -22,8 +24,10 @@ import time
 from dataclasses import dataclass
 from pathlib import Path
 
+from ..agent import rules
 from ..agent.plugins import Plugin
 from ..voice import client as voice_client
+from ..voice import screen as voice_screen
 
 
 @dataclass
@@ -150,17 +154,21 @@ class MessagingChannel(Plugin):
                 self.agent.bus.publish("channel_ignored", channel=self.name, chat_id=item.chat_id)
                 continue
             text = item.text.strip()
+            voice = False
+            self.heard.pop(item.chat_id, None)
             if not text and item.voice_file_id:
                 text = self.hear(item)
-                if text:
+                verdict = self.screen(item, text) if text else None
+                if verdict == "answer":
+                    continue
+                if verdict == "ok":
                     self.heard[item.chat_id] = text
-            else:
-                self.heard.pop(item.chat_id, None)
+                voice = bool(text)
             if not text:
                 continue
             self.last_chat = item.chat_id
             self.agent.bus.publish("message", channel=self.name, text=text, chat_id=item.chat_id,
-                                   person=self.person_of(item.chat_id), voice=item.chat_id in self.heard)
+                                   person=self.person_of(item.chat_id), voice=voice)
             accepted.append(item)
         return accepted
 
@@ -182,6 +190,16 @@ class MessagingChannel(Plugin):
         if not text:
             self.send_text(item.chat_id, NOT_HEARD[lang])
         return text
+
+    def screen(self, item, text):
+        """ "ok", "no_echo" or "answer". An answer from the ear is never the parent's words: it is not echoed, not
+        handed to the agent, and the parent is asked to say it again, with the health line."""
+        verdict, reason = voice_screen.screen(text, getattr(self.voice, "seconds", None))
+        if verdict != "ok":
+            self.agent.bus.publish("voice_screened", channel=self.name, verdict=verdict, reason=reason, chars=len(text))
+        if verdict == "answer":
+            self.send_text(item.chat_id, voice_screen.not_understood("es" if rules.looks_spanish(text) else "en"))
+        return verdict
 
     def send_text(self, chat, text):
         try:

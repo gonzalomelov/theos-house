@@ -114,6 +114,13 @@ NOTE_WORDS_ES = [
 SPANISH = re.compile(r"[ñáéíóú¿¡]|\b(se|le|la|el|de|del|un|una|y|con|ya|reci[eé]n|hoy)\b", re.I)
 # A reply that says something went into the log. "Noted" and "OK" are not claims, so small talk is never one.
 CLAIMS_LOGGED = re.compile(r"\b(logged|recorded|added (it )?to the log|anot[eé]|anotad[oa]s?|registr[eé]|registrad[oa]s?)\b", re.I)
+# A reply that says the agent reached someone or did something in the house: sent, called, announced, asked, told.
+CLAIMS_ACTED = re.compile(
+    r"\b(sent|texted|messaged|notified|pinged|announced|(asked|called|told) (him|her|them|your|ceci|gonza|the)|"
+    r"let (him|her|them|your partner) know|(trying|going) to reach|reach(ed|ing)|"
+    r"(is|are) on (his|her|their|the) way|request (was |has been )?(sent|made)|"
+    r"envi[eé]|enviad[oa]s?|mand[eé]|mandad[oa]s?|avis[eé]|avisad[oa]s?|llam[eé]|le ped[ií]|les ped[ií]|le escrib[ií]|"
+    r"anunci[eé]|le dije|les dije|va en camino|est[aá] en camino|pedido enviado|solicitud enviada)\b", re.I)
 
 # A medicine the parent gave, a milestone, or an explicit ask to log: a health message with one of these is logged
 # first (a medicine or a symptom goes in as a note), and only the advice part is refused.
@@ -137,8 +144,11 @@ ADVICE = re.compile(r"\?|\b(should i|should we|can i|can we|could i|is it normal
 BRACKETS = str.maketrans({c: "(" for c in "[\uff3b\u27e6\u3010\u3014\u2045\u3016\u301a"} | {c: ")" for c in "]\uff3d\u27e7\u3011\u3015\u2046\u3017\u301b"})
 # Secrets and codes: never read aloud on a shared speaker, never sent in a free-text push, never kept as a fact.
 SECRET = re.compile(r"\b(code|c[oó]digo|pin|password|passcode|passwd|contrase[ñn]a|clave|alarm|alarma|gate|port[oó]n|"
-                    r"wi-?fi|key|llave|lock|combination|combinaci[oó]n|cvv|card|tarjeta|account|cuenta|token)\b|"
+                    r"wi-?fi|key ?code|keypad|lock|combination|combinaci[oó]n|cvv|card|tarjeta|account|cuenta|token)\b|"
                     r"\d(?:[\s.-]?\d){3,}|@\w+\.\w+", re.I)
+CODE_WORD = re.compile(r"\b(code|c[oó]digo|pin|password|passcode|passwd|contrase[ñn]a|clave|alarm|alarma|wi-?fi|key ?code|"
+                       r"keypad|combination|combinaci[oó]n|cvv|token)\b", re.I)
+CODE_NUMBER = re.compile(r"(?<![\w.])\d(?:[\s.-]?\d){3,}(?![\w])")
 CONTACT = re.compile(r"@|\+?\d(?:[\s.-]?\d){5,}|\b(street|st\.|avenue|ave\.|road|calle|avenida|apto|apt|esquina|"
                      r"barrio|zip|postal)\b", re.I)
 # The only sentences a house speaker says, in the demo and in the family's kitchen. Free text never reaches a speaker,
@@ -403,6 +413,19 @@ def is_log_request(text):
     return log_kind(text) is not None
 
 
+def describes_house(text, observed=False):
+    """True when a reply speaks of an action in the house: "I'll announce one moment please", "Said one moment please
+    at the door", "dimmed the light". On an observation turn (the doorbell rang) the words the agent would say at the
+    door, "one moment please", count too. "Someone is at the door" only reports, it is no action."""
+    text = text or ""
+    return bool(HOUSE_ACTION.search(text) or (observed and ONE_MOMENT.search(text)))
+
+
+def claims_acted(text):
+    """True when a reply says the agent already sent, called, announced, asked or told someone."""
+    return bool(CLAIMS_ACTED.search(text or ""))
+
+
 def claims_logged(text):
     return bool(CLAIMS_LOGGED.search(text or ""))
 
@@ -446,9 +469,27 @@ def parent_text(text):
     return str(text or "").translate(BRACKETS)
 
 
+_HOUSE = (r"announc\w*|one moment|un momento|speaker|parlante|altavoz|door|doorbell|puerta|timbre|lights?|luz|luces|"
+          r"dim\w*|lamp|vacuum|aspiradora|tv|tele")
+ONE_MOMENT = re.compile(r"\b(one moment|un momento|just a moment|ya va(mos)?|we'?ll be right (there|with you))\b", re.I)
+HOUSE_ACTION = re.compile(rf"\b(i'?ll|i will|i am|i'm|i've|i have|let me|voy a|le digo|les digo|said|told|dije|avis[eé])\b"
+                          rf"[^.?!]{{0,60}}\b({_HOUSE})\b|"
+                          r"\b(announced|anunci[eé]|dimmed|turned (on|off|down) the)\b", re.I)
+
+
 def has_secret(text):
-    """True when the text names a code, a password, a key or a card, or holds a run of four or more digits."""
+    """True when the text names a code, a password, a PIN or a card, or holds a run of four or more digits. The plain
+    word "key" is no secret: "bring the spare key" is an errand, "the key code is 4471" is caught by its code."""
     return bool(SECRET.search(str(text or "")))
+
+
+def holds_code(text, numbers=True):
+    """True when a prep item or an appointment holds a code: a word that names one (code, PIN, password, wifi, alarm)
+    or, with numbers, a run of four or more digits that stands alone. Narrower than has_secret, because "the health
+    provider card" and "a MAX98357A amplifier" are items on the plan, while "gate code 4471" and "wifi password
+    babytheo2026" are not."""
+    text = str(text or "")
+    return bool(CODE_WORD.search(text) or (numbers and CODE_NUMBER.search(text)))
 
 
 def personal_detail(text):

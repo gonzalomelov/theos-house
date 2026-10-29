@@ -14,6 +14,7 @@ import urllib.request
 from ..agent import rules
 from ..agent.brain import BrainError
 from . import audio, words
+from . import screen
 from .ear import Ear
 
 # A spoken answer is the first sentences only: the text has the rest. On the Vostro CPU a sentence takes about 10 s.
@@ -76,10 +77,13 @@ class Voice:
 
     def __init__(self, backend, ear, reply_with_voice=True):
         self.backend, self.ear, self.reply_with_voice = backend, ear, reply_with_voice
+        self.seconds = None
 
     def hear(self, data):
-        """The words in a voice note. Raises VoiceError when it could not be converted or heard."""
+        """The words in a voice note. Raises VoiceError when it could not be converted or heard. seconds keeps the
+        note's length, so the screen can tell a transcript from an answer too long for the audio."""
         wav = self.backend.to_wav(data)
+        self.seconds = screen.wav_seconds(wav)
         try:
             return self.ear.hear(wav)
         except BrainError as error:

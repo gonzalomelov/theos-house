@@ -42,7 +42,7 @@ WARM_KELVIN = 2700
 
 ALONE = ("study_light", "echo_do_not_disturb", "announce_kitchen", "tv_mute", "vacuum_pause", "vacuum_dock",
          "push_gonza", "add_to_list", "house_status")
-ASK_FIRST = ("start_vacuum", "camera_floodlight", "tv_power", "tv_volume")
+ASK_FIRST = ("start_vacuum", "camera_floodlight", "tv_power", "tv_volume", "add_to_todo")
 READABLE = (STUDY_LIGHT, ECHO_DND, ECHO_ANNOUNCE, ECHO_PLAYER, VACUUM, *TVS.values(), *LISTS.values())
 # Every service target the tools may touch. A call outside it is refused even if it is not on the never list.
 TARGETS = {*READABLE, *FLOODLIGHTS.values(), None}
@@ -90,9 +90,12 @@ class HouseTools(Plugin):
         add(Tool("vacuum_dock", "Send the robot vacuum back to its base.", schema({}), self.vacuum_dock))
         add(Tool("push_gonza", "Send a push notification to Gonza's iPhone. Never a code, a password or a phone number.",
                  schema({"text": {"type": "string"}, "title": {"type": "string"}}, ["text"]), self.push_gonza))
-        add(Tool("add_to_list", "Add an item to the family to-do list or the shopping list, for example diapers.",
-                 schema({"item": {"type": "string"}, "list": {"type": "string", "enum": list(LISTS)}}, ["item"]),
+        add(Tool("add_to_list", "Add an item to the shopping list, for example diapers. The family to-do list is "
+                 "add_to_todo, which waits for the parent's yes.",
+                 schema({"item": {"type": "string"}, "list": {"type": "string", "enum": ["shopping"]}}, ["item"]),
                  self.add_to_list))
+        add(Tool("add_to_todo", "Add an item to the family to-do list. Always waits for the parent's yes, like "
+                 "prep_to_home_assistant.", schema({"item": {"type": "string"}}, ["item"]), self.add_to_todo))
         add(Tool("house_status", "Read the house: study light, kitchen Echo, TVs, robot vacuum, lists. Changes nothing.",
                  schema({}), self.status))
         add(Tool("start_vacuum", "Start the robot vacuum. Always waits for the parent's yes.", schema({}), self.start_vacuum))
@@ -197,7 +200,22 @@ class HouseTools(Plugin):
         return self.call("push_gonza", PUSH_GONZA, None, data)
 
     def add_to_list(self, item, list="shopping"):
-        return self.call("add_to_list", "todo.add_item", pick(LISTS, list, "list"), {"item": str(item)[:120]})
+        """The shopping list only. The family to-do list waits for a yes (add_to_todo), the same as
+        prep_to_home_assistant, so a brain never reaches it alone."""
+        entity = pick(LISTS, list, "list")
+        if entity != LISTS["shopping"]:
+            self.log("add_to_list", "todo.add_item", entity, "refused", reason="the to-do list waits for a yes")
+            return "add_to_list: refused, the family to-do list changes only with add_to_todo and the parent's yes"
+        return self.list_item("add_to_list", entity, item)
+
+    def add_to_todo(self, item):
+        return self.list_item("add_to_todo", LISTS["to-do"], item)
+
+    def list_item(self, action, entity, item):
+        if rules.holds_code(item):
+            self.log(action, "todo.add_item", entity, "refused", reason="holds a code or a number")
+            return f"{action}: refused, a code, a password or a long number never goes on a list"
+        return self.call(action, "todo.add_item", entity, {"item": str(item)[:120]})
 
     def status(self):
         if self.client is None:

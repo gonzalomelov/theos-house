@@ -5,13 +5,17 @@ Messenger works here, so the tests use a fake one. The read position is kept in 
 does not answer a message twice. Message text is never logged, only counts and error types.
 
 Voice notes from a parent are heard by Muse Spark Open (parenting_agent/voice) and handled as the words heard. The
-answer goes back as text that starts with those words, and as a voice note in a Meta open voice (MMS-TTS).
+answer goes back as text that starts with those words, and as a voice note in a Meta open voice (MMS-TTS). The words
+are screened first (parenting_agent/voice/screen.py): an answer Muse wrote instead of the parent's words is never echoed
+or handled, and heard words with a dose are handled but never echoed.
 """
 import threading
 from pathlib import Path
 
+from ..agent import rules
 from ..channels.messaging import NO_VOICE, NOT_HEARD, MessagingError, heard_text
 from ..voice import client as voice_client
+from ..voice import screen as voice_screen
 
 OFFSET_FILE = "families-telegram.offset"
 
@@ -60,17 +64,26 @@ class FamiliesBot:
         sent = 0
         for item in batch:
             self.save_offset(item.update_id + 1)
-            text, heard = item.text, None
+            text, heard, echo = item.text, None, False
             if not (text or "").strip() and getattr(item, "voice_file_id", ""):
                 text = heard = self.hear(item)
                 if not heard:
                     sent += 1
                     continue
+                verdict, reason = voice_screen.screen(heard, getattr(self.voice, "seconds", None))
+                if verdict != "ok":
+                    print(f"families: voice note screened, {verdict} {reason}", flush=True)
+                if verdict == "answer":
+                    lang = "es" if rules.looks_spanish(heard) else self.service.family_lang(item.user_id, getattr(item, "language_code", ""))
+                    sent += self.send([(item.chat_id, voice_screen.not_understood(lang))])
+                    continue
+                echo = verdict == "ok"
             replies = self.service.handle(item.user_id, item.chat_id, text, item.chat_type or "private",
                                           getattr(item, "language_code", ""), item.update_id)
             if heard and replies:
                 spoken = [r for _, r in replies]
-                replies = [(replies[0][0], heard_text(heard, replies[0][1]))] + replies[1:]
+                if echo:
+                    replies = [(replies[0][0], heard_text(heard, replies[0][1]))] + replies[1:]
                 sent += self.send(replies)
                 self.spoken_thread = voice_client.in_background(self.send_spoken, item.chat_id, " ".join(spoken))
                 continue

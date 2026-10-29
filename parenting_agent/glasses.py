@@ -14,6 +14,12 @@ Every request carries "Authorization: Bearer <pairing token>". The server listen
 Tailscale address, set with glasses.host or PARENTING_AGENT_GLASSES_HOST. A public address or 0.0.0.0 is
 refused, so the endpoint is never reachable from outside the house.
 
+The pairing token is never printed. It is written to a file only its owner can read (data/glasses-token, mode 600,
+or PARENTING_AGENT_GLASSES_TOKEN_FILE) and the log prints that path. The endpoint is plain HTTP: on a shared home
+Wi-Fi anyone on that network can read the token and the frames off the air and then send "yes" on /say. Use the Mac's
+Tailscale 100.x address as the host, so the phone and the Mac talk over WireGuard and nothing on the Wi-Fi sees the
+token. A home network address is for a network only the family uses.
+
 Add "parenting_agent.glasses:Glasses" to the agent plugins and set a skill's source to "glasses". The skill
 gets a view on the one shared server, so arming and finishing a skill never drops the phone's connection.
 """
@@ -26,6 +32,7 @@ import secrets
 import threading
 import time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from pathlib import Path
 
 from .agent.plugins import Plugin
 from .sources import MAX_FRAME_BYTES, Latest
@@ -46,6 +53,17 @@ def check_host(host):
     if not (ip.is_loopback or ip in TAILSCALE or (ip.is_private and not ip.is_link_local)):
         raise ValueError(f"glasses: {host} is not a private address, refusing to serve")
     return str(ip)
+
+
+def write_token(token, path=None):
+    """Writes the pairing token to a file only this user can read, and returns the path. The token is never printed."""
+    path = Path(path or os.environ.get("PARENTING_AGENT_GLASSES_TOKEN_FILE") or Path("data") / "glasses-token")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    descriptor = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+    with os.fdopen(descriptor, "w") as out:
+        out.write(token + "\n")
+    os.chmod(path, 0o600)
+    return path
 
 
 class GlassesHub(Latest):
@@ -70,14 +88,15 @@ class GlassesHub(Latest):
         self.thread.start()
 
     @classmethod
-    def shared(cls, port=DEFAULT_PORT, **kwargs):
+    def shared(cls, port=DEFAULT_PORT, token_file=None, **kwargs):
         """One hub per port in this process, so the channel and every skill share the phone's connection."""
         with cls._hubs_lock:
             hub = cls._hubs.get(port)
             if hub is None or hub.stopped:
                 hub = cls(port=port, **kwargs)
                 cls._hubs[hub.port] = hub
-                print(f"glasses endpoint: {hub.url} pairing token: {hub.token}", flush=True)
+                path = write_token(hub.token, token_file)
+                print(f"glasses endpoint: {hub.url} pairing token in {path} (readable by this user only)", flush=True)
             elif kwargs.get("on_say") is not None:
                 hub.on_say = kwargs["on_say"]
             return hub
@@ -106,13 +125,23 @@ class GlassesHub(Latest):
                 self.end_headers()
                 self.wfile.write(body)
 
+            def length(self):
+                """The body length, or None for a Content-Length that is negative or not a number."""
+                try:
+                    length = int(self.headers.get("Content-Length", 0) or 0)
+                except ValueError:
+                    return None
+                return length if length >= 0 else None
+
             def guard(self):
                 if hub.authorized(self.headers):
                     return True
                 hub.rejected += 1
-                length = int(self.headers.get("Content-Length", 0) or 0)
-                if 0 < length <= MAX_FRAME_BYTES:
+                length = self.length()
+                if length is not None and 0 < length <= MAX_FRAME_BYTES:
                     self.rfile.read(length)
+                else:
+                    self.close_connection = True
                 self.reply(401)
                 return False
 
@@ -131,7 +160,12 @@ class GlassesHub(Latest):
             def do_POST(self):
                 if not self.guard():
                     return
-                length = int(self.headers.get("Content-Length", 0) or 0)
+                length = self.length()
+                if length is None:
+                    # Content-Length -1 would read until the client hangs up and hold a server thread (round 2).
+                    self.close_connection = True
+                    self.reply(400)
+                    return
                 if length > MAX_FRAME_BYTES:
                     self.reply(413)
                     self.close_connection = True
@@ -261,6 +295,7 @@ class Glasses(Plugin):
         super().__init__(agent, config)
         self.cfg = {"port": DEFAULT_PORT, **config.get("glasses", {})}
         self.hub = GlassesHub.shared(self.cfg["port"], host=self.cfg.get("host"), token=self.cfg.get("token"),
+                                     token_file=self.cfg.get("token_file") or Path(config.get("data_dir", "data")) / "glasses-token",
                                      on_say=self.heard)
         agent.bus.subscribe(self.forward, list(FORWARDED))
 

@@ -63,6 +63,15 @@ HOLD = {"hold on", "wait", "one sec", "one second", "one moment", "a moment", "l
 APPROVAL_WINDOW_S = 180
 ASK_LINE = {"en": "Waiting for your yes: {what}. Reply yes in the next {minutes} minutes to run it, anything else cancels it.",
             "es": "Espero tu sí: {what}. Respondé sí en los próximos {minutes} minutos para hacerlo, cualquier otra cosa lo cancela."}
+NOT_ASKED = {"en": "That question was for whoever asked it, on the chat it was asked in, so your yes ran nothing.",
+             "es": "Esa pregunta era para quien la pidió, en el chat donde la pidió, así que tu sí no hizo nada."}
+# A reply that claims the agent already reached someone. It goes out only when a tool that acts ran in the same turn.
+NOT_SENT = {"en": "Nothing was sent yet.", "es": "Todavía no mandé nada."}
+NOT_SENT_NOTHING = {"en": "I did not send anything, nothing ran. Tell me again what you want me to do.",
+                    "es": "No mandé nada, no se hizo nada. Decime de nuevo qué querés que haga."}
+# Tools that reach no one: a reply that says "sent" or "announced" needs a tool outside these to have run.
+QUIET_TOOLS = {"log_baby_event", "edit_baby_event", "delete_baby_event", "remember", "prep_next", "prep_list",
+               "appointments", "nursery_plan", "house_status"}
 EXPIRED = {"en": "That question expired, so nothing ran. Ask me again if you still want it.",
            "es": "Esa pregunta venció, así que no hice nada. Pedímelo de nuevo si todavía lo querés."}
 HEALTH_LOG = ("[check from the agent, not the parent] This message reports something the parent wants kept. Log it once "
@@ -103,6 +112,10 @@ EDIT_CHECK = ("[check from the agent, not the parent] The parent's newest messag
               "an entry already in the log, and the log has not changed. Call edit_baby_event or delete_baby_event once "
               "for the entry it means (read_baby_log gives the ids and times). Never log a new entry for a correction. "
               + QUIET)
+ACT_CHECK = ("[check from the agent, not the parent] Your answer says something was sent, said, announced or done in the "
+             "house, but no tool that acts ran in this turn. If it should happen, call the tool for it now (a tool that "
+             "waits for the parent's yes is called too, the parent is asked). If not, answer without saying it "
+             "happened. " + QUIET)
 READ_TOOLS = {"read_baby_log", "baby_summary", "current_time", "next_feed"}
 EDIT_TOOLS = {"edit_baby_event", "delete_baby_event"}
 ONE_AFTER_CHECK = "not logged: after the check only the newest message is logged, once. Earlier messages were already handled."
@@ -275,6 +288,8 @@ class Agent:
         self.said = 0
         # Callables text -> text run on every reply before it is said, such as a camera skill's "never leave" guard.
         self.reply_guards = []
+        # Standing instructions a plug-in adds to the system prompt. Never a fact: a fact can be overwritten by remember.
+        self.prompt_notes = []
         bus.subscribe(self.inbox.put, ["message", "observation"])
 
     def start(self):
@@ -339,7 +354,9 @@ class Agent:
 
     def system_prompt(self):
         facts = {key: item["value"] for key, item in self.memory.facts().items()} or "none yet"
-        return SYSTEM.format(today=self.now().date().isoformat(), facts=json.dumps(facts, ensure_ascii=False))
+        base = SYSTEM.format(today=self.now().date().isoformat(), facts=json.dumps(facts, ensure_ascii=False))
+        notes = getattr(self, "prompt_notes", [])
+        return base + ("Standing rules from the agent itself:\n" + "".join(f"- {note}\n" for note in notes) if notes else "")
 
     def transcript(self, new_text):
         items = [{"role": m["role"], "text": f"[{m['ts'][11:16]}] {m['text']}" if m["role"] == "user" else m["text"]}
@@ -347,92 +364,123 @@ class Agent:
         items.append({"role": "user", "text": new_text})
         return items
 
-    def wait_for_yes(self, call):
-        """Keep a call for the parent's yes, frozen as it was asked: a later change to its arguments never runs."""
+    def wait_for_yes(self, call, channel=None):
+        """Keep a call for the parent's yes, frozen as it was asked: a later change to its arguments never runs. It is
+        bound to the channel, the person and the chat that were asked, so only their yes runs it."""
+        event = self.current_event or {}
+        asked_on = channel or event.get("channel")
+        same = event.get("kind") == "message" and event.get("channel") == asked_on
         self.pending.append({"id": call.get("id"), "name": call["name"], "arguments": copy.deepcopy(call.get("arguments") or {}),
-                             "asked": self.clock_s()})
+                             "asked": self.clock_s(), "channel": asked_on,
+                             "person": event.get("person") if same else None,
+                             "chat_id": event.get("chat_id") if same else None})
+
+    @staticmethod
+    def asked(call, event):
+        """True when event comes from the channel, the person and the chat a pending call was asked on. A question a
+        skill or a plug-in asked is bound to its channel only."""
+        if call.get("channel") and event.get("channel") != call["channel"]:
+            return False
+        if call.get("person") and event.get("person") != call["person"]:
+            return False
+        return not (call.get("chat_id") and str(event.get("chat_id")) != str(call["chat_id"]))
 
     def propose(self, channel, name, arguments, text=None):
         """A plug-in asks the parent before one of its tools runs: the parent's next yes runs it, like a brain call
         that was not on the allowed list. A newer proposal for the same tool replaces the older one."""
         self.pending = [call for call in self.pending if call["name"] != name]
-        self.wait_for_yes({"id": f"proposal-{name}", "name": name, "arguments": dict(arguments)})
+        self.wait_for_yes({"id": f"proposal-{name}", "name": name, "arguments": dict(arguments)}, channel=channel)
         self.bus.publish("ask_parent", channel=channel, name=name, arguments=arguments, source="plugin")
         if text:
             self.say(channel, text)
 
-    def approve_pending(self, channel):
+    def approve_pending(self, channel, calls=None):
         """The parent's yes runs exactly the calls asked in the agent's last question, as they were asked, and only
-        within the approval window. A yes after it, or after any other message, runs nothing."""
-        results = []
-        for call in self.pending:
+        within the approval window. A yes after it, or after any other message, runs nothing. The answer says "Done"
+        only for a call that ran, and "Not done" for one the tool refused."""
+        calls = self.pending if calls is None else calls
+        done, failed = [], []
+        for call in calls:
             tool = self.tools.items[call["name"]]
             try:
                 result = tool.handler(**call["arguments"])
                 status = "ran_after_yes"
             except (TypeError, ValueError, KeyError, RuntimeError) as error:
                 # A call the tool refuses, for example a partner message holding a code, fails plainly and runs nothing.
-                result, status = f"not done, {error}", "failed_after_yes"
+                result, status = str(error), "failed_after_yes"
             self.bus.publish("tool", name=call["name"], status=status)
-            results.append(f"{call['name']}: {result}")
-        self.pending = []
-        self.say(channel, "Done. " + "; ".join(str(r)[:80] for r in results))
+            (done if status == "ran_after_yes" else failed).append(f"{call['name']}: {str(result)[:80]}")
+        self.pending = [call for call in self.pending if call not in calls]
+        parts = ([f"Done. {'; '.join(done)}."] if done else []) + ([f"Not done. {'; '.join(failed)}."] if failed else [])
+        self.say(channel, " ".join(parts) or "Not done. Nothing was waiting.")
 
     def handle(self, event):
         channel = event.get("channel", "console")
         if event["kind"] == "message":
             text = rules.parent_text(event["text"]).strip()
             word = text.lower().strip(" .!¡")
+            # Only the calls asked of this person, on this chat and channel, are theirs to answer. Another parent's yes,
+            # or a yes from the glasses for a question asked on Telegram, runs nothing and leaves the question open.
+            mine = [call for call in self.pending if self.asked(call, event)]
+            others = [call for call in self.pending if call not in mine]
             if self.pending and word in YES:
                 self.memory.add_message(channel, "user", text, ts=self.now())
-                if any(self.clock_s() - call["asked"] > self.approval_window_s for call in self.pending):
-                    self.bus.publish("guard", status="approval_expired", names=[c["name"] for c in self.pending])
-                    self.pending = []
+                if not mine:
+                    self.bus.publish("guard", status="approval_not_asked", names=[c["name"] for c in others],
+                                     person=event.get("person"), channel=channel)
+                    self.say(channel, NOT_ASKED[self.lang(text)])
+                    return
+                expired = any(self.clock_s() - call["asked"] > self.approval_window_s for call in mine)
+                self.pending = others
+                if expired:
+                    self.bus.publish("guard", status="approval_expired", names=[c["name"] for c in mine])
                     self.say(channel, EXPIRED[self.lang(text)])
                     return
-                self.approve_pending(channel)
+                self.approve_pending(channel, mine)
                 return
-            if self.pending and word not in HOLD:
+            if mine and word not in HOLD:
                 # A yes is bound to the question just asked: any other message cancels it, so a stale "ok" runs nothing.
-                self.bus.publish("guard", status="approval_cleared", names=[c["name"] for c in self.pending])
-                self.pending = []
-            if rules.is_emergency(text):
-                # Red flags never wait for the brain: the emergency number at once.
-                self.memory.add_message(channel, "user", text, ts=self.now())
-                self.bus.publish("guard", status="emergency")
-                self.say(channel, self.emergency(text))
-                return
-            if rules.is_safe_sleep_question(text):
-                # How a baby sleeps safely: the AAP's public line with its source, the same every time, no brain call.
-                self.memory.add_message(channel, "user", text, ts=self.now())
-                self.bus.publish("guard", status="safe_sleep_fact")
-                self.say(channel, self.safe_sleep(text))
-                return
-            route = rules.health_route(text) if self.health_gate else None
-            if route == "refuse":
-                # Health advice with nothing to log: the kind refusal, with no brain call.
-                self.memory.add_message(channel, "user", text, ts=self.now())
-                self.bus.publish("guard", status="health_refused")
-                self.say(channel, self.refusal(text))
-                return
-            double, self.double = self.double, None
-            if double and self.now() - double["asked"] <= DOUBLE_ANSWER_WINDOW and self.answer_double(channel, text, double):
-                return
-            stamp = self.now().strftime("%H:%M")
-            transcript = self.transcript(f"[{stamp}] {text}" + (f"\n{HEALTH_LOG}" if route == "log" else ""))
-            self.memory.add_message(channel, "user", text, ts=self.now())
-            self.health_turn = {"entries": [], "request": text} if route == "log" else None
-            try:
-                self.decide(channel, transcript, request=text, check_double=double is None)
-            finally:
-                self.health_turn = None
-            return
+                self.bus.publish("guard", status="approval_cleared", names=[c["name"] for c in mine])
+                self.pending = others
+            return self.handle_message(event, channel, text)
         else:
             observed = f"[observation from {event.get('source', 'a skill')}] {event.get('text', '')}"
             transcript = self.transcript(observed)
             # Kept in memory too, so a later turn knows why the agent spoke and does not think it invented the event.
             self.memory.add_message(channel, "user", observed, ts=self.now())
         self.decide(channel, transcript, observation=True)
+
+    def handle_message(self, event, channel, text):
+        if rules.is_emergency(text):
+            # Red flags never wait for the brain: the emergency number at once.
+            self.memory.add_message(channel, "user", text, ts=self.now())
+            self.bus.publish("guard", status="emergency")
+            self.say(channel, self.emergency(text))
+            return
+        if rules.is_safe_sleep_question(text):
+            # How a baby sleeps safely: the AAP's public line with its source, the same every time, no brain call.
+            self.memory.add_message(channel, "user", text, ts=self.now())
+            self.bus.publish("guard", status="safe_sleep_fact")
+            self.say(channel, self.safe_sleep(text))
+            return
+        route = rules.health_route(text) if self.health_gate else None
+        if route == "refuse":
+            # Health advice with nothing to log: the kind refusal, with no brain call.
+            self.memory.add_message(channel, "user", text, ts=self.now())
+            self.bus.publish("guard", status="health_refused")
+            self.say(channel, self.refusal(text))
+            return
+        double, self.double = self.double, None
+        if double and self.now() - double["asked"] <= DOUBLE_ANSWER_WINDOW and self.answer_double(channel, text, double):
+            return
+        stamp = self.now().strftime("%H:%M")
+        transcript = self.transcript(f"[{stamp}] {text}" + (f"\n{HEALTH_LOG}" if route == "log" else ""))
+        self.memory.add_message(channel, "user", text, ts=self.now())
+        self.health_turn = {"entries": [], "request": text} if route == "log" else None
+        try:
+            self.decide(channel, transcript, request=text, check_double=double is None)
+        finally:
+            self.health_turn = None
 
     def emergency(self, request):
         return rules.EMERGENCY_REPLY[self.lang(request)]
@@ -557,6 +605,7 @@ class Agent:
         system, specs = self.system_prompt(), self.tools.specs()
         logged, kept, changed = {}, [], []
         failed, acted, checked, edit_checked = False, None, False, False
+        actors, act_checked = set(), False
         asked = 0
         wanted = rules.log_kind(request) if request is not None else None
         editing = request is not None and rules.is_edit_request(request)
@@ -612,6 +661,18 @@ class Agent:
                         continue
                     self.bus.publish("guard", status="not_logged", failed=failed)
                     return finish(self.not_logged(request), fixed=True)
+                if not actors and (rules.claims_acted(reply.text) or rules.describes_house(reply.text, observation)):
+                    # "Partner request sent" with nothing sent (live, round 2), or the door words with no announce (the
+                    # full day, PR #79): a reply that says the agent did something goes out only when a tool that acts
+                    # ran in this turn. The brain is asked once to call the tool, then the answer is the honest one.
+                    if not act_checked:
+                        act_checked = True
+                        self.bus.publish("guard", status="asked_to_act", asked=bool(asked))
+                        transcript.append({"role": "assistant", "text": reply.text or "(no answer)"})
+                        transcript.append({"role": "user", "text": ACT_CHECK})
+                        continue
+                    self.bus.publish("guard", status="claimed_action", asked=bool(asked))
+                    return finish((NOT_SENT if asked else NOT_SENT_NOTHING)[lang])
                 return finish(reply.text or "OK.")
             if request is not None:
                 reply.tool_calls = rules.one_diaper(reply.tool_calls, request)
@@ -622,6 +683,12 @@ class Agent:
                     if call["name"] == "log_baby_event":
                         arguments["details"], ts = rules.said_only(request, arguments.get("kind"), arguments.get("details"), arguments.get("ts"))
                         arguments.pop("ts", None)
+                        if isinstance(arguments["details"], dict):
+                            # "she napped from 22:30 to 23:30" sent after midnight: a nap's start and end roll back to
+                            # the latest such time, like ts, so last night's nap is never refused as in the future.
+                            for name in ("start", "end"):
+                                if arguments["details"].get(name):
+                                    arguments["details"][name] = rules.latest_time(arguments["details"][name], self.now(), request)
                         if ts:
                             ts = rules.latest_time(ts, self.now(), request)
                         named = rules.named_time(request, self.now())
@@ -700,6 +767,8 @@ class Agent:
                     acted = "ask_parent"
                 elif status == "ran" and call["name"] not in READ_TOOLS and acted is None:
                     acted = call["name"]
+                if status == "ran" and call["name"] not in READ_TOOLS | QUIET_TOOLS:
+                    actors.add(call["name"])
                 if key is not None and status == "ran":
                     logged[key] = result
                     kept.append(call["arguments"])
@@ -709,7 +778,7 @@ class Agent:
                     changed.append(result)
                 if status == "ask_parent":
                     self.pending = [c for c in self.pending if c["name"] != call["name"]]
-                    self.wait_for_yes(call)
+                    self.wait_for_yes(call, channel)
                     asked = min(asked + 1, len(self.pending))
                     self.bus.publish("ask_parent", channel=channel, name=call["name"], arguments=call["arguments"])
                 transcript.append({"role": "tool", "id": call["id"], "name": call["name"], "result": result})

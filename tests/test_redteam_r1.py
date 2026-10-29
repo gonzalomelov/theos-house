@@ -371,7 +371,7 @@ class SelfAttack(unittest.TestCase):
         app.message("v", False, "ask my partner to come, the gate code is 4471")
         status, body = app.message("v", False, "yes")
         self.assertEqual(status, 200)
-        self.assertIn("not done", body["reply"])
+        self.assertIn("not done", body["reply"].lower())
         self.assertEqual(house_actions(app, "v"), [])
 
     def test_the_log_route_never_lets_the_brain_answer_the_health_part(self):

@@ -9,7 +9,7 @@ Built with Muse Spark Open. Every number below is from a run during the event, a
 | [results/kr222/](results/kr222/) | Changing table on generated clips streamed live: both hands off spoken 15 of 15, max 1.68 s, SAM 3.1 confirming | Oct 27 |
 | [results/hover/lift/](results/hover/lift/README.md) | Touch versus a 2 to 5 cm hover, blind: the lift check caught 15 of 16 hovers on a fresh render made after the design was frozen, with 2 false alarms on 16 touches. On the test set it was tuned against, no longer blind: 24 and 23 of 26 in two runs, 1 false voice on 16 touches. Before: 2 of 26 ([results/hover/](results/hover/README.md), Oct 28). Meta depth models scored at chance | Oct 29 |
 | [results/carseat/](results/carseat/test.md) | Car seat coach on rendered clips: 11 of 12 wrong installs flagged, 1 of 12 false alarms, 4 of 4 unseen clips abstained | Oct 28 |
-| [results/redteam/](results/redteam/README.md) | Red team round 1: 29 regression tests, all fail on the attacked code and pass after the fixes | Oct 28 |
+| [results/redteam/](results/redteam/README.md) | Red team round 1: 29 regression tests, all fail on the attacked code and pass after the fixes. Round 2: 38 tests, 27 fail on the attacked code, all pass after | Oct 28, Oct 29 |
 | [results/glasses/](results/glasses/README.md) | Full glasses loop in the iOS simulator with Meta's mock Ray-Ban Meta. Real glasses not paired yet | Oct 28 |
 | [results/muse/](results/muse/README.md) | Muse Spark Open as the brain: latency, cost, fallbacks and per-call logs | Oct 28 |
 
@@ -43,7 +43,7 @@ It logs, reminds and alerts. It is built to never give medical advice and never 
 One long-running agent sits in the middle. Everything it sees, hears and does goes through an event bus.
 
 - **Memory.** The baby's log lives in Baby Buddy, an open-source baby tracker running on the family's own server. The agent's own notes and conversation live in a local SQLite file.
-- **Brain.** A model with tools decides what to do: log a feed, answer a question from the log, arm a skill, act on the house. Anything outside the allowed list waits for a parent's yes.
+- **Brain.** A model with tools decides what to do: log a feed, answer a question from the log, arm a skill, act on the house. Anything outside the allowed list waits for the yes of the parent who was asked, on the chat where it was asked.
 - **Skills.** The changing-table and bath skills watch through a head-worn camera. A local hand detector raises the alarm in under a second when both hands leave the baby, and Meta's SAM 3.1 confirms or cancels the alarm. A hand held 2 to 5 cm above the baby looks like a touch to both, so a lift check measures how much the hand grew toward the head camera. On a fresh blind render (Oct 29) it caught 15 of 16 hovers, with 2 false alarms on 16 touches. On the test set it was tuned against it caught 24 and 23 of 26 in two runs with 1 false voice on 16 touches, against 2 of 26 before (`results/hover/lift/README.md`). Meta's depth models did not see the lift and are not used. It is untested on a real hand.
 - **Daily rhythm.** From the log it learns the baby's patterns and speaks first: the next feed, unusual days, a night summary and a fair split of the night between two parents.
 - **House.** Home Assistant is its hands: lights, notifications, speakers, the robot vacuum, the TV, as tools behind the action policy (`parenting_agent/house_tools.py`). It runs dry until `house.live` is true in the agent config, and only Gonza turns that on.

@@ -48,6 +48,9 @@ PROMPT_FACT = ("Theo is not born yet, the family is getting ready. Prep, purchas
                "(prep_next, prep_list, prep_check, prep_add, add_appointment, appointments, nursery_plan). Appointments "
                "are logistics only: never comment on anything medical.")
 LOGISTICS_ONLY = "I keep only the logistics of an appointment: what, when, where and what to bring. Nothing medical."
+NO_SECRETS = ("a code, a PIN, a password or a long number is never kept in a prep list or an appointment, it would go out "
+              "in the morning nudge. Nothing was kept")
+NUDGE_FAILED = ("The morning prep message failed today ({error}). Ask me what is next and I will answer from the lists.")
 
 
 def parse_day(value):
@@ -72,7 +75,13 @@ class Prep(Plugin):
         with self.lock:
             self.db.executescript(SCHEMA)
         self.seed()
-        agent.memory.remember("before_he_arrives", PROMPT_FACT)
+        # The instruction is a standing rule of the agent, never a fact: remember could overwrite a fact (round 2).
+        if PROMPT_FACT not in getattr(agent, "prompt_notes", []):
+            agent.prompt_notes = [*getattr(agent, "prompt_notes", []), PROMPT_FACT]
+        with self.lock:
+            self.db.execute("delete from facts where key = 'before_he_arrives'")
+            self.db.commit()
+        self.failed_day = None
         for name in ASK_FIRST:
             if name in agent.tools.allowed:
                 agent.tools.allowed.discard(name)
@@ -144,9 +153,14 @@ class Prep(Plugin):
         return [dict(zip(keys, row)) for row in found]
 
     def due_date(self):
+        """The due date a parent set, or the config date. A fact that is not a date (a "mid December" kept before
+        round 2) never stops the countdown or the nudge: the config date stands and the bad fact is reported."""
         fact = self.agent.memory.facts().get("due_date")
         if fact:
-            return parse_day(fact["value"]), False
+            try:
+                return parse_day(fact["value"]), False
+            except ValueError:
+                self.agent.bus.publish("prep_warning", error="the due_date fact is not a date, the config date is used")
         return parse_day(self.cfg["due_date"]), bool(self.cfg["due_date_estimate"])
 
     def by_date(self, item):
@@ -208,6 +222,8 @@ class Prep(Plugin):
     def add(self, list, text, by=None):
         if list not in lists_mod.LISTS:
             raise ValueError(f"unknown list {list!r}, expected one of {', '.join(lists_mod.ORDER)}")
+        if rules.holds_code(text):
+            raise ValueError(NO_SECRETS)
         if by:
             by = parse_day(by).isoformat()
         stamp = self.now().isoformat(timespec="seconds")
@@ -226,6 +242,8 @@ class Prep(Plugin):
         text = " ".join(str(part) for part in (title, place, bring) if part)
         if rules.is_medical(text) or rules.is_medical_es(text):
             raise ValueError(LOGISTICS_ONLY)
+        if rules.holds_code(title) or rules.holds_code(bring) or rules.holds_code(place, numbers=False):
+            raise ValueError(NO_SECRETS)
         moment = datetime.datetime.fromisoformat(str(when))
         if moment.tzinfo is None:
             moment = moment.replace(tzinfo=self.now().tzinfo)
@@ -293,6 +311,8 @@ class Prep(Plugin):
     def to_home_assistant(self, list):
         entity = self.cfg["ha_todo"]
         items = [i for i in self.rows(list) if not i["done"]]
+        held = [i for i in items if rules.holds_code(i["text"])]
+        items = [i for i in items if i not in held]
         reason = never_reason(entity)
         if reason:
             return f"refused: {reason}"
@@ -306,7 +326,8 @@ class Prep(Plugin):
             for item in items:
                 self.agent.bus.publish("house_call", action="prep_to_home_assistant", service="todo.add_item", entity=entity,
                                        live=False, status="dry", reason=why, data={"item": item["text"][:120]})
-            return f"dry run ({why}): {len(items)} items would go on the to-do list, nothing changed in the house"
+            return (f"dry run ({why}): {len(items)} items would go on the to-do list, nothing changed in the house"
+                    + self.held_note(held))
         added = 0
         for item in items:
             try:
@@ -318,7 +339,11 @@ class Prep(Plugin):
                 self.agent.bus.publish("house_call", action="prep_to_home_assistant", service="todo.add_item",
                                        entity=entity, live=True, status="error", error=str(error)[:200])
                 break
-        return f"added {added} of {len(items)} items to the to-do list"
+        return f"added {added} of {len(items)} items to the to-do list" + self.held_note(held)
+
+    @staticmethod
+    def held_note(held):
+        return f", {len(held)} item(s) holding a code left out" if held else ""
 
     # The morning nudge
 
@@ -333,6 +358,10 @@ class Prep(Plugin):
         if nxt["items"]:
             lines.append("Next up:")
             for item in nxt["items"]:
+                if rules.holds_code(item["text"]):
+                    # An item kept before round 2 can hold a code: the push never carries it.
+                    lines.append("- an item that holds a code, ask me for it")
+                    continue
                 lines.append(f"- {item['text'].split(': http')[0]}" + (" (late)" if item["late"] else ""))
         lines.append("Tell me when one is done, or ask what is next.")
         return "\n".join(lines)
@@ -371,6 +400,19 @@ class Prep(Plugin):
         self.agent.bus.publish("reply", channel=channel, chat_id=chat, text=text)
         return text
 
+    def nudge_failed(self, error):
+        """A nudge that fails is never silent: a prep_error event, a line in the container log and, once a day, a
+        short message to Gonza's chat that says it failed."""
+        self.agent.bus.publish("prep_error", error=str(error)[:200])
+        print(f"prep: morning nudge failed, {type(error).__name__}", flush=True)
+        today = self.now().date().isoformat()
+        chat = self.gonza_chat()
+        if chat is None or self.failed_day == today:
+            return
+        self.failed_day = today
+        self.agent.bus.publish("reply", channel=self.cfg["nudge"]["channel"], chat_id=chat,
+                               text=NUDGE_FAILED.format(error=type(error).__name__))
+
     def tick(self):
         now = self.now()
         if self.nudge_due(now):
@@ -380,8 +422,8 @@ class Prep(Plugin):
         while not self.stopped.is_set():
             try:
                 self.tick()
-            except Exception as error:  # noqa: BLE001 a failed nudge is logged, the agent keeps running
-                self.agent.bus.publish("prep_error", error=str(error)[:200])
+            except Exception as error:  # noqa: BLE001 a failed nudge is reported, the agent keeps running
+                self.nudge_failed(error)
             self.stopped.wait(self.cfg["nudge"]["check_every_s"])
 
     def start(self):

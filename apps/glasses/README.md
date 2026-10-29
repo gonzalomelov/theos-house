@@ -45,7 +45,8 @@ Nothing here needs a Meta developer account or an app ID. Developer Mode skips D
    ```bash
    PARENTING_AGENT_GLASSES_HOST=192.168.x.y python -m parenting_agent --config config/agent.glasses.json
    ```
-   It prints `glasses endpoint: http://192.168.x.y:8766/ pairing token: ...`. A public address or 0.0.0.0 is refused. Set `PARENTING_AGENT_GLASSES_TOKEN` to keep the same token across restarts.
+   It prints `glasses endpoint: http://192.168.x.y:8766/ pairing token in data/glasses-token`. The token is never printed: read it with `cat data/glasses-token` (mode 600). A public address or 0.0.0.0 is refused. Set `PARENTING_AGENT_GLASSES_TOKEN` to keep the same token across restarts.
+   The link is plain HTTP, so on a Wi-Fi other people share, anyone on it can read the token and send "yes" on `/say`. Prefer the Tailscale 100.x address of the Mac as the host, with Tailscale on the iPhone too: the traffic then goes over WireGuard and nothing on the Wi-Fi sees it.
 5. In the app: the gear, set the agent address `http://192.168.x.y:8766` and the pairing token, Done. iOS asks for local network access the first time, allow it.
 6. Put the glasses on, unfolded. Tap **Connect glasses**. The first time it opens the Meta AI app to approve this app and the camera, then comes back. The chips should read "Glasses · live" and "Agent connected".
 7. Say or tap "changing time", work at the changing table with a doll, lift both hands, hear the chime and "hand", then "done".
