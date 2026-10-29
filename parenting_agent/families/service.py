@@ -608,14 +608,14 @@ class Families:
         if "awake_min" in ctx and "usual_awake_min" in ctx:
             evidence["tired"] = f.t("CRY_TIRED", ago=_hm(ctx["awake_min"]), usual=_hm(ctx["usual_awake_min"]))
         if "since_change_min" in ctx:
-            unchanged = "last_feed" in ctx and ctx["last_change"] < ctx["last_feed"] and ctx.get("feed_ended", True)
-            evidence["diaper"] = (f.t("CRY_DIAPER_SINCE_FEED", at=patterns.hhmm(ctx["last_feed"].astimezone(self.tz))) if unchanged
+            evidence["diaper"] = (f.t("CRY_DIAPER_SINCE_FEED", at=patterns.hhmm(ctx["last_feed"].astimezone(self.tz)))
+                                  if cry_reason.diaper_after_feed(ctx)
                                   else f.t("CRY_DIAPER", ago=_hm(ctx["since_change_min"])))
         evidence["comfort"] = f.t("CRY_COMFORT")
-        top = ranked[0][1]
+        top = ranked[0][1] if cry_reason.is_likely(ranked) else "comfort"
         text = (f.t("CRY_NO_REASON", evidence=evidence["comfort"]) if top == "comfort"
                 else f.t("CRY_PROBABLY", reason=f.t(f"CRY_{top.upper()}_WORD"), evidence=evidence[top]))
-        if len(ranked) > 1 and ranked[1][1] != "comfort" and ranked[1][0] >= 0.4:
+        if top != "comfort" and len(ranked) > 1 and ranked[1][1] != "comfort" and ranked[1][0] >= cry_reason.LIKELY:
             text += " " + f.t("CRY_NEXT", reason=f.t(f"CRY_{ranked[1][1].upper()}_WORD"), evidence=evidence[ranked[1][1]])
         return text + " " + f.t("CRY_GUESS")
 

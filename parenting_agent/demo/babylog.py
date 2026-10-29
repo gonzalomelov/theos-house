@@ -21,15 +21,28 @@ def iso(moment):
     return moment.astimezone(TZ).isoformat(timespec="seconds")
 
 
-def week(now):
-    """The simulated week ending today at now: seven days of entries, the last one today, none in the future."""
+def finished(row):
+    return parse_time(row.get("end") or row.get("start") or row["time"])
+
+
+def started(row):
+    return parse_time(row.get("start") or row["time"])
+
+
+def split_week(now):
+    """The simulated week around now: the entries already over, with ids, and the rest of today, still to happen."""
     tomorrow = now.astimezone(TZ).replace(hour=0, minute=0, second=0, microsecond=0) + datetime.timedelta(days=1)
     rows = simweek.generate(seed=7, anchor=tomorrow)
-    kept = [r for r in rows if parse_time(r.get("end") or r.get("start") or r["time"]) <= now]
+    kept = [r for r in rows if finished(r) <= now]
     for i, row in enumerate(kept):
         row["ref"] = f"{row['kind']}#{i}"
         row["id"] = i + 1
-    return kept
+    return kept, sorted((r for r in rows if finished(r) > now), key=started)
+
+
+def week(now):
+    """The simulated week ending today at now: seven days of entries, the last one today, none in the future."""
+    return split_week(now)[0]
 
 
 def minutes_between(start, end):
@@ -63,13 +76,38 @@ class DemoBabyLog(BabyLog):
 
     def __init__(self, now=None, clock=None):
         self.clock = clock or (lambda: datetime.datetime.now(TZ))
-        self.rows = week(now or self.clock())
+        # The simulated day keeps going while the visitor reads: an upcoming entry joins the log once it is over, and
+        # one in progress (a feed or a sleep that started) is shown to the rhythm, so the next feed never reads late
+        # just because the simulated baby is eating right now. Once the visitor logs or changes anything the day is
+        # theirs and nothing more is added by itself.
+        self.rows, self.upcoming = split_week(now or self.clock())
         self.sleep_started = None
         self.added = 0
         self.lock = threading.Lock()
 
     def now(self):
         return self.clock().astimezone(TZ)
+
+    def advance(self):
+        """Move the simulated entries that are over by now from upcoming into the log."""
+        current = self.now()
+        with self.lock:
+            while self.upcoming and finished(self.upcoming[0]) <= current:
+                row = self.upcoming.pop(0)
+                row["id"] = max((r["id"] for r in self.rows), default=0) + 1
+                row["ref"] = f"{row['kind']}#{row['id'] - 1}"
+                self.rows.append(row)
+
+    def in_progress(self):
+        """Simulated entries that started and are not over yet, such as a feed going on now."""
+        current = self.now()
+        with self.lock:
+            return [dict(r, ref=f"{r['kind']}#now", id=0) for r in self.upcoming
+                    if r["kind"] in ("feeding", "sleep") and started(r) <= current < finished(r)]
+
+    def take_over(self):
+        with self.lock:
+            self.upcoming = []
 
     def at_or_before_now(self, ts):
         current = self.now()
@@ -92,6 +130,8 @@ class DemoBabyLog(BabyLog):
             raise ValueError(f"unknown log kind {kind}, expected one of {', '.join(LOG_KINDS)}")
         details = dict(details or {})
         self.check_bounds(kind, details, ts)
+        self.advance()
+        self.take_over()
         when = self.at_or_before_now(ts or details.get("end") or details.get("time"))
         if kind == "feeding":
             # Only what the parent said: no milk type, start or length is made up. A feed with neither a start nor a
@@ -136,6 +176,7 @@ class DemoBabyLog(BabyLog):
         return self._append({"kind": "sleep", "start": iso(start), "end": iso(end), "nap": 7 <= start.hour < 19, "notes": ""})
 
     def _row(self, entry_id):
+        self.advance()
         try:
             wanted = int(entry_id)
         except (TypeError, ValueError):
@@ -156,6 +197,7 @@ class DemoBabyLog(BabyLog):
         """Change an entry of this visitor's copy in place. Returns the entry before and after, so the reply says
         exactly what changed. Simulated entries can be corrected too: the copy is the visitor's own."""
         row = self._row(entry_id)
+        self.take_over()
         before = view(row)
         new = dict(details or {})
         self.check_bounds(before["kind"], {k: v for k, v in new.items() if k in ("amount_ml", "duration_min", "start", "end")}, ts)
@@ -196,6 +238,7 @@ class DemoBabyLog(BabyLog):
 
     def delete(self, entry_id):
         row = self._row(entry_id)
+        self.take_over()
         before = view(row)
         with self.lock:
             self.rows = [r for r in self.rows if r is not row]
@@ -203,6 +246,7 @@ class DemoBabyLog(BabyLog):
 
     def entries(self, kind=None, since=None, limit=50):
         since_time = parse_time(since) if since else None
+        self.advance()
         with self.lock:
             items = [view(r) for r in self.rows]
         items = [e for e in items if (kind is None or e["kind"] == kind) and (since_time is None or parse_time(e["ts"]) >= since_time)]
@@ -210,6 +254,9 @@ class DemoBabyLog(BabyLog):
         return items[-max(int(limit or 50), 1):]
 
     def rhythm_rows(self):
-        """The rows in the simulated week's shape, which the rhythm engine reads."""
+        """The rows in the simulated week's shape, which the rhythm engine reads, with a simulated feed or sleep that is
+        going on now. The rhythm engine counts an entry from its start, so one in progress is read correctly."""
+        self.advance()
         with self.lock:
-            return [dict(r) for r in self.rows]
+            rows = [dict(r) for r in self.rows]
+        return rows + self.in_progress()

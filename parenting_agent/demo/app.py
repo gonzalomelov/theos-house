@@ -57,15 +57,16 @@ TEXTS = {
            "CRY_GUESS": "Es solo una pista del registro, nunca un diagnóstico.",
            "CRY_NOT_ENOUGH": "Todavía no hay suficiente en el registro de Theo para adivinar por qué llora. No es un diagnóstico.",
            "CRY_PROBABLY": "Por el registro, capaz que es {reason}: {evidence}.",
-           "CRY_NO_REASON": "En el registro no veo una razón clara: {evidence}.",
+           "CRY_NO_REASON": "En el registro no hay una razón probable{evidence}. Para revisar: {checks}.",
+           "CRY_CHECKS": "el pañal mojado o sucio, si tiene calor o frío, un provechito después de la toma, o capaz que solo quiere brazos",
+           "CRY_FACT_FEED": "última toma hace {ago}", "CRY_FACT_CHANGE": "último cambio de pañal hace {ago}",
+           "CRY_FACT_AWAKE": "despierto hace {ago}",
            "CRY_NEXT": "Si no, {reason}: {evidence}.",
            "CRY_HUNGRY": "la última toma fue hace {ago} y suele comer cada {gap}",
            "CRY_TIRED": "se despertó hace {ago} y suele volver a dormirse después de unos {usual}",
            "CRY_DIAPER": "el último cambio de pañal fue hace {ago}",
            "CRY_DIAPER_SINCE_FEED": "no hay cambio de pañal anotado desde la toma de las {at}",
-           "CRY_COMFORT": "comió, le cambiaron el pañal y descansó hace poco, capaz que solo quiere brazos",
-           "CRY_HUNGRY_WORD": "hambre", "CRY_TIRED_WORD": "sueño", "CRY_DIAPER_WORD": "el pañal",
-           "CRY_NEXT_FEED": "La próxima toma sería cerca de las {at}."},
+           "CRY_HUNGRY_WORD": "hambre", "CRY_TIRED_WORD": "sueño", "CRY_DIAPER_WORD": "el pañal"},
 }
 # Words that mark a short message as Spanish or English when the shared check cannot tell, like "nono eran 70".
 ES_HINT = re.compile(r"\b(nono|eran?|fue|fueron|mamadera|toma|tom[oó]|pa[ñn]al|llora\w*|durmi\w*|cu[aá]ndo|"
@@ -97,11 +98,22 @@ def message_lang(text, fallback="en"):
     return fallback if fallback in TEXTS else "en"
 
 
+def answered_by(events, from_log=False):
+    """Who wrote the answer, so the page can say it: the AI model when a brain call ran in this turn, else the log
+    (why he may be crying, read from his log by a rule) or a fixed rule (the emergency line, a refusal, a logged entry)."""
+    calls = [e for e in events if e["kind"] == "brain_call"]
+    if calls:
+        model = str(calls[-1].get("model") or "")
+        return {"kind": "brain", "model": model, "muse": "muse" in model.lower()}
+    return {"kind": "log" if from_log else "rule"}
+
+
 def night_es(text):
     """The rhythm engine's night summary in Spanish. Its sentences are a fixed template, so this is a plain mapping."""
     def day(match):
         return f"{DAYS_ES[match.group(1)]} {match.group(2)}"
     out = re.sub(r"\b(Mon|Tue|Wed|Thu|Fri|Sat|Sun) (\d{2})\b", day, text)
+    out = re.sub(r"A feed was expected around (\d{2}:\d{2}), (\d+) min ago\.", r"Se esperaba una toma cerca de las \1, hace \2 min.", out)
     for en, es in (("Tonight so far, since", "Esta noche hasta ahora, desde"), ("Last night,", "Anoche,"),
                    ("Night summary for", "Resumen de la noche del"), (" to ", " al "), (" feeds at ", " tomas a las "),
                    (" feeds,", " tomas,"), ("longest sleep", "sueño más largo"), ("Wake-ups:", "Despertares:"),
@@ -231,6 +243,7 @@ class Visitor:
         self.bus.subscribe(self.replies.append, ["reply"])
         self.brain, self.settings = brain, settings
         self._prep = None
+        self.answered_by = None
 
     def add_house_tools(self, tools):
         def simulated(action):
@@ -286,11 +299,14 @@ class Visitor:
         self.agent.page_lang = lang
         if mode == "prep" or (PREP_WORDS.search(text) and not rules.is_health(text) and not rules.is_log_request(text)):
             self.prep().agent.page_lang = lang
+            prep_start = len(self.prep().bus.history)
             reply, actions = self.prep().talk(text)
+            self.answered_by = answered_by(list(self.prep().bus.history)[prep_start:])
             return reply, actions, "prep"
         start = len(self.bus.history)
         self.replies.clear()
-        if rules.is_cry_question(text) and not rules.is_health(text) and not rules.is_log_request(text):
+        from_log = rules.is_cry_question(text) and not rules.is_health(text) and not rules.is_log_request(text)
+        if from_log:
             # "Why is he crying?" gets the likely reason from the log with no brain call, as in the families bot. Red
             # flags never reach here: is_cry_question is false for them and the agent answers with the emergency line.
             self.memory.add_message("demo", "user", text, ts=self.baby_log.now())
@@ -299,6 +315,7 @@ class Visitor:
             # Health advice is refused inside the agent before any brain call, and a dose given or a milestone is logged.
             self.agent.handle({"kind": "message", "channel": "demo", "text": text})
         reply = " ".join(e["text"] for e in self.replies) or "OK."
+        self.answered_by = answered_by(list(self.bus.history)[start:], from_log)
         return reply, self.actions_since(start), "baby"
 
     def cry_text(self, lang="en"):
@@ -317,22 +334,26 @@ class Visitor:
                 return t["CRY_NOT_ENOUGH"]
         ranked = sorted(((round(score, 3), reason) for reason, (score, _) in cry_reason.scores(ctx).items()),
                         key=lambda r: (-r[0], cry_reason.REASONS.index(r[1])))
-        evidence = {"comfort": t["CRY_COMFORT"]}
+        facts = [t["CRY_FACT_FEED"].format(ago=hm(ctx["since_feed_min"])) if "since_feed_min" in ctx else "",
+                 t["CRY_FACT_CHANGE"].format(ago=hm(ctx["since_change_min"])) if "since_change_min" in ctx else "",
+                 t["CRY_FACT_AWAKE"].format(ago=hm(ctx["awake_min"])) if "awake_min" in ctx and not ctx["asleep"] else ""]
+        known = ", ".join(f for f in facts if f)
+        evidence = {"comfort": (": " + known) if known else ""}
         if "since_feed_min" in ctx and "feed_gap_min" in ctx:
             evidence["hungry"] = t["CRY_HUNGRY"].format(ago=hm(ctx["since_feed_min"]), gap=hm(ctx["feed_gap_min"]))
         if "awake_min" in ctx and "usual_awake_min" in ctx:
             evidence["tired"] = t["CRY_TIRED"].format(ago=hm(ctx["awake_min"]), usual=hm(ctx["usual_awake_min"]))
         if "since_change_min" in ctx:
-            unchanged = "last_feed" in ctx and ctx["last_change"] < ctx["last_feed"] and ctx.get("feed_ended", True)
             evidence["diaper"] = (t["CRY_DIAPER_SINCE_FEED"].format(at=patterns.hhmm(ctx["last_feed"].astimezone(TZ)))
-                                  if unchanged else t["CRY_DIAPER"].format(ago=hm(ctx["since_change_min"])))
-        top = ranked[0][1] if ranked[0][1] in evidence else "comfort"
-        text = (t["CRY_NO_REASON"].format(evidence=evidence["comfort"]) if top == "comfort"
+                                  if cry_reason.diaper_after_feed(ctx) else t["CRY_DIAPER"].format(ago=hm(ctx["since_change_min"])))
+        top = ranked[0][1] if ranked[0][1] in evidence and cry_reason.is_likely(ranked) else "comfort"
+        text = (t["CRY_NO_REASON"].format(evidence=evidence["comfort"], checks=t["CRY_CHECKS"]) if top == "comfort"
                 else t["CRY_PROBABLY"].format(reason=t[f"CRY_{top.upper()}_WORD"], evidence=evidence[top]))
-        if len(ranked) > 1 and ranked[1][1] not in ("comfort", top) and ranked[1][1] in evidence and ranked[1][0] >= 0.4:
+        if (top != "comfort" and len(ranked) > 1 and ranked[1][1] not in ("comfort", top) and ranked[1][1] in evidence
+                and ranked[1][0] >= cry_reason.LIKELY):
             text += " " + t["CRY_NEXT"].format(reason=t[f"CRY_{ranked[1][1].upper()}_WORD"], evidence=evidence[ranked[1][1]])
         if ctx.get("next_feed_at") and top != "hungry":
-            text += " " + t["CRY_NEXT_FEED"].format(at=patterns.hhmm(ctx["next_feed_at"].astimezone(TZ)))
+            text += " " + night_es(patterns.next_feed_sentence(ctx["next_feed"], now, TZ))
         return text + " " + t["CRY_GUESS"]
 
     def rota(self):
@@ -359,7 +380,7 @@ class Visitor:
             when = patterns.hhmm(nxt["at"].astimezone(TZ))
             out["next_feed"] = {"at": when, "in_min": minutes, "gap_min": nxt["gap_min"],
                                 "text": (f"Next feed around {when}, in about {minutes} min. Feeds have been about {nxt['gap_min']} min apart."
-                                         if minutes >= 0 else f"A feed was expected around {when}, {-minutes} min ago."),
+                                         if minutes >= 0 else patterns.next_feed_sentence(nxt, now, TZ)),
                                 "house": ("dim_lights" if patterns.is_night(nxt["at"].astimezone(TZ)) else None)}
         summary = patterns.night_summary(rows, now, TZ, PARENTS, current=True)
         out["night_summary"] = {"text": night_es(summary["text"]) if lang == "es" else summary["text"], "on_duty": summary["on_duty"]}
@@ -609,7 +630,7 @@ class DemoApp:
                     v.bus.publish("agent_error", error=str(error)[:300])
                     v.memory.add_message("demo", "assistant", THINK_FAIL)
                     return 502, {"error": "brain", "reply": THINK_FAIL, "remaining": self.remaining(vid, internal)}
-            return 200, {"reply": reply, "actions": actions, "mode": mode, "proactive": v.proactive(lang), "recent": v.recent(),
+            return 200, {"reply": reply, "actions": actions, "mode": mode, "answered_by": v.answered_by, "proactive": v.proactive(lang), "recent": v.recent(),
                          "prep": v.prep().state(lang), "remaining": self.remaining(vid, internal)}
         finally:
             self.thinking.release()

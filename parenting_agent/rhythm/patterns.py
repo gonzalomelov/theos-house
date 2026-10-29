@@ -45,6 +45,13 @@ def next_feed(entries, now):
             "computed_from": [e["ref"] for e in rows[-(RECENT_GAPS + 1):]]}
 
 
+def next_feed_sentence(nxt, now, tz):
+    """The next feed as one sentence, the same wherever it is shown: ahead of now, or how long ago it was expected."""
+    at = hhmm(nxt["at"].astimezone(tz))
+    late = round((now - nxt["at"]).total_seconds() / 60)
+    return f"Next feed expected around {at}." if late <= 0 else f"A feed was expected around {at}, {late} min ago."
+
+
 def backtest_next_feed(entries, warmup=4):
     """For each feed after the warmup, the minutes between the estimate made just before it and the real start."""
     rows = feeds(entries)
@@ -179,6 +186,6 @@ def night_summary(entries, now, tz, parents, current=False):
             + (f" at {', '.join(hhmm(when(e).astimezone(tz)) for e in night_feeds)}" if night_feeds else "")
             + f", longest sleep {longest:.1f} h. Wake-ups: {per_parent}. Next on duty: {on_duty}.")
     if nxt:
-        text += f" Next feed expected around {hhmm(nxt['at'].astimezone(tz))}."
+        text += " " + next_feed_sentence(nxt, now, tz)
     refs = [e["ref"] for e in in_night] + [w["ref"] for w in wakes]
     return {"text": text, "on_duty": on_duty, "computed_from": refs or (nxt or {}).get("computed_from", [])}

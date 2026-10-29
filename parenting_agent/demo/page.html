@@ -57,6 +57,7 @@ summary { font-size: 13px; color: var(--muted); cursor: pointer; padding: 6px 0;
 .msg { max-width: 86%; padding: 9px 12px; border-radius: 16px; white-space: pre-wrap; word-wrap: break-word; }
 .agent { background: var(--card); border: 1px solid var(--line); align-self: flex-start; border-bottom-left-radius: 4px; }
 .me { background: var(--me); color: #fff; align-self: flex-end; border-bottom-right-radius: 4px; }
+.by { display: block; margin-top: 6px; font-size: 11px; color: var(--muted); }
 .note { align-self: center; font-size: 13px; color: var(--warn); background: var(--warn-bg); border-radius: 10px; padding: 6px 10px; }
 .acts { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
 .act { font-size: 12px; border-radius: 8px; padding: 4px 8px; color: var(--sim); background: var(--sim-bg); }
@@ -84,7 +85,7 @@ footer button { font: inherit; background: none; border: 0; color: var(--muted);
 <body>
 <header>
   <h1>Theo <span class="badge" data-es="BEBÉ SIMULADO">SIMULATED BABY</span></h1>
-  <p class="sub" data-es="Hablá con un agente persistente para padres primerizos. Theo es un bebé simulado, no un niño real: su semana, sus padres y la casa son simulados. Tu copia es solo tuya. Tus mensajes van al modelo de IA para responder: Muse Spark Open, el modelo abierto de Meta, en Baseten, o Claude solo si esa llamada falla. En este servidor quedan solo en memoria, nunca en disco, por 6 horas como máximo. Por favor no escribas nombres reales ni datos personales.">Talk to a persistent agent for new parents. Theo is a simulated baby boy, not a real child: his week, his parents and the house are simulated. Your copy is only yours. Your messages go to the AI model for an answer: Muse Spark Open, Meta's open model, on Baseten, or Claude only if that call fails. On this server they stay in memory only, never on disk, for at most 6 hours. Please do not type real names or personal details.</p>
+  <p class="sub" data-es="Hablá con un agente persistente para padres primerizos. Theo es un bebé simulado, no un niño real: su semana, sus padres y la casa son simulados. Tu copia es solo tuya. La mayoría de las respuestas las escribe el modelo de IA: Muse Spark Open, el modelo abierto de Meta, en Baseten, o Claude solo si esa llamada falla. Algunas salen de reglas fijas sin llamar a la IA, como por qué puede estar llorando, que se lee de su registro. Cada respuesta dice de dónde sale. En este servidor quedan solo en memoria, nunca en disco, por 6 horas como máximo. Por favor no escribas nombres reales ni datos personales.">Talk to a persistent agent for new parents. Theo is a simulated baby boy, not a real child: his week, his parents and the house are simulated. Your copy is only yours. Most answers are written by the AI model: Muse Spark Open, Meta's open model, on Baseten, or Claude only if that call fails. Some come from fixed rules with no AI call, like why he may be crying, which is read from his log. Each answer says where it came from. On this server they stay in memory only, never on disk, for at most 6 hours. Please do not type real names or personal details.</p>
 </header>
 <div class="tabs" role="tablist">
   <button class="tab" role="tab" id="tab-baby" aria-selected="true" type="button" data-es="Sus primeras semanas">His first weeks</button>
@@ -139,14 +140,16 @@ const T = {
         unreachable: "Could not reach the demo. Please try again.", resting: "The demo is resting for today. Please come back tomorrow.",
         fresh: "A fresh copy of Theo's simulated week is ready. What would you like to know?",
         house: "Simulated house: ", ask: "Waits for your yes: ", feed: "Feed, ", diaper: "Diaper, ", wet: "wet", dirty: "dirty",
-        and: " and ", sleep: "Sleep, " },
+        and: " and ", sleep: "Sleep, ",
+        src: { log: "From the log, no AI", rule: "Fixed reply, no AI", muse: "Muse Spark Open", other: "Claude, fallback" } },
   es: { inAbout: (m, g) => "en unos " + m + " min, cada ~" + g + " min", ago: (m) => "se esperaba hace " + m + " min",
         left: (n) => "Te quedan " + n + " mensajes. Hecho para no dar consejos médicos. Las señales de alarma van al 911.", leftShort: (n) => "Te quedan " + n + " mensajes.", by: "antes del", day: (iso) => iso.slice(8, 10) + "/" + iso.slice(5, 7),
         simLists: "Listas simuladas.", open: "pendientes", thinking: "pensando...", wrong: "Algo salió mal. Probá de nuevo.",
         unreachable: "No pude llegar a la demo. Probá de nuevo.", resting: "La demo descansa por hoy. Volvé mañana.",
         fresh: "Lista una copia nueva de la semana simulada de Theo. ¿Qué querés saber?",
         house: "Casa simulada: ", ask: "Espera tu sí: ", feed: "Toma, ", diaper: "Pañal, ", wet: "mojado", dirty: "sucio",
-        and: " y ", sleep: "Sueño, " },
+        and: " y ", sleep: "Sueño, ",
+        src: { log: "Del registro, sin IA", rule: "Respuesta fija, sin IA", muse: "Muse Spark Open", other: "Claude, de respaldo" } },
 }[LANG];
 if (LANG === "es") {
   document.documentElement.lang = "es-UY";
@@ -170,6 +173,14 @@ function bubble(cls, text) {
   $("thread").appendChild(el);
   $("thread").scrollTop = $("thread").scrollHeight;
   return el;
+}
+
+function source(el, by) {
+  if (!by) return;
+  const tag = document.createElement("span");
+  tag.className = "by";
+  tag.textContent = by.kind === "brain" ? (by.muse ? T.src.muse : T.src.other) : (T.src[by.kind] || T.src.rule);
+  el.appendChild(tag);
 }
 
 function actions(el, list) {
@@ -254,6 +265,7 @@ async function send(text) {
     if (ok) {
       if (data.mode && data.mode !== mode) setMode(data.mode);
       const el = bubble("agent", data.reply);
+      source(el, data.answered_by);
       actions(el, data.actions);
       render(data);
     } else {

@@ -21,6 +21,13 @@ MEDICAL_RE = re.compile(r"\b(pain\w*|hurt\w*|ill|illness|sick\w*|colic\w*|reflux
                         re.IGNORECASE)
 SOUND_WEIGHT = 0.05
 COMFORT_SCORE = 0.3
+# A change usually follows a feed, so a missing one points to the diaper only once the feed started this many minutes ago
+# and the last change is at least DIAPER_MIN_SINCE_CHANGE old. Right after a bottle the log says nothing about it.
+DIAPER_AFTER_FEED_MIN = 10
+DIAPER_MIN_SINCE_CHANGE = 45
+# Below this score no reason is likely: the agent says so and lists what to check instead of guessing.
+LIKELY = 0.4
+CHECKS = "a wet or dirty diaper, too warm or too cold, a burp after the feed, or he may just want to be held"
 
 
 def no_medical(text):
@@ -42,6 +49,30 @@ def _minutes(a, b):
     return (b - a).total_seconds() / 60
 
 
+def diaper_after_feed(ctx):
+    """True when the log shows a feed with no change after it, and both are old enough to mean something."""
+    return ("last_feed" in ctx and "last_change" in ctx and ctx["last_change"] < ctx["last_feed"]
+            and ctx.get("feed_ended", True) and ctx["since_feed_min"] >= DIAPER_AFTER_FEED_MIN
+            and ctx["since_change_min"] >= DIAPER_MIN_SINCE_CHANGE)
+
+
+def facts(ctx):
+    """What the log says right now, as plain facts: last feed, last change, awake time."""
+    out = []
+    if "since_feed_min" in ctx:
+        out.append(f"last feed {_hm(ctx['since_feed_min'])} ago")
+    if "since_change_min" in ctx:
+        out.append(f"last diaper change {_hm(ctx['since_change_min'])} ago")
+    if "awake_min" in ctx and not ctx["asleep"]:
+        out.append(f"awake {_hm(ctx['awake_min'])}")
+    return ", ".join(out)
+
+
+def is_likely(ranked):
+    """ranked is [(score, reason, ...)], best first. A reason is likely only above LIKELY and when it is not comfort."""
+    return bool(ranked) and ranked[0][1] != "comfort" and ranked[0][0] >= LIKELY
+
+
 def context(entries, now, tz):
     """What the log says at the moment of the cry. Only entries that already happened count."""
     past = ordered(entries, now)
@@ -57,7 +88,7 @@ def context(entries, now, tz):
         ctx["refs"].append(last["ref"])
     nxt = patterns.next_feed(past, now)
     if nxt:
-        ctx.update(feed_gap_min=nxt["gap_min"], next_feed_at=nxt["at"])
+        ctx.update(feed_gap_min=nxt["gap_min"], next_feed_at=nxt["at"], next_feed=nxt)
         ctx["refs"] += nxt["computed_from"]
     if changes:
         ctx.update(last_change=when(changes[-1]), since_change_min=_minutes(when(changes[-1]), now))
@@ -89,14 +120,13 @@ def scores(ctx, features=None):
         out["tired"] = (_clamp((ratio - 0.55) / 0.4),
                         f"awake {_hm(ctx['awake_min'])}, he usually sleeps again after about {_hm(ctx['usual_awake_min'])}")
     if "since_change_min" in ctx:
-        unchanged = "last_feed" in ctx and ctx["last_change"] < ctx["last_feed"] and ctx.get("feed_ended", True)
-        if unchanged:
+        if diaper_after_feed(ctx):
             out["diaper"] = (0.85, f"no diaper change since the {patterns.hhmm(ctx['last_feed'].astimezone(ctx['tz']))} "
                                    f"feed, a change usually follows each feed")
         else:
             out["diaper"] = (0.5 * _clamp(ctx["since_change_min"] / 240),
                              f"last diaper change {_hm(ctx['since_change_min'])} ago")
-    out["comfort"] = (COMFORT_SCORE, "fed, changed and rested recently by the log, he may want to be held")
+    out["comfort"] = (COMFORT_SCORE, facts(ctx) or "nothing logged yet")
     if features:
         length, voiced = features.get("length_s") or 0, features.get("voiced_share") or 0
         if length >= 60 and voiced >= 0.6 and "hungry" in out:
@@ -112,18 +142,21 @@ def explain(entries, now, tz, features=None, pronoun="he"):
     ranked = sorted(((round(s, 3), reason, text) for reason, (s, text) in scores(ctx, features).items()),
                     key=lambda r: (-r[0], REASONS.index(r[1])))
     top_score, top, evidence = ranked[0]
-    if top == "comfort":
-        text = f"Crying, no clear reason in the log: {evidence}."
+    likely = is_likely(ranked)
+    if not likely:
+        known = facts(ctx)
+        text = (f"Nothing in the log points to a likely reason{': ' + known if known else ''}. "
+                f"Things to check: {CHECKS}.")
     else:
         text = f"Probably {'a diaper' if top == 'diaper' else top}: {evidence}."
-    if len(ranked) > 1 and ranked[1][1] != "comfort" and ranked[1][0] >= 0.4:
+    if likely and len(ranked) > 1 and ranked[1][1] != "comfort" and ranked[1][0] >= LIKELY:
         text += f" Next guess: {ranked[1][1]}, {ranked[1][2]}."
     if ctx.get("next_feed_at") and top != "hungry":
-        text += f" Next feed expected around {patterns.hhmm(ctx['next_feed_at'].astimezone(tz))}."
+        text += " " + patterns.next_feed_sentence(ctx["next_feed"], now, tz)
     if pronoun != "he":
         text = re.sub(r"\bhe\b", pronoun, text)
     if not (no_medical(text) and patterns.no_advice(text)):
         raise ValueError("cry reason text failed the no-medical guard")
-    return {"top": top, "text": text, "ranked": [{"reason": r, "score": s, "evidence": t} for s, r, t in ranked],
+    return {"top": top, "likely": likely, "text": text, "ranked": [{"reason": r, "score": s, "evidence": t} for s, r, t in ranked],
             "computed_from": ctx["refs"], "asleep": ctx["asleep"],
             "next_sleep_at": ctx["next_sleep_at"].isoformat() if ctx.get("next_sleep_at") else None}
