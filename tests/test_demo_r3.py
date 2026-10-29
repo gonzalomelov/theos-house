@@ -113,6 +113,17 @@ class NextFeedAgrees(unittest.TestCase):
                          "x. Se esperaba una toma cerca de las 02:57, hace 68 min.")
 
 
+class SpanishPanelText(unittest.TestCase):
+    def test_the_next_feed_text_is_spanish_for_a_spanish_page(self):
+        for hour, minute in ((15, 0), (3, 30)):
+            app, _ = demo(CountingBrain(), now=at(hour, minute))
+            p = app.visitor("v").proactive("es")
+            app.close()
+            with self.subTest(at=f"{hour}:{minute}"):
+                self.assertTrue(p["next_feed"]["text"].startswith(("Próxima toma", "Se esperaba una toma")), p["next_feed"]["text"])
+                self.assertNotIn("Next feed", p["night_summary"]["text"])
+
+
 class SimulatedDayKeepsGoing(unittest.TestCase):
     def test_entries_that_happen_while_the_visitor_reads_join_the_log(self):
         app, clock = demo(CountingBrain(), now=at(15))

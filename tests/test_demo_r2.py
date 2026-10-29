@@ -382,8 +382,8 @@ class VisitorLanguage(unittest.TestCase):
         page = PAGE.read_text()
         self.assertNotIn("Never medical advice", page)
         self.assertNotIn("Nunca consejo médico", page)
-        self.assertEqual(page.count("Built to refuse medical advice. Red flags go to 911."), 2)
-        self.assertEqual(page.count("Hecho para no dar consejos médicos. Las señales de alarma van al 911."), 2)
+        self.assertEqual(page.count("Built to refuse medical advice. Red flags get: call 911 now."), 2)
+        self.assertEqual(page.count("Hecho para no dar consejos médicos. Ante una señal de alarma: llamá al 911 ya."), 2)
 
     def test_the_page_switches_to_es_uy_with_voseo_chips(self):
         page = PAGE.read_text()

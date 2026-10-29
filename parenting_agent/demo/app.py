@@ -394,9 +394,13 @@ class Visitor:
         if nxt:
             minutes = round((nxt["at"] - now).total_seconds() / 60)
             when = patterns.hhmm(nxt["at"].astimezone(TZ))
-            out["next_feed"] = {"at": when, "in_min": minutes, "gap_min": nxt["gap_min"],
-                                "text": (f"Next feed around {when}, in about {minutes} min. Feeds have been about {nxt['gap_min']} min apart."
-                                         if minutes >= 0 else patterns.next_feed_sentence(nxt, now, TZ)),
+            if lang == "es":
+                text = (f"Próxima toma cerca de las {when}, en unos {minutes} min. Las tomas vienen cada unos {nxt['gap_min']} min."
+                        if minutes >= 0 else night_es(patterns.next_feed_sentence(nxt, now, TZ)))
+            else:
+                text = (f"Next feed around {when}, in about {minutes} min. Feeds have been about {nxt['gap_min']} min apart."
+                        if minutes >= 0 else patterns.next_feed_sentence(nxt, now, TZ))
+            out["next_feed"] = {"at": when, "in_min": minutes, "gap_min": nxt["gap_min"], "text": text,
                                 "house": ("dim_lights" if patterns.is_night(nxt["at"].astimezone(TZ)) else None)}
         summary = patterns.night_summary(rows, now, TZ, PARENTS, current=True)
         out["night_summary"] = {"text": night_es(summary["text"]) if lang == "es" else summary["text"], "on_duty": summary["on_duty"]}

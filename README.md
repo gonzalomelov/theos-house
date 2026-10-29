@@ -7,7 +7,7 @@ Built with Muse Spark Open. Every number below is from a run during the event, a
 | Result | Headline | Run |
 |---|---|---|
 | [results/kr222/](results/kr222/) | Changing table on generated clips streamed live: both hands off spoken 15 of 15, max 1.68 s, SAM 3.1 confirming | Oct 27 |
-| [results/hover/blind/](results/hover/blind/README.md) | Touch versus a 2 to 5 cm hover, on a blind set frozen before the design: the final design caught 22 of 32 hovers and never said hand on 16 touches, 2 touches chimed. Lift with SAM 3.1 hand masks: 23 of 32, never said hand on a touch, 1 touch chimed. Lift alone, no SAM 3.1: 21 of 32, said hand on 1 touch, 2 touches chimed. Reflex alone: 0 of 32. 8 of the 16 bath hovers show one hand and are missed by design since the bath fix. SAM 3.1 helps here and is optional ([results/meta-models/](results/meta-models/README.md)). Earlier, smaller blind render: 15 of 16 hovers with 2 false alarms on 16 touches ([results/hover/lift/](results/hover/lift/README.md)). Meta depth models scored at chance | Oct 29 |
+| [results/hover/blind/](results/hover/blind/README.md) | Touch versus a 2 to 5 cm hover, on a blind set frozen before the design: the final design caught 22 of 32 hovers and never said hand on 16 touches, 2 touches chimed. Lift with SAM 3.1 hand masks: 23 of 32, never said hand on a touch, 1 touch chimed. Lift alone, no SAM 3.1: 21 of 32, said hand on 1 touch, 2 touches chimed. Reflex alone: 0 of 32. 8 of the 16 bath hovers show one hand and are missed by design since the bath fix. SAM 3.1 helps here and is optional ([results/meta-models/](results/meta-models/README.md)). Earlier, smaller blind render: 15 of 16 hovers with 2 false alarms on 16 touches ([results/hover/lift/](results/hover/lift/README.md)). Meta depth models were too weak to use, AUC 0.41 to 0.66 | Oct 29 |
 | [results/bath/onehand/](results/bath/onehand/README.md) | Bath fix: one hand on the baby stays silent 10 of 10, both hands off spoken 10 of 10, SAM 3.1 confirm on. Before the fix the one-hand clip spoke "hand" in 5 of 10 baths (PR #92) | Oct 29 |
 | [results/carseat/](results/carseat/test.md) | Car seat coach on rendered clips: 11 of 12 wrong installs flagged, 1 of 12 false alarms, 4 of 4 unseen clips abstained. SAM 3.1 is essential here: Muse alone got the shoulder belt right 12 of 28 times, and nothing else checks a belt ([results/meta-models/](results/meta-models/README.md)) | Oct 28, Oct 29 |
 | [results/redteam/](results/redteam/README.md) | Red team round 1: 29 regression tests, all fail on the attacked code and pass after the fixes. Round 2: 38 tests, 27 fail on the attacked code, all pass after (PR #81) | Oct 28, Oct 29 |
@@ -28,7 +28,7 @@ What runs where:
 |---|---|
 | Mac (M3 Max) | SAM 3.1 on the GPU, the MediaPipe hand reflex, PANNs house sounds, the glasses endpoint and the iOS simulator. Frames and audio stay here |
 | Vostro (the family's home server) | The always-on family agent, the public demo at baby.bygmv.com and the families bot, each in a walled-off container, next to Baby Buddy and Home Assistant |
-| Baseten | Muse Spark Open, the brain. It gets conversation text and tool results only |
+| Baseten | Muse Spark Open, the brain. It gets messages, voice notes and tool results |
 
 Licenses: our code is MIT ([LICENSE](LICENSE)). Models and SDKs keep their own terms, see [THIRD_PARTY.md](THIRD_PARTY.md).
 
