@@ -6,7 +6,7 @@ Muse brain, and the answer is spoken with Meta's MMS-TTS and "sent" as an OGG Op
 faked. A note scores when the log holds the right entry with the right values (or the answer has the right number,
 for the question), checked on the log itself, not on the reply text.
 
-    ttsvenv/bin/python scripts/voice_notes_run.py --keys-env ~/.parenting-agent.env
+    <python with torch and transformers> scripts/voice_notes_run.py --keys-env ~/.parenting-agent.env
 
 Needs torch and transformers (MMS-TTS) and ffmpeg. Writes results/voice/run.json, run.md and three reply samples.
 """
@@ -30,7 +30,7 @@ from parenting_agent.families.bot import FamiliesBot  # noqa: E402
 from parenting_agent.families.service import Families  # noqa: E402
 from parenting_agent.families.store import visitor_id  # noqa: E402
 from parenting_agent.voice import client as voice_client  # noqa: E402
-from parenting_agent.voice.ear import MODEL as EAR_MODEL  # noqa: E402
+from parenting_agent.voice.ear import MODEL as EAR_MODEL, PROMPT as EAR_PROMPT  # noqa: E402
 
 TZ = zoneinfo.ZoneInfo("America/Montevideo")
 NOTES = ROOT / "results" / "voice" / "notes"
@@ -185,6 +185,7 @@ def run(keys_env, model):
         text = hear(data)
         timing["hear_s"] = round(time.monotonic() - started, 3)
         timing["heard"] = text
+        timing["ear_calls"] = list(voice.ear.calls)
         return text
 
     voice.hear = timed_hear
@@ -221,7 +222,7 @@ def run(keys_env, model):
             (OUT / f"reply-{note['id']}.ogg").write_bytes(telegram.voices[0])
         steps.append({"id": note["id"], "said": note["text"], "voice": note["voice"], "heard": timing.get("heard"),
                       "reply": reply, "voice_reply_bytes": len(telegram.voices[0]) if telegram.voices else 0,
-                      "tools": list(calls),
+                      "tools": list(calls), "ear_calls": timing.get("ear_calls", []),
                       "check": what, "ok": bool(ok), "hear_s": timing.get("hear_s"), "speak_s": timing.get("speak_s"),
                       "speak_sentences": timing.get("speak_sentences", []), "total_s": total})
         print(f"{note['id']} {'ok  ' if ok else 'FAIL'} heard={timing.get('heard')!r} | {what} | {calls}", flush=True)
@@ -236,6 +237,7 @@ def run(keys_env, model):
                "tts_sentences": len(sentence_s), "tts_s_per_sentence_median": median(sentence_s),
                "tts_s_per_sentence_max": max(sentence_s) if sentence_s else None,
                "spend_usd": round(app.store.spent_today(), 4), "synthetic_audio": True,
+               "ear_calls": sum(len(s["ear_calls"]) for s in steps), "ear_prompt": EAR_PROMPT,
                "failed": [f"{s['id']}: {s['check']} (heard {s['heard']!r})" for s in steps if not s["ok"]]}
     app.close()
     return summary, steps
@@ -255,10 +257,10 @@ def write(summary, steps):
              f"{summary['ok']} of {summary['notes']} synthetic voice notes logged right "
              f"({summary['ok_es']} of 10 Spanish, {summary['ok_en']} of 10 English). Ear {summary['ear']}, brain "
              f"{summary['brain']}, voice {summary['voice']}.", "",
-             "| note | said (synthetic) | Muse heard | check | ok | hear s | total s |", "|---|---|---|---|---|---|---|"]
+             "| note | said (synthetic) | Muse heard | check | ok | ear calls, prompt tokens | hear s | total s |", "|---|---|---|---|---|---|---|---|"]
     for s in steps:
         lines.append(f"| {s['id']} | {s['said']} | {s['heard']} | {s['check']} | {'yes' if s['ok'] else 'NO'} | "
-                     f"{s['hear_s']} | {s['total_s']} |")
+                     f"{len(s['ear_calls'])}, {' '.join(str(c['prompt_tokens']) for c in s['ear_calls'])} | {s['hear_s']} | {s['total_s']} |")
     lines += ["", "## Replies", ""]
     for s in steps:
         lines += [f"**{s['id']}** {s['reply']}".replace("\n", " / "), ""]

@@ -12,7 +12,7 @@ from unittest import mock
 
 import numpy as np
 
-from parenting_agent import cry_muse, hearing
+from parenting_agent import cry_muse, hearing, muse_senses
 from parenting_agent.agent.brain import BrainError
 from parenting_agent.bus import Bus
 from parenting_agent.carseat import muse_check
@@ -62,10 +62,21 @@ class MuseSensesTest(unittest.TestCase):
         self.assertEqual(got["host"], "inference.baseten.co")
         self.assertAlmostEqual(got["usd"], (1000 * 1.25 + 500 * 4.25) / 1e6)
 
-    def test_audio_goes_as_an_audio_url_part(self):
+    def test_audio_goes_after_the_instruction_in_one_user_message(self):
+        """With a system message, or the audio before the instruction, Muse answers that it heard nothing (Oct 29)."""
         s, post = senses([{"a": 1}])
-        s.ask("sys", "q", {"type": "object"}, audio_url="data:audio/wav;base64,AAAA")
-        self.assertEqual(post.bodies[0]["messages"][1]["content"][0]["type"], "audio_url")
+        s.ask("sys", "q", {"type": "object"}, audio_wav=b"RIFFwav")
+        messages = post.bodies[0]["messages"]
+        self.assertEqual([m["role"] for m in messages], ["user"])
+        self.assertEqual([p["type"] for p in messages[0]["content"]], ["text", "input_audio"])
+        self.assertEqual(messages[0]["content"][0]["text"], "sys\n\nq")
+        self.assertEqual(messages[0]["content"][1]["input_audio"], {"data": "UklGRndhdg==", "format": "wav"})
+
+    def test_no_audio_prompt_offers_a_way_out_of_hearing(self):
+        """'If no audio reaches you' made Muse say it heard nothing even for speech it otherwise wrote down (Oct 29)."""
+        for text in (cry_muse.SYSTEM, cry_muse.TEXT, muse_senses.CANARY_SYSTEM, muse_senses.CANARY_TEXT):
+            self.assertNotIn("no audio", text.lower())
+            self.assertNotIn("attached", text.lower())
 
     def test_an_answer_that_is_not_json_is_an_error_never_a_verdict(self):
         s, _ = senses(["the seat looks fine"])
@@ -207,14 +218,14 @@ class CryMuseTest(unittest.TestCase):
         got = cry_muse.CryEars(s, {"enabled": True}).guess(np.zeros(5 * 16000))
         self.assertIn("canary failed", got["skipped"])
         self.assertEqual(len(post.bodies), 1)  # the synthetic canary only
-        self.assertIn("beeps", post.bodies[0]["messages"][1]["content"][1]["text"])
+        self.assertIn("beeps", post.bodies[0]["messages"][0]["content"][0]["text"])
 
     def test_only_the_first_clip_seconds_are_sent_and_the_guess_is_read(self):
         s, post = senses([{"heard_sound": True, "beeps": 3},
                           {"heard_sound": True, "sound": "baby_crying", "reason_guess": "hungry", "confidence": 0.7}])
         got = cry_muse.CryEars(s, {"enabled": True, "clip_s": 2.0}).guess(np.zeros(20 * 16000))
         self.assertEqual((got["reason"], got["confidence"], got["heard"]), ("hungry", 0.7, True))
-        sent = post.bodies[1]["messages"][1]["content"][0]["audio_url"]["url"]
+        sent = post.bodies[1]["messages"][0]["content"][1]["input_audio"]["data"]
         self.assertLess(len(sent), 2.5 * 16000 * 2 * 4 / 3 + 200)  # about 2 s of 16-bit audio in base64
 
     def test_a_claim_without_hearing_a_cry_gives_no_reason(self):

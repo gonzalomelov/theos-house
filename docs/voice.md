@@ -28,6 +28,8 @@ Tested with real calls on Oct 28 2026:
 
 Sometimes, with the same request that works the other times, Muse answers as if no audio came with it ("No tengo acceso al audio", "I don't have access to audio files", "Enviá el audio y lo escribo"). It happened to 2 of 20 notes in the first full run on Oct 28, and to 1 of 4 identical MP3 calls in a probe. The ear never takes such an answer as the parent's words: it asks again, up to 3 times. If all fail, the parent is asked to send it again or type it. No local fallback model was needed, Muse audio input works.
 
+Checked again on Oct 29 with clips Muse could not guess (a made-up word and random digits, in both languages): it wrote down speech in all 9 tries, the digits exact in the 6 tries of two clips, while the third clip's "sixty eight" came back as "868" every time, and its prompt tokens grow with the clip's length. Muse hears speech only. Beeps and house sounds get "I cannot hear audio". `usage.prompt_tokens_details.audio_tokens` reads 0 on every call, even when every word comes back, so that field is no sign either way. A system message, or a prompt that offers "if no audio reaches you" as a way out, makes Muse say it heard nothing. The ear has neither. Details in `results/audio-truth/README.md`.
+
 ## The voice: Meta open TTS options
 
 | Option | License | Runs here | Verdict |

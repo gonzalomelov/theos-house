@@ -15,6 +15,7 @@ from parenting_agent.agent import build
 from parenting_agent.agent import config as config_mod
 from parenting_agent.agent.babybuddy import BabyBuddyLog
 
+import fixed_clock
 from fake_babybuddy import TOKEN, FakeBabyBuddy
 
 LIVE_ENV = "~/.parenting-agent.env"
@@ -98,6 +99,8 @@ class VoiceLogBehaviour:
     brain = None
 
     def setUp(self):
+        # The notes and the seeded morning are relative to now: on a fixed afternoon they never cross midnight.
+        self.enterContext(fixed_clock.frozen())
         self.server = FakeBabyBuddy()
         self.tmp = tempfile.TemporaryDirectory()
         self.agent = make_agent(self.brain, self.tmp.name, self.server)

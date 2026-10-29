@@ -1,6 +1,8 @@
 # Voice notes: Muse hears, MMS-TTS speaks (issue #58)
 
-All numbers below come from runs on Oct 28 2026, during the hackathon. All audio is synthetic: no family audio is in this folder.
+All numbers below come from runs on Oct 28 and 29 2026, during the hackathon. All audio is synthetic: no family audio is in this folder.
+
+**Does Muse really hear? Speech yes, other sounds no.** Checked on Oct 29 with clips Muse could not guess, and the harness checked for leaks: `results/audio-truth/README.md`. The ear prompt's example used to be "(90 ml, a las 3)", which matched note es01 word for word. It is now "(35 ml, a las 11)", matching no note, and run 3 below uses it.
 
 ## The test set
 
@@ -10,16 +12,18 @@ All numbers below come from runs on Oct 28 2026, during the hackathon. All audio
 
 `scripts/voice_notes_run.py` sends each note through `FamiliesBot.poll_once_items`, the families bot's real voice path. Only Telegram is faked: the file id is the path of the OGG file, and sends are recorded. Each note is converted to WAV with ffmpeg, heard by Muse Spark Open (`meta-models/muse-spark-open-1026`, audio input), handled by the families service with Muse as the brain, and the answer is spoken with MMS-TTS and "sent" as an OGG Opus voice note. Two fictional families, one per language, each note at its own simulated time on Oct 29. A note scores when the log itself holds the right entry with the right values, or, for the question, when the answer has the right total.
 
-| | Run 1 (`run-1.json`) | Run 2 (`run.json`, `run.md`) |
-|---|---|---|
-| Notes logged right | **20 of 20** | **20 of 20** |
-| Spanish / English | 10 / 10 | 10 / 10 |
-| Answers sent as a voice note | 20 of 20 | 20 of 20 |
-| Hearing, median seconds (ffmpeg plus Muse) | 4.31 | 4.13 |
-| Whole note to answer, median seconds | 8.54 | 8.71 |
-| Muse spend for 20 notes (hearing plus brain) | $0.22 | $0.20 |
+| | Run 1, Oct 28 (`run-oct28-1.json`) | Run 2, Oct 28 (`run-oct28-2.json`, `run-oct28-2.md`) | Run 3, Oct 29, new ear prompt (`run.json`, `run.md`) |
+|---|---|---|---|
+| Notes logged right | **20 of 20** | **20 of 20** | **20 of 20** |
+| Spanish / English | 10 / 10 | 10 / 10 | 10 / 10 |
+| Answers sent as a voice note | 20 of 20 | 20 of 20 | 20 of 20 |
+| Ear calls (a refusal is asked again) | not logged | not logged | 21, one retry on en09 |
+| Prompt tokens per ear call | not logged | not logged | 243 to 284, audio_tokens 0 on every call |
+| Hearing, median seconds (ffmpeg plus Muse) | 4.31 | 4.13 | 3.94 |
+| Whole note to answer, median seconds | 8.54 | 8.71 | 7.55 |
+| Muse spend for 20 notes (hearing plus brain) | $0.22 | $0.20 | $0.20 |
 
-Target was at least 18 of 20. Both runs on the final code got 20 of 20.
+Target was at least 18 of 20. All three runs on the final code got 20 of 20. Run 3 kept every ear call's prompt tokens and audio tokens in `run.json` (`ear_calls`). `audio_tokens` reads 0 even when Muse writes down every word, so it is not a sign of hearing.
 
 Before the final code, the same set scored 14, 18, 16, 17, 20 and 16 of 20 while it was being fixed. What failed and what fixed it:
 
@@ -37,21 +41,22 @@ MMS-TTS (`facebook/mms-tts-spa`, `facebook/mms-tts-eng`, CC-BY-NC 4.0, non-comme
 
 | Where | Seconds per sentence | Sentences |
 |---|---|---|
+| Mac (Apple silicon, CPU, 2 threads), run 3 | median 0.43, max 1.33 | 21 |
 | Mac (Apple silicon, CPU, 2 threads), run 2 | median 0.40, max 0.66 | 22 |
 | Mac, run 1 | median 0.35, max 0.73 | 24 |
 | Vostro (Intel i5-6200U, 2 CPUs for the container), the voice image | 6.48, 6.67, 9.62, 10.05, 10.38, 11.45, median 9.84 | 6 |
 
 The Vostro is about 25 times slower than the Mac, so there the text answer goes out first and the voice note follows about 10 s per sentence later, in the background. Only the first 3 sentences are spoken. Nearly all the time is in the HiFi-GAN decoder's convolutions (86 percent in `mkldnn_convolution` in a profile). Turning oneDNN off made it slower (13.7 s). A faster runtime for the Vostro is the next step.
 
-Samples, OGG Opus mono 48 kHz, as Telegram receives them:
+Samples from run 3, OGG Opus mono 48 kHz, as Telegram receives them. Only the first 3 sentences are spoken:
 
 | File | What it says | Length |
 |---|---|---|
-| `reply-es01.ogg` | Anotado: mamadera de 90 ml de Tomi a las 3. | 4.5 s |
-| `reply-es08.ogg` | Hoy Tomi tomó 210 ml en mamadera, en 2 tomas. La última fue de 120 ml a las 7:30. | 11.7 s |
-| `reply-en06.ogg` | Logged breastfeed on the right side for Mia, 12 minutes at 5:50. | 5.9 s |
+| `reply-es01.ogg` | Anotado, 90 ml de mamadera a las 3 para Tomi. | 4.6 s |
+| `reply-es08.ogg` | Hoy Tomi tomó 210 ml de mamadera en 2 tomas, 90 ml a las 03:00 y 120 ml a las 07:30. Además tomó teta izquierda 10 min a las 06:40. | 16.4 s |
+| `reply-en06.ogg` | Logged breastfeeding on the right for 12 minutes for Mia. | 4.4 s |
 
-Can the voice be understood? `scripts/voice_roundtrip.py` speaks each of the 20 answers of run 2 with MMS-TTS and lets Muse hear it back. The numbers came back in **18 of 20** (`roundtrip.json`, 9 Spanish, 9 English, "4 y media" counted as 4:30). The Spanish voice is clear apart from the baby's name ("Tomi" heard as "Tommy"). The English voice loses words more often: "Logged for Mia" came back as "Lod for Maya", "dirty diaper" once as "Debra". Muse is a machine listener, so this says whether the facts survive the voice, not how it sounds to a person.
+Can the voice be understood? `scripts/voice_roundtrip.py` speaks each of the 20 answers of run 2 (Oct 28) with MMS-TTS and lets Muse hear it back. The numbers came back in **18 of 20** (`roundtrip.json`, 9 Spanish, 9 English, "4 y media" counted as 4:30). The Spanish voice is clear apart from the baby's name ("Tomi" heard as "Tommy"). The English voice loses words more often: "Logged for Mia" came back as "Lod for Maya", "dirty diaper" once as "Debra". Muse is a machine listener, so this says whether the facts survive the voice, not how it sounds to a person.
 
 ## On the Vostro (Oct 29, 00:04 to 00:10)
 

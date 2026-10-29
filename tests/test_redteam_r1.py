@@ -51,8 +51,12 @@ class Recording(ScriptedBrain):
         return super().step(system, transcript, tools)
 
 
-def demo(brain=None, **extra):
-    app = DemoApp(test_demo.settings(**extra), brain=brain)
+# A fixed evening, so "at 18:00" is earlier today and the demo week ends at the same moment on any date.
+EVENING = datetime.datetime(2026, 10, 28, 20, 30, tzinfo=datetime.timezone(datetime.timedelta(hours=-3)))
+
+
+def demo(brain=None, clock=lambda: EVENING, **extra):
+    app = DemoApp(test_demo.settings(**extra), brain=brain, clock=clock)
     return app
 
 

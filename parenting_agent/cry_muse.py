@@ -8,16 +8,17 @@ dropped right after the call. Nothing else leaves the house: no room audio, no o
 The guess is framed as a guess from the sound alone. It never names pain, illness or any medical cause, and it is
 a second opinion next to the log: one added sentence, it does not change the log's ranking.
 
-Audio path guard: the Baseten deployment measured on Oct 28 2026 took audio parts without error but did not hear
-them (0 audio tokens, "no audio" answers). So before any cry clip is sent, the canary (a synthetic beep clip, not
-house audio) must be counted right, and an answer counts only if Muse says it heard sound. While the canary fails,
-no cry audio is sent at all and the log-based reason stands alone.
+Audio path guard, measured with real calls on Oct 29 2026 (results/audio-truth): Muse hears speech in an audio part
+but not other sounds. It wrote down made-up words and random digits it could not guess, and it answered "I cannot
+hear audio" or guessed for beeps, cries, a dog and a doorbell. So before any cry clip is sent, the canary (a synthetic
+beep clip, not house audio) must be counted right, and an answer counts only if Muse says it heard a baby crying.
+While the canary fails, no cry audio is sent at all and the log-based reason stands alone.
 """
 import time
 
 from .agent.brain import BrainError
 from .cry_reason import REASONS, no_medical
-from .muse_senses import wav_bytes, wav_data_url
+from .muse_senses import wav_bytes
 
 DEFAULTS = {"enabled": False, "clip_s": 5.0, "canary_every_s": 6 * 3600, "min_confidence": 0.5}
 
@@ -33,11 +34,11 @@ SCHEMA = {
 }
 
 SYSTEM = (
-    "You listen to a few seconds of audio from a baby monitor. You make a guess, not a diagnosis. You never give "
-    "medical advice and never name pain, illness or any medical cause. If no audio reaches you, set heard_sound false.")
+    "You listen to a few seconds of sound from the baby monitor in the nursery. You make a guess, not a diagnosis. "
+    "You never give medical advice and never name pain, illness or any medical cause.")
 
 TEXT = (
-    "Is this a baby crying? If it is, guess the most likely everyday reason from the sound alone: hungry (rhythmic, "
+    "This recording is the sound in the nursery right now. Set heard_sound true when you hear it. Is this a baby crying? If it is, guess the most likely everyday reason from the sound alone: hungry (rhythmic, "
     "building, often with sucking or rooting sounds between cries), tired (whiny, on and off, with yawns or rubbing), "
     "diaper (fussy, uncomfortable, squirming), or comfort (wants to be held). Answer cannot_tell when the sound does "
     "not point to one. Give your confidence from 0 to 1.")
@@ -65,7 +66,7 @@ class CryEars:
             return {"skipped": "the audio canary failed, Muse does not hear audio on this endpoint, no clip was sent"}
         clip = samples[:int(self.cfg["clip_s"] * rate)]
         try:
-            got = self.senses.ask(SYSTEM, TEXT, SCHEMA, audio_url=wav_data_url(wav_bytes(clip, rate)))
+            got = self.senses.ask(SYSTEM, TEXT, SCHEMA, audio_wav=wav_bytes(clip, rate))
         except BrainError as error:
             return {"skipped": f"muse error: {str(error)[:120]}"}
         finally:

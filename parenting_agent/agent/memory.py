@@ -30,10 +30,6 @@ def parse_time(value):
     return moment.astimezone() if moment.tzinfo else moment.astimezone(datetime.datetime.now().astimezone().tzinfo)
 
 
-def start_of_today():
-    return datetime.datetime.now().astimezone().replace(hour=0, minute=0, second=0, microsecond=0).isoformat(timespec="seconds")
-
-
 def hhmm(ts):
     return parse_time(ts).strftime("%H:%M") if ts else None
 
@@ -125,8 +121,9 @@ class BabyLog:
             raise ValueError(f"{bad[0]} {bad[1]} is outside what one entry can be, nothing was logged")
 
     def summary(self, since=None):
-        """Totals since an instant (default midnight today) and the last of each kind, computed from the log, never guessed."""
-        since = since or start_of_today()
+        """Totals since an instant (default midnight today on the log's own clock, so a family clock and a server on UTC
+        agree) and the last of each kind, computed from the log, never guessed."""
+        since = since or self.now().replace(hour=0, minute=0, second=0, microsecond=0).isoformat(timespec="seconds")
         recent = self.entries(None, None, 200)
         window = [e for e in recent if parse_time(e["ts"]) >= parse_time(since)]
 

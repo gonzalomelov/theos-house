@@ -1,0 +1,32 @@
+[
+ {
+  "variant": "ear_prompt+audio_url",
+  "prompt_tokens": 269,
+  "answer": "The code word is Blorvik. 7392"
+ },
+ {
+  "variant": "affirm_text+input_audio",
+  "prompt_tokens": 219,
+  "answer": "La palabra secreta es trombelo, 85162"
+ },
+ {
+  "variant": "affirm_json_schema+input_audio",
+  "prompt_tokens": 227,
+  "answer": "{\"words\": \"La palabra secreta es trombelo, 85162\"}"
+ },
+ {
+  "variant": "ear_prompt+audio_url",
+  "prompt_tokens": 269,
+  "answer": null
+ },
+ {
+  "variant": "affirm_text+input_audio",
+  "prompt_tokens": 219,
+  "answer": "La palabra secreta es trumbelo. 8 5 1 6 2"
+ },
+ {
+  "variant": "affirm_json_schema+input_audio",
+  "prompt_tokens": 227,
+  "answer": "{\"words\": \"La palabra secreta es trombelo, 85162\"}"
+ }
+]

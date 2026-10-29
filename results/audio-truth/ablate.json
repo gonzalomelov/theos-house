@@ -1,0 +1,86 @@
+[
+ {
+  "variant": "ear_prompt+beep5",
+  "prompt_tokens": 267,
+  "audio_tokens": 0,
+  "answer": null,
+  "finish": "stop"
+ },
+ {
+  "variant": "ear_prompt+silence3",
+  "prompt_tokens": 267,
+  "audio_tokens": 0,
+  "answer": null,
+  "finish": "stop"
+ },
+ {
+  "variant": "ear_prompt+en1",
+  "prompt_tokens": 269,
+  "audio_tokens": 0,
+  "answer": "The code word is Blorvec 73924",
+  "finish": "stop"
+ },
+ {
+  "variant": "ear_prompt+en1pad",
+  "prompt_tokens": 356,
+  "audio_tokens": 0,
+  "answer": "The code word is Blorvik. 73924",
+  "finish": "stop"
+ },
+ {
+  "variant": "ear_prompt+long",
+  "prompt_tokens": 364,
+  "audio_tokens": 0,
+  "answer": "9 apples, 9 apples, 9 apples, 9 apples, 9 apples, 9 apples, 9 apples, 9 apples, 9 apples, 9 apples, 9 apples, 9 apples, 9 apples, 9 apples, 9 apples, 9 apples, 9 apples, 9 apples, 9 apples, 9 apples",
+  "finish": "stop"
+ },
+ {
+  "variant": "ear_prompt_noaudio",
+  "prompt_tokens": 227,
+  "audio_tokens": 0,
+  "answer": "Entendido — cuando me envíes el audio, lo transcribiré textualmente en el idioma en que esté hablado, con los números como dígitos y sin agregar nada más.\n\nListo para transcribir tu nota de voz.",
+  "finish": "stop"
+ },
+ {
+  "variant": "ear_audio_first",
+  "prompt_tokens": 269,
+  "audio_tokens": 0,
+  "answer": null,
+  "finish": "stop"
+ },
+ {
+  "variant": "ear+system",
+  "prompt_tokens": 288,
+  "audio_tokens": 0,
+  "answer": null,
+  "finish": "stop"
+ },
+ {
+  "variant": "ear+json_schema",
+  "prompt_tokens": 199,
+  "audio_tokens": 0,
+  "answer": "{\"heard_sound\": true, \"words\": \"\"}",
+  "finish": "stop"
+ },
+ {
+  "variant": "ear_cry_text_no_schema",
+  "prompt_tokens": 199,
+  "audio_tokens": 0,
+  "answer": " I don't have the ability to access or play attached audio files, so I can't transcribe any words from an audio clip. If you can provide the text in written form, I'm happy to help you work with it — for example, summarizing, editing, or reformatting it.",
+  "finish": "stop"
+ },
+ {
+  "variant": "cry_no_system",
+  "prompt_tokens": 199,
+  "audio_tokens": 0,
+  "answer": "{\"heard_sound\": false, \"words\": \"\"}",
+  "finish": "stop"
+ },
+ {
+  "variant": "cry_no_schema",
+  "prompt_tokens": 218,
+  "audio_tokens": 0,
+  "answer": "No audio was received with your request, so I cannot hear or transcribe any clip.\n\n```json\n{\n  \"heard_sound\": false,\n  \"transcription\": null,\n  \"reason\": \"No audio data was attached or reachable\"\n}\n```\n\nIf you re-attach the audio file, I can provide an exact verbatim transcription.",
+  "finish": "stop"
+ }
+]

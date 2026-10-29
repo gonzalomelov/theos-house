@@ -7,10 +7,14 @@ JSON schema, and returns the parsed answer with the tokens, the price and the se
 Nothing is written to disk. The frame or clip goes only to the configured brain host (inference.baseten.co), which
 is the one call allowed to leave the house. Spend is computed from the tokens the call reports, at the brain's price.
 
-Audio note, measured Oct 28 2026: the meta-models/muse-spark-open-1026 deployment accepted audio_url and
-input_audio parts with no error but did not hear them (0 audio tokens, and "no audio" answers on a public speech
-clip). heard() is the guard: an audio answer counts only if the model says it heard sound, and canary() checks the
-path with a clip whose answer is known before audio guesses are trusted.
+Audio, measured with real calls on Oct 29 2026 (results/audio-truth): Muse hears speech in an audio part. It wrote
+down made-up words and random digits it could not guess, in Spanish and English, and prompt_tokens grows with the
+clip's length (about 13 tokens a second) while usage.prompt_tokens_details.audio_tokens always reads 0, so that field
+says nothing about hearing. Two things make it answer "no audio" anyway: a system message, and a prompt that offers
+"if no audio reaches you" as a way out. So an audio question goes as one user message, the instruction first, then an
+input_audio part. Muse does not hear sounds that are not speech: beeps, a cry, a dog or a doorbell all get "I cannot
+hear audio" or a guess. heard() and canary() guard that: an audio answer counts only if Muse says it heard sound, and
+the beep canary must be counted right before a sound guess is trusted.
 """
 import base64
 import io
@@ -57,10 +61,6 @@ def wav_bytes(samples, rate=16000):
     return out.getvalue()
 
 
-def wav_data_url(wav):
-    return "data:audio/wav;base64," + base64.b64encode(wav).decode()
-
-
 def beeps(count, rate=16000, tone_hz=1000, beep_s=0.25, gap_s=0.35):
     """A clip with an exact number of beeps, the canary for the audio path."""
     samples = []
@@ -68,6 +68,11 @@ def beeps(count, rate=16000, tone_hz=1000, beep_s=0.25, gap_s=0.35):
         samples += [0.5 * math.sin(2 * math.pi * tone_hz * i / rate) for i in range(int(beep_s * rate))]
         samples += [0.0] * int(gap_s * rate)
     return wav_bytes(samples, rate)
+
+
+CANARY_SYSTEM = "You listen to a short sound recording from a home baby monitor."
+CANARY_TEXT = ("This recording is a test tone that beeps a few times. Count the beeps. Set heard_sound true when you "
+               "hear the tone.")
 
 
 class MuseSenses:
@@ -84,26 +89,28 @@ class MuseSenses:
             raise BrainError(f"muse senses: {self.cfg['key_env']} is not set")
         return {"Authorization": f"Bearer {key}", "Content-Type": "application/json"}
 
-    def body(self, system, text, schema, image_url=None, audio_url=None):
-        content = []
-        # Media first, then the question: the order Baseten's vision and audio guides use.
-        if image_url:
-            content.append({"type": "image_url", "image_url": {"url": image_url}})
-        if audio_url:
-            content.append({"type": "audio_url", "audio_url": {"url": audio_url}})
-        content.append({"type": "text", "text": text})
-        body = {"model": self.cfg["model"], "max_tokens": self.cfg["max_tokens"],
-                "messages": [{"role": "system", "content": system}, {"role": "user", "content": content}],
+    def body(self, system, text, schema, image_url=None, audio_wav=None):
+        if audio_wav is not None:
+            # Audio: one user message, the instruction first, then the clip. A system message makes Muse say it heard
+            # nothing, so the system text leads the instruction instead.
+            content = [{"type": "text", "text": f"{system}\n\n{text}"},
+                       {"type": "input_audio", "input_audio": {"data": base64.b64encode(audio_wav).decode(), "format": "wav"}}]
+            messages = [{"role": "user", "content": content}]
+        else:
+            # An image first, then the question: the order Baseten's vision guide uses.
+            content = ([{"type": "image_url", "image_url": {"url": image_url}}] if image_url else []) + [{"type": "text", "text": text}]
+            messages = [{"role": "system", "content": system}, {"role": "user", "content": content}]
+        body = {"model": self.cfg["model"], "max_tokens": self.cfg["max_tokens"], "messages": messages,
                 "response_format": {"type": "json_schema",
                                     "json_schema": {"name": "answer", "strict": True, "schema": schema}}}
         if self.cfg.get("reasoning_effort"):
             body["reasoning_effort"] = self.cfg["reasoning_effort"]
         return body
 
-    def ask(self, system, text, schema, image_url=None, audio_url=None):
+    def ask(self, system, text, schema, image_url=None, audio_wav=None):
         """{"answer": dict, "usage": {...}, "usd": float, "seconds": float, "host": str}. Raises BrainError."""
         started = self.clock()
-        reply = self.post(self.url, self._headers(), self.body(system, text, schema, image_url, audio_url),
+        reply = self.post(self.url, self._headers(), self.body(system, text, schema, image_url, audio_wav),
                           self.cfg["timeout_s"])
         seconds = round(self.clock() - started, 3)
         choice = (reply.get("choices") or [{}])[0]
@@ -131,9 +138,7 @@ class MuseSenses:
         schema = {"type": "object", "additionalProperties": False, "required": ["heard_sound", "beeps"],
                   "properties": {"heard_sound": {"type": "boolean"}, "beeps": {"type": "integer"}}}
         try:
-            got = self.ask("You listen to the attached audio clip. If no audio reaches you, set heard_sound false.",
-                           "How many beeps are in the attached audio clip?", schema,
-                           audio_url=wav_data_url(beeps(count)))
+            got = self.ask(CANARY_SYSTEM, CANARY_TEXT, schema, audio_wav=beeps(count))
         except BrainError:
             return False
         return bool(got["answer"].get("heard_sound")) and got["answer"].get("beeps") == count

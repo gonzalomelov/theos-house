@@ -16,7 +16,7 @@ Each brain call wrote one JSON line through `PA_BRAIN_LOG` (numbers only, no tex
 | Sitter brief (`calls-sitter.jsonl`) | 2 | 0 | 1.44 s | 1.52 s | $0.0033 | $0.007 |
 | **All six** | **123** | **0** | **1.32 s** | **2.24 s** | **$0.0042** | **$0.52** |
 
-A parent's message takes 1 or 2 brain calls (one to call a tool, one to answer). In the families run that came to $0.0068 a message. The same demo visit on Haiku cost $0.0084 in total against $0.094 on Muse, about 11 times less, with the same latency (p50 1.55 s, p90 2.04 s on Haiku).
+A parent's message takes 1 or 2 brain calls (one to call a tool, one to answer). In the families run that came to $0.0068 a message. Haiku is the cheaper brain. The same demo visit cost $0.0084 on Haiku and $0.094 on Muse, so Muse cost about 11 times more, at the prices in `config/agent.vostro.json` (Haiku 5.5 $0.10 in and $0.50 out per million tokens, Muse $1.25 and $4.25). The latency was about the same (p50 1.55 s, p90 2.04 s on Haiku). Muse is the brain because it is Meta's open model, not to save money.
 
 Muse averages about 2,860 input tokens, 157 output tokens and 98 reasoning tokens a call. Its price is $1.25 input and $4.25 output per million tokens (Baseten library page, read Oct 28 2026).
 

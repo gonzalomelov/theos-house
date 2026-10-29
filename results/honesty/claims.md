@@ -94,6 +94,15 @@ The event started Oct 26 2026 at 12 PM ET. This repo's first commit is Oct 26 15
 | 47 | "It speaks first" | README Daily rhythm | true with a note | Rhythm reminders are computed from the log outside the brain loop (`results/redteam/README.md`, still open). The family agent sends them, the demo panel is computed on page load | none, the README does not claim the brain decides |
 | 48 | "Sitter: nothing is sent until you approve it" | storyboard s12, docs/sitter-handover.md | true | `results/sitter/run.json` (Muse brain, `sent: false`), `send_handover_to_sitter` never on the allowed list | none |
 
+## Audio, checked Oct 29
+
+| # | Claim | Where | Verdict | Evidence | Fix |
+|---|---|---|---|---|---|
+| 56 | "Muse hears the voice note", 20 of 20 (PR #70) | results/voice/README.md, docs/voice.md | true for speech | Oct 29: made-up words and random digits written down in all 9 tries, harness leaks checked, ear prompt example that matched note es01 replaced, rerun 20 of 20 (`results/audio-truth/README.md`) | The voice README and docs say speech yes, other sounds no |
+| 57 | "Muse does not hear audio on this endpoint", 0 audio tokens (PR #74) | results/sounds/muse/README.md, README.md, docs/house-sounds.md | false as worded | `audio_tokens` reads 0 even when Muse writes down every word. The cry prompt's "if no audio reaches you" made Muse say it heard nothing even for speech. In the fixed shape a spoken number came back 3 of 3, beeps 0 of 3, house sounds 11 of 46 | All three rewritten: Muse hears speech, not house sounds, the cry path stays off |
+| 58 | "Video and audio stay in your house. Only the conversation text goes to the brain." | README.md:33 | false | A parent's Telegram voice note goes as audio to Muse on Baseten | "Video and house audio stay in your house. Only the conversation text, and a voice note you send, go to the brain." The privacy table names the voice note |
+| 59 | Haiku demo visit "about 11 times less" | results/muse/README.md | unclear | `calls-demo-claude.jsonl` $0.0084, `calls-demo.jsonl` $0.094 | Says plainly that Haiku is cheaper and Muse cost about 11 times more |
+
 ## Stale or missing
 
 | # | Claim | Where | Verdict | Evidence | Fix |

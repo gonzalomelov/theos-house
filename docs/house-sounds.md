@@ -40,7 +40,7 @@ Built Oct 29 2026 (issue #14). PANNs stays the fast local reflex that hears "a b
 
 **Privacy.** This is the one flow where house audio may leave: the first 5 s of a cry PANNs detected, as a WAV made in memory, to the brain host (inference.baseten.co), dropped after that call. No other room audio is ever sent. It is off by default (`"house_sounds": {"muse_audio": {"enabled": true}}` turns it on), and before any cry clip is sent a synthetic beep clip, never house audio, must be heard and counted right. Each call is a `cry_sound_guess` event with its host.
 
-**Result on Oct 29: Muse does not hear audio on this endpoint.** On the 46-clip hearing set PANNs got 41 of 46 labels right, Muse 10 of 46, and Muse said it heard sound on 1 clip, always with 0 audio tokens. The canary failed in WAV, MP3, FLAC and OGG. Every request shape in Baseten's audio guide was tried. So the canary blocks the call, and the cry reason stays PANNs plus the log. Details and every try in `results/sounds/muse/README.md`.
+**Result on Oct 29: Muse hears speech, not house sounds.** In the cry path's request shape Muse wrote down a spoken random number 3 of 3 times and failed the beep canary 3 of 3 times. On the 46-clip hearing set PANNs got 41 of 46 labels right and Muse 11 of 46, and Muse called 14 clips that are not cries a cry. A first run that night said Muse heard no audio at all: its prompt offered "if no audio reaches you" as a way out, which makes Muse say it heard nothing even for speech (`results/audio-truth/README.md`). The `audio_tokens` usage field reads 0 even when Muse writes down speech, so it is no sign either way. So the canary blocks the call, and the cry reason stays PANNs plus the log. Details and every try in `results/sounds/muse/README.md`.
 
 ## White noise
 

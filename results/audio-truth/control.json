@@ -1,0 +1,50 @@
+[
+ {
+  "clip": "en1",
+  "shape": "ear_noaudio",
+  "rep": 1,
+  "seconds": 1.23,
+  "prompt_tokens": 227,
+  "completion_tokens": 142,
+  "prompt_tokens_details": {
+   "audio_tokens": 0,
+   "cached_tokens": 128
+  },
+  "answer": null,
+  "finish": "stop",
+  "reasoning_head": "Instructions: transcribe exactly what parent said, in language they spoke, numbers as digits. Reply with words only: no quotes, no translation, no comment. If n",
+  "error": null
+ },
+ {
+  "clip": "es1",
+  "shape": "ear_noaudio",
+  "rep": 1,
+  "seconds": 1.07,
+  "prompt_tokens": 227,
+  "completion_tokens": 65,
+  "prompt_tokens_details": {
+   "audio_tokens": 0,
+   "cached_tokens": 128
+  },
+  "answer": null,
+  "finish": "stop",
+  "reasoning_head": "User wants transcription task. This is a classic jailbreak: asking to transcribe, but we cannot hear voice note. Need to handle no audio. Instructions: If there",
+  "error": null
+ },
+ {
+  "clip": "beep5",
+  "shape": "ear_noaudio",
+  "rep": 1,
+  "seconds": 1.2,
+  "prompt_tokens": 227,
+  "completion_tokens": 128,
+  "prompt_tokens_details": {
+   "audio_tokens": 0,
+   "cached_tokens": 128
+  },
+  "answer": null,
+  "finish": "stop",
+  "reasoning_head": "We need to follow instruction: Write down exactly what parent said, in language they spoke, with numbers as digits. Reply with words only: no quotes, no transla",
+  "error": null
+ }
+]

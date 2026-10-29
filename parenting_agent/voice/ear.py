@@ -2,6 +2,9 @@
 
 One call to the OpenAI-compatible endpoint on Baseten with an input_audio part. Checked with real calls on
 Oct 28 2026: WAV and MP3 are accepted, OGG is refused with HTTP 400, so voice notes are converted to WAV first.
+Checked again on Oct 29 2026 (results/audio-truth): Muse wrote down made-up words and random digits it could not
+guess, and the prompt tokens grow with the note's length. usage.prompt_tokens_details.audio_tokens reads 0 even then,
+so it is not a sign of hearing. The example values in the prompt match no test note.
 
 Muse sometimes answers as if no audio came with the message ("No tengo acceso al audio", "I don't have access to
 audio files") to a request that works the other times: 2 of 20 notes in the first full run on Oct 28. Such an answer is never
@@ -19,7 +22,7 @@ MODEL = "meta-models/muse-spark-open-1026"
 BASE_URL = "https://inference.baseten.co/v1"
 PROMPT = ("This is a voice note from a parent to their baby care assistant, in Spanish (often rioplatense, from "
           "Uruguay or Argentina) or English. Write down exactly what the parent said, in the language they spoke, "
-          "with numbers as digits (90 ml, a las 3). Reply with the words only: no quotes, no translation, no comment. "
+          "with numbers as digits (35 ml, a las 11). Reply with the words only: no quotes, no translation, no comment. "
           "If there is no speech, reply with nothing.")
 
 
@@ -47,6 +50,7 @@ class Ear:
         self.usage = None
         self.attempts = attempts
         self.tries = 0
+        self.calls = []
 
     def hear(self, wav):
         """The words in a WAV voice note, or "" when there is no speech. Raises BrainError when Muse fails."""
@@ -59,6 +63,7 @@ class Ear:
                 "messages": [{"role": "user", "content": [{"type": "text", "text": PROMPT}, audio]}]}
         started = time.monotonic()
         self.usage = {"input_tokens": 0, "output_tokens": 0}
+        self.calls = []
         text = ""
         for self.tries in range(1, self.attempts + 1):
             reply = post_json(self.url, {"Authorization": f"Bearer {key}", "Content-Type": "application/json"}, body, self.timeout)
@@ -67,6 +72,10 @@ class Ear:
             self.usage["output_tokens"] += usage.get("completion_tokens", 0)
             message = ((reply.get("choices") or [{}])[0]).get("message") or {}
             text = clean(message.get("content") or "")
+            self.calls.append({"prompt_tokens": usage.get("prompt_tokens"),
+                               "audio_tokens": (usage.get("prompt_tokens_details") or {}).get("audio_tokens"),
+                               "completion_tokens": usage.get("completion_tokens"), "answer": text[:200],
+                               "taken": bool(text and not refused(text))})
             if text and not refused(text):
                 break
             text = ""

@@ -3,19 +3,21 @@
     python scripts/sounds_muse_eval.py            # writes results/sounds/muse/run.json
     python scripts/sounds_muse_eval.py --no-muse  # PANNs only, no Baseten spend
 
-1. The audio canary: a synthetic beep clip (not house audio) sent in each audio format Baseten lists, to see whether
-   Muse hears audio on this endpoint at all.
+1. Two controls, synthetic, never house audio: a spoken random number made with macOS `say` (Muse must write the
+   digits down, so the audio path works) and the beep canary (Muse must count the beeps, so it hears sounds that are
+   not speech). Each is sent 3 times in the request shape cry_muse.py uses.
 2. Each clip of the hearing set (meta-hackathon-2026 hearing_sources.json, licenses there) is decoded in memory
    through the camera's 8 kHz A-law channel, cut to its first clip_s seconds, and scored by PANNs (the local reflex)
    and by Muse Spark Open (one call, strict JSON: what sound, and for a cry a guessed reason with a confidence).
 Nothing is written but the labels, scores and Muse's answers. The clips stay outside the repo.
 """
 import argparse
-import base64
 import json
+import random
 import statistics
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -37,35 +39,47 @@ SCHEMA = {"type": "object", "additionalProperties": False,
           "properties": {"heard_sound": {"type": "boolean"}, "sound": {"type": "string", "enum": SOUNDS},
                          "reason_guess": {"type": "string", "enum": [*REASONS, "not_a_cry", "cannot_tell"]},
                          "confidence": {"type": "number"}}}
-SYSTEM = ("You listen to a few seconds of audio from a home camera. If no audio reaches you, set heard_sound false. "
+SYSTEM = ("You listen to a few seconds of sound from a home camera in the nursery. "
           "You never give medical advice and never name pain or illness.")
-TEXT = ("What is the main sound in the attached audio? If it is a baby crying, guess the most likely everyday reason "
+TEXT = ("This recording is the sound in the room right now. Set heard_sound true when you hear it. What is the main "
+        "sound? If it is a baby crying, guess the most likely everyday reason "
         "from the sound alone (hungry, tired, diaper, comfort, or cannot_tell), else not_a_cry. Confidence 0 to 1.")
-CANARY_SCHEMA = {"type": "object", "additionalProperties": False, "required": ["heard_sound", "beeps"],
-                 "properties": {"heard_sound": {"type": "boolean"}, "beeps": {"type": "integer"}}}
+SPEECH_SCHEMA = {"type": "object", "additionalProperties": False, "required": ["heard_sound", "words"],
+                 "properties": {"heard_sound": {"type": "boolean"}, "words": {"type": "string"}}}
 
 
-def encode(wav, fmt):
-    if fmt == "wav":
-        return wav
-    return subprocess.run(["ffmpeg", "-nostdin", "-v", "error", "-f", "wav", "-i", "pipe:0", "-f", fmt, "pipe:1"],
-                          input=wav, capture_output=True, check=True).stdout
+def spoken_number():
+    """A random 5 digit number read by macOS say, as 16 kHz WAV. Muse cannot guess it without hearing it."""
+    digits = "".join(random.choice("123456789") for _ in range(5))
+    with tempfile.TemporaryDirectory() as tmp:
+        aiff, wav = Path(tmp) / "n.aiff", Path(tmp) / "n.wav"
+        subprocess.run(["say", "-v", "Samantha", "-o", str(aiff), "The number is " + " ".join(digits) + "."], check=True)
+        subprocess.run(["ffmpeg", "-nostdin", "-v", "error", "-i", str(aiff), "-ar", "16000", "-ac", "1", str(wav)], check=True)
+        return digits, wav.read_bytes()
 
 
-def canary(senses):
+def controls(senses, repeats=3):
     rows = []
-    wav = beeps(3)
-    for fmt, mime in (("wav", "audio/wav"), ("mp3", "audio/mpeg"), ("flac", "audio/flac"), ("ogg", "audio/ogg")):
-        url = f"data:{mime};base64," + base64.b64encode(encode(wav, fmt)).decode()
-        try:
-            got = senses.ask("You listen to the attached audio clip. If no audio reaches you, set heard_sound false.",
-                             "How many beeps are in the attached audio clip?", CANARY_SCHEMA, audio_url=url)
-            rows.append({"format": fmt, "answer": got["answer"], "audio_tokens": got["usage"]["audio_tokens"],
-                         "input_tokens": got["usage"]["input_tokens"], "right": got["answer"].get("beeps") == 3
-                         and got["answer"].get("heard_sound") is True})
-        except BrainError as error:
-            rows.append({"format": fmt, "error": str(error)[:200], "right": False})
-        print("canary", rows[-1], flush=True)
+    digits, speech = spoken_number()
+    for i in range(repeats):
+        for name in ("speech", "beeps"):
+            try:
+                if name == "speech":
+                    got = senses.ask(SYSTEM, "This recording is a person saying a number. Write down the words, numbers as "
+                                     "digits. Set heard_sound true when you hear the voice.", SPEECH_SCHEMA, audio_wav=speech)
+                    right = got["answer"].get("words", "").replace(" ", "").find(digits) >= 0
+                    row = {"control": "speech", "said": digits}
+                else:
+                    ok = senses.canary(3)
+                    got, right, row = None, ok, {"control": "beeps", "said": 3}
+                row.update({"try": i + 1, "right": right})
+                if got:
+                    row.update({"answer": got["answer"], "input_tokens": got["usage"]["input_tokens"],
+                                "audio_tokens": got["usage"]["audio_tokens"]})
+            except BrainError as error:
+                row = {"control": name, "try": i + 1, "error": str(error)[:200], "right": False}
+            rows.append(row)
+            print("control", row, flush=True)
     return rows
 
 
@@ -90,7 +104,7 @@ def main():
     sources = [s for s in json.loads(SOURCES.read_text()) if (MEDIA / s["file"]).is_file() and s["label"] in TRUTH]
     listener = hearing.PannsListener({"model_dir": str(Path.home() / "Engineering/gonza/parenting-agent/.models/panns")})
     senses = None if args.no_muse else MuseSenses({"max_tokens": 4000})
-    canary_rows = canary(senses) if senses else []
+    canary_rows = controls(senses) if senses else []
     rows = []
     for source in sources:
         samples = hearing.from_file(MEDIA / source["file"], seconds=args.clip_s)
@@ -99,9 +113,9 @@ def main():
                "panns": {"cry": "baby_crying", "dog": "dog_barking", "doorbell": "doorbell", "splash": "water_splashing"}.get(panns, "other"),
                "panns_scores": scores}
         if senses:
-            from parenting_agent.muse_senses import wav_bytes, wav_data_url
+            from parenting_agent.muse_senses import wav_bytes
             try:
-                got = senses.ask(SYSTEM, TEXT, SCHEMA, audio_url=wav_data_url(wav_bytes(samples)))
+                got = senses.ask(SYSTEM, TEXT, SCHEMA, audio_wav=wav_bytes(samples))
                 row["muse"] = {**got["answer"], "seconds": got["seconds"], "usd": got["usd"],
                                "audio_tokens": got["usage"]["audio_tokens"], "input_tokens": got["usage"]["input_tokens"]}
             except BrainError as error:
@@ -123,12 +137,14 @@ def main():
                "muse_sound_right": sum(r["muse"].get("sound") == r["truth"] for r in muse_rows),
                "muse_cries_heard_as_cries": sum(r["truth"] == "baby_crying" and r["muse"].get("sound") == "baby_crying" for r in muse_rows),
                "cries": sum(r["truth"] == "baby_crying" for r in rows),
-               "canary_right": [c["format"] for c in canary_rows if c["right"]],
+               "speech_control_right": sum(c["right"] for c in canary_rows if c["control"] == "speech"),
+               "beep_canary_right": sum(c["right"] for c in canary_rows if c["control"] == "beeps"),
+               "controls_each": sum(c["control"] == "speech" for c in canary_rows),
                "latency_s": {"median": statistics.median(secs), "max": max(secs)} if secs else None,
                "usd": round(senses.spent_usd, 4) if senses else 0.0}
     out = ROOT / "results" / "sounds" / "muse"
     out.mkdir(parents=True, exist_ok=True)
-    (out / "run.json").write_text(json.dumps({"summary": summary, "canary": canary_rows, "clips": rows}, indent=1))
+    (out / "run.json").write_text(json.dumps({"summary": summary, "controls": canary_rows, "clips": rows}, indent=1))
     print(json.dumps(summary, indent=1))
 
 

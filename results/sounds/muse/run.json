@@ -7,57 +7,73 @@
   "muse_model": "meta-models/muse-spark-open-1026",
   "muse_host": "inference.baseten.co",
   "muse_answered": 46,
-  "muse_heard_sound": 1,
+  "muse_heard_sound": 10,
   "muse_audio_tokens": 0,
-  "muse_sound_right": 10,
-  "muse_cries_heard_as_cries": 1,
+  "muse_sound_right": 11,
+  "muse_cries_heard_as_cries": 3,
   "cries": 4,
-  "canary_right": [],
+  "speech_control_right": 3,
+  "beep_canary_right": 0,
+  "controls_each": 3,
   "latency_s": {
-   "median": 4.9985,
-   "max": 6.659
+   "median": 5.463,
+   "max": 7.965
   },
-  "usd": 0.0935
+  "usd": 0.1189
  },
- "canary": [
+ "controls": [
   {
-   "format": "wav",
+   "control": "speech",
+   "said": "54441",
+   "try": 1,
+   "right": true,
    "answer": {
-    "heard_sound": false,
-    "beeps": -1
+    "heard_sound": true,
+    "words": "5 4 4 4 1"
    },
-   "audio_tokens": 0,
-   "input_tokens": 200,
+   "input_tokens": 229,
+   "audio_tokens": 0
+  },
+  {
+   "control": "beeps",
+   "said": 3,
+   "try": 1,
    "right": false
   },
   {
-   "format": "mp3",
+   "control": "speech",
+   "said": "54441",
+   "try": 2,
+   "right": true,
    "answer": {
-    "heard_sound": false,
-    "beeps": -1
+    "heard_sound": true,
+    "words": "The number is 54441"
    },
-   "audio_tokens": 0,
-   "input_tokens": 201,
+   "input_tokens": 229,
+   "audio_tokens": 0
+  },
+  {
+   "control": "beeps",
+   "said": 3,
+   "try": 2,
    "right": false
   },
   {
-   "format": "flac",
+   "control": "speech",
+   "said": "54441",
+   "try": 3,
+   "right": true,
    "answer": {
-    "heard_sound": false,
-    "beeps": 0
+    "heard_sound": true,
+    "words": "The number is 54441"
    },
-   "audio_tokens": 0,
-   "input_tokens": 200,
-   "right": false
+   "input_tokens": 229,
+   "audio_tokens": 0
   },
   {
-   "format": "ogg",
-   "answer": {
-    "heard_sound": false,
-    "beeps": 0
-   },
-   "audio_tokens": 0,
-   "input_tokens": 200,
+   "control": "beeps",
+   "said": 3,
+   "try": 3,
    "right": false
   }
  ],
@@ -75,14 +91,14 @@
     "splash": 0.0063
    },
    "muse": {
-    "heard_sound": false,
+    "heard_sound": true,
     "sound": "baby_crying",
     "reason_guess": "cannot_tell",
-    "confidence": 0.0,
-    "seconds": 4.996,
-    "usd": 0.001695,
+    "confidence": 0.95,
+    "seconds": 7.033,
+    "usd": 0.002445,
     "audio_tokens": 0,
-    "input_tokens": 302
+    "input_tokens": 310
    }
   },
   {
@@ -99,13 +115,13 @@
    },
    "muse": {
     "heard_sound": false,
-    "sound": "silence",
+    "sound": "baby_crying",
     "reason_guess": "cannot_tell",
-    "confidence": 0,
-    "seconds": 5.846,
-    "usd": 0.001444,
+    "confidence": 0.0,
+    "seconds": 7.889,
+    "usd": 0.002874,
     "audio_tokens": 0,
-    "input_tokens": 302
+    "input_tokens": 310
    }
   },
   {
@@ -122,13 +138,13 @@
    },
    "muse": {
     "heard_sound": false,
-    "sound": "silence",
-    "reason_guess": "cannot_tell",
-    "confidence": 0,
-    "seconds": 5.025,
-    "usd": 0.001903,
+    "sound": "coughing",
+    "reason_guess": "not_a_cry",
+    "confidence": 0.0,
+    "seconds": 5.769,
+    "usd": 0.002066,
     "audio_tokens": 0,
-    "input_tokens": 302
+    "input_tokens": 310
    }
   },
   {
@@ -144,14 +160,14 @@
     "splash": 0.0036
    },
    "muse": {
-    "heard_sound": false,
-    "sound": "silence",
+    "heard_sound": true,
+    "sound": "baby_crying",
     "reason_guess": "cannot_tell",
-    "confidence": 0,
-    "seconds": 5.123,
-    "usd": 0.001754,
+    "confidence": 0.5,
+    "seconds": 5.637,
+    "usd": 0.001994,
     "audio_tokens": 0,
-    "input_tokens": 302
+    "input_tokens": 310
    }
   },
   {
@@ -171,10 +187,10 @@
     "sound": "silence",
     "reason_guess": "cannot_tell",
     "confidence": 0.0,
-    "seconds": 3.807,
-    "usd": 0.002038,
+    "seconds": 4.616,
+    "usd": 0.003217,
     "audio_tokens": 0,
-    "input_tokens": 247
+    "input_tokens": 255
    }
   },
   {
@@ -194,10 +210,10 @@
     "sound": "silence",
     "reason_guess": "cannot_tell",
     "confidence": 0.0,
-    "seconds": 3.987,
-    "usd": 0.001846,
+    "seconds": 5.139,
+    "usd": 0.002609,
     "audio_tokens": 0,
-    "input_tokens": 253
+    "input_tokens": 261
    }
   },
   {
@@ -214,13 +230,13 @@
    },
    "muse": {
     "heard_sound": false,
-    "sound": "baby_crying",
+    "sound": "silence",
     "reason_guess": "cannot_tell",
-    "confidence": 0,
-    "seconds": 3.624,
-    "usd": 0.001698,
+    "confidence": 0.0,
+    "seconds": 2.362,
+    "usd": 0.000854,
     "audio_tokens": 0,
-    "input_tokens": 247
+    "input_tokens": 255
    }
   },
   {
@@ -237,13 +253,13 @@
    },
    "muse": {
     "heard_sound": false,
-    "sound": "dog_barking",
+    "sound": "baby_crying",
     "reason_guess": "not_a_cry",
-    "confidence": 0.0,
-    "seconds": 4.937,
-    "usd": 0.001491,
+    "confidence": 0,
+    "seconds": 6.726,
+    "usd": 0.002117,
     "audio_tokens": 0,
-    "input_tokens": 302
+    "input_tokens": 310
    }
   },
   {
@@ -259,14 +275,14 @@
     "splash": 0.003
    },
    "muse": {
-    "heard_sound": false,
-    "sound": "silence",
-    "reason_guess": "cannot_tell",
-    "confidence": 0,
-    "seconds": 4.408,
-    "usd": 0.001106,
+    "heard_sound": true,
+    "sound": "dog_barking",
+    "reason_guess": "not_a_cry",
+    "confidence": 0.98,
+    "seconds": 5.256,
+    "usd": 0.002094,
     "audio_tokens": 0,
-    "input_tokens": 290
+    "input_tokens": 298
    }
   },
   {
@@ -282,14 +298,14 @@
     "splash": 0.0035
    },
    "muse": {
-    "heard_sound": false,
+    "heard_sound": true,
     "sound": "dog_barking",
     "reason_guess": "not_a_cry",
-    "confidence": 0,
-    "seconds": 4.391,
-    "usd": 0.00119,
+    "confidence": 0.95,
+    "seconds": 4.775,
+    "usd": 0.001884,
     "audio_tokens": 0,
-    "input_tokens": 272
+    "input_tokens": 280
    }
   },
   {
@@ -305,14 +321,14 @@
     "splash": 0.005
    },
    "muse": {
-    "heard_sound": false,
+    "heard_sound": true,
     "sound": "dog_barking",
     "reason_guess": "not_a_cry",
-    "confidence": 0.0,
-    "seconds": 5.809,
-    "usd": 0.002456,
+    "confidence": 0.99,
+    "seconds": 5.798,
+    "usd": 0.002011,
     "audio_tokens": 0,
-    "input_tokens": 302
+    "input_tokens": 310
    }
   },
   {
@@ -330,12 +346,12 @@
    "muse": {
     "heard_sound": false,
     "sound": "silence",
-    "reason_guess": "cannot_tell",
-    "confidence": 0.0,
-    "seconds": 5.36,
-    "usd": 0.001832,
+    "reason_guess": "not_a_cry",
+    "confidence": 0,
+    "seconds": 4.73,
+    "usd": 0.0016,
     "audio_tokens": 0,
-    "input_tokens": 272
+    "input_tokens": 280
    }
   },
   {
@@ -352,13 +368,13 @@
    },
    "muse": {
     "heard_sound": false,
-    "sound": "other",
-    "reason_guess": "cannot_tell",
-    "confidence": 0,
-    "seconds": 5.401,
-    "usd": 0.001461,
+    "sound": "silence",
+    "reason_guess": "not_a_cry",
+    "confidence": 0.0,
+    "seconds": 5.445,
+    "usd": 0.002147,
     "audio_tokens": 0,
-    "input_tokens": 302
+    "input_tokens": 310
    }
   },
   {
@@ -375,13 +391,13 @@
    },
    "muse": {
     "heard_sound": false,
-    "sound": "silence",
+    "sound": "baby_crying",
     "reason_guess": "cannot_tell",
-    "confidence": 0.0,
-    "seconds": 6.276,
-    "usd": 0.002017,
+    "confidence": 0.75,
+    "seconds": 7.965,
+    "usd": 0.002868,
     "audio_tokens": 0,
-    "input_tokens": 294
+    "input_tokens": 302
    }
   },
   {
@@ -398,13 +414,13 @@
    },
    "muse": {
     "heard_sound": false,
-    "sound": "silence",
+    "sound": "other",
     "reason_guess": "not_a_cry",
     "confidence": 0.0,
-    "seconds": 4.791,
-    "usd": 0.001589,
+    "seconds": 6.558,
+    "usd": 0.002555,
     "audio_tokens": 0,
-    "input_tokens": 302
+    "input_tokens": 310
    }
   },
   {
@@ -423,11 +439,11 @@
     "heard_sound": false,
     "sound": "silence",
     "reason_guess": "cannot_tell",
-    "confidence": 0.0,
-    "seconds": 5.001,
-    "usd": 0.002201,
+    "confidence": 0,
+    "seconds": 5.635,
+    "usd": 0.001973,
     "audio_tokens": 0,
-    "input_tokens": 302
+    "input_tokens": 310
    }
   },
   {
@@ -444,13 +460,13 @@
    },
    "muse": {
     "heard_sound": false,
-    "sound": "silence",
-    "reason_guess": "not_a_cry",
-    "confidence": 0,
-    "seconds": 5.19,
-    "usd": 0.001975,
+    "sound": "baby_crying",
+    "reason_guess": "comfort",
+    "confidence": 0.02,
+    "seconds": 5.539,
+    "usd": 0.001879,
     "audio_tokens": 0,
-    "input_tokens": 302
+    "input_tokens": 310
    }
   },
   {
@@ -467,13 +483,13 @@
    },
    "muse": {
     "heard_sound": false,
-    "sound": "silence",
+    "sound": "baby_crying",
     "reason_guess": "not_a_cry",
     "confidence": 0.0,
-    "seconds": 3.531,
-    "usd": 0.001912,
+    "seconds": 4.661,
+    "usd": 0.003146,
     "audio_tokens": 0,
-    "input_tokens": 248
+    "input_tokens": 256
    }
   },
   {
@@ -493,10 +509,10 @@
     "sound": "silence",
     "reason_guess": "cannot_tell",
     "confidence": 0.0,
-    "seconds": 2.072,
-    "usd": 0.001057,
+    "seconds": 5.627,
+    "usd": 0.004306,
     "audio_tokens": 0,
-    "input_tokens": 244
+    "input_tokens": 252
    }
   },
   {
@@ -516,10 +532,10 @@
     "sound": "silence",
     "reason_guess": "cannot_tell",
     "confidence": 0.0,
-    "seconds": 3.626,
-    "usd": 0.002788,
+    "seconds": 3.353,
+    "usd": 0.00185,
     "audio_tokens": 0,
-    "input_tokens": 248
+    "input_tokens": 256
    }
   },
   {
@@ -536,13 +552,13 @@
    },
    "muse": {
     "heard_sound": false,
-    "sound": "coughing",
+    "sound": "baby_crying",
     "reason_guess": "cannot_tell",
-    "confidence": 1.0,
-    "seconds": 2.654,
-    "usd": 0.001387,
+    "confidence": 0.0,
+    "seconds": 4.09,
+    "usd": 0.002515,
     "audio_tokens": 0,
-    "input_tokens": 246
+    "input_tokens": 254
    }
   },
   {
@@ -560,12 +576,12 @@
    "muse": {
     "heard_sound": false,
     "sound": "coughing",
-    "reason_guess": "cannot_tell",
-    "confidence": 0,
-    "seconds": 3.551,
-    "usd": 0.001826,
+    "reason_guess": "not_a_cry",
+    "confidence": 0.94,
+    "seconds": 3.353,
+    "usd": 0.0017,
     "audio_tokens": 0,
-    "input_tokens": 250
+    "input_tokens": 258
    }
   },
   {
@@ -583,12 +599,12 @@
    "muse": {
     "heard_sound": false,
     "sound": "coughing",
-    "reason_guess": "not_a_cry",
+    "reason_guess": "cannot_tell",
     "confidence": 0.0,
-    "seconds": 4.354,
-    "usd": 0.001792,
+    "seconds": 5.057,
+    "usd": 0.001994,
     "audio_tokens": 0,
-    "input_tokens": 271
+    "input_tokens": 279
    }
   },
   {
@@ -606,12 +622,12 @@
    "muse": {
     "heard_sound": false,
     "sound": "silence",
-    "reason_guess": "cannot_tell",
-    "confidence": 0,
-    "seconds": 3.952,
-    "usd": 0.001597,
+    "reason_guess": "not_a_cry",
+    "confidence": 0.0,
+    "seconds": 4.945,
+    "usd": 0.002105,
     "audio_tokens": 0,
-    "input_tokens": 302
+    "input_tokens": 310
    }
   },
   {
@@ -630,11 +646,11 @@
     "heard_sound": true,
     "sound": "dog_barking",
     "reason_guess": "not_a_cry",
-    "confidence": 0.99,
-    "seconds": 4.314,
-    "usd": 0.001776,
+    "confidence": 0.98,
+    "seconds": 5.51,
+    "usd": 0.002432,
     "audio_tokens": 0,
-    "input_tokens": 302
+    "input_tokens": 310
    }
   },
   {
@@ -650,14 +666,14 @@
     "splash": 0.0014
    },
    "muse": {
-    "heard_sound": false,
+    "heard_sound": true,
     "sound": "dog_barking",
     "reason_guess": "not_a_cry",
-    "confidence": 0,
-    "seconds": 5.63,
-    "usd": 0.002367,
+    "confidence": 0.92,
+    "seconds": 6.483,
+    "usd": 0.002351,
     "audio_tokens": 0,
-    "input_tokens": 302
+    "input_tokens": 310
    }
   },
   {
@@ -674,13 +690,13 @@
    },
    "muse": {
     "heard_sound": false,
-    "sound": "baby_crying",
-    "reason_guess": "cannot_tell",
+    "sound": "silence",
+    "reason_guess": "not_a_cry",
     "confidence": 0.0,
-    "seconds": 5.401,
-    "usd": 0.002145,
+    "seconds": 5.19,
+    "usd": 0.002682,
     "audio_tokens": 0,
-    "input_tokens": 302
+    "input_tokens": 310
    }
   },
   {
@@ -696,14 +712,14 @@
     "splash": 0.0595
    },
    "muse": {
-    "heard_sound": false,
-    "sound": "silence",
+    "heard_sound": true,
+    "sound": "baby_crying",
     "reason_guess": "cannot_tell",
     "confidence": 0.0,
-    "seconds": 5.109,
-    "usd": 0.002205,
+    "seconds": 5.581,
+    "usd": 0.001773,
     "audio_tokens": 0,
-    "input_tokens": 302
+    "input_tokens": 310
    }
   },
   {
@@ -723,10 +739,10 @@
     "sound": "silence",
     "reason_guess": "not_a_cry",
     "confidence": 0.0,
-    "seconds": 4.807,
-    "usd": 0.002034,
+    "seconds": 5.481,
+    "usd": 0.002333,
     "audio_tokens": 0,
-    "input_tokens": 291
+    "input_tokens": 299
    }
   },
   {
@@ -743,13 +759,13 @@
    },
    "muse": {
     "heard_sound": false,
-    "sound": "coughing",
-    "reason_guess": "cannot_tell",
+    "sound": "baby_crying",
+    "reason_guess": "not_a_cry",
     "confidence": 0.0,
-    "seconds": 6.659,
-    "usd": 0.003578,
+    "seconds": 5.319,
+    "usd": 0.00233,
     "audio_tokens": 0,
-    "input_tokens": 302
+    "input_tokens": 310
    }
   },
   {
@@ -766,13 +782,13 @@
    },
    "muse": {
     "heard_sound": false,
-    "sound": "silence",
+    "sound": "baby_crying",
     "reason_guess": "cannot_tell",
     "confidence": 0,
-    "seconds": 5.395,
-    "usd": 0.002766,
+    "seconds": 6.326,
+    "usd": 0.003456,
     "audio_tokens": 0,
-    "input_tokens": 292
+    "input_tokens": 300
    }
   },
   {
@@ -788,14 +804,14 @@
     "splash": 0.0036
    },
    "muse": {
-    "heard_sound": false,
-    "sound": "silence",
-    "reason_guess": "cannot_tell",
-    "confidence": 0.0,
-    "seconds": 5.337,
-    "usd": 0.002996,
+    "heard_sound": true,
+    "sound": "doorbell",
+    "reason_guess": "not_a_cry",
+    "confidence": 1.0,
+    "seconds": 4.719,
+    "usd": 0.002517,
     "audio_tokens": 0,
-    "input_tokens": 265
+    "input_tokens": 273
    }
   },
   {
@@ -812,13 +828,13 @@
    },
    "muse": {
     "heard_sound": false,
-    "sound": "silence",
+    "sound": "baby_crying",
     "reason_guess": "cannot_tell",
     "confidence": 0.0,
-    "seconds": 4.47,
-    "usd": 0.001906,
+    "seconds": 5.925,
+    "usd": 0.003471,
     "audio_tokens": 0,
-    "input_tokens": 270
+    "input_tokens": 278
    }
   },
   {
@@ -836,12 +852,12 @@
    "muse": {
     "heard_sound": false,
     "sound": "silence",
-    "reason_guess": "not_a_cry",
-    "confidence": 0,
-    "seconds": 3.359,
-    "usd": 0.001515,
+    "reason_guess": "cannot_tell",
+    "confidence": 0.23,
+    "seconds": 4.936,
+    "usd": 0.002601,
     "audio_tokens": 0,
-    "input_tokens": 257
+    "input_tokens": 265
    }
   },
   {
@@ -857,14 +873,14 @@
     "splash": 1.0
    },
    "muse": {
-    "heard_sound": false,
+    "heard_sound": true,
     "sound": "silence",
-    "reason_guess": "cannot_tell",
-    "confidence": 0.0,
-    "seconds": 5.028,
-    "usd": 0.001699,
+    "reason_guess": "not_a_cry",
+    "confidence": 0.92,
+    "seconds": 6.052,
+    "usd": 0.003044,
     "audio_tokens": 0,
-    "input_tokens": 302
+    "input_tokens": 310
    }
   },
   {
@@ -881,13 +897,13 @@
    },
    "muse": {
     "heard_sound": false,
-    "sound": "other",
+    "sound": "baby_crying",
     "reason_guess": "cannot_tell",
-    "confidence": 0.0,
-    "seconds": 5.399,
-    "usd": 0.001784,
+    "confidence": 0,
+    "seconds": 6.285,
+    "usd": 0.002967,
     "audio_tokens": 0,
-    "input_tokens": 302
+    "input_tokens": 310
    }
   },
   {
@@ -906,11 +922,11 @@
     "heard_sound": false,
     "sound": "silence",
     "reason_guess": "cannot_tell",
-    "confidence": 0.0,
-    "seconds": 4.032,
-    "usd": 0.002025,
+    "confidence": 0,
+    "seconds": 4.137,
+    "usd": 0.002371,
     "audio_tokens": 0,
-    "input_tokens": 257
+    "input_tokens": 265
    }
   },
   {
@@ -927,13 +943,13 @@
    },
    "muse": {
     "heard_sound": false,
-    "sound": "silence",
+    "sound": "speech",
     "reason_guess": "cannot_tell",
     "confidence": 0.0,
-    "seconds": 4.487,
-    "usd": 0.00206,
+    "seconds": 6.906,
+    "usd": 0.003197,
     "audio_tokens": 0,
-    "input_tokens": 302
+    "input_tokens": 310
    }
   },
   {
@@ -950,13 +966,13 @@
    },
    "muse": {
     "heard_sound": false,
-    "sound": "other",
-    "reason_guess": "cannot_tell",
-    "confidence": 0.0,
-    "seconds": 5.565,
-    "usd": 0.001733,
+    "sound": "baby_crying",
+    "reason_guess": "hungry",
+    "confidence": 0.98,
+    "seconds": 4.582,
+    "usd": 0.002695,
     "audio_tokens": 0,
-    "input_tokens": 302
+    "input_tokens": 310
    }
   },
   {
@@ -973,13 +989,13 @@
    },
    "muse": {
     "heard_sound": false,
-    "sound": "silence",
-    "reason_guess": "cannot_tell",
+    "sound": "baby_crying",
+    "reason_guess": "not_a_cry",
     "confidence": 0,
-    "seconds": 4.767,
-    "usd": 0.001546,
+    "seconds": 5.327,
+    "usd": 0.002177,
     "audio_tokens": 0,
-    "input_tokens": 302
+    "input_tokens": 310
    }
   },
   {
@@ -998,11 +1014,11 @@
     "heard_sound": false,
     "sound": "silence",
     "reason_guess": "cannot_tell",
-    "confidence": 0,
-    "seconds": 4.094,
-    "usd": 0.00198,
+    "confidence": 0.0,
+    "seconds": 4.922,
+    "usd": 0.00182,
     "audio_tokens": 0,
-    "input_tokens": 302
+    "input_tokens": 310
    }
   },
   {
@@ -1020,12 +1036,12 @@
    "muse": {
     "heard_sound": false,
     "sound": "silence",
-    "reason_guess": "cannot_tell",
+    "reason_guess": "not_a_cry",
     "confidence": 0.0,
-    "seconds": 5.432,
-    "usd": 0.001942,
+    "seconds": 5.655,
+    "usd": 0.002478,
     "audio_tokens": 0,
-    "input_tokens": 302
+    "input_tokens": 310
    }
   },
   {
@@ -1043,12 +1059,12 @@
    "muse": {
     "heard_sound": false,
     "sound": "silence",
-    "reason_guess": "cannot_tell",
-    "confidence": 0,
-    "seconds": 5.101,
-    "usd": 0.00181,
+    "reason_guess": "not_a_cry",
+    "confidence": 0.0,
+    "seconds": 4.541,
+    "usd": 0.001832,
     "audio_tokens": 0,
-    "input_tokens": 302
+    "input_tokens": 310
    }
   },
   {
@@ -1065,13 +1081,13 @@
    },
    "muse": {
     "heard_sound": false,
-    "sound": "baby_crying",
-    "reason_guess": "not_a_cry",
+    "sound": "silence",
+    "reason_guess": "cannot_tell",
     "confidence": 0.0,
-    "seconds": 5.418,
-    "usd": 0.001716,
+    "seconds": 5.91,
+    "usd": 0.002321,
     "audio_tokens": 0,
-    "input_tokens": 302
+    "input_tokens": 310
    }
   },
   {
@@ -1088,13 +1104,13 @@
    },
    "muse": {
     "heard_sound": false,
-    "sound": "silence",
+    "sound": "baby_crying",
     "reason_guess": "cannot_tell",
-    "confidence": 0.0,
-    "seconds": 5.73,
-    "usd": 0.0026,
+    "confidence": 0,
+    "seconds": 5.487,
+    "usd": 0.00284,
     "audio_tokens": 0,
-    "input_tokens": 302
+    "input_tokens": 310
    }
   },
   {
@@ -1111,13 +1127,13 @@
    },
    "muse": {
     "heard_sound": false,
-    "sound": "silence",
-    "reason_guess": "not_a_cry",
-    "confidence": 0,
-    "seconds": 5.703,
-    "usd": 0.002065,
+    "sound": "baby_crying",
+    "reason_guess": "cannot_tell",
+    "confidence": 0.0,
+    "seconds": 5.414,
+    "usd": 0.002105,
     "audio_tokens": 0,
-    "input_tokens": 302
+    "input_tokens": 310
    }
   }
  ]

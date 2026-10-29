@@ -1,0 +1,38 @@
+[
+ {
+  "clip": "cry-01",
+  "prompt_tokens": 260,
+  "answer": " I don't have the ability to process or hear audio files, so I can't identify the sound from a baby monitor clip. If you can describe what you heard I can help you interpret it, or you can try uploading the clip to an audio classification tool.",
+  "reasoning": "We need to classify sound. The user provides something that looks like transcript? \"This is 5 seconds of sound from the baby monitor in the nursery. Which one is the main sound: baby crying, dog barking, doorbell, coughi"
+ },
+ {
+  "clip": "cry-02",
+  "prompt_tokens": 260,
+  "answer": "baby crying",
+  "reasoning": "We need to respond with label only. Options: baby crying, dog barking, doorbell, coughing, water splashing, speech, or other.\n\nThe description: \"This is 5 seconds of sound from the baby monitor in the nursery. Which one "
+ },
+ {
+  "clip": "dog-01",
+  "prompt_tokens": 260,
+  "answer": "I am not able to listen to or analyze audio files, so I cannot identify the sound in your clip. If you can describe what you heard I can help you narrow it down, or you can try an audio classifier app on your device to identify it.",
+  "reasoning": "We have audio classification task. Can't hear audio. But need to respond. We have no audio. We need to handle. The instruction says baby crying, dog barking, doorbell, coughing, water splashing, speech, or other? Reply w"
+ },
+ {
+  "clip": "doorbell-01",
+  "prompt_tokens": 230,
+  "answer": " I don't have the ability to listen to or analyze audio clips, so I can't hear or classify the 5-second sound from your baby monitor. I also don't see an audio file attached to your message.\n\nIf you can describe what you hear - for example pitch, rhythm, duration, and whether it sounds like a voice, cry, bark, or tone - I can help you narrow down which label fits best among: baby crying, dog barking, doorbell, coughing, water splashing, speech, or other.\n\nIf you have a platform that allows audio upload for analysis, please use its built-in audio classification feature, and never rely solely on an AI label for infant safety monitoring - always check the nursery directly if you are concerned.",
+  "reasoning": "We need to classify audio. This is 5 seconds of sound from baby monitor. Which one is main sound: baby crying, dog barking, doorbell, coughing, water splashing, speech, or other? Reply with label only.\n\nWe cannot hear au"
+ },
+ {
+  "clip": "cough-01",
+  "prompt_tokens": 205,
+  "answer": "I don't have the ability to receive or analyze audio, so I can't hear the sound from the baby monitor and can't provide a label. If you can describe what you hear I can help you identify it.",
+  "reasoning": "We need to respond with label only. User asks to classify 5 seconds of sound from baby monitor. We haven't actually heard sound. We need to decide what to do. We cannot hear? This is text prompt. We must not hallucinate?"
+ },
+ {
+  "clip": "splash-01",
+  "prompt_tokens": 260,
+  "answer": "I don't have the ability to hear or analyze audio, and no audio file was included with your message, so I can't identify the sound from the baby monitor. If you can describe what you heard or provide a transcript of any speech, I can help you think through what it might be or what to do next.\n\nIf you're concerned about a baby's safety, please check on the baby in person right away and contact a caregiver, pediatrician, or emergency services if needed.",
+  "reasoning": "We need to respond label only. But this is audio? The user says 5 seconds of sound from baby monitor. Which one is main sound: baby crying, dog barking, doorbell, coughing, water splashing, speech, or other? Reply with l"
+ }
+]
