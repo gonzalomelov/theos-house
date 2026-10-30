@@ -133,19 +133,20 @@ class Skill:
     def _held_look(self, frame_bgr, gray, stream_s):
         """lift.held: SAM 3.1 hand regions with what they hold, on the confirm worker. The skill's thread lands them."""
         hands, baby = self.masks(frame_bgr, held=True)
-        self.held_anchor = (gray, stream_s, hands, baby)
+        objects = list(getattr(getattr(self.masks, "__self__", None), "held_objects", None) or [])
+        self.held_anchor = (gray, stream_s, hands, baby, objects)
         return "held"
 
     def _held_verdict(self, episode, verdict):
         """The held look's answer: its hand regions on the baby become the anchor (on), none means no hand on (off)."""
         if verdict != "held" or self.held_anchor is None:
             return verdict
-        gray, stream_s, hands, baby = self.held_anchor
+        gray, stream_s, hands, baby, objects = self.held_anchor
         self.held_anchor = None
         self.lift.anchor(gray, hands, baby, stream_s)
         based = self.lift.base is not None
         self.held_lost = False
-        self.bus.publish("anchor", stream_s=round(stream_s, 3), hands=len(hands), based=based, held=True)
+        self.bus.publish("anchor", stream_s=round(stream_s, 3), hands=len(hands), based=based, held=True, objects=objects)
         return "on" if based else "off"
 
     def _anchor(self, frame_bgr, gray, stream_s):

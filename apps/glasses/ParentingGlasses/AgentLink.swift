@@ -19,7 +19,8 @@ final class AgentLink {
   var lastUploadMs: Int?
   var lastError: String?
 
-  @ObservationIgnored var onEvent: ((AgentEvent) -> Void)?
+  /// Each event with its raw JSON, which the HUD decodes again for the fields it shows.
+  @ObservationIgnored var onEvent: ((AgentEvent, Data) -> Void)?
   @ObservationIgnored private var listenTask: Task<Void, Never>?
   @ObservationIgnored private var uploading = false
 
@@ -102,7 +103,7 @@ final class AgentLink {
           for try await line in bytes.lines {
             guard line.hasPrefix("data: "), let data = line.dropFirst(6).data(using: .utf8) else { continue }
             if let event = try? JSONDecoder().decode(AgentEvent.self, from: data) {
-              onEvent?(event)
+              onEvent?(event, data)
             }
           }
         } catch {

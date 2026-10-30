@@ -23,6 +23,7 @@ token. A home network address is for a network only the family uses.
 Add "parenting_agent.glasses:Glasses" to the agent plugins and set a skill's source to "glasses". The skill
 gets a view on the one shared server, so arming and finishing a skill never drops the phone's connection.
 """
+import collections
 import hmac
 import ipaddress
 import json
@@ -39,7 +40,7 @@ from .sources import MAX_FRAME_BYTES, Latest
 
 DEFAULT_PORT = 8766
 TAILSCALE = ipaddress.ip_network("100.64.0.0/10")
-FORWARDED = ("reply", "ask_parent", "skill_armed", "skill_closed", "frame")
+ARRIVALS_KEPT = 600  # about a minute of frames at 10 per second
 
 
 def check_host(host):
@@ -80,6 +81,7 @@ class GlassesHub(Latest):
         self.on_say = on_say
         self.clients = []
         self.frames_in, self.rejected = 0, 0
+        self.arrivals = collections.OrderedDict()  # stream_s (3 decimals) -> Unix time the frame arrived
         self.server = ThreadingHTTPServer((self.host, port), self._handler())
         self.server.daemon_threads = True
         self.port = self.server.server_address[1]
@@ -201,8 +203,18 @@ class GlassesHub(Latest):
         if self.started is None:
             self.started = now
         self.frames_in += 1
-        self.put(frame, now - self.started)
+        stream_s = now - self.started
+        with self.lock:
+            self.arrivals[round(stream_s, 3)] = round(time.time(), 3)
+            while len(self.arrivals) > ARRIVALS_KEPT:
+                self.arrivals.popitem(last=False)
+        self.put(frame, stream_s)
         return True
+
+    def arrival(self, stream_s):
+        """The Unix time the frame with this stream time reached the endpoint, or None once it is forgotten."""
+        with self.lock:
+            return self.arrivals.get(round(stream_s, 3))
 
     def _stream(self, handler):
         handler.send_response(200)
@@ -225,6 +237,9 @@ class GlassesHub(Latest):
             self.clients.remove(inbox)
 
     def push(self, event):
+        """Events with a frame's stream_s carry frame_unix, the time that frame arrived, so the app can time frame to card."""
+        if event.get("stream_s") is not None and "frame_unix" not in event:
+            event = {**event, "frame_unix": self.arrival(event["stream_s"])}
         for inbox in list(self.clients):
             try:
                 inbox.put_nowait(event)
@@ -269,20 +284,61 @@ class GlassesView:
         self.closed = True
 
 
+def _hhmm(stamp):
+    from .changing_table import local_hhmm
+    return local_hhmm(stamp)
+
+
+def _frame(event):
+    return {"stream_s": event["stream_s"]} if event.get("stream_s") is not None else {}
+
+
+def _alarm(event):
+    if event.get("action") in ("raise", "reraise"):
+        return {"kind": "alarm", "state": event.get("state") or "off", "episode": event.get("episode"), **_frame(event)}
+    return {"kind": "clear", "episode": event.get("episode"), **_frame(event)}
+
+
+def _held(event):
+    if not event.get("held"):
+        return None
+    objects = event.get("objects") or []
+    return {"kind": "held", "verdict": "on" if event.get("based") else "off", "object": objects[0] if objects else None,
+            "model": "SAM 3.1", **_frame(event)}
+
+
+def _logged(event):
+    contents = [word for word, on in (("wet", event.get("wet")), ("dirty", event.get("solid"))) if on]
+    return {"kind": "logged", "what": "diaper", "at": _hhmm(event.get("time")), "contents": contents, "entry": event.get("id")}
+
+
+# The one path from the agent to the app and its glasses display (HUD): bus event kind -> the app event, or None to skip.
+# Each app event kind is one card kind in apps/glasses/ParentingGlasses/HUD/HUDState.swift. A new HUD card is one entry
+# here and one case there, nothing else: the hub, the event stream, the frame times and DisplayHUD are shared.
+TO_APP = {
+    "reply": lambda e: {"kind": "reply", "text": e.get("text", "")},
+    "ask_parent": lambda e: {"kind": "reply", "text": f"I want to use {e.get('name')}. Say yes to let me."},
+    "skill_armed": lambda e: {"kind": "skill", "text": f"{e.get('skill')} armed, watching through the glasses"},
+    "skill_closed": lambda e: {"kind": "skill", "text": f"{e.get('skill')} closed after {e.get('frames')} frames"},
+    "frame": lambda e: {"kind": "state", "state": e.get("state"), "hands": e.get("hands"), "lift_cm": e.get("lift_cm"),
+                        **({"held": e["held"]} if e.get("held") else {}), **_frame(e)},
+    "changing_armed": lambda e: {"kind": "armed", "by": e.get("via"), "seconds": e.get("since_words_s"),
+                                 **({"tool": "start_changing_table"} if e.get("via") == "brain" else {})},
+    "alarm": _alarm,
+    "confirm": lambda e: {"kind": "confirm", "verdict": e.get("verdict"), "episode": e.get("episode"), "model": "SAM 3.1",
+                          **_frame(e)},
+    "anchor": _held,
+    "change_read_back": _logged,
+    "dog_watch": lambda e: {"kind": "dog", "verdict": e.get("verdict"), "ratio": e.get("ratio"), "dog_score": e.get("dog_score"),
+                            "baby_score": e.get("baby_score"), "seconds": e.get("sam_s"), "model": "SAM 3.1", **_frame(e)},
+}
+FORWARDED = tuple(TO_APP)
+
+
 def to_app(event):
     """The bus event as the app sees it, or None for events the app does not show."""
-    kind = event["kind"]
-    if kind == "reply":
-        return {"kind": "reply", "text": event.get("text", "")}
-    if kind == "ask_parent":
-        return {"kind": "reply", "text": f"I want to use {event.get('name')}. Say yes to let me."}
-    if kind == "skill_armed":
-        return {"kind": "skill", "text": f"{event.get('skill')} armed, watching through the glasses"}
-    if kind == "skill_closed":
-        return {"kind": "skill", "text": f"{event.get('skill')} closed after {event.get('frames')} frames"}
-    if kind == "frame":
-        return {"kind": "state", "state": event.get("state"), "hands": event.get("hands")}
-    return None
+    shown = TO_APP.get(event["kind"])
+    return shown(event) if shown else None
 
 
 class Glasses(Plugin):

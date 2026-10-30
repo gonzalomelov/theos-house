@@ -66,3 +66,4 @@ All of it is synthetic or rendered, no family audio, photo or video. Checked on 
 | `results/voice/reply-*.ogg`, the car seat lines in `results/hero2/carseat.mp4` | MMS-TTS | CC BY-NC 4.0, non-commercial only |
 | `results/hero/speech/*.wav`, the glasses voice in `results/hero*/` videos | iOS AVSpeechSynthesizer in the simulator | Apple's SDK and simulator terms |
 | `results/hero*/`, `results/glasses/` videos and screenshots | Screen recordings of the iOS simulator with DAT's mock device playing generated clips | Meta Wearables Developer Terms for the mock device, our own clips |
+| `results/glasses-live/*.png` | Screenshots of the iOS simulator with DAT's mock device and MockDisplayKit playing generated clips and, in, a Wikimedia Commons photo by Wang Yu Ching, Office of the President (Taiwan), credited on screen | Meta Wearables Developer Terms for the mock device, our own clips, CC BY 2.0 for the photo |

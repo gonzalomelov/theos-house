@@ -31,31 +31,68 @@ final class Companion {
   var replay: HUDReplay?
   var replayScene: HUDScene?
   var replayClock: Double = 0
+  /// Set while the live HUD run plays its mock feed (Debug only): detectors and the agent run for real.
+  var liveScript: HUDLiveScript?
+  var liveScene: HUDScene?
+  /// The newest card's latency, from the agent receiving the frame to the display accepting the card.
+  var lastFrameToCard: Double?
   @ObservationIgnored private let started = Date()
+  /// What made each card, for the latency log: the event kind, its frame's arrival and the event's arrival (Unix).
+  @ObservationIgnored private var causes: [HUDCard: (kind: String, frameUnix: Double?, eventUnix: Double)] = [:]
+  @ObservationIgnored private var hudLog: FileHandle?
 
   init() {
     let fps = UserDefaults.standard.double(forKey: "sendFPS")
     glasses = GlassesCamera(sendFPS: fps > 0 ? fps : 10)
     glasses.onSample = { [weak self] jpeg in self?.agent.send(frame: jpeg) }
-    agent.onEvent = { [weak self] event in self?.received(event) }
+    agent.onEvent = { [weak self] event, data in self?.received(event, data: data) }
     voice.onSpoken = { [weak self] _ in self?.spokenCount += 1 }
     glasses.onSessionStarted = { [weak self] session in self?.hud.attach(to: session) }
+    hud.onSent = { [weak self] card, unix in self?.sent(card, at: unix) }
     #if DEBUG
     if UserDefaults.standard.bool(forKey: "hudReplay") { return }
     #endif
     agent.listen()
   }
 
-  private func hudApply(_ events: [HUDEvent], at t: Double) {
+  private func hudApply(_ events: [HUDEvent], at t: Double, cause: (kind: String, frameUnix: Double?)? = nil) {
     for event in events { hudState.apply(event) }
-    hudCard = hudState.card(at: t)
+    let card = hudState.card(at: t)
+    if card != hudCard, let cause {  // the newest cause of a card, so a card shown before never lends its old frame
+      causes[card] = (cause.kind, cause.frameUnix, Date().timeIntervalSince1970)
+    }
+    hudCard = card
     hud.show(hudCard)
+  }
+
+  /// The display accepted a card: log it with what made it, so frame to card latency can be read from the run.
+  private func sent(_ card: HUDCard, at unix: Double) {
+    let cause = causes.removeValue(forKey: card)
+    if let frame = cause?.frameUnix { lastFrameToCard = unix - frame }
+    log(["kind": "sent", "title": card.title, "status": card.status, "detail": card.detail ?? "", "meta": card.meta ?? "",
+         "cause": cause?.kind ?? "", "frame_unix": cause?.frameUnix ?? 0, "event_unix": cause?.eventUnix ?? 0, "unix": unix])
+  }
+
+  /// Debug runs with -hudLog YES append every agent event, parent line and display send to Documents/hud-live.jsonl.
+  private func log(_ row: [String: Any]) {
+    #if DEBUG
+    guard UserDefaults.standard.bool(forKey: "hudLog") else { return }
+    if hudLog == nil, let docs = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+      let url = docs.appendingPathComponent("hud-live.jsonl")
+      try? Data().write(to: url)
+      hudLog = try? FileHandle(forWritingTo: url)
+    }
+    if let data = try? JSONSerialization.data(withJSONObject: row) {
+      hudLog?.write(data + Data("\n".utf8))
+    }
+    #endif
   }
 
   func say(_ text: String) {
     let text = text.trimmingCharacters(in: .whitespacesAndNewlines)
     guard !text.isEmpty else { return }
     add(.parent, text)
+    log(["kind": "say", "text": text, "unix": Date().timeIntervalSince1970])
     agent.say(text)
   }
 
@@ -64,10 +101,15 @@ final class Companion {
     if lines.count > 40 { lines.removeFirst(lines.count - 40) }
   }
 
-  private func received(_ event: AgentEvent) {
+  private func received(_ event: AgentEvent, data: Data) {
     let t = Date().timeIntervalSince(started)
-    hudApply(HUDState.live(kind: event.kind, text: event.text, state: event.state, hands: event.hands, at: t,
-                           current: hudState), at: t)
+    if let live = try? JSONDecoder().decode(HUDEvent.self, from: data) {
+      if event.kind != "state", event.kind != "hello" {
+        log(["kind": "event", "event": event.kind, "frame_unix": live.frameUnix ?? 0, "unix": Date().timeIntervalSince1970,
+             "text": event.text ?? "", "verdict": live.verdict ?? "", "state": event.state ?? ""])
+      }
+      hudApply(HUDState.live(live, at: t, current: hudState), at: t, cause: (event.kind, live.frameUnix))
+    }
     if event.kind == "voice" {
       Task { [weak self] in
         try? await Task.sleep(for: .seconds(HUDState.voiceHoldS + 0.1))
@@ -156,6 +198,44 @@ final class Companion {
       hudApply(due, at: replayClock)
       try? await Task.sleep(for: .milliseconds(50))
     }
+  }
+
+  /// Simulator live HUD run: a mock Meta Ray-Ban Display whose camera plays `MockFeed/<feed>.mp4` (our synthetic clips and
+  /// a licensed photo) through DAT to the real agent, which runs MediaPipe, SAM 3.1 and Muse on the frames and sends its
+  /// events back. The display shows what the agent sends. The only scripted part is the parent's words, sent at the feed
+  /// times in `HUD/hud-live.json` (`scripts/glasses_hud_live.py`).
+  func runHUDLive() async {
+    guard
+      let url = Bundle.main.url(forResource: "hud-live", withExtension: "json"),
+      let script = try? JSONDecoder().decode(HUDLiveScript.self, from: Data(contentsOf: url)),
+      let feed = Bundle.main.url(forResource: script.feed, withExtension: "mp4")
+    else {
+      add(.system, "No live script or feed in the app. Run scripts/glasses_hud_live.py --build-feed and build again.")
+      return
+    }
+    liveScript = script
+    add(.system, "Mock Meta Ray-Ban Display paired (DAT MockDeviceKit)")
+    glasses.pairMockGlasses(feed: feed, model: .metaRayBanDisplay)
+    for _ in 0..<100 where !agent.connected { try? await Task.sleep(for: .milliseconds(100)) }
+    await glasses.start()
+    for _ in 0..<150 where glasses.framesIn == 0 { try? await Task.sleep(for: .milliseconds(100)) }
+    let clock = Date()
+    log(["kind": "feed_start", "unix": clock.timeIntervalSince1970])
+    var next = 0
+    while true {
+      let t = Date().timeIntervalSince(clock)
+      if liveScene != script.scene(at: t) {
+        liveScene = script.scene(at: t)
+        log(["kind": "scene", "name": liveScene?.name ?? "", "feed_s": t, "unix": Date().timeIntervalSince1970])
+      }
+      while next < script.say.count, script.say[next].at <= t {
+        say(script.say[next].text)
+        next += 1
+      }
+      if t > script.durationS { break }
+      try? await Task.sleep(for: .milliseconds(50))
+    }
+    log(["kind": "feed_end", "unix": Date().timeIntervalSince1970])
   }
 
   /// Simulator demo: mock glasses on, the synthetic changing-table clip as their camera, then the parent's two lines.

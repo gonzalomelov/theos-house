@@ -23,11 +23,14 @@ starts and again after each change, so "changing time" starts watching at once i
 it the skill is blind for those 10 s, and a hover in them is never seen (results/hero/README.md).
 A load that is still running after preload_wait_s (default 5) never holds up "changing time": the watch starts with
 the MediaPipe hand regions only, the agent says so, and the detector is used from the next change (round 3 red team).
+With "keep_confirm": true the loaded detector is kept between changes instead of closed and loaded again, so one
+SAM 3.1 process serves the agent from start to stop and other checks can share it (sam3_local.live(), the dog watch
+on the glasses). "confirm_ready" says when the preload finished and how long it took.
 """
 import datetime
 import threading
 import time
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import Future, ThreadPoolExecutor
 from concurrent.futures import TimeoutError as FutureTimeout
 
 from . import confirm as confirm_mod
@@ -77,6 +80,28 @@ def describe(entry):
     return "dirty" if entry.get("solid") else "wet" if entry.get("wet") else "dry, nothing said about it"
 
 
+class KeptConfirm:
+    """The kept detector as the skill sees it: everything passes through, except close, which the plug-in does at stop."""
+
+    def __init__(self, detector):
+        self.detector = detector
+        self.name = detector.name
+
+    def judge(self, frame_bgr):
+        return self.detector.judge(frame_bgr)
+
+    @property
+    def impl(self):
+        return getattr(self.detector, "impl", None)
+
+    @property
+    def masks(self):
+        return getattr(self.detector, "masks", None)
+
+    def close(self):
+        pass
+
+
 class ChangingTable(Plugin):
     name = "changing-table"
     kind = "skill"
@@ -90,6 +115,7 @@ class ChangingTable(Plugin):
         self.skill, self.source, self.thread = None, None, None
         self.lock = threading.Lock()
         self.loader, self.warm, self.stopping, self.arming = None, None, False, False
+        self.kept = None
         agent.tools.add(Tool("start_changing_table", "Start watching the changing table, when the parent says a change is "
                              "starting (for example \"changing time\").", schema({}), lambda: self.arm(via="brain")))
         agent.tools.add(Tool("finish_changing_table", "Stop watching the changing table and log this diaper change with its "
@@ -148,7 +174,10 @@ class ChangingTable(Plugin):
         if not self.cfg.get("preload_confirm") or self._confirm is not None or self.warm is not None or self.stopping:
             return
         self.loader = self.loader or ThreadPoolExecutor(max_workers=1)
+        started = time.monotonic()
         self.warm = self.loader.submit(confirm_mod.build, self.skill_cfg["confirm"])
+        self.warm.add_done_callback(lambda done: None if done.cancelled() or done.exception() else self.agent.bus.publish(
+            "confirm_ready", provider=getattr(done.result(), "name", None), load_s=round(time.monotonic() - started, 3)))
 
     def take_warm(self):
         """The preloaded detector, waiting up to preload_wait_s for it if it is still loading, or None to build one
@@ -179,7 +208,10 @@ class ChangingTable(Plugin):
             self.arming = True
             self.voices_before = self.agent.bus.count("voice")
         try:
-            detector = self._confirm or self.take_warm()
+            detector = self._confirm or self.kept or self.take_warm()  # kept: an arm that failed after taking it
+            if self.cfg.get("keep_confirm") and self._confirm is None and detector is not None \
+                    and not isinstance(detector, confirm_mod.NoConfirm):
+                self.kept, detector = detector, KeptConfirm(detector)
             with self.lock:
                 self.source = self._source or open_source(self.cfg["source"])
                 if isinstance(self.source, PhoneSource):
@@ -220,6 +252,10 @@ class ChangingTable(Plugin):
             self.skill, self.source, self.thread = None, None, None
             self.agent.memory.remember(self.name, IDLE_FACT)
             self.agent.memory.remember(LAST_CHANGE, summary)
+            if self.kept is not None:  # keep_confirm: the same loaded detector waits for the next change
+                self.warm = Future()
+                self.warm.set_result(self.kept)
+                self.kept = None
             self.preload()
             return summary if via == "brain" else "diaper change logged"
 
@@ -241,6 +277,9 @@ class ChangingTable(Plugin):
     def stop(self):
         self.stopping = True
         self.finish()
+        if self.kept is not None:  # kept by an arm that never started watching
+            getattr(self.kept, "close", lambda: None)()
+            self.kept = None
         if self.warm is not None:
             try:
                 getattr(self.warm.result(timeout=60), "close", lambda: None)()

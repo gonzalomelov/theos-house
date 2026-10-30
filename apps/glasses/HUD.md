@@ -43,6 +43,10 @@ So the agent can draw its own cards on the lens from the iPhone app it already h
 | On-screen size | The 600 x 600 square is drawn about 255 points wide over the camera, enlarged for legibility. On the glasses it covers about 20 degrees of view. The camera is dimmed by 30 percent so the added light reads on video |
 | Sound | The app plays the tone and speaks "hand", but simctl screen recordings have no audio track |
 
+## The live run (Oct 30)
+
+`-hudLive YES` drives the same HUD from the running agent instead of a recording: the mock glasses stream `MockFeed/hud-live-feed.mp4` to the agent, MediaPipe, one SAM 3.1 process and Muse run on the frames, and every card comes from an agent event (`parenting_agent/glasses.py` `TO_APP`, one entry per event kind, mapped to one card kind in `HUDState.live`). `scripts/glasses_hud_live.py` builds the feed and runs the whole thing. Results, latency and what is still simulated: `results/glasses-live/README.md`.
+
 ## Run it
 
 ```bash
@@ -62,6 +66,6 @@ apps/glasses/scripts/test-hud.sh                 # the HUD logic tests, on the M
 
 ## Not done
 
-- Not run on real Meta Ray-Ban Display glasses, only on the mock. The live path (agent events to the display) builds and its mapping is tested, but it was only run against the mock, not with the agent and real frames.
+- Not run on real Meta Ray-Ban Display glasses, only on the mock. The live path (frames up, the running agent with MediaPipe, SAM 3.1 and Muse, its events to the display) ran on Oct 30: `results/glasses-live/README.md`.
 - No Neural Band input. Inputs is experimental and needs approval in the Wearables Developer Center.
 - The HUD is text and icons. Sending the SAM 3.1 mask picture to the display as an `Image` would work through the API but was not built.

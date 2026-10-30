@@ -129,9 +129,51 @@ class Endpoint(unittest.TestCase):
 class AppEvents(unittest.TestCase):
     def test_bus_events_shown_in_the_app(self):
         self.assertEqual(to_app({"kind": "reply", "text": "Watching."}), {"kind": "reply", "text": "Watching."})
-        self.assertEqual(to_app({"kind": "frame", "state": "off", "hands": 0}), {"kind": "state", "state": "off", "hands": 0})
+        self.assertEqual(to_app({"kind": "frame", "state": "lifted", "hands": 1, "lift_cm": 2.4, "stream_s": 3.2}),
+                         {"kind": "state", "state": "lifted", "hands": 1, "lift_cm": 2.4, "stream_s": 3.2})
         self.assertEqual(to_app({"kind": "skill_armed", "skill": "changing-table"})["kind"], "skill")
         self.assertIsNone(to_app({"kind": "brain_call"}))
+
+    def test_hud_events(self):
+        """Every check the HUD card shows comes from a bus event the agent really publishes."""
+        self.assertEqual(to_app({"kind": "changing_armed", "via": "brain", "since_words_s": 3.1}),
+                         {"kind": "armed", "by": "brain", "seconds": 3.1, "tool": "start_changing_table"})
+        self.assertNotIn("tool", to_app({"kind": "changing_armed", "via": "phrase fallback", "since_words_s": 12}))
+        self.assertEqual(to_app({"kind": "alarm", "action": "raise", "state": "lifted", "episode": 2, "stream_s": 4.0}),
+                         {"kind": "alarm", "state": "lifted", "episode": 2, "stream_s": 4.0})
+        self.assertEqual(to_app({"kind": "alarm", "action": "reraise", "episode": 2})["state"], "off")
+        self.assertEqual(to_app({"kind": "alarm", "action": "cancel", "episode": 2, "stream_s": 5})["kind"], "clear")
+        self.assertEqual(to_app({"kind": "confirm", "verdict": "off", "episode": 2})["verdict"], "off")
+        self.assertIsNone(to_app({"kind": "anchor", "based": True, "hands": 1}), "a resting anchor is not shown")
+        held = to_app({"kind": "anchor", "based": True, "held": True, "objects": ["diaper"], "stream_s": 1.0})
+        self.assertEqual((held["kind"], held["verdict"], held["object"]), ("held", "on", "diaper"))
+        self.assertEqual(to_app({"kind": "anchor", "based": False, "held": True, "objects": []})["verdict"], "off")
+        logged = to_app({"kind": "change_read_back", "id": 212, "time": "2026-10-30T22:15:00Z", "wet": False, "solid": True})
+        self.assertEqual((logged["kind"], logged["contents"], logged["entry"]), ("logged", ["dirty"], 212))
+        self.assertRegex(logged["at"], r"^\d\d:\d\d$")
+        dog = to_app({"kind": "dog_watch", "verdict": "near", "ratio": 0.13, "dog_score": 0.94, "baby_score": 0.9, "sam_s": 1.2,
+                      "stream_s": 40.0})
+        self.assertEqual((dog["kind"], dog["verdict"], dog["dog_score"], dog["stream_s"]), ("dog", "near", 0.94, 40.0))
+
+    def test_frame_events_carry_the_frame_arrival_time(self):
+        hub = GlassesHub(port=0, host="127.0.0.1", token="t")
+        try:
+            events = Events(hub)
+            self.assertTrue(events.wait(lambda e: e["kind"] == "hello"))
+            before = time.time()
+            self.assertEqual(call(hub, "frame", jpeg(), token="t")[0], 204)
+            _, _, stream_s = hub.latest(0)
+            hub.push({"kind": "alarm", "state": "off", "stream_s": round(stream_s, 3)})
+            hub.push({"kind": "reply", "text": "no frame"})
+            self.assertTrue(events.wait(lambda e: e["kind"] == "reply"))
+            alarm = next(e for e in events.seen if e["kind"] == "alarm")
+            self.assertGreaterEqual(alarm["frame_unix"], round(before, 3) - 0.001)
+            self.assertNotIn("frame_unix", next(e for e in events.seen if e["kind"] == "reply"))
+            hub.push({"kind": "alarm", "state": "off", "stream_s": 999.0})
+            self.assertTrue(events.wait(lambda e: e["kind"] == "alarm" and e["stream_s"] == 999.0))
+            self.assertIsNone(events.seen[-1]["frame_unix"], "an unknown frame has no arrival time")
+        finally:
+            hub.close()
 
 
 class GlassesChannel(unittest.TestCase):
@@ -164,8 +206,11 @@ class GlassesChannel(unittest.TestCase):
                     call(hub, "frame", jpeg(), token="t")
                     time.sleep(0.25)
                 self.assertTrue(events.wait(lambda e: e["kind"] == "chime"))
-                self.assertTrue(events.wait(lambda e: e == {"kind": "voice", "text": "hand"}))
+                self.assertTrue(events.wait(lambda e: e["kind"] == "voice" and e["text"] == "hand"))
+                voice = next(e for e in events.seen if e["kind"] == "voice")
+                self.assertIsNotNone(voice["frame_unix"], "the voice carries the arrival time of its frame")
                 self.assertTrue(events.wait(lambda e: e["kind"] == "state" and e["state"] == "off"))
+                self.assertTrue(events.wait(lambda e: e["kind"] == "alarm" and e["state"] == "off"))
                 self.assertEqual(table.finish(), "diaper change logged")
                 self.assertTrue(events.wait(lambda e: e["kind"] == "skill" and "closed" in e["text"]))
                 self.assertFalse(hub.stopped)

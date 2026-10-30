@@ -19,15 +19,25 @@ Frames come from Home Assistant's camera proxy straight into memory and are neve
 a short deque (buffer_frames) and are dropped as new ones arrive.
 
 Add "parenting_agent.dog_watch:DogWatch" to the agent config plugins, with an optional "dog_watch" block (DEFAULTS).
+
+GlassesDogWatch runs the same look on the glasses camera (parenting_agent.dog_watch:GlassesDogWatch, block
+"dog_watch_glasses", GLASSES_DEFAULTS): the newest glasses frame every every_s, through the SAM 3.1 worker the
+changing table already runs (sam3_local.live()), never a second model on the GPU. It pauses while a camera skill
+watches, and from the moment the parent says a start phrase, so the SAM 3.1 look that finds hands hidden by a diaper
+never waits behind a dog look (Oct 30 rehearsal: it waited 2.3 s and "hand" was spoken before it answered). Its alert goes to a capture file unless alert_to is "telegram", and its
+house announce is always a dry run.
 """
 import collections
+import json
 import os
 import threading
 import time
 import urllib.error
+from pathlib import Path
 
 from .agent.plugins import Plugin
-from .channels.messaging import MessagingError
+from .channels.messaging import Messenger, MessagingError
+from .confirm import Unavailable
 from .channels.router import HomeSpeaker
 from .house import HomeAssistant
 
@@ -58,6 +68,11 @@ def _union(found, words, min_score, shape):
             if score >= min_score:
                 out |= mask
     return out
+
+
+def best_score(found, words):
+    scores = [score for word in words for score, _ in found.get(word, [])]
+    return round(max(scores), 3) if scores else None
 
 
 def measure(found, cfg):
@@ -192,7 +207,8 @@ class Watch:
         self.buffer = collections.deque(maxlen=cfg["buffer_frames"])
         self.frames = frames
 
-    def look(self, frame, why="snapshot"):
+    def look(self, frame, why="snapshot", **extra):
+        """extra goes on the dog_watch event as it is (the glasses frame's stream_s)."""
         self.buffer.append(frame)
         started = time.monotonic()
         found, sam_s = self.segmenter.masks(frame, prompts(self.cfg))
@@ -201,7 +217,8 @@ class Watch:
         alerted = verdict == "near" and self.limit.allow(self.cfg["room"])
         self.bus.publish("dog_watch", room=self.cfg["room"], why=why, verdict=verdict, alerted=alerted,
                          sam_s=round(sam_s, 3), seconds=round(time.monotonic() - started, 3),
-                         **{k: v for k, v in m.items() if k in ("gap_px", "ratio", "touching")})
+                         dog_score=best_score(found, self.cfg["dog_prompts"]), baby_score=best_score(found, self.cfg["baby_prompts"]),
+                         **{k: v for k, v in m.items() if k in ("gap_px", "ratio", "touching")}, **extra)
         if alerted:
             self.alert(m)
         return verdict, alerted, m
@@ -256,3 +273,105 @@ class DogWatch(Plugin):
             self.thread.join(timeout=10)
         if self.segmenter is not None and hasattr(self.segmenter, "close"):
             self.segmenter.close()
+
+
+GLASSES_DEFAULTS = {"source": "glasses", "every_s": 0.25, "room": "changing table", "alert_to": "capture",
+                    "pause_while_watching": True, "pause_on_phrase_s": 20}
+
+
+class SharedSam3:
+    """Prompt masks from the SAM 3.1 worker this agent already runs (sam3_local.live()). Never loads a model."""
+
+    name = "sam3_shared"
+
+    def masks(self, frame_bgr, words):
+        from . import sam3_local
+        worker = sam3_local.live()
+        if worker is None:
+            raise Unavailable("no SAM 3.1 worker is running in this agent yet")
+        return worker.prompt_masks(frame_bgr, words)
+
+
+class CapturedMessages(Messenger):
+    """Stands in for Telegram on test runs: each message that would be sent is appended to a local JSONL file, and
+    nothing leaves the Mac."""
+
+    name = "captured"
+
+    def __init__(self, path):
+        self.path = Path(path)
+        self.lock = threading.Lock()
+
+    def send(self, chat_id, text):
+        self.path.parent.mkdir(parents=True, exist_ok=True)
+        with self.lock, self.path.open("a") as out:
+            out.write(json.dumps({"unix": round(time.time(), 3), "chat": str(chat_id), "text": text}) + "\n")
+        return True
+
+
+class GlassesDogWatch(Plugin):
+    """The dog look on the glasses camera, sharing the agent's one SAM 3.1 worker."""
+
+    name = "dog-watch-glasses"
+    kind = "eyes"
+
+    def __init__(self, agent, config, segmenter=None, messenger=None, source=None):
+        super().__init__(agent, config)
+        self.cfg = {**DEFAULTS, **GLASSES_DEFAULTS, **(config.get("dog_watch_glasses") or {})}
+        self.cfg["house"] = {"live": False}  # the announce from the glasses watch is always a dry run
+        if messenger is None and self.cfg["alert_to"] == "capture":
+            messenger = CapturedMessages(Path(config.get("data_dir", "data")) / "telegram-captured.jsonl")
+        self.alert = Alerter(self.cfg, agent.bus, None, messenger)
+        if self.cfg["alert_to"] == "capture":
+            self.alert.chat_id = "captured"
+        self.segmenter = segmenter or SharedSam3()
+        self._source, self.source = source, None
+        self.watching, self.waiting = set(), False
+        self.stopping = threading.Event()
+        self.thread, self.seq = None, 0
+        self.phrase_until = 0.0
+        agent.bus.subscribe(self.on_skill, ["skill_armed", "skill_closed", "phrase"])
+
+    def on_skill(self, event):
+        if event["kind"] == "phrase":
+            if event.get("action") == "arm":  # a skill is about to arm: keep the GPU free for it, until it does
+                self.phrase_until = time.monotonic() + self.cfg["pause_on_phrase_s"]
+            return
+        self.phrase_until = 0.0
+        (self.watching.add if event["kind"] == "skill_armed" else self.watching.discard)(event.get("skill"))
+
+    def start(self):
+        from .sources import open_source
+        self.source = self._source or open_source(self.cfg["source"])
+        self.watch = Watch(self.cfg, self.agent.bus, self.segmenter, self.alert)
+        self.thread = threading.Thread(target=self.run, name=self.name, daemon=True)
+        self.thread.start()
+
+    def run(self):
+        while not self.stopping.wait(self.cfg["every_s"]):
+            self.step()
+
+    def step(self):
+        """One look at the newest glasses frame, or None when paused, when no new frame came, or while SAM 3.1 loads."""
+        if self.cfg["pause_while_watching"] and (self.watching or time.monotonic() < self.phrase_until):
+            return None
+        got = self.source.latest(self.seq)
+        if got is None:
+            return None
+        frame, self.seq, stream_s = got
+        try:
+            result = self.watch.look(frame, why="glasses", stream_s=round(stream_s, 3))
+        except Unavailable as error:
+            if not self.waiting:
+                self.agent.bus.publish("dog_watch_wait", reason=str(error))
+            self.waiting = True
+            return None
+        self.waiting = False
+        return result
+
+    def stop(self):
+        self.stopping.set()
+        if self.thread:
+            self.thread.join(timeout=10)
+        if self.source is not None:
+            self.source.close()

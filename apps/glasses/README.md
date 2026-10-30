@@ -34,7 +34,7 @@ python -m parenting_agent --config config/agent.glasses.json      # prints the e
 xcrun simctl launch booted com.bygmv.parentingglasses -agentToken <token> -autoDemo YES
 ```
 
-`-hudReplay YES` runs the HUD replay instead: a mock Meta Ray-Ban Display whose in-lens display shows our checks, driven by recorded detector outputs, no agent needed (`HUD.md`).
+`-hudLive YES` runs the live HUD: the mock Meta Ray-Ban Display streams `MockFeed/hud-live-feed.mp4` to the running agent and the lens shows its events (`scripts/glasses_hud_live.py`, `results/glasses-live/README.md`). `-hudReplay YES` runs the HUD replay instead: a mock Meta Ray-Ban Display whose in-lens display shows our checks, driven by recorded detector outputs, no agent needed (`HUD.md`).
 
 Debug launch arguments for the simulator demo: `-mockFeed NAME` plays `MockFeed/NAME.mp4`, `-demoAsk TEXT` asks one more question after "done", and `-recordSpeech YES` also renders every line the app speaks to `Documents/speech/NNN.wav` with a play log, because the simulator's screen recording has no audio. `scripts/glasses_hero_run.py` uses all three for the recorded hero run (`results/hero/README.md`).
 

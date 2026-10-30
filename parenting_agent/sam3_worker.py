@@ -8,7 +8,9 @@ parenting_agent.sam3_local. It speaks a tiny protocol on stdin and stdout so the
   a request whose length has the top bit set (MASKS) also gets "hands" and "baby": PNG masks in base64, for the
   lift check's SAM 3.1 regions (parenting_agent/lift.py)
   a request with the next bit set too (HELD) also prompts the held_mask_words and draws each hand with what it holds,
-  for a hand the reflex lost behind a diaper, a wipe or a bottle (results/hover/held)
+  for a hand the reflex lost behind a diaper, a wipe or a bottle (results/hover/held), and names them in "held_objects"
+  a request with the PROMPTS bit set carries 4-byte length + JSON {"prompts": [...]} before the image and gets the
+  masks for each prompt, the reply of sam3_prompts_worker.py, so the dog watch on the glasses shares this one process
 A hand is on the baby when at least ring_min of the ring of pixels around the hand mask is baby. Hands smaller
 than min_hand_area of the frame are dropped, so the baby's own hand never counts. Frames stay in memory.
 """
@@ -22,6 +24,7 @@ from pathlib import Path
 
 MASKS = 1 << 31
 HELD = 1 << 30
+PROMPTS = 1 << 29
 DEFAULTS = {
     "checkpoints": [{"repo": "facebook/sam3.1", "file": "sam3.1_multiplex.pt"}, {"repo": "facebook/sam3", "file": "sam3.pt"}],
     "device": "mps", "confidence": 0.4, "hand_word": "hand", "baby_word": "baby",
@@ -65,6 +68,22 @@ def holding(hands, objects, cfg, baby=None):
         for i in touching:
             out[i] |= obj & ~hands[i]
     return out
+
+
+def held_objects(hands, masks, cfg, baby=None):
+    """The words of the held objects that touch a hand, the way holding() draws them: what the HUD names as held."""
+    import cv2
+    import numpy as np
+    kernel = np.ones((2 * cfg["held_touch_px"] + 1,) * 2, np.uint8)
+    grown = [cv2.dilate(h.astype(np.uint8), kernel).astype(bool) for h in hands]
+    found = []
+    for word, objects in masks.items():
+        for obj in objects:
+            if baby is not None and (obj & baby).sum() > cfg["worn_share"] * max(obj.sum(), 1):
+                continue
+            if any((g & obj).any() for g in grown) and word not in found:
+                found.append(word)
+    return found
 
 
 class Sam3:
@@ -157,9 +176,12 @@ class Sam3:
         if held:  # the parent's hand, mostly hidden by what it holds: smaller, and never the baby's own hand
             hands = [h for h in hands if (h & baby).sum() < self.cfg["worn_share"] * max(h.sum(), 1)]
             min_area = self.cfg["held_min_hand_area"]
+        objects = held_objects(hands, {w: masks[w] for w in extra}, self.cfg, baby) if held else None
         hands = holding(hands, [m for w in extra for m in masks[w]], self.cfg, baby)
         verdict, rings = ring_state(hands, baby, self.cfg)
         reply = {"verdict": verdict, "seconds": round(time.monotonic() - started, 3), "rings": rings}
+        if objects is not None:
+            reply["held_objects"] = objects
         if with_masks:
             png = lambda mask: base64.b64encode(cv2.imencode(".png", mask.astype(np.uint8) * 255)[1].tobytes()).decode()
             pixels = baby.shape[0] * baby.shape[1]
@@ -189,9 +211,15 @@ def main():
         if len(header) < 4:
             return 0
         size = struct.unpack(">I", header)[0]
-        jpeg = read(size & ~(MASKS | HELD))
+        jpeg = read(size & ~(MASKS | HELD | PROMPTS))
         try:
-            reply = sam.judge(jpeg, with_masks=bool(size & MASKS), held=bool(size & HELD))
+            if size & PROMPTS:
+                from sam3_prompts_worker import masks_for
+                length = struct.unpack(">I", jpeg[:4])[0]
+                prompts = json.loads(jpeg[4:4 + length]).get("prompts", [])
+                reply = masks_for(sam, jpeg[4 + length:], prompts)
+            else:
+                reply = sam.judge(jpeg, with_masks=bool(size & MASKS), held=bool(size & HELD))
         except Exception as error:  # one bad frame never kills the worker
             reply = {"verdict": "unknown", "error": str(error)[:200]}
         out.write(json.dumps(reply) + "\n")

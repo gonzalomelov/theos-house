@@ -4,6 +4,9 @@ The skill process starts the worker (parenting_agent/sam3_worker.py) in the Pyth
 sam3 package, given by confirm.python or SAM3_PYTHON (default ~/Engineering/gonza/sam3-native/venv).
 The worker loads the weights once, then answers one frame at a time. Frames go through a local pipe and never
 leave the machine. If the worker cannot start, build() raises confirm.Unavailable before the routine begins.
+
+One worker serves the whole agent. live() is the worker that is running, so another check (the dog watch on the
+glasses frames) asks it for prompt masks instead of loading a second SAM 3.1 on the GPU. Requests take turns on its lock.
 """
 import json
 import os
@@ -16,8 +19,19 @@ from .confirm import Unavailable
 
 DEFAULT_PYTHON = Path.home() / "Engineering/gonza/sam3-native/venv/bin/python"
 WORKER = Path(__file__).with_name("sam3_worker.py")
-MASKS, HELD = 1 << 31, 1 << 30  # same flags as sam3_worker
+MASKS, HELD, PROMPTS = 1 << 31, 1 << 30, 1 << 29  # same flags as sam3_worker
 KEYS = ("device", "confidence", "hand_word", "baby_word", "ring_px", "ring_min", "min_hand_area", "autocast", "held_words", "held_touch_px", "held_mask_words", "batch_prompts", "worn_share", "held_min_hand_area")
+
+
+_LIVE = []
+_LIVE_LOCK = threading.Lock()
+
+
+def live():
+    """The SAM 3.1 worker running in this process, or None while none is loaded."""
+    with _LIVE_LOCK:
+        running = [worker for worker in _LIVE if worker.process.poll() is None]
+    return running[-1] if running else None
 
 
 class Sam3Local:
@@ -41,15 +55,18 @@ class Sam3Local:
         self.source = hello
         self.lock = threading.Lock()
         self.codec = config.get("frame_codec", "jpg")
+        self.held_objects = []
+        with _LIVE_LOCK:
+            _LIVE.append(self)
 
-    def _ask(self, frame_bgr, flag=0):
+    def _ask(self, frame_bgr, flag=0, prefix=b""):
         import cv2
         # PNG keeps the frame as the camera gave it: a JPEG at quality 90 can halve a partly hidden hand's SAM 3.1 mask
         ok, jpeg = (cv2.imencode(".png", frame_bgr) if self.codec == "png"
                     else cv2.imencode(".jpg", frame_bgr, [cv2.IMWRITE_JPEG_QUALITY, 90]))
         if not ok:
             return {"verdict": "unknown"}
-        data = jpeg.tobytes()
+        data = prefix + jpeg.tobytes()
         with self.lock:
             self.process.stdin.write(struct.pack(">I", len(data) | flag) + data)
             self.process.stdin.flush()
@@ -66,11 +83,34 @@ class Sam3Local:
         import cv2
         import numpy as np
         reply = self._ask(frame_bgr, MASKS | (HELD if held else 0))
+        if held:
+            self.held_objects = list(reply.get("held_objects", []))
         decode = lambda text: cv2.imdecode(np.frombuffer(base64.b64decode(text), np.uint8), cv2.IMREAD_GRAYSCALE) > 0
         baby = decode(reply["baby"]) if reply.get("baby") else None
         return [decode(h) for h in reply.get("hands", [])], baby
 
+    def prompt_masks(self, frame_bgr, prompts):
+        """{prompt: [(score, bool mask)]} and the seconds SAM 3.1 took, the same answer as carseat.sam3_masks.Sam3Masks,
+        from this worker."""
+        import base64
+        import cv2
+        import numpy as np
+        request = json.dumps({"prompts": list(prompts)}).encode()
+        reply = self._ask(frame_bgr, PROMPTS, struct.pack(">I", len(request)) + request)
+        out = {}
+        for prompt, items in reply.get("found", {}).items():
+            decoded = []
+            for item in items:
+                mask = cv2.imdecode(np.frombuffer(base64.b64decode(item["mask"]), np.uint8), cv2.IMREAD_GRAYSCALE) if item.get("mask") else None
+                if mask is not None:
+                    decoded.append((item["score"], mask > 127))
+            out[prompt] = decoded
+        return out, reply.get("seconds", 0.0)
+
     def close(self):
+        with _LIVE_LOCK:
+            if self in _LIVE:
+                _LIVE.remove(self)
         if self.process.poll() is None:
             self.process.stdin.close()
             self.process.wait(timeout=10)

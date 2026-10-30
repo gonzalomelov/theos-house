@@ -18,6 +18,8 @@ final class DisplayHUD {
   @ObservationIgnored private var shown: HUDCard?
   @ObservationIgnored private var pending: HUDCard?
   @ObservationIgnored private var sending = false
+  /// Called on the main actor after the display accepted a card, with the Unix time the send finished.
+  @ObservationIgnored var onSent: ((HUDCard, Double) -> Void)?
 
   /// Attaches the display to a started device session. Glasses without a display throw, and the HUD stays off.
   func attach(to session: DeviceSession) {
@@ -73,6 +75,7 @@ final class DisplayHUD {
         try await display.send(Self.view(card))
         shown = card
         sent += 1
+        onSent?(card, Date().timeIntervalSince1970)
       } catch {
         lastError = (error as? DisplayError)?.description ?? error.localizedDescription
       }

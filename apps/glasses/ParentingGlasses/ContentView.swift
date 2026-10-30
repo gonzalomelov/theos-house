@@ -10,7 +10,7 @@ struct ContentView: View {
 
   var body: some View {
     #if DEBUG
-    if companion.replay != nil {
+    if companion.replay != nil || companion.liveScript != nil {
       HUDReplayScreen(companion: companion)
     } else {
       main

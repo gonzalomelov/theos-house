@@ -49,7 +49,8 @@ class Speaker:
 
     def on_event(self, event):
         if self.source is not None:
-            self.source.push({"kind": event["kind"], "text": event.get("text")})
+            self.source.push({"kind": event["kind"], "text": event.get("text"),
+                              **{k: event[k] for k in ("stream_s", "episode") if event.get(k) is not None}})
         if not self.local:
             return
         if event["kind"] == "chime":

@@ -24,6 +24,10 @@ struct HUDEvent: Decodable, Equatable, Sendable {
   var babyScore: Double?
   var latencyS: Double?
   var model: String?
+  /// Live events only: the Unix time the agent received the frame this event is about (`frame_unix`).
+  var frameUnix: Double?
+  /// Live hand states only: "on" or "lifted" while the skill follows a hand MediaPipe lost, by its SAM 3.1 region.
+  var held: String?
 
   init(t: Double, kind: String, text: String? = nil, state: String? = nil, hands: Int? = nil) {
     self.t = t
@@ -40,6 +44,37 @@ struct HUDEvent: Decodable, Equatable, Sendable {
     case dogScore = "dog_score"
     case babyScore = "baby_score"
     case latencyS = "latency_s"
+    case held
+    case frameUnix = "frame_unix"
+  }
+
+  /// Live agent events carry no `t`, the app stamps them on arrival.
+  init(from decoder: Decoder) throws {
+    let c = try decoder.container(keyedBy: CodingKeys.self)
+    t = try c.decodeIfPresent(Double.self, forKey: .t) ?? 0
+    kind = try c.decode(String.self, forKey: .kind)
+    text = try c.decodeIfPresent(String.self, forKey: .text)
+    state = try c.decodeIfPresent(String.self, forKey: .state)
+    hands = try c.decodeIfPresent(Int.self, forKey: .hands)
+    liftCm = try c.decodeIfPresent(Double.self, forKey: .liftCm)
+    name = try c.decodeIfPresent(String.self, forKey: .name)
+    source = try c.decodeIfPresent(String.self, forKey: .source)
+    by = try c.decodeIfPresent(String.self, forKey: .by)
+    tool = try c.decodeIfPresent(String.self, forKey: .tool)
+    seconds = try c.decodeIfPresent(Double.self, forKey: .seconds)
+    verdict = try c.decodeIfPresent(String.self, forKey: .verdict)
+    object = try c.decodeIfPresent(String.self, forKey: .object)
+    what = try c.decodeIfPresent(String.self, forKey: .what)
+    at = try c.decodeIfPresent(String.self, forKey: .at)
+    contents = try c.decodeIfPresent([String].self, forKey: .contents)
+    entry = try c.decodeIfPresent(Int.self, forKey: .entry)
+    ratio = try c.decodeIfPresent(Double.self, forKey: .ratio)
+    dogScore = try c.decodeIfPresent(Double.self, forKey: .dogScore)
+    babyScore = try c.decodeIfPresent(Double.self, forKey: .babyScore)
+    latencyS = try c.decodeIfPresent(Double.self, forKey: .latencyS)
+    model = try c.decodeIfPresent(String.self, forKey: .model)
+    frameUnix = try c.decodeIfPresent(Double.self, forKey: .frameUnix)
+    held = try c.decodeIfPresent(String.self, forKey: .held)
   }
 }
 
@@ -49,6 +84,29 @@ struct HUDScene: Decodable, Equatable, Sendable {
   var credit: String?
   let at: Double
   let length: Double
+}
+
+/// The live run's script (`HUD/hud-live.json`, written by `scripts/glasses_hud_live.py`): which part of the mock feed
+/// plays when, and the parent's words, sent at feed times. Nothing in it is a detector output.
+struct HUDLiveScript: Decodable, Sendable {
+  struct Line: Decodable, Sendable {
+    let at: Double
+    let text: String
+  }
+
+  let feed: String
+  let durationS: Double
+  let scenes: [HUDScene]
+  let say: [Line]
+
+  enum CodingKeys: String, CodingKey {
+    case feed, scenes, say
+    case durationS = "duration_s"
+  }
+
+  func scene(at t: Double) -> HUDScene? {
+    scenes.last { $0.at <= t }
+  }
 }
 
 /// The replay file written by `scripts/glasses_hud_replay.py`.
@@ -66,7 +124,7 @@ struct HUDReplay: Decodable, Sendable {
 
 /// What the glasses display shows: one card, sent whole to the display each time it changes.
 /// `icon` is a Meta Ray-Ban Display `IconName` case name.
-struct HUDCard: Equatable, Sendable {
+struct HUDCard: Hashable, Sendable {
   var icon: String
   var title: String
   var status: String
@@ -79,6 +137,8 @@ struct HUDCard: Equatable, Sendable {
 struct HUDState: Equatable, Sendable {
   /// How long the spoken "hand" stays the headline.
   static let voiceHoldS = 1.6
+  /// How long MediaPipe must see a hand on the baby again before the hidden-hand card goes.
+  static let seenAgainS = 1.0
 
   var scene: String?
   var watchOn = false
@@ -93,6 +153,7 @@ struct HUDState: Equatable, Sendable {
   var confirm: String?
   var heldObject: String?
   var heldVerdict: String?
+  var seenSince: Double?
   var lastReply: String?
   var closing = false
   var logged: HUDEvent?
@@ -110,19 +171,37 @@ struct HUDState: Equatable, Sendable {
       liftCm = nil
       if event.name == "dog" { logged = nil }
     case "armed":
+      if watchOn, event.by == "agent" { break }  // the skill's own "armed" never hides who armed it
       watchOn = true
       armedBy = event.by
       armTool = event.tool
       armSeconds = event.seconds
+      logged = nil
+      closing = false
+      alarm = nil
+      heldObject = nil
+      heldVerdict = nil
     case "closed":
       watchOn = false
       closing = true
       alarm = nil
       lastReply = nil
+      heldObject = nil
+      heldVerdict = nil
     case "reflex":
       reflex = event.state
       hands = event.hands
       liftCm = event.liftCm ?? (event.state == "lifted" ? liftCm : nil)
+      if event.held != nil || (event.hands ?? 0) == 0 || event.state != "on" {
+        seenSince = nil
+      } else if let since = seenSince {
+        if event.t - since >= Self.seenAgainS {
+          heldObject = nil
+          heldVerdict = nil
+        }
+      } else {
+        seenSince = event.t
+      }
     case "alarm":
       alarm = event.state
       voicedAt = nil
@@ -187,9 +266,9 @@ struct HUDState: Equatable, Sendable {
       return HUDCard(icon: "exclamationTriangle", title: alarm == "lifted" ? "Hover" : "Hands off", status: what,
                      detail: heldObject.map { "Holding a \($0)" }, meta: meta, alert: true)
     }
-    if let heldObject {
+    if heldVerdict != nil || heldObject != nil {
       return HUDCard(
-        icon: "eye", title: "Changing table", status: "Hand hidden by the \(heldObject)",
+        icon: "eye", title: "Changing table", status: heldObject.map { "Hand hidden by the \($0)" } ?? "Hands hidden from MediaPipe",
         detail: heldVerdict == "on" ? "SAM 3.1 found the hand on the baby" : "SAM 3.1 is looking for the hand",
         meta: watchMeta)
     }
@@ -213,21 +292,23 @@ struct HUDState: Equatable, Sendable {
     return meta
   }
 
-  /// The live agent's glasses events (`parenting_agent/glasses.py` `to_app`) as HUD events.
-  static func live(kind: String, text: String?, state: String?, hands: Int?, at t: Double, current: HUDState) -> [HUDEvent] {
-    switch kind {
+  /// The live agent's glasses events (`parenting_agent/glasses.py` `to_app`) as HUD events at the app's time `t`.
+  /// The agent sends the checks themselves (armed, alarm, clear, confirm, held, logged, dog), so they pass through.
+  /// The tone and the voice come from the skill's speaker, the hand state from every frame.
+  static func live(_ event: HUDEvent, at t: Double, current: HUDState) -> [HUDEvent] {
+    var event = event
+    event.t = t
+    switch event.kind {
     case "state":
-      var events = [HUDEvent(t: t, kind: "reflex", state: state, hands: hands)]
-      if state == "on", current.alarm != nil { events.append(HUDEvent(t: t, kind: "clear")) }
-      return events
-    case "chime":
-      return [HUDEvent(t: t, kind: "alarm", state: current.reflex == "lifted" ? "lifted" : "off")]
+      event.kind = "reflex"
+      return [event]
+    case "armed", "alarm", "clear", "confirm", "held", "logged", "dog", "reply":
+      return [event]
     case "voice":
-      return [HUDEvent(t: t, kind: "voice", text: text ?? "hand")]
-    case "reply":
-      return [HUDEvent(t: t, kind: "reply", text: text)]
+      if event.text == nil { event.text = "hand" }
+      return [event]
     case "skill":
-      guard let text else { return [] }
+      guard let text = event.text else { return [] }
       if text.contains("armed") {
         var armed = HUDEvent(t: t, kind: "armed")
         armed.by = "agent"

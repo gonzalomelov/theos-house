@@ -1,0 +1,67 @@
+{
+ "feed": "hud-live-feed",
+ "duration_s": 61.858,
+ "scenes": [
+  {
+   "name": "held diaper",
+   "source": "Muse arms the watch, the hands hold a diaper: SAM 3.1 finds them, then the hover",
+   "at": 0.0,
+   "length": 17.0
+  },
+  {
+   "name": "both hands off",
+   "source": "The hands come back, rest, then both leave: MediaPipe, the tone, then \u201chand\u201d",
+   "at": 17.0,
+   "length": 8.942
+  },
+  {
+   "name": "one hand on",
+   "source": "One hand rests on the baby: silent",
+   "at": 25.942,
+   "length": 10.0
+  },
+  {
+   "name": "hover 2.5 cm",
+   "source": "One hand hovers 2.5 cm: SAM 3.1 hand masks and the lift check",
+   "at": 35.942,
+   "length": 6.958
+  },
+  {
+   "name": "done",
+   "source": "\u201cdone, it was dirty\u201d: Muse closes the watch, Baby Buddy read back",
+   "at": 42.9,
+   "length": 6.958
+  },
+  {
+   "name": "dog near the baby",
+   "source": "SAM 3.1 dog and baby masks on the glasses frame",
+   "at": 49.858,
+   "length": 12.0,
+   "credit": "Photo: Wang Yu Ching, Office of the President (Taiwan), CC BY 2.0, Wikimedia Commons"
+  }
+ ],
+ "say": [
+  {
+   "at": 1.0,
+   "text": "changing time"
+  },
+  {
+   "at": 43.2,
+   "text": "done, it was dirty"
+  }
+ ],
+ "cues": [
+  {
+   "scene": "held diaper",
+   "feed_s": 12.6
+  },
+  {
+   "scene": "both hands off",
+   "feed_s": 22.1
+  },
+  {
+   "scene": "hover 2.5 cm",
+   "feed_s": 38.442
+  }
+ ]
+}

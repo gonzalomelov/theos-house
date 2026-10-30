@@ -131,20 +131,60 @@ do {
   expect(far.card(at: 0).title != "Dog near the baby", "a far dog does not alert")
 }
 
-// Live agent events map onto the same reducer.
+// Live agent events (parenting_agent/glasses.py to_app) map onto the same reducer, in the order the agent sends them.
 do {
   var state = HUDState()
-  for e in HUDState.live(kind: "skill", text: "changing-table armed, watching through the glasses", state: nil, hands: nil,
-                         at: 0, current: state) { state.apply(e) }
-  expect(state.watchOn && state.armedBy == "agent", "live armed")
-  for e in HUDState.live(kind: "state", text: nil, state: "lifted", hands: 1, at: 1, current: state) { state.apply(e) }
-  for e in HUDState.live(kind: "chime", text: nil, state: nil, hands: nil, at: 1, current: state) { state.apply(e) }
-  expect(state.alarm == "lifted", "live chime while lifted is a hover")
-  for e in HUDState.live(kind: "voice", text: "hand", state: nil, hands: nil, at: 2, current: state) { state.apply(e) }
-  expect(state.card(at: 2).title == "\u{201C}hand\u{201D}", "live voice")
-  for e in HUDState.live(kind: "state", text: nil, state: "on", hands: 1, at: 3, current: state) { state.apply(e) }
-  expect(state.alarm == nil, "live hand back clears")
-  expect(HUDState.live(kind: "hello", text: nil, state: nil, hands: nil, at: 0, current: state).isEmpty, "unknown kind")
+  func feed(_ json: String, at t: Double) {
+    for e in HUDState.live(event(json), at: t, current: state) { state.apply(e) }
+  }
+  feed(#"{"kind":"skill","text":"changing-table armed, watching through the glasses"}"#, at: 0)
+  feed(#"{"kind":"armed","by":"brain","seconds":3.12,"tool":"start_changing_table"}"#, at: 0)
+  feed(#"{"kind":"state","state":"on","hands":1,"lift_cm":0.1,"stream_s":4.2,"frame_unix":1000.5}"#, at: 0.1)
+  expect(state.armedBy == "brain", "the skill's own armed does not hide Muse: \(state.armedBy ?? "nil")")
+  expect(state.card(at: 0.1).meta == "Watch on · armed by Muse in 3.1 s", "live armed meta: \(state.card(at: 0.1).meta ?? "nil")")
+  expect(state.card(at: 0.1).status == "Hand on the baby", "live hand on")
+  feed(#"{"kind":"state","state":"off","hands":0,"stream_s":5}"#, at: 1)
+  feed(#"{"kind":"alarm","state":"off","episode":1,"stream_s":5}"#, at: 1)
+  feed(#"{"kind":"chime","stream_s":5}"#, at: 1)
+  expect(state.card(at: 1).title == "Hands off", "live alarm")
+  feed(#"{"kind":"confirm","verdict":"off","episode":1,"model":"SAM 3.1"}"#, at: 1.5)
+  feed(#"{"kind":"voice","text":"hand","stream_s":5,"frame_unix":1001.2}"#, at: 2.2)
+  expect(state.card(at: 2.3).title == "\u{201C}hand\u{201D}", "live voice")
+  feed(#"{"kind":"clear","episode":1}"#, at: 3)
+  feed(#"{"kind":"state","state":"lifted","hands":1,"lift_cm":2.44}"#, at: 4)
+  feed(#"{"kind":"alarm","state":"lifted","episode":2}"#, at: 4)
+  expect(state.card(at: 4).status == "Hand lifted 2.4 cm off the baby", "live hover: \(state.card(at: 4).status)")
+  feed(#"{"kind":"clear","episode":2}"#, at: 5)
+  feed(#"{"kind":"held","verdict":"on","object":"diaper","model":"SAM 3.1"}"#, at: 6)
+  expect(state.card(at: 6).status == "Hand hidden by the diaper", "live held: \(state.card(at: 6).status)")
+  feed(#"{"kind":"state","state":"on","hands":0,"held":"on"}"#, at: 6.2)
+  feed(#"{"kind":"state","state":"on","hands":1}"#, at: 6.3)
+  expect(state.card(at: 6.3).status == "Hand hidden by the diaper", "one MediaPipe frame keeps the hidden-hand card")
+  feed(#"{"kind":"state","state":"on","hands":1}"#, at: 7.4)
+  expect(state.card(at: 7.4).status == "Hand on the baby", "a second of MediaPipe seeing the hand again ends it")
+  var unnamed = HUDState()
+  for e in HUDState.live(event(#"{"kind":"armed","by":"brain"}"#), at: 0, current: unnamed) { unnamed.apply(e) }
+  for e in HUDState.live(event(#"{"kind":"held","verdict":"on","object":null}"#), at: 1, current: unnamed) { unnamed.apply(e) }
+  expect(unnamed.card(at: 1).status == "Hands hidden from MediaPipe", "held look with nothing named: \(unnamed.card(at: 1).status)")
+  expect(unnamed.card(at: 1).detail == "SAM 3.1 found the hand on the baby", "held look found the hand")
+  feed(#"{"kind":"skill","text":"changing-table closed after 300 frames"}"#, at: 8)
+  expect(state.card(at: 8).status == "Logging the change", "live closing")
+  feed(#"{"kind":"logged","what":"diaper","at":"19:20","contents":["dirty"],"entry":230}"#, at: 8.5)
+  feed(#"{"kind":"reply","text":"3 hand alerts. Logged diaper at 19:20, dirty."}"#, at: 9)
+  expect(state.card(at: 9).meta == "Read back from Baby Buddy · entry 230", "live read back")
+  feed(#"{"kind":"dog","verdict":"no_dog"}"#, at: 10)
+  expect(state.card(at: 10).title == "Logged", "no dog keeps the logged card")
+  feed(#"{"kind":"dog","verdict":"near","ratio":0.1,"dog_score":0.93,"baby_score":0.88,"model":"SAM 3.1","stream_s":40}"#, at: 11)
+  expect(state.card(at: 11).title == "Dog near the baby", "live dog")
+  expect(HUDState.live(event(#"{"kind":"hello"}"#), at: 0, current: state).isEmpty, "unknown kind")
+  expect(event(#"{"kind":"voice","frame_unix":1001.25}"#).frameUnix == 1001.25, "frame time decodes")
+}
+
+// The live script picks the scene playing at a feed time.
+do {
+  let json = #"{"feed":"hud-live-feed","duration_s":20,"scenes":[{"name":"one hand","source":"live","at":0,"length":10},{"name":"dog","source":"live","at":10,"length":10}],"say":[{"at":1,"text":"changing time"}]}"#
+  let script = try! JSONDecoder().decode(HUDLiveScript.self, from: Data(json.utf8))
+  expect(script.scene(at: 3)?.name == "one hand" && script.scene(at: 12)?.name == "dog", "live scenes")
 }
 
 // The committed replay file: decodes, is ordered, and shows every check the HUD is for, in order.

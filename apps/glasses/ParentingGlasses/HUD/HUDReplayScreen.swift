@@ -21,12 +21,14 @@ struct MockDisplayPreview: UIViewRepresentable {
   func updateUIView(_ uiView: UIView, context: Context) {}
 }
 
-/// The simulator screen for the recorded HUD replay: what the wearer sees, the head camera with the in-lens display
-/// over it, and labels that say what is simulated and where every detector output comes from.
+/// The simulator screen for the HUD: what the wearer sees, the head camera with the in-lens display over it, and labels
+/// that say what is simulated and where every detector output comes from. The recorded replay and the live run
+/// (`Companion.runHUDLive`, detectors and agent running) share it.
 struct HUDReplayScreen: View {
   let companion: Companion
 
   private var glasses: GlassesCamera { companion.glasses }
+  private var live: Bool { companion.liveScript != nil }
 
   var body: some View {
     VStack(alignment: .leading, spacing: 10) {
@@ -46,9 +48,13 @@ struct HUDReplayScreen: View {
   private var simulatedBanner: some View {
     VStack(alignment: .leading, spacing: 4) {
       HStack(spacing: 6) {
-        Text("SIMULATED").font(.caption.bold()).padding(.horizontal, 8).padding(.vertical, 3)
-          .background(Color.orange, in: Capsule()).foregroundStyle(.black)
+        Text(live ? "LIVE" : "SIMULATED").font(.caption.bold()).padding(.horizontal, 8).padding(.vertical, 3)
+          .background(live ? Color.green : Color.orange, in: Capsule()).foregroundStyle(.black)
         Text("Meta Ray-Ban Display HUD").font(.headline)
+      }
+      if live {
+        Text("Live: detectors and agent running, glasses and lens simulated by Meta's mock")
+          .font(.caption.bold()).fixedSize(horizontal: false, vertical: true)
       }
       Text("Real DAT Display API (MWDATDisplay 1.0.1), drawn by Meta's MockDisplayKit in the iOS simulator. No real glasses.")
         .font(.caption2).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
@@ -74,11 +80,6 @@ struct HUDReplayScreen: View {
             .frame(width: display, height: display)
             .blendMode(.plusLighter)
             .overlay(RoundedRectangle(cornerRadius: 10).stroke(.white.opacity(0.3), lineWidth: 1))
-            .overlay(alignment: .topTrailing) {
-              Text("600 × 600 in-lens display, enlarged").font(.system(size: 9, weight: .semibold))
-                .padding(.horizontal, 5).padding(.vertical, 2).background(.black.opacity(0.6), in: Capsule())
-                .padding(6)
-            }
             .offset(x: width - display - (height - display) / 2, y: (height - display) / 2)
         }
         HStack(spacing: 6) {
@@ -94,11 +95,22 @@ struct HUDReplayScreen: View {
       .clipShape(RoundedRectangle(cornerRadius: 16))
     }
     .aspectRatio(4 / 3, contentMode: .fit)
+    .overlay(alignment: .bottomTrailing) {
+      // Under the lens, so it never covers the head camera label or the card
+      Text("600 × 600 in-lens display, enlarged").font(.system(size: 9, weight: .semibold)).foregroundStyle(.secondary)
+        .alignmentGuide(.bottom) { $0[.top] - 3 }
+    }
+    .padding(.bottom, 12)
   }
 
   private var sceneCaption: some View {
     VStack(alignment: .leading, spacing: 3) {
-      if let replay = companion.replay, let scene = companion.replayScene,
+      if let script = companion.liveScript, let scene = companion.liveScene,
+         let index = script.scenes.firstIndex(of: scene) {
+        Text("Scene \(index + 1) of \(script.scenes.count) · \(scene.name.capitalized)").font(.subheadline.bold())
+        Text(scene.source).font(.caption).foregroundStyle(.secondary)
+        if let credit = scene.credit { Text(credit).font(.caption2).foregroundStyle(.secondary) }
+      } else if let replay = companion.replay, let scene = companion.replayScene,
          let index = replay.scenes.firstIndex(of: scene) {
         Text("Scene \(index + 1) of \(replay.scenes.count) · \(scene.name.capitalized)").font(.subheadline.bold())
         Text("Detector outputs replayed from \(scene.source)").font(.caption).foregroundStyle(.secondary)
@@ -106,7 +118,9 @@ struct HUDReplayScreen: View {
       } else {
         Text(glasses.message ?? "Waiting for the mock glasses camera").font(.subheadline.bold())
       }
-      Text("Display \(String(describing: companion.hud.state)) · \(companion.hud.sent) views sent")
+      Text("Display \(String(describing: companion.hud.state)) · \(companion.hud.sent) views sent"
+           + (live ? " · \(companion.agent.framesSent) frames to the agent" : "")
+           + (companion.lastFrameToCard.map { String(format: " · frame to card %.2f s", $0) } ?? ""))
         .font(.caption2.monospacedDigit()).foregroundStyle(.secondary)
       if let error = companion.hud.lastError { Text(error).font(.caption2).foregroundStyle(.orange) }
     }
@@ -124,7 +138,9 @@ struct HUDReplayScreen: View {
   }
 
   private var footer: some View {
-    Text("Camera: our synthetic clips and a licensed photo. MediaPipe and SAM 3.1 outputs are recorded (Oct 29), not run now. Gaps between scenes shortened. Camera dimmed so the additive display reads on video.")
+    Text(live
+         ? "Camera: our synthetic clips and a licensed photo, played by DAT MockDeviceKit. MediaPipe and SAM 3.1 run on this Mac, Muse Spark Open on Baseten, the diaper goes to Baby Buddy (test child). The parent's words are typed by the run's script. Recorded in real time, not edited. Camera dimmed so the additive display reads on video."
+         : "Camera: our synthetic clips and a licensed photo. MediaPipe and SAM 3.1 outputs are recorded (Oct 29), not run now. Gaps between scenes shortened. Camera dimmed so the additive display reads on video.")
       .font(.caption2).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
       .padding(.bottom, 4)
   }
