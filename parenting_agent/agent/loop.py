@@ -197,7 +197,8 @@ TEXTS = {
         "LAST_NOT_LOGGED": "I did not change anything: the one before was not logged. Tell me what it was and I log it.",
         "DID_ONLY": "Nothing was sent. I only did this: {what}.",
         "DONE": "Done. {what}.", "NOT_DONE": "Not done. {what}.", "NOTHING_WAITING": "Not done. Nothing was waiting.",
-        "EDITED": "Fixed {entry}: {changes}.", "UNCHANGED": "{entry} already says that, nothing changed.",
+        "EDITED": "Fixed {entry}: {changes}.", "NO_ML": "no ml", "ASK_BREAST": "How many minutes was it, and which side?",
+        "UNCHANGED": "{entry} already says that, nothing changed.",
         "DELETED": "Deleted {entry}.",
         "BOTTLE": "bottle", "BREAST": "breast feed", "DIAPER": "diaper", "SLEEP": "sleep", "BATH": "bath", "NOTE": "note",
         "ENTRY_AT": "the {at} {noun}", "OF_ML": " of {ml} ml",
@@ -229,7 +230,8 @@ TEXTS = {
         "LAST_NOT_LOGGED": "No cambié nada: la anterior no quedó anotada. Decime qué fue y la anoto.",
         "DID_ONLY": "Todavía no mandé nada. Solo hice esto: {what}.",
         "DONE": "Listo. {what}.", "NOT_DONE": "No se hizo. {what}.", "NOTHING_WAITING": "No se hizo nada. No había nada esperando.",
-        "EDITED": "Corregí {entry}: {changes}.", "UNCHANGED": "{entry} ya decía eso, no cambié nada.",
+        "EDITED": "Corregí {entry}: {changes}.", "NO_ML": "sin ml", "ASK_BREAST": "¿Cuántos minutos fue y de qué lado?",
+        "UNCHANGED": "{entry} ya decía eso, no cambié nada.",
         "DELETED": "Borré {entry}.",
         "BOTTLE": "la mamadera", "BREAST": "la toma de pecho", "DIAPER": "el pañal", "SLEEP": "el sueño", "BATH": "el baño",
         "NOTE": "la nota", "ENTRY_AT": "{noun}{ml} de las {at}", "OF_ML": " de {ml} ml",
@@ -331,7 +333,9 @@ def changes(before, after, lang):
     a, b = before.get("details") or {}, after.get("details") or {}
     out = []
     if _ml(a.get("amount_ml")) != _ml(b.get("amount_ml")):
-        out.append(f"{_ml(a.get('amount_ml')) or '?'} ml → {_ml(b.get('amount_ml')) or '?'} ml")
+        old = f"{_ml(a.get('amount_ml'))} ml" if _ml(a.get("amount_ml")) else words.get("NO_ML", "no ml")
+        new = f"{_ml(b.get('amount_ml'))} ml" if _ml(b.get("amount_ml")) else words.get("NO_ML", "no ml")
+        out.append(f"{old} → {new}")
     if str(before.get("ts"))[11:16] != str(after.get("ts"))[11:16]:
         out.append(f"{str(before.get('ts'))[11:16]} → {str(after.get('ts'))[11:16]}")
     for name in ("method", "type"):
@@ -356,7 +360,13 @@ def change_text(result, lang):
     if not what:
         text = words["UNCHANGED"].format(entry=describe(before, lang))
         return text[0].upper() + text[1:]
-    return words["EDITED"].format(entry=describe(before, lang, with_ml=False), changes=what)
+    text = words["EDITED"].format(entry=describe(before, lang, with_ml=False), changes=what)
+    a, b = before.get("details") or {}, after.get("details") or {}
+    if (before.get("kind") == "feeding" and "breast" in str(b.get("method") or "") and "breast" not in str(a.get("method") or "")
+            and not (b.get("duration_min") or 0)):
+        # A bottle that was a breast feed: the ml are gone and the log asks for what a breast feed holds (round 5).
+        text += " " + words["ASK_BREAST"]
+    return text
 
 
 def own_entry(result, stored):

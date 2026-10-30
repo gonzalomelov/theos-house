@@ -160,7 +160,9 @@ class FamilyBot(unittest.TestCase):
         nine = self.fam.log.add("feeding", {"method": "bottle", "amount_ml": 90}, ts="2026-11-01T09:00:00-03:00")
         self.fam.log.add("feeding", {"method": "bottle", "amount_ml": 100}, ts="2026-11-01T06:00:00-03:00")
         self.brain.queue.append(("log_ops", {"ops": [{"op": "edit", "id": nine["id"], "method": "breast"}], "reply": ""}))
-        self.say("el de las 9 fue de pecho no mamadera")
+        reply = self.say("el de las 9 fue de pecho no mamadera")
+        self.assertIn("90 ml → sin ml", reply)
+        self.assertTrue(reply.endswith("¿Cuántos minutos fue y de qué lado?"), reply)
         after = self.fam.log.get(nine["id"])["details"]
         self.assertEqual(after["method"], "breast")
         self.assertNotIn("amount_ml", after)
