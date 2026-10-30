@@ -1,6 +1,7 @@
 """Score the held-out set once against a checkout, with the real Muse Spark Open brain in log ops mode.
 
-Usage: python score.py <repo checkout> <out prefix>
+Usage: python score.py <repo checkout> <out prefix> [baseten|claude]
+The optional brain is baseten (Muse) by default. claude runs the same set on Claude Haiku with max_tokens 2048, as Muse.
 Writes <out prefix>.md (transcript and verdicts) and <out prefix>.json (scores). Telegram is never touched: replies
 come back from Families.handle. The keys are read from the hackathon .env into this process only.
 """
@@ -16,6 +17,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 REPO = Path(sys.argv[1]).resolve()
 OUT = Path(sys.argv[2])
+BRAIN = sys.argv[3] if len(sys.argv) > 3 else "baseten"
 sys.path.insert(0, str(REPO))
 
 from parenting_agent.families import settings as settings_mod  # noqa: E402
@@ -120,7 +122,9 @@ def main():
         if name in env:
             os.environ[name] = env[name]
     data = tempfile.mkdtemp(prefix="heldout-")
-    s = settings_mod.load({"PA_FAMILIES_BRAIN": "baseten", "PA_FAMILIES_DATA_DIR": data, "PA_FAMILIES_LOG_MODE": "ops"})
+    if BRAIN == "claude":
+        settings_mod.BRAINS["claude"] = {**settings_mod.BRAINS["claude"], "max_tokens": 2048}
+    s = settings_mod.load({"PA_FAMILIES_BRAIN": BRAIN, "PA_FAMILIES_DATA_DIR": data, "PA_FAMILIES_LOG_MODE": "ops"})
     clock = {"now": at(spec["start"])}
     MEM.now = lambda: clock["now"].isoformat(timespec="seconds")
     app = Families(s, clock=lambda: clock["now"])

@@ -1,0 +1,514 @@
+{
+ "variant": "ops",
+ "sets": [
+  "steps"
+ ],
+ "messages": 45,
+ "wrong_log_states": 0,
+ "reply_misses": 1,
+ "fallbacks": 0,
+ "usd": 0.0205,
+ "seconds_per_message": 1.96,
+ "by_set": [
+  {
+   "set": "steps",
+   "brain": "claude-haiku-5-5",
+   "messages": 45,
+   "wrong_log_states": 0,
+   "reply_misses": 1,
+   "fallbacks": 0,
+   "usd": 0.0205,
+   "seconds": 88.4,
+   "fallback_steps": [],
+   "misses": [],
+   "reply_problems": [
+    {
+     "step": 6,
+     "what": "a claimed log with nothing logged",
+     "reply": "Ya tengo anotado el pañal mojado de las 04:00. ¿Me mandaste el mismo mensaje dos veces o fueron dos pañales?"
+    }
+   ],
+   "steps": [
+    {
+     "step": 1,
+     "brains": [
+      "claude-haiku-5-5"
+     ],
+     "seconds": 1.83
+    },
+    {
+     "step": 2,
+     "brains": [
+      "claude-haiku-5-5"
+     ],
+     "seconds": 1.89
+    },
+    {
+     "step": 3,
+     "brains": [
+      "claude-haiku-5-5"
+     ],
+     "seconds": 2.15
+    },
+    {
+     "step": 4,
+     "brains": [
+      "claude-haiku-5-5"
+     ],
+     "seconds": 1.75
+    },
+    {
+     "step": 5,
+     "brains": [
+      "claude-haiku-5-5"
+     ],
+     "seconds": 1.87
+    },
+    {
+     "step": 6,
+     "brains": [
+      "claude-haiku-5-5"
+     ],
+     "seconds": 1.71
+    },
+    {
+     "step": 7,
+     "brains": [
+      "claude-haiku-5-5"
+     ],
+     "seconds": 1.52
+    },
+    {
+     "step": 8,
+     "brains": [
+      "claude-haiku-5-5"
+     ],
+     "seconds": 2.21
+    },
+    {
+     "step": 9,
+     "brains": [
+      "claude-haiku-5-5"
+     ],
+     "seconds": 1.78
+    },
+    {
+     "step": 10,
+     "brains": [
+      "claude-haiku-5-5"
+     ],
+     "seconds": 2.36
+    },
+    {
+     "step": 11,
+     "brains": [
+      "claude-haiku-5-5"
+     ],
+     "seconds": 1.53
+    },
+    {
+     "step": 12,
+     "brains": [
+      "claude-haiku-5-5"
+     ],
+     "seconds": 1.61
+    },
+    {
+     "step": 13,
+     "brains": [
+      "claude-haiku-5-5"
+     ],
+     "seconds": 1.74
+    },
+    {
+     "step": 14,
+     "brains": [
+      "claude-haiku-5-5"
+     ],
+     "seconds": 3.32
+    },
+    {
+     "step": 15,
+     "brains": [
+      "claude-haiku-5-5"
+     ],
+     "seconds": 1.78
+    },
+    {
+     "step": 16,
+     "brains": [
+      "claude-haiku-5-5"
+     ],
+     "seconds": 1.34
+    },
+    {
+     "step": 17,
+     "brains": [
+      "claude-haiku-5-5"
+     ],
+     "seconds": 3.22
+    },
+    {
+     "step": 18,
+     "brains": [
+      "claude-haiku-5-5"
+     ],
+     "seconds": 1.88
+    },
+    {
+     "step": 19,
+     "brains": [
+      "claude-haiku-5-5"
+     ],
+     "seconds": 1.71
+    },
+    {
+     "step": 20,
+     "brains": [
+      "claude-haiku-5-5"
+     ],
+     "seconds": 2.14
+    },
+    {
+     "step": 21,
+     "brains": [
+      "claude-haiku-5-5"
+     ],
+     "seconds": 1.87
+    },
+    {
+     "step": 22,
+     "brains": [
+      "claude-haiku-5-5"
+     ],
+     "seconds": 2.15
+    },
+    {
+     "step": 23,
+     "brains": [
+      "claude-haiku-5-5"
+     ],
+     "seconds": 2.22
+    },
+    {
+     "step": 24,
+     "brains": [
+      "claude-haiku-5-5"
+     ],
+     "seconds": 1.33
+    },
+    {
+     "step": 25,
+     "brains": [
+      "claude-haiku-5-5"
+     ],
+     "seconds": 1.36
+    },
+    {
+     "step": 26,
+     "brains": [
+      "claude-haiku-5-5"
+     ],
+     "seconds": 2.63
+    },
+    {
+     "step": 27,
+     "brains": [
+      "claude-haiku-5-5"
+     ],
+     "seconds": 1.52
+    },
+    {
+     "step": 28,
+     "brains": [
+      "claude-haiku-5-5"
+     ],
+     "seconds": 1.42
+    },
+    {
+     "step": 29,
+     "brains": [
+      "claude-haiku-5-5"
+     ],
+     "seconds": 1.72
+    },
+    {
+     "step": 30,
+     "brains": [
+      "claude-haiku-5-5"
+     ],
+     "seconds": 6.76
+    },
+    {
+     "step": 31,
+     "brains": [
+      "claude-haiku-5-5"
+     ],
+     "seconds": 1.57
+    },
+    {
+     "step": 32,
+     "brains": [
+      "claude-haiku-5-5"
+     ],
+     "seconds": 2.15
+    },
+    {
+     "step": 33,
+     "brains": [
+      "claude-haiku-5-5"
+     ],
+     "seconds": 1.39
+    },
+    {
+     "step": 34,
+     "brains": [
+      "claude-haiku-5-5"
+     ],
+     "seconds": 1.77
+    },
+    {
+     "step": 35,
+     "brains": [
+      "claude-haiku-5-5"
+     ],
+     "seconds": 1.7
+    },
+    {
+     "step": 36,
+     "brains": [
+      "claude-haiku-5-5"
+     ],
+     "seconds": 1.74
+    },
+    {
+     "step": 37,
+     "brains": [
+      "claude-haiku-5-5"
+     ],
+     "seconds": 1.83
+    },
+    {
+     "step": 38,
+     "brains": [
+      "claude-haiku-5-5"
+     ],
+     "seconds": 1.57
+    },
+    {
+     "step": 39,
+     "brains": [
+      "claude-haiku-5-5"
+     ],
+     "seconds": 2.66
+    },
+    {
+     "step": 40,
+     "brains": [
+      "claude-haiku-5-5"
+     ],
+     "seconds": 2.11
+    },
+    {
+     "step": 41,
+     "brains": [
+      "claude-haiku-5-5"
+     ],
+     "seconds": 1.49
+    },
+    {
+     "step": 42,
+     "brains": [
+      "claude-haiku-5-5"
+     ],
+     "seconds": 1.72
+    },
+    {
+     "step": 43,
+     "brains": [
+      "claude-haiku-5-5"
+     ],
+     "seconds": 1.45
+    },
+    {
+     "step": 44,
+     "brains": [
+      "claude-haiku-5-5"
+     ],
+     "seconds": 1.1
+    },
+    {
+     "step": 45,
+     "brains": [
+      "claude-haiku-5-5"
+     ],
+     "seconds": 1.88
+    }
+   ],
+   "final_log": [
+    {
+     "kind": "sleep",
+     "day": 29,
+     "at": "02:45",
+     "start": "00:30"
+    },
+    {
+     "kind": "feeding",
+     "day": 29,
+     "at": "03:20",
+     "method": "right breast",
+     "ml": null,
+     "type": "breast milk",
+     "min": 18
+    },
+    {
+     "kind": "diaper",
+     "day": 29,
+     "at": "04:00",
+     "wet": true,
+     "solid": false
+    },
+    {
+     "kind": "diaper",
+     "day": 29,
+     "at": "04:02",
+     "wet": true,
+     "solid": false
+    },
+    {
+     "kind": "feeding",
+     "day": 29,
+     "at": "07:10",
+     "method": "bottle",
+     "ml": 90.0,
+     "type": "breast milk",
+     "min": 0
+    },
+    {
+     "kind": "note",
+     "day": 29,
+     "at": "09:45"
+    },
+    {
+     "kind": "bath",
+     "day": 29,
+     "at": "11:00"
+    },
+    {
+     "kind": "feeding",
+     "day": 30,
+     "at": "00:20",
+     "method": "bottle",
+     "ml": 110.0,
+     "type": "formula",
+     "min": 0
+    },
+    {
+     "kind": "sleep",
+     "day": 30,
+     "at": "02:30",
+     "start": "00:40"
+    },
+    {
+     "kind": "feeding",
+     "day": 30,
+     "at": "02:35",
+     "method": "left breast",
+     "ml": null,
+     "type": "breast milk",
+     "min": 20
+    },
+    {
+     "kind": "diaper",
+     "day": 30,
+     "at": "03:40",
+     "wet": true,
+     "solid": true
+    },
+    {
+     "kind": "feeding",
+     "day": 30,
+     "at": "05:00",
+     "method": "right breast",
+     "ml": null,
+     "type": "breast milk",
+     "min": 12
+    },
+    {
+     "kind": "feeding",
+     "day": 30,
+     "at": "07:45",
+     "method": "bottle",
+     "ml": 60.0,
+     "type": "breast milk",
+     "min": 0
+    },
+    {
+     "kind": "sleep",
+     "day": 30,
+     "at": "10:00",
+     "start": "09:15"
+    },
+    {
+     "kind": "feeding",
+     "day": 31,
+     "at": "00:30",
+     "method": "bottle",
+     "ml": 120.0,
+     "type": "formula",
+     "min": 0
+    },
+    {
+     "kind": "sleep",
+     "day": 31,
+     "at": "04:00",
+     "start": "00:50"
+    },
+    {
+     "kind": "feeding",
+     "day": 31,
+     "at": "04:05",
+     "method": "both breasts",
+     "ml": null,
+     "type": "breast milk",
+     "min": 20
+    },
+    {
+     "kind": "diaper",
+     "day": 31,
+     "at": "06:00",
+     "wet": true,
+     "solid": true
+    },
+    {
+     "kind": "feeding",
+     "day": 31,
+     "at": "06:30",
+     "method": "bottle",
+     "ml": 50.0,
+     "type": "formula",
+     "min": 0
+    },
+    {
+     "kind": "bath",
+     "day": 31,
+     "at": "09:30"
+    },
+    {
+     "kind": "feeding",
+     "day": 31,
+     "at": "11:20",
+     "method": "left breast",
+     "ml": null,
+     "type": "breast milk",
+     "min": 15
+    },
+    {
+     "kind": "note",
+     "day": 31,
+     "at": "13:15"
+    }
+   ]
+  }
+ ]
+}

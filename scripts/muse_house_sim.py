@@ -12,10 +12,14 @@ Every house write is a dry run, house.live is false, there is no Home Assistant 
 machine is Muse on Baseten (BASETEN_API_KEY from the environment), with a hard budget.
 
     .venv/bin/python scripts/muse_house_sim.py [--out results/muse-house] [--budget 2.5] [--runs 1]
+
+--brain haiku asks Claude Haiku the same prompts with the same schema instead of Muse (results/muse-vs-haiku), on
+ANTHROPIC_API_KEY, thinking off as the agent's Claude brain runs it, the same 6000 token cap.
 """
 import argparse
 import datetime
 import json
+import os
 import statistics
 import sys
 import tempfile
@@ -28,8 +32,9 @@ sys.path.insert(0, str(ROOT / "scripts"))
 
 import night_feed_sim  # noqa: E402
 from parenting_agent import day_sim  # noqa: E402
+from parenting_agent.agent.brain import BrainError, post_json, without_thinking  # noqa: E402
 from parenting_agent.day_engine import ECHO_ANNOUNCE, PUSH, VACUUM, DayWriter, tummy_times  # noqa: E402
-from parenting_agent.house_brain import HouseBrain, MuseClient  # noqa: E402
+from parenting_agent.house_brain import MUSE, HouseBrain, MuseAnswerError, MuseClient  # noqa: E402
 from parenting_agent.rhythm import patterns  # noqa: E402
 from parenting_agent.rhythm.log import FixtureLog, parse  # noqa: E402
 
@@ -38,11 +43,49 @@ PARENTS = ["Parent A", "Parent B"]
 SETTINGS = {"utc_offset_h": -3, "parents": PARENTS}
 
 
-class Recorder:
-    """The Muse client with a log of every call and a budget across the whole run."""
+HAIKU = {"model": "claude-haiku-5-5", "max_tokens": MUSE["max_tokens"], "timeout_s": MUSE["timeout_s"],
+         "price_in_per_mtok": 0.10, "price_out_per_mtok": 0.50}
 
-    def __init__(self, budget):
-        self.client, self.budget, self.calls = MuseClient(), budget, []
+
+class HaikuClient:
+    """The same ask() as MuseClient, answered by Claude Haiku with the schema as a structured output."""
+
+    url = "https://api.anthropic.com/v1/messages"
+    host = "api.anthropic.com"
+    cfg = HAIKU
+
+    def ask(self, system, text, schema, name="plan"):
+        key = os.environ.get("ANTHROPIC_API_KEY")
+        if not key:
+            raise BrainError("house brain: ANTHROPIC_API_KEY is not set")
+        body = {"model": self.cfg["model"], "max_tokens": self.cfg["max_tokens"], "thinking": {"type": "disabled"},
+                "system": system, "messages": [{"role": "user", "content": text}],
+                "output_config": {"format": {"type": "json_schema", "schema": schema}}}
+        started = time.monotonic()
+        reply = post_json(self.url, {"x-api-key": key, "anthropic-version": "2023-06-01",
+                                     "content-type": "application/json"}, body, self.cfg["timeout_s"])
+        seconds = round(time.monotonic() - started, 3)
+        usage = reply.get("usage") or {}
+        tin = usage.get("input_tokens", 0) + usage.get("cache_creation_input_tokens", 0) + usage.get("cache_read_input_tokens", 0)
+        tout = usage.get("output_tokens", 0)
+        usd = (tin * self.cfg["price_in_per_mtok"] + tout * self.cfg["price_out_per_mtok"]) / 1_000_000
+        raw = without_thinking("".join(b.get("text", "") for b in reply.get("content", []) if b.get("type") == "text"))
+        meta = {"seconds": seconds, "usd": round(usd, 6), "input_tokens": tin, "output_tokens": tout, "host": self.host,
+                "model": self.cfg["model"]}
+        try:
+            answer = json.loads(raw) if raw else None
+        except json.JSONDecodeError:
+            answer = None
+        if not isinstance(answer, dict):
+            raise MuseAnswerError(f"not a JSON object (stop_reason {reply.get('stop_reason')}): {str(raw)[:120]}", meta)
+        return answer, meta
+
+
+class Recorder:
+    """The brain client with a log of every call and a budget across the whole run."""
+
+    def __init__(self, budget, client=None):
+        self.client, self.budget, self.calls = client or MuseClient(), budget, []
         self.part = ""
 
     @property
@@ -281,11 +324,12 @@ def main():
     parser.add_argument("--budget", type=float, default=2.5)
     parser.add_argument("--runs", type=int, default=1)
     parser.add_argument("--only", choices=["day", "nights", "cases"], default=None)
+    parser.add_argument("--brain", choices=["muse", "haiku"], default="muse")
     args = parser.parse_args()
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
     rows = FixtureLog(ROOT / "tests" / "fixtures" / "simweek.json").entries()
-    muse = Recorder(args.budget)
+    muse = Recorder(args.budget, HaikuClient() if args.brain == "haiku" else None)
     report = {"model": muse.client.cfg["model"], "host": muse.client.host, "budget_usd": args.budget, "runs": []}
     fixed = {}
     if args.only in (None, "day"):

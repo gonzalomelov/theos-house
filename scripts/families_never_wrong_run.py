@@ -333,7 +333,10 @@ def main():
     parser.add_argument("--sets", default="old,judge", help="comma list of message sets: " + ", ".join(SETS))
     parser.add_argument("--steps-file", help="a JSON file of steps to run instead of --sets")
     parser.add_argument("--variant", default="main", choices=list(VARIANTS), help="the log architecture to run")
+    parser.add_argument("--claude-max-tokens", type=int, help="the Claude brain's max_tokens, to match Muse's 2048")
     args = parser.parse_args()
+    if args.claude_max_tokens:
+        settings_mod.BRAINS["claude"] = {**settings_mod.BRAINS["claude"], "max_tokens": args.claude_max_tokens}
     setup = VARIANTS[args.variant]
     if callable(setup):
         setup()
