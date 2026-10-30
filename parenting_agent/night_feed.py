@@ -353,6 +353,7 @@ class NightFeed(Plugin):
         """The push says truthfully what moved in the house and what was only written down."""
         said = {"live": "Study light on, dim and warm: done for real.",
                 "failed": "Study light: tried for real, Home Assistant did not take it.",
+                "unavailable": "Study light: unavailable in Home Assistant, nothing moved.",
                 "dry": "Study light dim and warm: only written down (dry run)."}[light]
         dry = [w for w, on in (("bottle warmer on", warm), ("white noise down", noise)) if on]
         rest = f" {' and '.join(dry).capitalize()}: only written down (dry run)." if dry else ""
@@ -371,7 +372,7 @@ class NightFeed(Plugin):
             if event["status"] == "ran":
                 ep["light_live"] = on
                 return "live"
-            return "failed"
+            return "unavailable" if event["status"] == "unavailable" else "failed"
         if on:
             self.house("study_light", on=True, brightness_pct=self.s["light_pct"], warm=True)
         else:

@@ -12,7 +12,8 @@ Never live, whatever the config says: vacuum.start and vacuum.clean_area (no sta
 never list in house.py, and every other service and entity. A write the gate does not allow goes down the caller's
 usual dry path, so the reply and the event log say it was only written down.
 
-Every live write, refused live write and rate limited write is a "house_live" event with the routine, entity, service
+A device that reads unavailable in Home Assistant gets nothing sent: the "house_live" event says unavailable and the
+reply says nothing moved. Every live write, refused live write and rate limited write is a "house_live" event with the routine, entity, service
 and reason, so it lands in data/events.jsonl. The counts live in memory: an agent restart starts them over.
 """
 import datetime
@@ -30,6 +31,7 @@ MAX_LIGHT_PCT = 30
 WARM_KELVIN = 2700
 NEVER_LIVE = ("vacuum.start", "vacuum.clean_area")
 RECENT = datetime.timedelta(minutes=60)
+UNREACHABLE = ("unavailable", "unknown", None)
 
 CATALOG = {
     "night_feed_light": {"routine": "night_feed", "entity": STUDY_LIGHT, "services": ("light.turn_on", "light.turn_off"),
@@ -120,6 +122,10 @@ class LiveGate:
             self.counts[key] = self.counts.get(key, 0) + 1
         data = self.clean(service, data)
         try:
+            before = self.client.state(entity)
+            if before in UNREACHABLE:
+                return self.log("unavailable", routine, service, entity, reason, signal=signal, state=before,
+                                why=f"{entity} reads {before} in Home Assistant, nothing was sent")
             self.client.service(service, entity, data)
         except (urllib.error.URLError, TimeoutError, OSError, ValueError) as error:
             return self.log("error", routine, service, entity, reason, signal=signal, data=data, error=str(error)[:200])

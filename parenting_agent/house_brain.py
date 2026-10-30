@@ -739,7 +739,8 @@ def compact(e):
                 "reason": str(e.get("reason"))[:80], "happened": "only written down (dry run)"}
     if kind == "house_live":
         happened = {"ran": "done for real", "error": "tried for real, failed", "refused": "refused live, only written down",
-                    "rate_limited": "over the live cap, only written down"}.get(e.get("status"), e.get("status"))
+                    "rate_limited": "over the live cap, only written down",
+                    "unavailable": "device unavailable, nothing sent"}.get(e.get("status"), e.get("status"))
         return {"at": hm, "what": f"{e.get('routine')}: {e.get('service')} {e.get('entity')}", "happened": happened,
                 "reason": str(e.get("reason"))[:80]}
     if kind == "house_call":

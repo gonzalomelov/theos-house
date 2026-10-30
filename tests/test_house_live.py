@@ -116,6 +116,14 @@ class AllowlistTest(unittest.TestCase):
             self.assertIsNone(g.write("night_feed", "light.turn_on", entity, {}, "x", "cry"))
         self.assertEqual(ha.calls, [])
 
+    def test_an_unavailable_device_gets_nothing_sent_and_no_claim(self):
+        g, ha, bus = gate()
+        ha.states[hl.STUDY_LIGHT] = "unavailable"
+        self.assertEqual(g.write("night_feed", "light.turn_on", hl.STUDY_LIGHT, {}, "awake", "cry")["status"], "unavailable")
+        self.assertEqual(ha.calls, [])
+        self.assertEqual(g.claims(), [])
+        self.assertIn(DRY_NOTE, dry_reply("I turned the light on.", g.claims()))
+
     def test_no_token_stays_dry(self):
         g = hl.LiveGate(Bus(), {"live_actions": BOTH}, None)
         self.assertIsNone(g.write("night_feed", "light.turn_on", hl.STUDY_LIGHT, {}, "x", "cry"))
@@ -181,6 +189,13 @@ class NightFeedLiveTest(unittest.TestCase):
         self.assertEqual([e["service"] for e in events(self.agent, "house_live", status="ran")],
                          ["light.turn_on", "light.turn_off"])
         self.assertTrue(all(e["status"] == "dry" for e in events(self.agent, "house_call")))
+
+    def test_an_unavailable_light_is_said_plainly_in_the_push(self):
+        self.ha.states[hl.STUDY_LIGHT] = "unavailable"
+        self.feed.awake(at(21, 2, 0), "button", "tapped")
+        self.assertEqual(self.ha.calls, [])
+        self.assertIn("Study light: unavailable in Home Assistant, nothing moved.",
+                      events(self.agent, "night_feed", step="push")[-1]["text"])
 
     def test_a_light_that_went_on_dry_is_never_switched_off_for_real(self):
         self.feed.gate.caps["night_feed_light"] = 0
