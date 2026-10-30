@@ -216,11 +216,12 @@ class Medical(unittest.TestCase):
         onboard(app, "111", lang="es")
         for question in ("¿le doy ibuprofeno?", "¿es normal este sarpullido?", "tiene tos, ¿le doy algo?"):
             self.assertEqual(text(app.handle("111", "111", question)), ES["REFUSAL"])
-        # What the parent saw, with no question, is noted in their words and the advice is refused, in one turn.
+        # What the parent saw, with no question, is noted in their words. They asked nothing, so no advice line follows
+        # (round 4: "No puedo darte consejo médico" after "tomo 70 y vomito un poco" read as noise at 3 AM).
         for seen in ("tiene sarpullido", "vomitó dos veces", "tiene tos", "vomito un poquito dsp de la toma"):
             reply = text(app.handle("111", "111", seen))
-            self.assertRegex(reply, r"^Anoté una nota a las \d\d:\d\d: \"" + seen + r"\"\. ")
-            self.assertIn(rules.NO_ADVICE["es"], reply)
+            self.assertRegex(reply, r"^Anoté una nota a las \d\d:\d\d: \"" + seen + r"\"\.$")
+            self.assertNotIn(rules.NO_ADVICE["es"], reply)
         notes = [e["details"]["text"] for e in app.family(family_of(app, "111")).log.entries("note")]
         self.assertEqual(notes, ["tiene sarpullido", "vomitó dos veces", "tiene tos", "vomito un poquito dsp de la toma"])
         self.assertEqual(brain.calls, 0)

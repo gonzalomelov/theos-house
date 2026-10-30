@@ -136,7 +136,9 @@ class BabyLog:
                   and (until is None or parse_time(e["ts"]) < parse_time(until))]
 
         def last(kind, test=lambda e: True):
-            found = [e for e in recent if e["kind"] == kind and test(e)]
+            # A window that ends (yesterday) names its own last entry: round 4 read "la última de ayer fue a la 01:05"
+            # when the 01:05 feed was today.
+            found = [e for e in (window if until is not None else recent) if e["kind"] == kind and test(e)]
             return found[-1] if found else None
 
         feeds = [e for e in window if e["kind"] == "feeding"]
@@ -153,6 +155,7 @@ class BabyLog:
             "since": since, "until": until or current.isoformat(timespec="seconds"), "now": current.isoformat(timespec="seconds"),
             "feedings": {"count": len(feeds), "total_ml": round(sum(float(e["details"].get("amount_ml") or 0) for e in feeds)),
                          "last_at": at(last_feed["ts"]) if last_feed else None,
+                         "last_date": last_feed["ts"][:10] if last_feed else None,
                          "last_amount_ml": last_feed["details"].get("amount_ml") if last_feed else None,
                          "last_method": last_feed["details"].get("method") if last_feed else None},
             "diapers": {"count": len(diapers), "wet": sum(1 for e in diapers if e["details"].get("wet")),
@@ -162,7 +165,8 @@ class BabyLog:
                         "last_wet_at": at(last_wet["ts"]) if last_wet else None},
             "sleep": {"count": len(sleeps), "total_min": sum(int(e["details"].get("duration_min") or 0) for e in sleeps),
                       "last_start_at": at(last_sleep["details"].get("start")) if last_sleep and last_sleep["details"].get("start") else None,
-                      "last_end_at": at(last_sleep["ts"]) if last_sleep else None},
+                      "last_end_at": at(last_sleep["ts"]) if last_sleep else None,
+                      "last_end_date": last_sleep["ts"][:10] if last_sleep else None},
             "baths": {"count": sum(1 for e in window if e["kind"] == "bath"),
                       "last_at": at(last_bath["ts"]) if last_bath else None,
                       "last_date": last_bath["ts"][:10] if last_bath else None},

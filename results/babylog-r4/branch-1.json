@@ -1,0 +1,300 @@
+{
+ "summary": {
+  "right": 36,
+  "total": 36,
+  "spanish": 36,
+  "fallbacks": 0,
+  "usd": 0.1707,
+  "repo": "/Users/gonza/Engineering/gonza/parenting-agent-worktrees/babylog-r4"
+ },
+ "rows": [
+  {
+   "n": 1,
+   "text": "tomo 80 de formula y despues vomito bastante",
+   "ok": true,
+   "language_ok": true,
+   "problems": [],
+   "reply": "Anoté la mamadera de 80 ml de fórmula de las 22:10 y una nota a las 22:10: \"vomitó bastante después de tomar 80 de fórmula\"."
+  },
+  {
+   "n": 2,
+   "text": "ahi se durmio",
+   "ok": true,
+   "language_ok": true,
+   "problems": [],
+   "reply": "Anoté que Lola se durmió a las 22:40."
+  },
+  {
+   "n": 3,
+   "text": "se desperto llorando",
+   "ok": true,
+   "language_ok": true,
+   "problems": [],
+   "reply": "Anoté el sueño de 22:40 a 01:20, 2 h 40 min."
+  },
+  {
+   "n": 4,
+   "text": "12 minutitos de la teta derecha",
+   "ok": true,
+   "language_ok": true,
+   "problems": [],
+   "reply": "Anoté la toma de pecho derecho de 12 min de las 01:35."
+  },
+  {
+   "n": 5,
+   "text": "le cambie, tenia pis nomas",
+   "ok": true,
+   "language_ok": true,
+   "problems": [],
+   "reply": "Anoté el pañal mojado de las 01:40."
+  },
+  {
+   "n": 6,
+   "text": "90 de mamadera recien",
+   "ok": true,
+   "language_ok": true,
+   "problems": [],
+   "reply": "Anoté la mamadera de 90 ml de las 03:50."
+  },
+  {
+   "n": 7,
+   "text": "90 de mamadera recien",
+   "ok": true,
+   "language_ok": true,
+   "problems": [],
+   "reply": "Parece el mismo mensaje de recién, ¿se te envió dos veces o fueron dos mamaderas de 90?"
+  },
+  {
+   "n": 8,
+   "text": "sorry era una sola",
+   "ok": true,
+   "language_ok": true,
+   "problems": [],
+   "reply": "Perfecto, quedó una sola de 90 ml de las 03:50."
+  },
+  {
+   "n": 9,
+   "text": "a las 5 hizo caca, me olvide de poner",
+   "ok": true,
+   "language_ok": true,
+   "problems": [],
+   "reply": "Anoté el pañal sucio de las 05:00."
+  },
+  {
+   "n": 10,
+   "text": "vomito despues de la mamadera de 120",
+   "ok": true,
+   "language_ok": true,
+   "problems": [],
+   "reply": "Anoté la mamadera de 120 ml de las 09:10 y una nota a las 09:10: \"vomito despues de la mamadera de 120\"."
+  },
+  {
+   "n": 11,
+   "text": "cuanto tomo hoy en total?",
+   "ok": true,
+   "language_ok": true,
+   "problems": [],
+   "reply": "Hoy Lola tomó 210 ml en total, en 3 tomas. La última fue de 120 ml a las 09:10."
+  },
+  {
+   "n": 12,
+   "text": "a las 1 y media tomo 100",
+   "ok": true,
+   "language_ok": true,
+   "problems": [],
+   "reply": "Anoté la mamadera de 100 ml de las 13:30."
+  },
+  {
+   "n": 13,
+   "text": "lo acoste a las 3",
+   "ok": true,
+   "language_ok": true,
+   "problems": [],
+   "reply": "Anoté que Lola se durmió a las 15:00."
+  },
+  {
+   "n": 14,
+   "text": "arriba de nuevo la señorita",
+   "ok": true,
+   "language_ok": true,
+   "problems": [],
+   "reply": "Anoté el sueño de 15:00 a 16:20, 1 h 20 min."
+  },
+  {
+   "n": 15,
+   "text": "le di pecho a las 5 menos cuarto, 20 min los dos lados",
+   "ok": true,
+   "language_ok": true,
+   "problems": [],
+   "reply": "Anoté la toma de pecho de los dos lados de 20 min de las 16:45."
+  },
+  {
+   "n": 16,
+   "text": "recien salimos del baño",
+   "ok": true,
+   "language_ok": true,
+   "problems": [],
+   "reply": "Anoté el baño de las 19:00."
+  },
+  {
+   "n": 17,
+   "text": "tomo 60 nomas y vomito un poquito",
+   "ok": true,
+   "language_ok": true,
+   "problems": [],
+   "reply": "Anoté la mamadera de 60 ml de las 19:45 y una nota a las 19:45: \"vomito un poquito\"."
+  },
+  {
+   "n": 18,
+   "text": "cuantos pañales hoy?",
+   "ok": true,
+   "language_ok": true,
+   "problems": [],
+   "reply": "Hoy, martes, van 2 pañales: 1 con pis a las 01:40 y 1 con caca a las 05:00."
+  },
+  {
+   "n": 19,
+   "text": "se quedo dormida tomando la teta, 15 min izquierda",
+   "ok": true,
+   "language_ok": true,
+   "problems": [],
+   "reply": "Anoté la toma de pecho izquierdo de 15 min de las 22:15 y que Lola se durmió a las 22:15."
+  },
+  {
+   "n": 20,
+   "text": "lloro, le di 70 de formula",
+   "ok": true,
+   "language_ok": true,
+   "problems": [],
+   "reply": "Anoté el sueño de 22:15 a 00:40, 2 h 25 min y la mamadera de 70 ml de fórmula de las 00:40."
+  },
+  {
+   "n": 21,
+   "text": "fueron 75 en realidad",
+   "ok": true,
+   "language_ok": true,
+   "problems": [],
+   "reply": "Corregí la mamadera de las 00:40: 70 ml → 75 ml."
+  },
+  {
+   "n": 22,
+   "text": "otro pañal, mojadito",
+   "ok": true,
+   "language_ok": true,
+   "problems": [],
+   "reply": "Anoté el pañal mojado de las 02:05."
+  },
+  {
+   "n": 23,
+   "text": "cuanto tomo ayer de mamadera?",
+   "ok": true,
+   "language_ok": true,
+   "problems": [],
+   "reply": "Ayer, martes, Lola tomó 4 mamaderas que suman 370 ml: 90 ml a las 03:50, 120 ml a las 09:10, 100 ml a las 13:30 y 60 ml a las 19:45. Además tuvo 2 tomas de pecho."
+  },
+  {
+   "n": 24,
+   "text": "le di 90 a las 4",
+   "ok": true,
+   "language_ok": true,
+   "problems": [],
+   "reply": "Anoté la mamadera de 90 ml de las 04:00."
+  },
+  {
+   "n": 25,
+   "text": "le di 90 a las 4",
+   "ok": true,
+   "language_ok": true,
+   "problems": [],
+   "reply": "Creo que este mensaje de las 04:00 llegó dos veces. ¿Fue un envío duplicado o fueron dos mamaderas distintas de 90 ml?"
+  },
+  {
+   "n": 26,
+   "text": "si es el mismo mensaje, sorry",
+   "ok": true,
+   "language_ok": true,
+   "problems": [],
+   "reply": "Todo bien, tranqui. Quedó una sola mamadera de 90 ml de las 04:00, sin duplicar."
+  },
+  {
+   "n": 27,
+   "text": "a que hora comio por ultima vez",
+   "ok": true,
+   "language_ok": true,
+   "problems": [],
+   "reply": "La última toma de Lola fue a las 04:00 de hoy, mamadera de 90 ml."
+  },
+  {
+   "n": 28,
+   "text": "se durmio a las 6 y media mas o menos",
+   "ok": true,
+   "language_ok": true,
+   "problems": [],
+   "reply": "Anoté que Lola se durmió a las 06:30."
+  },
+  {
+   "n": 29,
+   "text": "se desperto a las 8 y cuarto",
+   "ok": true,
+   "language_ok": true,
+   "problems": [],
+   "reply": "Anoté el sueño de 06:30 a 08:15, 1 h 45 min."
+  },
+  {
+   "n": 30,
+   "text": "vomitó un poco, nada más",
+   "ok": true,
+   "language_ok": true,
+   "problems": [],
+   "reply": "Anoté una nota a las 09:30: \"vomitó un poco, nada más\"."
+  },
+  {
+   "n": 31,
+   "text": "120 de mamadera a las 10",
+   "ok": true,
+   "language_ok": true,
+   "problems": [],
+   "reply": "Anoté la mamadera de 120 ml de las 10:00."
+  },
+  {
+   "n": 32,
+   "text": "a las 11 le cambie el pañal, pis y caca",
+   "ok": true,
+   "language_ok": true,
+   "problems": [],
+   "reply": "Anoté el pañal mojado y sucio de las 11:00."
+  },
+  {
+   "n": 33,
+   "text": "tiene un poco de tos, le doy algo?",
+   "ok": true,
+   "language_ok": true,
+   "problems": [],
+   "reply": "No puedo dar consejos médicos. Para eso, mejor llamá a tu pediatra. Si es urgente, llamá al 911. Si querés, anoto lo que ves así lo tenés a mano para la llamada."
+  },
+  {
+   "n": 34,
+   "text": "tomo 40 y vomito todo",
+   "ok": true,
+   "language_ok": true,
+   "problems": [],
+   "reply": "Eso está en la lista de señales en un recién nacido para actuar ya. Llamá ahora a tu pediatra o andá a emergencia. Si no los ubicás, llamá al 911. Es la guía pública de la Academia Estadounidense de Pediatría (AAP), no un consejo sobre tu bebé: https://www.healthychildren.org/English/tips-tools/symptom-checker/Pages/symptomviewer.aspx?symptom=Newborn+Illness+-+How+to+Recognize Anoté la mamadera de 40 ml de las 12:45 y una nota a las 12:45: \"tomo 40 y vomito todo\"."
+  },
+  {
+   "n": 35,
+   "text": "hoy cuantas tomas lleva?",
+   "ok": true,
+   "language_ok": true,
+   "problems": [],
+   "reply": "Hoy lleva 4 tomas, 325 ml en total. La última fue a las 12:45, de 40 ml."
+  },
+  {
+   "n": 36,
+   "text": "a la 1 le di teta derecha 10 min",
+   "ok": true,
+   "language_ok": true,
+   "problems": [],
+   "reply": "Anoté la toma de pecho derecho de 10 min de las 13:00."
+  }
+ ]
+}

@@ -192,6 +192,7 @@ TEXTS = {
         "WOKE_NO_SLEEP": "I did not log the sleep. When did {name} fall asleep?",
         "STILL_ASLEEP": "{name} has been asleep since {at}, that stays as it was.",
         "OLD_EDIT": "I did not change anything: the latest I have is {entry}, more than {hours} hours ago. Which one do you mean, or should I log it new?",
+        "EDIT_WHICH": "I did not change anything. The latest I have is {entry}. Is that the one to fix?",
         "LAST_NOT_LOGGED": "I did not change anything: the one before was not logged. Tell me what it was and I log it.",
         "DID_ONLY": "Nothing was sent. I only did this: {what}.",
         "DONE": "Done. {what}.", "NOT_DONE": "Not done. {what}.", "NOTHING_WAITING": "Not done. Nothing was waiting.",
@@ -223,6 +224,7 @@ TEXTS = {
         "WOKE_NO_SLEEP": "No anoté el sueño. ¿A qué hora se durmió {name}?",
         "STILL_ASLEEP": "{name} ya duerme desde las {at}, eso queda como estaba.",
         "OLD_EDIT": "No cambié nada: lo último que tengo es {entry}, de hace más de {hours} horas. ¿Cuál querés corregir, o lo anoto nuevo?",
+        "EDIT_WHICH": "No cambié nada. Lo último que tengo es {entry}. ¿Es esa la que querés corregir?",
         "LAST_NOT_LOGGED": "No cambié nada: la anterior no quedó anotada. Decime qué fue y la anoto.",
         "DID_ONLY": "Todavía no mandé nada. Solo hice esto: {what}.",
         "DONE": "Listo. {what}.", "NOT_DONE": "No se hizo. {what}.", "NOTHING_WAITING": "No se hizo nada. No había nada esperando.",
@@ -729,6 +731,12 @@ class Agent:
                 self.say(channel, strip_codes(reply))
                 return
             # No log operations came back (the rule brain behind the spend cap never answers log_ops): the guarded loop.
+        if route == "log" and rules.symptom_feed(text) and not rules.MILESTONE.search(text):
+            # "tomo 70 y vomito un poco" without log ops: the feed and the note from plain code, never a note alone.
+            self.memory.add_message(channel, "user", text, ts=self.now())
+            self.bus.publish("guard", status="health_feed_noted")
+            self.say(channel, self.note_observation(text))
+            return
         double, self.double = self.double, None
         if double and self.now() - double["asked"] <= DOUBLE_ANSWER_WINDOW and self.answer_double(channel, text, double):
             return
@@ -753,23 +761,34 @@ class Agent:
         return None
 
     def urgent(self, request, kind):
-        """The call-now line first, then the note that keeps the parent's words. A failed note never holds the line back."""
+        """The call-now line first, then the note that keeps the parent's words, and a feed told in the same message
+        ("tomo 40 y vomito todo"). A failed note never holds the line back."""
         lang = self.lang(request) if self.lang(request) in ("en", "es") else "en"
         line = rules.URGENT_REPLY[kind][lang]
-        status, entry = self.tools.run("log_baby_event", {"kind": "note", "details": {"text": request}})
-        self.bus.publish("tool", name="log_baby_event", status=status)
-        if status != "ran" or not isinstance(entry, dict):
-            return line
-        return line + " " + logged_text([entry], lang)
+        entries = self.log_observation(request)
+        return line + " " + logged_text(entries, lang) if entries else line
+
+    def log_observation(self, request):
+        """The feed a symptom message reports, then the note in the parent's words. Returns the entries stored."""
+        stored = []
+        feed = rules.symptom_feed(request)
+        calls = ([{"kind": "feeding", "details": feed}] if feed else []) + [{"kind": "note", "details": {"text": request}}]
+        for arguments in calls:
+            status, entry = self.tools.run("log_baby_event", arguments)
+            self.bus.publish("tool", name="log_baby_event", status=status)
+            if status == "ran" and isinstance(entry, dict):
+                stored.append(entry)
+        return stored
 
     def note_observation(self, request):
-        """Log what the parent saw as a note, with their words, and answer with the stored note and the no-advice line."""
-        status, entry = self.tools.run("log_baby_event", {"kind": "note", "details": {"text": request}})
-        self.bus.publish("tool", name="log_baby_event", status=status)
-        if status != "ran" or not isinstance(entry, dict):
+        """Log what the parent saw as a note, with their words, and a feed told with it. The no-advice line follows only
+        when the parent asked something or named a fever: on round 4 a tired parent read "No puedo darte consejo
+        médico" after "tomo 70 y vomito un poco", which asked nothing."""
+        entries = self.log_observation(request)
+        if not entries:
             return self.refusal(request)
-        lang = self.lang(request)
-        return logged_text([entry], lang) + " " + self.no_advice(request)
+        text = logged_text(entries, self.lang(request))
+        return text + " " + self.no_advice(request) if rules.asks_advice(request) else text
 
     def baby_name(self):
         return None
@@ -968,6 +987,14 @@ class Agent:
             state[("sleep", OPEN_SLEEP_ID)] = {"id": OPEN_SLEEP_ID, "kind": "sleep", "ts": str(opened),
                                                "details": {"action": "start"}}
         return state
+
+    def latest_of(self, kind):
+        """The newest entry of one kind in the log, or None."""
+        try:
+            items = self.baby_log.entries(kind, None, 1) if kind else []
+        except Exception:  # noqa: BLE001 a log that cannot be read names no entry
+            return None
+        return items[-1] if items else None
 
     def edit_target(self, arguments):
         try:
@@ -1513,6 +1540,11 @@ class Agent:
                             # "en realidad tomo 3" never changes yesterday's bottle: only the last few hours, unless the
                             # parent names a day or a time.
                             self.bus.publish("guard", status="edit_too_old")
+                            latest = self.latest_of(target.get("kind")) or target
+                            if latest.get("id") != target.get("id") or latest.get("ts") != target.get("ts"):
+                                # Round 4 demo: the brain aimed at an old bottle, and the reply called it the last one
+                                # right after the parent was told the last was another. The real last one is named.
+                                return finish(self.text("EDIT_WHICH", request, entry=describe(latest, lang)), fixed=True)
                             return finish(self.text("OLD_EDIT", request, entry=describe(target, lang),
                                                     hours=int(EDIT_RECENT.total_seconds() // 3600)), fixed=True)
                 if call["name"] == "baby_summary" and request is not None and rules.YESTERDAY.search(request) \

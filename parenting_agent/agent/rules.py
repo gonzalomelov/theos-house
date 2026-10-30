@@ -1029,6 +1029,34 @@ def message_lang(text):
     return "en" if ENGLISH.search(text or "") else None
 
 
+EN_COMMON = re.compile(r"(are|a|an|to|in|on|for|my|me|you|we|not|off|up|out|be|been|have|has|having|this|there|so|but|"
+                       r"or|very|all|one|two|won|can|t|don|didn|isn|wasn|doesn|s|ll|ve|m)", re.I)
+ES_COMMON = re.compile(r"(lo|los|las|dos|una|uno|es|era|eran|fue|fueron|s[ií]+|mismo|misma|veces|vez|que|qu[eé]|por|para|"
+                       r"pero|como|cuando|mand[eé]|sola|solo|bien|todo|nada|m[aá]s|muy|ahi|ah[ií]|ac[aá]|esta|est[aá]|"
+                       r"eso|esa|ese|perd[oó]n|tranqui|dale|nomas|nom[aá]s|igual|otra|otro|recien|reci[eé]n|pa|che)", re.I)
+
+
+def clearly_english(text):
+    """True when a message is in English and not Spanish with an English word: "gave her a 60 ml bottle" and "his lips
+    are blue" are, "sii lo mande dos veces sorry" is not."""
+    words = re.findall(r"[^\W\d_]+", text or "")
+    if any(ES_COMMON.fullmatch(w) for w in words):
+        return False
+    hits = [w for w in words if ENGLISH.fullmatch(w) or EN_COMMON.fullmatch(w)
+            or (w[-1:].lower() == "s" and ENGLISH.fullmatch(w[:-1]))]
+    return bool(hits) and (2 * len(hits) >= len(words) or len(hits) >= 2)
+
+
+def turn_lang(text, home):
+    """The language to answer one message in, for a chat whose language is home. A Spanish family's "sorry" or "ok"
+    never turns the reply English: on round 4 "sii lo mande dos veces sorry" got "No worries, left it as one bottle"
+    at 03:48 in 3 of 3 runs. A message clearly in the other language still gets that language."""
+    lang = message_lang(text)
+    if lang == "en" and home == "es" and not clearly_english(text):
+        return "es"
+    return lang
+
+
 def answer(question, summary):
     """A short answer to a parent's question from baby_summary, or None when the rules do not know the question."""
     q = question.lower()
@@ -1094,21 +1122,55 @@ def personal_detail(text):
 
 def health_route(text):
     """None for a message with no health talk. "refuse" for health advice with nothing to log: the kind refusal, no
-    brain call. "note" for a symptom the parent reports with no question: noted in their words, no brain call. "log" for a health message that also reports something the parent wants kept, a medicine given, a
-    milestone or an explicit ask to log: it is logged as a note and only the advice part is refused."""
+    brain call. "note" for a symptom the parent reports with no question: noted in their words, no brain call. "log" for
+    a health message that also reports something the parent wants kept, a medicine given, a milestone, an explicit ask
+    to log, or a feed told with the symptom ("tomo 70 y vomito un poco"): the entry is logged, the symptom kept as a
+    note, and only an advice part is refused."""
     if not text or is_emergency(text) or not (is_medical(text) or is_medical_es(text)):
         return None
     if LOG_ASK.search(text) or GAVE.search(text) or MILESTONE.search(text):
         return "log"
     if SYMPTOM.search(text) and not is_question(text) and not ADVICE.search(text):
         # "vomito un poquito dsp de la toma" reports what the parent saw: it is kept as a note in their words, for the
-        # pediatrician, and only the advice part is refused, in one turn.
-        return "note"
+        # pediatrician. "tomo 70 y vomito un poco" also reports a feed: on round 4 the 70 ml was lost from the day total
+        # in 3 of 3 runs, so a message that carries a feed amount or minutes goes to the log as well.
+        return "log" if symptom_feed(text) else "note"
     return "refuse"
 
 
 def asks_advice(text):
-    return bool(ADVICE.search(text or "")) or bool(SYMPTOM.search(text or ""))
+    """True when the parent asked something a health line answers, or named a fever. A symptom reported with no question
+    ("tomo 70 y vomito un poco") gets no "I can't give medical advice" tail: the parent asked nothing."""
+    return bool(ADVICE.search(text or "")) or names_fever(text)
+
+
+# A feed told together with a symptom: "tomo 70 y vomito un poco", "vomito despues de la mamadera de 120",
+# "took 60 ml and spat up". Plain code reads it, so the urgent line and the note path never lose the amount.
+SYMPTOM_BOTTLE = re.compile(r"\b(?:tom[oó]|tomo|le di|le dimos|se tom[oó]|mamadera(?: de)?|biber[oó]n(?: de)?|f[oó]rmula|"
+                            r"took|drank|had|bottle(?: of)?|fed(?: him| her)?)\s+(?:como |unos |about |de )?(\d{2,3})"
+                            r"(?:\s*(?:ml|cc))?\b(?!\s*(?:min|minutos|mins|minutes|h\b|hs|horas|hours|veces|times|grados|degrees|°))|"
+                            r"\b(\d{2,3})\s*(?:ml|cc)\b", re.I)
+SYMPTOM_BREAST = re.compile(r"\b(?:pecho|teta|breast|nursed)\b[^.?!]{0,30}?\b(\d{1,3})\s*(?:min|minutos|mins|minutes)\b|"
+                            r"\b(\d{1,3})\s*(?:min|minutos|mins|minutes)\b[^.?!]{0,20}?\b(?:pecho|teta|breast)\b", re.I)
+
+
+def symptom_feed(text):
+    """The feed a symptom message also reports, as log_baby_event details, or None. Only a bottle amount of 5 to 300 ml
+    or breast minutes of 1 to 120 count, so "vomito dos veces" and "38 de fiebre" are no feed."""
+    text = text or ""
+    if medicine_only(text) and not SYMPTOM_BOTTLE.search(text):
+        return None
+    bottle = SYMPTOM_BOTTLE.search(text)
+    if bottle:
+        ml = float(bottle.group(1) or bottle.group(2))
+        if 5 <= ml <= 300 and not names_fever(text[max(0, bottle.start() - 5):bottle.end() + 12]):
+            return {"method": "bottle", "amount_ml": ml}
+    breast = SYMPTOM_BREAST.search(text)
+    if breast:
+        minutes = int(breast.group(1) or breast.group(2))
+        if 1 <= minutes <= 120:
+            return {"method": "breast", "duration_min": minutes}
+    return None
 
 
 FEED_WORDS = re.compile(r"\b(bottle|breast|feed|fed|nursed|formula|milk|mamadera|biber[oó]n|teta|pecho|toma|tom[oó] \d|"

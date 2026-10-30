@@ -305,7 +305,7 @@ class Family:
         """Red flags go straight to the emergency line and health advice to the refusal, both inside the agent with no
         brain call. A dose given or a milestone is logged as a note, with only the advice part refused. "Why is she
         crying?" gets the likely reason from the log, with no brain call."""
-        self.turn_lang = rules.message_lang(text)
+        self.turn_lang = rules.turn_lang(text, self.fact("_lang", "en"))
         try:
             return self.answer(text)
         finally:

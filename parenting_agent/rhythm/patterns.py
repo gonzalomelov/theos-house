@@ -101,24 +101,35 @@ def _hm(minutes):
     return f"{h} h {m:02d} min" if h else f"{m} min"
 
 
-def unusual_notes(entries, tz, gap_ratio=0.3, sleep_ratio=0.15):
-    """Plain notes for full days that differ from the rest of the log, oldest first."""
+ES_DAYS = ("lun", "mar", "mié", "jue", "vie", "sáb", "dom")
+
+
+def unusual_notes(entries, tz, gap_ratio=0.3, sleep_ratio=0.15, lang="en"):
+    """Plain notes for full days that differ from the rest of the log, oldest first, in English or Spanish."""
     notes = []
     days = daily(entries, tz)
     complete = sorted(days)[1:-1] if len(days) > 2 else []
     for day in complete:
         others = [days[d] for d in complete if d != day]
         row = days[day]
+        label = f"{ES_DAYS[day.weekday()]} {day:%d}" if lang == "es" else f"{day:%a %d}"
         usual = _odd(row["min_gap_min"], [o["min_gap_min"] for o in others], gap_ratio)
         if usual is not None and row["min_gap_min"] < usual:
-            notes.append({"day": day, "text": f"{day:%a %d}: feeds came {_hm(row['min_gap_min'])} apart around "
-                                              f"{hhmm(row['min_gap_at'])}, usually at least {_hm(usual)}.",
-                          "computed_from": row["refs"]})
+            text = (f"{label}: hubo tomas a {_hm(row['min_gap_min'])} una de otra cerca de las {hhmm(row['min_gap_at'])}, "
+                    f"cuando suelen ser al menos {_hm(usual)}." if lang == "es" else
+                    f"{label}: feeds came {_hm(row['min_gap_min'])} apart around {hhmm(row['min_gap_at'])}, usually at "
+                    f"least {_hm(usual)}.")
+            notes.append({"day": day, "text": text, "computed_from": row["refs"]})
         usual = _odd(row["sleep_h"], [o["sleep_h"] for o in others], sleep_ratio)
         if usual is not None:
-            word = "less" if row["sleep_h"] < usual else "more"
-            notes.append({"day": day, "text": f"{day:%a %d}: {row['sleep_h']:.1f} h of sleep in total, {word} than the "
-                                              f"usual {usual:.1f} h.", "computed_from": row["refs"]})
+            if lang == "es":
+                word = "menos" if row["sleep_h"] < usual else "más"
+                hours, normal = (f"{v:.1f}".replace(".", ",") for v in (row["sleep_h"], usual))
+                text = f"{label}: {hours} h de sueño en total, {word} que las {normal} h de siempre."
+            else:
+                word = "less" if row["sleep_h"] < usual else "more"
+                text = f"{label}: {row['sleep_h']:.1f} h of sleep in total, {word} than the usual {usual:.1f} h."
+            notes.append({"day": day, "text": text, "computed_from": row["refs"]})
     return notes
 
 

@@ -123,7 +123,8 @@ def message_lang(text, fallback="en"):
     if rules.looks_spanish(text) or ES_HINT.search(text or ""):
         return "es"
     if EN_HINT.search(text or ""):
-        return "en"
+        # A Spanish page's "sorry" or "ok" stays Spanish, only a message clearly in English is answered in English.
+        return "es" if fallback == "es" and not rules.clearly_english(text) else "en"
     return fallback if fallback in TEXTS else "en"
 
 
@@ -441,7 +442,7 @@ class Visitor:
                                 "house": ("dim_lights" if patterns.is_night(nxt["at"].astimezone(TZ)) else None)}
         summary = patterns.night_summary(rows, now, TZ, PARENTS, current=True)
         out["night_summary"] = {"text": night_es(summary["text"]) if lang == "es" else summary["text"], "on_duty": summary["on_duty"]}
-        notes = patterns.unusual_notes(rows, TZ)
+        notes = patterns.unusual_notes(rows, TZ, lang=lang)
         out["unusual"] = [n["text"] for n in notes[-2:]]
         return out
 

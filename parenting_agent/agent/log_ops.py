@@ -62,7 +62,8 @@ How to read the parent:
   says it was one, change nothing. Delete only when the parent asks to delete or the log really holds the entry twice.
 - Notes are for something to keep: a symptom, a medicine given, a milestone, a vaccine, or whatever the parent asks to
   write down ("anota ..."). A moment shared, a mood, the weather or a chat with you is answered warmly and logged as
-  nothing. A diaper the parent says was dry or not changed is nothing.
+  nothing. A diaper the parent says was dry or not changed is nothing. A symptom told with a feed ("tomo 70 y vomito
+  un poco") is two operations: the feed with what the baby took, and a note with the parent's words.
 - A question is answered from the log and the numbers given, logged as nothing. For when the next feed is, answer with
   the rhythm line given.
 - Never give medical advice, a diagnosis or a dose.
@@ -71,6 +72,9 @@ The reply: one or two short plain sentences in {language}, with commas and perio
 the log now holds, so your reply is only used for a question or the double-send question. When there are no
 operations, never say you logged, saved, changed, corrected or deleted anything.
 """
+
+LANG_RETRY = ("Your last reply was not in {language}. Call log_ops exactly once now with the same operations and the reply "
+              "in {language}.")
 
 RETRY = "Your last answer had no log_ops call. Call log_ops exactly once now, with the operations and the reply."
 
@@ -133,11 +137,13 @@ def context(agent, request, now):
     lines += [f"  {entry_line(e, tz)}" for e in entries] or ["  (empty)"]
     try:
         summary = agent.baby_log.summary(None, None)
-        lines.append("Today since midnight: " + json.dumps(summary, ensure_ascii=False, default=str))
+        lines.append(f"Today ({now.strftime('%a %Y-%m-%d')}) since midnight: "
+                     + json.dumps(summary, ensure_ascii=False, default=str))
         midnight = now.replace(hour=0, minute=0, second=0, microsecond=0)
-        yesterday = agent.baby_log.summary((midnight - datetime.timedelta(days=1)).isoformat(timespec="seconds"),
-                                           midnight.isoformat(timespec="seconds"))
-        lines.append("Yesterday: " + json.dumps(yesterday, ensure_ascii=False, default=str))
+        day_before = midnight - datetime.timedelta(days=1)
+        yesterday = agent.baby_log.summary(day_before.isoformat(timespec="seconds"), midnight.isoformat(timespec="seconds"))
+        lines.append(f"Yesterday ({day_before.strftime('%a %Y-%m-%d')}), its last entries are yesterday's own: "
+                     + json.dumps(yesterday, ensure_ascii=False, default=str))
     except Exception:  # noqa: BLE001 a log without totals still gets its entries read
         pass
     if "next_feed" in agent.tools.items:
@@ -152,8 +158,38 @@ def context(agent, request, now):
     return "\n".join(lines)
 
 
-def clock(value, now):
-    """A clock time HH:MM as the latest such moment not after now, or None when it is not a clock time."""
+# A clock hour the parent said with no half of the day: "a las 2", "a la una y media", "a las 5 menos cuarto", "at 3".
+HOUR_WORDS = {"una": 1, "dos": 2, "tres": 3, "cuatro": 4, "cinco": 5, "seis": 6, "siete": 7, "ocho": 8, "nueve": 9,
+              "diez": 10, "once": 11, "doce": 12}
+SAID_HOUR = re.compile(r"\b(?:a las?|las?|desde las?|hasta las?|de las?|tipo|at|around|by|from|until|till|de|a)\s+"
+                       r"(\d{1,2}|" + "|".join(HOUR_WORDS) + r")(?!\d|[.,]\d|\s*(?:ml|cc|oz|onzas?|min\w*|h\b|hs|horas?|"
+                       r"hours?|kg|g\b|%|veces|times|grados|degrees|°|dias|days))(\s+menos)?", re.I)
+DAY_HALF = re.compile(r"\b(am|pm|a\.\s?m\.?|p\.\s?m\.?|mañana|manana|tarde|noche|madrugada|mediod[ií]a|medianoche|"
+                      r"noon|midnight|morning|afternoon|evening|night|tonight|anoche|ayer|anteayer|yesterday|"
+                      r"(1[3-9]|2[0-3])\s*[:.h]\s*\d{2}|(1[3-9]|2[0-3])\s*(hs|horas))\b", re.I)
+
+
+def bare_hours(request):
+    """The hours from 1 to 12 the parent said with no half of the day, as hour % 12, or an empty set when the message
+    names a half of the day, a day, or a 24 hour time. "a las 5 menos cuarto" names 4 too, the hour Muse writes."""
+    request = str(request or "")
+    if DAY_HALF.search(request):
+        return frozenset()
+    hours = set()
+    for match in SAID_HOUR.finditer(request):
+        word = match.group(1).lower()
+        hour = HOUR_WORDS.get(word) or int(word)
+        if 1 <= hour <= 12:
+            hours.add(hour % 12)
+            if match.group(2):
+                hours.add((hour - 1) % 12)
+    return frozenset(hours)
+
+
+def clock(value, now, hours=frozenset()):
+    """A clock time HH:MM as the latest such moment not after now, or None when it is not a clock time. When the parent
+    said that hour with no half of the day (hours from bare_hours), the latest of its two readings wins in code: round 4
+    put "a las 2 le di pecho" said at 15:00 at 02:00 instead of 14:00."""
     match = HHMM.match(str(value or ""))
     if not match:
         try:
@@ -164,6 +200,11 @@ def clock(value, now):
     hour, minute = int(match.group(1)), int(match.group(2))
     if hour > 23 or minute > 59:
         return None
+    readings = (hour % 12, hour % 12 + 12) if hour % 12 in hours else (hour,)
+    return max(_latest(h, minute, now) for h in readings)
+
+
+def _latest(hour, minute, now):
     moment = now.replace(hour=hour, minute=minute, second=0, microsecond=0)
     if moment > now + datetime.timedelta(minutes=1):
         moment -= datetime.timedelta(days=1)
@@ -183,17 +224,19 @@ def amount(op):
     return None
 
 
-def to_call(op, now):
-    """One operation as a log tool call (name, arguments), or None when it is not an operation."""
+def to_call(op, now, hours=frozenset()):
+    """One operation as a log tool call (name, arguments), or None when it is not an operation. hours are the bare clock
+    hours the parent said, so each time lands on the latest of its two readings."""
     kind, name = op.get("kind"), op.get("op")
-    at = clock(op.get("at"), now) if op.get("at") else None
+    at = clock(op.get("at"), now, hours) if op.get("at") else None
     ts = at.isoformat(timespec="seconds") if at else None
     if name == "sleep_start":
         return "log_baby_event", {"kind": "sleep", "details": {"action": "start"}, **({"ts": ts} if ts else {})}
     if name == "sleep_end":
         return "log_baby_event", {"kind": "sleep", "details": {"action": "end"}, **({"ts": ts} if ts else {})}
     if name == "add" and kind == "sleep":
-        start, end = clock(op.get("start"), now), clock(op.get("end"), now) if op.get("end") else now
+        end = clock(op.get("end"), now, hours) if op.get("end") else now
+        start = clock(op.get("start"), end, hours) if end is not None else None
         if start is None or end is None:
             return None
         if start >= end:
@@ -218,6 +261,10 @@ def to_call(op, now):
     if name in ("edit", "delete") and op.get("id") is not None:
         if name == "delete":
             return "delete_baby_event", {"id": op["id"]}
+        # A correction moves an entry Muse can see in the log, so its own reading of the hour stands: "no, fue a las 9 y
+        # media" at 22:00 may well mean the morning feed.
+        at = clock(op.get("at"), now) if op.get("at") else None
+        ts = at.isoformat(timespec="seconds") if at else None
         details = {k: op[k] for k in EDIT_FIELDS if k in op and k not in ("at", "amount_oz", "amount_ml", "start", "end")}
         if "amount_oz" in op or "amount_ml" in op:
             details["amount_ml"] = amount(op)
@@ -262,6 +309,29 @@ def call_brain(agent, system, text, tool):
     return reply
 
 
+def observation_ops(agent, request, ops, now):
+    """A health message that reports what the parent saw keeps it as a note in their words, and a feed told with it
+    ("tomo 70 y vomito un poco") is logged, whatever Muse proposed: round 4 lost the 70 ml from the day total in 3 of 3
+    runs. The feed is added only when Muse proposed none and the log has no such feed in the last 30 minutes."""
+    ops = list(ops)
+    if rules.SYMPTOM.search(request or "") and not any(op.get("op") == "add" and op.get("kind") == "note" for op in ops):
+        ops.append({"op": "add", "kind": "note", "text": request})
+    feed = rules.symptom_feed(request)
+    if feed and not any(op.get("kind") == "feeding" or op.get("op") == "edit" for op in ops):
+        since = (now - datetime.timedelta(minutes=30)).isoformat(timespec="seconds")
+        try:
+            near = agent.baby_log.entries("feeding", since, 20)
+        except Exception:  # noqa: BLE001 a log that cannot be read is read as holding no such feed
+            near = []
+        twin = any(float((e.get("details") or {}).get("amount_ml") or 0) == float(feed.get("amount_ml") or -1) or
+                   (feed.get("duration_min") and (e.get("details") or {}).get("duration_min") == feed["duration_min"])
+                   for e in near)
+        if not twin:
+            agent.bus.publish("guard", status="symptom_feed_added")
+            ops.insert(0, {"op": "add", "kind": "feeding", **feed})
+    return ops
+
+
 def decide(agent, channel, request, verify=False, health=False):
     """One parent message through the ops brain. Returns the reply text, which the caller says, or None when the brain
     answered no log operations at all, so the caller can take the guarded path."""
@@ -283,13 +353,26 @@ def decide(agent, channel, request, verify=False, health=False):
         return None
     ops = [op for op in proposal.get("ops") or [] if isinstance(op, dict)]
     said = re.sub(r"\s*[—–]\s*", ", ", str(proposal.get("reply") or "")).strip()
+    if said and not ops and rules.message_lang(said) not in (None, lang) and agent.brain.name != "fake":
+        # Round 4: "No worries, I kept just the one at 03:45." in a Spanish chat at 3 AM. A reply in the wrong language
+        # is asked for once more in the family's language, and never sent as it was.
+        agent.bus.publish("guard", status="ops_wrong_language")
+        again = parse_reply(call_brain(agent, system, seen + "\n" + LANG_RETRY.format(language=LANG_NAMES[lang]), OPS_TOOL),
+                            "log_ops") or {}
+        redo = re.sub(r"\s*[—–]\s*", ", ", str(again.get("reply") or "")).strip()
+        if [op for op in again.get("ops") or [] if isinstance(op, dict)]:
+            redo = ""  # a second answer that suddenly changes the log is not trusted for a reply-only turn
+        said = redo if redo and rules.message_lang(redo) in (None, lang) else ""
     if verify:
         check = parse_reply(call_brain(agent, VERIFY_SYSTEM, seen + "\nProposed operations: "
                                        + json.dumps(ops, ensure_ascii=False), VERDICT_TOOL), "verdict") or {}
         if check.get("ok") is False and isinstance(check.get("ops"), list):
             agent.bus.publish("guard", status="verify_corrected", reason=str(check.get("reason") or "")[:200])
             ops = [op for op in check["ops"] if isinstance(op, dict)]
-    calls = [c for c in (to_call(op, now) for op in ops) if c is not None]
+    if health:
+        ops = observation_ops(agent, request, ops, now)
+    hours = bare_hours(request)
+    calls = [c for c in (to_call(op, now, hours) for op in ops) if c is not None]
     for name, arguments in calls:
         kind = arguments.get("kind")
         if name == "edit_baby_event" and kind is None:
@@ -310,8 +393,10 @@ def decide(agent, channel, request, verify=False, health=False):
     red_flag = rules.names_red_flag(request)
     if not diff_empty(diff):
         text = diff_text(diff, lang, agent.baby_name())
-        if health:
+        if health and rules.asks_advice(request):
             text += " " + agent.no_advice(request)
+        elif health:
+            pass
         elif safety:
             agent.bus.publish("guard", status="safety_line_kept")
             text += " " + said

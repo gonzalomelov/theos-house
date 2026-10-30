@@ -143,6 +143,14 @@ The guards above decided what the parent said from rules, and four blind sets st
 - A Muse answer with no `log_ops` call is asked for once more. If it still has none, as with the free rule brain after the spend cap, the message goes through the guarded loop above.
 - Fifth blind set, scored once each: log ops 1 of 45 wrong, the guarded loop 13 of 45, at half the cost and latency.
 
+Round 4 fixes (issue #126, `results/babylog-r4/README.md`):
+
+- A symptom told with a feed ("tomo 70 y vomito un poco") logs the feed and a note with the parent's words in the same turn, whatever Muse proposed. The feed is added by code only when Muse proposed none and the log has no such feed in the last 30 minutes. Without log ops, and on the red flag line ("tomo 40 y vomito todo"), plain code reads the amount or the minutes.
+- A symptom reported with no question gets no "No puedo darte consejo médico" tail. A question, a fever and every red flag line keep their fixed lines.
+- The reply language is the family's. A Spanish family's "sorry" or "ok" never turns the reply English, only a message clearly in English does. A log ops reply in the wrong language is asked for once more and never sent as it was.
+- A bare clock hour ("a las 2", "a las 5 menos cuarto") with no half of the day named lands on the latest of its two readings in code, so "a las 2" said at 15:00 is 14:00. A correction keeps Muse's own reading, since it can mean an earlier entry.
+- Yesterday's totals name yesterday's own last entries, and the totals Muse reads carry their dates.
+
 `PA_FAMILIES_LOG_MODE` is `ops` by default, `ops-verify` adds a second checking call (no better on the 180, twice the cost) and `guards` is the old loop. The emergency, red flag, safe sleep and health gates run before any mode. Code: `parenting_agent/agent/log_ops.py`. Tests: `tests/test_log_ops.py`.
 
 ## How it is built
