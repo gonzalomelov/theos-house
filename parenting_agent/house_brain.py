@@ -75,7 +75,8 @@ Routines you can arm (all times are HH:MM local, between now and plan_until, not
   that is not the living room within the last 2 hours (floor_clean_gate), and a parent confirms. The routine checks
   that gate itself at run time, minute by minute inside your window, so a window can be armed before the gate is met.
   Arm none when there is no safe window.
-- bottle_prewarm: start = the minute the bottle warmer (water only) and a dim study light go on before a night feed.
+- bottle_prewarm: start = the minute the bottle warmer (water only) goes on, silently, before a night feed. The light,
+  the white noise and any push wait for a real sign he is awake, never for this time.
   Night only (21:00 to 06:59), at most 4, at least 60 minutes apart. The warmer turns itself off after 30 minutes.
 - door_quiet: a window in which the doorbell goes to a silent phone push instead of the kitchen speaker, for example
   around a visitor arriving close to a nap. At most 2 windows and 4 hours in all.

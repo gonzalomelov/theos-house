@@ -24,32 +24,43 @@ SHOPPING = {
 
 
 class VirtualSwitch:
-    """A plug that switches one device, with a hard auto off after max_on_min that no setting can turn off."""
+    """A plug that switches one device, with a hard auto off after max_on_min that no setting can turn off. on() can
+    ask for a shorter run (max_min), never a longer one. used_min counts every minute it has been on."""
 
     def __init__(self, bus, entity_id, label, max_on_min, buy=None):
         if not max_on_min or max_on_min <= 0:
             raise ValueError("a virtual switch needs a positive max_on_min")
         self.bus, self.entity_id, self.label, self.max_on_min, self.buy = bus, entity_id, label, max_on_min, buy
         self.state, self.on_since, self.off_at = "off", None, None
+        self.used = datetime.timedelta(0)
 
     def _publish(self, action, reason, now):
         return self.bus.publish("virtual_device", device=self.label, entity=self.entity_id, action=action, state=self.state,
                                 reason=reason, dry=True, at=now.isoformat(timespec="seconds"),
                                 off_at=self.off_at.isoformat(timespec="seconds") if self.off_at else None)
 
-    def on(self, now, reason=""):
+    def used_min(self, now):
+        running = now - self.on_since if self.state == "on" else datetime.timedelta(0)
+        return (self.used + running).total_seconds() / 60
+
+    def on(self, now, reason="", max_min=None):
+        if self.state == "on":
+            self.used += now - self.on_since
+        minutes = self.max_on_min if max_min is None else max(0, min(self.max_on_min, max_min))
         self.state, self.on_since = "on", now
-        self.off_at = now + datetime.timedelta(minutes=self.max_on_min)
+        self.off_at = now + datetime.timedelta(minutes=minutes)
         return self._publish("on", reason, now)
 
     def off(self, now, reason=""):
         was_on = self.state == "on"
+        if was_on:
+            self.used += min(now, self.off_at) - self.on_since
         self.state, self.on_since, self.off_at = "off", None, None
         return self._publish("off", reason, now) if was_on else None
 
     def tick(self, now):
         if self.state == "on" and now >= self.off_at:
-            return self.off(now, f"auto off after {self.max_on_min} min")
+            return self.off(now, f"auto off after {round((self.off_at - self.on_since).total_seconds() / 60)} min")
         return None
 
 

@@ -15,6 +15,8 @@ Code: `parenting_agent/house_brain.py`, hooks in `day_engine.py` and `night_feed
 
 ## Replay against the fixed routines
 
+These runs are from Oct 29, before the night feed became awake-only the same day (issue #128). In them a pre-warm also lit the study light, lowered the white noise and pushed the parent. Since then a Muse pre-warm, like the rhythm guess, only turns the warmer on silently. The nights were not rerun with Muse after that change, see `results/night-feed/README.md` for the fixed rules after it.
+
 The same simulated day (`results/house-day`, Sat Oct 24 06:00 to Sun 07:00) and the same six nights (`results/night-feed`, Oct 20 to 26, 22:00 to 06:00, with the cry on the microphone). Runs 1 and 2 had Muse choose the parent on duty every time. Run 3 is the shipped setting, after the change below.
 
 | Check | Fixed | Muse run 1 | Muse run 2 | Muse run 3 (shipped) |

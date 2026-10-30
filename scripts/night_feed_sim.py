@@ -1,5 +1,8 @@
 """Simulated nights for the 3 AM feed (issue #110): every night of the simulated week, minute by minute.
 
+Every push, white noise drop and light-on is also checked against when the simulated baby is awake (awake_windows):
+the parent must never be pushed and the white noise never lowered while he sleeps.
+
 For each night from 22:00 to 06:00 the log holds the simulated week up to 22:00. During the night the baby cries on
 the Tapo microphone 4 minutes before each real feed in the fixture (a "sound" event, as house_sounds publishes it),
 and the parent logs the feed by voice one minute after it starts, through the voice bridge over HTTP, with the fake
@@ -165,6 +168,42 @@ def summarize(truth, history):
     return out
 
 
+AWAKE_BEFORE = datetime.timedelta(minutes=4)  # the simulated cry, 4 min before the feed
+AWAKE_AFTER = datetime.timedelta(minutes=45)  # awake through the feed and the burp
+
+
+def awake_windows(truth):
+    """When the simulated baby is awake: from 4 min before each real feed to 45 min after it starts. Outside these
+    windows he is asleep. The same windows hold with or without the cry on the microphone: he wakes either way."""
+    return [(patterns.when(f) - AWAKE_BEFORE, patterns.when(f) + AWAKE_AFTER) for f in truth]
+
+
+def asleep_actions(truth, history):
+    """What reached the parent or the nursery while the simulated baby slept, and the warmer's minutes that night."""
+    windows = awake_windows(truth)
+    asleep = lambda moment: not any(a <= moment < b for a, b in windows)
+    pushes, noise_down, light_on, last_level = [], [], [], None
+    warm_min, warm_since = 0.0, None
+    for e in history:
+        moment = datetime.datetime.fromisoformat(e["sim_at"])
+        if e["kind"] == "night_feed" and e.get("step") == "push" and asleep(moment):
+            pushes.append({"at": patterns.hhmm(moment), "text": e["text"]})
+        elif e["kind"] == "white_noise":
+            if e["action"] == "level" and last_level is not None and e["level"] < last_level and asleep(moment):
+                noise_down.append(patterns.hhmm(moment))
+            last_level = e["level"] if e.get("on") else None
+        elif e["kind"] == "house_call" and e.get("action") == "study_light" and e.get("service") == "light.turn_on" and asleep(moment):
+            light_on.append(patterns.hhmm(moment))
+        elif e["kind"] == "virtual_device":
+            if e["state"] == "on" and warm_since is None:
+                warm_since = moment
+            elif e["state"] == "off" and warm_since is not None:
+                warm_min += (moment - warm_since).total_seconds() / 60
+                warm_since = None
+    return {"pushes_while_asleep": pushes, "noise_down_while_asleep": noise_down, "light_on_while_asleep": light_on,
+            "warmer_min": round(warm_min)}
+
+
 def backtest(rows):
     """For each night feed, the error of the prediction made right after the feed before it (the folded rhythm)."""
     feeds = patterns.feeds(rows)
@@ -193,9 +232,11 @@ def main():
         with tempfile.TemporaryDirectory() as tmp:
             truth, history, spoken, _, _ = run_night(rows, start, tmp, cries_on=not args.no_cry)
         feeds = summarize(truth, history)
-        nights.append({"night": f"Oct {day} to {day + 1}", "feeds": feeds, "voice": spoken,
+        nights.append({"night": f"Oct {day} to {day + 1}", "feeds": feeds, "voice": spoken, **asleep_actions(truth, history),
                        "prepares": sum(1 for e in history if e["kind"] == "night_feed" and e["step"] == "prepare"),
+                       "prewarms": sum(1 for e in history if e["kind"] == "night_feed" and e["step"] == "prewarm"),
                        "skips": sum(1 for e in history if e["kind"] == "night_feed" and e["step"] == "skip"),
+                       "pushes": [e["text"] for e in history if e["kind"] == "night_feed" and e["step"] == "push"],
                        "rewarms": sum(1 for e in history if e["kind"] == "night_feed" and e["step"] == "rewarm"),
                        "warmer_on": sum(1 for e in history if e["kind"] == "virtual_device" and e["action"] == "on"),
                        "live_calls": sum(1 for e in history if e["kind"] == "house_call" and e.get("live"))})
@@ -213,11 +254,17 @@ def main():
         "warm_min_median": statistics.median([f["warm_min"] for f in all_feeds if f["warm_min"] is not None] or [0]),
         "warm_min_all": [f["warm_min"] for f in all_feeds if f["warm_min"] is not None],
         "prepares": sum(n["prepares"] for n in nights),
+        "prewarms": sum(n["prewarms"] for n in nights),
         "rewarms": sum(n["rewarms"] for n in nights),
         "cry_skips": sum(n["skips"] for n in nights),
         "voice_logs": sum(len(n["voice"]) for n in nights),
         "voice_logs_answered_done": sum(1 for n in nights for v in n["voice"] if v["reply"].startswith("Done")),
         "live_house_calls": sum(n["live_calls"] for n in nights),
+        "pushes": sum(len(n["pushes"]) for n in nights),
+        "pushes_while_asleep": sum(len(n["pushes_while_asleep"]) for n in nights),
+        "noise_down_while_asleep": sum(len(n["noise_down_while_asleep"]) for n in nights),
+        "light_on_while_asleep": sum(len(n["light_on_while_asleep"]) for n in nights),
+        "warmer_min_per_night": [n["warmer_min"] for n in nights],
         "predictor_night_errors_min": errors,
         "predictor_abs_error_median_min": statistics.median(abs_err) if abs_err else None,
         "predictor_within_10_min": sum(1 for e in abs_err if e <= 10),

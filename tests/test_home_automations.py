@@ -96,71 +96,132 @@ class NightFeedTest(unittest.TestCase):
         self.log.rows.append({"kind": "feeding", "start": at(20, 23, 20).isoformat(), "ref": "feeding#topup"})
         self.assertEqual(predict(self.log.entries(), at(21, 1, 0))["at"], at(21, 2, 0))
 
-    def test_ten_minutes_before_the_house_gets_ready_once(self):
+    def cry(self, moment, episode=1):
+        self.clock.moment = moment
+        self.agent.bus.publish("sound", label="cry", phase="start", episode=episode, seconds=0)
+
+    def say(self, moment, text):
+        self.clock.moment = moment
+        self.agent.bus.publish("message", channel="telegram", text=text)
+
+    def run_ticks(self, start, end):
+        t = start
+        while t < end:
+            self.feed.tick(t)
+            t += datetime.timedelta(minutes=1)
+
+    def test_the_guess_only_prewarms_the_warmer_silently(self):
+        device = self.sounds.device
+        device.on("bedtime")
+        level = device.state["level"]
         self.assertIsNone(self.feed.tick(at(21, 1, 45)))
         episode = self.feed.tick(at(21, 1, 50))
-        self.assertEqual(episode["parent"], "Parent B")  # Parent A took the last wake-up
+        self.assertFalse(episode["awake"])
         self.assertEqual(self.feed.warmer.state, "on")
+        self.assertEqual(events(self.agent, "house_call", action="study_light"), [])
+        self.assertEqual(events(self.agent, "night_feed", step="push"), [])
+        self.assertEqual(events(self.agent, "night_feed", step="prepare"), [])
+        self.assertEqual(device.state["level"], level)
+        self.assertIsNone(self.feed.tick(at(21, 1, 51)))
+        self.assertEqual(len(events(self.agent, "night_feed", step="prewarm")), 1)
+
+    def test_a_guess_never_pushes_or_nags_and_closes_quietly(self):
+        device = self.sounds.device
+        device.on("bedtime")
+        level = device.state["level"]
+        self.run_ticks(at(21, 1, 40), at(21, 4, 30))
+        self.assertEqual(events(self.agent, "night_feed", step="push"), [])
+        self.assertEqual(events(self.agent, "notify"), [])
+        self.assertEqual(device.state["level"], level)
+        self.assertEqual(self.feed.warmer.state, "off")
+        self.assertIn("no awake signal", events(self.agent, "night_feed", step="done")[0]["reason"])
+
+    def test_a_cry_while_prewarming_gets_the_house_ready(self):
+        self.feed.tick(at(21, 1, 50))
+        self.cry(at(21, 1, 58))
+        prepare = events(self.agent, "night_feed", step="prepare")
+        self.assertEqual((len(prepare), prepare[0]["trigger"]), (1, "cry"))
         light = events(self.agent, "house_call", action="study_light")[-1]
         self.assertEqual(light["status"], "dry")
         self.assertEqual(light["data"], {"brightness_pct": 10, "color_temp_kelvin": 2700})
         push = events(self.agent, "night_feed", step="push")[-1]
-        self.assertEqual(push["to"], "Parent B")
-        self.assertIn("around 02:00", push["text"])
-        self.assertIsNone(self.feed.tick(at(21, 1, 51)))
-        self.assertEqual(len(events(self.agent, "night_feed", step="prepare")), 1)
+        self.assertEqual(push["to"], "Parent B")  # Parent A took the last wake-up
+        self.assertIn("awake", push["text"])
 
     def test_a_cry_gets_the_house_ready_at_once_when_the_feed_is_close(self):
-        self.clock.moment = at(21, 1, 30)
-        self.agent.bus.publish("sound", label="cry", phase="start", episode=1, seconds=0)
+        self.cry(at(21, 1, 30))
         prepare = events(self.agent, "night_feed", step="prepare")
         self.assertEqual(len(prepare), 1)
         self.assertEqual(prepare[0]["trigger"], "cry")
         self.assertEqual(self.feed.warmer.state, "on")
 
     def test_a_cry_long_before_the_feed_does_not_warm_the_milk(self):
-        self.clock.moment = at(20, 23, 40)
-        self.agent.bus.publish("sound", label="cry", phase="start", episode=1, seconds=0)
+        self.cry(at(20, 23, 40))
         self.assertEqual(self.feed.warmer.state, "off")
         self.assertIn("min away", events(self.agent, "night_feed", step="skip")[0]["reason"])
 
     def test_crying_again_after_a_skip_gets_the_house_ready(self):
-        self.clock.moment = at(20, 23, 40)
-        self.agent.bus.publish("sound", label="cry", phase="start", episode=1, seconds=0)
-        self.clock.moment = at(20, 23, 50)
-        self.agent.bus.publish("sound", label="cry", phase="start", episode=2, seconds=0)
+        self.cry(at(20, 23, 40))
+        self.cry(at(20, 23, 50), episode=2)
         self.assertEqual(self.feed.warmer.state, "on")
         self.assertIn("crying again", events(self.agent, "night_feed", step="prepare")[0]["reason"])
 
-    def test_a_late_feed_cry_turns_the_warmer_back_on_after_its_auto_off(self):
-        self.feed.tick(at(21, 1, 50))
-        for minute in range(51, 60):
-            self.feed.tick(at(21, 1, minute))
-        for minute in range(0, 25):
-            self.feed.tick(at(21, 2, minute))
-        self.assertEqual(self.feed.warmer.state, "off")  # 30 min auto off
-        self.clock.moment = at(21, 2, 40)
-        self.agent.bus.publish("sound", label="cry", phase="start", episode=3, seconds=0)
-        self.assertEqual(self.feed.warmer.state, "on")
-        self.assertEqual(len(events(self.agent, "night_feed", step="rewarm")), 1)
-
-    def test_a_cry_while_warming_restarts_the_auto_off_without_a_second_push(self):
-        self.feed.tick(at(21, 1, 50))
-        self.clock.moment = at(21, 2, 15)
-        self.agent.bus.publish("sound", label="cry", phase="start", episode=4, seconds=0)
-        self.assertEqual(self.feed.warmer.off_at, at(21, 2, 45))
+    def test_a_parent_saying_he_is_up_gets_the_house_ready(self):
+        for text in ("is he up?", "he's still asleep", "when is the next feed", "good night"):
+            self.say(at(21, 1, 20), text)
+        self.assertEqual(events(self.agent, "night_feed", step="prepare"), [])
+        self.say(at(21, 1, 25), "he's up")
+        prepare = events(self.agent, "night_feed", step="prepare")
+        self.assertEqual((len(prepare), prepare[0]["trigger"]), (1, "parent"))
         self.assertEqual(len(events(self.agent, "night_feed", step="push")), 1)
 
-    def test_a_day_feed_is_left_alone(self):
-        log = ListLog([{"kind": "feeding", "start": at(20, h, 0).isoformat(), "ref": f"f{h}"} for h in (7, 10, 13)])
-        feed = NightFeed(self.agent, self.config, log=log, clock=Clock(at(20, 15, 55)))
-        self.assertIsNone(feed.tick(at(20, 15, 55)))
+    def test_a_parent_starting_a_bottle_needs_no_push(self):
+        self.say(at(21, 1, 25), "starting a bottle")
+        self.assertEqual(len(events(self.agent, "night_feed", step="prepare")), 1)
+        self.assertEqual(events(self.agent, "night_feed", step="push"), [])
+        self.assertEqual(self.feed.warmer.state, "on")
 
-    def test_white_noise_goes_down_and_comes_back(self):
+    def test_the_he_is_up_button(self):
+        self.clock.moment = at(21, 1, 25)
+        self.agent.bus.publish("baby_awake", by="Parent A")
+        self.assertEqual(events(self.agent, "night_feed", step="prepare")[0]["trigger"], "button")
+
+    def test_a_day_message_or_cry_is_left_alone(self):
+        self.say(at(21, 10, 0), "he's up")
+        self.cry(at(21, 10, 5))
+        self.assertEqual(events(self.agent, "night_feed", step="prepare"), [])
+
+    def test_a_logged_feed_is_an_awake_signal_without_a_push(self):
+        self.feed.tick(at(21, 1, 50))
+        self.log.add_feed(at(21, 2, 4))
+        self.assertIsNone(self.feed.tick(at(21, 2, 6)))
+        self.assertEqual(events(self.agent, "night_feed", step="prepare")[0]["trigger"], "log")
+        self.assertEqual(self.feed.warmer.state, "off")
+        self.assertEqual(events(self.agent, "house_call", action="study_light")[-1]["service"], "light.turn_on")
+        self.assertEqual(events(self.agent, "night_feed", step="push"), [])
+        done = self.feed.tick(at(21, 2, 34))
+        self.assertIsNotNone(done)
+        self.assertEqual(events(self.agent, "house_call", action="study_light")[-1]["service"], "light.turn_off")
+        self.assertIn("feed logged at 02:04", events(self.agent, "night_feed", step="done")[0]["reason"])
+
+    def test_a_logged_wake_up_note_is_an_awake_signal(self):
+        self.feed.tick(at(21, 1, 0))
+        self.log.rows.append({"kind": "note", "time": at(21, 1, 10).isoformat(), "note": "He woke up", "ref": "note#w"})
+        self.feed.tick(at(21, 1, 11))
+        self.assertEqual(events(self.agent, "night_feed", step="prepare")[0]["trigger"], "log")
+
+    def test_what_was_in_the_log_before_is_not_a_signal(self):
+        self.log.rows.append({"kind": "note", "time": at(21, 0, 55).isoformat(), "note": "He woke up", "ref": "note#old"})
+        self.feed.tick(at(21, 1, 0))
+        self.assertEqual(events(self.agent, "night_feed", step="prepare"), [])
+
+    def test_white_noise_goes_down_only_once_he_is_awake_and_comes_back(self):
         device = self.sounds.device
         device.on("bedtime")
         level = device.state["level"]
         self.feed.tick(at(21, 1, 50))
+        self.assertEqual(device.state["level"], level)
+        self.cry(at(21, 1, 56))
         self.assertAlmostEqual(device.state["level"], round(level * 0.5, 2))
         self.log.add_feed(at(21, 2, 5))
         self.feed.tick(at(21, 2, 10))
@@ -168,29 +229,47 @@ class NightFeedTest(unittest.TestCase):
         self.feed.tick(at(21, 2, 35))
         self.assertEqual(device.state["level"], level)
 
-    def test_the_voice_logged_feed_winds_everything_down(self):
-        self.feed.tick(at(21, 1, 50))
-        self.log.add_feed(at(21, 2, 4))
-        self.assertIsNone(self.feed.tick(at(21, 2, 6)))
-        self.assertEqual(self.feed.warmer.state, "off")
-        self.assertEqual(events(self.agent, "house_call", action="study_light")[-1]["service"], "light.turn_on")
-        done = self.feed.tick(at(21, 2, 34))
-        self.assertIsNotNone(done)
-        self.assertEqual(events(self.agent, "house_call", action="study_light")[-1]["service"], "light.turn_off")
-        self.assertIn("feed logged at 02:04", events(self.agent, "night_feed", step="done")[0]["reason"])
+    def test_a_late_feed_cry_turns_the_warmer_back_on_after_its_auto_off(self):
+        self.cry(at(21, 1, 50))
+        self.run_ticks(at(21, 1, 51), at(21, 2, 25))
+        self.assertEqual(self.feed.warmer.state, "off")  # 30 min auto off
+        self.cry(at(21, 2, 40), episode=3)
+        self.assertEqual(self.feed.warmer.state, "on")
+        self.assertEqual(len(events(self.agent, "night_feed", step="rewarm")), 1)
 
-    def test_without_a_log_one_reminder_to_log_by_voice(self):
-        self.feed.tick(at(21, 1, 50))
-        for minute in range(31, 59):
-            self.feed.tick(at(21, 2, minute))
+    def test_a_cry_while_warming_restarts_the_auto_off_without_a_second_push(self):
+        self.cry(at(21, 1, 50))
+        self.cry(at(21, 2, 15), episode=4)
+        self.assertEqual(self.feed.warmer.off_at, at(21, 2, 45))
+        self.assertEqual(len(events(self.agent, "night_feed", step="push")), 1)
+
+    def test_the_no_feed_logged_reminder_only_once_he_is_awake(self):
+        self.cry(at(21, 1, 50))
+        self.run_ticks(at(21, 1, 51), at(21, 3, 0))
         reminders = [e for e in events(self.agent, "night_feed", step="push") if "No feed logged" in e["text"]]
         self.assertEqual(len(reminders), 1)
         self.assertIn("baby agent", reminders[0]["text"])
 
-    def test_the_warmer_has_a_hard_auto_off(self):
-        config = {**self.config, "night_feed": {"warmer_max_on_min": 600}}
+    def test_the_warmer_has_a_per_night_cap_across_switch_ons(self):
+        self.cry(at(21, 0, 30))
+        for i, minute in enumerate(range(20, 300, 20)):  # a cry every 20 min would restart a per-switch auto off forever
+            moment = at(21, 0, 30) + datetime.timedelta(minutes=minute)
+            self.run_ticks(moment - datetime.timedelta(minutes=20), moment)
+            self.cry(moment, episode=10 + i)
+        self.run_ticks(at(21, 5, 30), at(21, 5, 50))
+        night_min = self.feed.warmer.used_min(at(21, 5, 50))
+        self.assertLessEqual(night_min, 90)
+        self.assertGreaterEqual(night_min, 89)
+        self.assertEqual(self.feed.warmer.state, "off")
+        self.assertTrue(events(self.agent, "night_feed", step="warmer", action="night cap")
+                        or events(self.agent, "night_feed", step="warmer", action="left off"))
+        self.assertEqual(self.feed.night_cap(at(21, 23, 0)), 90)  # the next night starts fresh
+
+    def test_the_warmer_has_a_hard_auto_off_and_a_hard_night_cap(self):
+        config = {**self.config, "night_feed": {"warmer_max_on_min": 600, "warmer_night_max_min": 6000}}
         feed = NightFeed(self.agent, config, log=self.log, clock=self.clock)
         self.assertEqual(feed.warmer.max_on_min, 45)
+        self.assertEqual(feed.night_cap_min, 120)
         feed.warmer.on(at(21, 1, 0))
         feed.warmer.tick(at(21, 1, 45))
         self.assertEqual(feed.warmer.state, "off")
@@ -199,9 +278,10 @@ class NightFeedTest(unittest.TestCase):
 
     def test_gonza_on_duty_gets_his_iphone_push_dry(self):
         config = {**self.config, "night_feed": {"push": {"Parent B": "gonza"}}}
+        self.feed.stop()
         feed = NightFeed(self.agent, config, log=self.log, clock=self.clock)
         self.agent.plugins = [self.house, self.sounds, feed]
-        feed.tick(at(21, 1, 50))
+        feed.awake(at(21, 1, 50), "cry", "cry heard")
         push = events(self.agent, "house_call", action="push_gonza")[-1]
         self.assertEqual(push["status"], "dry")
         self.assertFalse(push["live"])
@@ -211,11 +291,14 @@ class NightFeedTest(unittest.TestCase):
             row["method"] = "left breast"
         self.feed.tick(at(21, 1, 50))
         self.assertEqual(self.feed.warmer.state, "off")
+        self.cry(at(21, 1, 55))
+        self.assertEqual(self.feed.warmer.state, "off")
         self.assertNotIn("warmer", events(self.agent, "night_feed", step="push")[-1]["text"])
         self.assertIn("Study light", events(self.agent, "night_feed", step="push")[-1]["text"])
 
     def test_every_device_change_is_dry(self):
         self.feed.tick(at(21, 1, 50))
+        self.cry(at(21, 1, 55))
         self.assertTrue(all(e["dry"] for e in events(self.agent, "virtual_device")))
         self.assertTrue(all(not e["live"] for e in events(self.agent, "house_call")))
 

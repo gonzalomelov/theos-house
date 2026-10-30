@@ -1,26 +1,40 @@
-"""The 3 AM feed (issue #110): the house gets the night feed ready before the parent on duty is up.
+"""The 3 AM feed (issue #110): the house gets the night feed ready once the baby is awake, never on a guess.
 
 The next feed comes from the log rhythm, the same way the families bot computes it: feeds that start within 30 minutes
 of the one before fold into one (families.service.sessions), then patterns.next_feed takes the median of the last
-gaps. When that feed falls in the night (22:00 to 06:00), lead_min minutes before it, or the moment a cry starts on
-the Tapo microphone at night (a "sound" event from house_sounds) while the feed is due within cry_window_min or
-overdue, or a second cry within again_min of one that did not look like a feed, the house gets ready once. A cry
-while the house is ready and no feed is logged yet means the feed is later than the rhythm said: the warmer goes on
-again if its auto off ran.
+gaps. That guess can be more than an hour off, so it never touches the nursery or the parent. When the guessed feed
+falls in the night (22:00 to 06:00), lead_min minutes before it (or at a Muse plan moment, house_brain.py) the house
+may only pre-warm the bottle warmer, silently: water only, a dry virtual plug today, no light, no white noise change,
+no push.
 
-- the bottle warmer plug turns on. The plug is not bought yet, so it is a VirtualSwitch (dry, virtual_devices.py)
-  with a hard auto off after warmer_max_on_min. The warmer holds water only: the bottle stays in the fridge until the
-  parent is up, so no milk waits out of the fridge for the plan.
-- the study light goes on, dim and warm, through house_tools (dry while house.live is false).
-- the white noise goes down to a share of its level, if it is on (the house_sounds device).
-- one push to the parent on duty from the night rota (patterns.next_on_duty over the night wake-up notes).
+The house acts only on a real awake signal:
+- a cry on the Tapo microphone at night (a "sound" event from house_sounds) while the feed is due within
+  cry_window_min or overdue, or while a pre-warm is running, or a second cry within again_min of one that did not look
+  like a feed.
+- a parent message at night that says he is up or a feed is starting ("he's up", "he's awake", "starting a bottle"),
+  typed on Telegram or said to the Echo or Assist through voice_bridge.py. A question is not a signal.
+- a "baby_awake" event, the bus event a "he's up" button publishes.
+- a wake-up, a night wake-up note or a feed newly written to the log at night.
 
-The parent logs the feed by voice: a Telegram voice note, the Echo or Assist through voice_bridge.py. A feed in the
-log after the episode started turns the warmer off at once (the bottle is out), and after_feed_min after that feed
-started the light goes off and the white noise goes back to its level. Without a feed log reminder_min after the
-expected time, one reminder says how to log it by voice. The warmer runs when a bottle was logged in the last 24 hours by
-default ("warmer": "bottle_days"), or "always" or "never". Every step is a "night_feed"
-event. The texts state times and actions only, never advice (patterns.no_advice).
+Awake means:
+- the bottle warmer plug on (VirtualSwitch, dry, virtual_devices.py) with a hard auto off after warmer_max_on_min. The
+  warmer holds water only: the bottle stays in the fridge until the parent is up, so no milk waits out of the fridge.
+- the study light on, dim and warm, through house_tools (dry while house.live is false).
+- the white noise down to a share of its level, if it is on (the house_sounds device).
+- one push to the parent on duty from the night rota (patterns.next_on_duty over the night wake-up notes), unless the
+  signal came from the log, where a parent is already up and logging.
+
+A cry while awake and no feed logged yet means the feed is coming now: the warmer's auto off starts over, and if it had
+already run, the warmer goes on again with one push. Every switch-on counts against one per-night total
+(warmer_night_max_min, never more than WARMER_NIGHT_CAP_MIN): once the night's minutes are used, the warmer stays off
+until the next night. The count lives in memory, so an agent restart in the night starts it over.
+
+The parent logs the feed by voice. A feed in the log turns the warmer off at once (the bottle is out), and
+after_feed_min after that feed started the light goes off and the white noise goes back to its level. Only once the
+baby is known awake, and without a feed log reminder_min after that, one reminder says how to log it by voice. A
+pre-warm with no awake signal closes quietly. The warmer runs when a bottle was logged in the last 24 hours by default
+("warmer": "bottle_days"), or "always" or "never". Every step is a "night_feed" event. The texts state times and
+actions only, never advice (patterns.no_advice).
 
 Add "parenting_agent.night_feed:NightFeed" to the agent plugins, after "parenting_agent.house_tools:HouseTools" and
 "parenting_agent.house_sounds:HouseSounds" when they are used. Settings live under "night_feed", see DEFAULTS. "push"
@@ -28,6 +42,7 @@ maps a rota name to "gonza" (his iPhone through push_gonza) or "notify" (a notif
 """
 import datetime
 import os
+import re
 import threading
 
 from .agent.plugins import Plugin
@@ -37,9 +52,17 @@ from .rhythm.engine import make_log
 from .virtual_devices import SHOPPING, VirtualSwitch
 
 DEFAULTS = {"lead_min": 10, "cry_window_min": 45, "late_window_min": 30, "warmer_max_on_min": 30, "light_pct": 10,
-            "white_noise_share": 0.5, "reminder_min": 30, "after_feed_min": 30, "give_up_min": 120, "warmer": "bottle_days", "again_min": 15, "max_gap_h": 6, "poll_s": 30,
+            "white_noise_share": 0.5, "reminder_min": 30, "after_feed_min": 30, "give_up_min": 120, "warmer": "bottle_days",
+            "again_min": 15, "max_gap_h": 6, "poll_s": 30, "warmer_night_max_min": 90, "log_signal_min": 20,
             "warmer_entity": "switch.bottle_warmer_plug", "push": {}}
-WARMER_CAP_MIN = 45  # no setting keeps the warmer on longer than this
+WARMER_CAP_MIN = 45  # no setting keeps the warmer on longer than this in one go
+WARMER_NIGHT_CAP_MIN = 120  # no setting lets the warmer run longer than this in one night, all switch-ons together
+
+AWAKE_RE = re.compile(r"\b(he'?s up|she'?s up|baby'?s up|is up|awake|woke|waking|crying|hungry|fussing|stirring)\b", re.I)
+FEED_RE = re.compile(r"\b(feeding|starting (a |the )?(bottle|feed)|making (a |the )?bottle|nursing)\b", re.I)
+NOT_RE = re.compile(r"\b(not|n't|still asleep|sleeping)\b", re.I)
+SIGNAL = {"cry": "a cry was heard", "parent": "a parent said so", "button": "he's up was tapped", "log": "it is in the log"}
+QUESTION_RE = re.compile(r"\?|^\s*(when|what|how|is|was|did|does|should|can|will)\b", re.I)
 
 
 def find_plugin(agent, name):
@@ -56,6 +79,17 @@ def predict(rows, now, max_gap_h=6):
     return patterns.next_feed(rows, now)
 
 
+def awake_message(text):
+    """What a parent's message says about the baby: "awake", "feed" (a feed is starting) or None (a question, a
+    "not up yet", anything else)."""
+    text = (text or "").strip()
+    if not text or QUESTION_RE.search(text) or NOT_RE.search(text):
+        return None
+    if FEED_RE.search(text):
+        return "feed"
+    return "awake" if AWAKE_RE.search(text) else None
+
+
 class NightFeed(Plugin):
     name = "night-feed"
 
@@ -68,14 +102,19 @@ class NightFeed(Plugin):
         self._log = log
         self.warmer = warmer or VirtualSwitch(agent.bus, self.s["warmer_entity"], "bottle warmer",
                                               min(self.s["warmer_max_on_min"], WARMER_CAP_MIN), SHOPPING["bottle_warmer"])
+        self.night_cap_min = min(self.s["warmer_night_max_min"], WARMER_NIGHT_CAP_MIN)
+        self.night, self.night_base = None, 0.0
         self.episode, self.done, self.last_skip = None, set(), None
+        self.seen = None  # log refs already looked at for a wake-up signal, filled on the first tick
         # Set by the house brain (house_brain.py) from a checked Muse plan: {"prewarm": [moments], "on_duty": name}.
-        # With a plan the warmer goes on at the planned moments instead of the rhythm lead. The cry trigger, the
-        # warmer's hard auto off and the wind-down stay as they are. None runs the fixed rules.
+        # With a plan the silent pre-warm runs at the planned moments instead of the rhythm lead. The awake signals,
+        # the warmer's caps and the wind-down stay as they are. None runs the fixed rules.
         self.plan = None
-        self.lock = threading.Lock()
+        self.lock = threading.RLock()  # a step publishes on the bus, a handler may come back in on the same thread
         self.stopped = threading.Event()
         agent.bus.subscribe(self.on_sound, ["sound"])
+        agent.bus.subscribe(self.on_message, ["message"])
+        agent.bus.subscribe(self.on_awake, ["baby_awake"])
 
     @property
     def log(self):
@@ -100,17 +139,24 @@ class NightFeed(Plugin):
     def event(self, step, now, **fields):
         return self.agent.bus.publish("night_feed", step=step, at=now.astimezone(self.tz).isoformat(timespec="seconds"), **fields)
 
+    def is_night(self, now):
+        return patterns.is_night(now.astimezone(self.tz))
+
     # When
 
     def next_night_feed(self, now):
         nxt = predict(self.log.entries(), now, self.s["max_gap_h"])
-        if nxt and patterns.is_night(nxt["at"].astimezone(self.tz)):
+        if nxt and self.is_night(nxt["at"]):
             return nxt
         return None
 
     def tick(self, now):
         with self.lock:
             self.warmer.tick(now)
+            self.night_cap(now)
+            signal = self.log_signal(now)
+            if signal is not None:
+                self.awake(now, "log", signal)
             if self.episode:
                 return self.follow(now)
             if self.plan is not None and self.plan.get("prewarm") is not None:
@@ -121,7 +167,7 @@ class NightFeed(Plugin):
             lead = datetime.timedelta(minutes=self.s["lead_min"])
             late = datetime.timedelta(minutes=self.s["late_window_min"])
             if nxt["at"] - lead <= now < nxt["at"] + late:
-                return self.prepare(now, nxt, f"night feed expected around {self.hhmm(nxt['at'])}")
+                return self.prewarm(now, nxt, f"night feed guessed around {self.hhmm(nxt['at'])}")
             return None
 
     def planned(self, now):
@@ -130,17 +176,59 @@ class NightFeed(Plugin):
             key = f"plan@{moment.isoformat()}"
             if key not in self.done and moment <= now < moment + late:
                 nxt = predict(self.log.entries(), now, self.s["max_gap_h"])
-                return self.prepare(now, nxt, f"Muse plan: warm at {self.hhmm(moment)}", trigger="plan", key=key)
+                return self.prewarm(now, nxt, f"Muse plan: warm at {self.hhmm(moment)}", trigger="plan", key=key)
         return None
+
+    # Awake signals
+
+    def log_signal(self, now):
+        """A wake-up, a night wake-up note or a feed that is new in the log and recent, at night: the baby is awake."""
+        rows = self.log.entries()
+        refs = {e.get("ref") for e in rows if e.get("ref")}
+        if self.seen is None:
+            self.seen = refs
+            return None
+        new = [e for e in rows if e.get("ref") and e["ref"] not in self.seen]
+        self.seen |= refs
+        recent = datetime.timedelta(minutes=self.s["log_signal_min"])
+        for e in new:
+            if e["kind"] == "feeding":
+                moment, what = patterns.when(e), "feed"
+            elif e["kind"] == "sleep" and e.get("end"):
+                moment, what = patterns.parse(e["end"]), "wake-up"
+            elif e["kind"] == "note" and re.search(r"\b(wake|woke|awake|up)\b", e.get("note") or "", re.I):
+                moment, what = patterns.when(e), "wake-up note"
+            else:
+                continue
+            if self.is_night(now) and now - recent <= moment <= now + datetime.timedelta(minutes=1):
+                return f"{what} logged at {self.hhmm(moment)}"
+        return None
+
+    def on_message(self, event):
+        what = awake_message(event.get("text"))
+        now = self.clock()
+        if what is None or not self.is_night(now):
+            return
+        with self.lock:
+            self.awake(now, "parent", f"a parent said \"{str(event.get('text'))[:80]}\"", push=what == "awake")
+
+    def on_awake(self, event):
+        now = self.clock()
+        if not self.is_night(now):
+            return
+        with self.lock:
+            self.awake(now, "button", f"{event.get('by') or 'a parent'} tapped he's up")
 
     def on_sound(self, event):
         if event.get("label") != "cry" or event.get("phase") not in ("start", "ongoing"):
             return
         now = self.clock()
-        if not patterns.is_night(now.astimezone(self.tz)):
+        if not self.is_night(now):
             return
         with self.lock:
             if self.episode:
+                if not self.episode["awake"]:
+                    return self.awake(now, "cry", f"cry heard, feed expected around {self.hhmm(self.episode['expected'])}")
                 if self.episode.get("logged") is None:
                     self.rewarm(now)
                 return
@@ -159,20 +247,44 @@ class NightFeed(Plugin):
             else:
                 why = "cry heard at night, too few recent feeds in the log to predict one"
             self.last_skip = None
-            self.prepare(now, nxt, why, trigger="cry")
+            self.awake(now, "cry", why)
 
     def rewarm(self, now):
-        """A cry while the house is ready and no feed is logged yet: the feed is coming now, maybe later than the rhythm
-        said. The warmer's auto off starts over, and if it had already run, the warmer goes on again with one push."""
+        """A cry while awake and no feed logged yet: the feed is coming now, maybe later than the rhythm said. The
+        warmer's auto off starts over, within the night's minutes, and if it had already run, the warmer goes on again
+        with one push."""
         ep = self.episode
         ep["started"] = now
         if not self.wants_warmer():
             return
         was_off = self.warmer.state == "off"
-        self.warmer.on(now, "crying, the feed is coming now")
+        if not self.warm(now, "crying, the feed is coming now"):
+            return
         self.event("rewarm", now, on_duty=ep["parent"], was_off=was_off)
         if was_off:
             self.push(ep["parent"], f"Crying now. Bottle warmer back on. {ep['parent']} is on duty.", now)
+
+    # The warmer and its night
+
+    def night_cap(self, now):
+        """The warmer's minutes tonight, all switch-ons together. A night runs from noon to noon, so 22:00 and 03:00
+        are the same night. Turns the warmer off when the night's minutes are used. Returns the minutes left."""
+        night = (now.astimezone(self.tz) - datetime.timedelta(hours=12)).date()
+        if night != self.night:
+            self.night, self.night_base = night, self.warmer.used_min(now)
+        left = self.night_cap_min - (self.warmer.used_min(now) - self.night_base)
+        if self.warmer.state == "on" and left <= 0:
+            self.warmer.off(now, f"night cap: {self.night_cap_min} min of warmer time tonight")
+            self.event("warmer", now, action="night cap", reason=f"{self.night_cap_min} min of warmer time used tonight")
+        return max(0.0, left)
+
+    def warm(self, now, why):
+        left = self.night_cap(now)
+        if left < 1:
+            self.event("warmer", now, action="left off", reason=f"night cap: {self.night_cap_min} min of warmer time used tonight")
+            return False
+        self.warmer.on(now, why, max_min=left)
+        return True
 
     # Ready
 
@@ -185,29 +297,49 @@ class NightFeed(Plugin):
         handled = [w["parent"] for w in patterns.night_wakeups(self.log.entries(), self.tz) if w["at"] < now]
         return patterns.next_on_duty(handled, self.rhythm["parents"])
 
-    def prepare(self, now, nxt, why, trigger="rhythm", key=None):
-        key = key or (nxt["computed_from"][-1] if nxt else f"cry@{now.isoformat()}")
+    def open_episode(self, now, nxt, key):
         self.done.add(key)
-        if nxt and trigger == "plan":  # the rhythm lead does not prepare the same feed again after a fallback
+        if nxt:  # the rhythm lead does not open the same feed again
             self.done.add(nxt["computed_from"][-1])
-        parent = self.on_duty(now)
-        self.episode = {"key": key, "started": now, "expected": nxt["at"] if nxt else now, "parent": parent,
-                        "reminded": False, "noise_before": None}
-        self.event("prepare", now, trigger=trigger, reason=why, on_duty=parent,
-                   expected=self.hhmm(self.episode["expected"]), computed_from=(nxt or {}).get("computed_from", []))
-        if self.wants_warmer():
-            self.warmer.on(now, why)
-            warm = "Bottle warmer on, "
+        self.episode = {"key": key, "started": now, "expected": nxt["at"] if nxt else now, "parent": self.on_duty(now),
+                        "reminded": False, "noise_before": None, "awake": False, "awake_at": None}
+        return self.episode
+
+    def prewarm(self, now, nxt, why, trigger="rhythm", key=None):
+        """A guess: the warmer may go on, silently. No light, no white noise change, no push."""
+        ep = self.open_episode(now, nxt, key or (nxt["computed_from"][-1] if nxt else f"{trigger}@{now.isoformat()}"))
+        warmed = self.wants_warmer() and self.warm(now, why)
+        self.event("prewarm", now, trigger=trigger, reason=why, warmer="on" if warmed else "off",
+                   expected=self.hhmm(ep["expected"]), computed_from=(nxt or {}).get("computed_from", []))
+        return ep
+
+    def awake(self, now, trigger, why, push=None):
+        """A real awake signal. Opens the night feed, or turns a silent pre-warm into it, once."""
+        if self.episode and self.episode["awake"]:
+            return self.episode
+        if self.episode is None:
+            nxt = predict(self.log.entries(), now, self.s["max_gap_h"])
+            self.open_episode(now, nxt, f"{trigger}@{now.isoformat()}")
+        ep = self.episode
+        ep.update(awake=True, awake_at=now, parent=self.on_duty(now))
+        if trigger in ("cry", "button") or (trigger == "parent" and push is not False):
+            push = True
+        self.event("prepare", now, trigger=trigger, reason=why, on_duty=ep["parent"], expected=self.hhmm(ep["expected"]))
+        warm = ""
+        if trigger == "log" and self.logged_feed() is not None:
+            pass  # the feed is already in the log, the bottle is out
+        elif self.wants_warmer():
+            if self.warm(now, why):  # a pre-warm's auto off starts over, the feed is coming now
+                warm = "Bottle warmer on, "
         else:
             self.event("warmer", now, action="left off", reason="no bottle in the last 24 hours" if self.s["warmer"] == "bottle_days"
                        else "warmer set to never")
-            warm = ""
         self.house("study_light", on=True, brightness_pct=self.s["light_pct"], warm=True)
         self.noise_down(now)
-        when = f"around {self.hhmm(nxt['at'])}" if nxt else "now, a cry was heard"
-        self.push(parent, f"Night feed {when}. {warm}{'study' if warm else 'Study'} light dim and warm, white noise down. "
-                          f"{parent} is on duty.", now)
-        return self.episode
+        if push:
+            self.push(ep["parent"], f"He is awake, {SIGNAL[trigger]}. {warm}{'study' if warm else 'Study'} light dim and warm, "
+                                    f"white noise down. {ep['parent']} is on duty.", now)
+        return ep
 
     def wants_warmer(self):
         """always, never, or bottle_days (the default): on when a bottle was logged in the last 24 hours, so a family
@@ -235,7 +367,7 @@ class NightFeed(Plugin):
             self.event("white_noise", now, action="left", reason="white noise is off or not loaded")
             return
         self.episode["noise_before"] = device.state["level"]
-        device.level(round(device.state["level"] * self.s["white_noise_share"], 2), "night feed, turned down")
+        device.level(round(device.state["level"] * self.s["white_noise_share"], 2), "night feed, he is awake, turned down")
 
     def noise_back(self):
         sounds = find_plugin(self.agent, "house-sounds")
@@ -263,6 +395,10 @@ class NightFeed(Plugin):
 
     def follow(self, now):
         ep = self.episode
+        if not ep["awake"]:
+            if now >= ep["started"] + datetime.timedelta(minutes=self.s["give_up_min"]):
+                return self.wind_down(now, "no awake signal, the pre-warm closed quietly", None)
+            return None
         if ep.get("logged") is None:
             feed = self.logged_feed()
             if feed is not None:
@@ -273,18 +409,19 @@ class NightFeed(Plugin):
             if now >= ep["logged"]["at"] + datetime.timedelta(minutes=self.s["after_feed_min"]):
                 return self.wind_down(now, f"feed logged at {self.hhmm(ep['logged']['at'])}", ep["logged"]["ref"])
             return None
-        if not ep["reminded"] and now >= ep["expected"] + datetime.timedelta(minutes=self.s["reminder_min"]):
+        if not ep["reminded"] and now >= max(ep["expected"], ep["awake_at"]) + datetime.timedelta(minutes=self.s["reminder_min"]):
             ep["reminded"] = True
             self.push(ep["parent"], "No feed logged yet for the night feed. Say \"baby agent, fed 90 ml\" to the Echo, "
                                     "or send a voice note, and I log it.", now)
-        if now >= ep["started"] + datetime.timedelta(minutes=self.s["give_up_min"]):
+        if now >= ep["awake_at"] + datetime.timedelta(minutes=self.s["give_up_min"]):
             return self.wind_down(now, "no feed logged, closed without one", None)
         return None
 
     def wind_down(self, now, why, ref):
         self.warmer.off(now, why)
-        self.house("study_light", on=False)
-        self.noise_back()
+        if self.episode["awake"]:
+            self.house("study_light", on=False)
+            self.noise_back()
         self.event("done", now, reason=why, logged=ref, minutes=round((now - self.episode["started"]).total_seconds() / 60))
         ended, self.episode = self.episode, None
         return ended

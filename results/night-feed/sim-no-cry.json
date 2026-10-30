@@ -6,14 +6,14 @@
     {
      "feed": "23:27",
      "method": "right breast",
-     "light_on": true,
+     "light_on": false,
      "warmer_on": false,
      "warm_min": null
     },
     {
      "feed": "02:13",
      "method": "bottle",
-     "light_on": true,
+     "light_on": false,
      "warmer_on": true,
      "warm_min": 26
     },
@@ -42,8 +42,14 @@
      "reply": "Done, logged."
     }
    ],
-   "prepares": 2,
+   "pushes_while_asleep": [],
+   "noise_down_while_asleep": [],
+   "light_on_while_asleep": [],
+   "warmer_min": 58,
+   "prepares": 3,
+   "prewarms": 2,
    "skips": 0,
+   "pushes": [],
    "rewarms": 0,
    "warmer_on": 2,
    "live_calls": 0
@@ -54,7 +60,7 @@
     {
      "feed": "00:05",
      "method": "bottle",
-     "light_on": true,
+     "light_on": false,
      "warmer_on": true,
      "warm_min": 1
     },
@@ -68,9 +74,9 @@
     {
      "feed": "04:44",
      "method": "both breasts",
-     "light_on": true,
-     "warmer_on": true,
-     "warm_min": 8
+     "light_on": false,
+     "warmer_on": false,
+     "warm_min": null
     }
    ],
    "voice": [
@@ -90,10 +96,16 @@
      "reply": "Done, logged."
     }
    ],
-   "prepares": 2,
+   "pushes_while_asleep": [],
+   "noise_down_while_asleep": [],
+   "light_on_while_asleep": [],
+   "warmer_min": 3,
+   "prepares": 3,
+   "prewarms": 1,
    "skips": 0,
+   "pushes": [],
    "rewarms": 0,
-   "warmer_on": 2,
+   "warmer_on": 1,
    "live_calls": 0
   },
   {
@@ -102,7 +114,7 @@
     {
      "feed": "23:07",
      "method": "both breasts",
-     "light_on": true,
+     "light_on": false,
      "warmer_on": true,
      "warm_min": 11
     },
@@ -138,8 +150,14 @@
      "reply": "Done, logged."
     }
    ],
-   "prepares": 1,
+   "pushes_while_asleep": [],
+   "noise_down_while_asleep": [],
+   "light_on_while_asleep": [],
+   "warmer_min": 13,
+   "prepares": 3,
+   "prewarms": 1,
    "skips": 0,
+   "pushes": [],
    "rewarms": 0,
    "warmer_on": 1,
    "live_calls": 0
@@ -157,14 +175,14 @@
     {
      "feed": "00:51",
      "method": "bottle",
-     "light_on": true,
+     "light_on": false,
      "warmer_on": false,
      "warm_min": null
     },
     {
      "feed": "03:21",
      "method": "left breast",
-     "light_on": true,
+     "light_on": false,
      "warmer_on": false,
      "warm_min": null
     },
@@ -198,10 +216,16 @@
      "reply": "Done, logged."
     }
    ],
-   "prepares": 2,
+   "pushes_while_asleep": [],
+   "noise_down_while_asleep": [],
+   "light_on_while_asleep": [],
+   "warmer_min": 0,
+   "prepares": 4,
+   "prewarms": 0,
    "skips": 0,
+   "pushes": [],
    "rewarms": 0,
-   "warmer_on": 2,
+   "warmer_on": 0,
    "live_calls": 0
   },
   {
@@ -210,7 +234,7 @@
     {
      "feed": "00:10",
      "method": "bottle",
-     "light_on": true,
+     "light_on": false,
      "warmer_on": false,
      "warm_min": null
     },
@@ -231,9 +255,9 @@
     {
      "feed": "04:54",
      "method": "left breast",
-     "light_on": true,
-     "warmer_on": true,
-     "warm_min": 26
+     "light_on": false,
+     "warmer_on": false,
+     "warm_min": null
     }
    ],
    "voice": [
@@ -258,10 +282,16 @@
      "reply": "Done, logged."
     }
    ],
-   "prepares": 2,
+   "pushes_while_asleep": [],
+   "noise_down_while_asleep": [],
+   "light_on_while_asleep": [],
+   "warmer_min": 30,
+   "prepares": 4,
+   "prewarms": 1,
    "skips": 0,
+   "pushes": [],
    "rewarms": 0,
-   "warmer_on": 2,
+   "warmer_on": 1,
    "live_calls": 0
   },
   {
@@ -284,7 +314,7 @@
     {
      "feed": "04:02",
      "method": "both breasts",
-     "light_on": true,
+     "light_on": false,
      "warmer_on": false,
      "warm_min": null
     }
@@ -306,32 +336,49 @@
      "reply": "Done, logged."
     }
    ],
-   "prepares": 1,
+   "pushes_while_asleep": [],
+   "noise_down_while_asleep": [],
+   "light_on_while_asleep": [],
+   "warmer_min": 0,
+   "prepares": 3,
+   "prewarms": 0,
    "skips": 0,
+   "pushes": [],
    "rewarms": 0,
-   "warmer_on": 1,
+   "warmer_on": 0,
    "live_calls": 0
   }
  ],
  "feeds": 20,
- "light_on_at_feed_start": 10,
+ "light_on_at_feed_start": 0,
  "bottle_feeds": 8,
  "bottle_feeds_warmer_on_at_start": 2,
- "warmer_on_for_breast_feeds": 3,
+ "warmer_on_for_breast_feeds": 1,
  "warm_min_median": 11,
  "warm_min_all": [
   26,
   1,
-  8,
-  11,
-  26
+  11
  ],
- "prepares": 10,
+ "prepares": 20,
+ "prewarms": 5,
  "rewarms": 0,
  "cry_skips": 0,
  "voice_logs": 20,
  "voice_logs_answered_done": 20,
  "live_house_calls": 0,
+ "pushes": 0,
+ "pushes_while_asleep": 0,
+ "noise_down_while_asleep": 0,
+ "light_on_while_asleep": 0,
+ "warmer_min_per_night": [
+  58,
+  3,
+  13,
+  0,
+  30,
+  0
+ ],
  "predictor_night_errors_min": [
   12,
   22,
