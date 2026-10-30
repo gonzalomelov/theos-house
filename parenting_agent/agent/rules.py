@@ -866,8 +866,15 @@ def plain_numbers(text):
     return [float(n.replace(",", ".")) for n in re.findall(r"(?<![\d:.,])\d+(?:[.,]\d+)?(?![\d:])", re.sub(r"\d{1,2}:\d{2}", " ", text or ""))]
 
 
+# A question passed on for someone else: "Mi mamá pregunta cuándo comió por última vez" (the end-to-end day, Oct 30,
+# got "No pude anotarlo" because it has no question mark and names a feed).
+RELAYED_QUESTION = re.compile(r"\b(?:pregunta|preguntan|quiere saber|quieren saber|asks|is asking|wants to know|"
+                              r"wonders)\s+(?:si\b|if\b|whether\b|cu[aá]nd[oa]|cu[aá]nt[oa]s?|qu[eé]|c[oó]mo|"
+                              r"d[oó]nde|when|how|what|where)", re.I)
+
+
 def is_question(text):
-    return "?" in text or bool(QUESTION_START.search(text.strip()))
+    return "?" in text or bool(QUESTION_START.search(text.strip())) or bool(RELAYED_QUESTION.search(text))
 
 
 def latest_span(h1, m1, h2, m2, now=None):
@@ -932,9 +939,25 @@ def note_to_english(text):
     return out
 
 
+# How many are left at home is stock, not a diaper change: "Tenemos 26 pañales en casa" also logged a wet diaper in
+# the end-to-end day on Oct 30.
+STOCK_TALK = re.compile(r"\b(?:tenemos|quedan|nos quedan|hay|compramos|compré|compre|we have|there are|we bought|"
+                        r"bought|left)\b[^.?!]{0,20}\b\d+\s+(?:pa[ñn]ales|toallitas|diapers|nappies|wipes)\b|"
+                        r"\b\d+\s+(?:pa[ñn]ales|diapers|wipes|toallitas)\s+(?:left|en casa|at home)\b|"
+                        r"\b(?:quedan pocos|quedan pocas|se (?:est[áa]n )?(?:acaban|terminan)|running low|low on|out of)\b"
+                        r"[^.?!]{0,20}\b(?:pa[ñn]ales|toallitas|diapers|nappies|wipes)\b|"
+                        r"lista de (?:las )?compras|shopping list", re.I)
+
+
+def is_stock_talk(text):
+    return bool(STOCK_TALK.search(text or ""))
+
+
 def log_kind(text):
     """The kind of log entry a parent's message reports (feeding, diaper, sleep, bath, note), in English or Spanish.
-    None for questions, health questions and anything that is not a note about the baby."""
+    None for questions, health questions, stock counts and anything that is not a note about the baby."""
+    if is_stock_talk(text):  # what is left at home is no log, the rest of the message may still be one
+        text = STOCK_TALK.sub(" ", text)
     english = note_to_english(text)
     if is_question(text) or is_question(english) or is_health(text):
         return None

@@ -205,6 +205,23 @@ class LiveGate:
                  f"{moment.astimezone(self.tz):%H:%M}.") for name, (moment, service) in latest.items()]
 
 
+DEVICE_ES = {"the study light": "la luz del estudio", "the vacuum": "la aspiradora", "the shopping list": "la lista de compras"}
+SAID_ES = {"went on, dim and warm": "se encendió, tenue y cálida", "went off": "se apagó", "was paused": "se pausó",
+           "was sent to its base": "volvió a su base"}
+
+
+def claim_es(sentence):
+    """A claim sentence from LiveGate.claims() in Spanish, for a reply in Spanish."""
+    m = re.match(r"Added to the shopping list for real at (\d\d:\d\d)\.$", sentence)
+    if m:
+        return f"Agregado a la lista de compras de verdad a las {m.group(1)}."
+    m = re.match(r"Done for real: (.+?) (went on, dim and warm|went off|was paused|was sent to its base) at (\d\d:\d\d)\.$",
+                 sentence)
+    if m:
+        return f"Hecho de verdad: {DEVICE_ES.get(m.group(1), m.group(1))} {SAID_ES[m.group(2)]} a las {m.group(3)}."
+    return sentence
+
+
 def gate_for(agent, config, client=None, clock=None):
     """One gate per agent, shared by the night feed and the day engine, so the reply guard sees every live write."""
     gate = getattr(agent, "house_live", None)

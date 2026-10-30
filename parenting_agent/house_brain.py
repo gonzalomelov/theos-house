@@ -30,6 +30,7 @@ import threading
 import time
 import urllib.parse
 
+from . import baby_phase
 from .agent import rules
 from .agent.brain import BrainError, post_json, without_thinking
 from .agent.plugins import Plugin
@@ -152,13 +153,18 @@ class MuseClient:
         if self.cfg.get("reasoning_effort"):
             body["reasoning_effort"] = self.cfg["reasoning_effort"]
         started = self.clock()
-        reply = self.post(self.url, {"Authorization": f"Bearer {key}", "Content-Type": "application/json"}, body,
-                          self.cfg["timeout_s"])
+        tin = tout = 0
+        for attempt in (1, 2):
+            reply = self.post(self.url, {"Authorization": f"Bearer {key}", "Content-Type": "application/json"}, body,
+                              self.cfg["timeout_s"])
+            usage = reply.get("usage") or {}
+            tin, tout = tin + usage.get("prompt_tokens", 0), tout + usage.get("completion_tokens", 0)
+            choice = (reply.get("choices") or [{}])[0]
+            # Cut off by the token limit (Oct 30 10:24, 6000 tokens of reasoning loop): one more try, then give up.
+            if choice.get("finish_reason") != "length":
+                break
         seconds = round(self.clock() - started, 3)
-        usage = reply.get("usage") or {}
-        tin, tout = usage.get("prompt_tokens", 0), usage.get("completion_tokens", 0)
         usd = (tin * self.cfg["price_in_per_mtok"] + tout * self.cfg["price_out_per_mtok"]) / 1_000_000
-        choice = (reply.get("choices") or [{}])[0]
         raw = without_thinking((choice.get("message") or {}).get("content"))
         meta = {"seconds": seconds, "usd": round(usd, 6), "input_tokens": tin, "output_tokens": tout, "host": self.host,
                 "model": self.cfg["model"]}
@@ -305,9 +311,16 @@ def validate(answer, now, tz, s, windows):
     return plan, [], refused, dropped
 
 
+# Words of the machinery, never for a parent: on Oct 30 the morning explanation said "invalid answer not a JSON object
+# with finish reason length" after a plan call was cut off by the token limit.
+INTERNAL_RE = re.compile(r"finish[_ ]?reason|reason length|\bJSON\b|invalid answer|not a JSON|\bMuse\b|fixed routines?|"
+                         r"\bfallback\b|token|\btrigger\b|\bschema\b|<\|", re.I)
+
+
 def text_ok(text):
-    """No advice, no secret and no contact detail. Times like 08:15-09:14 are not a run of digits."""
-    return patterns.no_advice(text) and not rules.personal_detail(re.sub(r"\b\d{1,2}:\d{2}\b", "T", text))
+    """No advice, no secret, no contact detail and nothing internal. Times like 08:15-09:14 are not a run of digits."""
+    return (patterns.no_advice(text) and not rules.personal_detail(re.sub(r"\b\d{1,2}:\d{2}\b", "T", text))
+            and not INTERNAL_RE.search(text))
 
 
 def disagrees_on_duty(summary, on_duty, parents):
@@ -349,6 +362,7 @@ class HouseBrain:
         self.say = say      # the Echo, a callable(text, now)
         self.tell = tell    # Telegram to Gonza, a callable(text, now)
         self.plan, self.done = None, set()
+        self.told_duty = None  # the parent on duty the parents were last told, so a re-plan is told only when it changes
         self.stats = {"calls": 0, "usd": 0.0, "seconds": [], "fallbacks": 0, "accepted": 0, "by_trigger": {},
                       "fallback_reasons": []}
         self.last_call, self.last_feed, self.boosting, self.last_dog = None, None, None, None
@@ -583,36 +597,58 @@ class HouseBrain:
                 "on_duty": take("on_duty", plan["on_duty"])}
 
     def announce(self, plan, trigger, now):
-        """Tonight's plan at bedtime, the one-sentence why on a re-plan, and the plan's messages to the parents."""
+        """Tonight's plan at bedtime, the one-sentence why on a re-plan, and the plan's messages to the parents. Each
+        parent reads the plan in their own language, built from the checked plan itself. Muse's own sentences (the
+        summary, the why and its messages) are English: they reach an English family only, a Spanish one keeps them
+        in the event log."""
         tz = self.tz
+        es_family = self.s.get("lang") == "es"
+        duty = plan["on_duty"]
+        if self.night_feed is not None and hasattr(self.night_feed, "on_duty"):
+            duty = self.night_feed.on_duty(now)  # a parent who asked to sleep wins over the plan's on_duty
         if trigger == "bedtime":
-            parts = [f"Tonight's plan. On duty: {plan['on_duty']}."]
+            en, es = [f"Tonight's plan. On duty: {duty}."], [f"Plan de esta noche. De turno: {duty}."]
             if plan["bottle_prewarm"]:
-                parts.append("Bottle warmer and dim light at " + ", ".join(local_hm(w["start"], tz) for w in plan["bottle_prewarm"]) + ".")
+                times = ", ".join(local_hm(w["start"], tz) for w in plan["bottle_prewarm"])
+                en.append(f"Bottle warmer and dim light at {times}.")
+                es.append(f"Calentador de mamadera (solo agua) a las {times}. La luz espera a que se despierte.")
             elif plan["bottle_prewarm"] is None:
-                parts.append("Bottle warmer on the fixed rhythm rule, Muse's times did not pass the checks.")
+                en.append("Bottle warmer on the fixed rhythm rule, Muse's times did not pass the checks.")
+                es.append("Calentador de mamadera según el ritmo de las tomas.")
             else:
-                parts.append("No bottle pre-warm armed, a cry on the microphone still gets the house ready.")
-            for name, label in (("door_quiet", "Door to silent push"), ("floor_clean", "Floor clean window"),
-                                ("white_noise_boost", "White noise up")):
+                en.append("No bottle pre-warm armed, a cry on the microphone still gets the house ready.")
+                es.append("Sin precalentado: si llora, la casa se prepara igual.")
+            for name, label, label_es in (("door_quiet", "Door to silent push", "Puerta en aviso silencioso"),
+                                          ("floor_clean", "Floor clean window", "Ventana para aspirar"),
+                                          ("white_noise_boost", "White noise up", "Ruido blanco más alto")):
                 for w in plan[name] or []:
-                    parts.append(f"{label} {local_hm(w['start'], tz)} to {local_hm(w['end'], tz)}.")
+                    en.append(f"{label} {local_hm(w['start'], tz)} to {local_hm(w['end'], tz)}.")
+                    es.append(f"{label_es} de {local_hm(w['start'], tz)} a {local_hm(w['end'], tz)}.")
             if plan["summary"]:
-                parts.append(f"Why: {plan['summary']}")
-            self.send("\n".join(parts), now, "tonight")
-            if plan["why_changed"]:
+                en.append(f"Why: {plan['summary']}")
+            self.send("\n".join(en), now, "tonight", es="\n".join(es))
+            if plan["why_changed"] and not es_family:
                 self.send(f"Plan changed: {plan['why_changed']}", now, "replan")
         elif trigger == "adapt" and plan["why_changed"]:
-            self.send(f"Plan changed: {plan['why_changed']}", now, "replan")
+            if not es_family:
+                self.send(f"Plan changed: {plan['why_changed']}", now, "replan")
+            elif self.told_duty is not None and duty != self.told_duty:
+                self.send(f"Tonight's plan changed. On duty: {duty}.", now, "replan",
+                          es=f"Cambió el plan de esta noche. De turno: {duty}.")
+        if trigger == "bedtime" or (trigger == "adapt" and plan["why_changed"]):
+            self.told_duty = duty
         for m in plan["messages"]:
             # Each parent's own line reaches their chat at bedtime (channels/push.py). The lines of the plans before each
             # nap stay in the event log: six or more a day would bury the night's message.
             self.send(f"For {m['to']}: {m['text']}" if m["to"] != "both" else m["text"], now, "plan_message", to=m["to"],
-                      quiet=trigger != "bedtime")
+                      quiet=trigger != "bedtime" or es_family)
 
-    def send(self, text, now, what, to="both", quiet=None, **fields):
+    def send(self, text, now, what, to="both", quiet=None, es=None, **fields):
         """A notify event for the parents. quiet keeps it in the event log only: by default every routine not in
-        settings "tell". The delivery (channels/push.py) sends what is not quiet to the right parent."""
+        settings "tell". The delivery (channels/push.py) sends what is not quiet to the right parent, in Spanish (es)
+        to a parent who reads Spanish."""
+        if es is not None:
+            fields["texts"] = {"en": text, "es": es}
         if not patterns.no_advice(text):
             self.bus.publish("house_brain_refused", text=text[:200], reason="failed the no-advice guard")
             return None
@@ -674,7 +710,8 @@ class HouseBrain:
         self.overnight = []
         event = self.bus.publish("house_explain", at=now.isoformat(), telegram=text, echo=echo, source=source, muse=meta,
                                  events=len(events))
-        duty = [e.get("on_duty") for e in events if e.get("on_duty")]
+        # Who was up last night comes from the night feed only: a plan made at 07:00 names tonight's parent.
+        duty = [e.get("on_duty") for e in events if e.get("on_duty") and str(e.get("what", "")).startswith("night feed")]
         self.send(text, now, "morning_explain", facts={
             "night_feeds": sum(1 for e in events if e.get("what") == "night feed prepare"),
             "real": sum(1 for e in events if e.get("happened") == "done for real"),
@@ -730,17 +767,18 @@ def compact(e):
     hm = at[11:16] if len(at) >= 16 else ""
     if kind == "house_plan":
         if not e.get("accepted"):
-            return {"at": hm, "what": "Muse plan refused by the checks, fixed routines ran", "trigger": e.get("trigger")}
+            return {"at": hm, "what": "the house kept its usual routines", "trigger": e.get("trigger")}
         p = e.get("plan") or {}
         lists = lambda name, fmt: p[name] if isinstance(p.get(name), str) else [fmt(w) for w in p.get(name) or []]
-        return {"at": hm, "what": "Muse plan armed", "trigger": e.get("trigger"), "on_duty": p.get("on_duty"),
+        return {"at": hm, "what": "house plan set", "trigger": e.get("trigger"), "on_duty": p.get("on_duty"),
                 "bottle_prewarm": lists("bottle_prewarm", lambda w: w["start"]),
                 "floor_clean": lists("floor_clean", lambda w: f"{w['start']}-{w['end']}"),
                 "door_quiet": lists("door_quiet", lambda w: f"{w['start']}-{w['end']}"),
                 "white_noise_boost": lists("white_noise_boost", lambda w: f"{w['start']}-{w['end']}"),
                 "why": p.get("why_changed") or p.get("summary")}
     if kind == "house_brain_fallback":
-        return {"at": hm, "what": "Muse not used, fixed routines ran", "reason": str(e.get("reason"))[:120]}
+        # The reason is the machinery's (a cut-off answer, a refused window): it never goes to the parents' text.
+        return {"at": hm, "what": "the house kept its usual routines"}
     if kind == "night_feed":
         keep = {k: e.get(k) for k in ("trigger", "on_duty", "expected", "to", "logged", "feed_at", "minutes") if e.get(k)}
         return {"at": hm, "what": f"night feed {e.get('step')}", **keep}
@@ -765,13 +803,10 @@ def compact(e):
 def fixed_explanation(events):
     feeds = sum(1 for e in events if e.get("what") == "night feed prepare")
     warm = sum(1 for e in events if e.get("what", "").startswith("bottle warmer on"))
-    plans = sum(1 for e in events if e.get("what") == "Muse plan armed")
-    falls = sum(1 for e in events if e.get("what", "").startswith(("Muse not used", "Muse plan refused")))
     real = sum(1 for e in events if e.get("happened") == "done for real")
     s = lambda n: "" if n == 1 else "s"
     return (f"Overnight the house got ready for {feeds} night feed{s(feeds)}, the virtual bottle warmer went on {warm} "
-            f"time{s(warm)}. Muse armed {plans} plan{s(plans)}, the fixed routines ran {falls} time{s(falls)} instead. "
-            f"{real} device write{s(real)} done for real, everything else only written down.")
+            f"time{s(warm)}. {real} device action{s(real)} done for real, everything else only written down.")
 
 
 def fixed_echo(events):
@@ -801,6 +836,10 @@ class HouseBrainPlugin(Plugin):
         self.chat = next((c.strip() for c in os.environ.get(self.s.get("chat_ids_env", "TELEGRAM_CHAT_ID"), "").split(",")
                           if c.strip()), None)
         self.spent_day, self.spent_base = None, 0.0
+        self.born = baby_phase.born(config)
+        people = getattr(agent, "people", None)
+        if people is not None and people.family_lang() and "lang" not in self.s:
+            self.s["lang"] = people.family_lang()
 
     @property
     def log(self):
@@ -838,6 +877,9 @@ class HouseBrainPlugin(Plugin):
 
     def run(self):
         while not self.stopped.is_set():
+            if not self.born:  # before the birth there is no night to plan: the log is a test child
+                self.stopped.wait(self.s["poll_s"])
+                continue
             try:
                 now = self.clock()
                 today = now.astimezone(self.tz).date()

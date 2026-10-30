@@ -49,6 +49,7 @@ import os
 import re
 import threading
 
+from . import baby_phase
 from .agent.plugins import Plugin
 from .agent.tools import Tool, schema
 from .agent.people import People
@@ -86,7 +87,12 @@ BABY_WORD = re.compile(r"\b(theo|baby|bebé|bebe|nene)\b", re.I)
 # Someone else as the subject: the dog, the cat, the speaker in English, or a person named in the config.
 OTHER_RE = re.compile(r"\b(dog|dogs|puppy|perro|perra|perrito|cat|gato|gata)\b", re.I)
 I_EN = re.compile(r"\b(I|I'm|I’m|we|we're)\b")
+# A parent asking to sleep tonight: the other parent takes the night (Oct 30, Ceci: "necesito dormir esta noche").
+SLEEP_ASK = re.compile(r"\b(?:necesito|quiero|preciso|dejame|déjame|d[ée]jenme)\s+dormir\b|\bme dejan dormir\b|"
+                       r"\b(?:I )?need (?:to|some) sleep\b|\blet me sleep\b|\bI want to sleep\b", re.I)
 SIGNAL = {"cry": "a cry was heard", "parent": "a parent said so", "button": "he's up was tapped", "log": "it is in the log"}
+SIGNAL_ES = {"cry": "se oyó un llanto", "parent": "lo avisó un padre", "button": "tocaron se despertó",
+             "log": "está en el registro"}
 QUESTION_RE = re.compile(r"[?¿]|^\s*(when|what|how|is|was|did|does|should|can|will|cu[áa]ndo|qu[ée]|c[óo]mo)\b", re.I)
 
 
@@ -145,6 +151,8 @@ class NightFeed(Plugin):
         # With a plan the silent pre-warm runs at the planned moments instead of the rhythm lead. The awake signals,
         # the warmer's caps and the wind-down stay as they are. None runs the fixed rules.
         self.plan = None
+        self.born = baby_phase.born(config)
+        self.sleep_ask = None  # {"night": the evening's date, "person": who asked to sleep, "label": their rota label}
         self.lock = threading.RLock()  # a step publishes on the bus, a handler may come back in on the same thread
         self.stopped = threading.Event()
         agent.bus.subscribe(self.on_sound, ["sound"])
@@ -191,6 +199,8 @@ class NightFeed(Plugin):
         return None
 
     def tick(self, now):
+        if not self.born:
+            return None  # before the birth the log is a test child: nothing to warm, nobody to wake
         with self.lock:
             self.warmer.tick(now)
             self.night_cap(now)
@@ -245,16 +255,49 @@ class NightFeed(Plugin):
         return None
 
     def on_message(self, event):
-        what = awake_message(event.get("text"), self.others)
+        if not self.born:
+            return
         now = self.clock()
+        if SLEEP_ASK.search(str(event.get("text") or "")):
+            self.asked_to_sleep(event.get("person"), now)
+            return
+        what = awake_message(event.get("text"), self.others)
         if what is None or not self.is_night(now):
             return
         with self.lock:
-            self.awake(now, "parent", f"a parent said \"{str(event.get('text'))[:80]}\"", push=what == "awake")
+            # The parent who says he is up already knows: the house gets ready, the push goes only to someone else.
+            duty = self.people.person(self.on_duty(now))
+            push = what == "awake" and not (event.get("person") and event.get("person") == duty)
+            self.awake(now, "parent", f"a parent said \"{str(event.get('text'))[:80]}\"", push=push,
+                       by=event.get("person"))
+
+    @staticmethod
+    def night_of(now, tz):
+        """The evening a night belongs to: 22:00 and 03:00 are the same night."""
+        return (now.astimezone(tz) - datetime.timedelta(hours=12)).date()
+
+    def asked_to_sleep(self, person, now):
+        """A parent asked to sleep tonight: the other parent is on duty, and is told once."""
+        label = self.people.label(person) if person else None
+        others = [p for p in self.rhythm["parents"] if p != label]
+        local = now.astimezone(self.tz)
+        if label is None or len(others) != 1 or 6 <= local.hour < 12:
+            return None
+        night = self.night_of(now, self.tz)
+        if self.sleep_ask and self.sleep_ask["night"] == night and self.sleep_ask["person"] == person:
+            return None
+        self.sleep_ask = {"night": night, "person": person, "label": label, "on_duty": others[0]}
+        asker, duty = self.people.display(label), self.people.display(others[0])
+        self.event("handover", now, asked=asker, on_duty=duty)
+        texts = {"en": f"{asker} asked to sleep tonight, so you are on duty tonight, {duty}. Night pushes go to you only.",
+                 "es": f"{asker} pidió dormir esta noche, así que esta noche estás de turno vos, {duty}. "
+                       "Los avisos de la noche te llegan solo a vos."}
+        return self.agent.bus.publish("notify", text=texts["en"], texts=texts, parent=others[0], source="night_feed",
+                                      routine="handover")
 
     def on_awake(self, event):
         now = self.clock()
-        if not self.is_night(now):
+        if not self.born or not self.is_night(now):
             return
         with self.lock:
             self.awake(now, "button", f"{event.get('by') or 'a parent'} tapped he's up")
@@ -263,7 +306,7 @@ class NightFeed(Plugin):
         if event.get("label") != "cry" or event.get("phase") not in ("start", "ongoing"):
             return
         now = self.clock()
-        if not self.is_night(now):
+        if not self.born or not self.is_night(now):
             return
         with self.lock:
             if self.episode:
@@ -302,7 +345,8 @@ class NightFeed(Plugin):
             return
         self.event("rewarm", now, on_duty=ep["parent"], was_off=was_off)
         if was_off:
-            self.push(ep["parent"], f"Crying now. Bottle warmer back on. {ep['parent']} is on duty.", now)
+            self.push(ep["parent"], f"Crying now. Bottle warmer back on. {ep['parent']} is on duty.", now,
+                      es="Está llorando. Calentador de mamadera encendido de nuevo (prueba en seco).")
 
     # The warmer and its night
 
@@ -337,6 +381,9 @@ class NightFeed(Plugin):
                 if w["at"] < now]
 
     def on_duty(self, now):
+        ask = self.sleep_ask
+        if ask and ask["night"] == self.night_of(now, self.tz):
+            return ask["on_duty"]
         if self.plan is not None and self.plan.get("on_duty") in self.rhythm["parents"]:
             return self.plan["on_duty"]
         return patterns.next_on_duty(self.handled(now), self.rhythm["parents"])
@@ -350,7 +397,8 @@ class NightFeed(Plugin):
         now = now or self.clock()
         label = self.on_duty(now)
         handled = self.handled(now)
-        by_plan = self.plan is not None and self.plan.get("on_duty") in self.rhythm["parents"]
+        asked = self.sleep_ask is not None and self.sleep_ask["night"] == self.night_of(now, self.tz)
+        by_plan = asked or (self.plan is not None and self.plan.get("on_duty") in self.rhythm["parents"])
         return {"on_duty": self.people.display(label), "person": self.people.person(label),
                 "counts": {self.people.display(p): handled.count(p) for p in self.rhythm["parents"]},
                 "by_plan": by_plan, "wakeups": len(handled)}
@@ -394,7 +442,22 @@ class NightFeed(Plugin):
                    expected=self.hhmm(ep["expected"]), computed_from=(nxt or {}).get("computed_from", []))
         return ep
 
-    def awake(self, now, trigger, why, push=None):
+    def note_handled(self, now, who):
+        """One "Night wake-up handled by Gonza" note in the log per awake episode: the night rota and the morning
+        message count night wake-ups from these notes, and on Oct 30 the end-to-end day had none, so Gonza read "no
+        te levantaste" after a night up and the rota put him on duty again."""
+        name = self.people.display(who)
+        log = getattr(self.agent, "baby_log", None)
+        if not name or log is None or self.episode.get("noted"):
+            return
+        self.episode["noted"] = True
+        try:
+            entry = log.add("note", {"text": f"Night wake-up handled by {name}"}, ts=now.isoformat(timespec="seconds"))
+            self.event("handled", now, by=name, entry=(entry or {}).get("id"))
+        except Exception as error:  # noqa: BLE001 the house still gets ready when the log cannot be written
+            self.event("handled", now, by=name, error=str(error)[:160])
+
+    def awake(self, now, trigger, why, push=None, by=None):
         """A real awake signal. Opens the night feed, or turns a silent pre-warm into it, once."""
         if self.episode and self.episode["awake"]:
             return self.episode
@@ -403,6 +466,7 @@ class NightFeed(Plugin):
             self.open_episode(now, nxt, f"{trigger}@{now.isoformat()}")
         ep = self.episode
         ep.update(awake=True, awake_at=now, parent=self.on_duty(now))
+        self.note_handled(now, by or ep["parent"])
         if trigger in ("cry", "button") or (trigger == "parent" and push is not False):
             push = True
         self.event("prepare", now, trigger=trigger, reason=why, on_duty=ep["parent"], expected=self.hhmm(ep["expected"]))
@@ -418,7 +482,9 @@ class NightFeed(Plugin):
         light = self.light(now, True, trigger, why)
         noise = self.noise_down(now)
         if push:
-            self.push(ep["parent"], self.awake_text(trigger, light, warm, noise, ep["parent"]), now)
+            name = self.people.display(ep["parent"])
+            self.push(ep["parent"], self.awake_text(trigger, light, warm, noise, ep["parent"]), now,
+                      es=self.awake_text_es(trigger, light, warm, noise, name))
         return ep
 
     @staticmethod
@@ -431,6 +497,16 @@ class NightFeed(Plugin):
         dry = [w for w, on in (("bottle warmer on", warm), ("white noise down", noise)) if on]
         rest = f" {' and '.join(dry).capitalize()}: only written down (dry run)." if dry else ""
         return f"He is awake, {SIGNAL[trigger]}. {said}{rest} {parent} is on duty."
+
+    @staticmethod
+    def awake_text_es(trigger, light, warm, noise, name):
+        said = {"live": "Luz del estudio encendida, tenue y cálida: de verdad.",
+                "failed": "Luz del estudio: se intentó de verdad, Home Assistant no la tomó.",
+                "unavailable": "Luz del estudio: no disponible en Home Assistant, no se movió nada.",
+                "dry": "Luz del estudio tenue: solo anotada (prueba en seco)."}[light]
+        dry = [w for w, on in (("calentador de mamadera encendido", warm), ("ruido blanco más bajo", noise)) if on]
+        rest = f" {' y '.join(dry).capitalize()}: solo anotado (prueba en seco)." if dry else ""
+        return f"Se despertó, {SIGNAL_ES[trigger]}. {said}{rest} Estás de turno, {name}."
 
     def light(self, now, on, signal, why):
         """The study light, live through the gate when it allows, else the dry path. Returns live, failed or dry."""
@@ -488,7 +564,7 @@ class NightFeed(Plugin):
         if device is not None and before is not None and device.state["on"]:
             device.level(before, "night feed over, back to its level")
 
-    def push(self, parent, text, now):
+    def push(self, parent, text, now, es=None):
         if not patterns.no_advice(text):
             self.event("refused", now, reason="push text failed the no advice guard", text=text)
             return None
@@ -496,7 +572,9 @@ class NightFeed(Plugin):
         self.event("push", now, to=parent, via=target, text=text)
         if target == "gonza":
             return self.house("push_gonza", text=text, title="Night feed")
-        return self.agent.bus.publish("notify", text=text, parent=parent, source="night_feed")
+        texts = {"en": text, "es": es} if es else None
+        return self.agent.bus.publish("notify", text=text, parent=parent, source="night_feed",
+                                      **({"texts": texts} if texts else {}))
 
     # After
 
@@ -524,7 +602,9 @@ class NightFeed(Plugin):
         if not ep["reminded"] and now >= max(ep["expected"], ep["awake_at"]) + datetime.timedelta(minutes=self.s["reminder_min"]):
             ep["reminded"] = True
             self.push(ep["parent"], "No feed logged yet for the night feed. Say \"baby agent, fed 90 ml\" to the Echo, "
-                                    "or send a voice note, and I log it.", now)
+                                    "or send a voice note, and I log it.", now,
+                      es="Todavía no hay toma anotada de esta noche. Mandame un audio o escribime, por ejemplo "
+                         "\"le di 90 ml\", y la anoto.")
         if now >= ep["awake_at"] + datetime.timedelta(minutes=self.s["give_up_min"]):
             return self.wind_down(now, "no feed logged, closed without one", None)
         return None

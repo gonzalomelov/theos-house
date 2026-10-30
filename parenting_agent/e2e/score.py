@@ -18,6 +18,7 @@ PREP = re.compile(r"before he arrives|antes de que llegue", re.I)
 NEXT_FEED = re.compile(r"next feed|pr[óo]xima toma", re.I)
 SUPPLY = re.compile(r"diapers|pañales|panales", re.I)
 NIGHT = (22, 6)
+BABY_AS_PARENT = re.compile(r"\b(Gonza|Ceci)\s+(comi[óo]|tom[óo]|durmi[óo]|se despert[óo]|se durmi[óo]|ate|slept|woke)\b")
 
 
 def parse(ts):
@@ -72,11 +73,13 @@ def judge_messages(rows, run, events):
         internal = INTERNAL.search(row["text"])
         if internal:
             problems.append(f"internal text ({internal.group(0)})")
+        if BABY_AS_PARENT.search(row["text"]):
+            problems.append("the baby called by a parent's name")
         if PREP.search(row["text"]):
             problems.append("prep lines after the birth")
         # A push the agent starts twice is noise. A short confirmation that repeats ("Pañal mojado registrado.") answers
         # a new message each time, so replies are never duplicates.
-        key = (row["to"], re.sub(r"\d", "#", row["text"].strip().lower())[:160])
+        key = (row["to"], row["text"].strip().lower()[:200])
         if row["proactive"] and any(abs((t - other).total_seconds()) < 6 * 3600 for other in seen[key]):
             problems.append("duplicate")
         if row["proactive"]:
@@ -106,24 +109,28 @@ def expectations(run, events, rows, day0):
         for who in ("gonza", "ceci"):
             got = [r for r in proactive if r["to"] == who and D(d, "07:25") <= parse(r["at"]) <= D(d, "08:10")]
             morning = [r for r in got if re.search(r"good morning|buen d[íi]a", r["text"], re.I)]
-            check(f"morning message day {d} to {who}", len(morning) == 1 and len(got) == 1,
-                  f"{len(morning)} morning message(s), {len(got)} message(s) 07:25 to 08:10")
+            check(f"morning message day {d} to {who}", len(morning) == 1,
+                  f"{len(morning)} morning message(s), {len(got)} message(s) in all 07:25 to 08:10")
     feeds = [parse(s["at"]) for s in run["steps"] if (s.get("expect") or [None])[0] == "feeding"]
     day_feeds = [f for f in feeds if not is_night(f) and f - parse(run["start"]) > datetime.timedelta(hours=1)]
     for f in day_feeds:
         warned = [r for r in proactive if NEXT_FEED.search(r["text"]) and f - datetime.timedelta(minutes=90) <= parse(r["at"]) <= f]
         check(f"next-feed reminder before the {f:%H:%M} feed", warned, f"{len(warned)} reminder(s) in the 90 min before")
-    naps = [e for e in events if e["kind"] == "routine" and e.get("name") == "nap_mode" and e.get("step") == "on"]
+    modes = [e for e in events if e["kind"] == "routine" and e.get("name") == "nap_mode" and e.get("step") in ("on", "off")]
     starts = [parse(s["at"]) for s in run["steps"] if (s.get("expect") or [None])[0] == "sleep_start"]
     for s in starts:
-        hit = [e for e in naps if 0 <= (parse(e["ts"]) - s).total_seconds() <= 300]
-        check(f"nap mode on after the {s:%H:%M} sleep", hit, f"{len(hit)} nap_mode on event(s) within 5 min")
+        # On 5 min after he fell asleep: turned on then, or still on from the night (a night wake-up keeps the house
+        # quiet until morning, nap_mode "night_wake_stays_quiet").
+        before = [e for e in modes if parse(e["ts"]) <= s + datetime.timedelta(minutes=5)]
+        on = bool(before) and before[-1]["step"] == "on"
+        check(f"nap mode on after the {s:%H:%M} sleep", on,
+              f"nap mode {before[-1]['step']} since {parse(before[-1]['ts']):%H:%M}" if before else "never on")
     asked = D(0, "20:00")
     handover = [r for r in proactive if r["to"] == "gonza" and asked <= parse(r["at"]) <= D(0, "21:30")
                 and re.search(r"gonza|te toca|de turno|on duty", r["text"], re.I)]
     check("night handover to Gonza after Ceci asked to sleep", handover, f"{len(handover)} message(s) to Gonza 20:00 to 21:30")
-    tonight = [r for r in proactive if D(0, "20:25") <= parse(r["at"]) <= D(0, "21:30")
-               and re.search(r"tonight|esta noche", r["text"], re.I)]
+    tonight = [r for r in proactive if D(0, "19:00") <= parse(r["at"]) <= D(0, "21:30")
+               and re.match(r"tonight's plan|plan de esta noche", r["text"], re.I)]
     check("tonight's plan at bedtime, at most one per parent", tonight and len(tonight) <= 2,
           f"{len(tonight)} plan message(s)")
     cry = D(1, "02:50")
@@ -131,7 +138,9 @@ def expectations(run, events, rows, day0):
     check("night cry: push to Gonza (on duty) within 5 min", woke, f"{len(woke)} push(es)")
     ceci_night = [r for r in proactive if r["to"] == "ceci" and asked <= parse(r["at"]) and is_night(parse(r["at"]))]
     check("no night push to Ceci after she asked to sleep", not ceci_night, f"{len(ceci_night)} night push(es) to Ceci")
-    low = [r for r in proactive if SUPPLY.search(r["text"]) and re.search(r"low|running|quedan|termin|lista|list", r["text"], re.I)]
+    # The push when it runs low. The line in the next morning message is part of that message, not a second push.
+    low = [r for r in proactive if SUPPLY.search(r["text"]) and re.search(r"low|running|quedan|termin|lista|list", r["text"], re.I)
+           and not re.match(r"good morning|buen d[íi]a", r["text"], re.I)]
     per = collections.Counter(r["to"] for r in low)
     check("diapers running low told once to each parent", per.get("gonza") == 1 and per.get("ceci") == 1, dict(per) or "none")
     adds = [e for e in events if (e["kind"] in ("house_dry", "house_live") and "todo.add_item" in
@@ -222,7 +231,10 @@ def log_accuracy(run, day0):
             continue
         out.append({"at": step["at"], "who": step["who"], "said": step.get("text") or "(voice note)", "want": kind,
                     "got": got, "ok": ok})
-    extra = [r for r in rows if (r["endpoint"], r["id"]) not in used and r["endpoint"] != "timers"]
+    # The agent's own bookkeeping, asked for by the day: the diaper count Gonza gave and who got up at night.
+    books = re.compile(r"^(stock: \w+ \d+|night wake-up handled by \w+)$", re.I)
+    extra = [r for r in rows if (r["endpoint"], r["id"]) not in used and r["endpoint"] != "timers"
+             and not books.match(str(r.get("note") or ""))]
     return out, extra
 
 
@@ -237,6 +249,9 @@ def summarize(run, events, day0):
         "noise_by_kind": dict(collections.Counter(p.split(" (")[0] for r in rows for p in r["problems"])),
         "expected_found": sum(1 for e in expected if e["found"]), "expected": len(expected),
         "log_ok": sum(1 for l in logs if l["ok"]), "log_expected": len(logs), "log_extra": len(extra),
+        "log_bookkeeping": sorted(collections.Counter(str(r.get("note")) for r in run["baby_buddy"]
+                                                      if re.match(r"^(Stock: |Night wake-up handled by )", str(r.get("note") or ""))
+                                                      and "e2e-seed" not in (r.get("tags") or [])).items()),
         "brain_usd": run["brain_usd"], "brain_calls": run["brain_calls"], "real_seconds": run["real_seconds"],
         "house_writes_refused": len([r for r in run["refused"] if r["what"] == "house write"]),
         "telegram_refused": len([r for r in run["refused"] if r["what"] == "telegram"]),

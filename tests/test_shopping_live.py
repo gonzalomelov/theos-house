@@ -128,9 +128,11 @@ class GateTest(unittest.TestCase):
         ha = ShopHA()
         g, _ = gate(ha)
         reply = "Listo, agregué pañales a la lista de compras."
-        self.assertIn("Dry run", dry_reply(reply, g.claims()))
+        self.assertIn("Prueba en seco", dry_reply(reply, g.claims()))  # a Spanish reply gets the Spanish note
         g.write("shopping", "todo.add_item", hl.SHOPPING, {"item": "Pañales"}, "asked", "parent_asked")
-        self.assertIn("Added to the shopping list for real", dry_reply(reply, g.claims()))
+        self.assertIn("Agregado a la lista de compras de verdad", dry_reply(reply, g.claims()))
+        self.assertIn("Added to the shopping list for real", dry_reply("Done, I added diapers to the shopping list.",
+                                                                        g.claims()))
 
 
 class SuppliesRoutineTest(unittest.TestCase):

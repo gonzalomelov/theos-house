@@ -66,8 +66,12 @@ DONE_WORDS = re.compile(r"\b(start(ed|ing)?|running|runs|paused|stopped|docked|d
                         r"sent|done|added|arranc\w*|prend\w*|apagu\w*|paus\w*|encend\w*|agregu\w*|agregad\w*|"
                         r"anot\w*)\b", re.I)
 OTHERS_DRY_NOTE = "Everything else was only written down (dry run), nothing else moved in the house."
+# The same notes for a reply in Spanish: on Oct 30 the end-to-end day found the English note under a Spanish answer.
+DRY_NOTE_ES = "Prueba en seco: solo quedó anotado, no se movió nada en la casa."
+OTHERS_DRY_NOTE_ES = "Todo lo demás solo quedó anotado (prueba en seco), no se movió nada más en la casa."
 LIVE_WORDS = re.compile(r"for real|\(live\)", re.I)
-DRY_WORDS = re.compile(r"dry run|written down|simulated|simulad|nothing moved|not now|did not|didn't|no real|already on the|ya est[áa] en la|"
+DRY_WORDS = re.compile(r"dry run|written down|simulated|simulad|nothing moved|prueba en seco|solo (?:qued[óo] )?anotad|"
+                       r"no se movi[óo]|not now|did not|didn't|no real|already on the|ya est[áa] en la|"
                        r"stays docked|waits? for|reply yes|\?", re.I)
 # A note that puts him in a room of the house ("tummy time on the play mat in the living room"). A mess note such as
 # "crumbs on the sofa" says where the mess is, not where he is.
@@ -131,14 +135,17 @@ def dry_reply(text, live=()):
     if not (text and DEVICE_WORDS.search(text) and DONE_WORDS.search(text)) or DRY_WORDS.search(text) \
             or LIVE_WORDS.search(text):
         return text
-    hits = [(words, sentence) for words, sentence in live if words.search(text)]
+    from .agent.rules import looks_spanish
+    from .house_live import claim_es
+    es = looks_spanish(text)
+    hits = [(words, claim_es(sentence) if es else sentence) for words, sentence in live if words.search(text)]
     if not hits:
-        return f"{text.rstrip()} {DRY_NOTE}"
+        return f"{text.rstrip()} {DRY_NOTE_ES if es else DRY_NOTE}"
     rest = text
     for words, _ in hits:
         rest = words.sub("", rest)
     out = f"{text.rstrip()} {' '.join(sentence for _, sentence in hits)}"
-    return f"{out} {OTHERS_DRY_NOTE}" if DEVICE_WORDS.search(rest) else out
+    return f"{out} {OTHERS_DRY_NOTE_ES if es else OTHERS_DRY_NOTE}" if DEVICE_WORDS.search(rest) else out
 
 
 def add_dry_guard(agent):

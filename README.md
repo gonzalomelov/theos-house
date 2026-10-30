@@ -96,6 +96,10 @@ ssh -f -N -L 127.0.0.1:18790:127.0.0.1:8790 vostro   # see docs/deploy-babybuddy
 
 The agent runs 24/7 on the Vostro in its own walled-off container: it reaches Baby Buddy and Home Assistant through a relay and the brain and Telegram through an allowlisting proxy, and nothing else. It restarts on its own, keeps its data in a volume, and house actions stay dry run. Deploy, update, logs, stop and rollback with `sh deploy/agent.sh`, see `docs/deploy-agent.md`.
 
+## One day and night, end to end (issue #148)
+
+`python -m parenting_agent.e2e` runs the family agent as deployed (its config, every plug-in and loop, Muse, Baby Buddy, Home Assistant reads) through a first-month day and night on a fast clock, with Telegram captured and house writes forced dry, and scores what a parent would feel. On Oct 30, before the fixes: 11 of 34 things a parent must get, 16 of 55 messages noise (mostly English to a Spanish parent). After: 30 of 34, 0 of 58 noise, 25 of 25 log entries right. See `results/e2e-day/README.md`.
+
 ## Baby log in Baby Buddy (issue #2)
 
 Notes like "bottle, 120 ml", "wet and dirty diaper", "she napped from 14:00 to 15:00" or "just gave her a bath" become Baby Buddy entries. Questions like "when was the last dirty diaper?" or "how much did she drink today?" are answered from Baby Buddy through the `baby_summary` and `read_baby_log` tools. Health questions get a kind refusal and a suggestion to call the pediatrician. Notes arrive as text or as Telegram voice notes: Muse Spark Open hears the voice note itself and the answer comes back as text and as a voice note in Meta's MMS-TTS voice, see `docs/voice.md`.
@@ -169,7 +173,7 @@ Home Assistant is reached through `ssh -f -N -L 127.0.0.1:18123:127.0.0.1:8123 v
 
 ## Before he arrives (issue #56)
 
-Theo is not born yet, so the family agent helps get ready: prep lists for the nursery (from the home twin's measured plan), the hospital bag, the car seat and the white noise machine, appointments, a countdown to the due date, and one short morning nudge to Gonza on Telegram. Logistics only, never medical. Every message is a `turn` event with the person who sent it, so the daily-use KR is scored from the agent's own log. See `docs/before-he-arrives.md`.
+Theo is not born yet, so the family agent helps get ready: prep lists for the nursery (from the home twin's measured plan), the hospital bag, the car seat and the white noise machine, appointments, a countdown to the due date, and one short morning nudge to Gonza on Telegram. Logistics only, never medical. Every message is a `turn` event with the person who sent it, so the daily-use KR is scored from the agent's own log. See `docs/before-he-arrives.md`. Until the birth the family agent runs in prep mode (`"baby": {"born": false}`): the baby log it reads is a test child, so no routine computed from it reaches the parents. One config change at birth switches the baby routines on (`parenting_agent/baby_phase.py`).
 
 ## Car seat coach (issue #30)
 

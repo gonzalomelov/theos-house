@@ -1,10 +1,11 @@
 """The family's people: who they are, what the night rota calls them, and their chats.
 
 From the "people" block of the agent config:
-    "people": {"gonza": {"name": "Gonza", "rota": "Parent A", "chat_ids_env": "TELEGRAM_CHAT_ID"},
-               "ceci": {"name": "Ceci", "rota": "Parent B", "chat_ids_env": "TELEGRAM_CECI_CHAT_ID"}}
+    "people": {"gonza": {"name": "Gonza", "rota": "Parent A", "chat_ids_env": "TELEGRAM_CHAT_ID", "lang": "es"},
+               "ceci": {"name": "Ceci", "rota": "Parent B", "chat_ids_env": "TELEGRAM_CECI_CHAT_ID", "lang": "es"}}
 The night rota (rhythm/patterns.py) and the house brain name parents with rota labels ("Parent A"), so the log and the
-Muse prompt keep no names. Everything a parent reads says the name instead. A person with no name shows as the key
+Muse prompt keep no names. Everything a parent reads says the name instead, in the person's "lang" ("es" or "en"):
+a push that carries "texts" ({"en": ..., "es": ...}) reaches each person in their own language (channels/push.py). A person with no name shows as the key
 capitalized, a rota label with no person stays the label.
 """
 import re
@@ -25,6 +26,16 @@ class People:
         if spec is None:
             return None
         return spec.get("name") or person.capitalize()
+
+    def lang(self, person):
+        """The language a person reads, "es" or "en", from "lang" in the people block. None when it is not set."""
+        lang = (self.spec.get(person) or {}).get("lang")
+        return lang if lang in ("es", "en") else None
+
+    def family_lang(self):
+        """The family's language when every person sets the same one, else None."""
+        langs = {self.lang(p) for p in self.spec}
+        return langs.pop() if len(langs) == 1 else None
 
     def label(self, person):
         return (self.spec.get(person) or {}).get("rota")

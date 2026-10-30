@@ -71,6 +71,18 @@ class BabyBuddyLog:
             path = page["next"].replace(self.url, "") if page.get("next") else None
         return rows
 
+    def open_sleeps(self, child):
+        """A sleep the agent started ("asleep") is a Baby Buddy timer until he wakes: a sleep with a start and no end,
+        so nap mode and the house brain see it while it goes on, not only once it is over."""
+        rows = []
+        for row in self._all(f"/api/timers/?child={child}&limit=50"):
+            if row.get("name") == "sleep" and row.get("start") and not row.get("end"):
+                if self.tag and self.tag not in (row.get("tags") or []):
+                    continue
+                rows.append({"kind": "sleep", "ref": f"timers/{row['id']}", "start": row["start"], "end": None,
+                             "nap": None, "tags": []})
+        return rows
+
     def child_id(self):
         for child in self._all("/api/children/"):
             if child["first_name"] == self.child_name:
@@ -79,7 +91,7 @@ class BabyBuddyLog:
 
     def entries(self):
         child = self.child_id()
-        rows = []
+        rows = self.open_sleeps(child)
         for kind, endpoint in ENDPOINTS.items():
             for row in self._all(f"/api/{endpoint}/?child={child}&limit=500"):
                 if self.tag and self.tag not in (row.get("tags") or []):

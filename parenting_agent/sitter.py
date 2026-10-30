@@ -71,10 +71,11 @@ def _hm(minutes):
 
 
 def load_notes(path):
-    """The family notes file's handover block only. Missing file: the example with placeholders."""
+    """The family notes file's handover block only. No path: the example with placeholders (tests, the demo). A path
+    that does not exist yet: no placeholders at all, so a real brief never shows a made-up phone number."""
+    if path and not Path(os.path.expanduser(path)).exists():
+        return {"baby_name": "Theo", "pronoun": "he", "where": [], "contacts": [], "pediatrician": {}, "emergency": "911"}
     path = Path(os.path.expanduser(path)) if path else EXAMPLE_NOTES
-    if not path.exists():
-        path = EXAMPLE_NOTES
     data = json.loads(path.read_text())
     handover = data.get("handover") or {}
     return {"baby_name": data.get("baby_name") or "the baby", "pronoun": data.get("pronoun") or "he",
@@ -172,8 +173,61 @@ def facts(entries, now, start, end, tz):
     return out
 
 
-def brief(entries, now, sitter, start, end, tz, notes):
+def _feed_words_es(last):
+    """The last feed in Spanish, from the facts' last_feed (method, amount and the English words)."""
+    method, amount = (last.get("method") or "").lower(), last.get("amount_ml")
+    if "breast" in method and "bottle" not in method:
+        side = {"left breast": "lado izquierdo", "right breast": "lado derecho", "both breasts": "los dos lados"}.get(method, "")
+        return "teta" + (f" ({side})" if side else "")
+    milk = "leche materna" if "breast milk" in (last.get("words") or "") else "fórmula"
+    return f"mamadera de {milk}" + (f", {amount:g} ml" if amount else "")
+
+
+def brief_es(f, sitter, start, end, notes):
+    """The same handover in Spanish (Uruguay), from the same facts."""
+    name, hhmm, dropped = notes["baby_name"], patterns.hhmm, []
+
+    def keep(lines, text):
+        if safe_line(text):
+            lines.append("- " + text)
+        else:
+            dropped.append(text)
+
+    food, sleep, diapers, where, reach = [], [], [], [], []
+    if "last_feed" in f:
+        keep(food, f"Última toma a las {hhmm(f['last_feed']['at'])}, {_feed_words_es(f['last_feed'])}.")
+    else:
+        keep(food, "Todavía no hay tomas anotadas hoy.")
+    if "next_feed" in f:
+        keep(food, f"La próxima toma se espera cerca de las {hhmm(f['next_feed']['at'])}. Viene comiendo cada "
+                   f"{_hm(f['next_feed']['gap_min'])} más o menos.")
+    keep(food, f"Hoy van {f['today']['feeds']} tomas" + (f", {f['today']['bottle_ml']} ml de mamadera."
+                                                         if f["today"]["bottle_ml"] else "."))
+    if "asleep_since" in f:
+        keep(sleep, f"Está dormido desde las {hhmm(f['asleep_since'])}.")
+    if "last_diaper" in f:
+        kind = {"wet and dirty": "mojado y con caca", "dirty": "con caca", "wet": "mojado"}[f["last_diaper"]["kind"]]
+        keep(diapers, f"Último pañal a las {hhmm(f['last_diaper']['at'])}, {kind}.")
+    for line in notes["where"]:
+        keep(where, line.rstrip(".") + ".")
+    for c in notes["contacts"]:
+        keep(reach, f"{c.get('name', 'Padres')}: {c.get('phone', 'sin número')}.")
+    ped = notes["pediatrician"]
+    pediatra = f"a {ped.get('name') or 'la pediatra'} al {ped['phone']}" if ped.get("phone") else "a la pediatra"
+    parts = [f"Hola {sitter}, gracias por cuidar a {name} de {hhmm(start)} a {hhmm(end)}."]
+    for title, lines in (("Comida", food), ("Sueño", sleep), ("Pañales", diapers), ("Dónde están las cosas", where),
+                         ("Cómo ubicarnos", reach)):
+        if lines:
+            parts.append(title + "\n" + "\n".join(lines))
+    parts.append("Salud\n- Por cualquier cosa de su salud, llamanos primero. Si no nos ubicás, llamá " + pediatra
+                 + f". En una emergencia llamá al {notes['emergency']}.")
+    return {"text": "\n\n".join(parts), "dropped": dropped, "facts": f, "computed_from": f["refs"]}
+
+
+def brief(entries, now, sitter, start, end, tz, notes, lang="en"):
     """The handover text and what was left out. Lines that fail safe_line are dropped and reported to the parent."""
+    if lang == "es":
+        return brief_es(facts(entries, now, start, end, tz), sitter, start, end, notes)
     he, his, him = PRONOUNS.get(notes["pronoun"], PRONOUNS["he"])
     f = facts(entries, now, start, end, tz)
     name, hhmm = notes["baby_name"], patterns.hhmm
@@ -328,12 +382,43 @@ class GuestSession:
         feed_text = f"{len(feeds)} feed{'s' if len(feeds) != 1 else ''}" + (f" ({ml} ml)" if ml else "")
         parts.append(f"Logged: {feed_text}, {len(diapers)} diaper{'s' if len(diapers) != 1 else ''}"
                      + (f" ({wet} wet, {dirty} dirty)" if diapers else "") + ".")
+        seen = self.window_log()
+        if seen is not None and (seen["feeds"] > len(feeds) or seen["diapers"] > len(diapers)):
+            parts.append(f"The log for those hours, whoever wrote it: {seen['feeds']} feed{'s' if seen['feeds'] != 1 else ''}"
+                         + (f" ({seen['ml']} ml)" if seen["ml"] else "")
+                         + f", {seen['diapers']} diaper{'s' if seen['diapers'] != 1 else ''}.")
         parts.append(f"{self.sitter} asked {self.questions} question{'s' if self.questions != 1 else ''}.")
         if self.health_questions:
             quoted = ", ".join(f'"{q[:80]}"' for q in self.health_questions)
             parts.append(f"Health questions, I told {self.sitter} to call you: {quoted}.")
         if self.denied:
             parts.append(f"Refused for the guest: {', '.join(sorted(set(self.denied)))}.")
+        return " ".join(parts)
+
+    def window_log(self):
+        """What the log holds for the window, whoever wrote it: the sitter here, a parent in the family chat."""
+        try:
+            rows = self.baby_log.entries(since=self.start.isoformat(timespec="seconds"), limit=100)
+        except Exception:  # noqa: BLE001 a log that cannot be read leaves the summary to what the guest logged
+            return None
+        rows = [r for r in rows if parse(r["ts"]) <= self.end]
+        feeds = [r for r in rows if r["kind"] == "feeding"]
+        diapers = [r for r in rows if r["kind"] == "diaper"]
+        ml = round(sum(float(r["details"].get("amount_ml") or 0) for r in feeds))
+        return {"feeds": len(feeds), "ml": ml, "diapers": len(diapers)}
+
+    def summary_es(self):
+        span = f"{patterns.hhmm(self.start)} a {patterns.hhmm(self.end)}"
+        seen = self.window_log()
+        parts = [f"{self.sitter} cuidó a {self.baby} de {span}."]
+        if seen is not None:
+            parts.append(f"En el registro de esas horas: {seen['feeds']} toma{'s' if seen['feeds'] != 1 else ''}"
+                         + (f" ({seen['ml']} ml)" if seen["ml"] else "")
+                         + f", {seen['diapers']} pañal{'es' if seen['diapers'] != 1 else ''}.")
+        if self.logged:
+            parts.append(f"{self.sitter} anotó {len(self.logged)} por acá.")
+        if self.health_questions:
+            parts.append(f"Preguntó {len(self.health_questions)} cosa(s) de salud: le dije que los llame a ustedes.")
         return " ".join(parts)
 
     def close(self):
@@ -351,6 +436,8 @@ class SitterHandover(Plugin):
     def __init__(self, agent, config, log=None, clock=None, sitter_messenger=None, contacts=None):
         super().__init__(agent, config)
         self.cfg = {**DEFAULTS, **config.get("sitter", {})}
+        people = getattr(agent, "people", None)
+        self.lang = self.cfg.get("lang") or (people.family_lang() if people is not None else None) or "en"
         self.rhythm = {**RHYTHM_DEFAULTS, **config.get("rhythm", {})}
         self.tz = datetime.timezone(datetime.timedelta(hours=self.rhythm["utc_offset_h"]))
         self.clock = clock or (lambda: datetime.datetime.now(self.tz))
@@ -392,15 +479,22 @@ class SitterHandover(Plugin):
         if b <= now:
             raise ValueError("that time window has already ended")
         notes = self.notes()
-        made = brief(self.log.entries(), now, sitter, a, b, self.tz, notes)
+        made = brief(self.log.entries(), now, sitter, a, b, self.tz, notes, self.lang)
+        asked_by = (getattr(self.agent, "current_event", None) or {}).get("person")
         with self.lock:
-            self.draft = {"sitter": sitter, "start": a, "end": b, **made}
+            self.draft = {"sitter": sitter, "start": a, "end": b, "asked_by": asked_by, **made}
             self.session = GuestSession(self.agent.bus, self.agent.baby_log, self.agent.brain, sitter, a, b, made["text"],
                                         notes["emergency"], notes["baby_name"], self.clock)
-        header = (f"Draft handover for {sitter}, {patterns.hhmm(a)} to {patterns.hhmm(b)}. Nothing goes to {sitter} "
-                  f"unless you say so.")
-        if made["dropped"]:
-            header += f" I left out {len(made['dropped'])} line(s) from the family notes about health or medicine, tell {sitter} yourself."
+        if self.lang == "es":
+            header = (f"Borrador del resumen para {sitter}, de {patterns.hhmm(a)} a {patterns.hhmm(b)}. No le mando "
+                      f"nada a {sitter} si no me decís. Reenviáselo vos.")
+            if made["dropped"]:
+                header += f" Dejé afuera {len(made['dropped'])} línea(s) sobre salud o remedios: contáselo vos."
+        else:
+            header = (f"Draft handover for {sitter}, {patterns.hhmm(a)} to {patterns.hhmm(b)}. Nothing goes to {sitter} "
+                      f"unless you say so.")
+            if made["dropped"]:
+                header += f" I left out {len(made['dropped'])} line(s) from the family notes about health or medicine, tell {sitter} yourself."
         self.agent.say(self.cfg["parent_channel"], header + "\n\n" + made["text"])
         self.agent.bus.publish("sitter_draft", sitter=sitter, start=a.isoformat(), end=b.isoformat(),
                                computed_from=made["computed_from"], dropped=len(made["dropped"]))
@@ -443,7 +537,13 @@ class SitterHandover(Plugin):
             if session is None or session.closed or now < session.end:
                 return None
             text = session.close()
-        self.agent.say(self.cfg["parent_channel"], text)
+        asked_by = (self.draft or {}).get("asked_by")
+        if any(getattr(p, "name", "") == "family-push" for p in getattr(self.agent, "plugins", [])):
+            texts = {"en": text, "es": session.summary_es()}
+            self.agent.bus.publish("notify", text=text, texts=texts, source="sitter", routine="sitter_summary",
+                                   **({"person": asked_by} if asked_by else {}))
+        else:
+            self.agent.say(self.cfg["parent_channel"], text)
         return text
 
     def stop(self):

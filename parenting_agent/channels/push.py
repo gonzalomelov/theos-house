@@ -16,6 +16,9 @@ An event with quiet true stays in the event log only. A yes to a pushed question
 (Agent.bind_ask), so the other parent's yes runs nothing. Every delivery is a "pushed" event with who got it and why,
 and each message is a "reply" event with proactive true and the person, so the log shows who was told what.
 
+Each parent reads a push in their own language: a notify event with "texts" ({"en": ..., "es": ...}) is sent in the
+"lang" of the person in the people block, the plain "text" otherwise.
+
 A scheduled push (ONCE_A_DAY: tonight's plan, the parents' meals, the morning message and its parts) reaches each
 parent at most once a day, across restarts (morning.Sent, data/scheduled-pushes.json). A repeat is a "pushed" event
 with nobody in to and the reason, never a message.
@@ -51,6 +54,13 @@ def is_night(local, night):
     start, end = (datetime.time.fromisoformat(t) for t in night)
     t = local.time()
     return t >= start or t < end if start > end else start <= t < end
+
+
+def in_lang(event, lang):
+    """The text of a notify event in a person's language: "texts" holds {"en": ..., "es": ...} when the routine wrote
+    both, else the one "text"."""
+    texts = event.get("texts") or {}
+    return str(texts.get(lang) or event.get("text") or texts.get("en") or "")
 
 
 def recipients(event, people, on_duty=None, night=False, asks_to=None):
@@ -141,10 +151,8 @@ class FamilyPush(Plugin):
                 return self.agent.bus.publish("pushed", source=event.get("source"), routine=routine, to=[], missing=[],
                                               repeats=repeats, reason=f"already sent today ({day}), a restart repeat")
         sent, missing = [], []
-        text = self.people.named(str(event.get("text") or ""))
         for person in to:
-            if texts is not None:
-                text = texts[person]
+            text = texts[person] if texts is not None else self.people.named(in_lang(event, self.people.lang(person)))
             chat = chats.get(person)
             if chat is None:
                 missing.append(person)
@@ -169,7 +177,9 @@ class FamilyPush(Plugin):
                 return self.agent.bus.publish("pushed", source=event.get("source"), routine=event.get("routine"), to=[],
                                               missing=[], reason="already in today's morning message, a restart repeat")
             self.parts[event["routine"]] = event
-            expected = {r for r, plugin in MORNING_PARTS.items() if find_plugin(self.agent, plugin) is not None}
+            # A plug-in that is silent before the birth (the house brain, baby_phase.py) sends no part to wait for.
+            expected = {r for r, plugin in MORNING_PARTS.items()
+                        if getattr(find_plugin(self.agent, plugin), "born", find_plugin(self.agent, plugin) is not None)}
             if expected <= set(self.parts):
                 return self.morning_flush()
             if self.timer is None:
@@ -209,7 +219,7 @@ class FamilyPush(Plugin):
                 return None
             now = self.clock()
             prep = find_plugin(self.agent, "prep")
-            lang = self.morning_lang(prep)
+            lang = self.people.family_lang() or self.morning_lang(prep)
             lines = []
             if prep is not None and prep.cfg["nudge"]["enabled"] and prep.last_nudge() != now.date().isoformat():
                 try:
@@ -221,7 +231,7 @@ class FamilyPush(Plugin):
             explain = parts.get("morning_explain")
             rota = getattr(self.agent, "rota", None)
             tonight = last_night = None
-            if rota is not None:
+            if rota is not None and getattr(rota, "born", True):  # no night rota before the birth
                 try:
                     tonight = rota.rota_only(now)
                     yesterday = now.astimezone(self.tz).replace(hour=22, minute=0, second=0, microsecond=0) \
@@ -233,7 +243,7 @@ class FamilyPush(Plugin):
             for person in self.people.keys():
                 label = self.people.label(person)
                 texts[person] = self.people.named(morning_mod.compose(
-                    lang, self.people.name(person), label, brief, explain, lines,
+                    self.people.lang(person) or lang, self.people.name(person), label, brief, explain, lines,
                     self.people.rota_label(tonight) if tonight else None,
                     self.people.rota_label(last_night) if last_night else None))
             self.agent.bus.publish("morning_message", parts=sorted(parts), facts=brief, explain=(explain or {}).get("text"),

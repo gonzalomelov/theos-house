@@ -9,6 +9,7 @@ was computed from. Real delivery on Telegram, the ear or the speakers comes with
 import datetime
 import threading
 
+from .. import baby_phase
 from ..agent.plugins import Plugin
 from . import patterns
 from .log import BabyBuddyLog, FixtureLog
@@ -67,28 +68,93 @@ def make_log(settings, env):
 
 
 class RhythmPlugin(Plugin):
-    """Agent plug-in: config "plugins": ["parenting_agent.rhythm.engine:RhythmPlugin"], settings under "rhythm"."""
+    """Agent plug-in "parenting_agent.rhythm.engine:RhythmPlugin", settings under "rhythm".
+
+    On the family agent ("kinds": ["next_feed"]) it sends one next feed reminder per feed, lead_min before the feed
+    the log rhythm expects, by day only: at night the night feed (night_feed.py) gets the house ready on a real awake
+    signal instead of a guess. The feed comes from sleep_forecast.predict_feed, the rhythm the night feed and the
+    families bot read (a top-up within 30 min is the same feed, no guess from a feed older than 6 h). With the family
+    push loaded the reminder is a notify event in English and Spanish, to both parents. Without it, it is said on
+    the configured channel as before. Silent before the birth ("baby": {"born": false}, baby_phase.py)."""
     name = "rhythm"
 
-    def start(self):
-        import os
-        settings = {**DEFAULTS, **self.config.get("rhythm", {})}
-        self.rhythm = Rhythm(make_log(settings, os.environ), settings)
+    def __init__(self, agent, config, log=None, clock=None):
+        super().__init__(agent, config)
+        self.s = {**DEFAULTS, "kinds": ["next_feed", "night_summary", "unusual_day"], **config.get("rhythm", {})}
+        self.tz = datetime.timezone(datetime.timedelta(hours=self.s["utc_offset_h"]))
+        self.clock = clock or (lambda: datetime.datetime.now(self.tz))
+        self._log = log
+        self.born = baby_phase.born(config)
+        self.rhythm = None
+        self.sent = set()
         self.stopped = threading.Event()
+
+    @property
+    def log(self):
+        if self._log is None:
+            import os
+            self._log = make_log(self.s, os.environ)
+        return self._log
+
+    def start(self):
+        self.rhythm = Rhythm(self.log, self.s)
         self.thread = threading.Thread(target=self.run, name="rhythm", daemon=True)
         self.thread.start()
 
     def run(self):
         while not self.stopped.is_set():
             try:
-                for reminder in self.rhythm.tick(datetime.datetime.now().astimezone()):
-                    deliver(self.agent, reminder)
+                self.tick(self.clock())
             except Exception as error:  # a bad read must not stop the agent
                 self.agent.bus.publish("rhythm_error", error=str(error)[:300])
-            self.stopped.wait(self.rhythm.s["poll_s"])
+            self.stopped.wait(self.s["poll_s"])
+
+    def tick(self, now):
+        if not self.born:
+            return []
+        out = []
+        if "next_feed" in self.s["kinds"]:
+            reminder = self.next_feed(now)
+            if reminder is not None:
+                out.append(reminder)
+        others = [k for k in self.s["kinds"] if k != "next_feed"]
+        if others and self.rhythm is not None:
+            for reminder in self.rhythm.tick(now):
+                if reminder["kind"] in others:
+                    out.append(deliver(self.agent, reminder))
+        return out
+
+    def next_feed(self, now):
+        from ..sleep_forecast import predict_feed
+        nxt = predict_feed(self.log.entries(), now)
+        if not nxt or patterns.is_night(nxt["at"].astimezone(self.tz)):
+            return None
+        key = nxt["computed_from"][-1]
+        lead = datetime.timedelta(minutes=self.s["lead_min"])
+        if key in self.sent or not (nxt["at"] - lead <= now < nxt["at"] + datetime.timedelta(minutes=5)):
+            return None
+        self.sent.add(key)
+        texts = next_feed_texts(nxt, now, self.tz)
+        if not all(patterns.no_advice(t) for t in texts.values()):
+            return None
+        if any(getattr(p, "name", "") == "family-push" for p in getattr(self.agent, "plugins", [])):
+            return self.agent.bus.publish("notify", text=texts["en"], texts=texts, channel="telegram", source="rhythm",
+                                          routine="next_feed", at=now.isoformat(), computed_from=nxt["computed_from"])
+        return deliver(self.agent, {"kind": "next_feed", "text": texts["en"], "computed_from": nxt["computed_from"],
+                                    "channel": self.s["channel"]})
 
     def stop(self):
         self.stopped.set()
+
+
+def next_feed_texts(nxt, now, tz):
+    """The reminder in both languages: when, and the gap it comes from. Times and numbers only."""
+    at = patterns.hhmm(nxt["at"].astimezone(tz))
+    minutes = max(0, round((nxt["at"] - now).total_seconds() / 60))
+    gap = nxt["gap_min"]
+    hours = f"{gap // 60} h {gap % 60:02d} min" if gap >= 60 else f"{gap} min"
+    return {"en": f"Next feed in about {minutes} min, around {at}. Feeds have been about {hours} apart.",
+            "es": f"Próxima toma en unos {minutes} min, cerca de las {at}. Las tomas vienen cada {hours} más o menos."}
 
 
 def deliver(agent, reminder):

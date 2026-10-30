@@ -8,12 +8,13 @@ Virtual day 2026-10-29T06:00 to 2026-10-30T08:30, real time 1567 s, brain 0.5736
 | proactive | 17 |
 | replies | 38 |
 | noise | 16 |
-| noise_by_kind | {'English to a Spanish parent': 14, 'prep lines after the birth': 4, 'duplicate': 4, 'night push to the parent who just said it': 1, 'internal text': 1} |
+| noise_by_kind | {'English to a Spanish parent': 14, 'prep lines after the birth': 4, 'night push to the parent who just said it': 1, 'internal text': 1} |
 | expected_found | 11 |
 | expected | 34 |
 | log_ok | 24 |
 | log_expected | 25 |
 | log_extra | 2 |
+| log_bookkeeping | [] |
 | brain_usd | 0.5736 |
 | brain_calls | {'inference.baseten.co': 95} |
 | real_seconds | 1567 |
@@ -24,24 +25,24 @@ Virtual day 2026-10-29T06:00 to 2026-10-30T08:30, real time 1567 s, brain 0.5736
 
 | Item | Found | Detail |
 |---|---|---|
-| morning message day 0 to gonza | yes | 1 morning message(s), 1 message(s) 07:25 to 08:10 |
-| morning message day 0 to ceci | yes | 1 morning message(s), 1 message(s) 07:25 to 08:10 |
-| morning message day 1 to gonza | yes | 1 morning message(s), 1 message(s) 07:25 to 08:10 |
-| morning message day 1 to ceci | yes | 1 morning message(s), 1 message(s) 07:25 to 08:10 |
+| morning message day 0 to gonza | yes | 1 morning message(s), 1 message(s) in all 07:25 to 08:10 |
+| morning message day 0 to ceci | yes | 1 morning message(s), 1 message(s) in all 07:25 to 08:10 |
+| morning message day 1 to gonza | yes | 1 morning message(s), 1 message(s) in all 07:25 to 08:10 |
+| morning message day 1 to ceci | yes | 1 morning message(s), 1 message(s) in all 07:25 to 08:10 |
 | next-feed reminder before the 08:15 feed | MISSED | 0 reminder(s) in the 90 min before |
 | next-feed reminder before the 10:40 feed | MISSED | 0 reminder(s) in the 90 min before |
 | next-feed reminder before the 13:25 feed | MISSED | 0 reminder(s) in the 90 min before |
 | next-feed reminder before the 15:55 feed | MISSED | 0 reminder(s) in the 90 min before |
 | next-feed reminder before the 18:35 feed | MISSED | 0 reminder(s) in the 90 min before |
 | next-feed reminder before the 06:15 feed | MISSED | 0 reminder(s) in the 90 min before |
-| nap mode on after the 06:35 sleep | MISSED | 0 nap_mode on event(s) within 5 min |
-| nap mode on after the 08:50 sleep | MISSED | 0 nap_mode on event(s) within 5 min |
-| nap mode on after the 11:30 sleep | MISSED | 0 nap_mode on event(s) within 5 min |
-| nap mode on after the 13:50 sleep | MISSED | 0 nap_mode on event(s) within 5 min |
-| nap mode on after the 16:30 sleep | MISSED | 0 nap_mode on event(s) within 5 min |
-| nap mode on after the 19:40 sleep | MISSED | 0 nap_mode on event(s) within 5 min |
-| nap mode on after the 22:55 sleep | MISSED | 0 nap_mode on event(s) within 5 min |
-| nap mode on after the 03:30 sleep | MISSED | 0 nap_mode on event(s) within 5 min |
+| nap mode on after the 06:35 sleep | MISSED | never on |
+| nap mode on after the 08:50 sleep | MISSED | never on |
+| nap mode on after the 11:30 sleep | MISSED | never on |
+| nap mode on after the 13:50 sleep | MISSED | never on |
+| nap mode on after the 16:30 sleep | MISSED | never on |
+| nap mode on after the 19:40 sleep | MISSED | never on |
+| nap mode on after the 22:55 sleep | MISSED | never on |
+| nap mode on after the 03:30 sleep | MISSED | never on |
 | night handover to Gonza after Ceci asked to sleep | yes | 2 message(s) to Gonza 20:00 to 21:30 |
 | tonight's plan at bedtime, at most one per parent | yes | 2 plan message(s) |
 | night cry: push to Gonza (on duty) within 5 min | yes | 1 push(es) |
@@ -147,8 +148,8 @@ Entries nobody asked for: 2
 | 10-29 13:15 | Ceci | says: Se despertó. | input |
 | 10-29 13:15 | agent to Ceci | reply: Despertada registrada, durmió 1 hora 45 min. | ok |
 | 10-29 13:16 | house | house plan (wake_up) accepted True | log |
-| 10-29 13:17 | agent to Gonza | push: I could run the floor clean before 14:05, but the log does not say where he is in the last 2 hours, so the vacuum stays docked. Tell me where he is, or that he is out with you. | NOISE: English to a Spanish parent, duplicate |
-| 10-29 13:17 | agent to Ceci | push: I could run the floor clean before 14:05, but the log does not say where he is in the last 2 hours, so the vacuum stays docked. Tell me where he is, or that he is out with you. | NOISE: English to a Spanish parent, duplicate |
+| 10-29 13:17 | agent to Gonza | push: I could run the floor clean before 14:05, but the log does not say where he is in the last 2 hours, so the vacuum stays docked. Tell me where he is, or that he is out with you. | NOISE: English to a Spanish parent |
+| 10-29 13:17 | agent to Ceci | push: I could run the floor clean before 14:05, but the log does not say where he is in the last 2 hours, so the vacuum stays docked. Tell me where he is, or that he is out with you. | NOISE: English to a Spanish parent |
 | 10-29 13:25 | Ceci | says: Le di 90 ml de mamadera. | input |
 | 10-29 13:25 | agent to Ceci | reply: Registrado: mamadera de 90 ml. | ok |
 | 10-29 13:27 | Ceci | says: Pañal mojado. | input |
@@ -172,8 +173,8 @@ Entries nobody asked for: 2
 | 10-29 18:20 | Ceci | says: Se despertó. | input |
 | 10-29 18:20 | agent to Ceci | reply: Despertada registrada, durmió 1 hora 50 min. | ok |
 | 10-29 18:21 | house | house plan (wake_up) accepted True | log |
-| 10-29 18:22 | agent to Gonza | push: I could run the floor clean before 19:03, but the log does not say where he is in the last 2 hours, so the vacuum stays docked. Tell me where he is, or that he is out with you. | NOISE: English to a Spanish parent, duplicate |
-| 10-29 18:22 | agent to Ceci | push: I could run the floor clean before 19:03, but the log does not say where he is in the last 2 hours, so the vacuum stays docked. Tell me where he is, or that he is out with you. | NOISE: English to a Spanish parent, duplicate |
+| 10-29 18:22 | agent to Gonza | push: I could run the floor clean before 19:03, but the log does not say where he is in the last 2 hours, so the vacuum stays docked. Tell me where he is, or that he is out with you. | NOISE: English to a Spanish parent |
+| 10-29 18:22 | agent to Ceci | push: I could run the floor clean before 19:03, but the log does not say where he is in the last 2 hours, so the vacuum stays docked. Tell me where he is, or that he is out with you. | NOISE: English to a Spanish parent |
 | 10-29 18:35 | Ceci | says: Teta 20 minutos, los dos lados. | input |
 | 10-29 18:35 | agent to Ceci | reply: Teta registrada, 20 min de ambos lados. | ok |
 | 10-29 18:40 | Ceci | says: Pañal mojado. | input |

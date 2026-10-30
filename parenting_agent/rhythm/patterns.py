@@ -166,7 +166,7 @@ def split_nights(wake_times, parents):
     return handled
 
 
-def night_summary(entries, now, tz, parents, current=False):
+def night_summary(entries, now, tz, parents, current=False, aliases=None):
     """Summary of the last night (22:00 to 06:00 before now) plus who is on duty next and the next feed.
 
     With current, a summary asked during the night covers the night in progress up to now, and the label names both
@@ -181,12 +181,14 @@ def night_summary(entries, now, tz, parents, current=False):
     start = end - datetime.timedelta(hours=24 - NIGHT_START + NIGHT_END)
     if in_progress:
         end = local
+    # "handled by Gonza" counts for his rota label: aliases maps a lowercase name to its label (the people block).
+    label = (lambda who: (aliases or {}).get(str(who).strip().lower(), who))
     in_night = [e for e in ordered(entries, now) if start <= when(e) < end]
     night_feeds = [e for e in in_night if e["kind"] == "feeding"]
-    wakes = [w for w in night_wakeups(entries, tz) if start <= w["at"] < end]
+    wakes = [{**w, "parent": label(w["parent"])} for w in night_wakeups(entries, tz) if start <= w["at"] < end]
     sleeps = [e for e in in_night if e["kind"] == "sleep" and e.get("end")]
     longest = max(((parse(e["end"]) - parse(e["start"])).total_seconds() / 3600 for e in sleeps), default=0.0)
-    handled_all = [w["parent"] for w in night_wakeups(entries, tz) if w["at"] < now.astimezone(tz)]
+    handled_all = [label(w["parent"]) for w in night_wakeups(entries, tz) if w["at"] < now.astimezone(tz)]
     on_duty = next_on_duty(handled_all, parents)
     per_parent = ", ".join(f"{p} {sum(1 for w in wakes if w['parent'] == p)}" for p in parents)
     nxt = next_feed(entries, now)

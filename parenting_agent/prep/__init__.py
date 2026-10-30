@@ -26,6 +26,7 @@ import threading
 import urllib.error
 from pathlib import Path
 
+from .. import baby_phase
 from ..agent import rules
 from ..agent.plugins import Plugin
 from ..agent.tools import Tool, schema
@@ -91,8 +92,18 @@ class Prep(Plugin):
             self.db.executescript(SCHEMA)
         self.seed()
         # The instruction is a standing rule of the agent, never a fact: remember could overwrite a fact (round 2).
-        if PROMPT_FACT not in getattr(agent, "prompt_notes", []):
-            agent.prompt_notes = [*getattr(agent, "prompt_notes", []), PROMPT_FACT]
+        phase = baby_phase.phase(config)
+        notes = [] if phase == "born" else [PROMPT_FACT]
+        if phase == "prep":
+            notes.append(baby_phase.NOT_BORN_NOTE)
+        if phase == "born":
+            self.cfg["nudge"]["enabled"] = False  # after the birth the prep lines leave the morning message
+            name = (config.get("baby") or {}).get("name")
+            if name:
+                notes.append(baby_phase.born_note(name, getattr(agent, "people", None)))
+        for note in notes:
+            if note not in getattr(agent, "prompt_notes", []):
+                agent.prompt_notes = [*getattr(agent, "prompt_notes", []), note]
         with self.lock:
             self.db.execute("delete from facts where key = 'before_he_arrives'")
             self.db.commit()

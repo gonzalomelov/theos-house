@@ -35,7 +35,9 @@
     "nursery_plan",
     "night_rota",
     "remind_me",
-    "add_to_shopping_list"
+    "add_to_shopping_list",
+    "set_supply_stock",
+    "sitter_handover"
   ],
   "plugins": [
     "parenting_agent.agent.heartbeat:Heartbeat",
@@ -45,8 +47,14 @@
     "parenting_agent.night_feed:NightFeed",
     "parenting_agent.house_brain:HouseBrainPlugin",
     "parenting_agent.reminders:Reminders",
+    "parenting_agent.rhythm.engine:RhythmPlugin",
+    "parenting_agent.sitter:SitterHandover",
     "parenting_agent.channels.push:FamilyPush"
   ],
+  "baby": {"born": false, "name": "Theo"},
+  "rhythm": {"child": "Test", "kinds": ["next_feed"]},
+  "day_engine": {"door_sensors": []},
+  "sitter": {"family_notes": "/data/family-notes.json"},
   "house_brain": {
     "budget_usd": 0.5,
     "bedtime": "20:30",
@@ -65,12 +73,14 @@
     "gonza": {
       "name": "Gonza",
       "rota": "Parent A",
-      "chat_ids_env": "TELEGRAM_CHAT_ID"
+      "chat_ids_env": "TELEGRAM_CHAT_ID",
+      "lang": "es"
     },
     "ceci": {
       "name": "Ceci",
       "rota": "Parent B",
-      "chat_ids_env": "TELEGRAM_CECI_CHAT_ID"
+      "chat_ids_env": "TELEGRAM_CECI_CHAT_ID",
+      "lang": "es"
     }
   },
   "family_push": {

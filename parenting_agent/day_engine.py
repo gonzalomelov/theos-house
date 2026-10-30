@@ -23,7 +23,7 @@ import statistics
 import threading
 import urllib.error
 
-from . import meals
+from . import baby_phase, meals
 from .agent import rules
 from .agent.plugins import Plugin
 from .agent.tools import Tool, schema
@@ -74,6 +74,9 @@ DEFAULTS = {
     "tummy_days": 3, "morning_at": "07:30", "echo_until": "10:30", "echo_motion_min": 10,
     "supplies": {"diapers": None, "wipes": None, "formula": None}, "wipes_per_change": 3, "low_days": 2.0,
     "bad_night": {}, "fast_max_min": 30, "quiet_min_extra": 10, "day_end": "21:00", "poll_s": 60,
+    # The binary sensors that count as someone at the door. The family agent sets [] so
+    # a camera person detection is not a doorbell.
+    "door_sensors": list(DOOR_SENSORS),
 }
 ROUTINES = {
     "nap_mode": "skill", "door": "skill", "floor_clean": "schedule", "morning_brief": "schedule",
@@ -139,6 +142,21 @@ def shopping_said(event, item):
     if status in ("error", "unavailable", "house_error"):
         return f"{item} was not added: the shopping list could not be reached."
     return f"{item} only written down for the shopping list (dry run), nothing was added."
+
+
+SUPPLY_ES = {"diapers": "Pañales", "wipes": "Toallitas", "formula": "Fórmula"}
+DAYS_ES = ("lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo")
+
+
+def shopping_said_es(event, item):
+    status = event.get("status") if event.get("kind") == "house_live" else event.get("kind")
+    if status in ("ran", "house_done"):
+        return f"{item}: agregado a la lista de compras de verdad."
+    if status == "already_listed":
+        return f"{item} ya está en la lista de compras, no se agregó nada."
+    if status in ("error", "unavailable", "house_error"):
+        return f"{item} no se agregó: no se pudo llegar a la lista de compras."
+    return f"{item}: solo anotado para la lista de compras (prueba en seco), no se agregó nada."
 
 
 def asleep_now(entries, now):
@@ -211,11 +229,14 @@ class DayEngine:
     def routine(self, name, step, now, **fields):
         return self.bus.publish("routine", name=name, trigger=ROUTINES[name], step=step, at=now.isoformat(), **fields)
 
-    def notify(self, routine, text, now, channel="telegram", unchecked="", **fields):
+    def notify(self, routine, text, now, channel="telegram", unchecked="", es=None, **fields):
         """A message for Gonza. The engine's own words pass the no-advice guard. unchecked holds words that come
-        from his own calendar or Cookidoo, which are quoted as they are."""
+        from his own calendar or Cookidoo, which are quoted as they are. es is the same message in Spanish: the family
+        push sends each parent their own language."""
         if not patterns.no_advice(text):
             raise ValueError(f"day engine text failed the no-advice guard: {text[:80]}")
+        if es is not None:
+            fields["texts"] = {"en": text + unchecked, "es": es + unchecked}
         return self.bus.publish("notify", text=text + unchecked, channel=channel, source="day-engine",
                                 routine=routine, at=now.isoformat(), **fields)
 
@@ -299,7 +320,9 @@ class DayEngine:
         if hit or not self.s["resume_alone"]:
             why = (f"the rest of the run ({round(left)} min) would reach the {hit['kind']} around {self._hm(hit['start'])}"
                    if hit else "resuming waits for a yes")
-            self.notify("nap_mode", f"The vacuum stays docked: {why}.", now)
+            why_es = (f"el resto de la pasada ({round(left)} min) llegaría a la siesta prevista cerca de las "
+                      f"{self._hm(hit['start'])}" if hit else "retomarla espera un sí")
+            self.notify("nap_mode", f"The vacuum stays docked: {why}.", now, es=f"La aspiradora queda en su base: {why_es}.")
             return [self.routine("nap_mode", "vacuum_hold", now, why=why)]
         house["vacuum_left_min"] = left
         return [self.write("nap_mode", "vacuum.start", VACUUM, None,
@@ -372,12 +395,17 @@ class DayEngine:
                 continue
             if not ok:
                 self.floor_why[key] = why
-                if why == UNSURE_WHERE and ("where", key) not in self.done:
-                    # Unsure where he is: ask, never assume he is out.
-                    self.done.add(("where", key))
+                where_key = ("where", now.astimezone(self.tz).date())
+                if why == UNSURE_WHERE and where_key not in self.done:
+                    # Unsure where he is: ask, never assume he is out. Once a day: on Oct 30 the end-to-end day got the
+                    # same question after every nap.
+                    self.done.add(where_key)
                     out.append(self.notify("floor_clean", f"I could run the floor clean before {self._hm(floor)}, but "
                                            "the log does not say where he is in the last 2 hours, so the vacuum stays "
-                                           "docked. Tell me where he is, or that he is out with you.", now))
+                                           "docked. Tell me where he is, or that he is out with you.", now,
+                                           es=f"Podría pasar la aspiradora antes de las {self._hm(floor)}, pero el registro "
+                                              "no dice dónde está en las últimas 2 horas, así que queda en su base. "
+                                              "Decime dónde está, o si salió con ustedes."))
                 continue
             if self.s["floor_alone"] is True:
                 out += self.floor_start(key, floor, now, "alone")
@@ -390,9 +418,16 @@ class DayEngine:
                 out.append(self.routine("floor_clean", "ask", now, floor_at=floor.isoformat()))
                 lead = (f"The plan has a floor clean window until {self._hm(floor)}." if self.plan and
                         self.plan.get("floor_clean") is not None else f"Tummy time is usually around {self._hm(floor)}.")
+                where_es = "está afuera" if baby_out(entries, now) else "está despierto en otro cuarto"
+                lead_es = (f"El plan tiene una ventana para aspirar hasta las {self._hm(floor)}." if self.plan and
+                           self.plan.get("floor_clean") is not None else
+                           f"El rato en el piso suele ser cerca de las {self._hm(floor)}.")
                 out.append(self.notify("floor_clean", f"{lead} {where.capitalize()}, "
                                        f"I can run the vacuum now: {self.s['run_min']} min, done by {done}, before the next "
-                                       "predicted nap. Reply yes to start it.", now, ask="floor_clean"))
+                                       "predicted nap. Reply yes to start it.", now, ask="floor_clean",
+                                       es=f"{lead_es} {where_es.capitalize()}, puedo pasar la aspiradora ahora: "
+                                          f"{self.s['run_min']} min, termina a las {done}, antes de la próxima siesta "
+                                          "prevista. Respondé sí para empezar."))
         return out
 
     def floor_ok(self, entries, now, house):
@@ -467,7 +502,7 @@ class DayEngine:
     def brief(self, entries, now, house):
         """(telegram text, quoted calendar text, Echo text). The Echo text is numbers and fixed words only."""
         night = meals.last_night(entries, now, self.tz)
-        summary_row = patterns.night_summary(entries, now, self.tz, self.s["parents"])
+        summary_row = patterns.night_summary(entries, now, self.tz, self.s["parents"], aliases=self.s.get("aliases"))
         summary = summary_row["text"]
         weather = house.get("weather") or {}
         sky = SKY.get(weather.get("condition"))
@@ -534,7 +569,13 @@ class DayEngine:
                                  f"{item} running low", now, signal="supplies_low")
             out.append(written)
             if written.get("status") != "already_listed":
-                out.append(self.notify("supplies", f"{shopping_said(written, name)} {description}.", now))
+                name_es = SUPPLY_ES[item]
+                runs_es = (f"{DAYS_ES[row['runs_out'].astimezone(self.tz).weekday()]} {self._hm(row['runs_out'])}"
+                           if row["runs_out"] else "pronto")
+                description_es = (f"Quedan unos {row['left']}{unit}, se usan {row['per_day']}{unit} por día, se terminan "
+                                  f"cerca del {runs_es}")
+                out.append(self.notify("supplies", f"{shopping_said(written, name)} {description}.", now,
+                                       es=f"{shopping_said_es(written, name_es)} {description_es}."))
             house.setdefault("shopping", []).append(name)
         return out
 
@@ -607,8 +648,9 @@ class HouseReader:
     """Reads the house state the engine needs from Home Assistant. Reads only: GET states and calendars, and the
     todo.get_items and weather.get_forecasts read services that return data and change nothing."""
 
-    def __init__(self, client, tz, run_min=31):
+    def __init__(self, client, tz, run_min=31, door_sensors=DOOR_SENSORS):
         self.client, self.tz, self.run_min = client, tz, run_min
+        self.door_sensors = tuple(door_sensors)
         # A person at the door counts when the sensor turns on, never while it stays on: the outdoor camera's
         # person sensor read "on" all through Oct 29, and a stuck sensor must not push every minute.
         self.door_was = {}
@@ -637,7 +679,7 @@ class HouseReader:
         house["kitchen_temp_c"] = self._safe(lambda: float(c.state(KITCHEN_TEMP)), None)
         house["living_person"] = self._safe(lambda: c.state(LIVING_PERSON), "off") == "on"
         house["presence"] = {p: self._safe(lambda: c.state(p), "unknown") for p in ("person.gonza", "person.ceci")}
-        for sensor in DOOR_SENSORS:
+        for sensor in self.door_sensors:
             on = self._safe(lambda: c.state(sensor), "off") == "on"
             if on and self.door_was.get(sensor) is False:
                 house["door"].append({"source": "person_detection", "at": now.replace(second=0, microsecond=0).isoformat()})
@@ -670,7 +712,9 @@ class DayEnginePlugin(Plugin):
         token = os.environ.get(house_cfg.get("ha_token_env", "HA_MCP_TOKEN"))
         self.client = client if client is not None else (
             HomeAssistant(house_cfg.get("ha_url", "http://127.0.0.1:18123"), token) if token else None)
-        self.reader = HouseReader(self.client, self.tz, self.s["run_min"]) if self.client is not None else None
+        self.reader = (HouseReader(self.client, self.tz, self.s["run_min"], self.s["door_sensors"])
+                       if self.client is not None else None)
+        self.born = baby_phase.born(config)
         self._log = log
         self.clock = clock or (lambda: datetime.datetime.now(self.tz))
         recipes = meals.FixtureRecipes(self.s["recipes_fixture"]) if self.s.get("recipes_fixture") else (
@@ -681,6 +725,10 @@ class DayEnginePlugin(Plugin):
                                 SimulatedWhiteNoise(agent.bus))
         if not self.engine.writer.live:
             add_dry_guard(agent)
+        people = getattr(agent, "people", None)
+        if people:
+            self.engine.s["aliases"] = {str(people.name(p)).lower(): people.label(p) for p in people.keys()
+                                        if people.label(p)}
         self.lock = threading.Lock()
         self.stopped = threading.Event()
         self.door = []
@@ -693,6 +741,11 @@ class DayEnginePlugin(Plugin):
                              "parent asks, for example diapers or pañales. It checks the list first and never adds an "
                              "item twice. It cannot remove items.",
                              schema({"item": {"type": "string"}}, ["item"]), self.add_to_shopping_list))
+        agent.tools.add(Tool("set_supply_stock", "When a parent says how many diapers or wipes, or how much formula (ml), "
+                             "the family has at home now, for example 'tenemos 26 pañales'. The supplies routine counts "
+                             "down from it and puts the item on the shopping list two days before it runs out.",
+                             schema({"item": {"type": "string", "enum": list(SUPPLY_NAMES)},
+                                     "count": {"type": "integer"}}, ["item", "count"]), self.set_stock))
         agent.tools.add(Tool("day_engine_status", "What the day engine is doing: nap mode, open questions. Changes nothing.",
                              schema({}), self.status))
 
@@ -735,6 +788,27 @@ class DayEnginePlugin(Plugin):
             event = self.engine.add_item(item, self.clock())
         return shopping_said(event, item)
 
+    def set_stock(self, item, count):
+        """A "Stock: diapers 26" note in the baby log: the supplies routine reads the latest one (house_plan.STOCK_RE)."""
+        if item not in SUPPLY_NAMES:
+            return f"set_supply_stock: unknown item {item}, expected one of {', '.join(SUPPLY_NAMES)}."
+        count = int(count)
+        if not 0 <= count <= 5000:
+            return "set_supply_stock: refused, the count must be between 0 and 5000."
+        text = f"Stock: {item} {count}"
+        try:
+            since = (self.clock() - datetime.timedelta(hours=12)).isoformat(timespec="seconds")
+            kept = [e for e in self.agent.baby_log.entries("note", since, 50)
+                    if str((e.get("details") or {}).get("text", "")).strip().lower().startswith(f"stock: {item} ")]
+        except Exception:  # noqa: BLE001 an unreadable log never blocks the write
+            kept = []
+        if kept and kept[-1]["details"]["text"].strip().lower() == text.lower():
+            # The brain can call it again on a later message (Oct 30 end-to-end day: the 06:20 count again at 08:05).
+            return f"Stock already kept: {item} {count}, nothing new written."
+        entry = self.agent.baby_log.add("note", {"text": text})
+        self.agent.bus.publish("supplies_stock", item=item, count=count, entry=entry.get("id"))
+        return f"Stock kept: {item} {count}. I tell you both and add it to the shopping list two days before it runs out."
+
     def status(self):
         mode = self.engine.mode
         return {"nap_mode": bool(mode), "since": mode["since"].isoformat() if mode else None,
@@ -750,7 +824,8 @@ class DayEnginePlugin(Plugin):
             try:
                 now = self.clock()
                 with self.lock:
-                    self.engine.tick(self.log.entries(), now, self.house(now))
+                    # Before the birth the log is a test child: the routines see an empty log (baby_phase.py).
+                    self.engine.tick(self.log.entries() if self.born else [], now, self.house(now))
                     self.door = []
             except Exception as error:  # a bad read must not stop the agent
                 self.agent.bus.publish("day_engine_error", error=str(error)[:300])

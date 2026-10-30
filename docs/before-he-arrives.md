@@ -1,6 +1,6 @@
 # Before he arrives (issue #56)
 
-Theo is due around mid December 2026. Until then the family agent (@home_agent_example_bot) helps Gonza and Ceci get ready, so they use it every day from now and not only after the birth. Built during the Meta hackathon, Oct 28 2026. a usage goal scores it from the agent's own log.
+Theo is due around mid December 2026. Until then the family agent runs in prep mode (`"baby": {"born": false}` in `config/agent.vostro.json`, `parenting_agent/baby_phase.py`): the baby log it reads is the test child, so nothing computed from it reaches the parents (no next feed, no night summary, no tonight's plan, no nap mode, no supplies from test entries). The prep lists and the morning message lead. At birth one config change switches every baby routine on. Until then the family agent (@home_agent_example_bot) helps Gonza and Ceci get ready, so they use it every day from now and not only after the birth. Built during the Meta hackathon, Oct 28 2026. a usage goal scores it from the agent's own log.
 
 Everything here is logistics: what to buy, build, place, pack, and when. The agent never gives medical advice. An appointment keeps only what, when, where and what to bring, and a title or note with medical words is refused with "I keep only the logistics".
 

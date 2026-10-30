@@ -56,7 +56,7 @@ class MorningMessageTest(unittest.TestCase):
         self.assertEqual((len(gonza), len(ceci)), (1, 1))
         self.assertIn("Good morning, Gonza.", gonza[0])
         self.assertIn("you were up 2 times", gonza[0])
-        self.assertIn("you were up 0 times", ceci[0])
+        self.assertIn("you were not up", ceci[0])
         self.assertIn("You are on duty tonight.", ceci[0])
         self.assertNotIn("on duty tonight", gonza[0])
         self.assertIn(f"The house overnight: {EXPLAIN}", gonza[0], "he was on duty last night")

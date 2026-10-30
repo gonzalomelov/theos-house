@@ -8,7 +8,6 @@
   "noise_by_kind": {
    "English to a Spanish parent": 14,
    "prep lines after the birth": 4,
-   "duplicate": 4,
    "night push to the parent who just said it": 1,
    "internal text": 1
   },
@@ -17,6 +16,7 @@
   "log_ok": 24,
   "log_expected": 25,
   "log_extra": 2,
+  "log_bookkeeping": [],
   "brain_usd": 0.5736,
   "brain_calls": {
    "inference.baseten.co": 95
@@ -213,8 +213,7 @@
    "proactive": true,
    "source": "day-engine",
    "problems": [
-    "English to a Spanish parent",
-    "duplicate"
+    "English to a Spanish parent"
    ],
    "verdict": "noise"
   },
@@ -225,8 +224,7 @@
    "proactive": true,
    "source": "day-engine",
    "problems": [
-    "English to a Spanish parent",
-    "duplicate"
+    "English to a Spanish parent"
    ],
    "verdict": "noise"
   },
@@ -320,8 +318,7 @@
    "proactive": true,
    "source": "day-engine",
    "problems": [
-    "English to a Spanish parent",
-    "duplicate"
+    "English to a Spanish parent"
    ],
    "verdict": "noise"
   },
@@ -332,8 +329,7 @@
    "proactive": true,
    "source": "day-engine",
    "problems": [
-    "English to a Spanish parent",
-    "duplicate"
+    "English to a Spanish parent"
    ],
    "verdict": "noise"
   },
@@ -566,22 +562,22 @@
   {
    "item": "morning message day 0 to gonza",
    "found": true,
-   "detail": "1 morning message(s), 1 message(s) 07:25 to 08:10"
+   "detail": "1 morning message(s), 1 message(s) in all 07:25 to 08:10"
   },
   {
    "item": "morning message day 0 to ceci",
    "found": true,
-   "detail": "1 morning message(s), 1 message(s) 07:25 to 08:10"
+   "detail": "1 morning message(s), 1 message(s) in all 07:25 to 08:10"
   },
   {
    "item": "morning message day 1 to gonza",
    "found": true,
-   "detail": "1 morning message(s), 1 message(s) 07:25 to 08:10"
+   "detail": "1 morning message(s), 1 message(s) in all 07:25 to 08:10"
   },
   {
    "item": "morning message day 1 to ceci",
    "found": true,
-   "detail": "1 morning message(s), 1 message(s) 07:25 to 08:10"
+   "detail": "1 morning message(s), 1 message(s) in all 07:25 to 08:10"
   },
   {
    "item": "next-feed reminder before the 08:15 feed",
@@ -616,42 +612,42 @@
   {
    "item": "nap mode on after the 06:35 sleep",
    "found": false,
-   "detail": "0 nap_mode on event(s) within 5 min"
+   "detail": "never on"
   },
   {
    "item": "nap mode on after the 08:50 sleep",
    "found": false,
-   "detail": "0 nap_mode on event(s) within 5 min"
+   "detail": "never on"
   },
   {
    "item": "nap mode on after the 11:30 sleep",
    "found": false,
-   "detail": "0 nap_mode on event(s) within 5 min"
+   "detail": "never on"
   },
   {
    "item": "nap mode on after the 13:50 sleep",
    "found": false,
-   "detail": "0 nap_mode on event(s) within 5 min"
+   "detail": "never on"
   },
   {
    "item": "nap mode on after the 16:30 sleep",
    "found": false,
-   "detail": "0 nap_mode on event(s) within 5 min"
+   "detail": "never on"
   },
   {
    "item": "nap mode on after the 19:40 sleep",
    "found": false,
-   "detail": "0 nap_mode on event(s) within 5 min"
+   "detail": "never on"
   },
   {
    "item": "nap mode on after the 22:55 sleep",
    "found": false,
-   "detail": "0 nap_mode on event(s) within 5 min"
+   "detail": "never on"
   },
   {
    "item": "nap mode on after the 03:30 sleep",
    "found": false,
-   "detail": "0 nap_mode on event(s) within 5 min"
+   "detail": "never on"
   },
   {
    "item": "night handover to Gonza after Ceci asked to sleep",

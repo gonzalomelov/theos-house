@@ -33,11 +33,13 @@ SUPPLY = {"en": {"diapers": "Diapers", "wipes": "Wipes", "formula": "Formula"},
           "es": {"diapers": "Pañales", "wipes": "Toallitas", "formula": "Fórmula"}}
 WORDS = {
     "en": {"hello": "Good morning, {name}.", "night": "Last night: {feeds} feed{s}, longest sleep {h} h, you were up {times}.",
+           "night_none": "Last night: {feeds} feed{s}, longest sleep {h} h, you were not up.",
            "times": ("once", "{n} times"), "duty": "You are on duty tonight.", "weather": "Weather: {sky}, {low} to {high} C{rain}.",
            "rain": ", {mm:g} mm of rain", "low": "Running low: {items}.", "left": "{name} (about {d:.1f} days left)",
            "today": "Today: {items}.", "meals": "Cookidoo meal plan: {items}.", "house": "The house overnight: {text}",
            "prep": "Before he arrives: {line}"},
     "es": {"hello": "Buen día, {name}.", "night": "Anoche: {feeds} toma{s}, el sueño más largo {h} h, te levantaste {times}.",
+           "night_none": "Anoche: {feeds} toma{s}, el sueño más largo {h} h, no te levantaste.",
            "times": ("una vez", "{n} veces"), "duty": "Esta noche te toca a vos.", "weather": "Clima: {sky}, {low} a {high} C{rain}.",
            "rain": ", {mm:g} mm de lluvia", "low": "Se está terminando: {items}.", "left": "{name} (quedan unos {d:.1f} días)",
            "today": "Hoy: {items}.", "meals": "Menú de Cookidoo: {items}.", "house": "La casa de noche: {text}",
@@ -56,8 +58,9 @@ def compose(lang, name, label, brief=None, explain=None, prep=(), tonight=None, 
     if night.get("feeds") or any((night.get("wakeups") or {}).values()):
         feeds = night.get("feeds", 0)
         times = w["times"][0] if up == 1 else w["times"][1].format(n=up)
-        lines.append(w["night"].format(feeds=feeds, s="" if feeds == 1 else "s", h=f"{night.get('longest_h') or 0:.1f}",
-                                       times=times))
+        line = w["night"] if up else w["night_none"]
+        lines.append(line.format(feeds=feeds, s="" if feeds == 1 else "s", h=f"{night.get('longest_h') or 0:.1f}",
+                                 times=times))
     if tonight and tonight == label:
         lines.append(w["duty"])
     weather = (brief or {}).get("weather")
@@ -73,12 +76,29 @@ def compose(lang, name, label, brief=None, explain=None, prep=(), tonight=None, 
     if (brief or {}).get("meals"):
         lines.append(w["meals"].format(items=", ".join(brief["meals"])))
     facts = (explain or {}).get("facts") or {}
-    if explain and explain.get("text") and facts.get("events", 1) and (last_night in (None, label)):
-        lines.append(w["house"].format(text=explain["text"].strip()))
+    # Only a night the house really got ready for (a night feed, a device moved) is worth a line, and only for the
+    # parent who was on duty. Muse writes the explanation in English: a Spanish parent reads the same facts in Spanish.
+    relevant = facts.get("night_feeds", facts.get("events", 1)) or facts.get("real")
+    if explain and explain.get("text") and relevant and (last_night in (None, label)):
+        text = explain["text"].strip() if lang == "en" else house_es(facts)
+        if text:
+            lines.append(w["house"].format(text=text))
     if prep:
         lines.append(w["prep"].format(line=prep[0]))
         lines.extend(prep[1:])
     return "\n".join(lines)
+
+
+def house_es(facts):
+    """The house's night in Spanish, from the explanation's facts only."""
+    feeds, real = facts.get("night_feeds") or 0, facts.get("real") or 0
+    if not feeds and not real:
+        return ""
+    parts = [f"se preparó para {feeds} toma{'s' if feeds != 1 else ''} nocturna{'s' if feeds != 1 else ''}"] if feeds else []
+    parts.append(f"{real} acción{'es' if real != 1 else ''} de verdad, el resto solo anotado (prueba en seco)" if real
+                 else "todo solo anotado (prueba en seco)")
+    text = ", ".join(parts)
+    return text[0].upper() + text[1:] + "."
 
 
 class Sent:

@@ -8,7 +8,7 @@ WORKDIR /app
 # simulated week generator, and the house brain with the sleep forecast it reads (Tonight's house card, nothing to arm).
 # house.py is not copied: the prep plug-in loads it only to copy a list to the house, which the demo removes. No
 # house_plan.py, day_engine.py or night_feed.py either, so no device path is in the image.
-COPY parenting_agent/__init__.py parenting_agent/bus.py parenting_agent/cry_reason.py parenting_agent/house_brain.py parenting_agent/sleep_forecast.py parenting_agent/
+COPY parenting_agent/__init__.py parenting_agent/baby_phase.py parenting_agent/bus.py parenting_agent/cry_reason.py parenting_agent/house_brain.py parenting_agent/sleep_forecast.py parenting_agent/
 COPY parenting_agent/agent parenting_agent/agent
 COPY parenting_agent/rhythm parenting_agent/rhythm
 COPY parenting_agent/prep parenting_agent/prep

@@ -33,6 +33,26 @@ Both parents write in Spanish. Gonza and Ceci log 9 feeds (bottle and breast), 9
 - 34 things a parent must get: one morning message each day, a next feed reminder before each day feed, nap mode on after each sleep, the night handover, tonight's plan once, the cry push to the parent on duty, nothing to Ceci at night, diapers running low once each, the shopping list once, the sitter brief and its summary, the grandmother's question answered, the voice note heard, no doorbell, and each morning message clean.
 - 25 log entries the parents asked for, looked up in Baby Buddy (kind, time, amount or side).
 
+## Before and after
+
+Both runs are scored by the same final scorer (`python -m parenting_agent.e2e --score`). After is the same day with the fixes of #148 and the Vostro config with one override, `baby.born=true`, the switch Gonza flips when Theo is born.
+
+| Number | Before (`before/`) | After (`after/`) |
+|---|---|---|
+| Things a parent must get | 11 of 34 | 30 of 34 |
+| Messages out (proactive, replies) | 55 (17, 38) | 58 (19, 39) |
+| Noise | 16 of 55 | 0 of 58 |
+| Log entries right | 24 of 25, 2 entries nobody asked for | 25 of 25, none nobody asked for |
+| Brain | 0.57 USD, 95 Muse calls | 0.60 USD, 97 Muse calls |
+
+The 4 misses after, said plainly:
+
+- Next feed reminders before the 08:15 and the 10:40 feeds. The rhythm guesses from the median of the last two gaps, and Test Baby's own test history ends with two feeds a minute apart at 01:12 and a 4 h 43 min gap, so the first guesses of the day landed after the real feeds. From the third feed on every day feed got its reminder (12:20, 15:25, 17:58, 20:28), in Spanish, once, to both.
+- The next feed reminder before the 06:15 feed: the rhythm expected it at 05:45, which is night, and at night the night feed gets the house ready on a real awake signal instead of a guess. By design.
+- Diapers running low: Gonza said 26 at 06:20, the day used 7, so 19 were left at about 8 a day, 2.4 days, over the 2 day line, and no low push went out. The morning message on day 1 said "Se está terminando: Pañales (quedan unos 2.9 días)" to both. In the second after run (`after-run2/`, 31 of 34) the same routine pushed both parents once at 18:41 in Spanish, because a stray diaper entry made the count lower (that stray entry is one of the bugs fixed after it).
+
+The three after runs, in order, all scored by the final scorer: 30 of 34 with noise 7 of 62 (the floor clean question still in English, and "Gonza comió por última vez" about the baby, both fixed), 31 of 34 with noise 0 of 60 and one stray diaper entry (fixed), and the final one above. `after/` is the last and `after-run2/` the second, the first is not kept. Spend on the e2e in all: about 3.4 USD of Muse (6 full runs, one of them lost to a dropped tunnel, plus 4 ear checks).
+
 ## Before: current main and the Vostro config as deployed (`before/`)
 
 Commit 4a5af73, `before/timeline.md`. Brain spend 0.57 USD (95 Muse calls).
@@ -58,3 +78,24 @@ What a parent would have felt:
 10. The voice note was heard as "Le di 90 ml de mamadera a las 11": the ear prompt's example said "a las 11", and the 03:00 bottle went into the log at 22:45.
 11. A camera fired the door routine 9 times in 26 minutes of real time (dry Echo announcements, no message).
 12. What worked: every log by text landed right (24 of 25, the miss is the voice note), the answer to Ceci at 20:00 named Gonza for the night, the cry push reached only Gonza, nothing reached Ceci at night, the grandmother's own chat got nothing (no grandma user exists), one morning message each day.
+
+## After: what changed (`after/timeline.md`)
+
+| Before | After |
+|---|---|
+| No next feed reminder | One per feed, 20 min before, by day, both parents: "Próxima toma en unos 20 min, cerca de las 12:40. Las tomas vienen cada 2 h 15 min más o menos." (`rhythm.engine:RhythmPlugin` loaded) |
+| Nap mode never on | On within a minute of each "se durmió", and quiet all night (an open Baby Buddy sleep timer is a sleep going on) |
+| Floor clean question in English after every nap | In Spanish, once a day |
+| Tonight's plan and each parent's line in English | "Plan de esta noche. De turno: Gonza. Calentador de mamadera (solo agua) a las 23:50, 02:30, 05:15." Muse's English sentences stay in the event log |
+| Ceci asks to sleep: the brain answers her | Also one push to Gonza: "Ceci pidió dormir esta noche, así que esta noche estás de turno vos, Gonza." Night pushes go to him only |
+| Night push to the parent who just wrote "Se despertó", in English | No push to him (he knows), the cry push in Spanish: "Se despertó, se oyó un llanto. Luz del estudio tenue: solo anotada (prueba en seco)..." |
+| Nobody noted who got up, the morning said "te levantaste 0 veces" | "Night wake-up handled by Gonza" in the log per wake-up: day 1 says "te levantaste 2 veces" to Gonza, "no te levantaste. Esta noche te toca a vos." to Ceci |
+| Prep lines and English Muse text in the morning after the birth | No prep lines after the birth. The house's night only to the parent who was on duty, only when it got ready for a feed, in Spanish |
+| "Tenemos 26 pañales" a free note, and later a diaper too | `set_supply_stock` keeps "Stock: diapers 26" once, no diaper logged |
+| "Mi mamá pregunta cuándo comió..." got "No pude anotarlo" | "Fue a las 10:40, tomó 90 ml de mamadera." |
+| No sitter plug-in | Draft in Spanish to Ceci at 12:00, and at 18:00 "Mamá de Ceci cuidó a Theo de 15:00 a 18:00. En el registro de esas horas: 1 toma (80 ml), 1 pañal." |
+| Voice note heard "a las 11", logged at 22:45 | "Le di 90 mililitros de mamadera a las 3", logged at 03:00 (no example values in the ear prompt, 4 of 4 checks right) |
+| Door routine false alarms | 0 |
+| English dry-run note under a Spanish reply | "Prueba en seco: solo quedó anotado, no se movió nada en la casa." |
+
+Still open, not scored: the brain named the grandmother "Mamá de Ceci" in the draft, and after the draft it offered to send it although sending to a sitter is not built (the draft itself says "Reenviáselo vos"). There is no grandma user, so a grandmother who writes to the bot herself gets nothing: adding her needs her chat id, which only Gonza has.
