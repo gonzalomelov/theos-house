@@ -98,7 +98,8 @@ a phone number or an address. why_changed: when what_happened is not empty, one 
 and why, else "". Answer with the JSON only."""
 
 EXPLAIN_SYSTEM = """You tell a family with a newborn, in plain words, what their house did overnight and why. You get
-the house's own event list. State facts and times only. Never give advice or a health opinion: do not use the words
+the house's own event list. State facts and times only. An event's "happened" field says whether a device moved for
+real or was only written down (dry run): say which, and never call a written-down action done. Never give advice or a health opinion: do not use the words
 should, must, try, recommend, consider, need to, normal, worry, doctor, sick, fever, medicine.
 telegram: at most 4 short sentences. echo: at most 2 short sentences for the kitchen speaker, plain letters and
 numbers only. Answer with the JSON only."""
@@ -357,7 +358,8 @@ class HouseBrain:
 
     # Events the brain reacts to or keeps for the morning
 
-    KEEP = ("house_plan", "house_brain_fallback", "night_feed", "virtual_device", "house_dry", "white_noise", "house_call")
+    KEEP = ("house_plan", "house_brain_fallback", "night_feed", "virtual_device", "house_dry", "white_noise", "house_call",
+            "house_live")
 
     def on_event(self, event):
         kind = event["kind"]
@@ -734,6 +736,11 @@ def compact(e):
         return {"at": hm, "what": f"{e.get('device')} {e.get('action')}", "reason": str(e.get("reason"))[:80]}
     if kind == "house_dry":
         return {"at": hm, "what": f"{e.get('routine')}: {e.get('action')} {e.get('entity') or ''}".strip(),
+                "reason": str(e.get("reason"))[:80], "happened": "only written down (dry run)"}
+    if kind == "house_live":
+        happened = {"ran": "done for real", "error": "tried for real, failed", "refused": "refused live, only written down",
+                    "rate_limited": "over the live cap, only written down"}.get(e.get("status"), e.get("status"))
+        return {"at": hm, "what": f"{e.get('routine')}: {e.get('service')} {e.get('entity')}", "happened": happened,
                 "reason": str(e.get("reason"))[:80]}
     if kind == "house_call":
         return {"at": hm, "what": f"{e.get('action')} ({e.get('status')})"}
@@ -747,9 +754,11 @@ def fixed_explanation(events):
     warm = sum(1 for e in events if e.get("what", "").startswith("bottle warmer on"))
     plans = sum(1 for e in events if e.get("what") == "Muse plan armed")
     falls = sum(1 for e in events if e.get("what", "").startswith(("Muse not used", "Muse plan refused")))
+    real = sum(1 for e in events if e.get("happened") == "done for real")
     s = lambda n: "" if n == 1 else "s"
-    return (f"Overnight the house got ready for {feeds} night feed{s(feeds)}, the bottle warmer went on {warm} "
-            f"time{s(warm)}. Muse armed {plans} plan{s(plans)}, the fixed routines ran {falls} time{s(falls)} instead.")
+    return (f"Overnight the house got ready for {feeds} night feed{s(feeds)}, the virtual bottle warmer went on {warm} "
+            f"time{s(warm)}. Muse armed {plans} plan{s(plans)}, the fixed routines ran {falls} time{s(falls)} instead. "
+            f"{real} device write{s(real)} done for real, everything else only written down.")
 
 
 def fixed_echo(events):

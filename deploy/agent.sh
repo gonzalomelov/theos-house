@@ -139,7 +139,7 @@ $REMOTE_LIB
 [ -f "\$ENV_FILE" ] || fail "missing \$ENV_FILE: run sh deploy/agent.sh push-env"
 [ "\$(stat -c %a "\$ENV_FILE")" = "600" ] || fail "\$ENV_FILE must have mode 600"
 for NAME in \$REQUIRED_NAMES; do grep -Eq "^\$NAME=.+" "\$ENV_FILE" || fail "\$ENV_FILE has no value for \$NAME"; done
-# The house stays dry in this deploy: HA_TOKEN is what turns live actions on (issue #9).
+# HA_TOKEN would turn every house.py action live. The only live writes are house.live_actions in the config (Oct 30).
 ! grep -Eq "^HA_TOKEN=" "\$ENV_FILE" || fail "\$ENV_FILE sets HA_TOKEN: live house actions are not part of this deploy"
 
 MAJOR="\$(docker version --format "{{.Server.Version}}" | cut -d. -f1)"

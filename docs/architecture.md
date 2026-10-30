@@ -55,7 +55,7 @@ flowchart LR
 | Ray-Ban Meta glasses | `apps/glasses`, `parenting_agent/glasses.py` | iPhone app on Meta's Wearables Device Access Toolkit: glasses camera sampled to 10 fps and sent to the Mac on the home network with a pairing token, the agent's replies and "hand" spoken back. Simulator with DAT's mock glasses so far, see `results/glasses/README.md` |
 | Daily rhythm | `parenting_agent/rhythm/` | Next feed, unusual days, night summary, night shifts |
 | Channels | `parenting_agent/channels/` | Messaging adapter interface, Telegram long polling with a family allowlist, router for ear, speaker, Telegram or partner |
-| House | `parenting_agent/house.py`, `house_tools.py` | Home Assistant tools behind the policy: alone, only with a yes, never. Dry until `house.live` is true, every call logged as a `house_call` event |
+| House | `parenting_agent/house.py`, `house_tools.py` | Home Assistant tools behind the policy: alone, only with a yes, never. Dry except the actions in `house.live_actions` (`house_live.py`: the night feed's study light and nap mode's vacuum pause and dock, live since Oct 30), every call logged as a `house_call`, `house_dry` or `house_live` event |
 | Always on | `deploy/`, `parenting_agent/agent/heartbeat.py` | The agent in a walled-off container on the Vostro, see `docs/deploy-agent.md` |
 | House sounds | `parenting_agent/hearing.py`, `house_sounds.py`, `cry_reason.py`, `white_noise.py` | Cry, doorbell and dog as events, a likely reason for a cry from the log, simulated white noise, see `docs/house-sounds.md` |
 | House plan | `parenting_agent/house_plan.py`, `meals.py` | Vacuum around naps, room cleans, the daily run, the shopping list, fast dinners after a bad night (Cookidoo read only through home-agents), dinner timing, white noise on the rhythm, see `docs/house-plan.md` |
@@ -79,7 +79,7 @@ flowchart LR
 | Baby log entries | Agent core | Baby Buddy on the family server | No |
 | Rhythm reads | Baby Buddy | Daily rhythm | No |
 | Conversation and tool results | Agent core | Brain | **Yes.** Baseten for Muse Spark Open, Anthropic only for a fallback call. With Telegram, voice notes, the car from Nov 5 and the two opt-in Muse senses below, the only flows that leave. Each call logs its model and host as a `brain_call` event, each fallback a `brain_fallback` event |
-| House actions | Agent core | Home Assistant on the family server | No. Dry until `house.live` is true |
+| House actions | Agent core | Home Assistant on the family server | No. Dry except the study light and the vacuum pause and dock, live since Oct 30 |
 | House sound labels | Camera microphone | Bus | No. Audio stays in memory, never saved |
 | Car seat second opinion (opt-in, `car_seat.muse`) | Head camera, one zoomed still per camera step | Muse Spark Open on Baseten | **Yes**, as part of the brain call. Only that still, made in memory, never saved. Each call is a `carseat_muse` event with its host |
 | Cry reason guess (opt-in, `house_sounds.muse_audio`, off by default) | The first 5 s of a cry PANNs detected | Muse Spark Open on Baseten | **Yes**, as part of the brain call, only after a synthetic canary clip passes. The clip is dropped after the one call. Each call is a `cry_sound_guess` event. No other room audio is ever sent |

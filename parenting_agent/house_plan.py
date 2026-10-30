@@ -64,6 +64,8 @@ DEVICE_WORDS = re.compile(r"\b(vacuum|aspiradora|lights?|lamps?|luz|luces|white 
                           r"warmer|tv|doorbell|timbre)\b", re.I)
 DONE_WORDS = re.compile(r"\b(start(ed|ing)?|running|runs|paused|stopped|docked|dimmed|turned|switched|is on|are on|"
                         r"sent|done|arranc\w*|prend\w*|apagu\w*|paus\w*|encend\w*)\b", re.I)
+OTHERS_DRY_NOTE = "Everything else was only written down (dry run), nothing else moved in the house."
+LIVE_WORDS = re.compile(r"for real|\(live\)", re.I)
 DRY_WORDS = re.compile(r"dry run|written down|simulated|simulad|nothing moved|not now|did not|didn't|no real|"
                        r"stays docked|waits? for|reply yes|\?", re.I)
 # A note that puts him in a room of the house ("tummy time on the play mat in the living room"). A mess note such as
@@ -120,19 +122,37 @@ def baby_out(entries, now, max_age=OUT_MAX):
     return out_at is not None and now - out_at <= max_age
 
 
-def dry_reply(text):
-    """While house.live is off, a reply that says a device started, paused or turned on also says it was only written
-    down. The brain can paraphrase a dry-run tool result into "I started the vacuum" (round 4 red team)."""
-    if text and DEVICE_WORDS.search(text) and DONE_WORDS.search(text) and not DRY_WORDS.search(text):
+def dry_reply(text, live=()):
+    """While house.live is off, a reply that says a device started, paused or turned on also says what really
+    happened. The brain can paraphrase a dry-run tool result into "I started the vacuum" (round 4 red team). live holds
+    (device words, true sentence) for each device the live gate (house_live.py) wrote for real in the last hour: those
+    get their true sentence, every other device in the reply gets the dry-run note."""
+    if not (text and DEVICE_WORDS.search(text) and DONE_WORDS.search(text)) or DRY_WORDS.search(text) \
+            or LIVE_WORDS.search(text):
+        return text
+    hits = [(words, sentence) for words, sentence in live if words.search(text)]
+    if not hits:
         return f"{text.rstrip()} {DRY_NOTE}"
-    return text
+    rest = text
+    for words, _ in hits:
+        rest = words.sub("", rest)
+    out = f"{text.rstrip()} {' '.join(sentence for _, sentence in hits)}"
+    return f"{out} {OTHERS_DRY_NOTE}" if DEVICE_WORDS.search(rest) else out
 
 
 def add_dry_guard(agent):
-    """Adds dry_reply to the agent's reply guards once, however many house plug-ins load."""
+    """Adds the truthful reply guard once, however many house plug-ins load. It reads the agent's live gate at reply
+    time, so a light or vacuum write that really ran is never called a dry run."""
     guards = getattr(agent, "reply_guards", None)
-    if guards is not None and dry_reply not in guards:
-        guards.append(dry_reply)
+    if guards is None or getattr(agent, "_house_reply_guard", None) in guards:
+        return
+
+    def guard(text):
+        gate = getattr(agent, "house_live", None)
+        return dry_reply(text, gate.claims() if gate is not None else ())
+
+    agent._house_reply_guard = guard
+    guards.append(guard)
 
 
 def nobody_home(states):

@@ -10,8 +10,10 @@
 | parents_meals | schedule | the morning after a hard night | quick Thermomix recipes from Cookidoo (read only) for the next quiet window, logistics only |
 
 Every house write goes through DayWriter, which knows a fixed set of writes and refuses everything else, the never list
-included. Without house.live and a token every write is a dry run, a house_dry event with the exact request. Nothing in
-this module calls Home Assistant on its own: HouseReader reads states, the writer is the only door out.
+included. Every write is a dry run, a house_dry event with the exact request, except the ones the live gate allows
+(house_live.py, house.live_actions): since Oct 30 on the family agent that is nap mode's vacuum pause and return to
+base when a sleep starts, never a start or a resume. Nothing in this module calls Home Assistant on its own:
+HouseReader reads states, the writer is the only door out.
 """
 import datetime
 import os
@@ -24,6 +26,7 @@ from . import meals
 from .agent.plugins import Plugin
 from .agent.tools import Tool, schema
 from .house import HomeAssistant, never_reason
+from .house_live import SLEEP_START, gate_for
 from .house_plan import DRY_WRITE, SUPPLY_NAMES, add_dry_guard, as_of, baby_out, in_window, sleep_windows, supplies
 from .rhythm import patterns
 from .rhythm.engine import DEFAULTS as RHYTHM_DEFAULTS
@@ -85,10 +88,11 @@ def empty_house():
 
 class DayWriter:
     """The only door to Home Assistant writes. Dry run publishes the exact request and sends nothing. A mirror (the
-    simulated house) can follow dry writes so a simulation shows the house changing."""
+    simulated house) can follow dry writes so a simulation shows the house changing. A live gate (house_live.py) lets
+    the few writes listed in house.live_actions run for real, nap mode's vacuum pause and return to base today."""
 
-    def __init__(self, bus, client=None, live=False, mirror=None):
-        self.bus, self.client, self.mirror = bus, client, mirror
+    def __init__(self, bus, client=None, live=False, mirror=None, gate=None):
+        self.bus, self.client, self.mirror, self.gate = bus, client, mirror, gate
         self.live = live is True and client is not None
 
     def request(self, service, entity_id, data=None):
@@ -103,8 +107,13 @@ class DayWriter:
         body = {**({"entity_id": entity_id} if entity_id else {}), **(data or {})}
         return {"method": "POST", "path": f"/api/services/{domain}/{name}", "body": body}
 
-    def call(self, routine, service, entity_id, data=None, reason="", at=None):
+    def call(self, routine, service, entity_id, data=None, reason="", at=None, signal=None):
         req = self.request(service, entity_id, data)
+        if not self.live and self.gate is not None:
+            event = self.gate.write(routine, service, entity_id, data, reason, signal,
+                                    datetime.datetime.fromisoformat(at) if at else None)
+            if event is not None:
+                return event
         if not self.live:
             event = self.bus.publish("house_dry", routine=routine, action=service, entity=entity_id, request=req,
                                      reason=reason, at=at)
@@ -195,8 +204,8 @@ class DayEngine:
         return self.bus.publish("notify", text=text + unchecked, channel=channel, source="day-engine",
                                 routine=routine, at=now.isoformat(), **fields)
 
-    def write(self, routine, service, entity, data=None, reason="", now=None):
-        return self.writer.call(routine, service, entity, data, reason, at=now.isoformat() if now else None)
+    def write(self, routine, service, entity, data=None, reason="", now=None, signal=None):
+        return self.writer.call(routine, service, entity, data, reason, at=now.isoformat() if now else None, signal=signal)
 
     # Nap mode
 
@@ -227,9 +236,9 @@ class DayEngine:
         state = house["vacuum"]
         if state == "cleaning":
             saved["resume_min"] = house.get("vacuum_left_min")
-            out.append(self.write("nap_mode", "vacuum.pause", VACUUM, None, why, now))
+            out.append(self.write("nap_mode", "vacuum.pause", VACUUM, None, why, now, signal=SLEEP_START))
         if state in ("cleaning", "paused"):
-            out.append(self.write("nap_mode", "vacuum.return_to_base", VACUUM, None, why, now))
+            out.append(self.write("nap_mode", "vacuum.return_to_base", VACUUM, None, why, now, signal=SLEEP_START))
         for entity, tv in house["tvs"].items():
             if tv["on"] and not tv["muted"]:
                 saved["muted"].append(entity)
@@ -634,7 +643,8 @@ class DayEnginePlugin(Plugin):
         self.clock = clock or (lambda: datetime.datetime.now(self.tz))
         recipes = meals.FixtureRecipes(self.s["recipes_fixture"]) if self.s.get("recipes_fixture") else (
             meals.HomeAgentsRecipes() if self.s.get("recipes") == "home-agents" else None)
-        self.engine = DayEngine(agent.bus, DayWriter(agent.bus, self.client, house_cfg.get("live") is True),
+        self.gate = gate_for(agent, config, self.client, self.clock)
+        self.engine = DayEngine(agent.bus, DayWriter(agent.bus, self.client, house_cfg.get("live") is True, gate=self.gate),
                                 {**self.s, "utc_offset_h": self.rhythm["utc_offset_h"]}, recipes,
                                 SimulatedWhiteNoise(agent.bus))
         if not self.engine.writer.live:
@@ -680,7 +690,8 @@ class DayEnginePlugin(Plugin):
     def status(self):
         mode = self.engine.mode
         return {"nap_mode": bool(mode), "since": mode["since"].isoformat() if mode else None,
-                "asks": [k[0] for k in self.engine.asks], "live": self.engine.writer.live}
+                "asks": [k[0] for k in self.engine.asks], "live": self.engine.writer.live,
+                "live_actions": [n for n in self.gate.listed if self.gate.enabled(n)]}
 
     def start(self):
         self.thread = threading.Thread(target=self.run, name="day-engine", daemon=True)

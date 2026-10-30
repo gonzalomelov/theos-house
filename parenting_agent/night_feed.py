@@ -19,7 +19,9 @@ The house acts only on a real awake signal:
 Awake means:
 - the bottle warmer plug on (VirtualSwitch, dry, virtual_devices.py) with a hard auto off after warmer_max_on_min. The
   warmer holds water only: the bottle stays in the fridge until the parent is up, so no milk waits out of the fridge.
-- the study light on, dim and warm, through house_tools (dry while house.live is false).
+- the study light on, dim and warm. Live since Oct 30 on the family agent when "night_feed_light" is in
+  house.live_actions (house_live.py): on only from this awake path, off only when the same episode turned it on for
+  real, at most 6 writes a night. Otherwise it goes through house_tools as a dry run.
 - the white noise down to a share of its level, if it is on (the house_sounds device).
 - one push to the parent on duty from the night rota (patterns.next_on_duty over the night wake-up notes), unless the
   signal came from the log, where a parent is already up and logging.
@@ -46,6 +48,9 @@ import re
 import threading
 
 from .agent.plugins import Plugin
+from .house import HomeAssistant
+from .house_live import STUDY_LIGHT, gate_for, live_actions
+from .house_plan import add_dry_guard
 from .rhythm import patterns
 from .rhythm.engine import DEFAULTS as RHYTHM_DEFAULTS
 from .rhythm.engine import make_log
@@ -90,12 +95,18 @@ def awake_message(text):
 class NightFeed(Plugin):
     name = "night-feed"
 
-    def __init__(self, agent, config, log=None, clock=None, warmer=None):
+    def __init__(self, agent, config, log=None, clock=None, warmer=None, client=None):
         super().__init__(agent, config)
         self.s = {**DEFAULTS, **(config.get("night_feed") or {})}
         self.rhythm = {**RHYTHM_DEFAULTS, **config.get("rhythm", {})}
         self.tz = datetime.timezone(datetime.timedelta(hours=self.rhythm["utc_offset_h"]))
         self.clock = clock or (lambda: datetime.datetime.now(self.tz))
+        house_cfg = config.get("house") or {}
+        if client is None and "night_feed_light" in live_actions(house_cfg):
+            token = os.environ.get(house_cfg.get("ha_token_env", "HA_MCP_TOKEN"))
+            client = HomeAssistant(house_cfg.get("ha_url", "http://127.0.0.1:18123"), token) if token else None
+        self.gate = gate_for(agent, config, client, self.clock)
+        add_dry_guard(agent)
         self._log = log
         self.warmer = warmer or VirtualSwitch(agent.bus, self.s["warmer_entity"], "bottle warmer",
                                               min(self.s["warmer_max_on_min"], WARMER_CAP_MIN), SHOPPING["bottle_warmer"])
@@ -322,21 +333,50 @@ class NightFeed(Plugin):
         if trigger in ("cry", "button") or (trigger == "parent" and push is not False):
             push = True
         self.event("prepare", now, trigger=trigger, reason=why, on_duty=ep["parent"], expected=self.hhmm(ep["expected"]))
-        warm = ""
+        warm = False
         if trigger == "log" and self.logged_feed() is not None:
             pass  # the feed is already in the log, the bottle is out
         elif self.wants_warmer():
             if self.warm(now, why):  # a pre-warm's auto off starts over, the feed is coming now
-                warm = "Bottle warmer on, "
+                warm = True
         else:
             self.event("warmer", now, action="left off", reason="no bottle in the last 24 hours" if self.s["warmer"] == "bottle_days"
                        else "warmer set to never")
-        self.house("study_light", on=True, brightness_pct=self.s["light_pct"], warm=True)
-        self.noise_down(now)
+        light = self.light(now, True, trigger, why)
+        noise = self.noise_down(now)
         if push:
-            self.push(ep["parent"], f"He is awake, {SIGNAL[trigger]}. {warm}{'study' if warm else 'Study'} light dim and warm, "
-                                    f"white noise down. {ep['parent']} is on duty.", now)
+            self.push(ep["parent"], self.awake_text(trigger, light, warm, noise, ep["parent"]), now)
         return ep
+
+    @staticmethod
+    def awake_text(trigger, light, warm, noise, parent):
+        """The push says truthfully what moved in the house and what was only written down."""
+        said = {"live": "Study light on, dim and warm: done for real.",
+                "failed": "Study light: tried for real, Home Assistant did not take it.",
+                "dry": "Study light dim and warm: only written down (dry run)."}[light]
+        dry = [w for w, on in (("bottle warmer on", warm), ("white noise down", noise)) if on]
+        rest = f" {' and '.join(dry).capitalize()}: only written down (dry run)." if dry else ""
+        return f"He is awake, {SIGNAL[trigger]}. {said}{rest} {parent} is on duty."
+
+    def light(self, now, on, signal, why):
+        """The study light, live through the gate when it allows, else the dry path. Returns live, failed or dry."""
+        ep = self.episode or {}
+        event = None
+        if on:
+            event = self.gate.write("night_feed", "light.turn_on", STUDY_LIGHT, {"brightness_pct": self.s["light_pct"]},
+                                    f"night feed, he is awake: {why}", signal, now)
+        elif ep.get("light_live"):
+            event = self.gate.write("night_feed", "light.turn_off", STUDY_LIGHT, None, f"night feed over: {why}", signal, now)
+        if event is not None:
+            if event["status"] == "ran":
+                ep["light_live"] = on
+                return "live"
+            return "failed"
+        if on:
+            self.house("study_light", on=True, brightness_pct=self.s["light_pct"], warm=True)
+        else:
+            self.house("study_light", on=False)
+        return "dry"
 
     def wants_warmer(self):
         """always, never, or bottle_days (the default): on when a bottle was logged in the last 24 hours, so a family
@@ -362,9 +402,10 @@ class NightFeed(Plugin):
         device = getattr(sounds, "device", None)
         if device is None or not device.state["on"]:
             self.event("white_noise", now, action="left", reason="white noise is off or not loaded")
-            return
+            return False
         self.episode["noise_before"] = device.state["level"]
         device.level(round(device.state["level"] * self.s["white_noise_share"], 2), "night feed, he is awake, turned down")
+        return True
 
     def noise_back(self):
         sounds = find_plugin(self.agent, "house-sounds")
@@ -417,7 +458,7 @@ class NightFeed(Plugin):
     def wind_down(self, now, why, ref):
         self.warmer.off(now, why)
         if self.episode["awake"]:
-            self.house("study_light", on=False)
+            self.light(now, False, "wind_down", why)
             self.noise_back()
         self.event("done", now, reason=why, logged=ref, minutes=round((now - self.episode["started"]).total_seconds() / 60))
         ended, self.episode = self.episode, None

@@ -48,9 +48,9 @@ The internal network is created with `--internal` and the isolated gateway mode 
 
 `~/apps/parenting-agent.env` on the Vostro, mode 600, written by `push-env` over ssh from the git-ignored `.env` of meta-hackathon-2026. Only these names travel: `ANTHROPIC_API_KEY`, `BABYBUDDY_TOKEN`, `HA_MCP_TOKEN`, `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`, `TELEGRAM_CECI_CHAT_ID` (optional, Ceci's chat), `BASETEN_API_KEY`. Values are never printed. See `deploy/env.example`.
 
-## House actions stay dry
+## House actions: two live, the rest dry
 
-The house layer (`parenting_agent/house.py`) acts only when `HA_TOKEN` is set. The Vostro env file carries the Home Assistant token as `HA_MCP_TOKEN`, so the agent can read Home Assistant and every house action stays dry run. The deploy refuses an env file that sets `HA_TOKEN`. Turning live actions on is issue #9, under the action policy in `docs/home-assistant-inventory.md`.
+The house layer (`parenting_agent/house.py`) acts only when `HA_TOKEN` is set. The Vostro env file carries the Home Assistant token as `HA_MCP_TOKEN`, so the agent can read Home Assistant. The deploy refuses an env file that sets `HA_TOKEN`. Since Oct 30 `config/agent.vostro.json` lists two live actions in `house.live_actions`: the night feed's study light and nap mode's vacuum pause and return to base (`parenting_agent/house_live.py`, the table in `docs/home-assistant-inventory.md`). Every other house action stays a dry run. These two need Home Assistant reachable, so deploy without `NO_HA` for them to write.
 
 ## Home Assistant bans after failed logins
 
