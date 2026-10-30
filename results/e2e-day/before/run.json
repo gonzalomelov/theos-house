@@ -1,0 +1,1189 @@
+{
+ "label": "before",
+ "child": {
+  "id": 1,
+  "first_name": "Test",
+  "slug": "test-baby",
+  "birth_date": "2026-10-01"
+ },
+ "seeded": {
+  "history": "Test Baby's own test entries up to Oct 29 05:05, nothing seeded",
+  "removed_before_run": 0
+ },
+ "start": "2026-10-29T06:00:00-03:00",
+ "end": "2026-10-30T08:30:00-03:00",
+ "real_seconds": 1567,
+ "loops": [
+  "prep",
+  "day-engine",
+  "night-feed",
+  "house-brain",
+  "reminders"
+ ],
+ "steps": [
+  {
+   "at": "2026-10-29T06:10:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "Le di 80 ml de mamadera.",
+   "expect": [
+    "feeding",
+    {
+     "amount": 80
+    }
+   ],
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-29T06:12:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "Cambié el pañal, estaba mojado.",
+   "expect": [
+    "change",
+    {
+     "wet": true
+    }
+   ],
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-29T06:20:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "Tenemos 26 pañales en casa.",
+   "expect": null,
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-29T06:35:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "Se durmió.",
+   "expect": [
+    "sleep_start",
+    {}
+   ],
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-29T08:05:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "Se despertó.",
+   "expect": [
+    "sleep_end",
+    {}
+   ],
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-29T08:15:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "Le di teta 15 minutos del lado izquierdo.",
+   "expect": [
+    "feeding",
+    {
+     "method": "left breast"
+    }
+   ],
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-29T08:20:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "Pañal con caca.",
+   "expect": [
+    "change",
+    {
+     "solid": true
+    }
+   ],
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-29T08:50:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "Se durmió de nuevo.",
+   "expect": [
+    "sleep_start",
+    {}
+   ],
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-29T10:30:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "Se despertó.",
+   "expect": [
+    "sleep_end",
+    {}
+   ],
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-29T10:40:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "Tomó 90 ml de mamadera.",
+   "expect": [
+    "feeding",
+    {
+     "amount": 90
+    }
+   ],
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-29T10:42:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "Pañal mojado.",
+   "expect": [
+    "change",
+    {
+     "wet": true
+    }
+   ],
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-29T11:20:00-03:00",
+   "do": "message",
+   "who": "grandma",
+   "text": "Hola, soy la abuela. ¿Cuándo comió por última vez?",
+   "expect": null,
+   "accepted": 0,
+   "answered": true
+  },
+  {
+   "at": "2026-10-29T11:22:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "Mi mamá pregunta cuándo comió por última vez.",
+   "expect": null,
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-29T11:30:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "Se durmió.",
+   "expect": [
+    "sleep_start",
+    {}
+   ],
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-29T12:00:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "Mi mamá lo cuida hoy de 15 a 18. ¿Le preparás un resumen para ella?",
+   "expect": null,
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-29T13:15:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "Se despertó.",
+   "expect": [
+    "sleep_end",
+    {}
+   ],
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-29T13:25:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "Le di 90 ml de mamadera.",
+   "expect": [
+    "feeding",
+    {
+     "amount": 90
+    }
+   ],
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-29T13:27:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "Pañal mojado.",
+   "expect": [
+    "change",
+    {
+     "wet": true
+    }
+   ],
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-29T13:50:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "Se durmió.",
+   "expect": [
+    "sleep_start",
+    {}
+   ],
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-29T15:40:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "Se despertó.",
+   "expect": [
+    "sleep_end",
+    {}
+   ],
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-29T15:55:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "Tomó 80 ml.",
+   "expect": [
+    "feeding",
+    {
+     "amount": 80
+    }
+   ],
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-29T16:00:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "Pañal sucio.",
+   "expect": [
+    "change",
+    {
+     "solid": true
+    }
+   ],
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-29T16:10:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "Quedan pocos pañales, agregalos a la lista de compras.",
+   "expect": null,
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-29T16:30:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "Se durmió.",
+   "expect": [
+    "sleep_start",
+    {}
+   ],
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-29T18:20:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "Se despertó.",
+   "expect": [
+    "sleep_end",
+    {}
+   ],
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-29T18:35:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "Teta 20 minutos, los dos lados.",
+   "expect": [
+    "feeding",
+    {
+     "method": "both breasts"
+    }
+   ],
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-29T18:40:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "Pañal mojado.",
+   "expect": [
+    "change",
+    {
+     "wet": true
+    }
+   ],
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-29T19:05:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "Lo bañamos.",
+   "expect": [
+    "bath",
+    {}
+   ],
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-29T19:40:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "Se durmió para la noche.",
+   "expect": [
+    "sleep_start",
+    {}
+   ],
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-29T20:00:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "Esta noche necesito dormir. ¿Se puede encargar Gonza de la noche?",
+   "expect": null,
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-29T22:20:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "Se despertó.",
+   "expect": [
+    "sleep_end",
+    {}
+   ],
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-29T22:35:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "Le di 90 ml de mamadera.",
+   "expect": [
+    "feeding",
+    {
+     "amount": 90
+    }
+   ],
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-29T22:37:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "Pañal mojado.",
+   "expect": [
+    "change",
+    {
+     "wet": true
+    }
+   ],
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-29T22:55:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "Se durmió.",
+   "expect": [
+    "sleep_start",
+    {}
+   ],
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-30 02:50:00-03:00",
+   "do": "sound",
+   "label": "cry"
+  },
+  {
+   "at": "2026-10-30T03:12:00-03:00",
+   "do": "voice",
+   "who": "gonza",
+   "voice": "/Users/gonza/Engineering/gonza/parenting-agent-worktrees/e2e-day/results/voice/notes/es01.ogg",
+   "expect": [
+    "feeding",
+    {
+     "amount": 90,
+     "at": "03:00"
+    }
+   ],
+   "text": "",
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-30T03:15:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "Pañal mojado.",
+   "expect": [
+    "change",
+    {
+     "wet": true
+    }
+   ],
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-30T03:30:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "Se durmió.",
+   "expect": [
+    "sleep_start",
+    {}
+   ],
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-30T06:05:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "Se despertó.",
+   "expect": [
+    "sleep_end",
+    {}
+   ],
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-30T06:15:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "Tomó 80 ml.",
+   "expect": [
+    "feeding",
+    {
+     "amount": 80
+    }
+   ],
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-29T06:10:00-03:00",
+   "chat": "9000001",
+   "text": "Registrado: mamadera de 80 ml."
+  },
+  {
+   "at": "2026-10-29T06:12:00-03:00",
+   "chat": "9000001",
+   "text": "Pañal mojado registrado."
+  },
+  {
+   "at": "2026-10-29T06:20:00-03:00",
+   "chat": "9000001",
+   "text": "Nota guardada, 26 pañales en casa."
+  },
+  {
+   "at": "2026-10-29T06:35:00-03:00",
+   "chat": "9000001",
+   "text": "Sueño registrado, que descanse."
+  },
+  {
+   "at": "2026-10-29T07:30:00-03:00",
+   "chat": "9000001",
+   "text": "Buen día, Gonza.\nAnoche: 5 tomas, el sueño más largo 2.2 h, te levantaste 0 veces.\nEsta noche te toca a vos.\nClima: lluvia, 14 a 19 C, 14.5 mm de lluvia.\nLa casa de noche: At 06:11 a plan was armed for Gonza after night wake with floor clean window 07:26 to 08:07 written down. At 07:00 the plan was armed again before nap with floor clean moved to 08:15 to 08:56 written down. Both entries were plans written down, not device moves done.\nAntes de que llegue: Unos 47 días para la fecha de parto, el 15 de diciembre (estimada).\nLo que sigue:\n- Revisar que la caja de la Litetrax traiga el huevito i-Snug 2 (Europa y Nueva Zelanda) y no el Gemm (EE.UU.)\n- Comprar el sistema de viaje Litetrax (lo compra Gonza, el agente nunca paga)\n- Leer la parte 'instalación sin base' del manual"
+  },
+  {
+   "at": "2026-10-29T07:30:00-03:00",
+   "chat": "9000002",
+   "text": "Buen día, Ceci.\nAnoche: 5 tomas, el sueño más largo 2.2 h, te levantaste una vez.\nClima: lluvia, 14 a 19 C, 14.5 mm de lluvia.\nAntes de que llegue: Unos 47 días para la fecha de parto, el 15 de diciembre (estimada).\nLo que sigue:\n- Revisar que la caja de la Litetrax traiga el huevito i-Snug 2 (Europa y Nueva Zelanda) y no el Gemm (EE.UU.)\n- Comprar el sistema de viaje Litetrax (lo compra Gonza, el agente nunca paga)\n- Leer la parte 'instalación sin base' del manual"
+  },
+  {
+   "at": "2026-10-29T08:05:00-03:00",
+   "chat": "9000002",
+   "text": "Despertada registrada, durmió 1 hora 30 min."
+  },
+  {
+   "at": "2026-10-29T08:15:00-03:00",
+   "chat": "9000001",
+   "text": "I could run the floor clean before 08:56, but the log does not say where he is in the last 2 hours, so the vacuum stays docked. Tell me where he is, or that he is out with you."
+  },
+  {
+   "at": "2026-10-29T08:15:00-03:00",
+   "chat": "9000002",
+   "text": "I could run the floor clean before 08:56, but the log does not say where he is in the last 2 hours, so the vacuum stays docked. Tell me where he is, or that he is out with you."
+  },
+  {
+   "at": "2026-10-29T08:15:00-03:00",
+   "chat": "9000002",
+   "text": "Registrado: teta 15 min izquierdo."
+  },
+  {
+   "at": "2026-10-29T08:20:00-03:00",
+   "chat": "9000002",
+   "text": "Pañal con caca registrado."
+  },
+  {
+   "at": "2026-10-29T08:50:00-03:00",
+   "chat": "9000002",
+   "text": "Sueño registrado."
+  },
+  {
+   "at": "2026-10-29T10:30:00-03:00",
+   "chat": "9000001",
+   "text": "Despertada registrada, durmió 1 hora 40 min."
+  },
+  {
+   "at": "2026-10-29T10:40:00-03:00",
+   "chat": "9000001",
+   "text": "Registrado: mamadera de 90 ml."
+  },
+  {
+   "at": "2026-10-29T10:42:00-03:00",
+   "chat": "9000001",
+   "text": "Pañal mojado registrado."
+  },
+  {
+   "at": "2026-10-29T11:22:00-03:00",
+   "chat": "9000002",
+   "text": "No pude anotarlo, ¿me lo repetís?"
+  },
+  {
+   "at": "2026-10-29T11:30:00-03:00",
+   "chat": "9000001",
+   "text": "Sueño registrado."
+  },
+  {
+   "at": "2026-10-29T12:00:00-03:00",
+   "chat": "9000002",
+   "text": "Para tu mamá, de 15 a 18:\n\nÚltima mamadera: 90 ml a las 10:40.\nÚltima teta: 15 min del lado izquierdo a las 08:15.\nPañales hoy: con caca a las 08:20, mojado a las 10:42.\nSueño hoy: 06:35 a 08:05 (1h30), 08:50 a 10:30 (1h40), y se durmió de nuevo a las 11:30 y sigue durmiendo.\n\nSi querés se lo preparo como mensaje para reenviarle."
+  },
+  {
+   "at": "2026-10-29T13:15:00-03:00",
+   "chat": "9000002",
+   "text": "Despertada registrada, durmió 1 hora 45 min."
+  },
+  {
+   "at": "2026-10-29T13:17:00-03:00",
+   "chat": "9000001",
+   "text": "I could run the floor clean before 14:05, but the log does not say where he is in the last 2 hours, so the vacuum stays docked. Tell me where he is, or that he is out with you."
+  },
+  {
+   "at": "2026-10-29T13:17:00-03:00",
+   "chat": "9000002",
+   "text": "I could run the floor clean before 14:05, but the log does not say where he is in the last 2 hours, so the vacuum stays docked. Tell me where he is, or that he is out with you."
+  },
+  {
+   "at": "2026-10-29T13:25:00-03:00",
+   "chat": "9000002",
+   "text": "Registrado: mamadera de 90 ml."
+  },
+  {
+   "at": "2026-10-29T13:27:00-03:00",
+   "chat": "9000002",
+   "text": "Pañal mojado registrado."
+  },
+  {
+   "at": "2026-10-29T13:50:00-03:00",
+   "chat": "9000002",
+   "text": "Sueño registrado."
+  },
+  {
+   "at": "2026-10-29T15:40:00-03:00",
+   "chat": "9000001",
+   "text": "Despertado registrado, durmió 1 hora 50 min."
+  },
+  {
+   "at": "2026-10-29T15:55:00-03:00",
+   "chat": "9000001",
+   "text": "Registrado: mamadera de 80 ml."
+  },
+  {
+   "at": "2026-10-29T16:00:00-03:00",
+   "chat": "9000001",
+   "text": "Pañal sucio registrado."
+  },
+  {
+   "at": "2026-10-29T16:10:00-03:00",
+   "chat": "9000001",
+   "text": "Listo, pañales agregados a la lista de compras. Dry run: house.live is off, so this was only written down and nothing moved in the house."
+  },
+  {
+   "at": "2026-10-29T16:30:00-03:00",
+   "chat": "9000001",
+   "text": "Sueño registrado."
+  },
+  {
+   "at": "2026-10-29T18:20:00-03:00",
+   "chat": "9000002",
+   "text": "Despertada registrada, durmió 1 hora 50 min."
+  },
+  {
+   "at": "2026-10-29T18:22:00-03:00",
+   "chat": "9000001",
+   "text": "I could run the floor clean before 19:03, but the log does not say where he is in the last 2 hours, so the vacuum stays docked. Tell me where he is, or that he is out with you."
+  },
+  {
+   "at": "2026-10-29T18:22:00-03:00",
+   "chat": "9000002",
+   "text": "I could run the floor clean before 19:03, but the log does not say where he is in the last 2 hours, so the vacuum stays docked. Tell me where he is, or that he is out with you."
+  },
+  {
+   "at": "2026-10-29T18:35:00-03:00",
+   "chat": "9000002",
+   "text": "Teta registrada, 20 min de ambos lados."
+  },
+  {
+   "at": "2026-10-29T18:40:00-03:00",
+   "chat": "9000002",
+   "text": "Pañal mojado registrado."
+  },
+  {
+   "at": "2026-10-29T19:05:00-03:00",
+   "chat": "9000002",
+   "text": "Baño registrado."
+  },
+  {
+   "at": "2026-10-29T19:40:00-03:00",
+   "chat": "9000002",
+   "text": "Sueño registrado."
+  },
+  {
+   "at": "2026-10-29T20:00:00-03:00",
+   "chat": "9000002",
+   "text": "Ceci, esta noche le toca a Gonza según la rota. La rota decide así: quien hizo menos noches se encarga de la próxima, y si empatan quien no hizo la última. Por ahora van 12 y 12."
+  },
+  {
+   "at": "2026-10-29T20:30:00-03:00",
+   "chat": "9000001",
+   "text": "Tonight's plan. On duty: Gonza.\nBottle warmer and dim light at 21:50, 00:25, 03:05, 05:45.\nWhy: No safe floor clean window in day time before 08:30 due to predicted sleep 07:05-08:50 and bottle prewarm armed at 21:50, 00:25, 03:05 and 05:45 for night wakes."
+  },
+  {
+   "at": "2026-10-29T20:30:00-03:00",
+   "chat": "9000002",
+   "text": "Tonight's plan. On duty: Gonza.\nBottle warmer and dim light at 21:50, 00:25, 03:05, 05:45.\nWhy: No safe floor clean window in day time before 08:30 due to predicted sleep 07:05-08:50 and bottle prewarm armed at 21:50, 00:25, 03:05 and 05:45 for night wakes."
+  },
+  {
+   "at": "2026-10-29T20:30:00-03:00",
+   "chat": "9000001",
+   "text": "For Gonza: On duty. No floor clean window available before 08:30. Bottle prewarm 21:50, 00:25, 03:05, 05:45."
+  },
+  {
+   "at": "2026-10-29T20:30:00-03:00",
+   "chat": "9000002",
+   "text": "For Ceci: No floor clean window available before 08:30. Bottle prewarm 21:50, 00:25, 03:05, 05:45."
+  },
+  {
+   "at": "2026-10-29T22:20:00-03:00",
+   "chat": "9000001",
+   "text": "He is awake, a parent said so. Study light dim and warm: only written down (dry run). Bottle warmer on: only written down (dry run). Gonza is on duty."
+  },
+  {
+   "at": "2026-10-29T22:20:00-03:00",
+   "chat": "9000001",
+   "text": "Se despertó registrado."
+  },
+  {
+   "at": "2026-10-29T22:35:00-03:00",
+   "chat": "9000001",
+   "text": "Mamadera de 90 ml registrada."
+  },
+  {
+   "at": "2026-10-29T22:37:00-03:00",
+   "chat": "9000001",
+   "text": "Pañal mojado registrado."
+  },
+  {
+   "at": "2026-10-29T22:55:00-03:00",
+   "chat": "9000001",
+   "text": "Sueño registrado."
+  },
+  {
+   "at": "2026-10-30T02:50:00-03:00",
+   "chat": "9000001",
+   "text": "He is awake, a cry was heard. Study light dim and warm: only written down (dry run). Bottle warmer on: only written down (dry run). Gonza is on duty."
+  },
+  {
+   "at": "2026-10-30T03:12:00-03:00",
+   "chat": "9000001",
+   "text": "«Le di 90 ml de mamadera a las 11.»\nMamadera de 90 ml a las 23:00 registrada."
+  },
+  {
+   "at": "2026-10-30T03:12:00-03:00",
+   "chat": "9000001",
+   "voice": true,
+   "bytes": 31
+  },
+  {
+   "at": "2026-10-30T03:15:00-03:00",
+   "chat": "9000001",
+   "text": "Pañal mojado registrado."
+  },
+  {
+   "at": "2026-10-30T03:20:00-03:00",
+   "chat": "9000001",
+   "text": "No feed logged yet for the night feed. Say \"baby agent, fed 90 ml\" to the Echo, or send a voice note, and I log it."
+  },
+  {
+   "at": "2026-10-30T03:30:00-03:00",
+   "chat": "9000001",
+   "text": "Sueño registrado."
+  },
+  {
+   "at": "2026-10-30T06:05:00-03:00",
+   "chat": "9000001",
+   "text": "Se despertó registrado."
+  },
+  {
+   "at": "2026-10-30T06:15:00-03:00",
+   "chat": "9000001",
+   "text": "Mamadera de 80 ml registrada."
+  },
+  {
+   "at": "2026-10-30T07:30:00-03:00",
+   "chat": "9000001",
+   "text": "Buen día, Gonza.\nAnoche: 2 tomas, el sueño más largo 2.6 h, te levantaste 0 veces.\nEsta noche te toca a vos.\nClima: lluvia, 14 a 19 C, 14.5 mm de lluvia.\nLa casa de noche: Bottle warmer was on at 21:50, 22:20, 00:25, 02:50 and 05:45 and off at 22:20, 22:36, 00:55 and 03:04. Night feed logged at 22:20 and feed done times logged at 22:50, 02:25 and 04:50. Door announcements at 06:05, 06:16 and 06:18 were only written down and not announced. Study light actions were only written down and not done, and Muse plans were armed at 20:30, 22:36, 06:06 and 07:00.\nAntes de que llegue: Unos 46 días para la fecha de parto, el 15 de diciembre (estimada).\nLo que sigue:\n- Revisar que la caja de la Litetrax traiga el huevito i-Snug 2 (Europa y Nueva Zelanda) y no el Gemm (EE.UU.)\n- Comprar el sistema de viaje Litetrax (lo compra Gonza, el agente nunca paga)\n- Leer la parte 'instalación sin base' del manual"
+  },
+  {
+   "at": "2026-10-30T07:30:00-03:00",
+   "chat": "9000002",
+   "text": "Buen día, Ceci.\nAnoche: 2 tomas, el sueño más largo 2.6 h, te levantaste 0 veces.\nClima: lluvia, 14 a 19 C, 14.5 mm de lluvia.\nAntes de que llegue: Unos 46 días para la fecha de parto, el 15 de diciembre (estimada).\nLo que sigue:\n- Revisar que la caja de la Litetrax traiga el huevito i-Snug 2 (Europa y Nueva Zelanda) y no el Gemm (EE.UU.)\n- Comprar el sistema de viaje Litetrax (lo compra Gonza, el agente nunca paga)\n- Leer la parte 'instalación sin base' del manual"
+  }
+ ],
+ "spoken": [
+  {
+   "text": "Mamadera de 90 ml a las 23:00 registrada.",
+   "lang": "es"
+  }
+ ],
+ "brain_usd": 0.5736,
+ "brain_calls": {
+  "inference.baseten.co": 95
+ },
+ "refused": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "tunnel_down": [],
+ "stopped_at": "2026-10-30T08:30:00-03:00",
+ "baby_buddy": [
+  {
+   "endpoint": "feedings",
+   "id": 184,
+   "child": 1,
+   "start": "2026-10-30T09:00:00Z",
+   "end": "2026-10-30T09:15:00Z",
+   "duration": "00:15:00",
+   "type": "formula",
+   "method": "bottle",
+   "amount": 80.0,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  },
+  {
+   "endpoint": "feedings",
+   "id": 183,
+   "child": 1,
+   "start": "2026-10-30T01:45:00Z",
+   "end": "2026-10-30T02:00:00Z",
+   "duration": "00:15:00",
+   "type": "formula",
+   "method": "bottle",
+   "amount": 90.0,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  },
+  {
+   "endpoint": "feedings",
+   "id": 182,
+   "child": 1,
+   "start": "2026-10-30T01:20:00Z",
+   "end": "2026-10-30T01:35:00Z",
+   "duration": "00:15:00",
+   "type": "formula",
+   "method": "bottle",
+   "amount": 90.0,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  },
+  {
+   "endpoint": "feedings",
+   "id": 181,
+   "child": 1,
+   "start": "2026-10-29T21:15:00Z",
+   "end": "2026-10-29T21:35:00Z",
+   "duration": "00:20:00",
+   "type": "breast milk",
+   "method": "both breasts",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  },
+  {
+   "endpoint": "feedings",
+   "id": 180,
+   "child": 1,
+   "start": "2026-10-29T18:40:00Z",
+   "end": "2026-10-29T18:55:00Z",
+   "duration": "00:15:00",
+   "type": "formula",
+   "method": "bottle",
+   "amount": 80.0,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  },
+  {
+   "endpoint": "feedings",
+   "id": 179,
+   "child": 1,
+   "start": "2026-10-29T16:10:00Z",
+   "end": "2026-10-29T16:25:00Z",
+   "duration": "00:15:00",
+   "type": "formula",
+   "method": "bottle",
+   "amount": 90.0,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  },
+  {
+   "endpoint": "feedings",
+   "id": 178,
+   "child": 1,
+   "start": "2026-10-29T13:25:00Z",
+   "end": "2026-10-29T13:40:00Z",
+   "duration": "00:15:00",
+   "type": "formula",
+   "method": "bottle",
+   "amount": 90.0,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  },
+  {
+   "endpoint": "feedings",
+   "id": 177,
+   "child": 1,
+   "start": "2026-10-29T11:00:00Z",
+   "end": "2026-10-29T11:15:00Z",
+   "duration": "00:15:00",
+   "type": "breast milk",
+   "method": "left breast",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  },
+  {
+   "endpoint": "feedings",
+   "id": 176,
+   "child": 1,
+   "start": "2026-10-29T08:55:00Z",
+   "end": "2026-10-29T09:10:00Z",
+   "duration": "00:15:00",
+   "type": "formula",
+   "method": "bottle",
+   "amount": 80.0,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  },
+  {
+   "endpoint": "changes",
+   "id": 187,
+   "child": 1,
+   "time": "2026-10-30T06:15:00Z",
+   "wet": true,
+   "solid": false,
+   "color": "",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  },
+  {
+   "endpoint": "changes",
+   "id": 186,
+   "child": 1,
+   "time": "2026-10-30T01:37:00Z",
+   "wet": true,
+   "solid": false,
+   "color": "",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  },
+  {
+   "endpoint": "changes",
+   "id": 185,
+   "child": 1,
+   "time": "2026-10-29T21:40:00Z",
+   "wet": true,
+   "solid": false,
+   "color": "",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  },
+  {
+   "endpoint": "changes",
+   "id": 184,
+   "child": 1,
+   "time": "2026-10-29T19:00:00Z",
+   "wet": false,
+   "solid": true,
+   "color": "",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  },
+  {
+   "endpoint": "changes",
+   "id": 183,
+   "child": 1,
+   "time": "2026-10-29T16:27:00Z",
+   "wet": true,
+   "solid": false,
+   "color": "",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  },
+  {
+   "endpoint": "changes",
+   "id": 182,
+   "child": 1,
+   "time": "2026-10-29T13:42:00Z",
+   "wet": true,
+   "solid": false,
+   "color": "",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  },
+  {
+   "endpoint": "changes",
+   "id": 181,
+   "child": 1,
+   "time": "2026-10-29T11:20:00Z",
+   "wet": false,
+   "solid": true,
+   "color": "",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  },
+  {
+   "endpoint": "changes",
+   "id": 180,
+   "child": 1,
+   "time": "2026-10-29T09:12:00Z",
+   "wet": true,
+   "solid": false,
+   "color": "",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  },
+  {
+   "endpoint": "sleep",
+   "id": 153,
+   "child": 1,
+   "start": "2026-10-30T06:30:00Z",
+   "end": "2026-10-30T09:05:00Z",
+   "duration": "02:35:00",
+   "nap": true,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  },
+  {
+   "endpoint": "sleep",
+   "id": 152,
+   "child": 1,
+   "start": "2026-10-29T22:40:00Z",
+   "end": "2026-10-30T01:20:00Z",
+   "duration": "02:40:00",
+   "nap": false,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  },
+  {
+   "endpoint": "sleep",
+   "id": 151,
+   "child": 1,
+   "start": "2026-10-29T19:30:00Z",
+   "end": "2026-10-29T21:20:00Z",
+   "duration": "01:50:00",
+   "nap": false,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  },
+  {
+   "endpoint": "sleep",
+   "id": 150,
+   "child": 1,
+   "start": "2026-10-29T16:50:00Z",
+   "end": "2026-10-29T18:40:00Z",
+   "duration": "01:50:00",
+   "nap": true,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  },
+  {
+   "endpoint": "sleep",
+   "id": 149,
+   "child": 1,
+   "start": "2026-10-29T14:30:00Z",
+   "end": "2026-10-29T16:15:00Z",
+   "duration": "01:45:00",
+   "nap": true,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  },
+  {
+   "endpoint": "sleep",
+   "id": 148,
+   "child": 1,
+   "start": "2026-10-29T11:50:00Z",
+   "end": "2026-10-29T13:30:00Z",
+   "duration": "01:40:00",
+   "nap": true,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  },
+  {
+   "endpoint": "sleep",
+   "id": 147,
+   "child": 1,
+   "start": "2026-10-29T09:35:00Z",
+   "end": "2026-10-29T11:05:00Z",
+   "duration": "01:30:00",
+   "nap": true,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  },
+  {
+   "endpoint": "notes",
+   "id": 158,
+   "child": 1,
+   "note": "Bath. Lo bañamos. (Ceci)",
+   "image": null,
+   "time": "2026-10-29T22:05:00Z",
+   "tags": [
+    "agent"
+   ]
+  },
+  {
+   "endpoint": "notes",
+   "id": 157,
+   "child": 1,
+   "note": "Gonza: Tenemos 26 pañales en casa",
+   "image": null,
+   "time": "2026-10-29T09:20:00Z",
+   "tags": [
+    "agent"
+   ]
+  },
+  {
+   "endpoint": "timers",
+   "id": 9,
+   "child": 1,
+   "name": "sleep",
+   "start": "2026-10-30T01:55:00Z",
+   "duration": "12:38:09.579554",
+   "user": 2
+  }
+ ]
+}

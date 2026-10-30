@@ -1,0 +1,963 @@
+{
+ "label": "before",
+ "numbers": {
+  "messages_out": 55,
+  "proactive": 17,
+  "replies": 38,
+  "noise": 16,
+  "noise_by_kind": {
+   "English to a Spanish parent": 14,
+   "prep lines after the birth": 4,
+   "duplicate": 4,
+   "night push to the parent who just said it": 1,
+   "internal text": 1
+  },
+  "expected_found": 11,
+  "expected": 34,
+  "log_ok": 24,
+  "log_expected": 25,
+  "log_extra": 2,
+  "brain_usd": 0.5736,
+  "brain_calls": {
+   "inference.baseten.co": 95
+  },
+  "real_seconds": 1567,
+  "house_writes_refused": 0,
+  "telegram_refused": 0
+ },
+ "messages": [
+  {
+   "at": "2026-10-29T06:10:00-03:00",
+   "to": "gonza",
+   "text": "Registrado: mamadera de 80 ml.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T06:12:00-03:00",
+   "to": "gonza",
+   "text": "Pañal mojado registrado.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T06:20:00-03:00",
+   "to": "gonza",
+   "text": "Nota guardada, 26 pañales en casa.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T06:35:00-03:00",
+   "to": "gonza",
+   "text": "Sueño registrado, que descanse.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T07:30:00-03:00",
+   "to": "gonza",
+   "text": "Buen día, Gonza.\nAnoche: 5 tomas, el sueño más largo 2.2 h, te levantaste 0 veces.\nEsta noche te toca a vos.\nClima: lluvia, 14 a 19 C, 14.5 mm de lluvia.\nLa casa de noche: At 06:11 a plan was armed for Gonza after night wake with floor clean window 07:26 to 08:07 written down. At 07:00 the plan was armed again before nap with floor clean moved to 08:15 to 08:56 written down. Both entries were plans written down, not device moves done.\nAntes de que llegue: Unos 47 días para la fecha de parto, el 15 de diciembre (estimada).\nLo que sigue:\n- Revisar que la caja de la Litetrax traiga el huevito i-Snug 2 (Europa y Nueva Zelanda) y no el Gemm (EE.UU.)\n- Comprar el sistema de viaje Litetrax (lo compra Gonza, el agente nunca paga)\n- Leer la parte 'instalación sin base' del manual",
+   "proactive": true,
+   "source": "family-push",
+   "problems": [
+    "English to a Spanish parent",
+    "prep lines after the birth"
+   ],
+   "verdict": "noise"
+  },
+  {
+   "at": "2026-10-29T07:30:00-03:00",
+   "to": "ceci",
+   "text": "Buen día, Ceci.\nAnoche: 5 tomas, el sueño más largo 2.2 h, te levantaste una vez.\nClima: lluvia, 14 a 19 C, 14.5 mm de lluvia.\nAntes de que llegue: Unos 47 días para la fecha de parto, el 15 de diciembre (estimada).\nLo que sigue:\n- Revisar que la caja de la Litetrax traiga el huevito i-Snug 2 (Europa y Nueva Zelanda) y no el Gemm (EE.UU.)\n- Comprar el sistema de viaje Litetrax (lo compra Gonza, el agente nunca paga)\n- Leer la parte 'instalación sin base' del manual",
+   "proactive": true,
+   "source": "family-push",
+   "problems": [
+    "prep lines after the birth"
+   ],
+   "verdict": "noise"
+  },
+  {
+   "at": "2026-10-29T08:05:00-03:00",
+   "to": "ceci",
+   "text": "Despertada registrada, durmió 1 hora 30 min.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T08:15:00-03:00",
+   "to": "gonza",
+   "text": "I could run the floor clean before 08:56, but the log does not say where he is in the last 2 hours, so the vacuum stays docked. Tell me where he is, or that he is out with you.",
+   "proactive": true,
+   "source": "day-engine",
+   "problems": [
+    "English to a Spanish parent"
+   ],
+   "verdict": "noise"
+  },
+  {
+   "at": "2026-10-29T08:15:00-03:00",
+   "to": "ceci",
+   "text": "I could run the floor clean before 08:56, but the log does not say where he is in the last 2 hours, so the vacuum stays docked. Tell me where he is, or that he is out with you.",
+   "proactive": true,
+   "source": "day-engine",
+   "problems": [
+    "English to a Spanish parent"
+   ],
+   "verdict": "noise"
+  },
+  {
+   "at": "2026-10-29T08:15:00-03:00",
+   "to": "ceci",
+   "text": "Registrado: teta 15 min izquierdo.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T08:20:00-03:00",
+   "to": "ceci",
+   "text": "Pañal con caca registrado.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T08:50:00-03:00",
+   "to": "ceci",
+   "text": "Sueño registrado.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T10:30:00-03:00",
+   "to": "gonza",
+   "text": "Despertada registrada, durmió 1 hora 40 min.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T10:40:00-03:00",
+   "to": "gonza",
+   "text": "Registrado: mamadera de 90 ml.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T10:42:00-03:00",
+   "to": "gonza",
+   "text": "Pañal mojado registrado.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T11:22:00-03:00",
+   "to": "ceci",
+   "text": "No pude anotarlo, ¿me lo repetís?",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T11:30:00-03:00",
+   "to": "gonza",
+   "text": "Sueño registrado.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T12:00:00-03:00",
+   "to": "ceci",
+   "text": "Para tu mamá, de 15 a 18:\n\nÚltima mamadera: 90 ml a las 10:40.\nÚltima teta: 15 min del lado izquierdo a las 08:15.\nPañales hoy: con caca a las 08:20, mojado a las 10:42.\nSueño hoy: 06:35 a 08:05 (1h30), 08:50 a 10:30 (1h40), y se durmió de nuevo a las 11:30 y sigue durmiendo.\n\nSi querés se lo preparo como mensaje para reenviarle.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T13:15:00-03:00",
+   "to": "ceci",
+   "text": "Despertada registrada, durmió 1 hora 45 min.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T13:17:00-03:00",
+   "to": "gonza",
+   "text": "I could run the floor clean before 14:05, but the log does not say where he is in the last 2 hours, so the vacuum stays docked. Tell me where he is, or that he is out with you.",
+   "proactive": true,
+   "source": "day-engine",
+   "problems": [
+    "English to a Spanish parent",
+    "duplicate"
+   ],
+   "verdict": "noise"
+  },
+  {
+   "at": "2026-10-29T13:17:00-03:00",
+   "to": "ceci",
+   "text": "I could run the floor clean before 14:05, but the log does not say where he is in the last 2 hours, so the vacuum stays docked. Tell me where he is, or that he is out with you.",
+   "proactive": true,
+   "source": "day-engine",
+   "problems": [
+    "English to a Spanish parent",
+    "duplicate"
+   ],
+   "verdict": "noise"
+  },
+  {
+   "at": "2026-10-29T13:25:00-03:00",
+   "to": "ceci",
+   "text": "Registrado: mamadera de 90 ml.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T13:27:00-03:00",
+   "to": "ceci",
+   "text": "Pañal mojado registrado.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T13:50:00-03:00",
+   "to": "ceci",
+   "text": "Sueño registrado.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T15:40:00-03:00",
+   "to": "gonza",
+   "text": "Despertado registrado, durmió 1 hora 50 min.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T15:55:00-03:00",
+   "to": "gonza",
+   "text": "Registrado: mamadera de 80 ml.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T16:00:00-03:00",
+   "to": "gonza",
+   "text": "Pañal sucio registrado.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T16:10:00-03:00",
+   "to": "gonza",
+   "text": "Listo, pañales agregados a la lista de compras. Dry run: house.live is off, so this was only written down and nothing moved in the house.",
+   "proactive": false,
+   "source": null,
+   "problems": [
+    "English to a Spanish parent"
+   ],
+   "verdict": "noise"
+  },
+  {
+   "at": "2026-10-29T16:30:00-03:00",
+   "to": "gonza",
+   "text": "Sueño registrado.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T18:20:00-03:00",
+   "to": "ceci",
+   "text": "Despertada registrada, durmió 1 hora 50 min.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T18:22:00-03:00",
+   "to": "gonza",
+   "text": "I could run the floor clean before 19:03, but the log does not say where he is in the last 2 hours, so the vacuum stays docked. Tell me where he is, or that he is out with you.",
+   "proactive": true,
+   "source": "day-engine",
+   "problems": [
+    "English to a Spanish parent",
+    "duplicate"
+   ],
+   "verdict": "noise"
+  },
+  {
+   "at": "2026-10-29T18:22:00-03:00",
+   "to": "ceci",
+   "text": "I could run the floor clean before 19:03, but the log does not say where he is in the last 2 hours, so the vacuum stays docked. Tell me where he is, or that he is out with you.",
+   "proactive": true,
+   "source": "day-engine",
+   "problems": [
+    "English to a Spanish parent",
+    "duplicate"
+   ],
+   "verdict": "noise"
+  },
+  {
+   "at": "2026-10-29T18:35:00-03:00",
+   "to": "ceci",
+   "text": "Teta registrada, 20 min de ambos lados.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T18:40:00-03:00",
+   "to": "ceci",
+   "text": "Pañal mojado registrado.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T19:05:00-03:00",
+   "to": "ceci",
+   "text": "Baño registrado.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T19:40:00-03:00",
+   "to": "ceci",
+   "text": "Sueño registrado.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T20:00:00-03:00",
+   "to": "ceci",
+   "text": "Ceci, esta noche le toca a Gonza según la rota. La rota decide así: quien hizo menos noches se encarga de la próxima, y si empatan quien no hizo la última. Por ahora van 12 y 12.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T20:30:00-03:00",
+   "to": "gonza",
+   "text": "Tonight's plan. On duty: Gonza.\nBottle warmer and dim light at 21:50, 00:25, 03:05, 05:45.\nWhy: No safe floor clean window in day time before 08:30 due to predicted sleep 07:05-08:50 and bottle prewarm armed at 21:50, 00:25, 03:05 and 05:45 for night wakes.",
+   "proactive": true,
+   "source": "house-brain",
+   "problems": [
+    "English to a Spanish parent"
+   ],
+   "verdict": "noise"
+  },
+  {
+   "at": "2026-10-29T20:30:00-03:00",
+   "to": "ceci",
+   "text": "Tonight's plan. On duty: Gonza.\nBottle warmer and dim light at 21:50, 00:25, 03:05, 05:45.\nWhy: No safe floor clean window in day time before 08:30 due to predicted sleep 07:05-08:50 and bottle prewarm armed at 21:50, 00:25, 03:05 and 05:45 for night wakes.",
+   "proactive": true,
+   "source": "house-brain",
+   "problems": [
+    "English to a Spanish parent"
+   ],
+   "verdict": "noise"
+  },
+  {
+   "at": "2026-10-29T20:30:00-03:00",
+   "to": "gonza",
+   "text": "For Gonza: On duty. No floor clean window available before 08:30. Bottle prewarm 21:50, 00:25, 03:05, 05:45.",
+   "proactive": true,
+   "source": "house-brain",
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T20:30:00-03:00",
+   "to": "ceci",
+   "text": "For Ceci: No floor clean window available before 08:30. Bottle prewarm 21:50, 00:25, 03:05, 05:45.",
+   "proactive": true,
+   "source": "house-brain",
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T22:20:00-03:00",
+   "to": "gonza",
+   "text": "He is awake, a parent said so. Study light dim and warm: only written down (dry run). Bottle warmer on: only written down (dry run). Gonza is on duty.",
+   "proactive": true,
+   "source": "night_feed",
+   "problems": [
+    "English to a Spanish parent",
+    "night push to the parent who just said it"
+   ],
+   "verdict": "noise"
+  },
+  {
+   "at": "2026-10-29T22:20:00-03:00",
+   "to": "gonza",
+   "text": "Se despertó registrado.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T22:35:00-03:00",
+   "to": "gonza",
+   "text": "Mamadera de 90 ml registrada.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T22:37:00-03:00",
+   "to": "gonza",
+   "text": "Pañal mojado registrado.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T22:55:00-03:00",
+   "to": "gonza",
+   "text": "Sueño registrado.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-30T02:50:00-03:00",
+   "to": "gonza",
+   "text": "He is awake, a cry was heard. Study light dim and warm: only written down (dry run). Bottle warmer on: only written down (dry run). Gonza is on duty.",
+   "proactive": true,
+   "source": "night_feed",
+   "problems": [
+    "English to a Spanish parent"
+   ],
+   "verdict": "noise"
+  },
+  {
+   "at": "2026-10-30T03:12:00-03:00",
+   "to": "gonza",
+   "text": "«Le di 90 ml de mamadera a las 11.»\nMamadera de 90 ml a las 23:00 registrada.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-30T03:15:00-03:00",
+   "to": "gonza",
+   "text": "Pañal mojado registrado.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-30T03:20:00-03:00",
+   "to": "gonza",
+   "text": "No feed logged yet for the night feed. Say \"baby agent, fed 90 ml\" to the Echo, or send a voice note, and I log it.",
+   "proactive": true,
+   "source": "night_feed",
+   "problems": [
+    "English to a Spanish parent"
+   ],
+   "verdict": "noise"
+  },
+  {
+   "at": "2026-10-30T03:30:00-03:00",
+   "to": "gonza",
+   "text": "Sueño registrado.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-30T06:05:00-03:00",
+   "to": "gonza",
+   "text": "Se despertó registrado.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-30T06:15:00-03:00",
+   "to": "gonza",
+   "text": "Mamadera de 80 ml registrada.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-30T07:30:00-03:00",
+   "to": "gonza",
+   "text": "Buen día, Gonza.\nAnoche: 2 tomas, el sueño más largo 2.6 h, te levantaste 0 veces.\nEsta noche te toca a vos.\nClima: lluvia, 14 a 19 C, 14.5 mm de lluvia.\nLa casa de noche: Bottle warmer was on at 21:50, 22:20, 00:25, 02:50 and 05:45 and off at 22:20, 22:36, 00:55 and 03:04. Night feed logged at 22:20 and feed done times logged at 22:50, 02:25 and 04:50. Door announcements at 06:05, 06:16 and 06:18 were only written down and not announced. Study light actions were only written down and not done, and Muse plans were armed at 20:30, 22:36, 06:06 and 07:00.\nAntes de que llegue: Unos 46 días para la fecha de parto, el 15 de diciembre (estimada).\nLo que sigue:\n- Revisar que la caja de la Litetrax traiga el huevito i-Snug 2 (Europa y Nueva Zelanda) y no el Gemm (EE.UU.)\n- Comprar el sistema de viaje Litetrax (lo compra Gonza, el agente nunca paga)\n- Leer la parte 'instalación sin base' del manual",
+   "proactive": true,
+   "source": "family-push",
+   "problems": [
+    "English to a Spanish parent",
+    "internal text (Muse)",
+    "prep lines after the birth"
+   ],
+   "verdict": "noise"
+  },
+  {
+   "at": "2026-10-30T07:30:00-03:00",
+   "to": "ceci",
+   "text": "Buen día, Ceci.\nAnoche: 2 tomas, el sueño más largo 2.6 h, te levantaste 0 veces.\nClima: lluvia, 14 a 19 C, 14.5 mm de lluvia.\nAntes de que llegue: Unos 46 días para la fecha de parto, el 15 de diciembre (estimada).\nLo que sigue:\n- Revisar que la caja de la Litetrax traiga el huevito i-Snug 2 (Europa y Nueva Zelanda) y no el Gemm (EE.UU.)\n- Comprar el sistema de viaje Litetrax (lo compra Gonza, el agente nunca paga)\n- Leer la parte 'instalación sin base' del manual",
+   "proactive": true,
+   "source": "family-push",
+   "problems": [
+    "prep lines after the birth"
+   ],
+   "verdict": "noise"
+  }
+ ],
+ "expected": [
+  {
+   "item": "morning message day 0 to gonza",
+   "found": true,
+   "detail": "1 morning message(s), 1 message(s) 07:25 to 08:10"
+  },
+  {
+   "item": "morning message day 0 to ceci",
+   "found": true,
+   "detail": "1 morning message(s), 1 message(s) 07:25 to 08:10"
+  },
+  {
+   "item": "morning message day 1 to gonza",
+   "found": true,
+   "detail": "1 morning message(s), 1 message(s) 07:25 to 08:10"
+  },
+  {
+   "item": "morning message day 1 to ceci",
+   "found": true,
+   "detail": "1 morning message(s), 1 message(s) 07:25 to 08:10"
+  },
+  {
+   "item": "next-feed reminder before the 08:15 feed",
+   "found": false,
+   "detail": "0 reminder(s) in the 90 min before"
+  },
+  {
+   "item": "next-feed reminder before the 10:40 feed",
+   "found": false,
+   "detail": "0 reminder(s) in the 90 min before"
+  },
+  {
+   "item": "next-feed reminder before the 13:25 feed",
+   "found": false,
+   "detail": "0 reminder(s) in the 90 min before"
+  },
+  {
+   "item": "next-feed reminder before the 15:55 feed",
+   "found": false,
+   "detail": "0 reminder(s) in the 90 min before"
+  },
+  {
+   "item": "next-feed reminder before the 18:35 feed",
+   "found": false,
+   "detail": "0 reminder(s) in the 90 min before"
+  },
+  {
+   "item": "next-feed reminder before the 06:15 feed",
+   "found": false,
+   "detail": "0 reminder(s) in the 90 min before"
+  },
+  {
+   "item": "nap mode on after the 06:35 sleep",
+   "found": false,
+   "detail": "0 nap_mode on event(s) within 5 min"
+  },
+  {
+   "item": "nap mode on after the 08:50 sleep",
+   "found": false,
+   "detail": "0 nap_mode on event(s) within 5 min"
+  },
+  {
+   "item": "nap mode on after the 11:30 sleep",
+   "found": false,
+   "detail": "0 nap_mode on event(s) within 5 min"
+  },
+  {
+   "item": "nap mode on after the 13:50 sleep",
+   "found": false,
+   "detail": "0 nap_mode on event(s) within 5 min"
+  },
+  {
+   "item": "nap mode on after the 16:30 sleep",
+   "found": false,
+   "detail": "0 nap_mode on event(s) within 5 min"
+  },
+  {
+   "item": "nap mode on after the 19:40 sleep",
+   "found": false,
+   "detail": "0 nap_mode on event(s) within 5 min"
+  },
+  {
+   "item": "nap mode on after the 22:55 sleep",
+   "found": false,
+   "detail": "0 nap_mode on event(s) within 5 min"
+  },
+  {
+   "item": "nap mode on after the 03:30 sleep",
+   "found": false,
+   "detail": "0 nap_mode on event(s) within 5 min"
+  },
+  {
+   "item": "night handover to Gonza after Ceci asked to sleep",
+   "found": true,
+   "detail": "2 message(s) to Gonza 20:00 to 21:30"
+  },
+  {
+   "item": "tonight's plan at bedtime, at most one per parent",
+   "found": true,
+   "detail": "2 plan message(s)"
+  },
+  {
+   "item": "night cry: push to Gonza (on duty) within 5 min",
+   "found": true,
+   "detail": "1 push(es)"
+  },
+  {
+   "item": "no night push to Ceci after she asked to sleep",
+   "found": true,
+   "detail": "0 night push(es) to Ceci"
+  },
+  {
+   "item": "diapers running low told once to each parent",
+   "found": false,
+   "detail": "none"
+  },
+  {
+   "item": "diapers on the shopping list once (dry in the run)",
+   "found": true,
+   "detail": "1 shopping list write(s): shopping"
+  },
+  {
+   "item": "sitter brief drafted for Ceci's mother",
+   "found": false,
+   "detail": "1 reply, events: []"
+  },
+  {
+   "item": "sitter summary after the window",
+   "found": false,
+   "detail": []
+  },
+  {
+   "item": "grandma's question through Ceci answered with the last feed time",
+   "found": false,
+   "detail": "No pude anotarlo, ¿me lo repetís?"
+  },
+  {
+   "item": "grandma's own message: no family user, ignored and nothing sent to her chat",
+   "found": true,
+   "detail": "1 ignored, 0 sent (no grandma in the people block)"
+  },
+  {
+   "item": "voice note heard",
+   "found": true,
+   "detail": "1 voice_heard"
+  },
+  {
+   "item": "no door routine",
+   "found": false,
+   "detail": "9 door routine event(s)"
+  },
+  {
+   "item": "morning message day 0 to gonza: Spanish, only what is theirs",
+   "found": false,
+   "detail": "English to a Spanish parent; prep lines after the birth"
+  },
+  {
+   "item": "morning message day 0 to ceci: Spanish, only what is theirs",
+   "found": false,
+   "detail": "prep lines after the birth"
+  },
+  {
+   "item": "morning message day 1 to gonza: Spanish, only what is theirs",
+   "found": false,
+   "detail": "English to a Spanish parent; internal text (Muse); prep lines after the birth"
+  },
+  {
+   "item": "morning message day 1 to ceci: Spanish, only what is theirs",
+   "found": false,
+   "detail": "prep lines after the birth"
+  }
+ ],
+ "log": [
+  {
+   "at": "2026-10-29T06:10:00-03:00",
+   "who": "gonza",
+   "said": "Le di 80 ml de mamadera.",
+   "want": "feeding",
+   "got": "bottle 80.0 ml at 05:55",
+   "ok": true
+  },
+  {
+   "at": "2026-10-29T06:12:00-03:00",
+   "who": "gonza",
+   "said": "Cambié el pañal, estaba mojado.",
+   "want": "change",
+   "got": "wet True solid False",
+   "ok": true
+  },
+  {
+   "at": "2026-10-29T08:05:00-03:00",
+   "who": "ceci",
+   "said": "Se despertó.",
+   "want": "sleep_end",
+   "got": "sleep 06:35 to 08:05",
+   "ok": true
+  },
+  {
+   "at": "2026-10-29T08:15:00-03:00",
+   "who": "ceci",
+   "said": "Le di teta 15 minutos del lado izquierdo.",
+   "want": "feeding",
+   "got": "left breast None ml at 08:00",
+   "ok": true
+  },
+  {
+   "at": "2026-10-29T08:20:00-03:00",
+   "who": "ceci",
+   "said": "Pañal con caca.",
+   "want": "change",
+   "got": "wet False solid True",
+   "ok": true
+  },
+  {
+   "at": "2026-10-29T10:30:00-03:00",
+   "who": "gonza",
+   "said": "Se despertó.",
+   "want": "sleep_end",
+   "got": "sleep 08:50 to 10:30",
+   "ok": true
+  },
+  {
+   "at": "2026-10-29T10:40:00-03:00",
+   "who": "gonza",
+   "said": "Tomó 90 ml de mamadera.",
+   "want": "feeding",
+   "got": "bottle 90.0 ml at 10:25",
+   "ok": true
+  },
+  {
+   "at": "2026-10-29T10:42:00-03:00",
+   "who": "gonza",
+   "said": "Pañal mojado.",
+   "want": "change",
+   "got": "wet True solid False",
+   "ok": true
+  },
+  {
+   "at": "2026-10-29T13:15:00-03:00",
+   "who": "ceci",
+   "said": "Se despertó.",
+   "want": "sleep_end",
+   "got": "sleep 11:30 to 13:15",
+   "ok": true
+  },
+  {
+   "at": "2026-10-29T13:25:00-03:00",
+   "who": "ceci",
+   "said": "Le di 90 ml de mamadera.",
+   "want": "feeding",
+   "got": "bottle 90.0 ml at 13:10",
+   "ok": true
+  },
+  {
+   "at": "2026-10-29T13:27:00-03:00",
+   "who": "ceci",
+   "said": "Pañal mojado.",
+   "want": "change",
+   "got": "wet True solid False",
+   "ok": true
+  },
+  {
+   "at": "2026-10-29T15:40:00-03:00",
+   "who": "gonza",
+   "said": "Se despertó.",
+   "want": "sleep_end",
+   "got": "sleep 13:50 to 15:40",
+   "ok": true
+  },
+  {
+   "at": "2026-10-29T15:55:00-03:00",
+   "who": "gonza",
+   "said": "Tomó 80 ml.",
+   "want": "feeding",
+   "got": "bottle 80.0 ml at 15:40",
+   "ok": true
+  },
+  {
+   "at": "2026-10-29T16:00:00-03:00",
+   "who": "gonza",
+   "said": "Pañal sucio.",
+   "want": "change",
+   "got": "wet False solid True",
+   "ok": true
+  },
+  {
+   "at": "2026-10-29T18:20:00-03:00",
+   "who": "ceci",
+   "said": "Se despertó.",
+   "want": "sleep_end",
+   "got": "sleep 16:30 to 18:20",
+   "ok": true
+  },
+  {
+   "at": "2026-10-29T18:35:00-03:00",
+   "who": "ceci",
+   "said": "Teta 20 minutos, los dos lados.",
+   "want": "feeding",
+   "got": "both breasts None ml at 18:15",
+   "ok": true
+  },
+  {
+   "at": "2026-10-29T18:40:00-03:00",
+   "who": "ceci",
+   "said": "Pañal mojado.",
+   "want": "change",
+   "got": "wet True solid False",
+   "ok": true
+  },
+  {
+   "at": "2026-10-29T19:05:00-03:00",
+   "who": "ceci",
+   "said": "Lo bañamos.",
+   "want": "bath",
+   "got": "Bath. Lo bañamos. (Ceci)",
+   "ok": true
+  },
+  {
+   "at": "2026-10-29T22:20:00-03:00",
+   "who": "gonza",
+   "said": "Se despertó.",
+   "want": "sleep_end",
+   "got": "sleep 19:40 to 22:20",
+   "ok": true
+  },
+  {
+   "at": "2026-10-29T22:35:00-03:00",
+   "who": "gonza",
+   "said": "Le di 90 ml de mamadera.",
+   "want": "feeding",
+   "got": "bottle 90.0 ml at 22:20",
+   "ok": true
+  },
+  {
+   "at": "2026-10-29T22:37:00-03:00",
+   "who": "gonza",
+   "said": "Pañal mojado.",
+   "want": "change",
+   "got": "wet True solid False",
+   "ok": true
+  },
+  {
+   "at": "2026-10-30T03:12:00-03:00",
+   "who": "gonza",
+   "said": "(voice note)",
+   "want": "feeding",
+   "got": "nothing",
+   "ok": false
+  },
+  {
+   "at": "2026-10-30T03:15:00-03:00",
+   "who": "gonza",
+   "said": "Pañal mojado.",
+   "want": "change",
+   "got": "wet True solid False",
+   "ok": true
+  },
+  {
+   "at": "2026-10-30T06:05:00-03:00",
+   "who": "gonza",
+   "said": "Se despertó.",
+   "want": "sleep_end",
+   "got": "sleep 03:30 to 06:05",
+   "ok": true
+  },
+  {
+   "at": "2026-10-30T06:15:00-03:00",
+   "who": "gonza",
+   "said": "Tomó 80 ml.",
+   "want": "feeding",
+   "got": "bottle 80.0 ml at 06:00",
+   "ok": true
+  }
+ ],
+ "log_extra": [
+  {
+   "endpoint": "feedings",
+   "id": 183,
+   "start": "2026-10-30T01:45:00Z",
+   "time": null,
+   "end": "2026-10-30T02:00:00Z",
+   "amount": 90.0,
+   "note": null,
+   "wet": null,
+   "solid": null
+  },
+  {
+   "endpoint": "notes",
+   "id": 157,
+   "start": null,
+   "time": "2026-10-29T09:20:00Z",
+   "end": null,
+   "amount": null,
+   "note": "Gonza: Tenemos 26 pañales en casa",
+   "wet": null,
+   "solid": null
+  }
+ ]
+}
