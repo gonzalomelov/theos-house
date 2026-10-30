@@ -9,6 +9,18 @@ struct ContentView: View {
   private var agent: AgentLink { companion.agent }
 
   var body: some View {
+    #if DEBUG
+    if companion.replay != nil {
+      HUDReplayScreen(companion: companion)
+    } else {
+      main
+    }
+    #else
+    main
+    #endif
+  }
+
+  private var main: some View {
     VStack(spacing: 12) {
       header
       preview

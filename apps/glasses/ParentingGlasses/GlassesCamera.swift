@@ -49,6 +49,11 @@ final class GlassesCamera {
   var message: String?
 
   @ObservationIgnored var onSample: ((Data) -> Void)?
+  /// Called once the device session is up, before the camera starts. The HUD attaches the display here.
+  @ObservationIgnored var onSessionStarted: ((DeviceSession) -> Void)?
+  #if DEBUG
+  @ObservationIgnored private(set) var mockGlasses: (any MockGlasses)?
+  #endif
   @ObservationIgnored private let wearables: WearablesInterface
   @ObservationIgnored private let selector: AutoDeviceSelector
   @ObservationIgnored private var session: DeviceSession?
@@ -104,12 +109,14 @@ final class GlassesCamera {
   }
 
   #if DEBUG
-  /// Simulator and tests: a mock Ray-Ban Meta from Meta's MockDeviceKit, worn, with a video file as its camera.
-  func pairMockGlasses(feed: URL) {
+  /// Simulator and tests: mock glasses from Meta's MockDeviceKit, worn, with a video file as their camera.
+  /// `.metaRayBanDisplay` also gives the session a display, rendered on the phone by MockDisplayKit.
+  func pairMockGlasses(feed: URL, model: GlassesModel = .rayBanMeta) {
     let kit = MockDeviceKit.shared
     kit.enable()
     do {
-      let device = try kit.pairGlasses(model: .rayBanMeta)
+      let device = try kit.pairGlasses(model: model)
+      mockGlasses = device
       device.powerOn()
       device.unfold()
       device.don()
@@ -155,6 +162,7 @@ final class GlassesCamera {
   private func sessionChanged(_ state: DeviceSessionState) {
     sessionState = state
     if state == .started, camera == nil {
+      if let session { onSessionStarted?(session) }
       Task { await startStream() }
     } else if state == .stopped {
       sessionTokens.clear()

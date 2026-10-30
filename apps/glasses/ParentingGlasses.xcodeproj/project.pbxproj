@@ -10,6 +10,7 @@
 		AA0000000000000000000B01 /* MWDATCore in Frameworks */ = {isa = PBXBuildFile; productRef = AA0000000000000000000C01 /* MWDATCore */; };
 		AA0000000000000000000B02 /* MWDATCamera in Frameworks */ = {isa = PBXBuildFile; productRef = AA0000000000000000000C02 /* MWDATCamera */; };
 		AA0000000000000000000B03 /* MWDATMockDevice in Frameworks */ = {isa = PBXBuildFile; productRef = AA0000000000000000000C03 /* MWDATMockDevice */; };
+		AA0000000000000000000B04 /* MWDATDisplay in Frameworks */ = {isa = PBXBuildFile; productRef = AA0000000000000000000C04 /* MWDATDisplay */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,7 @@
 				AA0000000000000000000B01 /* MWDATCore in Frameworks */,
 				AA0000000000000000000B02 /* MWDATCamera in Frameworks */,
 				AA0000000000000000000B03 /* MWDATMockDevice in Frameworks */,
+				AA0000000000000000000B04 /* MWDATDisplay in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -85,6 +87,7 @@
 				AA0000000000000000000C01 /* MWDATCore */,
 				AA0000000000000000000C02 /* MWDATCamera */,
 				AA0000000000000000000C03 /* MWDATMockDevice */,
+				AA0000000000000000000C04 /* MWDATDisplay */,
 			);
 			productName = ParentingGlasses;
 			productReference = AA0000000000000000000A01 /* ParentingGlasses.app */;
@@ -281,6 +284,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = AA0000000000000000001401 /* XCRemoteSwiftPackageReference "meta-wearables-dat-ios" */;
 			productName = MWDATMockDevice;
+		};
+		AA0000000000000000000C04 /* MWDATDisplay */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AA0000000000000000001401 /* XCRemoteSwiftPackageReference "meta-wearables-dat-ios" */;
+			productName = MWDATDisplay;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

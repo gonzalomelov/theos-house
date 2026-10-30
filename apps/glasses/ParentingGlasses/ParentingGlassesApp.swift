@@ -26,7 +26,11 @@ struct ParentingGlassesApp: App {
         }
         .task {
           #if DEBUG
-          if UserDefaults.standard.bool(forKey: "autoDemo") { await companion.runDemo() }
+          if UserDefaults.standard.bool(forKey: "hudReplay") {
+            await companion.runHUDReplay()
+          } else if UserDefaults.standard.bool(forKey: "autoDemo") {
+            await companion.runDemo()
+          }
           #endif
         }
     }

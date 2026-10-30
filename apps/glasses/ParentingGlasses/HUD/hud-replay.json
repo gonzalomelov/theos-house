@@ -1,0 +1,734 @@
+{
+ "duration_s": 19.0,
+ "note": "Recorded detector outputs replayed on our synthetic clips. Gaps between scenes are shortened.",
+ "scenes": [
+  {
+   "name": "armed",
+   "source": "hero2 take 2, Oct 29",
+   "feed": {
+    "clip": "hero",
+    "from": 3.0,
+    "to": 5.0
+   },
+   "at": 0.0,
+   "length": 2.0
+  },
+  {
+   "name": "hands off",
+   "source": "hero2 take 2, Oct 29",
+   "feed": {
+    "clip": "hero",
+    "from": 8.0,
+    "to": 11.6
+   },
+   "at": 2.0,
+   "length": 3.6
+  },
+  {
+   "name": "hover",
+   "source": "hero2 take 2, Oct 29",
+   "feed": {
+    "clip": "hero",
+    "from": 16.6,
+    "to": 20.0
+   },
+   "at": 5.6,
+   "length": 3.4
+  },
+  {
+   "name": "held diaper",
+   "source": "held blind2, Oct 29, SAM 3.1 masks",
+   "feed": {
+    "clip": "held",
+    "from": 0.0,
+    "to": 4.6
+   },
+   "at": 9.0,
+   "length": 4.6
+  },
+  {
+   "name": "logged",
+   "source": "hero2 take 2, Oct 29",
+   "feed": {
+    "clip": "hero",
+    "from": 0.0,
+    "to": 2.4
+   },
+   "at": 13.6,
+   "length": 2.4
+  },
+  {
+   "name": "dog",
+   "source": "dog blind set, photo c009, Oct 29, SAM 3.1 masks",
+   "credit": "Photo: Wang Yu Ching, Office of the President (Taiwan), CC BY 2.0, Wikimedia Commons",
+   "feed": {
+    "clip": "dog",
+    "from": 0.0,
+    "to": 3.0
+   },
+   "at": 16.0,
+   "length": 3.0
+  }
+ ],
+ "events": [
+  {
+   "t": 0.0,
+   "kind": "scene",
+   "name": "armed",
+   "source": "hero2 take 2, Oct 29"
+  },
+  {
+   "t": 0.0,
+   "kind": "parent",
+   "text": "changing time"
+  },
+  {
+   "t": 0.041,
+   "kind": "reflex",
+   "state": "on",
+   "hands": 1,
+   "lift_cm": null
+  },
+  {
+   "t": 0.1,
+   "kind": "armed",
+   "by": "brain",
+   "tool": "start_changing_table",
+   "seconds": 3.146
+  },
+  {
+   "t": 0.1,
+   "kind": "reply",
+   "text": "Watching the changing table."
+  },
+  {
+   "t": 0.17,
+   "kind": "reflex",
+   "state": "on",
+   "hands": 2,
+   "lift_cm": null
+  },
+  {
+   "t": 0.296,
+   "kind": "reflex",
+   "state": "on",
+   "hands": 2,
+   "lift_cm": null
+  },
+  {
+   "t": 0.423,
+   "kind": "reflex",
+   "state": "on",
+   "hands": 2,
+   "lift_cm": null
+  },
+  {
+   "t": 0.552,
+   "kind": "reflex",
+   "state": "on",
+   "hands": 1,
+   "lift_cm": null
+  },
+  {
+   "t": 0.673,
+   "kind": "reflex",
+   "state": "on",
+   "hands": 1,
+   "lift_cm": null
+  },
+  {
+   "t": 0.803,
+   "kind": "reflex",
+   "state": "on",
+   "hands": 1,
+   "lift_cm": null
+  },
+  {
+   "t": 0.927,
+   "kind": "reflex",
+   "state": "on",
+   "hands": 1,
+   "lift_cm": null
+  },
+  {
+   "t": 1.044,
+   "kind": "reflex",
+   "state": "on",
+   "hands": 1,
+   "lift_cm": null
+  },
+  {
+   "t": 1.178,
+   "kind": "reflex",
+   "state": "on",
+   "hands": 1,
+   "lift_cm": null
+  },
+  {
+   "t": 1.374,
+   "kind": "reflex",
+   "state": "on",
+   "hands": 1,
+   "lift_cm": null
+  },
+  {
+   "t": 1.413,
+   "kind": "reflex",
+   "state": "on",
+   "hands": 1,
+   "lift_cm": null
+  },
+  {
+   "t": 1.581,
+   "kind": "reflex",
+   "state": "on",
+   "hands": 1,
+   "lift_cm": null
+  },
+  {
+   "t": 1.72,
+   "kind": "reflex",
+   "state": "on",
+   "hands": 1,
+   "lift_cm": null
+  },
+  {
+   "t": 1.848,
+   "kind": "reflex",
+   "state": "on",
+   "hands": 1,
+   "lift_cm": null
+  },
+  {
+   "t": 1.966,
+   "kind": "reflex",
+   "state": "on",
+   "hands": 2,
+   "lift_cm": null
+  },
+  {
+   "t": 2.0,
+   "kind": "scene",
+   "name": "hands off",
+   "source": "hero2 take 2, Oct 29"
+  },
+  {
+   "t": 2.085,
+   "kind": "reflex",
+   "state": "on",
+   "hands": 1,
+   "lift_cm": null
+  },
+  {
+   "t": 2.214,
+   "kind": "reflex",
+   "state": "on",
+   "hands": 2,
+   "lift_cm": null
+  },
+  {
+   "t": 2.347,
+   "kind": "reflex",
+   "state": "on",
+   "hands": 1,
+   "lift_cm": null
+  },
+  {
+   "t": 2.469,
+   "kind": "reflex",
+   "state": "on",
+   "hands": 1,
+   "lift_cm": null
+  },
+  {
+   "t": 2.592,
+   "kind": "reflex",
+   "state": "on",
+   "hands": 1,
+   "lift_cm": null
+  },
+  {
+   "t": 2.721,
+   "kind": "reflex",
+   "state": "off",
+   "hands": 1,
+   "lift_cm": null
+  },
+  {
+   "t": 2.721,
+   "kind": "alarm",
+   "state": "off",
+   "episode": 1
+  },
+  {
+   "t": 2.721,
+   "kind": "chime",
+   "episode": 1
+  },
+  {
+   "t": 2.833,
+   "kind": "reflex",
+   "state": "on",
+   "hands": 1,
+   "lift_cm": null
+  },
+  {
+   "t": 2.965,
+   "kind": "reflex",
+   "state": "off",
+   "hands": 2,
+   "lift_cm": null
+  },
+  {
+   "t": 3.087,
+   "kind": "reflex",
+   "state": "off",
+   "hands": 1,
+   "lift_cm": null
+  },
+  {
+   "t": 3.213,
+   "kind": "reflex",
+   "state": "off",
+   "hands": 2,
+   "lift_cm": null
+  },
+  {
+   "t": 3.342,
+   "kind": "reflex",
+   "state": "on",
+   "hands": 1,
+   "lift_cm": null
+  },
+  {
+   "t": 3.472,
+   "kind": "reflex",
+   "state": "on",
+   "hands": 2,
+   "lift_cm": null
+  },
+  {
+   "t": 3.596,
+   "kind": "reflex",
+   "state": "off",
+   "hands": 1,
+   "lift_cm": null
+  },
+  {
+   "t": 3.596,
+   "kind": "confirm",
+   "verdict": "off",
+   "episode": 1,
+   "model": "SAM 3.1"
+  },
+  {
+   "t": 3.722,
+   "kind": "reflex",
+   "state": "on",
+   "hands": 2,
+   "lift_cm": null
+  },
+  {
+   "t": 3.848,
+   "kind": "reflex",
+   "state": "off",
+   "hands": 2,
+   "lift_cm": null
+  },
+  {
+   "t": 3.974,
+   "kind": "reflex",
+   "state": "on",
+   "hands": 2,
+   "lift_cm": null
+  },
+  {
+   "t": 4.102,
+   "kind": "reflex",
+   "state": "on",
+   "hands": 1,
+   "lift_cm": null
+  },
+  {
+   "t": 4.224,
+   "kind": "reflex",
+   "state": "off",
+   "hands": 1,
+   "lift_cm": null
+  },
+  {
+   "t": 4.224,
+   "kind": "voice",
+   "text": "hand",
+   "episode": 1
+  },
+  {
+   "t": 4.342,
+   "kind": "reflex",
+   "state": "off",
+   "hands": 1,
+   "lift_cm": null
+  },
+  {
+   "t": 4.464,
+   "kind": "reflex",
+   "state": "off",
+   "hands": 1,
+   "lift_cm": null
+  },
+  {
+   "t": 4.581,
+   "kind": "reflex",
+   "state": "off",
+   "hands": 1,
+   "lift_cm": null
+  },
+  {
+   "t": 4.711,
+   "kind": "reflex",
+   "state": "on",
+   "hands": 2,
+   "lift_cm": null
+  },
+  {
+   "t": 4.848,
+   "kind": "reflex",
+   "state": "on",
+   "hands": 1,
+   "lift_cm": null
+  },
+  {
+   "t": 4.97,
+   "kind": "reflex",
+   "state": "on",
+   "hands": 1,
+   "lift_cm": null
+  },
+  {
+   "t": 5.099,
+   "kind": "reflex",
+   "state": "on",
+   "hands": 1,
+   "lift_cm": null
+  },
+  {
+   "t": 5.22,
+   "kind": "reflex",
+   "state": "on",
+   "hands": 2,
+   "lift_cm": null
+  },
+  {
+   "t": 5.22,
+   "kind": "clear",
+   "episode": 1
+  },
+  {
+   "t": 5.344,
+   "kind": "reflex",
+   "state": "on",
+   "hands": 1,
+   "lift_cm": null
+  },
+  {
+   "t": 5.469,
+   "kind": "reflex",
+   "state": "on",
+   "hands": 1,
+   "lift_cm": null
+  },
+  {
+   "t": 5.594,
+   "kind": "reflex",
+   "state": "on",
+   "hands": 1,
+   "lift_cm": null
+  },
+  {
+   "t": 5.6,
+   "kind": "scene",
+   "name": "hover",
+   "source": "hero2 take 2, Oct 29"
+  },
+  {
+   "t": 5.631,
+   "kind": "reflex",
+   "state": "on",
+   "hands": 1,
+   "lift_cm": -0.16
+  },
+  {
+   "t": 5.766,
+   "kind": "reflex",
+   "state": "on",
+   "hands": 1,
+   "lift_cm": -0.16
+  },
+  {
+   "t": 5.881,
+   "kind": "reflex",
+   "state": "on",
+   "hands": 1,
+   "lift_cm": -0.05
+  },
+  {
+   "t": 6.014,
+   "kind": "reflex",
+   "state": "on",
+   "hands": 1,
+   "lift_cm": -0.04
+  },
+  {
+   "t": 6.138,
+   "kind": "reflex",
+   "state": "on",
+   "hands": 1,
+   "lift_cm": -0.0
+  },
+  {
+   "t": 6.264,
+   "kind": "reflex",
+   "state": "on",
+   "hands": 2,
+   "lift_cm": 0.93
+  },
+  {
+   "t": 6.389,
+   "kind": "reflex",
+   "state": "on",
+   "hands": 1,
+   "lift_cm": 1.43
+  },
+  {
+   "t": 6.507,
+   "kind": "reflex",
+   "state": "lifted",
+   "hands": 2,
+   "lift_cm": 1.81
+  },
+  {
+   "t": 6.507,
+   "kind": "alarm",
+   "state": "lifted",
+   "episode": 2
+  },
+  {
+   "t": 6.507,
+   "kind": "chime",
+   "episode": 2
+  },
+  {
+   "t": 6.631,
+   "kind": "reflex",
+   "state": "lifted",
+   "hands": 2,
+   "lift_cm": 1.9
+  },
+  {
+   "t": 6.752,
+   "kind": "reflex",
+   "state": "on",
+   "hands": 2,
+   "lift_cm": null
+  },
+  {
+   "t": 6.874,
+   "kind": "reflex",
+   "state": "on",
+   "hands": 2,
+   "lift_cm": null
+  },
+  {
+   "t": 6.998,
+   "kind": "reflex",
+   "state": "on",
+   "hands": 2,
+   "lift_cm": null
+  },
+  {
+   "t": 7.127,
+   "kind": "reflex",
+   "state": "on",
+   "hands": 2,
+   "lift_cm": null
+  },
+  {
+   "t": 7.259,
+   "kind": "reflex",
+   "state": "lifted",
+   "hands": 2,
+   "lift_cm": 2.42
+  },
+  {
+   "t": 7.388,
+   "kind": "reflex",
+   "state": "lifted",
+   "hands": 1,
+   "lift_cm": 2.46
+  },
+  {
+   "t": 7.513,
+   "kind": "reflex",
+   "state": "lifted",
+   "hands": 1,
+   "lift_cm": 2.61
+  },
+  {
+   "t": 7.636,
+   "kind": "reflex",
+   "state": "lifted",
+   "hands": 1,
+   "lift_cm": 2.46
+  },
+  {
+   "t": 7.758,
+   "kind": "reflex",
+   "state": "lifted",
+   "hands": 2,
+   "lift_cm": 2.46
+  },
+  {
+   "t": 7.758,
+   "kind": "voice",
+   "text": "hand",
+   "episode": 2
+  },
+  {
+   "t": 7.874,
+   "kind": "reflex",
+   "state": "lifted",
+   "hands": 2,
+   "lift_cm": 2.59
+  },
+  {
+   "t": 7.999,
+   "kind": "reflex",
+   "state": "lifted",
+   "hands": 1,
+   "lift_cm": 2.59
+  },
+  {
+   "t": 8.127,
+   "kind": "reflex",
+   "state": "lifted",
+   "hands": 1,
+   "lift_cm": 2.59
+  },
+  {
+   "t": 8.255,
+   "kind": "reflex",
+   "state": "lifted",
+   "hands": 1,
+   "lift_cm": 2.63
+  },
+  {
+   "t": 8.377,
+   "kind": "reflex",
+   "state": "lifted",
+   "hands": 1,
+   "lift_cm": 2.59
+  },
+  {
+   "t": 8.505,
+   "kind": "reflex",
+   "state": "lifted",
+   "hands": 1,
+   "lift_cm": 2.56
+  },
+  {
+   "t": 8.631,
+   "kind": "reflex",
+   "state": "lifted",
+   "hands": 1,
+   "lift_cm": 2.53
+  },
+  {
+   "t": 8.76,
+   "kind": "reflex",
+   "state": "lifted",
+   "hands": 1,
+   "lift_cm": 2.47
+  },
+  {
+   "t": 8.88,
+   "kind": "reflex",
+   "state": "lifted",
+   "hands": 2,
+   "lift_cm": 2.45
+  },
+  {
+   "t": 9.0,
+   "kind": "scene",
+   "name": "held diaper",
+   "source": "held blind2, Oct 29, SAM 3.1 masks"
+  },
+  {
+   "t": 9.2,
+   "kind": "held",
+   "object": "diaper",
+   "verdict": "on",
+   "model": "SAM 3.1"
+  },
+  {
+   "t": 10.6,
+   "kind": "alarm",
+   "state": "lifted",
+   "episode": 1
+  },
+  {
+   "t": 12.333,
+   "kind": "voice",
+   "text": "hand",
+   "episode": 1,
+   "latency_s": 1.733
+  },
+  {
+   "t": 13.6,
+   "kind": "scene",
+   "name": "logged",
+   "source": "hero2 take 2, Oct 29"
+  },
+  {
+   "t": 13.6,
+   "kind": "parent",
+   "text": "done, it was dirty"
+  },
+  {
+   "t": 13.6,
+   "kind": "closed"
+  },
+  {
+   "t": 14.1,
+   "kind": "logged",
+   "what": "diaper",
+   "at": "04:59",
+   "contents": [
+    "dirty"
+   ],
+   "entry": 174,
+   "seconds": 3.881
+  },
+  {
+   "t": 14.5,
+   "kind": "reply",
+   "text": "4 hand alerts this change. Logged diaper at 04:59, dirty."
+  },
+  {
+   "t": 16.0,
+   "kind": "scene",
+   "name": "dog",
+   "source": "dog blind set, photo c009, Oct 29, SAM 3.1 masks"
+  },
+  {
+   "t": 16.4,
+   "kind": "dog",
+   "verdict": "near",
+   "ratio": 0.134,
+   "alert": true,
+   "dog_score": 0.938,
+   "baby_score": 0.898,
+   "seconds": 3.831,
+   "model": "SAM 3.1"
+  }
+ ]
+}
