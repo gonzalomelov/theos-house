@@ -2,6 +2,7 @@
 from pathlib import Path
 
 from ..bus import Bus
+from .people import People
 from . import brain as brain_mod
 from . import config as config_mod
 from . import plugins as plugins_mod
@@ -24,5 +25,6 @@ def build(config):
     # remember writes only these keys: a free key ("house_rule", "before_he_arrives") would ride in every prompt.
     tools = core_tools(memory, baby_log, config["allowed_tools"], remember_keys=tuple(config.get("remember_keys", REMEMBER_KEYS)))
     agent = Agent(bus, memory, baby_log, tools, brain_mod.build(config["brain"]), max_steps=config["max_steps"])
+    agent.people = People(config.get("people"))
     agent.plugins = [plugins_mod.load(spec, agent, config) for spec in config["plugins"]]
     return agent

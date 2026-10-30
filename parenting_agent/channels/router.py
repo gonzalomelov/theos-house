@@ -5,7 +5,7 @@ device_tracker) and what their hands are doing (a skill is armed), then picks on
 
 | Situation | Channel |
 |---|---|
-| Help is needed (the message asks for the partner) | partner, a stub until Ceci has a phone channel |
+| Help is needed (the message asks for the partner) | partner: the other parent's Telegram chat (people block) |
 | Away from home, or presence unknown | telegram |
 | At home, a skill is armed (hands on the baby) | ear |
 | At home, the baby is asleep | ear, the home speaker would wake her |
@@ -172,6 +172,17 @@ class Router(Plugin):
         return {"sent_to": "telegram"}
 
     def to_partner(self, text):
-        # Stub: Ceci has no Telegram or phone in Home Assistant yet, and a message to anyone but Gonza needs his yes.
-        self.agent.bus.publish("partner_stub", text=text, note="not sent, needs a partner channel and the parent's yes")
-        return {"sent": False, "stub": True}
+        """The other parent's own Telegram chat: every person in the channel's people block but router "parent"
+        (default gonza). With no partner chat nothing is sent and the event says so."""
+        from .push import find_plugin
+        me = self.cfg.get("parent", "gonza")
+        channel = find_plugin(self.agent, "telegram")
+        chats = {p: sorted(ids)[0] for p, ids in (getattr(channel, "people", {}) or {}).items() if ids and p != me}
+        if not chats:
+            self.agent.bus.publish("partner_stub", text=text, note="not sent, no partner chat in the people block")
+            return {"sent": False, "stub": True}
+        people = getattr(self.agent, "people", None)
+        for person, chat in sorted(chats.items()):
+            self.agent.bus.publish("reply", channel="telegram", chat_id=chat, person=person, proactive=True,
+                                   source="router", text=people.named(text) if people else text)
+        return {"sent_to": sorted(chats)}

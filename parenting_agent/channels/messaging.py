@@ -228,6 +228,10 @@ class MessagingChannel(Plugin):
             self.agent.bus.publish("channel_error", channel=self.name, error="no family chat to send to")
             return
         text = event["text"] if event["kind"] == "reply" else f"I want to use {event['name']}. Say yes to let me."
+        if event.get("proactive"):
+            # A push the agent starts (channels/push.py) is not the answer to a voice note: no heard words before it.
+            self.send_text(chat, text)
+            return
         heard = self.heard.pop(chat, None)
         self.send_text(chat, heard_text(heard, text) if heard else text)
         if heard and self.voice is not None and self.voice.reply_with_voice:

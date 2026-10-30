@@ -32,7 +32,9 @@
     "prep_add",
     "add_appointment",
     "appointments",
-    "nursery_plan"
+    "nursery_plan",
+    "night_rota",
+    "remind_me"
   ],
   "plugins": [
     "parenting_agent.agent.heartbeat:Heartbeat",
@@ -40,7 +42,9 @@
     "parenting_agent.prep:Prep",
     "parenting_agent.day_engine:DayEnginePlugin",
     "parenting_agent.night_feed:NightFeed",
-    "parenting_agent.house_brain:HouseBrainPlugin"
+    "parenting_agent.house_brain:HouseBrainPlugin",
+    "parenting_agent.reminders:Reminders",
+    "parenting_agent.channels.push:FamilyPush"
   ],
   "house_brain": {
     "budget_usd": 0.5,
@@ -58,11 +62,19 @@
   },
   "people": {
     "gonza": {
+      "name": "Gonza",
+      "rota": "Parent A",
       "chat_ids_env": "TELEGRAM_CHAT_ID"
     },
     "ceci": {
+      "name": "Ceci",
+      "rota": "Parent B",
       "chat_ids_env": "TELEGRAM_CECI_CHAT_ID"
     }
+  },
+  "family_push": {
+    "channel": "telegram",
+    "asks_to": "gonza"
   },
   "house": {
     "live": false,
@@ -81,7 +93,8 @@
       "at": "08:00",
       "until": "11:00",
       "channel": "telegram",
-      "chat_ids_env": "TELEGRAM_CHAT_ID"
+      "chat_ids_env": "TELEGRAM_CHAT_ID",
+      "also_chat_ids_envs": ["TELEGRAM_CECI_CHAT_ID"]
     }
   }
 }

@@ -15,10 +15,10 @@ Three containers in the compose project `parenting-agent` (`deploy/compose.yml`)
 - Images: `python:3.12-slim-bookworm`, `nginxinc/nginx-unprivileged` and `alpine` with tinyproxy, each pinned by digest. The agent and egress images are built on the Vostro and tagged with the git commit.
 - Restart `unless-stopped`, read-only root, all capabilities dropped, no new privileges, user 1000, 256 MB, half a CPU, 64 processes.
 - Health check: the heartbeat plug-in (`parenting_agent/agent/heartbeat.py`) writes `/data/heartbeat.json` every 30 s while the decide-act loop is alive. Docker marks the container unhealthy when the file is older than 90 s. The check reads the file with the standard library only (`python -I -S`), because importing `parenting_agent` took 5.5 s inside the 0.5 CPU container on Oct 29, over the 5 s timeout, and the container showed unhealthy while the agent ran. If the loop thread dies, the plug-in ends the process with exit code 1 so the restart policy brings it back.
-- Data: `~/apps/parenting-agent-data` on the Vostro, mounted at `/data`: `memory.sqlite`, `events.jsonl`, `heartbeat.json`.
+- Data: `~/apps/parenting-agent-data` on the Vostro, mounted at `/data`: `memory.sqlite`, `events.jsonl`, `heartbeat.json`, `reminders.json` (open reminders).
 - Logs: Docker's json-file driver, 10 MB per file, 3 files.
-- Plug-ins on the Vostro: the heartbeat, the Telegram channel (#3) and the prep mode with the morning nudge (#56, `docs/before-he-arrives.md`). No console (no terminal there) and no changing table (vision runs on the Mac).
-- No channel router on the Vostro. Replies to a Telegram message go back to Telegram. The router picks the home speaker when the parent is home, and on the Vostro that would be a live house action, so it stays on the Mac until #9.
+- Plug-ins on the Vostro: the heartbeat, the Telegram channel (#3), the prep mode with the morning nudge (#56, `docs/before-he-arrives.md`), the day engine, the night feed, the house brain, reminders and the family push. No console (no terminal there) and no changing table (vision runs on the Mac).
+- No channel router on the Vostro. Replies to a Telegram message go back to the chat that asked. Pushes the agent starts on its own go through the family push (`parenting_agent/channels/push.py`) to Gonza's or Ceci's chat, or both, by the table in `docs/before-he-arrives.md`. The router picks the home speaker when the parent is home, and on the Vostro that would be a live house action, so it stays on the Mac until #9.
 
 ### Telegram
 

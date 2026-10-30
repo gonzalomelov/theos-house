@@ -466,7 +466,9 @@ class HouseBrain:
         u = usual(seen, now, tz)
         windows = sleep_windows(seen, now, tz, horizon_h=self.s["horizon_h"])
         nxt = predict_feed(seen, now)
-        handled = [w["parent"] for w in patterns.night_wakeups(seen, tz) if w["at"] < now]
+        people = getattr(self.night_feed, "people", None)
+        label = people.rota_label if people else (lambda who: who)
+        handled = [label(w["parent"]) for w in patterns.night_wakeups(seen, tz) if w["at"] < now]
         tummy = []
         if self.day_engine is not None:
             from .day_engine import tummy_times
@@ -603,14 +605,20 @@ class HouseBrain:
         elif trigger == "adapt" and plan["why_changed"]:
             self.send(f"Plan changed: {plan['why_changed']}", now, "replan")
         for m in plan["messages"]:
-            self.send(f"For {m['to']}: {m['text']}" if m["to"] != "both" else m["text"], now, "plan_message", to=m["to"])
+            # Each parent's own line reaches their chat at bedtime (channels/push.py). The lines of the plans before each
+            # nap stay in the event log: six or more a day would bury the night's message.
+            self.send(f"For {m['to']}: {m['text']}" if m["to"] != "both" else m["text"], now, "plan_message", to=m["to"],
+                      quiet=trigger != "bedtime")
 
-    def send(self, text, now, what, to="both"):
+    def send(self, text, now, what, to="both", quiet=None):
+        """A notify event for the parents. quiet keeps it in the event log only: by default every routine not in
+        settings "tell". The delivery (channels/push.py) sends what is not quiet to the right parent."""
         if not patterns.no_advice(text):
             self.bus.publish("house_brain_refused", text=text[:200], reason="failed the no-advice guard")
             return None
+        quiet = what not in self.s["tell"] if quiet is None else quiet
         event = self.bus.publish("notify", text=text, channel="telegram", source="house-brain", routine=what, to=to,
-                                 at=now.isoformat())
+                                 at=now.isoformat(), quiet=quiet)
         if self.tell is not None and what in self.s["tell"]:
             self.tell(text, now)
         return event
@@ -769,8 +777,9 @@ def fixed_echo(events):
 
 class HouseBrainPlugin(Plugin):
     """Agent plug-in "parenting_agent.house_brain:HouseBrainPlugin", listed after the day engine and the night feed
-    plug-ins it arms. Settings under "house_brain" (DEFAULTS, "muse" overrides the Muse client). Telegram goes only to
-    the first chat id in TELEGRAM_CHAT_ID (Gonza), whoever a message is for. The Echo goes through the day engine's
+    plug-ins it arms. Settings under "house_brain" (DEFAULTS, "muse" overrides the Muse client). With the family push
+    plug-in (channels/push.py) each message goes to the parent it is for, by name. Without it Telegram goes only to the
+    first chat id in TELEGRAM_CHAT_ID (Gonza), whoever a message is for. The Echo goes through the day engine's
     writer, so it is a dry run while house.live is false."""
     name = "house-brain"
 
@@ -810,6 +819,9 @@ class HouseBrainPlugin(Plugin):
         return self.brain
 
     def tell(self, text, now):
+        from .night_feed import find_plugin
+        if find_plugin(self.agent, "family-push") is not None:
+            return  # the family push delivers the notify event itself, to the right parent (channels/push.py)
         if self.chat:
             self.agent.bus.publish("reply", channel="telegram", chat_id=self.chat, text=text)
 

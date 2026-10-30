@@ -70,7 +70,7 @@ Avisame cuando hagas uno, o preguntame qué sigue.
 ## Who used it, for the scorer
 
 - Each family chat is tied to a person in the config (`people`): Gonza is `TELEGRAM_CHAT_ID`, Ceci is `TELEGRAM_CECI_CHAT_ID`. A chat id given to both belongs to neither.
-- Every message gets a `turn` event in `data/events.jsonl`: channel, person, whether the agent answered, and `test` when the text starts with "Test:".
+- Every message gets a `turn` event in `data/events.jsonl`: channel, person, whether the agent answered, and `test` when the text starts with "Test:". The agent answers the words after "Test:", the marker never reaches the brain.
 - Every prep change is a `prep` event with the person.
 - At start the Telegram channel logs `family_channels`, for example `{"ceci": true, "gonza": true}`. A person whose chat id is not set shows as not connected.
 - Replies go back to the chat that asked, so two parents on one bot each get their own answer.
@@ -90,6 +90,18 @@ On the Vostro, prefix with `docker exec parenting-agent`.
 
 Ceci is connected to the family bot. Her chat id is set on the Vostro as `TELEGRAM_CECI_CHAT_ID`, and the agent's `family_channels` event on Oct 29 shows `{"ceci": true, "gonza": true}`. Her messages are `turn` events with person `ceci`, and her replies go back to her own chat.
 
-What still goes only to Gonza: the morning nudge, tonight's house plan and every push the agent starts on its own. The router's partner route is a stub, because a message the agent starts for anyone but Gonza needs his yes (`parenting_agent/channels/router.py`).
+Since Oct 30 the pushes the agent starts on its own reach the person they are for, in their own chat, with names instead of "Parent A" and "Parent B" (`parenting_agent/channels/push.py`):
+
+| Push | Who gets it |
+|---|---|
+| Morning nudge (prep list), morning brief, supplies, tonight's plan at bedtime, a re-plan, the morning explanation | both |
+| The night feed push, and anything else between 22:00 and 06:00 | the parent on duty from the night rota |
+| A parent's own line in tonight's plan | that parent |
+| A question that waits for a yes ("Reply yes to start it") | one parent: the one on duty at night, Gonza by day. Only that parent's yes answers it |
+| A reminder ("recordame en 20 minutos ...", the `remind_me` tool) | whoever asked |
+
+A question the agent asked in one parent's chat is answered only from that chat: the other parent's "sí" runs nothing. "¿Quién está de turno esta noche?" is answered from the night rota by name, with how the rota decides (fewer night wake-ups takes the next one, a tie goes to whoever did not take the last one), with no brain call. The router's partner route sends to the other parent's chat when the config has a people block with that chat. The router is not loaded on the Vostro, and the Mac config (`config/agent.json`) has no people block yet, so there it still only records `partner_stub`.
+
+Every push is a `pushed` event (who got it and why) and a `reply` event with `proactive` true and the person. The house plans before each nap stay in the event log only, as before, so a day does not bring six of them. Open reminders live in `data/reminders.json`, so a restart keeps them.
 
 To change her chat id: put it in the meta-hackathon `.env` as `TELEGRAM_CECI_CHAT_ID`, then `sh deploy/agent.sh push-env` and `sh deploy/agent.sh update`.

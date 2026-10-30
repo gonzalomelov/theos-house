@@ -982,10 +982,21 @@ CLAIM_TOOLS = [
      {"call_partner", "notify", "send_handover_to_sitter", "reply_to_visitor"}),
     (re.compile(r"\b(announced|anunci[eé])\b", re.I), {"announce", "announce_kitchen", "reply_to_visitor"}),
     (re.compile(r"\b(saved|remembered|i'?ll remember|i will remember|guard[eé]|lo recuerdo|me lo acuerdo)\b", re.I),
-     {"remember", "log_baby_event", "edit_baby_event", "appointments", "prep_add", "prep_check", "set_due_date"}),
+     {"remember", "log_baby_event", "edit_baby_event", "appointments", "prep_add", "prep_check", "set_due_date", "remind_me"}),
     (re.compile(r"\b(added|agregu[eé]|sum[eé])\b", re.I), {"prep_add", "log_baby_event", "appointments"}),
     (re.compile(r"\b(ticked|checked (it )?off|crossed (it )?off|tach[eé]|marqu[eé])\b", re.I), {"prep_check"}),
 ]
+
+
+# "Si me decís, lo recuerdo": an offer on a condition the parent has not met is no claim that it happened. Once Muse
+# answered Ceci's question that way twice and the guard replaced it with "No mandé nada, no se hizo nada".
+CONDITION = re.compile(r"\b(si|if|en cuanto|apenas|as soon as|once you)\b", re.I)
+
+
+def offered_on_condition(text, start):
+    """True when the sentence before position start sets a condition: "Si me decís quién, lo recuerdo"."""
+    sentence = re.split(r"[.!?\n]", text[:start])[-1]
+    return bool(CONDITION.search(sentence))
 
 
 def unmet_claims(text, ran):
@@ -993,7 +1004,9 @@ def unmet_claims(text, ran):
     text, out = text or "", set()
     for pattern, tools in CLAIM_TOOLS:
         for m in pattern.finditer(text):
-            if not NEGATED.search(text[max(0, m.start() - 40):m.start()]) and not (tools & set(ran)):
+            if NEGATED.search(text[max(0, m.start() - 40):m.start()]) or offered_on_condition(text, m.start()):
+                continue
+            if not (tools & set(ran)):
                 out.add(m.group(0).lower())
     return out
 
@@ -1084,6 +1097,34 @@ def answer(question, summary):
     if "eat" in q or "fed" in q or "feed" in q:
         return f"The last feed was at {feeds['last_at']}." if feeds["last_at"] else "No feed in the log yet."
     return None
+
+
+TEST_PREFIX = re.compile(r"^\s*test:\s*", re.I)
+
+
+def is_test(text):
+    """A message that starts with "Test:" is a test: it never counts for the KR."""
+    return bool(TEST_PREFIX.match(str(text or "")))
+
+
+def without_test_prefix(text):
+    """The message without its "Test:" marker. The marker is for the KR scorer, the brain answers the words after it."""
+    text = str(text or "")
+    rest = TEST_PREFIX.sub("", text, count=1)
+    return rest if rest.strip() else text
+
+
+# "¿Quién está de turno esta noche?", "who is on duty tonight", "who gets up tonight": the night rota answers it.
+ON_DUTY = re.compile(r"\b(de turno|on duty|le toca (levantarse|esta noche|hoy)|toca levantarse|"
+                     r"who(se)? (turn|gets up|is up tonight)|a qui[eé]n le toca)\b", re.I)
+# "¿Cuál es la farmacia de turno?" asks about a pharmacy or a doctor on duty, never the night rota.
+NOT_ROTA = re.compile(r"\b(farmacia|pharmacy|m[eé]dic[oa]|doctor|pediatra|pediatrician|emergencia|emergency|"
+                      r"sanatorio|hospital|mutualista|enfermer[oa]|nurse)\b", re.I)
+
+
+def asks_on_duty(text):
+    text = text or ""
+    return bool(ON_DUTY.search(text)) and is_question(text) and not NOT_ROTA.search(text)
 
 
 def parent_text(text):

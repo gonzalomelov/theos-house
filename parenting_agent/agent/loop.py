@@ -494,12 +494,21 @@ class Agent:
         self.cancelled = []       # calls that waited for a yes and were cancelled: a bare yes never brings them back
         self.recent_actions = []  # (signature, clock_s) of acting tools that ran: a bare yes never replays one
         self.open_ask = None      # clock_s of a plug-in's "Reply yes" ask on a channel
+        self.open_ask_people = None  # the people a plug-in's ask was sent to, None for anyone on the channel
+        self.last_reply = {}      # (channel, chat id) -> the agent's last answer to that chat, so a yes answers its own chat
+        self.rota = None          # the night rota (night_feed.py): who is on duty tonight, by name
+        self.people = None        # channels/people.py People, set by build(): names for the people block
         bus.subscribe(self.inbox.put, ["message", "observation"])
         bus.subscribe(self.on_notify, ["notify"])
 
     def on_notify(self, event):
         if event.get("ask"):
-            self.open_ask = self.clock_s()
+            self.open_ask, self.open_ask_people = self.clock_s(), None
+
+    def bind_ask(self, people):
+        """The delivery of a plug-in's ask (channels/push.py) binds it to the people it was sent to: only their yes
+        answers it."""
+        self.open_ask_people = set(people) if people else None
 
     def start(self):
         self.thread = threading.Thread(target=self.run, name="agent", daemon=True)
@@ -536,7 +545,7 @@ class Agent:
         counts a person's day from these. A message that starts with "Test:" is a test."""
         text = str(event.get("text") or "")
         self.bus.publish("turn", channel=event.get("channel"), person=event.get("person"), answered=answered,
-                         test=text.strip().lower().startswith("test:"), chars=len(text))
+                         test=rules.is_test(text), chars=len(text))
 
     def now(self):
         """The baby log's clock: the family's time zone in the families bot, local time elsewhere."""
@@ -559,6 +568,8 @@ class Agent:
         # The answer goes back to the chat that asked, so two parents on one channel each get their own answer.
         event = self.current_event or {}
         to = {"chat_id": event["chat_id"]} if event.get("channel") == channel and event.get("chat_id") else {}
+        if to:
+            self.last_reply[(channel, str(to["chat_id"]))] = text
         self.bus.publish("reply", channel=channel, text=text, **to)
 
     def system_prompt(self):
@@ -594,11 +605,14 @@ class Agent:
             return False
         return not (call.get("chat_id") and str(event.get("chat_id")) != str(call["chat_id"]))
 
-    def propose(self, channel, name, arguments, text=None):
+    def propose(self, channel, name, arguments, text=None, person=None):
         """A plug-in asks the parent before one of its tools runs: the parent's next yes runs it, like a brain call
-        that was not on the allowed list. A newer proposal for the same tool replaces the older one."""
+        that was not on the allowed list. A newer proposal for the same tool replaces the older one. With person, only
+        that person's yes runs it."""
         self.pending = [call for call in self.pending if call["name"] != name]
         self.wait_for_yes({"id": f"proposal-{name}", "name": name, "arguments": dict(arguments)}, channel=channel)
+        if person:
+            self.pending[-1]["person"] = person
         self.bus.publish("ask_parent", channel=channel, name=name, arguments=arguments, source="plugin")
         if text:
             self.say(channel, text)
@@ -628,7 +642,7 @@ class Agent:
     def handle(self, event):
         channel = event.get("channel", "console")
         if event["kind"] == "message":
-            text = rules.parent_text(event["text"]).strip()
+            text = rules.parent_text(rules.without_test_prefix(event["text"])).strip()
             word = text.lower().strip(" .!¡")
             # Only the calls asked of this person, on this chat and channel, are theirs to answer. Another parent's yes,
             # or a yes from the glasses for a question asked on Telegram, runs nothing and leaves the question open.
@@ -655,7 +669,7 @@ class Agent:
                 self.bus.publish("guard", status="approval_cleared", names=[c["name"] for c in mine])
                 self.pending = others
                 self.cancel(mine)
-            if word in YES and not self.pending and not self.yes_has_question(channel):
+            if word in YES and not self.pending and not self.yes_has_question(channel, event):
                 self.memory.add_message(channel, "user", text, ts=self.now())
                 self.bus.publish("guard", status="yes_nothing_pending")
                 self.say(channel, NO_PENDING[self.lang(text)])
@@ -676,12 +690,20 @@ class Agent:
         self.cancelled = [c for c in self.cancelled if now - c["at"] <= CANCELLED_KEEP_S]
         return any(c["name"] == name for c in self.cancelled)
 
-    def yes_has_question(self, channel):
-        """True when a bare yes answers something: a plug-in's ask within OPEN_ASK_S, or the agent's last answer on this
-        channel asked a question or offered to do something. The plug-in's ask is used up by this yes."""
+    def yes_has_question(self, channel, event=None):
+        """True when a bare yes answers something: a plug-in's ask within OPEN_ASK_S sent to this person, or the agent's
+        last answer to this chat asked a question or offered to do something. The plug-in's ask is used up by this yes.
+        Two parents share the Telegram channel, so a question asked in one parent's chat is never answered by the other."""
+        event = event or {}
         if self.open_ask is not None and self.clock_s() - self.open_ask <= OPEN_ASK_S:
-            self.open_ask = None
-            return True
+            people = getattr(self, "open_ask_people", None)
+            if not people or event.get("person") in people:
+                self.open_ask = None
+                return True
+        chat = event.get("chat_id")
+        if chat is not None:
+            last_text = getattr(self, "last_reply", {}).get((channel, str(chat)))
+            return last_text is not None and (last_text.rstrip().endswith("?") or OFFER.search(last_text) is not None)
         last = [m for m in self.memory.recent_messages(self.history) if m["channel"] == channel and m["role"] == "assistant"]
         return bool(last) and (last[-1]["text"].rstrip().endswith("?") or OFFER.search(last[-1]["text"]) is not None)
 
@@ -710,6 +732,14 @@ class Agent:
             self.memory.add_message(channel, "user", text, ts=self.now())
             self.bus.publish("guard", status="safe_sleep_fact")
             self.say(channel, self.safe_sleep(text))
+            return
+        rota = getattr(self, "rota", None)
+        if rota is not None and rules.asks_on_duty(text):
+            # "¿Quién está de turno esta noche?": the night rota answers by name, the same every time, with no brain call.
+            # On Oct 30 Muse said it had nothing on who was on duty, while the rota held it.
+            self.memory.add_message(channel, "user", text, ts=self.now())
+            self.bus.publish("guard", status="night_rota")
+            self.say(channel, rota.answer(self.lang(text)))
             return
         route = rules.health_route(text) if self.health_gate else None
         if route == "refuse":
@@ -741,7 +771,10 @@ class Agent:
         if double and self.now() - double["asked"] <= DOUBLE_ANSWER_WINDOW and self.answer_double(channel, text, double):
             return
         stamp = self.now().strftime("%H:%M")
-        transcript = self.transcript(f"[{stamp}] {text}" + (f"\n{HEALTH_LOG}" if route == "log" else ""))
+        people = getattr(self, "people", None)
+        speaker = people.name(event.get("person")) if people and event.get("person") else None
+        said = f"{speaker}: {text}" if speaker else text
+        transcript = self.transcript(f"[{stamp}] {said}" + (f"\n{HEALTH_LOG}" if route == "log" else ""))
         self.memory.add_message(channel, "user", text, ts=self.now())
         self.health_turn = {"entries": [], "request": text} if route == "log" else None
         try:

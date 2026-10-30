@@ -48,6 +48,8 @@ import re
 import threading
 
 from .agent.plugins import Plugin
+from .agent.tools import Tool, schema
+from .agent.people import People
 from .house import HomeAssistant
 from .house_live import STUDY_LIGHT, gate_for, live_actions
 from .house_plan import add_dry_guard
@@ -123,6 +125,10 @@ class NightFeed(Plugin):
         agent.bus.subscribe(self.on_sound, ["sound"])
         agent.bus.subscribe(self.on_message, ["message"])
         agent.bus.subscribe(self.on_awake, ["baby_awake"])
+        self.people = getattr(agent, "people", None) or People(config.get("people"))
+        agent.rota = self
+        agent.tools.add(Tool("night_rota", "Who is on duty tonight and how the night rota decides it, by name. Changes "
+                             "nothing.", schema({}), lambda: self.answer("en")))
 
     @property
     def log(self):
@@ -299,11 +305,48 @@ class NightFeed(Plugin):
     def hhmm(self, moment):
         return patterns.hhmm(moment.astimezone(self.tz))
 
+    def handled(self, now):
+        """Who took each night wake-up so far, as rota labels: "handled by Ceci" in the log counts for her label."""
+        return [self.people.rota_label(w["parent"]) for w in patterns.night_wakeups(self.log.entries(), self.tz)
+                if w["at"] < now]
+
     def on_duty(self, now):
         if self.plan is not None and self.plan.get("on_duty") in self.rhythm["parents"]:
             return self.plan["on_duty"]
-        handled = [w["parent"] for w in patterns.night_wakeups(self.log.entries(), self.tz) if w["at"] < now]
-        return patterns.next_on_duty(handled, self.rhythm["parents"])
+        return patterns.next_on_duty(self.handled(now), self.rhythm["parents"])
+
+    def rota(self, now=None):
+        """Who is on duty tonight and why, with names: {"on_duty", "person", "counts", "by_plan"}."""
+        now = now or self.clock()
+        label = self.on_duty(now)
+        handled = self.handled(now)
+        by_plan = self.plan is not None and self.plan.get("on_duty") in self.rhythm["parents"]
+        return {"on_duty": self.people.display(label), "person": self.people.person(label),
+                "counts": {self.people.display(p): handled.count(p) for p in self.rhythm["parents"]},
+                "by_plan": by_plan, "wakeups": len(handled)}
+
+    def answer(self, lang="en", now=None):
+        """The rota as a parent reads it, in plain sentences, never advice."""
+        r = self.rota(now)
+        counts = ", ".join(f"{name} {n}" for name, n in r["counts"].items())
+        first = next(iter(r["counts"]), r["on_duty"])
+        if lang == "es":
+            head = f"Esta noche está de turno {r['on_duty']}."
+            if r["by_plan"]:
+                return head + " Lo cambió el plan de la casa porque uno de los dos pidió dormir."
+            rule = ("Lo decide la rota de la noche: le toca a quien se levantó menos veces de noche, y si empatan, a quien "
+                    "no se levantó la última vez.")
+            seen = (f" Hasta ahora: {counts}, según las notas de despertares nocturnos del registro." if r["wakeups"] else
+                    f" Todavía no hay despertares nocturnos en el registro, así que empieza {first}.")
+            return f"{head} {rule}{seen}"
+        head = f"{r['on_duty']} is on duty tonight."
+        if r["by_plan"]:
+            return head + " Tonight's house plan changed it because one of you asked to sleep."
+        rule = ("The night rota decides it: whoever has taken fewer night wake-ups takes the next one, and on a tie whoever "
+                "did not take the last one.")
+        seen = (f" So far: {counts}, from the night wake-up notes in the log." if r["wakeups"] else
+                f" No night wake-up is in the log yet, so it starts with {first}.")
+        return f"{head} {rule}{seen}"
 
     def open_episode(self, now, nxt, key):
         self.done.add(key)

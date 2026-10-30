@@ -11,8 +11,9 @@ data/events.jsonl next to the "turn" events the KR scorer reads.
 The lists start from lists.py. The parents tick, untick and add items by message. Putting a list on the Home
 Assistant to-do list always waits for the parent's yes and is a dry run while house.live is false.
 
-The morning nudge goes only to the first chat id in TELEGRAM_CHAT_ID (Gonza), once a day, between nudge.at and
-nudge.until local time. The day it was sent is kept in data/prep-nudge.json, so a restart never sends it twice.
+The morning nudge goes to the first chat id in TELEGRAM_CHAT_ID (Gonza), and to the first chat id of each env named
+in nudge.also_chat_ids_envs (on the family agent Ceci's TELEGRAM_CECI_CHAT_ID: the prep list is the family's), once
+a day, between nudge.at and nudge.until local time. The day it was sent is kept in data/prep-nudge.json, so a restart never sends it twice.
 
 Config block "prep": {"due_date": "2026-12-15", "due_date_estimate": true,
                       "nudge": {"enabled": true, "at": "08:00", "until": "11:00", "channel": "telegram",
@@ -40,7 +41,7 @@ create table if not exists prep_appointments (id integer primary key, title text
 """
 DEFAULTS = {"due_date": "2026-12-15", "due_date_estimate": True, "ha_todo": "todo.family_to_do_list",
             "nudge": {"enabled": True, "at": "08:00", "until": "11:00", "channel": "telegram",
-                      "chat_ids_env": "TELEGRAM_CHAT_ID", "check_every_s": 30}}
+                      "chat_ids_env": "TELEGRAM_CHAT_ID", "also_chat_ids_envs": [], "check_every_s": 30}}
 ASK_FIRST = ("prep_to_home_assistant",)
 PROMPT_FACT = ("Theo is not born yet, the family is getting ready. Prep, purchases, the nursery, the hospital bag, the car "
                "seat, the white noise machine and appointments never go in the baby log: use the prep tools "
@@ -419,6 +420,14 @@ class Prep(Plugin):
         ids = [c.strip() for c in raw.split(",") if c.strip()]
         return ids[0] if ids else None
 
+    def nudge_chats(self):
+        """Gonza's chat first, then the first chat of each also_chat_ids_envs env, each chat once."""
+        chats = [self.gonza_chat()]
+        for env in self.cfg["nudge"].get("also_chat_ids_envs") or []:
+            ids = [c.strip() for c in os.environ.get(env, "").split(",") if c.strip()]
+            chats.append(ids[0] if ids else None)
+        return list(dict.fromkeys(c for c in chats if c))
+
     def last_nudge(self):
         try:
             return json.loads(self.marker.read_text()).get("date")
@@ -433,7 +442,8 @@ class Prep(Plugin):
         return start <= now.time() < end and self.last_nudge() != now.date().isoformat()
 
     def send_nudge(self, reason="scheduled"):
-        """Sends the nudge to Gonza's chat and records the day. Returns the text, or None when there is no chat."""
+        """Sends the nudge to Gonza's chat (and the also_chat_ids_envs chats) and records the day. Returns the text, or
+        None when Gonza has no chat."""
         now = self.now()
         chat = self.gonza_chat()
         if chat is None:
@@ -444,8 +454,11 @@ class Prep(Plugin):
         self.marker.parent.mkdir(parents=True, exist_ok=True)
         self.marker.write_text(json.dumps({"date": now.date().isoformat(), "ts": now.isoformat(timespec="seconds"), "reason": reason}))
         self.agent.memory.add_message(channel, "assistant", text, ts=now)
-        self.agent.bus.publish("nudge", person="gonza", channel=channel, reason=reason, items=len(self.next()["items"]))
-        self.agent.bus.publish("reply", channel=channel, chat_id=chat, text=text)
+        chats = self.nudge_chats()
+        self.agent.bus.publish("nudge", person="gonza", channel=channel, reason=reason, items=len(self.next()["items"]),
+                               chats=len(chats))
+        for each in chats:
+            self.agent.bus.publish("reply", channel=channel, chat_id=each, text=text, proactive=True, source="prep")
         return text
 
     def nudge_failed(self, error):
