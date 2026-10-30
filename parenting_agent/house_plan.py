@@ -132,13 +132,24 @@ def dry_reply(text, live=()):
     happened. The brain can paraphrase a dry-run tool result into "I started the vacuum" (round 4 red team). live holds
     (device words, true sentence) for each device the live gate (house_live.py) wrote for real in the last hour: those
     get their true sentence, every other device in the reply gets the dry-run note."""
-    if not (text and DEVICE_WORDS.search(text) and DONE_WORDS.search(text)) or DRY_WORDS.search(text) \
-            or LIVE_WORDS.search(text):
+    if not (text and DEVICE_WORDS.search(text) and DONE_WORDS.search(text)):
         return text
     from .agent.rules import looks_spanish
     from .house_live import claim_es
     es = looks_spanish(text)
     hits = [(words, claim_es(sentence) if es else sentence) for words, sentence in live if words.search(text)]
+    if LIVE_WORDS.search(text):
+        # Only the live gate says "for real": a reply passes as it is only when it already carries the gate's own
+        # sentence for every device it names. Round 5 found any brain reply with "for real" or "(live)" skipped this
+        # guard, so a dry run could read "Done for real". The brain's own "for real" is taken out and the guard runs.
+        rest = text
+        for words, _ in hits:
+            rest = words.sub("", rest)
+        if hits and all(sentence in text for _, sentence in hits) and not DEVICE_WORDS.search(rest):
+            return text
+        text = re.sub(r"\s+([,.:;!?])", r"\1", re.sub(r"\s*(\(live\)|\bfor real\b)", "", text, flags=re.I)).strip()
+    if DRY_WORDS.search(text):
+        return text
     if not hits:
         return f"{text.rstrip()} {DRY_NOTE_ES if es else DRY_NOTE}"
     rest = text

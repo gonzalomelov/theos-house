@@ -303,12 +303,38 @@ def validate(answer, now, tz, s, windows):
             # The same check as every other outgoing text: no advice, no code, no contact detail.
             dropped.append({"to": field, "text": text, "why": "failed the no-advice or private-detail guard"})
             texts[field] = ""
+    for field in texts:
+        # The why describes the plan the checks kept: round 5 showed Muse's why naming a floor clean window the checks
+        # had refused. A sentence about a routine that was refused or is not armed is left out.
+        kept, cut = matching_sentences(texts[field], plan)
+        if cut:
+            dropped.append({"to": field, "text": " ".join(cut)[:240], "why": "names a routine the checked plan does not run"})
+            texts[field] = kept
     other = disagrees_on_duty(texts["summary"], answer["on_duty"], parents)
     if other:
         dropped.append({"to": "summary", "text": texts["summary"], "why": f"names {other} on duty, the plan says {answer['on_duty']}"})
         texts["summary"] = ""
     plan.update(on_duty=answer["on_duty"], messages=messages, **texts)
     return plan, [], refused, dropped
+
+
+ROUTINE_WORDS = {"floor_clean": re.compile(r"\b(floor|vacuum\w*|clean\w*|robot)\b", re.I),
+                 "bottle_prewarm": re.compile(r"\b(warm\w*|pre-?heat\w*|bottle warmer)\b", re.I),
+                 "door_quiet": re.compile(r"\b(door\w*|bell|visitor\w*)\b", re.I),
+                 "white_noise_boost": re.compile(r"\b(white noise|noise|boost\w*)\b", re.I)}
+SENTENCE_END = re.compile(r"(?<=[.!?])\s+")
+
+
+def matching_sentences(text, plan):
+    """(text kept, sentences cut): every sentence that names a routine the checked plan does not run (refused, so its
+    fixed rule runs, or armed with no window) is cut."""
+    if not text:
+        return text, []
+    off = [name for name in ROUTINES if not plan.get(name)]
+    kept, cut = [], []
+    for sentence in SENTENCE_END.split(text):
+        (cut if any(ROUTINE_WORDS[name].search(sentence) for name in off) else kept).append(sentence)
+    return " ".join(kept).strip(), cut
 
 
 # Words of the machinery, never for a parent: on Oct 30 the morning explanation said "invalid answer not a JSON object
@@ -761,7 +787,9 @@ def event_time(e):
 
 
 def compact(e):
-    """An event as a short line of facts for the morning prompt. Parent free text never goes in."""
+    """An event as a short line of facts for the morning prompt. Free text never goes in: not the parent's notes, and not
+    Muse's own why for a plan, which can quote a note ("Fire in the house, everyone get out now." reached the morning
+    speaker text that way in the round 4 red team)."""
     kind = e["kind"]
     at = e.get("sim_at") or e.get("at") or ""
     hm = at[11:16] if len(at) >= 16 else ""
@@ -774,8 +802,7 @@ def compact(e):
                 "bottle_prewarm": lists("bottle_prewarm", lambda w: w["start"]),
                 "floor_clean": lists("floor_clean", lambda w: f"{w['start']}-{w['end']}"),
                 "door_quiet": lists("door_quiet", lambda w: f"{w['start']}-{w['end']}"),
-                "white_noise_boost": lists("white_noise_boost", lambda w: f"{w['start']}-{w['end']}"),
-                "why": p.get("why_changed") or p.get("summary")}
+                "white_noise_boost": lists("white_noise_boost", lambda w: f"{w['start']}-{w['end']}")}
     if kind == "house_brain_fallback":
         # The reason is the machinery's (a cut-off answer, a refused window): it never goes to the parents' text.
         return {"at": hm, "what": "the house kept its usual routines"}

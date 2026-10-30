@@ -567,8 +567,12 @@ class Families:
         if not feeds:
             return {"text": f.t("NO_FEEDS_YET", name=f.name), "at": None, "kind": None}
         last = patterns.when(feeds[-1]).astimezone(self.tz)
-        since = self.at_words(f, last, now)
-        ago = _hm((now - last).total_seconds() / 60)
+        # The parent reads "since" and "ago" from when the last feed ended, the time the summary names: round 4's 20:00
+        # push said "la última a las 14:00" and then "6 h 15 min desde la última toma, a las 13:45", the 15 minute breast
+        # feed's start. The rhythm itself still counts feeds from their start.
+        ended = min(patterns.parse(feeds[-1]["end"]), now).astimezone(self.tz) if feeds[-1].get("end") else last
+        since = self.at_words(f, ended, now)
+        ago = _hm((now - ended).total_seconds() / 60)
         out = {"at": None, "last": feeds[-1]["ref"]}
         if now - last > datetime.timedelta(hours=self.s["reminder_max_gap_h"]):
             return {**out, "kind": "old", "text": f.t("LAST_FEED_AT", name=f.name, since=since, ago=ago)}

@@ -21,7 +21,7 @@ QUESTION_START = re.compile(r"^(y |and )?(when|how|what|did|has|have|is|was|why|
 # not one of them, only a question about what to give ("le puedo dar").
 MEDICAL_ES = re.compile(r"\b(fiebre|temperatura|medicamento|medicina|remedio|dosis|paracetamol|ibuprofeno|sarpullido|"
                         r"erupci|v[oó]mit|enferm|diagn[oó]s|tos\b|infecci|antibi[oó]tic|es normal|le puedo dar|puedo darle|"
-                        r"c[oó]lico|gotas para)", re.I)
+                        r"c[oó]lico|gotas para|larg[oó] (un poc|leche|algo|todo|bastante|mucho|un chorr|lechita)|regurgit|bocanada)", re.I)
 # Red flags: an answer in no time, with no brain call, that says to call emergency services. Fussing and crying are
 # not on the list, they get the likely reason from the log instead.
 EMERGENCY = re.compile(
@@ -83,6 +83,18 @@ EMERGENCY = re.compile(
     r"chest (caves?|caving|caved|sinks?|sinking|sucks?|sucking|pulls?|pulling) in|ribs (show|showing|pull\w*) (in )?when|retraction\w*|"
     r"se le hunde el pecho|se le marcan las costillas|tiraje|"
     # Grunting or moaning with every breath is a 911 sign on the healthychildren.org newborn illness list.
+    # Round 5 auditor misses: colour around the mouth, purple and blotchy skin, a dog that snapped or broke the skin,
+    # a baby dropped out of the arms, a tumble down stairs, and a bottle hot enough to make him scream.
+    r"(blue|purple|gr[ae]y|bluish|dark) (all )?(a?round|near) (the |his |her )?(mouth|lips)|"
+    r"(purple|blue|gr[ae]y) and blotchy|blotchy (and )?(purple|blue|gr[ae]y)|blotchy (purple|blue) (skin|patches)|"
+    r"(dog|puppy|pup|cat|pet)'?s? (\w+ )?snapped at (the baby|him|her|my (baby|son|daughter))|"
+    r"(dog|puppy|pup|cat|pet|bite|bit|scratch\w*|claw\w*)\b[^.!?]{0,40}\bbroke (the |his |her )?skin|"
+    r"taras(c|qu)[oó]n|"
+    r"(dropped|slipped|fell|slid|tumbled|wriggled) (right |straight )?(out of|from) (my|his|her|our|their|dad'?s|mom'?s) (arms|hands|grip)|"
+    r"se (me |le )?cay[oó] de (los|mis|sus) brazos|"
+    r"(tumbled|tumbles|rolled|rolls|slid|slipped|bounced) down (the |two |three |a few |some |a couple of |\d+ )?(stairs|steps|staircase)|"
+    r"(bottle|milk|formula|water|bath|tea|coffee)\b[^.!?]{0,25}\btoo hot\b[^.!?]{0,40}\b(scream\w*|shriek\w*|howl\w*|burn\w*|blister\w*)|"
+    r"(mamadera|leche|agua|ba[ñn]era|t[eé]|caf[eé])\b[^.!?]{0,25}\b(muy|demasiado|re) caliente\b[^.!?]{0,40}\b(grit[oó]|chill[oó]|alarid\w*|ampolla\w*)|"
     r"(grunt|moan)\w* (with|on|at) (each|every) breath|(quej\w*|hace ruido) (en|con) cada respiraci[oó]n|"
     # Signs the round 3 red teamer sent next to a cry: bluish, barely breathing, stiff, a high pitched scream, wheezing,
     # anything swallowed.
@@ -231,8 +243,11 @@ CLAIMS_ACTED = re.compile(
 MEDICINE = re.compile(r"\b(medicine|medication|dose|dosage|paracetamol|acetaminophen|tylenol|ibuprofen|motrin|advil|drops|"
                       r"syrup|antibiotic|vitamin|medicamento|medicina|remedio|dosis|ibuprofeno|gotas|jarabe|antibi[oó]tic\w*|"
                       r"vitamina)\b", re.I)
+# "largó un poco" is the Rioplatense spit-up: round 5 found "tomo 60 y largo un poco" stored as two bottles on the demo
+# because it went to the brain path. "largo" alone is "long" ("un rato largo"), so only the spit-up phrasings count.
+SPIT_UP_ES = r"larg[oó] (un poc\w*|leche|algo|todo|bastante|mucho|un chorr\w*|lechita)|regurgit\w*|bocanada"
 SYMPTOM = re.compile(r"\b(fever|temperature|rash|vomit\w*|sick|cough\w*|infection|diarrh\w*|fiebre|temperatura|sarpullido|"
-                     r"erupci\w*|v[oó]mit\w*|enferm\w*|tos|infecci\w*|diarrea)\b", re.I)
+                     r"erupci\w*|v[oó]mit\w*|enferm\w*|tos|infecci\w*|diarrea|" + SPIT_UP_ES + r")\b", re.I)
 LOG_ASK = re.compile(r"\b(log|logged|note (it|that|down)|write (it|that)? ?down|add (it|that)|record (it|that)|keep a note|"
                      r"save (it|that)|anot[aá]\w*|registr[aá]\w*|apunt[aá]\w*|guard[aá]\w*)\b", re.I)
 GAVE = re.compile(r"\b(i gave|we gave|i just gave|gave (him|her|the baby|it)|was given|she had (her|the)|he had (his|the)|"
@@ -401,8 +416,17 @@ def is_medical(text):
     return bool(MEDICAL.search(text))
 
 
+# Everyday lines the gate read as red flags in round 5 ("he chokes on laughter", "the dog bit his toy"). These words are
+# taken out before the gate reads the message, so anything else in it is still read.
+EVERYDAY = re.compile(r"\bchok\w* (on|with|from) (laughter|laughing|giggl\w*)|\bse (me |le )?ahog\w* de (la )?risa|"
+                      r"\blimp with (sleep|tiredness)|\bseizures? of (giggl\w*|laughter)|"
+                      r"\b(dog|puppy|cat|perr[oa]|gat[oa])\b[^.!?]{0,15}\b(bit|bites|chewed|mordi[oó]|muerde)\s+"
+                      r"(his|her|the|a|el|la|su|sus|un|una)\s+(\w+\s+)?(toys?|juguete\w*|chupete|blanket|manta|mantita|sock|media)\b"
+                      r"(\s+del? (beb[eé]|nene|nena))?", re.I)
+
+
 def is_emergency(text):
-    return bool(EMERGENCY.search(text or ""))
+    return bool(EMERGENCY.search(EVERYDAY.sub(" ", text or "")))
 
 
 # Words of a sign a log guard must never talk over, wider than the gate: labor, bleeding, shaking, a bite. A message
@@ -1074,13 +1098,50 @@ ES_COMMON = re.compile(r"(lo|los|las|dos|una|uno|es|era|eran|fue|fueron|s[ií]+|
 
 def clearly_english(text):
     """True when a message is in English and not Spanish with an English word: "gave her a 60 ml bottle" and "his lips
-    are blue" are, "sii lo mande dos veces sorry" is not."""
+    are blue" are, "sii lo mande dos veces sorry" and "ok thanks" are not."""
+    if is_courtesy(text):
+        return False
     words = re.findall(r"[^\W\d_]+", text or "")
     if any(ES_COMMON.fullmatch(w) for w in words):
         return False
     hits = [w for w in words if ENGLISH.fullmatch(w) or EN_COMMON.fullmatch(w)
             or (w[-1:].lower() == "s" and ENGLISH.fullmatch(w[:-1]))]
     return bool(hits) and (2 * len(hits) >= len(words) or len(hits) >= 2)
+
+
+# A thanks or an ok with nothing else in it. Round 5: "ok thanks" in a Spanish family got an English reply in 3 of 3 runs,
+# once with "Benja is doing great", a claim about the baby nobody made. It never flips the language, and it gets a short
+# fixed reply with no brain call and nothing said about the baby.
+COURTESY = re.compile(r"^\W*((ok(ay|a|i|is)?|dale|listo|genial|perfecto|buen[ií]simo|b[aá]rbaro|joya|great|cool|nice|"
+                      r"thanks?( a lot| so much)?|thank you( so much)?|thx|ty|gracias|muchas gracias|mil gracias|grax|"
+                      r"de una|sounds good|got it|entendido|👍|🙏|❤️?)[\s,.!]*)+$", re.I)
+THANKS = re.compile(r"thank|thx|\bty\b|graci|grax|🙏", re.I)
+COURTESY_REPLY = {"en": {"thanks": "You are welcome.", "ok": "OK."}, "es": {"thanks": "De nada.", "ok": "Dale."}}
+
+
+def is_courtesy(text):
+    return bool(text) and bool(COURTESY.match(text.strip()))
+
+
+def courtesy_reply(text, lang):
+    words = COURTESY_REPLY["es" if lang == "es" else "en"]
+    return words["thanks"] if THANKS.search(text or "") else words["ok"]
+
+
+TWO_FEEDS = re.compile(r"\b(dos|two|2|both|ambas|ambos) (mamaderas|tomas|bottles|feeds|feedings)\b|"
+                       r"\b(y|and|then|despu[eé]s|luego) (otra|another)\b|"
+                       r"\b(otra|another|other|second|segunda) (mamadera|toma|bottle|feed)\b", re.I)
+CLOCK_SAID = re.compile(r"\b\d{1,2}[:h.]\d{2}\b|\b(?:a las?|at) \d{1,2}\b", re.I)
+FEED_NUMBER = re.compile(r"(?<![\d:.])\d{1,3}(?:[.,]\d)?(?![\d:])")
+
+
+def says_two_feeds(text):
+    """True when one message reports more than one feed: two amounts or minutes, or "dos mamaderas". "tomo 60 y largo un
+    poco" reports one, and the demo stored it twice in 1 of 2 round 5 tries."""
+    text = text or ""
+    numbers = {n.replace(",", ".") for n in FEED_NUMBER.findall(re.sub(r"\b\d{1,2}[:h.]\d{2}\b|\ba las? \d{1,2}\b", " ", text))}
+    times = {t.lower() for t in CLOCK_SAID.findall(text)}
+    return bool(TWO_FEEDS.search(text)) or len(numbers) >= 2 or len(times) >= 2
 
 
 def turn_lang(text, home):

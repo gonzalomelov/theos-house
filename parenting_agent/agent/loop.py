@@ -112,6 +112,7 @@ BOUNDS_ASK = {
 }
 FROM_EARLIER = ("not logged: this note repeats an earlier message, which was already handled. Log only what the newest "
                 "message says.")
+ONE_FEED = "not logged: this message reports one feed and it is already logged."
 MEDICINE_NOTE = "not logged: a medicine is logged as a note with the parent's own words, never as a feed."
 ENTRY_WORDS = {"feeding": "a feed", "diaper": "a diaper", "sleep": "sleep", "bath": "a bath", "note": "a note"}
 SAVED_BEFORE_FAIL = "I could not finish my answer, but I logged {entries}. No need to send it again."
@@ -740,6 +741,12 @@ class Agent:
             self.memory.add_message(channel, "user", text, ts=self.now())
             self.bus.publish("guard", status="night_rota")
             self.say(channel, rota.answer(self.lang(text)))
+            return
+        if rules.is_courtesy(text) and rules.THANKS.search(text) and self.double is None:
+            # "ok thanks": a short fixed reply in the turn's language, no brain call, nothing said about the baby.
+            self.memory.add_message(channel, "user", text, ts=self.now())
+            self.bus.publish("guard", status="courtesy")
+            self.say(channel, rules.courtesy_reply(text, self.lang(text)))
             return
         route = rules.health_route(text) if self.health_gate else None
         if route == "refuse":
@@ -1509,6 +1516,13 @@ class Agent:
                     self.bus.publish("tool", name=call["name"], status="held", reason="woke")
                     transcript.append({"role": "tool", "id": call["id"], "name": call["name"],
                                        "result": NOT_STARTED if self.open_sleep() else NO_OPEN_SLEEP})
+                    continue
+                if (key is not None and call["arguments"].get("kind") == "feeding" and request is not None
+                        and any(e.get("kind") == "feeding" for e in stored) and not rules.says_two_feeds(request)):
+                    # One feed told, one feed stored: "tomo 60 y largo un poco" was two 60 ml bottles on the demo in 1 of
+                    # 2 round 5 tries, and the next feed line then said feeds come every 8 minutes.
+                    self.bus.publish("tool", name=call["name"], status="held", reason="one_feed")
+                    transcript.append({"role": "tool", "id": call["id"], "name": call["name"], "result": ONE_FEED})
                     continue
                 if key is not None and call["arguments"].get("kind") == "feeding" and rules.medicine_only(request):
                     # "I gave her 2.5 ml of paracetamol" is a note, never a 2.5 ml feed.

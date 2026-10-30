@@ -18,12 +18,13 @@ from ..agent.brain import BrainError
 from ..bus import Bus
 from ..rhythm import patterns
 from ..sleep_forecast import as_of, predict_feed, sleep_windows
-from .babylog import TZ
+from .babylog import TZ, finished, started
 
 # The night feed's rhythm lead and the white noise cap at the crib. night_feed.py and white_noise.py are not in the
 # demo image, a test keeps these the same as theirs.
 FIXED_LEAD_MIN = 10
 CRIB_CAP_DB = 50.0
+NIGHT_FROM = 19  # a visit before this hour (from 05:00) sees tonight's plan from 19:00, planned ahead
 SLEEP_NOTE = {"en": "{who}: I'm exhausted, let me sleep tonight", "es": "{who}: estoy muerto de sueño, dejame dormir esta noche"}
 NAMES_ES = {"Parent A": "Persona A", "Parent B": "Persona B"}
 
@@ -54,6 +55,7 @@ TEXT = {
         "no_change": "Nothing changed in the plan", "fixed_word": "fixed rule",
         "fixed_sleep": "The fixed rules do not re-plan when a parent asks to sleep, so {p} stays on duty",
         "plan_until": "Plan from {now} to {until}",
+        "plan_ahead": "Tonight from {now} to {until}, planned at {at} from the simulated day ahead",
     },
     "es": {
         "duty": "De turno esta noche", "warm": "El calienta mamaderas precalienta", "noise": "Ruido blanco",
@@ -82,6 +84,7 @@ TEXT = {
         "no_change": "No cambió nada en el plan", "fixed_word": "regla fija",
         "fixed_sleep": "Las reglas fijas no cambian el plan cuando alguien pide dormir, así que {p} sigue de turno",
         "plan_until": "Plan de {now} a {until}",
+        "plan_ahead": "Esta noche de {now} a {until}, planeado a las {at} con el resto del día simulado",
     },
 }
 
@@ -97,6 +100,14 @@ def hm(t):
     return patterns.hhmm(t.astimezone(TZ))
 
 
+def tonight_start(now):
+    """When tonight's plan starts: now in the evening and at night, else 19:00 today."""
+    local = now.astimezone(TZ)
+    if local.hour >= NIGHT_FROM or local.hour < 5:
+        return now
+    return local.replace(hour=NIGHT_FROM, minute=0, second=0, microsecond=0)
+
+
 class TonightHouse:
     """One visitor's simulated house plan. plan(action) returns (card, muse_calls): action "tonight" or "sleep"."""
 
@@ -108,6 +119,7 @@ class TonightHouse:
         self.allow_muse, self.on_spend = allow_muse, on_spend
         self.on_call = lambda: None  # counts one Muse plan call against the visitor's limits, set per request
         self.plans = {}
+        self.at, self.ahead = None, []
 
     def cached(self):
         return dict(self.plans)
@@ -120,23 +132,31 @@ class TonightHouse:
         calls = 0
         if action == "sleep" and "tonight" not in self.plans:
             calls += self.plan("tonight", lang)[1]
-        now = self.baby_log.now()
+        real_now = self.baby_log.now()
         if action == "tonight":
-            local = now.astimezone(TZ)
-            trigger = "bedtime" if local.hour >= 18 or local.hour < 5 else "plan_ahead"
-            what = None
+            self.at = tonight_start(real_now)
+            # A day visit plans the coming night, never the day under a "tonight" title (round 5 saw 07:23 to 19:23 with
+            # the warmer not armed): the rest of the simulated day up to the evening is read as the simulated baby will
+            # live it, then Muse plans from there.
+            self.ahead = [dict(r, ref=f"{r['kind']}#ahead{i}", id=0) for i, r in enumerate(self.baby_log.upcoming)
+                          if started(r) < self.at] if self.at > real_now else []
+            trigger, what = "bedtime", None
         else:
             before = self.plans["tonight"]
             who = before["on_duty"]
             note = SLEEP_NOTE["es" if lang == "es" else "en"].format(who=who)
             self.baby_log.add("note", {"text": note})
-            now = self.baby_log.now()
-            seen = as_of(self.baby_log.rhythm_rows(), now)
-            adapts = [t for t in self.brain.triggers(seen, now) if t[0] == "adapt"]
-            trigger, what = "adapt", "; ".join(t[1] for t in adapts) or f'a parent wrote at {hm(now)}: "{note}"'
-            if self.brain.asked_to_sleep is None:
-                self.brain.asked_to_sleep = now
+            real_now = self.baby_log.now()
+            seen = as_of(self.baby_log.rhythm_rows(), real_now)
+            adapts = [t for t in self.brain.triggers(seen, real_now) if t[0] == "adapt"]
+            trigger, what = "adapt", "; ".join(t[1] for t in adapts) or f'a parent wrote at {hm(real_now)}: "{note}"'
+            # The request is about tonight, so it counts from the start of the planned night.
+            self.brain.asked_to_sleep = max(self.brain.asked_to_sleep or real_now, self.at)
+        now = max(self.at, real_now)
         rows = self.baby_log.rhythm_rows()
+        have = {(r["kind"], r.get("start") or r.get("time")) for r in rows}
+        rows += [r for r in self.ahead if finished(r) > real_now and started(r) < now
+                 and (r["kind"], r.get("start") or r.get("time")) not in have]
         seen = as_of(rows, now)
         reason = None
         if not self.allow_muse():
@@ -153,6 +173,7 @@ class TonightHouse:
                 off = isinstance(self.brain.muse, NoMuse)
                 reason = "off" if off else ("refused" if refused else "error")
         card = self.card(seen, now, trigger, what, reason)
+        card["planned_at"] = hm(real_now) if now > real_now else ""
         if action == "sleep":
             card["before"] = self.plans["tonight"]
         self.plans[action] = card
@@ -183,9 +204,13 @@ class TonightHouse:
                 out[name] = "fixed"
             out["summary"] = out["why_changed"] = ""
             nxt = predict_feed(seen, now)
-            if nxt and patterns.is_night(nxt["at"].astimezone(TZ)) \
-                    and nxt["at"] - now <= datetime.timedelta(hours=self.brain.s["horizon_h"]):
-                out["fixed_prewarm"] = {"at": hm(nxt["at"] - datetime.timedelta(minutes=FIXED_LEAD_MIN)), "feed": hm(nxt["at"])}
+            horizon = now + datetime.timedelta(hours=self.brain.s["horizon_h"])
+            at = nxt["at"] if nxt else None
+            # The first guessed feed at night: from 19:00 the next one is in the evening, the one after it at night.
+            while at is not None and nxt["gap_min"] > 0 and not patterns.is_night(at.astimezone(TZ)) and at <= horizon:
+                at += datetime.timedelta(minutes=nxt["gap_min"])
+            if at is not None and patterns.is_night(at.astimezone(TZ)) and at <= horizon:
+                out["fixed_prewarm"] = {"at": hm(at - datetime.timedelta(minutes=FIXED_LEAD_MIN)), "feed": hm(at)}
         out["sleeps"] = [{"start": hm(w["start"]), "end": hm(w["end"]), "kind": w["kind"]}
                          for w in sleep_windows(seen, now, TZ, horizon_h=self.brain.s["horizon_h"])]
         return out
@@ -264,7 +289,8 @@ def view(card, lang="en"):
     source = t["src_muse"] if card["source"] == "muse" else t["src_fixed"].format(
         reason=t["fixed_reason"].get(card["fixed_reason"], t["fixed_reason"]["error"]))
     return {"source": card["source"], "label": source, "badge": t["badge"],
-            "span": t["plan_until"].format(now=card["now"], until=card["until"]),
+            "span": (t["plan_ahead"].format(now=card["now"], until=card["until"], at=card["planned_at"])
+                     if card.get("planned_at") else t["plan_until"].format(now=card["now"], until=card["until"])),
             "rows": [{"label": a, "text": b} for a, b in rows(card, lang)],
             "why": card["summary"], "why_label": t["why"], "why_changed": card["why_changed"],
             "changes": changes(card, lang), "changes_label": t["changed"], "on_duty": card["on_duty"],

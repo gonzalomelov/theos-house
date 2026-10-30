@@ -30,6 +30,7 @@ from ..prep import DEFAULTS as PREP_DEFAULTS
 from ..prep import Prep
 from ..prep import lists as prep_lists
 from ..rhythm import patterns
+from ..sleep_forecast import sessions
 from .babylog import TZ, DemoBabyLog
 from . import tonight
 from .records import Records
@@ -489,7 +490,9 @@ class Visitor:
         now = self.clock().astimezone(TZ)
         rows = self.baby_log.rhythm_rows()
         out = {}
-        nxt = patterns.next_feed(rows, now)
+        # Feeds within 30 minutes of the one before are one feed for the rhythm, as on the families bot: a bottle stored
+        # twice made the round 5 demo say feeds come every 8 minutes.
+        nxt = patterns.next_feed(sessions(rows), now)
         if nxt:
             minutes = round((nxt["at"] - now).total_seconds() / 60)
             when = patterns.hhmm(nxt["at"].astimezone(TZ))

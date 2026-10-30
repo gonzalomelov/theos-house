@@ -43,7 +43,8 @@ AUDITOR_RED = (
     "her neck is stiff", "tiene el cuello duro", "he stopped breathing for a few seconds", "dejó de respirar unos segundos",
     "he's struggling to breathe", "se puso azul alrededor de la boca", "the cord stump is bleeding a lot",
     "el ombligo sangra mucho")
-LEFT_FOR_THE_BRAIN = ("the bottle was too hot and he screamed",)
+# Round 5 moved "the bottle was too hot and he screamed" onto the gate (tests/test_round5.py), so none is left here.
+LEFT_FOR_THE_BRAIN = ()
 # The auditor's 34 everyday lines, minus two kept on the pregnancy gate on purpose: a terrible headache and blurry vision
 # are pregnancy red flags, and the gate cannot tell the tired parent from the pregnant one.
 AUDITOR_EVERYDAY = (

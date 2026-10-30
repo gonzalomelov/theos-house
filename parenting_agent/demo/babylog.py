@@ -215,6 +215,11 @@ class DemoBabyLog(BabyLog):
             changed.update(start=iso(start), end=iso(end))
             if new.get("amount_ml") is not None:
                 changed["amount"] = float(new["amount_ml"])
+            if "breast" in str(new.get("method") or "") and "breast" not in str(row.get("method") or "") \
+                    and new.get("amount_ml") is None:
+                changed.pop("amount", None)  # a bottle that was a breast feed keeps no ml, as on the families bot
+                if not new.get("type"):
+                    changed["type"] = "breast milk"
             for name in ("method", "type"):
                 if new.get(name):
                     changed[name] = new[name]

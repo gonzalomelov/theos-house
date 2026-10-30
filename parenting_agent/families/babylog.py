@@ -117,6 +117,12 @@ class FamilyBabyLog(BabyLog):
             if "method" in new and "type" not in new and d.get("type") == ("breast milk" if "breast" in str(d.get("method")) else "unknown"):
                 merged.pop("type", None)
             merged.update({k: v for k, v in new.items() if k in FEEDING_FIELDS and v is not None})
+            if "breast" in str(new.get("method") or "") and "breast" not in str(d.get("method") or "") \
+                    and new.get("amount_ml") is None:
+                # "el de las 9 fue de pecho no mamadera": a bottle that was a breast feed keeps no ml (round 5 kept the 90 ml
+                # on the breast feed in 3 of 3 runs, and the day total said 190 for 100).
+                merged.pop("amount_ml", None)
+                merged["type"] = new.get("type") or "breast milk"
             if "duration_min" not in new and d.get("start"):
                 merged["start"] = (self.time(d["start"]) + shift).isoformat(timespec="seconds")
                 merged.pop("duration_min", None)
