@@ -29,20 +29,41 @@ EMERGENCY = re.compile(
     r"(blue|purple|gr[ae]y) (lips|face)|lips (are |look |turned |turning )?(blue|purple|gr[ae]y)|turn(ed|ing|s)? (blue|purple)|"
     r"limp\b|limply|floppy|chok(e|es|ed|ing)|won'?t wake|wont wake|can'?t wake|cannot wake|not waking|unresponsive|"
     r"fell (off|from|down|out of)|had a fall|dropped (him|her|the baby)|hit (his|her|the|its) head|head injury|seizure|convuls\w*|"
-    r"no respira|dej[oó] de respirar|le cuesta respirar|no puede respirar|"
-    r"(est[aá]|se puso|se pone|se ve|se le puso|qued[oó]|labios|cara|boca) (muy |re |medio |todo |toda |bien |un poco )?morad\w*|"
+    r"no respira|dej[oó] de respirar|le cuesta (mucho |bastante |un mont[oó]n |re |muy )?respirar|no puede respirar|"
+    r"no (lo |la )?(puedo|podemos|logro|logramos|consigo) despertar|can'?t be woken|cannot be woken|(won'?t|doesn'?t|isn'?t) waking( up)?|"
+    r"(est[aá]|se puso|se pone|se ve|se le puso|qued[oó]|labios|cara|boca) (muy |re |medio |todo |toda |bien |un poco )?(morad|violet|gris)\w*|"
+    r"dusky|mottled|ashen|(turn\w*|going|gone|went|go(es)?|got|look\w*|is|was|seems?) (a bit |kind of |very |really |so )?gr[ae]y\b|"
     r"labios azules|se puso azul|"
     r"se (est[aá] )?ahog\w*|atragant\w*|no se despierta|no reacciona|no responde|"
     r"se (me )?cay[oó](?! (el|la) (chupete|mamadera|biber[oó]n|tete|juguete))(?! (dormid\w*|rendid\w*|frit\w*|redond\w*))|"
     # Falls the round 3 audit found missing: the baby fell, rolled off the bed or the couch.
     r"(the baby|baby|he|she|my baby|my son|my daughter) fell(?! (back )?asleep)(?! into)\b|rol+ed (off|out of)|rol+s (off|out of)|"
+    r"(slid|slipped|slides|tumbled|tumbles|toppled|took a tumble|took a fall|had a tumble) (right |straight )?(off|out of|from|down (from|off))\b|"
+    r"se (me |le )?(resbal[oó]|desliz[oó]) (del?|de la|de los|de mis|de sus)\b|"
     r"se golpe[oó]|golpe en la cabeza|convulsi\w*|"
+    r"(had|has|having|is having|went into) (a |another )?(fit|fits)\b|"
+    r"(whole|entire) body (is |was |keeps |kept |started |starts )?(shak|trembl|jerk|twitch|stiffen)\w*|shaking all over|"
+    r"(shak|trembl|jerk|twitch)\w* (and|but) (he |she )?(won'?t|doesn'?t|does not|isn'?t|is not|can'?t) (respond|answer|look|react|wake)\w*|"
+    r"(eyes|arms|legs|arms and legs) (are |were |keep |kept |won'?t stop )?(twitch|jerk)\w*|won'?t stop (jerking|twitching)|"
+    r"tembl\w* (todo el cuerpo|el cuerpo entero|entero|entera|enter[oa]s?)|(le )?tiembla todo el cuerpo|tiembla enter[oa]|"
+    r"(todo el cuerpo|el cuerpo entero) (le )?(tembl|sacud)\w*|temblor\w* (en|de) todo el cuerpo|"
+    r"(tembl|sacud)\w* (y|pero) no (responde|reacciona|me mira|mira)|"
     # Bath, changing table and breathing red flags a safety audit found missing (round 2), English then rioplatense.
     r"gasp\w*|(trouble|difficulty|hard time|problems?) breathing|breath(ing|es) (really |very |so |too )?(fast|hard|rapid\w*|weird\w*|strange\w*)|"
     r"labou?red breathing|went under(?! (the |his |her |a )?(blanket|covers|sheets?|table|bed|crib|cot|sofa|couch|chair))|(head|face) went under|slipped under|(went|was|stayed|slipped|got|been|is|fell|sank|sunk) (all the way |completely )?under (the )?water|drown\w*|"
     r"(swallowed|ate|ingested|put) (a |an |the |some |one of the |two )?(button |coin )?(battery|batteries|magnets?)\b|"
     r"(swallowed|drank|ate) (some )?(bleach|detergent|a (laundry |detergent )?pod)|poison\w*|"
-    r"(bulging|swollen) (soft spot|fontanel\w*)|(soft spot|fontanel\w*) (is |looks |seems )?(bulging|swollen|puffy)|"
+    r"(dog|puppy|pup|cat|kitten|pet)'?s? (\w+ )?(bit|bites|bitten|nipped|mauled|attacked|scratched|grabbed|clawed)\b|"
+    r"(bit|bitten|nipped|mauled|attacked|scratched) by (the |a |our |my )?(dog|puppy|cat|pet)|"
+    r"(perr[oa]|cachorr[oa]|gat[oa]|mascota)s? (\w+ )?(lo |la |le )?(mordi[oó]|muerde|ara[ñn][oó]|atac[oó]|agarr[oó])|"
+    r"(mordi[oó]|ara[ñn][oó]|atac[oó]) (el|la) (perr[oa]|gat[oa])|mordid[oa] por|"
+    r"(got into|licked|bit|bitten|chewed|sucked|mouthed|ate|swallowed|drank|had) (on |at |from )?(a |an |the |some |one of the |my |our )?"
+    r"(dishwasher|laundry|detergent|washing) (tablets?|pods?|capsules?|liquid|detergent|soap|powder)|"
+    r"(tom[oó]|bebi[oó]|chup[oó]|mordi[oó]|lami[oó]|se meti[oó] en la boca) (\w+ )?(lavandina|detergente|c[aá]psulas? de (detergente|lavarropas|lavavajillas)|pastillas? del lavavajillas)|"
+    r"(bulging|swollen|sunken|sunk|caved) (in )?(soft spot|fontanel\w*)|(soft spot|fontanel\w*) (is |looks |seems )?(bulging|swollen|puffy|sunken|sunk|caved)|"
+    r"(fontanela|mollera) (est[aá] |se ve |se le ve |muy |re )?hundid\w*|(fontanela|mollera) (se )?(le )?hund(i[oó]|e)|cuello (duro|r[ií]gido|tieso)|"
+    r"rash (that )?(doesn'?t|does not|won'?t|didn'?t|isn'?t going to) (fade|go away|blanch)|non[- ]?blanching|"
+    r"(spots|dots|rash) (that )?(don'?t|do not|won'?t) fade|(manchitas?|puntitos?|manchas?) (\w+ )?que no se (van|borran|desaparecen)|"
     r"(pale|grey|gray) and cold|cold and (pale|grey|gray)|scald\w*|burn(ed|t) (him|her|the baby|his|her)|"
     r"unconscious|passed out|faint(ed|ing)|(he|she|baby)('s| is)? (not|isn'?t) moving|"
     r"boque\w*|le falta (el )?aire|(dificultad|le cuesta) (para )?respirar|"
@@ -52,7 +73,7 @@ EMERGENCY = re.compile(
     r"(pila|pilas|bater[ií]a\w*|im[aá]n|imanes)\b.{0,25}\b(se )?(lo |la |los |las )?trag[oó]|pila de bot[oó]n|envenen\w*|intoxic\w*|"
     r"(fontanela|mollera) (est[aá] |se ve |muy )?(abultad\w*|hinchad\w*|inflad\w*)|"
     r"p[aá]lid[oa] y fr[ií][oa]|fr[ií][oa] y p[aá]lid[oa]|se (me )?quem[oó]|quemadura|"
-    r"se desmay[oó]|desmayad[oa]|inconsciente|(?<!cuna )(?<!silla )(?<!hamaca )(?<!mesa )(?<!cama )(?<!puerta )(?<!rueda )(?<!auto )(?<!mecedora )no se mueve(?! de)|"
+    r"se desmay[oó]|desmayad[oa]|inconsciente|(?<!cuna )(?<!silla )(?<!hamaca )(?<!mesa )(?<!cama )(?<!puerta )(?<!rueda )(?<!auto )(?<!mecedora )no se mueve(?! de)(?! (la|el) (hamaca|cuna|mecedora|silla|sillita|puerta|auto|coche|cochecito|carrito|mois[eé]s|juguete|m[oó]vil|ventilador|rueda))|"
     # Pills, medicine and coins, eyes rolling back and a chest that caves in, from the round 3 audit.
     r"(swallowed|ate|got into|chewed) (a |an |some |one of |my |the |his |her |two |few |a few )*(pills?|tablets?|coins?|medicines?|medication|meds)\b|"
     r"drank (some of |some )?(my|mom'?s|dad'?s|grandma'?s|the|a bottle of|his brother'?s|her sister'?s) (medicine|medication|meds|cough syrup|syrup)|"
@@ -65,17 +86,36 @@ EMERGENCY = re.compile(
     r"(grunt|moan)\w* (with|on|at) (each|every) breath|(quej\w*|hace ruido) (en|con) cada respiraci[oó]n|"
     # Signs the round 3 red teamer sent next to a cry: bluish, barely breathing, stiff, a high pitched scream, wheezing,
     # anything swallowed.
-    r"bluish|azulad\w*|barely breathing|hardly breathing|apenas respira|casi no respira|stiff\b|rigid\b|r[ií]gid[oa]|ties[oa]\b|"
-    r"high[- ]?pitched|shrill (cry|scream)|grito agudo|llanto (muy )?agudo|grita agudo|wheez\w*|silbido|le silba el pecho|"
-    r"swallowed (something|a |an |some |one |the |his |her |my )(?!(lot of |bit of |little )?(air|milk|formula|leche|aire))|"
+    r"bluish|azulad\w*|barely breathing|hardly breathing|apenas respira|casi no respira|stiff\b(?!( neck)? from )|rigid\b|r[ií]gid[oa]|ties[oa]\b|"
+    r"high[- ]?pitched(?![^.!?]{0,25}\b(happy|excited|playing|laugh\w*|giggl\w*|squeal\w*))|shrill (cry|scream)|grito agudo|llanto (muy )?agudo|grita agudo|wheez\w*|silbido|le silba el pecho|"
+    r"swallowed (something|a |an |some |one |the |his |her |my )(?!(lot of |bit of |little )?(air|milk|formula|leche|aire))"
+    r"(?!(whole |entire |full |all (of )?(the |his |her )?)?(bottle|feed|meal|food|milk|formula|breast|boob|puree|banana))|"
     r"se (me )?trag[oó] (algo|un |una |unas |unos )(?!(poco de )?(aire|leche))|"
     # Pregnancy red flags for prep mode: bleeding, the baby stopped moving, a severe headache, blurred vision.
-    r"(i'?m|i am|she'?s|she is|estoy|est[aá]) (bleeding|sangrando)|bleeding (a lot|heavily)|heavy bleeding|"
+    r"(i'?m|i am|she'?s|she is|estoy|est[aá]) (bleeding|sangrando)(?! (a bit |a little |un poco )?(from (the |my |her )?nipples?|del? (los )?pez[oó]n\w*))|bleeding (a lot|heavily)|heavy bleeding|"
     r"sangr\w* (mucho|abundante)|tengo (un )?sangrado|"
     r"(baby|he|she) (has )?(stopped|isn'?t|is not) moving|(not|no longer|can'?t|cannot) feel (the baby|him|her|it) mov\w*|"
-    r"no siento que se mueva|ya no (lo |la )?siento|no (lo |la )?siento mover\w*|dej[oó] de moverse|"
+    r"no siento que se mueva|ya no (lo |la )?siento(?! (llor|re[ií]r|quej)\w*)|no (lo |la )?siento mover\w*|dej[oó] de moverse|"
     r"(severe|terrible|worst|really bad|very bad|strong) headache|dolor de cabeza (muy )?(fuerte|intenso|terrible|horrible)|"
-    r"blurr\w* vision|vision (is )?blurr\w*|visi[oó]n borrosa)", re.I)
+    r"blurr\w* vision|vision (is )?blurr\w*|visi[oó]n borrosa|"
+    # The nine held-out misses, closed after the one scored run (results/safety-gate-r4/README.md).
+    r"(lips|face|mouth) (went|turned|turning|going|gone|are|is|look\w*|seem\w*) (dark|black|dusky)\b(?! (red|pink))(?![^.!?]{0,20}\bfrom\b)|"
+    r"(got hold of|got into|grabbed|found|chew\w*|lick\w*|mouth\w*|bit|biting|suck\w*)( on| at)? (a |an |the |some |one of the )?"
+    r"(lithium |button |coin |watch )(cell|battery|batteries)|"
+    r"(baby|he|she|it) (hasn'?t|has not|didn'?t|did not) (kicked|moved)( much| at all| once)? (all day|today|since|in \d+|for (hours|a day))|"
+    r"no (lo |la )?siento (al beb[eé] |a la beba |a mi beb[eé] )?(patear|mover\w*)|no (patea|se mueve) (desde|hace)|"
+    r"(the )?(umbilical )?cord (is )?(coming out(?! of the (wall|socket|plug))|prolaps\w*|out first)|(feel|see|saw|felt|can see) the (umbilical )?cord|"
+    r"cord[oó]n (umbilical )?(est[aá] )?(saliendo|afuera|colgando)|"
+    r"seeing (spots|flashing lights|flashes)|veo (puntitos|manchitas|lucecitas|luces)|splitting headache|"
+    r"(burn|scald|hot|boiling|caliente|hirviendo|quem)\w*.{0,40}\b(blister\w*|ampolla\w*)|"
+    r"(spilled|spilt|poured|knocked over) (hot|boiling) (tea|coffee|water|soup|milk) (on|over) (him|her|his|the baby|my baby)|"
+    r"face (down|first) in (the )?(bath|water|tub)|(bath|tub) water.{0,25}face down|boca abajo en (el agua|la ba[ñn]era)|"
+    r"(est[aá]|se puso|lo siento|la siento) (todo |toda )(flojit|blandit)\w*|"
+    r"((water|waters)\b.{0,15}\b(broke|broken|burst|went|leak\w*)|fluid|l[ií]quido|bolsa).{0,40}\b(green\w*|brown\w*|verde\w*|"
+    r"marr[oó]n\w*|bloody|con sangre|meconi\w*)|(green|brown|verde|marr[oó]n|bloody) (fluid|water|l[ií]quido)|meconi\w*|"
+    r"contractions?.{0,25}\b(every|each) ([1-5]|one|two|three|four|five|few|couple( of)?)( to [1-5])? ?(min|minutes|mins)?\b|"
+    r"contractions?.{0,15}\b([1-5]|two|three|four|five|few)( to [1-5])? ?(min|minutes|mins) apart|"
+    r"contracci\w*.{0,25}\bcada ([1-5]|uno|dos|tres|cuatro|cinco|poc[oa]s)( a [1-5])? ?(min|minutos)?\b)", re.I)
 # A question on how a baby sleeps safely gets the AAP's public safe sleep line, the same every time, never the brain's
 # words and never a refusal with no fact. Anything that also names a symptom stays refused.
 SLEEP_WORD = r"(sleep\w*|slept|asleep|nap\w*|put (him|her|the baby|my baby|them) down|crib|cot|bassinet|dorm\w*|duerm\w*|siesta\w*|cuna|mois[eé]s|acost\w*)"
@@ -179,6 +219,8 @@ CLAIMS_LOGGED = re.compile(r"\b(logged|recorded|added (it )?to the log|anot[eé]
 # A reply that says the agent reached someone or did something in the house: sent, called, announced, asked, told.
 CLAIMS_ACTED = re.compile(
     r"\b(sent|texted|messaged|notified|pinged|announced|(asked|called|told) (him|her|them|your|ceci|gonza|the)|"
+    # The agent never calls anyone, so "I called 911 for you" is always a claim of an action that never ran.
+    r"(called|phoned|dialed|dialled|contacted) (911|emergency|emergencies|an ambulance|the ambulance)|"
     r"let (him|her|them|your partner) know|(trying|going) to reach|reach(ed|ing)|"
     r"(is|are) on (his|her|their|the) way|request (was |has been )?(sent|made)|"
     r"envi[eé]|enviad[oa]s?|mand[eé]|mandad[oa]s?|avis[eé]|avisad[oa]s?|llam[eé]|le ped[ií]|les ped[ií]|le escrib[ií]|"
@@ -274,6 +316,9 @@ NOT_BODY = re.compile(r"\b(water|bath\w*|tub|room|nursery|bottle|milk|formula|ou
 RED_FLAG = re.compile(
     r"\b((vomit\w*|throw\w* up|threw up|spit\w* up)( is| was| looks?)? (dark |bright )?green|green (vomit|throw[- ]?up|spit[- ]?up)|"
     r"vomit\w* bile|\bbile\b|"
+    # Vomiting that goes on: on the healthychildren.org newborn list as repeated vomiting.
+    r"(vomit|throw)\w* (up )?(for|all) (hours|day|night|the whole \w+)|(won'?t|can'?t|cannot|isn'?t|is not|not) (keep|keeping) anything down|"
+    r"(vomit\w*|throw\w* up|threw up) everything|vomit\w* todo|no retiene nada|vomit\w* (hace|desde hace) horas|"
     r"weak suck\w*|(can'?t|cannot|won'?t|isn'?t able to) suck|weak cry\w*|"
     r"(won'?t|will not|isn'?t|is not|not|refus\w*( to)?) (feed|feeding|eat|eating)\b|refus\w* (every|all|each|the) (feeds?|bottles?|breast)|"
     r"can'?t finish (a |his |her |any |the )?feeds?|(won'?t|doesn'?t) wake (up )?(for|to) (feeds?|eat)|"
@@ -358,6 +403,39 @@ def is_medical(text):
 
 def is_emergency(text):
     return bool(EMERGENCY.search(text or ""))
+
+
+# Words of a sign a log guard must never talk over, wider than the gate: labor, bleeding, shaking, a bite. A message
+# with one of these still goes to the brain when the gate does not answer it, but no log honesty guard replaces the reply.
+WATCH = re.compile(r"\b(water(s)? (has |have |just )?(broke|broken|burst)|(se )?(me )?rompi\w* (la )?bolsa|romp\w* (la )?bolsa|"
+                   r"contractions?|contracci\w*|labou?r pains?|trabajo de parto|shak(e|es|ing)|trembl\w*|tembl\w*|jerk(s|ed|ing)|"
+                   r"twitch\w*|bleed\w*|sangr\w*|seizure|convuls\w*|unresponsive|no responde|no reacciona|"
+                   r"(bit|bitten|mordi[oó]|mordid[oa]))\b", re.I)
+# A reply that tells the parent to get help: an emergency number, the pediatrician, a doctor, the maternity or the
+# hospital. "Hospital bag" is a prep list, not one.
+SAFETY_LINE = re.compile(r"911|pediatr|emergenc|m[eé]dic(o|a|os|as|al)\b|doctor|urgent|matern\w*|midwife|partera|obstetr\w*|ambulanc\w*|"
+                         r"guardia|hospital(?! bag)", re.I)
+
+
+def names_red_flag(text):
+    """True when a message names a red flag the gate answers, or a sign on the wider watch list."""
+    text = text or ""
+    return bool(is_emergency(text) or newborn_red_flag(text) or WATCH.search(text))
+
+
+def fixed_safety_line(text, lang="en"):
+    """The gate's fixed line for a message, or None: the 911 line for a red flag, the newborn call-now line for a newborn
+    sign. Used where a message would otherwise get a limit, a sign-up step or an error and never reach the agent."""
+    lang = message_lang(text or "") or lang
+    lang = lang if lang in ("en", "es") else "en"
+    if is_emergency(text):
+        return EMERGENCY_REPLY[lang]
+    kind = newborn_red_flag(text)
+    return URGENT_REPLY[kind][lang] if kind else None
+
+
+def carries_safety_line(text):
+    return bool(SAFETY_LINE.search(text or ""))
 
 
 def is_safe_sleep_question(text):

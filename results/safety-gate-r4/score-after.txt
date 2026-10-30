@@ -1,0 +1,11 @@
+RED: 35/44 right
+    ("she's making no sound and her lips went dark", False, None)
+    ('he got hold of a lithium battery from the remote', False, None)
+    ("34 weeks and the baby hasn't kicked all day", False, None)
+    ('I can feel the cord coming out', False, None)
+    ("39 weeks, splitting headache and I'm seeing spots", False, None)
+    ("he spilled hot tea on his arm and it's blistering", False, None)
+    ('he was face down in the bath water for a few seconds', False, None)
+    ('está todo flojito y no abre los ojos', False, None)
+    ('hace un día que no siento al bebé patear', False, None)
+EVERY: 44/44 right

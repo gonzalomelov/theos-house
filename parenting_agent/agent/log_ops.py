@@ -305,15 +305,28 @@ def decide(agent, channel, request, verify=False, health=False):
         status, result = agent.tools.run(name, arguments)
         agent.bus.publish("tool", name=name, status=status)
     diff = log_diff(before, agent.log_state())
+    # A safety line in Muse's reply is never dropped for the log confirmation, and a red flag never gets "tell me again".
+    safety = rules.carries_safety_line(said)
+    red_flag = rules.names_red_flag(request)
     if not diff_empty(diff):
         text = diff_text(diff, lang, agent.baby_name())
         if health:
             text += " " + agent.no_advice(request)
+        elif safety:
+            agent.bus.publish("guard", status="safety_line_kept")
+            text += " " + said
         elif "?" in request and said and not rules.claims_done(said):
             text += " " + said
         return text
     if calls:
+        if safety:
+            agent.bus.publish("guard", status="safety_line_kept")
+            return said + " " + TEXTS[lang]["NOTHING_LOGGED"]
+        if red_flag:
+            return TEXTS[lang]["NOTHING_LOGGED"] + " " + agent.safety_line(request)
         return TEXTS[lang]["NOT_IN_LOG"]
     if health:
         return agent.refusal(request)
+    if red_flag and not safety and not said:
+        return agent.safety_line(request)
     return said or ("OK." if lang == "en" else "Dale.")

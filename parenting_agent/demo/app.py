@@ -330,7 +330,8 @@ class Visitor:
         else:
             # Health advice is refused inside the agent before any brain call, and a dose given or a milestone is logged.
             self.agent.handle({"kind": "message", "channel": "demo", "text": text})
-        reply = " ".join(e["text"] for e in self.replies) or "OK."
+        reply = " ".join(e["text"] for e in self.replies) or (
+            self.agent.safety_line(text) if rules.names_red_flag(text) else "OK.")
         self.answered_by = answered_by(list(self.bus.history)[start:], from_log)
         return reply, self.actions_since(start), "baby"
 
@@ -538,7 +539,9 @@ class PrepMode:
         events = list(self.bus.history)[start:]
         actions = [{"action": e["action"], "arguments": {"list": e.get("list"), "item": e.get("item_id")},
                     "status": "simulated"} for e in events if e["kind"] == "prep"]
-        return " ".join(e["text"] for e in self.replies) or "OK.", actions
+        reply = " ".join(e["text"] for e in self.replies) or (
+            self.agent.safety_line(text) if rules.names_red_flag(text) else "OK.")
+        return reply, actions
 
     def state(self, lang="en"):
         nxt = self.translate(self.plugin.next(items=3), lang)
@@ -631,20 +634,23 @@ class DemoApp:
         text = (text or "").strip()
         if not text:
             return 400, {"error": "empty"}
+        # A red flag that hits a limit or an error still gets the gate's fixed line, never only the limit text.
+        safety = rules.fixed_safety_line(text, lang)
         if len(text) > self.s["max_input_chars"]:
-            return 413, {"error": "too_long", "reply": TOO_LONG.format(n=self.s["max_input_chars"])}
+            return 413, {"error": "too_long", "reply": safety or TOO_LONG.format(n=self.s["max_input_chars"])}
         if not internal and self.records.messages_from(vid) >= self.s["max_messages_per_visitor"]:
-            return 429, {"error": "visitor_limit", "reply": VISITOR_LIMIT, "remaining": 0}
+            return 429, {"error": "visitor_limit", "reply": safety or VISITOR_LIMIT, "remaining": 0}
         new = self.known(vid) is None
         if not internal and not self.clients.allow(client, new_visitor=new):
-            return 429, {"error": "client_limit", "reply": CLIENT_LIMIT, "remaining": 0}
+            return 429, {"error": "client_limit", "reply": safety or CLIENT_LIMIT, "remaining": 0}
         if new and self.visitor(vid) is None:
-            return 503, {"error": "full", "reply": FULL, "remaining": self.remaining(vid, internal)}
+            return 503, {"error": "full", "reply": safety or FULL, "remaining": self.remaining(vid, internal)}
         self.records.add_message(vid, internal)
         if self.brain.resting() or (not internal and self.records.messages_today() > self.s["max_messages_per_day"]):
-            return 503, {"error": "resting", "reply": RESTING, "remaining": self.remaining(vid, internal)}
+            if safety is None:
+                return 503, {"error": "resting", "reply": RESTING, "remaining": self.remaining(vid, internal)}
         if not self.thinking.acquire(timeout=20):
-            return 503, {"error": "busy", "reply": BUSY, "remaining": self.remaining(vid, internal)}
+            return 503, {"error": "busy", "reply": safety or BUSY, "remaining": self.remaining(vid, internal)}
         try:
             v = self.visitor(vid)
             if v is None:
@@ -657,11 +663,11 @@ class DemoApp:
                     lang = self.visitor_lang(vid, v.agent.lang(text))
                 except SpendCapReached:
                     v.memory.add_message("demo", "assistant", RESTING)
-                    return 503, {"error": "resting", "reply": RESTING, "remaining": self.remaining(vid, internal)}
+                    return 503, {"error": "resting", "reply": safety or RESTING, "remaining": self.remaining(vid, internal)}
                 except brain_mod.BrainError as error:
                     v.bus.publish("agent_error", error=str(error)[:300])
                     v.memory.add_message("demo", "assistant", THINK_FAIL)
-                    return 502, {"error": "brain", "reply": THINK_FAIL, "remaining": self.remaining(vid, internal)}
+                    return 502, {"error": "brain", "reply": safety or THINK_FAIL, "remaining": self.remaining(vid, internal)}
             return 200, {"reply": reply, "actions": actions, "mode": mode, "answered_by": v.answered_by, "proactive": v.proactive(lang), "recent": v.recent(),
                          "prep": v.prep().state(lang), "remaining": self.remaining(vid, internal)}
         finally:

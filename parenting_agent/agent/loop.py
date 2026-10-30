@@ -70,6 +70,8 @@ NOT_ASKED = {"en": "That question was for whoever asked it, on the chat it was a
 NOT_SENT = {"en": "Nothing was sent yet.", "es": "Todavía no mandé nada."}
 NOT_SENT_NOTHING = {"en": "I did not send anything, nothing ran. Tell me again what you want me to do.",
                     "es": "No mandé nada, no se hizo nada. Decime de nuevo qué querés que haga."}
+# The same on a red flag, with no "tell me again": the safety line follows it.
+NOT_CALLED = {"en": "I cannot call anyone and nothing was sent.", "es": "No puedo llamar a nadie y no se mandó nada."}
 # Tools that reach no one: a reply that says "sent" or "announced" needs a tool outside these to have run.
 QUIET_TOOLS = {"log_baby_event", "edit_baby_event", "delete_baby_event", "remember", "prep_next", "prep_list",
                "appointments", "nursery_plan", "house_status"}
@@ -130,7 +132,6 @@ OTHER_KIND = ("not logged: the newest message does not report this kind of entry
               "handled, never log them again.")
 NOT_REMOVED = ("not deleted: the log holds this entry only once, so it happened and it stays. A message sent twice was "
                "logged once. Delete only when the parent asks to delete it.")
-SAFETY_WORDS = re.compile(r"911|pediatr|emergenc|m[eé]dic|doctor|urgent", re.I)
 NOT_AN_EDIT = ("not changed: the newest message corrects no earlier entry. Earlier messages were already handled, never "
                "change their entries now. Log only what the newest message says.")
 NOT_NEW = ("not logged: this message corrects or removes an earlier entry. Use edit_baby_event or delete_baby_event, "
@@ -174,6 +175,7 @@ TEXTS = {
         "TOO_MANY_STEPS": "I could not finish that. Tell me again in other words.",
         "NO_RESEND": "No need to send it again.",
         "NOT_IN_LOG": "Nothing changed in the log, so it is not logged. Could you tell me again?",
+        "NOTHING_LOGGED": "Nothing changed in the log.",
         "WOKE_NO_SLEEP": "I did not log the sleep. When did {name} fall asleep?",
         "STILL_ASLEEP": "{name} has been asleep since {at}, that stays as it was.",
         "OLD_EDIT": "I did not change anything: the latest I have is {entry}, more than {hours} hours ago. Which one do you mean, or should I log it new?",
@@ -204,6 +206,7 @@ TEXTS = {
         "TOO_MANY_STEPS": "No pude terminar eso. Decímelo de nuevo con otras palabras.",
         "NO_RESEND": "No hace falta que lo mandes de nuevo.",
         "NOT_IN_LOG": "No cambió nada en el registro, así que no quedó anotado. ¿Me lo decís de nuevo?",
+        "NOTHING_LOGGED": "No cambió nada en el registro.",
         "WOKE_NO_SLEEP": "No anoté el sueño. ¿A qué hora se durmió {name}?",
         "STILL_ASLEEP": "{name} ya duerme desde las {at}, eso queda como estaba.",
         "OLD_EDIT": "No cambié nada: lo último que tengo es {entry}, de hace más de {hours} horas. ¿Cuál querés corregir, o lo anoto nuevo?",
@@ -691,6 +694,10 @@ class Agent:
     def emergency(self, request):
         return rules.EMERGENCY_REPLY[self.lang(request)]
 
+    def safety_line(self, request):
+        """The fixed line that keeps a parent pointed at help when a guard took the brain's words away."""
+        return self.emergency(request) if rules.is_emergency(request) else self.no_advice(request)
+
     def birth_date(self):
         """The baby's birth date, or None when it is not known yet."""
         return None
@@ -972,15 +979,27 @@ class Agent:
         sees that nothing was logged."""
         return NOT_LOGGED["es" if rules.looks_spanish(request) else "en"]
 
-    def honest(self, text, before, request, editing, ran):
+    def honest(self, text, before, request, editing, ran, guarded=False):
         """A reply that says this turn logged, fixed or removed something goes out only when the log diff shows it. With
-        an empty diff the parent hears that nothing changed, never "anoté" or "corregí" over a lost entry."""
+        an empty diff the parent hears that nothing changed, never "anoté" or "corregí" over a lost entry.
+
+        guarded is a turn whose message names a red flag or whose brain said a safety line. Its reply is never replaced:
+        an unbacked claim only gets "nothing changed in the log" added, and a safety line always stays. Round 4 sent "I'm
+        37 weeks, my water broke and the fluid is green" and a log guard answered "Could you tell me again?"."""
         if request is None or before is None:
             return text
         if ran - (EDIT_TOOLS | READ_TOOLS | {"log_baby_event"}):
             return text  # another tool ran (an appointment, a list): its own claim guard covers it
         diff = log_diff(before, self.log_state())
         lang = self.lang(request)
+        if guarded:
+            if rules.claims_done(text) and diff_empty(diff):
+                self.bus.publish("guard", status="claim_without_diff_kept")
+                nothing = self.text("NOTHING_LOGGED", request)
+                if rules.carries_safety_line(text):
+                    return text + " " + nothing
+                return nothing + " " + self.safety_line(request)
+            return text
         if rules.says_woke(request) and rules.is_log_request(request) and not finished_sleep(diff) and not editing \
                 and rules.claims_done(text):
             name = self.baby_name() or TEXTS.get(lang, TEXTS["en"])["THE_BABY"]
@@ -1028,6 +1047,8 @@ class Agent:
         pooped in 4 days"."""
         if request is None or acted == "ask_parent" or rules.is_health(request) or rules.is_edit_request(request):
             return False
+        if rules.names_red_flag(request) or rules.carries_safety_line(text):
+            return False
         if read and not rules.is_log_request(request):
             # The brain read the log or the rhythm for it: a question, never "send it again".
             return False
@@ -1071,12 +1092,24 @@ class Agent:
         before = self.log_state() if request is not None else None
         ran, lang_checked = set(), False
         previous = earlier[-1] if earlier else None
+        red_flag = request is not None and rules.names_red_flag(request)
+        safety_said = []
 
         def finish(text, fixed=False, log_failed=False):
+            # A log honesty guard never replaces a reply on a red flag or a reply that sends the parent to help.
+            guarded = red_flag or bool(safety_said)
             if not fixed:
                 text = strip_codes(BRAIN_ASK_LINE.sub("", text or "").strip() or "OK.")
-                text = self.unbacked_value(text, before, request, editing, ran)
-            text = self.honest(text, before, request, editing, ran)
+                if not guarded:
+                    text = self.unbacked_value(text, before, request, editing, ran)
+                elif red_flag and text == "OK.":
+                    text = self.safety_line(request)
+            text = self.honest(text, before, request, editing, ran, guarded=guarded)
+            if safety_said and request is not None and not rules.carries_safety_line(text):
+                # Another guard put its own words in place of the brain's (a claim of an action that never ran, a
+                # change that never ran): the safety line comes back in the agent's fixed words.
+                self.bus.publish("guard", status="safety_line_kept")
+                text = (text + " " if text else "") + self.safety_line(request)
             if request is not None:
                 self.last_log_failed = self.now() if log_failed else None
             self.finish(channel, text, asked=asked, request=request, fixed=fixed)
@@ -1107,6 +1140,8 @@ class Agent:
                              fallback=bool(reply.fallback))
             if reply.fallback:
                 self.bus.publish("brain_fallback", **reply.fallback)
+            if rules.carries_safety_line(reply.text):
+                safety_said.append(True)
             if not reply.tool_calls and request is not None and not (reply.text or "").strip() and not empty_checked:
                 # An empty answer went out as "OK." and logged nothing: on the tuned judge set after the third blind
                 # set's fixes, Muse answered "tiene la nariz tapada y le cuesta tomar" with nothing at all.
@@ -1179,6 +1214,8 @@ class Agent:
                     self.bus.publish("guard", status="claimed_action", asked=bool(asked), unmet=sorted(unmet))
                     if actors and not asked:
                         return finish(self.text("DID_ONLY", request, what=", ".join(sorted(actors))), fixed=True)
+                    if red_flag or safety_said:
+                        return finish(NOT_CALLED[lang], fixed=True)
                     return finish((NOT_SENT if asked else NOT_SENT_NOTHING)[lang], fixed=True)
                 if claim:
                     # Still a claim of a change that never ran: the honest answer from the log instead.
@@ -1189,7 +1226,7 @@ class Agent:
                 if stored and self.confirm_from_log and self.health_turn is None and not observation:
                     text = diff_text(log_diff(before, self.log_state()), lang, self.baby_name()) or logged_text(stored, lang, self.baby_name())
                     if any(e.get("kind") == "note" for e in stored) and (
-                            rules.is_health(request) or SAFETY_WORDS.search(reply.text or "")):
+                            rules.is_health(request) or rules.carries_safety_line(reply.text)):
                         # "respira raro hace un ruido como silbido": the note from the log, and the safety line the brain
                         # meant, in the agent's own fixed words.
                         text += " " + self.no_advice(request)

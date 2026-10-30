@@ -319,6 +319,8 @@ class Family:
             self.agent.say(CHANNEL, self.service.cry_text(self))
         else:
             self.agent.handle({"kind": "message", "channel": CHANNEL, "text": text})
+        if not self.replies and rules.names_red_flag(text):
+            return self.agent.safety_line(text)
         return " ".join(e["text"] for e in self.replies) or self.t("OK")
 
     def close(self):
@@ -393,10 +395,16 @@ class Families:
             return []
         vid = visitor_id(user_id)
         parent = self.store.parent(vid)
+        # A red flag from someone the agent will not hear (a stranger, a parent still signing up, a family at its
+        # daily limit) still gets the fixed line, with no brain call and nothing stored.
+        safety = rules.fixed_safety_line(text, app_lang)
         if parent is None:
-            return [(chat_id, self.gate(vid, str(user_id), chat_id, text, app_lang))]
+            return [(chat_id, safety or self.gate(vid, str(user_id), chat_id, text, app_lang))]
         family_id = parent["family_id"]
         f = self.family(family_id)
+        if safety and (parent["step"] != "ready" or len(text) > self.s["max_input_chars"]
+                       or self.store.family_messages_today(family_id) >= self.s["max_messages_per_family_day"]):
+            return [(chat_id, safety)]
         if len(text) > self.s["max_input_chars"]:
             return [(chat_id, f.t("TOO_LONG", n=self.s["max_input_chars"]))]
         if self.store.family_messages_today(family_id) >= self.s["max_messages_per_family_day"]:
@@ -404,6 +412,9 @@ class Families:
         self.store.add_message(vid, family_id, parent["internal"])
         with f.lock:
             pending_delete = f.fact("_delete_asked")
+            if pending_delete and safety:
+                f.memory.remember("_delete_asked", "")
+                return [(chat_id, f.talk(text))]
             if pending_delete:
                 f.memory.remember("_delete_asked", "")
                 if text.strip(" .!¡").upper() == f.t("DELETE_WORD") and time.time() - float(pending_delete) <= DELETE_WINDOW_S:
