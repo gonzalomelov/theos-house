@@ -185,7 +185,7 @@ python -m parenting_agent --config config/agent.glasses.json   # Muse Spark Open
 
 ## Public demo app
 
-A phone-first web chat where anyone can talk to the real agent core about Demo Baby, a simulated baby on the simulated week, with a simulated house. Each visitor gets their own copy, health questions get the kind refusal, and the process carries only the brain keys. Live at https://baby.bygmv.com since Oct 28 2026. See `docs/demo-app.md`.
+A phone-first web chat where anyone can talk to the real agent core about Demo Baby, a simulated baby on the simulated week, with a simulated house. Each visitor gets their own copy, health questions get the kind refusal, and the process carries only the brain keys. Live at https://baby.bygmv.com since Oct 28 2026. Since Oct 29 the Tonight's house card runs the real house brain on the visitor's simulated log, shows Muse's plan for the night and re-plans on "Let me sleep tonight", with the fixed rules as the fallback and nothing moving (issue #132, `results/demo-house/README.md`). See `docs/demo-app.md`.
 
 ```bash
 python -m parenting_agent.demo --brain-env ~/.parenting-agent.env   # http://127.0.0.1:8765

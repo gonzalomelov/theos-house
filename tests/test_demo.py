@@ -176,9 +176,12 @@ class WalledOff(unittest.TestCase):
     def test_demo_code_has_no_house_client(self):
         for path in DEMO_DIR.glob("*.py"):
             source = path.read_text()
+            # house_brain.py and sleep_forecast.py are allowed: they plan, the Home Assistant client is house.py.
             for word in ("import BabyBuddyLog", "agent.babybuddy", "babybuddy import", "rhythm.log import", "HomeAssistant(",
-                         "from ..house", "import house", "load_env(", "HA_URL", "BABYBUDDY_URL", "urlopen"):
-                self.assertFalse(word in source, f"{path.name} uses {word}")
+                         r"from \.\.house\b(?!_brain)", r"\bimport house\b",
+                         r"\b(house_plan|day_engine|night_feed|house_tools)\b import|import .*\b(house_plan|day_engine|night_feed|house_tools)\b",
+                         "load_env(", "HA_URL", "BABYBUDDY_URL", "urlopen"):
+                self.assertIsNone(re.search(word if "\\" in word else re.escape(word), source), f"{path.name} uses {word}")
 
     def test_a_conversation_opens_no_network_connection(self):
         opened = []

@@ -1,7 +1,7 @@
 """The 3 AM feed (issue #110): the house gets the night feed ready once the baby is awake, never on a guess.
 
 The next feed comes from the log rhythm, the same way the families bot computes it: feeds that start within 30 minutes
-of the one before fold into one (families.service.sessions), then patterns.next_feed takes the median of the last
+of the one before fold into one (sleep_forecast.sessions), then patterns.next_feed takes the median of the last
 gaps. That guess can be more than an hour off, so it never touches the nursery or the parent. When the guessed feed
 falls in the night (22:00 to 06:00), lead_min minutes before it (or at a Muse plan moment, house_brain.py) the house
 may only pre-warm the bottle warmer, silently: water only, a dry virtual plug today, no light, no white noise change,
@@ -49,6 +49,7 @@ from .agent.plugins import Plugin
 from .rhythm import patterns
 from .rhythm.engine import DEFAULTS as RHYTHM_DEFAULTS
 from .rhythm.engine import make_log
+from .sleep_forecast import predict_feed
 from .virtual_devices import SHOPPING, VirtualSwitch
 
 DEFAULTS = {"lead_min": 10, "cry_window_min": 45, "late_window_min": 30, "warmer_max_on_min": 30, "light_pct": 10,
@@ -70,13 +71,9 @@ def find_plugin(agent, name):
 
 
 def predict(rows, now, max_gap_h=6):
-    """The next feed from the log, or None before two feeds or when the last feed is too old to guess from."""
-    from .families.service import sessions  # the families rhythm: a top-up within 30 min is the same feed
-    rows = sessions(rows)
-    feeds = patterns.feeds(rows, now)
-    if not feeds or now - patterns.when(feeds[-1]) > datetime.timedelta(hours=max_gap_h):
-        return None
-    return patterns.next_feed(rows, now)
+    """The next feed from the log, or None before two feeds or when the last feed is too old to guess from. The
+    families rhythm: a top-up within 30 min is the same feed (sleep_forecast.sessions)."""
+    return predict_feed(rows, now, max_gap_h)
 
 
 def awake_message(text):

@@ -22,6 +22,7 @@ from ..agent.tools import Tool, core_tools, schema
 from ..bus import Bus
 from ..demo.settings import PRICES
 from ..rhythm import patterns
+from ..sleep_forecast import SESSION_GAP, sessions  # noqa: F401, re-exported
 from . import babylog
 from . import texts
 from .texts import t
@@ -59,20 +60,6 @@ LANGUAGE_NOTE = {
 # are at most 6 hours apart: a longer gap means feeds are missing from the log, so only the last feed is named.
 MIN_FEEDS_DAY = 4
 FEW_FEEDS_MAX_GAP_MIN = 360
-SESSION_GAP = datetime.timedelta(minutes=30)
-
-
-def sessions(rows):
-    """The log rows with feeds that start within 30 minutes of the previous feed folded into it, for the rhythm."""
-    out, last = [], None
-    for row in sorted(rows, key=lambda r: patterns.when(r)):
-        if row["kind"] == "feeding":
-            start = patterns.when(row)
-            if last is not None and start - last < SESSION_GAP:
-                continue
-            last = start
-        out.append(row)
-    return out
 
 
 def _hm(minutes):

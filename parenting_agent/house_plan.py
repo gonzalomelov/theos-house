@@ -21,7 +21,6 @@ Without live: true (and a Home Assistant token) every write is a dry run: a hous
 import datetime
 import os
 import re
-import statistics
 import threading
 import urllib.error
 
@@ -33,6 +32,7 @@ from .rhythm import patterns
 from .rhythm.engine import DEFAULTS as RHYTHM_DEFAULTS
 from .rhythm.engine import make_log
 from .rhythm.log import ordered, parse, when
+from .sleep_forecast import _median, as_of, sleep_windows, usual  # noqa: F401, re-exported
 from .white_noise import CRIB_CAP_DB, SimulatedWhiteNoise, WhiteNoisePlan, crib_db
 
 VACUUM = "vacuum.xiaomi_ov71gl_0681_robot_cleaner"
@@ -84,66 +84,6 @@ DEFAULTS = {
     "morning_at": "07:30", "dinner_from": "17:30", "dinner_by": "21:00", "dinner_cook_min": 30,
     "white_noise": True, "poll_s": 60, "clean_area": None,
 }
-
-
-def as_of(entries, now):
-    """The log as it looked at now: nothing that started later, and a sleep still going on has no end yet."""
-    out = []
-    for e in ordered(entries, now):
-        if e.get("end") and parse(e["end"]) > now:
-            e = {**e, "end": None}
-        out.append(e)
-    return out
-
-
-def _median(values, default):
-    return statistics.median(values) if values else default
-
-
-def usual(entries, now, tz, days=2):
-    """Usual awake minutes and sleep minutes, by day and night, from the last days of the log."""
-    since = now - datetime.timedelta(days=days)
-    done = [e for e in entries if e["kind"] == "sleep" and e.get("end") and when(e) >= since]
-    night = lambda t: patterns.is_night(t.astimezone(tz))
-    awake = {True: [], False: []}
-    for a, b in zip(done, done[1:]):
-        gap = (when(b) - parse(a["end"])).total_seconds() / 60
-        if 0 < gap < 240:
-            awake[night(parse(a["end"]))].append(gap)
-    length = {True: [], False: []}
-    for e in done:
-        length[night(when(e))].append((parse(e["end"]) - when(e)).total_seconds() / 60)
-    return {"awake": {True: _median(awake[True], 30), False: _median(awake[False], 60)},
-            "sleep": {True: _median(length[True], 120), False: _median(length[False], 75)},
-            "computed_from": [e["ref"] for e in done[-6:]]}
-
-
-def sleep_windows(entries, now, tz, horizon_h=20):
-    """Predicted sleeps from now on: the one going on (if any), then a chain of usual awake time and usual sleep."""
-    seen = as_of(entries, now)
-    sleeps = [e for e in seen if e["kind"] == "sleep"]
-    if not sleeps:
-        return []
-    u = usual(seen, now, tz)
-    night = lambda t: patterns.is_night(t.astimezone(tz))
-    windows = []
-    current = sleeps[-1] if not sleeps[-1].get("end") else None
-    if current:
-        start = when(current)
-        end = max(start + datetime.timedelta(minutes=u["sleep"][night(start)]), now + datetime.timedelta(minutes=5))
-        windows.append({"start": start, "end": end, "ongoing": True})
-        cursor = end
-    else:
-        cursor = parse(sleeps[-1]["end"])
-    while cursor < now + datetime.timedelta(hours=horizon_h):
-        start = max(cursor + datetime.timedelta(minutes=u["awake"][night(cursor)]), now)
-        end = start + datetime.timedelta(minutes=u["sleep"][night(start)])
-        windows.append({"start": start, "end": end, "ongoing": False})
-        cursor = end
-    for w in windows:
-        w["kind"] = "nap" if 7 <= w["start"].astimezone(tz).hour < 19 else "sleep"
-        w["computed_from"] = u["computed_from"]
-    return windows
 
 
 def in_window(t0, t1, windows):

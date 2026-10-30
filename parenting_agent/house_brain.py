@@ -33,11 +33,11 @@ import urllib.parse
 from .agent import rules
 from .agent.brain import BrainError, post_json, without_thinking
 from .agent.plugins import Plugin
-from .house_plan import as_of, sleep_windows, usual
 from .rhythm import patterns
 from .rhythm.engine import DEFAULTS as RHYTHM_DEFAULTS
 from .rhythm.engine import make_log
 from .rhythm.log import ordered, parse, when
+from .sleep_forecast import as_of, predict_feed, sleep_windows, usual
 
 MUSE = {"model": "meta-models/muse-spark-open-1026", "base_url": "https://inference.baseten.co/v1",
         "key_env": "BASETEN_API_KEY", "reasoning_effort": "low", "max_tokens": 6000, "timeout_s": 60,
@@ -444,7 +444,6 @@ class HouseBrain:
     # The plan
 
     def context(self, seen, now, house, trigger, what):
-        from .night_feed import predict
         tz = self.tz
         local = now.astimezone(tz)
         rows = []
@@ -464,7 +463,7 @@ class HouseBrain:
                 rows.append(f"{t:%a %H:%M} diaper")
         u = usual(seen, now, tz)
         windows = sleep_windows(seen, now, tz, horizon_h=self.s["horizon_h"])
-        nxt = predict(seen, now)
+        nxt = predict_feed(seen, now)
         handled = [w["parent"] for w in patterns.night_wakeups(seen, tz) if w["at"] < now]
         tummy = []
         if self.day_engine is not None:

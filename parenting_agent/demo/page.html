@@ -53,7 +53,7 @@ summary { font-size: 13px; color: var(--muted); cursor: pointer; padding: 6px 0;
 .log { list-style: none; margin: 0 0 6px; padding: 0; font-size: 13px; }
 .log li { padding: 4px 0; border-bottom: 1px solid var(--line); display: flex; gap: 8px; }
 .log time { color: var(--muted); font-variant-numeric: tabular-nums; min-width: 42px; }
-#thread { flex: 1; overflow-y: auto; padding: 8px 16px; display: flex; flex-direction: column; gap: 8px; }
+#thread { flex: 1; min-height: 150px; overflow-y: auto; padding: 8px 16px; display: flex; flex-direction: column; gap: 8px; }
 .msg { max-width: 86%; padding: 9px 12px; border-radius: 16px; white-space: pre-wrap; word-wrap: break-word; }
 .agent { background: var(--card); border: 1px solid var(--line); align-self: flex-start; border-bottom-left-radius: 4px; }
 .me { background: var(--me); color: #fff; align-self: flex-end; border-bottom-right-radius: 4px; }
@@ -80,6 +80,19 @@ footer button { font: inherit; background: none; border: 0; color: var(--muted);
 .tab[aria-selected="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
 [hidden] { display: none !important; }
 .prep-items { margin: 4px 0 0; padding-left: 18px; font-size: 13px; }
+.house-head { display: flex; align-items: center; justify-content: space-between; gap: 6px; flex-wrap: wrap; }
+.house-btns { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+.house-btns .chip { font-size: 13px; padding: 6px 11px; }
+.house-btns .chip.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-weight: 600; }
+.house-box { margin-top: 4px; }
+.house-rows { margin: 4px 0 0; font-size: 13px; }
+.house-rows div { padding: 4px 0; border-bottom: 1px solid var(--line); }
+.house-rows b { display: block; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.house-why { font-size: 13px; margin: 6px 0 0; }
+.house-changes { font-size: 13px; margin: 6px 0 0; padding: 6px 8px; border-radius: 10px; background: var(--ask-bg); color: var(--ink); }
+.house-changes ul { margin: 2px 0 0; padding-left: 18px; }
+.house-src { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.house-src.fixed { color: var(--sim); }
 </style>
 </head>
 <body>
@@ -95,6 +108,20 @@ footer button { font: inherit; background: none; border: 0; color: var(--muted);
   <div class="card"><div class="label" data-es="Próxima toma">Next feed</div><div class="big" id="nf-at">--:--</div><div class="small" id="nf-in"></div></div>
   <div class="card"><div class="label" data-es="A quién le toca de noche">Next night on duty</div><div class="big" id="duty" style="font-size:20px">-</div><div class="small" data-es="reparto justo de despertares">fair split of wake-ups</div></div>
   <div class="card wide"><div class="label" data-es="Resumen de la noche">Night summary</div><div class="night" id="night">Loading...</div></div>
+  <div class="card wide" id="house-card">
+    <div class="house-head"><div class="label" data-es="La casa esta noche">Tonight's house</div><span class="badge" data-es="CASA SIMULADA, NADA SE MUEVE">SIMULATED HOUSE, NOTHING MOVES</span></div>
+    <div class="house-box" id="house-box" hidden>
+      <div class="small" id="house-span"></div>
+      <div class="house-src" id="house-src"></div>
+      <div class="house-changes" id="house-changes" hidden></div>
+      <p class="house-why" id="house-why" hidden></p>
+      <div class="house-rows" id="house-rows"></div>
+    </div>
+    <div class="house-btns">
+      <button class="chip primary" id="house-plan" type="button" data-es="Ver el plan de Muse para esta noche">See Muse's plan for tonight</button>
+      <button class="chip" id="house-sleep" type="button" hidden data-es="Dejame dormir esta noche">Let me sleep tonight</button>
+    </div>
+  </div>
 </section>
 <section class="cards" id="cards-prep" aria-label="Prep mode" hidden>
   <div class="card wide"><div class="label" data-es="Cuenta regresiva, fecha simulada">Countdown, simulated due date</div><div class="night" id="countdown">-</div></div>
@@ -141,7 +168,9 @@ const T = {
         fresh: "A fresh copy of Theo's simulated week is ready. What would you like to know?",
         house: "Simulated house: ", ask: "Waits for your yes: ", feed: "Feed, ", diaper: "Diaper, ", wet: "wet", dirty: "dirty",
         and: " and ", sleep: "Sleep, ",
-        src: { log: "From the log, no AI", rule: "Fixed reply, no AI", muse: "Muse Spark Open", other: "Claude, fallback" } },
+        src: { log: "From the log, no AI", rule: "Fixed reply, no AI", muse: "Muse Spark Open", other: "Claude, fallback",
+               houseMuse: "Muse Spark Open, house plan", houseFixed: "Fixed house rules, no AI" },
+        planning: "Muse is planning the house...", replanning: "Muse is re-planning the night...", took: (s) => " Muse took " + s + " s." },
   es: { inAbout: (m, g) => "en unos " + m + " min, cada ~" + g + " min", ago: (m) => "se esperaba hace " + m + " min",
         left: (n) => "Te quedan " + n + " mensajes. Hecho para no dar consejos médicos. Ante una señal de alarma: llamá al 911 ya.", leftShort: (n) => "Te quedan " + n + " mensajes.", by: "antes del", day: (iso) => iso.slice(8, 10) + "/" + iso.slice(5, 7),
         simLists: "Listas simuladas.", open: "pendientes", thinking: "pensando...", wrong: "Algo salió mal. Probá de nuevo.",
@@ -149,7 +178,9 @@ const T = {
         fresh: "Lista una copia nueva de la semana simulada de Theo. ¿Qué querés saber?",
         house: "Casa simulada: ", ask: "Espera tu sí: ", feed: "Toma, ", diaper: "Pañal, ", wet: "mojado", dirty: "sucio",
         and: " y ", sleep: "Sueño, ",
-        src: { log: "Del registro, sin IA", rule: "Respuesta fija, sin IA", muse: "Muse Spark Open", other: "Claude, de respaldo" } },
+        src: { log: "Del registro, sin IA", rule: "Respuesta fija, sin IA", muse: "Muse Spark Open", other: "Claude, de respaldo",
+               houseMuse: "Muse Spark Open, plan de la casa", houseFixed: "Reglas fijas de la casa, sin IA" },
+        planning: "Muse está planeando la casa...", replanning: "Muse está replaneando la noche...", took: (s) => " Muse tardó " + s + " s." },
 }[LANG];
 if (LANG === "es") {
   document.documentElement.lang = "es-UY";
@@ -179,7 +210,8 @@ function source(el, by) {
   if (!by) return;
   const tag = document.createElement("span");
   tag.className = "by";
-  tag.textContent = by.kind === "brain" ? (by.muse ? T.src.muse : T.src.other) : (T.src[by.kind] || T.src.rule);
+  tag.textContent = by.kind === "brain" ? (by.muse ? T.src.muse : T.src.other)
+    : by.kind === "house" ? (by.muse ? T.src.houseMuse : T.src.houseFixed) : (T.src[by.kind] || T.src.rule);
   el.appendChild(tag);
 }
 
@@ -197,6 +229,61 @@ function actions(el, list) {
   }
   el.appendChild(box);
   $("thread").scrollTop = $("thread").scrollHeight;
+}
+
+function renderHouse(house) {
+  const card = house && (house.sleep || house.tonight);
+  if (!card) return;
+  $("house-box").hidden = false;
+  $("house-plan").hidden = true;
+  $("house-sleep").hidden = !!house.sleep;
+  $("house-span").textContent = card.span;
+  const rows = $("house-rows");
+  rows.textContent = "";
+  for (const r of card.rows) {
+    const div = document.createElement("div");
+    const b = document.createElement("b");
+    b.textContent = r.label;
+    div.append(b, document.createTextNode(r.text));
+    rows.appendChild(div);
+  }
+  const why = card.why_changed || card.why;
+  $("house-why").hidden = !why;
+  $("house-why").textContent = why ? card.why_label + ": " + why : "";
+  const ch = $("house-changes");
+  ch.hidden = !(card.changes && card.changes.length);
+  ch.textContent = "";
+  if (!ch.hidden) {
+    const b = document.createElement("b");
+    b.textContent = card.changes_label;
+    const ul = document.createElement("ul");
+    for (const c of card.changes) { const li = document.createElement("li"); li.textContent = c; ul.appendChild(li); }
+    ch.append(b, ul);
+  }
+  $("house-src").className = "house-src" + (card.source === "fixed" ? " fixed" : "");
+  $("house-src").textContent = card.label + "." + (card.seconds ? T.took(card.seconds) : "");
+}
+
+async function housePlan(action) {
+  if (busy) return;
+  busy = true;
+  const btn = $(action === "sleep" ? "house-sleep" : "house-plan");
+  const label = btn.textContent;
+  $("house-plan").disabled = $("house-sleep").disabled = $("send").disabled = true;
+  btn.textContent = action === "sleep" ? T.replanning : T.planning;
+  try {
+    const { ok, data } = await api("/api/house", { action, lang: LANG });
+    if (ok) { renderHouse(data.house); render(data); }
+    else {
+      bubble("note", data.reply || T.wrong);
+      if (data.remaining !== undefined && data.remaining !== null) $("left").textContent = T.leftShort(data.remaining);
+    }
+  } catch (e) {
+    bubble("note", T.unreachable);
+  }
+  btn.textContent = label;
+  $("house-plan").disabled = $("house-sleep").disabled = $("send").disabled = false;
+  busy = false;
 }
 
 function render(state) {
@@ -238,6 +325,7 @@ function render(state) {
   if (state.remaining !== undefined && state.remaining !== null) {
     $("left").textContent = T.left(state.remaining);
   }
+  if (state.house) renderHouse(state.house);
   if (state.max_input) $("text").maxLength = state.max_input;
   if (state.resting) bubble("note", T.resting);
 }
@@ -283,12 +371,15 @@ $("form").addEventListener("submit", (e) => { e.preventDefault(); send($("text")
 for (const id of ["chips-baby", "chips-prep"]) {
   $(id).addEventListener("click", (e) => { if (e.target.classList.contains("chip")) send(e.target.textContent); });
 }
+$("house-plan").addEventListener("click", () => housePlan("tonight"));
+$("house-sleep").addEventListener("click", () => housePlan("sleep"));
 $("tab-baby").addEventListener("click", () => setMode("baby"));
 $("tab-prep").addEventListener("click", () => setMode("prep"));
 $("reset").addEventListener("click", async () => {
   const { ok, data } = await api("/api/reset", { lang: LANG });
   if (!ok) { bubble("note", data.reply || T.wrong); return; }
   $("thread").textContent = "";
+  $("house-box").hidden = true; $("house-plan").hidden = false; $("house-sleep").hidden = true;
   bubble("agent", T.fresh);
   render(data);
 });

@@ -1,7 +1,7 @@
 """The demo's web server: one phone-first page and a small JSON API, on the standard library only.
 
 Routes: GET / (the page), GET /og.png (the link preview card), GET /internal/<secret> (marks this browser as internal), GET /api/state, POST /api/message,
-POST /api/reset, GET /healthz. The secret is PA_DEMO_INTERNAL_SECRET. Any other /internal address is a plain 404,
+POST /api/reset, POST /api/house (Tonight's house card), GET /healthz. The secret is PA_DEMO_INTERNAL_SECRET. Any other /internal address is a plain 404,
 and the internal cookie is a signature of the secret, so a hand-made cookie does not count and a new secret unmarks
 every browser. Every visitor gets a random first-party cookie pa_vid, and only its sha256 is kept.
 Requests must be small JSON. There is no upload route and multipart bodies are refused.
@@ -137,7 +137,7 @@ def make_handler(app, settings):
 
         def do_POST(self):
             path = self.path.split("?", 1)[0]
-            if path not in ("/api/message", "/api/reset"):
+            if path not in ("/api/message", "/api/reset", "/api/house"):
                 return self.send(404, {"error": "not_found"})
             status, body = self.read_json()
             if status != 200:
@@ -146,6 +146,10 @@ def make_handler(app, settings):
             vid, internal, cookies = self.visitor()
             if path == "/api/reset":
                 status, out = app.reset(vid, internal, self.client(), lang=body.get("lang") if body.get("lang") in ("es", "en") else None)
+                return self.send(status, out, cookies=cookies)
+            if path == "/api/house":
+                action = body.get("action") if body.get("action") in ("tonight", "sleep") else ""
+                status, out = app.house(vid, internal, action, self.client(), lang="es" if body.get("lang") == "es" else "en")
                 return self.send(status, out, cookies=cookies)
             text, mode, lang = body.get("text"), body.get("mode"), body.get("lang")
             status, out = app.message(vid, internal, text if isinstance(text, str) else "", self.client(),

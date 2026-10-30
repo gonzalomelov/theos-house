@@ -5,7 +5,8 @@ simulated week, so visitors never see each other. The simulated baby is Theo, a 
 the story. A second agent per visitor runs prep mode, the before-he-arrives tools on simulated lists with a due date
 counted from today. The brain is the real one (Muse Spark Open on
 Baseten, Claude only as a logged fallback). House tools only simulate: they record what the agent would do and touch nothing. There is no
-Baby Buddy client, no Home Assistant client and no channel plug-in in here.
+Baby Buddy client, no Home Assistant client and no channel plug-in in here. Tonight's house (tonight.py) runs the real
+house brain on the visitor's simulated log, with nothing to arm.
 """
 import collections
 import datetime
@@ -30,10 +31,12 @@ from ..prep import Prep
 from ..prep import lists as prep_lists
 from ..rhythm import patterns
 from .babylog import TZ, DemoBabyLog
+from . import tonight
 from .records import Records
 
 ALLOWED = ["log_baby_event", "edit_baby_event", "delete_baby_event", "read_baby_log", "baby_summary", "next_feed", "night_rota",
-           "current_time", "dim_lights", "hold_notifications", "pause_vacuum", "announce", "set_on_duty", "white_noise"]
+           "current_time", "dim_lights", "hold_notifications", "pause_vacuum", "announce", "set_on_duty", "white_noise",
+           "tonight_house"]
 # The white noise cap at the crib, the same 50 dB as white_noise.CRIB_CAP_DB, which is not in the demo image.
 CRIB_CAP_DB = 50.0
 PREP_ALLOWED = ["current_time", "prep_next", "prep_list", "prep_check", "prep_add", "add_appointment", "appointments",
@@ -61,6 +64,29 @@ NOISE_NOW = (r"(set|turn|louder|quieter|up|down|db|volume|level|tonight|for the 
 HOUSE_WORDS = re.compile(r"\b(on duty|de turno|night shift|let me sleep|d[eé]jame dormir|parent [ab])\b|"
                          rf"\b(white noise|ruido blanco)\b.*\b{NOISE_NOW}\b|\b{NOISE_NOW}\b.*\b(white noise|ruido blanco)\b",
                          re.I)
+
+
+# "What will the house do tonight?" and "let me sleep tonight" get Muse's house plan as it is, with no chat brain call:
+# the chat brain's retelling of a plan tripped the log honesty guards ("the fixed rule runs" read as a claimed change).
+HOUSE_TONIGHT = re.compile(r"\b(what (will|does|is|would) the house (do|doing|plan\w*)|house (plan|do|doing) tonight|"
+                           r"plan (the|tonight'?s?) night|tonight'?s house|qu[eé] (va a hacer|hace|har[aá]|planea) la casa|"
+                           r"plan de (la|esta) noche|la casa esta noche)\b", re.I)
+
+
+# A message that also asks for something ("put Parent B on duty and set the white noise to 90 dB") goes to the agent,
+# which runs those tools and can call tonight_house itself.
+HOUSE_ORDER = re.compile(r"\d|\b(put|set|turn|make|dim|pause|stop|start|call|announce|tell|on duty|pon[eé]|prend[eé]|"
+                         r"apag[aá]|baj[aá]|sub[ií]|llam[aá]|avis[aá]|de turno)\b", re.I)
+
+
+def house_question(text):
+    """"sleep" for a parent asking to sleep tonight, "tonight" for a question on the house's night, else None. A health
+    question, a red flag, a log entry or another request is never taken here, the agent answers it."""
+    if rules.is_health(text) or rules.names_red_flag(text) or rules.is_log_request(text) or HOUSE_ORDER.search(text):
+        return None
+    if tonight.hb.EXHAUSTED_RE.search(text):
+        return "sleep"
+    return "tonight" if HOUSE_TONIGHT.search(text) else None
 
 
 def is_prep(text):
@@ -168,6 +194,9 @@ DEMO_NOTE = """
 This is a public demo. The baby is a simulated baby boy called Theo, a few weeks old, and the log is a simulated week.
 Always say he and him for Theo. The parents are Parent A and Parent B, simulated too.
 For who is up next at night, call night_rota and answer with its text: the night rota is the fair split of wake-ups.
+For what the house will do tonight, call tonight_house and answer from its text: Muse's checked plan for the simulated
+house. When a parent is exhausted or asks to sleep tonight, call tonight_house with asked_to_sleep true: it re-plans the
+night and says what changed.
 The house is simulated too: house tools only show what you would do. When an action in the house would help, for example
 dimming the nursery light for a night feed or holding notifications while he sleeps, call the tool and say in a few words
 that it is simulated. dim_lights, hold_notifications, pause_vacuum and announce run alone, simulated. announce says only
@@ -249,7 +278,7 @@ class PrepAgent(DemoAgent):
 class Visitor:
     """One visitor's demo: their own agent, bus, memory and baby log, plus what the simulated house did."""
 
-    def __init__(self, brain, settings, clock):
+    def __init__(self, brain, settings, clock, muse=None, allow_muse=lambda: True, on_spend=lambda usd: None):
         self.clock = clock
         self.lock = threading.Lock()
         self.last_seen = time.monotonic()
@@ -263,6 +292,14 @@ class Visitor:
         tools.add(Tool("night_rota", "Who is up next at night, from the night wake-ups in the log: the fair split, the same "
                        "as the panel. Use it for 'who is up next?' or 'whose turn is it tonight?' and answer with its text.",
                        schema({}), self.night_rota))
+        self.house = tonight.TonightHouse(muse, self.baby_log, lambda: self.rota()["on_duty"], PARENTS,
+                                          allow_muse=allow_muse, on_spend=on_spend)
+        self.turn_lang = "en"
+        tools.add(Tool("tonight_house", "What the simulated house will do tonight: Muse's checked plan, the same as the "
+                       "Tonight's house card (who is on duty, when the bottle warmer pre-heats, white noise, quiet doorbell, "
+                       "the floor clean window, and why). Use it for 'what will the house do tonight?'. Set asked_to_sleep "
+                       "when the parent is exhausted or asks to sleep tonight: it re-plans and says what changed. Simulated, "
+                       "nothing moves.", schema({"asked_to_sleep": {"type": "boolean"}}), self.tonight_text))
         self.agent = DemoAgent(self.bus, self.memory, self.baby_log, tools, brain,
                                max_steps=settings["max_steps"], history=settings["history"])
         self.agent.reply_guards.append(plain_reply)
@@ -346,6 +383,7 @@ class Visitor:
         """(reply, actions, mode). A message about getting ready goes to prep mode from either tab. lang is the page's
         language, used only when the message's own words do not tell."""
         self.agent.page_lang = lang
+        self.turn_lang = self.agent.lang(text)
         if mode == "prep" or is_prep(text):
             self.prep().agent.page_lang = lang
             prep_start = len(self.prep().bus.history)
@@ -355,6 +393,14 @@ class Visitor:
         start = len(self.bus.history)
         self.replies.clear()
         from_log = rules.is_cry_question(text) and not rules.is_health(text) and not rules.is_log_request(text)
+        house = None if from_log else house_question(text)
+        if house:
+            self.memory.add_message("demo", "user", text, ts=self.baby_log.now())
+            card, _ = self.house_plan(house)
+            self.agent.say("demo", tonight.text(card, self.turn_lang))
+            reply = " ".join(e["text"] for e in self.replies)
+            self.answered_by = {"kind": "house", "muse": card["source"] == "muse"}
+            return reply, self.actions_since(start), "baby"
         if from_log:
             # Only a bare "why is he crying?" gets the likely reason from the log with no brain call, as in the families
             # bot. A cry with anything else in it (bluish, lethargic, hot, swallowed a coin) is not bare, so the agent's
@@ -413,6 +459,21 @@ class Visitor:
         counts = {p: handled.count(p) for p in PARENTS}
         return {"on_duty": self.duty or patterns.next_on_duty(handled, PARENTS), "counts": counts,
                 "last": handled[-1] if handled else None, "asked": self.duty is not None}
+
+    def house_plan(self, action):
+        """(card, muse calls) for "tonight" or "sleep". A Muse plan that moves the night puts that parent on duty,
+        so the panel's rota and the card agree."""
+        card, calls = self.house.plan(action, self.turn_lang)
+        if action == "sleep" and card["on_duty_by"] == "muse":
+            self.duty = card["on_duty"]
+        return card, calls
+
+    def tonight_text(self, asked_to_sleep=False):
+        card, _ = self.house_plan("sleep" if asked_to_sleep else "tonight")
+        return tonight.text(card, self.turn_lang)
+
+    def house_cards(self, lang="en"):
+        return {action: tonight.view(card, lang) for action, card in self.house.cached().items()}
 
     def night_rota(self):
         r = self.rota()
@@ -589,12 +650,14 @@ class PrepMode:
 
 
 class DemoApp:
-    def __init__(self, settings, brain=None, clock=None):
+    def __init__(self, settings, brain=None, clock=None, muse=None):
         self.s = settings
         self.clock = clock or (lambda: datetime.datetime.now(TZ))
         self.records = Records(settings["data_dir"])
         raw = brain or brain_mod.build(settings["brain"])
         self.brain = MeteredBrain(raw, self.records, settings)
+        # Muse Spark Open plans the simulated house (tonight.py). With the fake brain there is no Muse: fixed rules only.
+        self.muse = muse if muse is not None else (None if settings["brain_name"] == "fake" else tonight.hb.MuseClient())
         self.visitors = collections.OrderedDict()
         self.langs = {}
         self.lock = threading.Lock()
@@ -612,11 +675,22 @@ class DemoApp:
                     return None
                 if vid in self.visitors:
                     self.visitors.pop(vid).close()
-                self.visitors[vid] = Visitor(self.brain, self.s, self.clock)
+                self.visitors[vid] = self.new_visitor()
             self.visitors.move_to_end(vid)
             v = self.visitors[vid]
             v.last_seen = time.monotonic()
             return v
+
+    def new_visitor(self):
+        return Visitor(self.brain, self.s, self.clock, muse=self.muse,
+                       on_spend=lambda usd: self.records.add_spend(usd) if usd > 0 else None)
+
+    def meter_house(self, v, vid, internal):
+        """Each Muse plan call counts as one message from this visitor (a session row, internal kept), and none runs
+        once the demo is resting: the daily spend cap or the strangers' daily message cap."""
+        v.house.on_call = lambda: self.records.add_message(vid, internal)
+        v.house.allow_muse = lambda: not self.brain.resting() and (
+            internal or self.records.messages_today() < self.s["max_messages_per_day"])
 
     def known(self, vid):
         with self.lock:
@@ -641,7 +715,7 @@ class DemoApp:
         if v is None or time.monotonic() - made > 60:
             if v is not None:
                 v.close()
-            v = Visitor(self.brain, self.s, self.clock)
+            v = self.new_visitor()
             self.preview = (time.monotonic(), v)
         return v
 
@@ -660,8 +734,10 @@ class DemoApp:
 
     def state(self, vid, internal, lang=None):
         lang = self.visitor_lang(vid, lang)
-        v = self.known(vid) or self.fresh_state()
+        known = self.known(vid)
+        v = known or self.fresh_state()
         return {"proactive": v.proactive(lang), "recent": v.recent(), "prep": v.prep().state(lang),
+                "house": known.house_cards(lang) if known else {},
                 "remaining": self.remaining(vid, internal), "resting": self.brain.resting(), "max_input": self.s["max_input_chars"]}
 
     def message(self, vid, internal, text, client=None, mode="baby", lang="en"):
@@ -693,6 +769,7 @@ class DemoApp:
             if v is None:
                 return 503, {"error": "full", "reply": FULL, "remaining": self.remaining(vid, internal)}
             with v.lock:
+                self.meter_house(v, vid, internal)
                 try:
                     lang = "es" if lang == "es" else "en"
                     reply, actions, mode = v.talk(text, "prep" if mode == "prep" else "baby", lang)
@@ -706,9 +783,46 @@ class DemoApp:
                     v.memory.add_message("demo", "assistant", THINK_FAIL)
                     return 502, {"error": "brain", "reply": safety or THINK_FAIL, "remaining": self.remaining(vid, internal)}
             return 200, {"reply": reply, "actions": actions, "mode": mode, "answered_by": v.answered_by, "proactive": v.proactive(lang), "recent": v.recent(),
-                         "prep": v.prep().state(lang), "remaining": self.remaining(vid, internal)}
+                         "prep": v.prep().state(lang), "house": v.house_cards(lang), "remaining": self.remaining(vid, internal)}
         finally:
             self.thinking.release()
+
+    def house(self, vid, internal, action, client=None, lang="en"):
+        """Tonight's house card: "tonight" plans the visitor's simulated house, "sleep" is "let me sleep tonight" and
+        re-plans. Returns (http status, body). One plan per visitor for each, a cached plan costs nothing. Each Muse
+        call counts against the same limits as a message."""
+        if action not in ("tonight", "sleep"):
+            return 400, {"error": "bad_request"}
+        lang = "es" if lang == "es" else "en"
+        v = self.known(vid)
+        if v is not None and action in v.house.plans:
+            return 200, self.house_body(v, vid, internal, lang)
+        if not internal and self.records.messages_from(vid) >= self.s["max_messages_per_visitor"]:
+            return 429, {"error": "visitor_limit", "reply": VISITOR_LIMIT, "remaining": 0}
+        if not internal and not self.clients.allow(client, new_visitor=v is None):
+            return 429, {"error": "client_limit", "reply": CLIENT_LIMIT, "remaining": 0}
+        if v is None and self.visitor(vid) is None:
+            return 503, {"error": "full", "reply": FULL, "remaining": self.remaining(vid, internal)}
+        if not self.thinking.acquire(timeout=20):
+            return 503, {"error": "busy", "reply": BUSY, "remaining": self.remaining(vid, internal)}
+        try:
+            v = self.visitor(vid)
+            if v is None:
+                return 503, {"error": "full", "reply": FULL, "remaining": self.remaining(vid, internal)}
+            with v.lock:
+                self.meter_house(v, vid, internal)
+                v.turn_lang = self.visitor_lang(vid, lang)
+                try:
+                    v.house_plan(action)
+                except ValueError as error:  # the visitor's log is full
+                    return 409, {"error": "log_full", "reply": str(error), "remaining": self.remaining(vid, internal)}
+            return 200, self.house_body(v, vid, internal, lang)
+        finally:
+            self.thinking.release()
+
+    def house_body(self, v, vid, internal, lang):
+        return {"house": v.house_cards(lang), "proactive": v.proactive(lang), "recent": v.recent(),
+                "remaining": self.remaining(vid, internal)}
 
     def reset(self, vid, internal, client=None, lang=None):
         """A fresh demo baby. It counts as a new visitor for the connection's limit, so resets cannot fill the demo."""
