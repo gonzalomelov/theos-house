@@ -19,7 +19,7 @@ The house acts only on a real awake signal:
 - a wake-up, a night wake-up note or a feed newly written to the log at night.
 
 Awake means:
-- the bottle warmer plug on (VirtualSwitch, dry, virtual_devices.py) with a hard auto off after warmer_max_on_min. The
+- the bottle warmer plug on (VirtualSwitch, dry, virtual_devices.py) with a software auto off after warmer_max_on_min. The
   warmer holds water only: the bottle stays in the fridge until the parent is up, so no milk waits out of the fridge.
 - the study light on, dim and warm. Live since Oct 30 on the family agent when "night_feed_light" is in
   house.live_actions (house_live.py): on only from this awake path, off only when the same episode turned it on for

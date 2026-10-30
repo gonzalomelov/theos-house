@@ -12,7 +12,7 @@ item against the clock, the routine list and the safety gate (a floor clean neve
 pre-warm only at night, a door or white noise window has a length limit) before apply() hands the windows to the
 deterministic routines in day_engine.py and night_feed.py. Those routines keep their own checks at run time: nap mode
 always pauses the vacuum when a sleep starts, the floor clean re-checks that he is awake and out of the room, the
-warmer has its hard auto off, the white noise its 50 dB cap.
+warmer has its software auto off, the white noise its 50 dB cap.
 
 When Muse is slow, errors, runs out of budget or returns a plan that fails validation, the plan is dropped and the
 fixed routines run exactly as before. Every fallback is a "house_brain_fallback" event. Every plan, accepted or not,

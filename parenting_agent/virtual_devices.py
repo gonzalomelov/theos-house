@@ -24,7 +24,7 @@ SHOPPING = {
 
 
 class VirtualSwitch:
-    """A plug that switches one device, with a hard auto off after max_on_min that no setting can turn off. on() can
+    """A plug that switches one device, with a software auto off after max_on_min that no setting can turn off. It is a tick in the agent, not a timer in the plug. on() can
     ask for a shorter run (max_min), never a longer one. used_min counts every minute it has been on."""
 
     def __init__(self, bus, entity_id, label, max_on_min, buy=None):

@@ -1,4 +1,6 @@
-# The families log is never wrong (issue #77)
+# Keeping the families log right (issue #77)
+
+The folder name is the round 2 goal, not a result: the fifth blind set later scored 1 of 45 wrong with Muse log ops (`results/families-log-ablation/`).
 
 **Update, later on Oct 29: the rule guards were replaced as the default by Muse log ops, which scored 1 of 45 on a fifth
 blind set against 13 of 45 for the guards. See [../families-log-ablation/README.md](../families-log-ablation/README.md).**

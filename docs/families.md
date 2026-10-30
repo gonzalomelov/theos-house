@@ -108,7 +108,7 @@ The real-new-parent judge ran 3 Spanish days with the real brain on Oct 28 and f
 
 Measured on Oct 28 with `scripts/families_3day_run.py`: 34 Spanish messages over 3 simulated days, two parents, Claude Haiku 5.5 (before Muse became the brain, the Muse run is `results/families/three-day-muse.md`). Before the fix 10 of 29 checks passed, with 10 replies of bookkeeping talk and 8 "se esperaba" texts. After, three runs passed 29, 28 and 27 of 29 with none of either. Each miss was the brain not calling a tool ("teta 10 min" once, "borrá la última" once), and the parent got the honest "No pude anotarlo" or "No pude cambiar el registro", never a false "Listo". Transcripts in `results/families/three-day-before.md` and `results/families/three-day-after.md` (plus `-2` and `-3`). Tests: `tests/test_log_edit.py`.
 
-## The log is never wrong (round 2)
+## Keeping the log right (round 2)
 
 The round 2 real-new-parent judge saw "nono eran 70" log a second bottle with the reply "corregido", and "se mando doble perdon" delete the only breast feed. The fix does not depend on clean words (issue #77):
 
