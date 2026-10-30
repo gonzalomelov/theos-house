@@ -298,6 +298,23 @@ class ChatTool(unittest.TestCase):
         self.assertEqual(len(muse.asked), 1)
 
 
+class AfterSleep(unittest.TestCase):
+    def test_tonight_is_the_re_planned_night_and_the_panel_agrees(self):
+        muse = FakeMuse(answer(), answer(on_duty="Parent A"))
+        app = make(muse)
+        self.addCleanup(app.close)
+        before = app.house("v", False, "tonight")[1]["house"]["tonight"]["on_duty"]
+        other = next(p for p in PARENTS if p != before)
+        muse.answers[0]["on_duty"] = other
+        app.house("v", False, "sleep")
+        body = app.message("v", False, "what will the house do tonight?")[1]
+        self.assertIn(f"On duty tonight: {other}", body["reply"])
+        self.assertEqual(body["proactive"]["night_summary"]["on_duty"], other)
+        self.assertIn(f"Next on duty: {other}, a parent asked.", body["proactive"]["night_summary"]["text"])
+        self.assertIn("porque alguien lo pidió", app.state("v", False, "es")["proactive"]["night_summary"]["text"])
+        self.assertEqual(len(muse.asked), 2)
+
+
 class ChatRoute(unittest.TestCase):
     def test_house_questions_get_the_plan_with_no_chat_brain_call(self):
         muse = FakeMuse(answer(), answer(on_duty="Parent A"))

@@ -113,6 +113,8 @@ class TonightHouse:
         return dict(self.plans)
 
     def plan(self, action, lang="en"):
+        if action == "tonight" and "sleep" in self.plans:
+            return self.plans["sleep"], 0  # after "let me sleep" the night is the re-planned one
         if action in self.plans:
             return self.plans[action], 0
         calls = 0

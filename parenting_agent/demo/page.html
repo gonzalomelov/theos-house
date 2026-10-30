@@ -170,7 +170,7 @@ const T = {
         and: " and ", sleep: "Sleep, ",
         src: { log: "From the log, no AI", rule: "Fixed reply, no AI", muse: "Muse Spark Open", other: "Claude, fallback",
                houseMuse: "Muse Spark Open, house plan", houseFixed: "Fixed house rules, no AI" },
-        planning: "Muse is planning the house...", replanning: "Muse is re-planning the night...", took: (s) => " Muse took " + s + " s." },
+        planning: "Muse is planning the house...", replanning: "Muse is re-planning the night...", took: (s) => " Muse took " + (Math.round(s * 10) / 10) + " s." },
   es: { inAbout: (m, g) => "en unos " + m + " min, cada ~" + g + " min", ago: (m) => "se esperaba hace " + m + " min",
         left: (n) => "Te quedan " + n + " mensajes. Hecho para no dar consejos médicos. Ante una señal de alarma: llamá al 911 ya.", leftShort: (n) => "Te quedan " + n + " mensajes.", by: "antes del", day: (iso) => iso.slice(8, 10) + "/" + iso.slice(5, 7),
         simLists: "Listas simuladas.", open: "pendientes", thinking: "pensando...", wrong: "Algo salió mal. Probá de nuevo.",
@@ -180,7 +180,7 @@ const T = {
         and: " y ", sleep: "Sueño, ",
         src: { log: "Del registro, sin IA", rule: "Respuesta fija, sin IA", muse: "Muse Spark Open", other: "Claude, de respaldo",
                houseMuse: "Muse Spark Open, plan de la casa", houseFixed: "Reglas fijas de la casa, sin IA" },
-        planning: "Muse está planeando la casa...", replanning: "Muse está replaneando la noche...", took: (s) => " Muse tardó " + s + " s." },
+        planning: "Muse está planeando la casa...", replanning: "Muse está replaneando la noche...", took: (s) => " Muse tardó " + String(Math.round(s * 10) / 10).replace(".", ",") + " s." },
 }[LANG];
 if (LANG === "es") {
   document.documentElement.lang = "es-UY";

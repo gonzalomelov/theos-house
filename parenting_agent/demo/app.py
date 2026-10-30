@@ -173,7 +173,7 @@ def night_es(text):
     for en, es in (("Tonight so far, since", "Esta noche hasta ahora, desde"), ("Last night,", "Anoche,"),
                    ("Night summary for", "Resumen de la noche del"), (" to ", " al "), (" feeds at ", " tomas a las "),
                    (" feeds,", " tomas,"), ("longest sleep", "sueño más largo"), ("Wake-ups:", "Despertares:"),
-                   ("Next on duty:", "Le toca:"), ("Next feed expected around", "Próxima toma cerca de las")):
+                   ("Next on duty:", "Le toca:"), (", a parent asked.", ", porque alguien lo pidió."), ("Next feed expected around", "Próxima toma cerca de las")):
         out = out.replace(en, es)
     return out
 
@@ -502,6 +502,11 @@ class Visitor:
             out["next_feed"] = {"at": when, "in_min": minutes, "gap_min": nxt["gap_min"], "text": text,
                                 "house": ("dim_lights" if patterns.is_night(nxt["at"].astimezone(TZ)) else None)}
         summary = patterns.night_summary(rows, now, TZ, PARENTS, current=True)
+        if self.duty and self.duty != summary["on_duty"]:
+            # A parent asked (set_on_duty or a Muse re-plan after "let me sleep"): the panel says who is really on.
+            summary["text"] = summary["text"].replace(f"Next on duty: {summary['on_duty']}.",
+                                                      f"Next on duty: {self.duty}, a parent asked.")
+            summary["on_duty"] = self.duty
         out["night_summary"] = {"text": night_es(summary["text"]) if lang == "es" else summary["text"], "on_duty": summary["on_duty"]}
         notes = patterns.unusual_notes(rows, TZ, lang=lang)
         out["unusual"] = [n["text"] for n in notes[-2:]]
