@@ -33,14 +33,16 @@ from .babylog import TZ, DemoBabyLog
 from .records import Records
 
 ALLOWED = ["log_baby_event", "edit_baby_event", "delete_baby_event", "read_baby_log", "baby_summary", "next_feed", "night_rota",
-           "current_time", "dim_lights", "hold_notifications", "pause_vacuum", "announce"]
+           "current_time", "dim_lights", "hold_notifications", "pause_vacuum", "announce", "set_on_duty", "white_noise"]
+# The white noise cap at the crib, the same 50 dB as white_noise.CRIB_CAP_DB, which is not in the demo image.
+CRIB_CAP_DB = 50.0
 PREP_ALLOWED = ["current_time", "prep_next", "prep_list", "prep_check", "prep_add", "add_appointment", "appointments",
                 "cancel_appointment", "set_due_date", "nursery_plan"]
 # Days from today to the simulated due date in prep mode, so the countdown and the list dates always look current.
 PREP_DUE_IN_DAYS = 47
 # A message about getting ready goes to prep mode even when it is typed on the after-birth tab.
 PREP_WORDS = re.compile(r"\b(hospital bag|before (he|she|the baby) (arrives|is born|comes)|due date|nursery|crib|"
-                        r"car seat|white noise|prep (list|mode)|pack(ing)? the bag|days left|bolso|sanatorio|maternidad|"
+                        r"car seat|prep (list|mode)|pack(ing)? the bag|days left|bolso|sanatorio|maternidad|"
                         r"cuna|cuarto del beb[eé]|silla del auto|ruido blanco|fecha (probable )?de parto|"
                         r"antes de que nazca|cu[aá]ntos d[ií]as faltan)\b", re.I)
 # Routing is by intent, not by one word (round 3 red team): an action on a house device stays on the baby agent even in
@@ -52,8 +54,20 @@ PREP_TARGET = re.compile(r"\b(hospital bag|bolso|(car seat|nursery|white noise|p
                          r"lista (de la |del |de )?(cuna|cuarto|silla|ruido blanco|bolso|preparativos))\b", re.I)
 
 
+# Words about tonight's house and the night shift. On the after-birth tab they stay with the baby agent: "set the white
+# noise and put Parent B on duty" is tonight, not the nursery list (round 4 red team).
+NOISE_NOW = (r"(set|turn|louder|quieter|up|down|db|volume|level|tonight|for the night|sub[ií]|baj[aá]|pon[eé]|prend[eé]|"
+             r"apag[aá]|m[aá]s fuerte|m[aá]s bajo|esta noche)")
+HOUSE_WORDS = re.compile(r"\b(on duty|de turno|night shift|let me sleep|d[eé]jame dormir|parent [ab])\b|"
+                         rf"\b(white noise|ruido blanco)\b.*\b{NOISE_NOW}\b|\b{NOISE_NOW}\b.*\b(white noise|ruido blanco)\b",
+                         re.I)
+
+
 def is_prep(text):
+    """True when a message typed on the after-birth tab is about getting ready, so it goes to prep mode."""
     if HOUSE_ACTION.search(text) or rules.is_health(text):
+        return False
+    if HOUSE_WORDS.search(text) and not PREP_TARGET.search(text):
         return False
     return bool(PREP_TARGET.search(text) or (PREP_WORDS.search(text) and not rules.is_log_request(text)))
 
@@ -259,6 +273,7 @@ class Visitor:
         self.brain, self.settings = brain, settings
         self._prep = None
         self.answered_by = None
+        self.duty = None  # a parent put on duty tonight with set_on_duty, else the fair split decides
 
     def add_house_tools(self, tools):
         def simulated(action):
@@ -282,6 +297,24 @@ class Visitor:
                        + " ".join(f"{k}: {v}" for k, v in ANNOUNCEMENTS.items()),
                        schema({"message": {"type": "string", "enum": list(ANNOUNCEMENTS)},
                                "where": {"type": "string", "enum": ROOMS}}, ["message"]), say_fixed))
+        noise = simulated("white_noise")
+
+        def white_noise(level_db):
+            level = min(float(level_db), CRIB_CAP_DB)
+            capped = f" {float(level_db):g} dB is above the cap, so it is {CRIB_CAP_DB:g} dB." if level < float(level_db) else ""
+            return noise(level_db=level) + f". White noise at {level:g} dB at the crib.{capped}"
+        tools.add(Tool("white_noise", f"Set the nursery white noise level in dB at the crib, capped at {CRIB_CAP_DB:g} dB. "
+                       "Simulated in the demo.", schema({"level_db": {"type": "number"}}, ["level_db"]), white_noise))
+
+        def set_on_duty(parent):
+            if parent not in PARENTS:
+                raise ValueError(f"on duty is one of: {', '.join(PARENTS)}")
+            self.duty = parent
+            self.bus.publish("house_dry", action="set_on_duty", arguments={"parent": parent})
+            return f"{SIMULATED}. {parent} is on duty tonight and gets the night pushes."
+        tools.add(Tool("set_on_duty", "Put one parent on duty tonight, for example when the other asks to sleep. The panel's "
+                       "rota shows it. Simulated in the demo.", schema({"parent": {"type": "string", "enum": PARENTS}},
+                                                                      ["parent"]), set_on_duty))
         partner = simulated("call_partner")
 
         def call_partner(text):
@@ -377,12 +410,15 @@ class Visitor:
         now = self.clock().astimezone(TZ)
         handled = [w["parent"] for w in patterns.night_wakeups(self.baby_log.rhythm_rows(), TZ) if w["at"] < now]
         counts = {p: handled.count(p) for p in PARENTS}
-        return {"on_duty": patterns.next_on_duty(handled, PARENTS), "counts": counts, "last": handled[-1] if handled else None}
+        return {"on_duty": self.duty or patterns.next_on_duty(handled, PARENTS), "counts": counts,
+                "last": handled[-1] if handled else None, "asked": self.duty is not None}
 
     def night_rota(self):
         r = self.rota()
         counts = ", ".join(f"{p} {n}" for p, n in r["counts"].items())
         last = f" {r['last']} took the last one." if r["last"] else ""
+        if r["asked"]:
+            return f"Tonight {r['on_duty']} is on duty, as a parent asked. Wake-ups in this week's log: {counts}.{last} Simulated parents."
         return (f"Next night wake-up: {r['on_duty']}. Wake-ups in this week's log: {counts}.{last} The rota is the fair "
                 "split: fewer wake-ups goes next, a tie goes to whoever did not take the last one. Simulated parents.")
 

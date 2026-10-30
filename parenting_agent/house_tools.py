@@ -24,6 +24,7 @@ from .agent import rules
 from .agent.plugins import Plugin
 from .agent.tools import Tool, schema
 from .house import HomeAssistant, never_reason
+from .house_plan import add_dry_guard
 
 DEFAULTS = {"live": False, "ha_url": "http://127.0.0.1:18123", "ha_token_env": "HA_MCP_TOKEN",
             "announce_volume": 0.2, "restore_after_s": 10, "read_back_tries": 6, "read_back_interval_s": 0.5}
@@ -62,6 +63,8 @@ class HouseTools(Plugin):
         super().__init__(agent, config)
         self.cfg = {**DEFAULTS, **(config.get("house") or {})}
         self.live = self.cfg["live"] is True
+        if not self.live:
+            add_dry_guard(agent)
         token = os.environ.get(self.cfg["ha_token_env"])
         self.client = client if client is not None else (HomeAssistant(self.cfg["ha_url"], token) if token else None)
         self.restorer = None

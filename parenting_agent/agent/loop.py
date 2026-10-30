@@ -64,6 +64,19 @@ HOLD = {"hold on", "wait", "one sec", "one second", "one moment", "a moment", "l
 APPROVAL_WINDOW_S = 180
 ASK_LINE = {"en": "Waiting for your yes: {what}. Reply yes in the next {minutes} minutes to run it, anything else cancels it.",
             "es": "Espero tu sí: {what}. Respondé sí en los próximos {minutes} minutos para hacerlo, cualquier otra cosa lo cancela."}
+# A bare yes with nothing waiting runs nothing (round 4 red team: it re-ran dim_lights and brought back a call cancelled
+# 8 turns earlier). It reaches the brain only when the agent's last answer asked something, or a plug-in asked on
+# Telegram ("Reply yes to start it") within OPEN_ASK_S.
+NO_PENDING = {"en": "Nothing is waiting for your yes, so nothing ran. Tell me what you want me to do.",
+              "es": "No hay nada esperando tu sí, así que no hice nada. Decime qué querés que haga."}
+OPEN_ASK_S = 3600
+OFFER = re.compile(r"\b(reply yes|say yes|want me to|shall i|should i|respond[eé] s[ií]|dec[ií] s[ií]|quer[eé]s que)\b", re.I)
+CANCELLED_KEEP_S = 12 * 3600
+REPLAY_S = 1800
+REPEAT_CALL = "not called: this tool was already called in this turn. Answer with what already happened."
+CANCELLED_CALL = ("not asked again: the parent cancelled this earlier, and the newest message does not ask for it. "
+                  "Do not ask it again.")
+REPLAY_CALL = "not run: this already ran earlier and a bare yes does not repeat it. Answer with what already happened."
 NOT_ASKED = {"en": "That question was for whoever asked it, on the chat it was asked in, so your yes ran nothing.",
              "es": "Esa pregunta era para quien la pidió, en el chat donde la pidió, así que tu sí no hizo nada."}
 # A reply that claims the agent already reached someone. It goes out only when a tool that acts ran in the same turn.
@@ -476,7 +489,15 @@ class Agent:
         self.reply_guards = []
         # Standing instructions a plug-in adds to the system prompt. Never a fact: a fact can be overwritten by remember.
         self.prompt_notes = []
+        self.cancelled = []       # calls that waited for a yes and were cancelled: a bare yes never brings them back
+        self.recent_actions = []  # (signature, clock_s) of acting tools that ran: a bare yes never replays one
+        self.open_ask = None      # clock_s of a plug-in's "Reply yes" ask on a channel
         bus.subscribe(self.inbox.put, ["message", "observation"])
+        bus.subscribe(self.on_notify, ["notify"])
+
+    def on_notify(self, event):
+        if event.get("ask"):
+            self.open_ask = self.clock_s()
 
     def start(self):
         self.thread = threading.Thread(target=self.run, name="agent", daemon=True)
@@ -621,6 +642,7 @@ class Agent:
                 expired = any(self.clock_s() - call["asked"] > self.approval_window_s for call in mine)
                 self.pending = others
                 if expired:
+                    self.cancel(mine)
                     self.bus.publish("guard", status="approval_expired", names=[c["name"] for c in mine])
                     self.say(channel, EXPIRED[self.lang(text)])
                     return
@@ -630,6 +652,12 @@ class Agent:
                 # A yes is bound to the question just asked: any other message cancels it, so a stale "ok" runs nothing.
                 self.bus.publish("guard", status="approval_cleared", names=[c["name"] for c in mine])
                 self.pending = others
+                self.cancel(mine)
+            if word in YES and not self.pending and not self.yes_has_question(channel):
+                self.memory.add_message(channel, "user", text, ts=self.now())
+                self.bus.publish("guard", status="yes_nothing_pending")
+                self.say(channel, NO_PENDING[self.lang(text)])
+                return
             return self.handle_message(event, channel, text)
         else:
             observed = f"[observation from {event.get('source', 'a skill')}] {event.get('text', '')}"
@@ -637,6 +665,28 @@ class Agent:
             # Kept in memory too, so a later turn knows why the agent spoke and does not think it invented the event.
             self.memory.add_message(channel, "user", observed, ts=self.now())
         self.decide(channel, transcript, observation=True)
+
+    def cancel(self, calls):
+        self.cancelled += [{"name": c["name"], "arguments": c["arguments"], "at": c["asked"]} for c in calls]
+
+    def was_cancelled(self, name):
+        now = self.clock_s()
+        self.cancelled = [c for c in self.cancelled if now - c["at"] <= CANCELLED_KEEP_S]
+        return any(c["name"] == name for c in self.cancelled)
+
+    def yes_has_question(self, channel):
+        """True when a bare yes answers something: a plug-in's ask within OPEN_ASK_S, or the agent's last answer on this
+        channel asked a question or offered to do something. The plug-in's ask is used up by this yes."""
+        if self.open_ask is not None and self.clock_s() - self.open_ask <= OPEN_ASK_S:
+            self.open_ask = None
+            return True
+        last = [m for m in self.memory.recent_messages(self.history) if m["channel"] == channel and m["role"] == "assistant"]
+        return bool(last) and (last[-1]["text"].rstrip().endswith("?") or OFFER.search(last[-1]["text"]) is not None)
+
+    def replayed(self, sig):
+        now = self.clock_s()
+        self.recent_actions = [(s, t) for s, t in self.recent_actions if now - t <= REPLAY_S]
+        return any(s == sig for s, _ in self.recent_actions)
 
     def handle_message(self, event, channel, text):
         if rules.is_emergency(text):
@@ -1094,6 +1144,8 @@ class Agent:
         previous = earlier[-1] if earlier else None
         red_flag = request is not None and rules.names_red_flag(request)
         safety_said = []
+        bare_yes = request is not None and request.lower().strip(" .!¡") in YES
+        called, proposed = set(), set()
 
         def finish(text, fixed=False, log_failed=False):
             # A log honesty guard never replaces a reply on a red flag or a reply that sends the parent to help.
@@ -1306,6 +1358,27 @@ class Agent:
                         value = _ml(bad[1]) if bad[0] in ("amount_ml", "duration_min") and _ml(bad[1]) else bad[1]
                         return finish(BOUNDS_ASK[lang][bad[0]].format(value=value), fixed=True, log_failed=call["name"] == "log_baby_event")
                 key = entry_key(call["arguments"] or {}) if call["name"] == "log_baby_event" else None
+                sig = None
+                if key is None:
+                    # One call of a tool with the same arguments per turn, and one ask of a tool that waits for a yes:
+                    # round 4 saw call_partner asked five times in one turn.
+                    sig = (call["name"], json.dumps(call["arguments"] or {}, sort_keys=True, default=str))
+                    asks = call["name"] in self.tools.items and call["name"] not in self.tools.allowed
+                    refused = None
+                    if sig in called or (asks and call["name"] in proposed):
+                        refused = ("repeat_call", REPEAT_CALL)
+                    elif asks and (bare_yes or request is None) and self.was_cancelled(call["name"]):
+                        refused = ("cancelled_call", CANCELLED_CALL)
+                    elif (bare_yes and not asks and call["name"] not in READ_TOOLS | QUIET_TOOLS
+                          and self.replayed(sig)):
+                        refused = ("replay_on_yes", REPLAY_CALL)
+                    if refused:
+                        self.bus.publish("guard", status=refused[0], name=call["name"])
+                        transcript.append({"role": "tool", "id": call["id"], "name": call["name"], "result": refused[1]})
+                        continue
+                    called.add(sig)
+                    if asks:
+                        proposed.add(call["name"])
                 if key is not None and observation:
                     # A skill's observation is never a new entry. On Oct 28 Muse logged an earlier bottle again when a
                     # doorbell observation came in.
@@ -1453,6 +1526,11 @@ class Agent:
                 self.bus.publish("tool", name=call["name"], status=status)
                 if status == "ran":
                     ran.add(call["name"])
+                    if sig is not None and call["name"] not in READ_TOOLS | QUIET_TOOLS:
+                        self.recent_actions.append((sig, self.clock_s()))
+                if status == "ask_parent" and not bare_yes and request is not None:
+                    # The parent asked for it again in their own words: it may be asked again.
+                    self.cancelled = [c for c in self.cancelled if c["name"] != call["name"]]
                 failed = failed or (key is not None and status == "error")
                 if status == "ran" and call["name"] in READ_TOOLS:
                     read.add(call["name"])

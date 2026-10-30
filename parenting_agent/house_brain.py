@@ -53,6 +53,10 @@ DEFAULTS = {"bedtime": "20:30", "explain_at": "07:30", "pre_nap_min": 15, "horiz
 ROUTINES = ("floor_clean", "bottle_prewarm", "door_quiet", "white_noise_boost")
 ALWAYS_ON = ("nap_mode", "door", "supplies", "morning_brief")  # safety and daily routines no plan can switch off
 MAX_WINDOW_MIN = {"floor_clean": 180, "door_quiet": 240, "white_noise_boost": 60}
+# How many windows one plan may arm, and the total minutes for the door: twelve boosts or a doorbell silent for 12 h
+# passed the per-window caps in round 4.
+MAX_WINDOWS = {"bottle_prewarm": 4, "floor_clean": 2, "door_quiet": 2, "white_noise_boost": 4}
+MAX_TOTAL_MIN = {"door_quiet": 240, "white_noise_boost": 120}
 EXHAUSTED_RE = re.compile(r"\b(exhausted|let me sleep|need (?:to|some) sleep|so tired|wiped out|agotad[oa]|"
                           r"d[eé]jame dormir|muert[oa] de sue[nñ]o)\b", re.IGNORECASE)
 VISITOR_RE = re.compile(r"\b(visit\w*|coming over|guests?|arriv\w*|visita\w*|vienen?)\b", re.IGNORECASE)
@@ -74,9 +78,9 @@ Routines you can arm (all times are HH:MM local, between now and plan_until, not
 - bottle_prewarm: start = the minute the bottle warmer (water only) and a dim study light go on before a night feed.
   Night only (21:00 to 06:59), at most 4, at least 60 minutes apart. The warmer turns itself off after 30 minutes.
 - door_quiet: a window in which the doorbell goes to a silent phone push instead of the kitchen speaker, for example
-  around a visitor arriving close to a nap. At most 4 hours.
+  around a visitor arriving close to a nap. At most 2 windows and 4 hours in all.
 - white_noise_boost: a window of at most 60 minutes in which the white noise goes up to its capped level, for example
-  while a dog barks during a sleep.
+  while a dog barks during a sleep. At most 4 windows and 120 minutes in all.
 Nap mode, the door, the supplies list and the morning brief always run, you cannot switch them off.
 Every window needs a real start and end (bottle_prewarm a start). An empty list means the routine is not armed.
 Your answer replaces current_plan whole: list again every window from current_plan you want to keep, nothing carries
@@ -88,7 +92,8 @@ reason in the log, for example a parent asking to sleep.
 messages: what to tell each parent, short, plain facts and times. Never give advice or a health opinion: do not use
 the words should, must, try, recommend, consider, need to, normal, worry, doctor, sick, fever, medicine.
 
-summary: one sentence, the plan and why. why_changed: when what_happened is not empty, one sentence on what changed
+summary: one sentence, the plan and why. It never names a parent on duty other than on_duty, and never holds a code,
+a phone number or an address. why_changed: when what_happened is not empty, one sentence on what changed
 and why, else "". Answer with the JSON only."""
 
 EXPLAIN_SYSTEM = """You tell a family with a newborn, in plain words, what their house did overnight and why. You get
@@ -263,12 +268,15 @@ def validate(answer, now, tz, s, windows):
     if errors:
         return None, errors, refused, dropped
     warm = sorted(w["start"] for w in plan["bottle_prewarm"])
-    if len(warm) > 4:
-        refused.setdefault("bottle_prewarm", []).append("more than 4 bottle pre-warms")
     if any(b - a < datetime.timedelta(minutes=60) for a, b in zip(warm, warm[1:])):
         refused.setdefault("bottle_prewarm", []).append("bottle pre-warms less than 60 min apart")
-    if len(plan["floor_clean"]) > 2:
-        refused.setdefault("floor_clean", []).append("more than 2 floor clean windows")
+    for name, most in MAX_WINDOWS.items():
+        if len(plan[name]) > most:
+            refused.setdefault(name, []).append(f"more than {most} {name} windows")
+    for name, most in MAX_TOTAL_MIN.items():
+        total = sum((w["end"] - w["start"]).total_seconds() / 60 for w in plan[name])
+        if total > most:
+            refused.setdefault(name, []).append(f"{name} windows add up to {total:.0f} min, more than {most}")
     for name in refused:
         plan[name] = None
     messages = []
@@ -283,16 +291,31 @@ def validate(answer, now, tz, s, windows):
             messages.append({"to": to, "text": text})
     texts = {"summary": clean_text(answer.get("summary"), 240), "why_changed": clean_text(answer.get("why_changed"), 240)}
     for field, text in list(texts.items()):
-        if text and not patterns.no_advice(text):
-            dropped.append({"to": field, "text": text, "why": "failed the no-advice guard"})
+        if text and not text_ok(text):
+            # The same check as every other outgoing text: no advice, no code, no contact detail.
+            dropped.append({"to": field, "text": text, "why": "failed the no-advice or private-detail guard"})
             texts[field] = ""
+    other = disagrees_on_duty(texts["summary"], answer["on_duty"], parents)
+    if other:
+        dropped.append({"to": "summary", "text": texts["summary"], "why": f"names {other} on duty, the plan says {answer['on_duty']}"})
+        texts["summary"] = ""
     plan.update(on_duty=answer["on_duty"], messages=messages, **texts)
     return plan, [], refused, dropped
 
 
 def text_ok(text):
-    """No advice and no secret. Times like 08:15-09:14 are not a run of digits."""
-    return patterns.no_advice(text) and not rules.has_secret(re.sub(r"\b\d{1,2}:\d{2}\b", "T", text))
+    """No advice, no secret and no contact detail. Times like 08:15-09:14 are not a run of digits."""
+    return patterns.no_advice(text) and not rules.personal_detail(re.sub(r"\b\d{1,2}:\d{2}\b", "T", text))
+
+
+def disagrees_on_duty(summary, on_duty, parents):
+    """The other parent a summary puts on duty, or None. The Telegram line names on_duty from the plan itself, so a
+    summary that says "Parent B is on" while the plan says Parent A would make the plan say two things."""
+    for other in parents:
+        if other != on_duty and re.search(rf"\b{re.escape(other)}\b(?:'s)?\s+(?:is\s+|takes\s+|has\s+)?(?:on\b|on duty|"
+                                           rf"the night|tonight's shift|up next|next)", summary or "", re.I):
+            return other
+    return None
 
 
 def speaker_ok(text):

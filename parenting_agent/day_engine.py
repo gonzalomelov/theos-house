@@ -24,7 +24,7 @@ from . import meals
 from .agent.plugins import Plugin
 from .agent.tools import Tool, schema
 from .house import HomeAssistant, never_reason
-from .house_plan import SUPPLY_NAMES, as_of, baby_out, in_window, sleep_windows, supplies
+from .house_plan import DRY_WRITE, SUPPLY_NAMES, add_dry_guard, as_of, baby_out, in_window, sleep_windows, supplies
 from .rhythm import patterns
 from .rhythm.engine import DEFAULTS as RHYTHM_DEFAULTS
 from .rhythm.engine import make_log
@@ -56,6 +56,7 @@ ALLOWED_WRITES = {
 NEVER = re.compile(r"thermomix|cookidoo", re.IGNORECASE)
 DOOR_LINE = "Someone is at the door."
 TUMMY_RE = re.compile(r"\btummy[- ]?time\b|\bfloor time\b|\bplay ?mat\b", re.IGNORECASE)
+UNSURE_WHERE = "where he is is not in the log"
 ROOM_RE = re.compile(r"\b(?:in|to|into) the (bedroom|nursery|kitchen|living room|study|dining room)\b", re.IGNORECASE)
 SKY = {"sunny": "sunny", "clear-night": "clear", "partlycloudy": "partly cloudy", "cloudy": "cloudy", "rainy": "rain",
        "pouring": "heavy rain", "fog": "fog", "windy": "windy", "windy-variant": "windy", "lightning-rainy": "storms",
@@ -347,6 +348,12 @@ class DayEngine:
                 continue
             if not ok:
                 self.floor_why[key] = why
+                if why == UNSURE_WHERE and ("where", key) not in self.done:
+                    # Unsure where he is: ask, never assume he is out.
+                    self.done.add(("where", key))
+                    out.append(self.notify("floor_clean", f"I could run the floor clean before {self._hm(floor)}, but "
+                                           "the log does not say where he is in the last 2 hours, so the vacuum stays "
+                                           "docked. Tell me where he is, or that he is out with you.", now))
                 continue
             if self.s["floor_alone"] is True:
                 out += self.floor_start(key, floor, now, "alone")
@@ -374,13 +381,15 @@ class DayEngine:
             return False, f"the run would reach the {hit['kind']} predicted around {self._hm(hit['start'])}"
         if house["vacuum"] != "docked":
             return False, f"the vacuum is {house['vacuum']}"
-        if baby_out(entries, now):
-            return True, ""
+        # The room sensor and the latest room note come first: a stale "out with the baby" note never outweighs a
+        # person in the living room or a newer note that puts him there (round 4 red team).
         room = baby_room(entries, now)
-        if room is None:
-            return False, "where he is is not in the log"
         if room == self.s["floor_room"] or house.get("living_person"):
             return False, f"he or someone is in the {self.s['floor_room']}"
+        if baby_out(entries, now):
+            return True, ""
+        if room is None:
+            return False, UNSURE_WHERE
         return True, ""
 
     def approve(self, action, entries, now, house):
@@ -628,6 +637,8 @@ class DayEnginePlugin(Plugin):
         self.engine = DayEngine(agent.bus, DayWriter(agent.bus, self.client, house_cfg.get("live") is True),
                                 {**self.s, "utc_offset_h": self.rhythm["utc_offset_h"]}, recipes,
                                 SimulatedWhiteNoise(agent.bus))
+        if not self.engine.writer.live:
+            add_dry_guard(agent)
         self.lock = threading.Lock()
         self.stopped = threading.Event()
         self.door = []
@@ -660,8 +671,11 @@ class DayEnginePlugin(Plugin):
             events = self.engine.approve("floor_clean", self.log.entries(), now, self.house(now))
         if not events:
             return "There is no floor clean waiting for a yes."
-        step = events[0].get("step")
-        return "Vacuum started for the floor clean." if step == "start" else f"Not now: {events[0].get('why')}."
+        if events[0].get("step") != "start":
+            return f"Not now: {events[0].get('why')}."
+        if self.engine.writer.live:
+            return "Vacuum start sent for the floor clean."
+        return f"Vacuum start for the floor clean {DRY_WRITE}."
 
     def status(self):
         mode = self.engine.mode

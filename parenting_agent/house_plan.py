@@ -57,6 +57,19 @@ ROOMS = (
 )
 MESS_RE = re.compile(r"\b(mess|messy|spill\w*|spit[- ]?up|crumbs?|food on the floor)\b", re.I)
 STOCK_RE = re.compile(r"\bstock:?\s*(diapers|wipes|formula)\s+(\d+)", re.I)
+# What every reply about a device action says while house.live is false: it was written down, nothing moved.
+DRY_WRITE = "only written down, house.live is off (dry run), nothing moved in the house"
+DRY_NOTE = "Dry run: house.live is off, so this was only written down and nothing moved in the house."
+DEVICE_WORDS = re.compile(r"\b(vacuum|aspiradora|lights?|lamps?|luz|luces|white noise|ruido blanco|speakers?|echo|"
+                          r"warmer|tv|doorbell|timbre)\b", re.I)
+DONE_WORDS = re.compile(r"\b(start(ed|ing)?|running|runs|paused|stopped|docked|dimmed|turned|switched|is on|are on|"
+                        r"sent|done|arranc\w*|prend\w*|apagu\w*|paus\w*|encend\w*)\b", re.I)
+DRY_WORDS = re.compile(r"dry run|written down|simulated|simulad|nothing moved|not now|did not|didn't|no real|"
+                       r"stays docked|waits? for|reply yes|\?", re.I)
+# A note that puts him in a room of the house ("tummy time on the play mat in the living room"). A mess note such as
+# "crumbs on the sofa" says where the mess is, not where he is.
+AT_HOME_RE = re.compile(r"\b(?:in|to|into|on) the (bedroom|nursery|kitchen|living room|study|dining room|play ?mat|crib)\b",
+                        re.I)
 OUT_RE = re.compile(r"^(\[simulated\] )?(out with the baby|baby is out|went out with)", re.I)
 BACK_RE = re.compile(r"^(\[simulated\] )?(back home|baby is back|we are back)", re.I)
 SUPPLY_NAMES = {"diapers": "Diapers", "wipes": "Wipes", "formula": "Formula"}
@@ -148,17 +161,38 @@ def room_for(text):
     return None
 
 
-def baby_out(entries, now):
-    """True when the latest out or back note in the log says the baby is out."""
-    state = False
+# An "out with the baby" note counts for this long. A note from the morning never says he is out all afternoon.
+OUT_MAX = datetime.timedelta(hours=2)
+
+
+def baby_out(entries, now, max_age=OUT_MAX):
+    """True only when the latest presence note says the baby is out and is at most max_age old. A later "back home"
+    note or a later note that puts him in a room of the house ("tummy time on the play mat") means he is home. With no
+    recent note he is not taken as out: unsure is never out."""
+    out_at = None
     for e in ordered(entries, now):
         if e["kind"] == "note":
             note = e.get("note") or ""
             if OUT_RE.search(note):
-                state = True
-            elif BACK_RE.search(note):
-                state = False
-    return state
+                out_at = when(e)
+            elif BACK_RE.search(note) or AT_HOME_RE.search(note):
+                out_at = None
+    return out_at is not None and now - out_at <= max_age
+
+
+def dry_reply(text):
+    """While house.live is off, a reply that says a device started, paused or turned on also says it was only written
+    down. The brain can paraphrase a dry-run tool result into "I started the vacuum" (round 4 red team)."""
+    if text and DEVICE_WORDS.search(text) and DONE_WORDS.search(text) and not DRY_WORDS.search(text):
+        return f"{text.rstrip()} {DRY_NOTE}"
+    return text
+
+
+def add_dry_guard(agent):
+    """Adds dry_reply to the agent's reply guards once, however many house plug-ins load."""
+    guards = getattr(agent, "reply_guards", None)
+    if guards is not None and dry_reply not in guards:
+        guards.append(dry_reply)
 
 
 def nobody_home(states):
@@ -502,6 +536,8 @@ class HousePlanPlugin(Plugin):
                               {**self.s, "utc_offset_h": self.rhythm["utc_offset_h"]}, make_recipes(self.s),
                               white if self.drives_white_noise else None, self.vacuum_state)
         self.day_white_noise = white
+        if self.s["live"] is not True:
+            add_dry_guard(agent)
         self.lock = threading.Lock()
         self.stopped = threading.Event()
         agent.tools.add(Tool("vacuum_dock", "Pause the robot vacuum and send it back to its base, for example when the baby "
@@ -544,7 +580,9 @@ class HousePlanPlugin(Plugin):
         if state == "cleaning":
             out.append(self.plan.writer.call("vacuum.pause", VACUUM, None, "asked"))
         out.append(self.plan.writer.call("vacuum.return_to_base", VACUUM, None, "asked"))
-        return f"Vacuum paused and sent to its base ({'dry run' if not self.plan.writer.live else 'live'})."
+        if not self.plan.writer.live:
+            return f"Vacuum pause and return to base {DRY_WRITE}."
+        return "Vacuum paused and sent to its base (live)."
 
     def start_from_tool(self, place=None):
         now = self.clock()
@@ -555,7 +593,10 @@ class HousePlanPlugin(Plugin):
                                        area=area, approved=True)
         if event["kind"] == "vacuum_hold":
             return f"Not now: {event['why']}."
-        return f"Vacuum {'cleaning the ' + area.replace('_', ' ') if area else 'started'} ({'dry run' if not self.plan.writer.live else 'live'})."
+        what = f"clean of the {area.replace('_', ' ')}" if area else "start"
+        if not self.plan.writer.live:
+            return f"Vacuum {what} {DRY_WRITE}."
+        return f"Vacuum {'cleaning the ' + area.replace('_', ' ') if area else 'started'} (live)."
 
     def today(self):
         now = self.clock()

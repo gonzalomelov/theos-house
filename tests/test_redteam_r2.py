@@ -162,7 +162,9 @@ class NoClaimWithoutTheTool(Base):
         agent, _ = self.family(["Your yes is noted. I'm trying to reach your partner."], ["I'm reaching your partner now."])
         say(agent, "yes")
         self.assertNotIn("reach", replies(agent)[-1])
-        self.assertEqual(agent.bus.count("guard"), 2)
+        # Since round 4 a bare yes with nothing waiting never reaches the brain: one guard, and it says nothing ran.
+        self.assertEqual(agent.bus.count("guard"), 1)
+        self.assertIn("nothing ran", replies(agent)[-1])
 
     def test_the_door_words_with_no_announce_are_retried_once(self):
         """The full day doorbell (PR #79, 1 of 3 runs): Muse said the door words and called no tool. Asked once, it
