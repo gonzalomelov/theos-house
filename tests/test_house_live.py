@@ -107,8 +107,8 @@ class AllowlistTest(unittest.TestCase):
         self.assertIsNotNone(g.write("nap_mode", "vacuum.pause", hl.VACUUM, None, "nap", hl.SLEEP_START, at(23, 9, 0)))
 
     def test_a_config_cap_can_only_lower_the_code_cap(self):
-        g, _, _ = gate(caps={"night_feed_light": 50, "nap_mode_vacuum": 2})
-        self.assertEqual(g.caps, {"night_feed_light": 6, "nap_mode_vacuum": 2})
+        g, _, _ = gate(caps={"night_feed_light": 50, "nap_mode_vacuum": 2, "shopping_list_add": 99})
+        self.assertEqual(g.caps, {"night_feed_light": 6, "nap_mode_vacuum": 2, "shopping_list_add": 6})
 
     def test_the_never_list_is_kept(self):
         g, ha, _ = gate()
@@ -132,7 +132,7 @@ class AllowlistTest(unittest.TestCase):
         for path in sorted((ROOT / "config").glob("*.json")):
             house = json.loads(path.read_text()).get("house") or {}
             self.assertIsNot(house.get("live"), True, path.name)
-            expected = BOTH if path.name == "agent.vostro.json" else []
+            expected = [*BOTH, "shopping_list_add"] if path.name == "agent.vostro.json" else []
             self.assertEqual(house.get("live_actions") or [], expected, path.name)
 
 

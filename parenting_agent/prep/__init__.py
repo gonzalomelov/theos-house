@@ -396,9 +396,16 @@ class Prep(Plugin):
     def nudge_text(self, lang=None):
         lang = lang or self.nudge_lang()
         words = NUDGE[lang]
+        lines = self.nudge_lines(lang)
+        return "\n".join([f"{words['hello']} {lines[0]}", *lines[1:], words["end"]])
+
+    def nudge_lines(self, lang):
+        """The nudge without its greeting and closing line: the countdown, the next appointment and the next items.
+        The family push puts these lines in the one morning message (channels/morning.py)."""
+        words = NUDGE[lang]
         nxt = self.next()
         countdown = self.countdown(lang)
-        lines = [f"{words['hello']} {countdown[0].upper()}{countdown[1:]}."]
+        lines = [f"{countdown[0].upper()}{countdown[1:]}."]
         appointment = nxt["next_appointment"]
         if appointment:
             moment = datetime.datetime.fromisoformat(appointment["when"])
@@ -412,8 +419,14 @@ class Prep(Plugin):
                     lines.append("- an item that holds a code, ask me for it" if lang == "en" else "- un ítem que tiene un código, pedímelo")
                     continue
                 lines.append(f"- {lists_mod.text_in(lang, item).split(': http')[0]}" + (words["late"] if item["late"] else ""))
-        lines.append(words["end"])
-        return "\n".join(lines)
+        return lines
+
+    def record_nudge(self, reason):
+        """Marks today's nudge as sent, so a restart never sends it again."""
+        now = self.now()
+        self.marker.parent.mkdir(parents=True, exist_ok=True)
+        self.marker.write_text(json.dumps({"date": now.date().isoformat(), "ts": now.isoformat(timespec="seconds"),
+                                           "reason": reason}))
 
     def gonza_chat(self):
         raw = os.environ.get(self.cfg["nudge"]["chat_ids_env"], "")
@@ -451,8 +464,7 @@ class Prep(Plugin):
             return None
         text = self.nudge_text()
         channel = self.cfg["nudge"]["channel"]
-        self.marker.parent.mkdir(parents=True, exist_ok=True)
-        self.marker.write_text(json.dumps({"date": now.date().isoformat(), "ts": now.isoformat(timespec="seconds"), "reason": reason}))
+        self.record_nudge(reason)
         self.agent.memory.add_message(channel, "assistant", text, ts=now)
         chats = self.nudge_chats()
         self.agent.bus.publish("nudge", person="gonza", channel=channel, reason=reason, items=len(self.next()["items"]),
@@ -477,7 +489,11 @@ class Prep(Plugin):
     def tick(self):
         now = self.now()
         if self.nudge_due(now):
-            self.send_nudge()
+            push = next((p for p in getattr(self.agent, "plugins", []) if getattr(p, "name", "") == "family-push"), None)
+            if push is not None and push.merging():
+                push.morning_from_prep()  # one morning message per parent, the prep lines inside it
+            else:
+                self.send_nudge()
 
     def run(self):
         while not self.stopped.is_set():

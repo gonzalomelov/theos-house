@@ -61,12 +61,13 @@ STOCK_RE = re.compile(r"\bstock:?\s*(diapers|wipes|formula)\s+(\d+)", re.I)
 DRY_WRITE = "only written down, house.live is off (dry run), nothing moved in the house"
 DRY_NOTE = "Dry run: house.live is off, so this was only written down and nothing moved in the house."
 DEVICE_WORDS = re.compile(r"\b(vacuum|aspiradora|lights?|lamps?|luz|luces|white noise|ruido blanco|speakers?|echo|"
-                          r"warmer|tv|doorbell|timbre)\b", re.I)
+                          r"warmer|tv|doorbell|timbre|shopping list|lista de (las )?compras|lista del s[uú]per)\b", re.I)
 DONE_WORDS = re.compile(r"\b(start(ed|ing)?|running|runs|paused|stopped|docked|dimmed|turned|switched|is on|are on|"
-                        r"sent|done|arranc\w*|prend\w*|apagu\w*|paus\w*|encend\w*)\b", re.I)
+                        r"sent|done|added|arranc\w*|prend\w*|apagu\w*|paus\w*|encend\w*|agregu\w*|agregad\w*|"
+                        r"anot\w*)\b", re.I)
 OTHERS_DRY_NOTE = "Everything else was only written down (dry run), nothing else moved in the house."
 LIVE_WORDS = re.compile(r"for real|\(live\)", re.I)
-DRY_WORDS = re.compile(r"dry run|written down|simulated|simulad|nothing moved|not now|did not|didn't|no real|"
+DRY_WORDS = re.compile(r"dry run|written down|simulated|simulad|nothing moved|not now|did not|didn't|no real|already on the|ya est[áa] en la|"
                        r"stays docked|waits? for|reply yes|\?", re.I)
 # A note that puts him in a room of the house ("tummy time on the play mat in the living room"). A mess note such as
 # "crumbs on the sofa" says where the mess is, not where he is.

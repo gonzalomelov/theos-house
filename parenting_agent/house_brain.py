@@ -610,7 +610,7 @@ class HouseBrain:
             self.send(f"For {m['to']}: {m['text']}" if m["to"] != "both" else m["text"], now, "plan_message", to=m["to"],
                       quiet=trigger != "bedtime")
 
-    def send(self, text, now, what, to="both", quiet=None):
+    def send(self, text, now, what, to="both", quiet=None, **fields):
         """A notify event for the parents. quiet keeps it in the event log only: by default every routine not in
         settings "tell". The delivery (channels/push.py) sends what is not quiet to the right parent."""
         if not patterns.no_advice(text):
@@ -618,7 +618,7 @@ class HouseBrain:
             return None
         quiet = what not in self.s["tell"] if quiet is None else quiet
         event = self.bus.publish("notify", text=text, channel="telegram", source="house-brain", routine=what, to=to,
-                                 at=now.isoformat(), quiet=quiet)
+                                 at=now.isoformat(), quiet=quiet, **fields)
         if self.tell is not None and what in self.s["tell"]:
             self.tell(text, now)
         return event
@@ -674,7 +674,11 @@ class HouseBrain:
         self.overnight = []
         event = self.bus.publish("house_explain", at=now.isoformat(), telegram=text, echo=echo, source=source, muse=meta,
                                  events=len(events))
-        self.send(text, now, "morning_explain")
+        duty = [e.get("on_duty") for e in events if e.get("on_duty")]
+        self.send(text, now, "morning_explain", facts={
+            "night_feeds": sum(1 for e in events if e.get("what") == "night feed prepare"),
+            "real": sum(1 for e in events if e.get("happened") == "done for real"),
+            "events": len(events), "on_duty": duty[-1] if duty else None})
         if self.say is not None and speaker_ok(echo):
             self.say(echo, now)
         return event

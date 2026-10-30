@@ -34,7 +34,8 @@
     "appointments",
     "nursery_plan",
     "night_rota",
-    "remind_me"
+    "remind_me",
+    "add_to_shopping_list"
   ],
   "plugins": [
     "parenting_agent.agent.heartbeat:Heartbeat",
@@ -74,12 +75,13 @@
   },
   "family_push": {
     "channel": "telegram",
-    "asks_to": "gonza"
+    "asks_to": "gonza",
+    "morning": true
   },
   "house": {
     "live": false,
     "ha_url": "http://relay:8123",
-    "live_actions": ["night_feed_light", "nap_mode_vacuum"]
+    "live_actions": ["night_feed_light", "nap_mode_vacuum", "shopping_list_add"]
   },
   "voice": {
     "service": "http://pa-voice-family:8800",

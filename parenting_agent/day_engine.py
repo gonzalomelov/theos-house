@@ -6,13 +6,14 @@
 | door | skill | a doorbell sound or a person at the door | silent push while nap mode is on, the Echo says one fixed line otherwise |
 | floor_clean | schedule | before a predicted tummy time | vacuum only when he is out or awake in another room and the run ends before the next predicted nap. Waits for Gonza's yes until floor_clean_alone is set |
 | morning_brief | schedule | morning_at (07:30) | night summary, who was up, appointments, Cookidoo dinner, weather, supplies running low. Telegram text at once, the Echo when he is awake and someone is in the kitchen |
-| supplies | schedule | every tick | diapers, wipes and formula from the log, onto the shopping list two days before they run out |
+| supplies | schedule | every tick | diapers, wipes and formula from the log, onto the shopping list two days before they run out. Live on the family agent since Oct 30 (shopping_list_add), never twice on the list |
 | parents_meals | schedule | the morning after a hard night | quick Thermomix recipes from Cookidoo (read only) for the next quiet window, logistics only |
 
 Every house write goes through DayWriter, which knows a fixed set of writes and refuses everything else, the never list
 included. Every write is a dry run, a house_dry event with the exact request, except the ones the live gate allows
 (house_live.py, house.live_actions): since Oct 30 on the family agent that is nap mode's vacuum pause and return to
-base when a sleep starts, never a start or a resume. Nothing in this module calls Home Assistant on its own:
+base when a sleep starts, never a start or a resume, and adding a supply that runs low or an item a parent asks for to
+the shopping list (add_to_shopping_list), never removing one. Nothing in this module calls Home Assistant on its own:
 HouseReader reads states, the writer is the only door out.
 """
 import datetime
@@ -23,6 +24,7 @@ import threading
 import urllib.error
 
 from . import meals
+from .agent import rules
 from .agent.plugins import Plugin
 from .agent.tools import Tool, schema
 from .house import HomeAssistant, never_reason
@@ -127,6 +129,18 @@ class DayWriter:
         return self.bus.publish("house_done", routine=routine, action=service, entity=entity_id, reason=reason, at=at)
 
 
+def shopping_said(event, item):
+    """What a parent reads about one shopping list add, true to what happened: real, already there, dry or failed."""
+    status = event.get("status") if event.get("kind") == "house_live" else event.get("kind")
+    if status in ("ran", "house_done"):
+        return f"{item} added to the shopping list for real."
+    if status == "already_listed":
+        return f"{item} is already on the shopping list, nothing added."
+    if status in ("error", "unavailable", "house_error"):
+        return f"{item} was not added: the shopping list could not be reached."
+    return f"{item} only written down for the shopping list (dry run), nothing was added."
+
+
 def asleep_now(entries, now):
     """The sleep entry going on at now, or None."""
     for e in reversed(ordered(entries, now)):
@@ -177,6 +191,7 @@ class DayEngine:
         self.done = set()
         self.asks = {}
         self.added = set()
+        self.facts = None
         self.echo_brief = None
         self.seen_door = set()
         self.floor_why = {}
@@ -431,7 +446,7 @@ class DayEngine:
             self.done.add(("brief", day))
             text, extra, echo = self.brief(entries, now, house)
             out.append(self.routine("morning_brief", "telegram", now))
-            out.append(self.notify("morning_brief", text, now, unchecked=extra))
+            out.append(self.notify("morning_brief", text, now, unchecked=extra, facts=self.facts))
             self.echo_brief = {"day": day, "text": echo}
         if self.echo_brief and self.echo_brief["day"] == day:
             if now > self._local(now, self.s["echo_until"]):
@@ -452,7 +467,8 @@ class DayEngine:
     def brief(self, entries, now, house):
         """(telegram text, quoted calendar text, Echo text). The Echo text is numbers and fixed words only."""
         night = meals.last_night(entries, now, self.tz)
-        summary = patterns.night_summary(entries, now, self.tz, self.s["parents"])["text"]
+        summary_row = patterns.night_summary(entries, now, self.tz, self.s["parents"])
+        summary = summary_row["text"]
         weather = house.get("weather") or {}
         sky = SKY.get(weather.get("condition"))
         parts = [f"Good morning. {summary}"]
@@ -476,6 +492,15 @@ class DayEngine:
         if meals_today:
             extra += " Cookidoo meal plan: " + ", ".join(m[:60] for m in meals_today) + "."
         text = " ".join(parts)
+        # The same brief as facts, so the family push can write each parent one short morning message with only what
+        # is theirs (channels/morning.py). The full text above stays in the event log.
+        self.facts = {"night": {k: summary_row[k] for k in ("feeds", "longest_h", "wakeups")},
+                      "weather": ({"sky": weather.get("condition"), "low": round(weather["templow"]),
+                                   "high": round(weather["temperature"]), "rain_mm": weather.get("precipitation") or 0}
+                                  if sky else None),
+                      "low": [{"item": i, "days_left": r["days_left"]} for i, r in low],
+                      "appointments": [f"{self._hm(e['start'])} {e['summary'][:60]}" for e in events],
+                      "meals": [m[:60] for m in meals_today]}
         longest = f"{night['longest_h']:.1f}" if night["longest_h"] is not None else "unknown"
         echo = [f"Good morning. Last night he woke {night['wakeups']} times, longest sleep {longest} hours."]
         if sky:
@@ -505,11 +530,18 @@ class DayEngine:
             description = f"About {row['left']}{unit} left, {row['per_day']}{unit} a day, runs out around {runs}"
             out.append(self.routine("supplies", "low", now, item=item, left=row["left"], per_day=row["per_day"],
                                     computed_from=row["computed_from"]))
-            out.append(self.write("supplies", "todo.add_item", SHOPPING, {"item": name, "description": description},
-                                  f"{item} running low", now))
-            out.append(self.notify("supplies", f"{name} added to the shopping list. {description}.", now))
+            written = self.write("supplies", "todo.add_item", SHOPPING, {"item": name, "description": description},
+                                 f"{item} running low", now, signal="supplies_low")
+            out.append(written)
+            if written.get("status") != "already_listed":
+                out.append(self.notify("supplies", f"{shopping_said(written, name)} {description}.", now))
             house.setdefault("shopping", []).append(name)
         return out
+
+    def add_item(self, item, now, by=None):
+        """A parent asked for an item on the shopping list. Live when shopping_list_add is listed, once per item."""
+        return self.write("shopping", "todo.add_item", SHOPPING, {"item": item}, f"{by or 'a parent'} asked", now,
+                          signal="parent_asked")
 
     # Parents' meals
 
@@ -657,6 +689,10 @@ class DayEnginePlugin(Plugin):
         agent.bus.subscribe(self.on_sound, kinds=["house_sound"])
         agent.tools.add(Tool("floor_clean_yes", "Start the floor clean the day engine asked about, after the parent said "
                              "yes. Refused when the run would reach a predicted nap.", schema({}), self.floor_yes))
+        agent.tools.add(Tool("add_to_shopping_list", "Add one item to the family's shopping list in Home Assistant when a "
+                             "parent asks, for example diapers or pañales. It checks the list first and never adds an "
+                             "item twice. It cannot remove items.",
+                             schema({"item": {"type": "string"}}, ["item"]), self.add_to_shopping_list))
         agent.tools.add(Tool("day_engine_status", "What the day engine is doing: nap mode, open questions. Changes nothing.",
                              schema({}), self.status))
 
@@ -686,6 +722,18 @@ class DayEnginePlugin(Plugin):
         if self.engine.writer.live:
             return "Vacuum start sent for the floor clean."
         return f"Vacuum start for the floor clean {DRY_WRITE}."
+
+    def add_to_shopping_list(self, item):
+        item = " ".join(str(item or "").split())[:120]
+        if not item:
+            return "add_to_shopping_list: no item given, nothing added."
+        if rules.holds_code(item):
+            self.agent.bus.publish("house_live", status="refused", routine="shopping", service="todo.add_item",
+                                   entity=SHOPPING, reason="a parent asked", why="holds a code or a number")
+            return "add_to_shopping_list: refused, a code, a password or a long number never goes on a list."
+        with self.lock:
+            event = self.engine.add_item(item, self.clock())
+        return shopping_said(event, item)
 
     def status(self):
         mode = self.engine.mode

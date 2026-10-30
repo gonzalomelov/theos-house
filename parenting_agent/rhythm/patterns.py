@@ -199,4 +199,6 @@ def night_summary(entries, now, tz, parents, current=False):
     if nxt:
         text += " " + next_feed_sentence(nxt, now, tz)
     refs = [e["ref"] for e in in_night] + [w["ref"] for w in wakes]
-    return {"text": text, "on_duty": on_duty, "computed_from": refs or (nxt or {}).get("computed_from", [])}
+    return {"text": text, "on_duty": on_duty, "computed_from": refs or (nxt or {}).get("computed_from", []),
+            "feeds": len(night_feeds), "longest_h": round(longest, 1),
+            "wakeups": {p: sum(1 for w in wakes if w["parent"] == p) for p in parents}}

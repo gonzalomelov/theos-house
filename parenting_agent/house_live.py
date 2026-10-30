@@ -1,4 +1,4 @@
-"""Per-action live house writes (Oct 30, Gonza's yes in chat: "Yes, light and vacuum pause").
+"""Per-action live house writes.
 
 Everything in the house is a dry run unless its action is named in "house": {"live_actions": [...]} in the agent
 config. The list is empty by default. A name only counts when it is in CATALOG below, kept in code:
@@ -7,9 +7,11 @@ config. The list is empty by default. A name only counts when it is in CATALOG b
 |---|---|---|---|---|---|
 | night_feed_light | night_feed | the study light | light.turn_on (dim, warm), light.turn_off | on only on a real awake signal (cry, parent message, he's up button, logged wake-up or feed), off only when the same episode turned it on for real | 6 writes a night (noon to noon) |
 | nap_mode_vacuum | nap_mode | the robot vacuum | vacuum.pause, vacuum.return_to_base | only when a nap or a night sleep starts | 4 writes a day |
+| shopping_list_add | supplies, shopping | the shopping list (todo.shopping_list) | todo.add_item | when diapers, wipes or formula run low (the supplies routine) or a parent asks, and only when the item is not already on the list (read first) | 6 adds a day |
 
-Never live, whatever the config says: vacuum.start and vacuum.clean_area (no start, no resume, no floor clean), the
-never list in house.py, and every other service and entity. A write the gate does not allow goes down the caller's
+Never live, whatever the config says: vacuum.start and vacuum.clean_area (no start, no resume, no floor clean),
+removing or completing a shopping list item (todo.remove_item, todo.update_item), the never list in house.py, and every
+other service and entity. A write the gate does not allow goes down the caller's
 usual dry path, so the reply and the event log say it was only written down.
 
 A device that reads unavailable in Home Assistant gets nothing sent: the "house_live" event says unavailable and the
@@ -24,12 +26,17 @@ import urllib.error
 from .house import never_reason
 
 STUDY_LIGHT = "light.wiz_824512_192_0_2_10"
+SHOPPING = "todo.shopping_list"
+SHOPPING_SIGNALS = ("supplies_low", "parent_asked")
+# The same supply in the words a parent may have typed on the list: "Pañales" already there means no "Diapers".
+SAME_ITEM = ({"diapers", "diaper", "pañales", "panales", "pañal"}, {"wipes", "toallitas", "toallitas húmedas"},
+             {"formula", "fórmula", "leche de fórmula", "leche de formula"})
 VACUUM = "vacuum.xiaomi_ov71gl_0681_robot_cleaner"
 AWAKE_SIGNALS = ("cry", "parent", "button", "log")
 SLEEP_START = "sleep_start"
 MAX_LIGHT_PCT = 30
 WARM_KELVIN = 2700
-NEVER_LIVE = ("vacuum.start", "vacuum.clean_area")
+NEVER_LIVE = ("vacuum.start", "vacuum.clean_area", "todo.remove_item", "todo.update_item")
 RECENT = datetime.timedelta(minutes=60)
 UNREACHABLE = ("unavailable", "unknown", None)
 
@@ -40,9 +47,29 @@ CATALOG = {
     "nap_mode_vacuum": {"routine": "nap_mode", "entity": VACUUM, "services": ("vacuum.pause", "vacuum.return_to_base"),
                         "cap": 4, "per": "day", "device": "the vacuum",
                         "words": re.compile(r"\b(vacuum|aspiradora)\b", re.I)},
+    "shopping_list_add": {"routine": ("supplies", "shopping"), "entity": SHOPPING, "services": ("todo.add_item",),
+                          "cap": 6, "per": "day", "device": "the shopping list",
+                          "words": re.compile(r"shopping list|lista de (las )?compras|lista del s[uú]per", re.I)},
 }
 SAID = {"light.turn_on": "went on, dim and warm", "light.turn_off": "went off", "vacuum.pause": "was paused",
         "vacuum.return_to_base": "was sent to its base"}
+
+
+def item_key(text):
+    """One spelling per item for the duplicate check: case, spaces and the supply's other names do not count."""
+    key = " ".join(str(text or "").casefold().split())
+    for names in SAME_ITEM:
+        if key in names:
+            return min(names)
+    return key
+
+
+def on_list(client, item):
+    """True when the item (or the same supply in other words) is on the shopping list and not done. Read only."""
+    answer = client.response("todo.get_items", SHOPPING)
+    items = (((answer or {}).get("service_response") or {}).get(SHOPPING) or {}).get("items") or []
+    key = item_key(item)
+    return any(item_key(i.get("summary")) == key for i in items if i.get("status") != "completed")
 
 
 def live_actions(house_cfg):
@@ -74,7 +101,8 @@ class LiveGate:
 
     def find(self, routine, service, entity):
         for name, spec in CATALOG.items():
-            if spec["routine"] == routine and spec["entity"] == entity and service in spec["services"]:
+            routines = spec["routine"] if isinstance(spec["routine"], tuple) else (spec["routine"],)
+            if routine in routines and spec["entity"] == entity and service in spec["services"]:
                 return name
         return None
 
@@ -97,7 +125,7 @@ class LiveGate:
         write is not live (unlisted, refused or rate limited), and the caller writes it down as a dry run."""
         name = self.find(routine, service, entity)
         if service in NEVER_LIVE:
-            if self.listed and entity == VACUUM:
+            if self.listed and entity in (VACUUM, SHOPPING):
                 self.log("refused", routine, service, entity, reason, why=f"{service} is never live")
             return None
         if name is None or name not in self.listed or never_reason(entity):
@@ -110,9 +138,25 @@ class LiveGate:
             self.log("refused", routine, service, entity, reason, signal=signal,
                      why="the vacuum pauses for real only when a nap or night sleep starts")
             return None
+        if name == "shopping_list_add" and signal not in SHOPPING_SIGNALS:
+            self.log("refused", routine, service, entity, reason, signal=signal,
+                     why="the shopping list gets an item for real only when a supply runs low or a parent asks")
+            return None
         if self.client is None:
             return None
         now = now or self.clock()
+        if name == "shopping_list_add":
+            item = str((data or {}).get("item") or "").strip()
+            if not item:
+                return None
+            try:
+                listed = on_list(self.client, item)
+            except (urllib.error.URLError, TimeoutError, OSError, ValueError, AttributeError) as error:
+                return self.log("error", routine, service, entity, reason, signal=signal, item=item[:120],
+                                error=f"could not read the shopping list, nothing added: {str(error)[:160]}")
+            if listed:
+                return self.log("already_listed", routine, service, entity, reason, signal=signal, item=item[:120],
+                                why=f"{item[:60]} is already on the shopping list, nothing added")
         with self.lock:
             key = (name, self.period(name, now))
             if self.counts.get(key, 0) >= self.caps[name]:
@@ -130,14 +174,19 @@ class LiveGate:
         except (urllib.error.URLError, TimeoutError, OSError, ValueError) as error:
             return self.log("error", routine, service, entity, reason, signal=signal, data=data, error=str(error)[:200])
         event = self.log("ran", routine, service, entity, reason, signal=signal, data=data,
-                         at=now.isoformat(timespec="seconds"))
+                         at=now.isoformat(timespec="seconds"), **({"item": data["item"]} if service == "todo.add_item" else {}))
         with self.lock:
             self.recent.append((now, name, service))
         return event
 
     @staticmethod
     def clean(service, data):
-        """The light goes on dim and warm: only brightness and warmth pass, brightness at most MAX_LIGHT_PCT."""
+        """The light goes on dim and warm: only brightness and warmth pass, brightness at most MAX_LIGHT_PCT. A shopping
+        list item passes its name and a short description, nothing else."""
+        if service == "todo.add_item":
+            data = data or {}
+            return {"item": str(data.get("item") or "").strip()[:120],
+                    **({"description": str(data["description"])[:200]} if data.get("description") else {})}
         if service != "light.turn_on":
             return None
         pct = int((data or {}).get("brightness_pct") or 10)
@@ -151,7 +200,8 @@ class LiveGate:
             for moment, name, service in self.recent:
                 if now - moment <= RECENT:
                     latest[name] = (moment, service)
-        return [(CATALOG[name]["words"], f"Done for real: {CATALOG[name]['device']} {SAID[service]} at "
+        return [(CATALOG[name]["words"], f"Added to the shopping list for real at {moment.astimezone(self.tz):%H:%M}."
+                 if name == "shopping_list_add" else f"Done for real: {CATALOG[name]['device']} {SAID[service]} at "
                  f"{moment.astimezone(self.tz):%H:%M}.") for name, (moment, service) in latest.items()]
 
 

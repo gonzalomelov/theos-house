@@ -94,7 +94,8 @@ Since Oct 30 the pushes the agent starts on its own reach the person they are fo
 
 | Push | Who gets it |
 |---|---|
-| Morning nudge (prep list), morning brief, supplies, tonight's plan at bedtime, a re-plan, the morning explanation | both |
+| The morning message (from Oct 31): the brief, the night explanation and the prep nudge merged into one short message per parent with only what is theirs (`parenting_agent/channels/morning.py`) | both, each their own text |
+| Supplies, tonight's plan at bedtime, a re-plan | both |
 | The night feed push, and anything else between 22:00 and 06:00 | the parent on duty from the night rota |
 | A parent's own line in tonight's plan | that parent |
 | A question that waits for a yes ("Reply yes to start it") | one parent: the one on duty at night, Gonza by day. Only that parent's yes answers it |
