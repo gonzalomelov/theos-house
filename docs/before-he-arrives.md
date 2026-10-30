@@ -72,7 +72,7 @@ Avisame cuando hagas uno, o preguntame qué sigue.
 - Each family chat is tied to a person in the config (`people`): Gonza is `TELEGRAM_CHAT_ID`, Ceci is `TELEGRAM_CECI_CHAT_ID`. A chat id given to both belongs to neither.
 - Every message gets a `turn` event in `data/events.jsonl`: channel, person, whether the agent answered, and `test` when the text starts with "Test:".
 - Every prep change is a `prep` event with the person.
-- At start the Telegram channel logs `family_channels`, for example `{"ceci": false, "gonza": true}`. Until Ceci's chat id is set, her channel shows as not connected.
+- At start the Telegram channel logs `family_channels`, for example `{"ceci": true, "gonza": true}`. A person whose chat id is not set shows as not connected.
 - Replies go back to the chat that asked, so two parents on one bot each get their own answer.
 
 ## Check it
@@ -88,4 +88,8 @@ On the Vostro, prefix with `docker exec parenting-agent`.
 
 ## Ceci's channel
 
-Ceci has no chat with the bot yet. To connect her: she opens @home_agent_example_bot and sends any message, her chat id is read from the `channel_ignored` event (chat id only), it goes in the meta-hackathon `.env` as `TELEGRAM_CECI_CHAT_ID`, then `sh deploy/agent.sh push-env` and `sh deploy/agent.sh update`.
+Ceci is connected to the family bot. Her chat id is set on the Vostro as `TELEGRAM_CECI_CHAT_ID`, and the agent's `family_channels` event on Oct 29 shows `{"ceci": true, "gonza": true}`. Her messages are `turn` events with person `ceci`, and her replies go back to her own chat.
+
+What still goes only to Gonza: the morning nudge, tonight's house plan and every push the agent starts on its own. The router's partner route is a stub, because a message the agent starts for anyone but Gonza needs his yes (`parenting_agent/channels/router.py`).
+
+To change her chat id: put it in the meta-hackathon `.env` as `TELEGRAM_CECI_CHAT_ID`, then `sh deploy/agent.sh push-env` and `sh deploy/agent.sh update`.

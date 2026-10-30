@@ -69,7 +69,6 @@ Fallbacks in runs 1 and 2: 0 whole plans refused, 5 partial fallbacks per run. A
 - The day and nights are the simulated week, not a real family. The cry timing (4 min before each feed) is an assumption from `results/night-feed`.
 - In the replay the plan is applied in the same minute Muse is asked. Live, Muse takes about 5 s, and the fixed routines run until the plan lands.
 - The morning explanation was Muse's in 17 of 18 nights. In the last night of run 3 Muse answered but its text failed the guard, so the fixed words went out. Muse's explanations read like a list of events more than plain words.
-- One test in `tests/test_one_message_one_entry.py` fails on origin/main too, before this change. Not touched here.
 
 ## Run it
 
