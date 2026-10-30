@@ -55,3 +55,14 @@ Checked against origin/main on Oct 28 2026. Licenses were read from the linked p
 | Doorbell sound, Wikimedia Commons | House sound test, audio not in this repo | Public domain | https://commons.wikimedia.org/wiki/File:Doorbell-cheap-dingdong.ogg |
 | Joie i-Snug 2 instruction manual | Car seat steps and limits in `skills/carseat/joie-i-snug-2.json`, written in our words with the manual's URL and hash. The PDF is not in this repo | Joie's document, all rights with Joie | https://dl.joiebaby.com/Instruction_Manual/GL/i-Snug-2/Joie-carseat-i-snug-2-instruction-manual.pdf |
 | Tesla child seat pages | Car rules in the simulated Tesla | Tesla's published pages, linked not copied | https://www.tesla.com |
+
+## Media committed in this repo
+
+All of it is synthetic or rendered, no family audio, photo or video. Checked on Oct 30 2026, the largest file is 2.5 MB.
+
+| Files | Made with | Terms that apply |
+|---|---|---|
+| `results/voice/notes/*.ogg` | macOS `say` (Apple system voices Samantha, Daniel, Paulina, Mónica) reading scripted lines | Apple's macOS license allows system voice output for personal, non-commercial projects |
+| `results/voice/reply-*.ogg`, the car seat lines in `results/hero2/carseat.mp4` | MMS-TTS | CC BY-NC 4.0, non-commercial only |
+| `results/hero/speech/*.wav`, the glasses voice in `results/hero*/` videos | iOS AVSpeechSynthesizer in the simulator | Apple's SDK and simulator terms |
+| `results/hero*/`, `results/glasses/` videos and screenshots | Screen recordings of the iOS simulator with DAT's mock device playing generated clips | Meta Wearables Developer Terms for the mock device, our own clips |

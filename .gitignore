@@ -6,3 +6,29 @@ __pycache__/
 *.pyc
 data/
 data-*/
+
+# Secrets and private data, never committed (checked before going public, docs/going-public.md)
+.env.*
+!.env.example
+*.secret
+*.pem
+*.key
+internal-url.txt
+invites.txt
+glasses-token
+*.sqlite
+*.sqlite3
+
+# Model weights and caches, fetched at setup
+*.safetensors
+*.pt
+*.pth
+*.ckpt
+*.onnx
+*.tflite
+*.task
+.cache/
+
+# Raw recordings and generated media outside results/ (results/ keeps only small, synthetic, reviewed files)
+/recordings/
+/clips/

@@ -1,5 +1,36 @@
 # parenting-agent
 
+**Live demo: https://baby.bygmv.com** (phone first, no sign-in, a simulated baby and a simulated house, nothing real moves)
+
+A persistent agent for new parents, built with Muse Spark Open and SAM 3.1 during the Meta Global AI Developer Hackathon (Oct 26 2026 12 PM ET to Nov 4 2026 9 PM ET).
+
+## Built during the event, and what is prior work
+
+| When | What | Where |
+|---|---|---|
+| Oct 21 to 25, before the event (prior work) | The MediaPipe hand reflex with the contact rule and the chime then voice alarm, built Oct 22 to 23 in the private prep repo and ported here on Oct 26 | commit f41acfa (`reflex.py`, `alarm.py`), a port, not new work |
+| Oct 21 to 25, before the event (prior work) | SAM 3.1 run locally on the Mac GPU, the iPhone Safari camera page, the PANNs sound thresholds | ported into `scripts/sam3-setup.sh`, `sam3_worker.py`, `sources.py`, `phone.html`, `hearing.py`. Full list in [Prior work](#prior-work-oct-21-to-25-2026-before-the-event) |
+| Oct 26, after the 12 PM ET start | The repo's first commit, 4f1898a at 14:03 ET, and the agent core skeleton | 4f1898a to 90ca5a3 |
+| Oct 27 | SAM 3.1 confirms or cancels the hand alarm | c0d7b5d (PR #25) |
+| Oct 28 | Muse Spark Open becomes the brain of all three agents, the public demo, the glasses app on Meta's mock device | 115dc2e (PR #61), PR #34, b571201 (PR #65) |
+| Oct 29 | The lift check that catches a hand hovering 2 to 5 cm, SAM 3.1 hand masks anchoring it, Muse plans the house, the families log ops | 4436ccd (PR #75), 9092ad0 (PR #93), 18160b5 (PR #118), 19c0523 (PR #117) |
+| Oct 30 | One first-month day and night end to end, the HUD on the Ray-Ban Display through DAT's Display API | 3fd0bc3 (PR #149), 5eb98d3 (PR #155) |
+
+Everything from Oct 26 on is event work. Details in [Built during the hackathon](#built-during-the-meta-global-ai-developer-hackathon-oct-26-12-pm-et-to-nov-4-9-pm-et-2026).
+
+## Run it from a clean clone
+
+Python 3.11. No keys and no network needed for the tests and the offline brain:
+
+```bash
+python3.11 -m venv .venv && .venv/bin/pip install -r requirements.txt
+.venv/bin/python -m unittest discover -s tests                                   # fake brain, live brain tests skip unless PA_LIVE=1
+.venv/bin/python -m parenting_agent --config config/agent.fake.json --check      # load the agent with the offline, rule-based brain
+.venv/bin/python -m parenting_agent.demo --brain-env FILE                         # the demo on http://127.0.0.1:8765, FILE holds BASETEN_API_KEY
+```
+
+More in [Run it](#run-it).
+
 ## For judges
 
 Built with Muse Spark Open. Every number below is from a run during the event, newest first, and each folder's files say how it was measured. The claims up to PR #153 are audited, each with its file and whether it holds, in [results/honesty/claims.md](results/honesty/claims.md).
@@ -25,13 +56,6 @@ Built with Muse Spark Open. Every number below is from a run during the event, n
 | [results/glasses/](results/glasses/README.md) | Full glasses loop in the iOS simulator with Meta's mock Ray-Ban Meta. Real glasses not paired yet | Oct 28 |
 | [results/muse/](results/muse/README.md) | Muse Spark Open as the brain: latency, cost, fallbacks and per-call logs | Oct 28 |
 
-Run the tests with Python 3.11. No keys and no network needed, the live brain tests skip unless `PA_LIVE=1`:
-
-```bash
-python3.11 -m venv .venv && .venv/bin/pip install -r requirements.txt
-.venv/bin/python -m unittest discover -s tests
-```
-
 What runs where:
 
 | Machine | What runs there |
@@ -42,11 +66,11 @@ What runs where:
 
 Licenses: our code is MIT ([LICENSE](LICENSE)). Models and SDKs keep their own terms, see [THIRD_PARTY.md](THIRD_PARTY.md).
 
-**My world before my son arrives: a persistent agent for new parents, built while we wait for Theo. Today it keeps the baby log from your phone (Telegram and a web page), tells you first when the next feed is due, reads why he may be crying from the log, and says "hand" when both your hands leave the baby on a head camera. Glasses run only in the iOS simulator so far, and in the house the study light, the vacuum pause and dock and the shopping list are allowed to act for real since Oct 30 (none has moved yet), everything else runs dry. Video and house audio stay in your house. Messages and voice notes go to the brain, Muse Spark Open on Baseten, and the opt-in car seat check can send one still.**
+**My world before my son arrives: a persistent agent for new parents, built while we wait for Theo. Today it keeps the baby log from your phone (Telegram and a web page), tells you first when the next feed is due, when he cries shows what the log says (last feed, last diaper, time awake), never a medical reason, and says "hand" when both your hands leave the baby on a head camera. Glasses run only in the iOS simulator so far, and in the house the study light, the vacuum pause and dock and the shopping list are allowed to act for real since Oct 30 (none has moved yet), everything else runs dry. Video and house audio stay in your house. Messages and voice notes go to the brain, Muse Spark Open on Baseten, and the opt-in car seat check can send one still.**
 
 What runs today: the phone (Telegram and a web page) and the kitchen Echo. The glasses app ran the full loop only in the iOS simulator with Meta's mock Ray-Ban Meta, real glasses are not paired yet (`results/glasses/README.md`). Three live tests ran in the house: one Echo announcement (`results/channels/check.json`), one test shopping list item added and removed (`results/house-plan/live-check.json`) and one Telegram dog alert to Gonza (`results/dog-near-baby/README.md`). Since Oct 30 the family agent on the Vostro has three live house actions, Gonza's yes in chat: the study light goes on dim and warm in the night feed on a real awake signal (the baby, in English or Spanish, never the parent or the dog) and off after the feed, the vacuum pauses and goes back to its base when a nap or night sleep starts (never a start or a resume), and diapers, wipes or formula that run low, or an item a parent asks for, go on the Home Assistant shopping list, never twice and never removed (at most 6 light, 4 vacuum and 6 shopping list writes, `docs/home-assistant-inventory.md`). The study light read unavailable at 06:35 on Oct 30 and is back online: at 19:26 Home Assistant read it with a state (off), so the next real awake signal at night can switch it. Live means allowed, not done: at 19:26 on Oct 30 the family agent's event log held no `house_live` write yet, so no device has moved for real so far. A device that reads unavailable gets nothing sent, and the reply says so. Everything else is a dry run, and reading the house is read only. Ceci is connected to the family bot: her chat id is configured on the Vostro and the agent's start event shows her chat as connected. Her messages get their own replies. Since Oct 30 the pushes the agent starts on its own go to the right parent over Telegram: one short morning message per parent with only what is theirs (the brief, the night explanation and the prep nudge merged), shared ones (supplies, tonight's plan) to both, each scheduled push at most once a day per parent across restarts, night pushes to the parent on duty from the night rota, a reminder to whoever asked, and a question that waits for a yes to one parent, whose yes alone answers it (`docs/before-he-arrives.md`, `parenting_agent/channels/push.py`). Claims are audited in [results/honesty/claims.md](results/honesty/claims.md).
 
-Built during the Meta Global AI Developer Hackathon, which started Oct 26 2026 at 12 PM ET. Prior work from Oct 21 to 25 is named in [Prior work](#prior-work-oct-21-to-25-2026-before-the-event). See [what was built during the hackathon](#built-during-the-meta-global-ai-developer-hackathon-oct-26-to-nov-4-2026) and [docs/architecture.md](docs/architecture.md).
+Built during the Meta Global AI Developer Hackathon, which started Oct 26 2026 at 12 PM ET. Prior work from Oct 21 to 25 is named in [Prior work](#prior-work-oct-21-to-25-2026-before-the-event). See [what was built during the hackathon](#built-during-the-meta-global-ai-developer-hackathon-oct-26-12-pm-et-to-nov-4-9-pm-et-2026) and [docs/architecture.md](docs/architecture.md).
 
 It logs, reminds and alerts. It is built to refuse medical advice and diagnosis. Red flags get: call 911 now. The agent never calls anyone itself. A rule gate refuses health questions and answers red flags (not breathing, gasping, blue lips, choking, a fall, under water in the bath, a swallowed battery or magnet, a bulging or sunken soft spot, a fit or whole body shaking, a dog bite, and in pregnancy green or brown fluid or contractions a few minutes apart, in English and rioplatense Spanish) with "call emergency services now" without a brain call (`parenting_agent/agent/rules.py`), and the brain's prompt forbids advice. A safe sleep question (tummy or back, the crib, bed sharing) gets the AAP's public line with its source (https://www.healthychildren.org/English/ages-stages/baby/sleep/Pages/a-parents-guide-to-safe-sleep.aspx), the same every time, never a refusal with no fact and never advice about one baby. The gate is a word list, so the prompt is the last line for anything it misses (`results/redteam/README.md`). On a held-out set written before the round 4 fix it caught 35 of 44 red flags and put 0 of 44 everyday lines on the 911 line. The six phrasings the round 5 auditor found missing (blue around the mouth, purple and blotchy skin, a dog that snapped or broke the skin, tarascón, dropped out of my arms, tumbled down stairs) and a bottle too hot that made him scream were added on Oct 30, with the auditor's six false 911 lines (chokes on laughter, limp with sleep, the dog bit his toy) kept off and the held-out everyday set still at 0 of 44 (`tests/test_round5.py`), and no log guard replaces a reply that names a red flag or sends the parent to help (`results/safety-gate-r4/README.md`). It never replaces staying within arm's reach of the baby.
 
@@ -67,7 +91,7 @@ One long-running agent sits in the middle. Everything it sees, hears and does go
 | Confirms or cancels the hand alarm at the changing table and in the bath, and its hand masks anchor the lift check that catches a 2 to 5 cm hover on the changing table (blind set Oct 29: 22 of 32 hovers, 0 of 16 false voices, against 21 and 1 without SAM 3.1). Essential in the car seat coach, the dog watch and the held object hover. Every Meta model with and without numbers: `results/meta-models/README.md` | **SAM 3.1**, Meta's open weights | On the Mac's GPU, 1.5 to 3 s per frame. Frames never leave the house |
 | The agent's brain, in the family agent, the families bot and the public demo. It proposes the families log operations (fifth blind set 1 of 45 wrong, 13 of 45 with the old rule guards, both on Muse. Claude Haiku 5.5 on the same design tied, 0 of 45 for both on Oct 30, `results/muse-vs-haiku/`) and plans the house (3 of 4 adaptation cases, the fixed rules matched it on the day checks) | **Muse Spark Open** (`meta-models/muse-spark-open-1026`), Meta's open weights | Baseten's OpenAI-compatible API, synchronous calls only (`config/agent.json`, `config/agent.vostro.json`). Every call logs its model and host as a `brain_call` event. Per-call logs from Oct 28 runs in `results/muse/` |
 | Second pair of eyes in the car seat coach: one zoomed still per step, handle and level line, a pass needs SAM 3.1 and Muse both. On 28 test renders (Oct 29) 12 of 12 wrong installs not passed, 0 false alarms, see `results/carseat/muse/README.md` | **Muse Spark Open**, image input | Baseten, opt-in (`car_seat.muse`). The still is sent once and never saved |
-| Cry reason from the sound, a guess next to the log | **Muse Spark Open**, audio input | Built and off: on Oct 29 Muse heard speech but not house sounds (11 of 46 labels against 41 for PANNs, beep canary 0 of 3), so no cry audio is sent. See `results/sounds/muse/README.md` and `results/audio-truth/README.md` |
+| A label for a cry sound, shown next to the log, never advice | **Muse Spark Open**, audio input | Built and off: on Oct 29 Muse heard speech but not house sounds (11 of 46 labels against 41 for PANNs, beep canary 0 of 3), so no cry audio is sent. See `results/sounds/muse/README.md` and `results/audio-truth/README.md` |
 | Fallback brain, only when a Muse call errors | Claude Haiku 5.5 | Anthropic API. Each fallback is a `brain_fallback` event and a stderr line, so it is counted, never silent |
 
 ## Private by design
@@ -243,7 +267,7 @@ The repo was created on Oct 26 2026 at 15:03 Montevideo time (14:03 ET), after t
 | Public demo app with a simulated baby, live at baby.bygmv.com since Oct 28 | #33 | #34 | see PR |
 | Always on: the agent in a walled-off container on the Vostro | #15 | #35 | see PR |
 | Telegram channel and channel picking | #3, #8 | #36 | see PR |
-| House sounds, why is he crying, white noise | #14, #32 | see PR | see PR |
+| House sounds, a cry heard next to the log's last feed and diaper, white noise | #14, #32 | see PR | see PR |
 | Sitter handover, time-boxed guest role, summary after | #16 | see PR | see PR |
 | Invited families on Telegram, one private log per family, walled off | #40 | see PR | see PR |
 | Bath skill, camera skills from config | #10 | #42 | see PR |
@@ -263,7 +287,7 @@ The first commits of Oct 26 (4f1898a to 90ca5a3) are an early skeleton that the 
 
 ## Prior work (Oct 21 to 25 2026, before the event)
 
-Built in the prep repo `gonzalomelov/meta-hackathon-2026` (64 commits from Oct 21 to 25) and reused here. None of its numbers is used as event evidence.
+Built in the prep repo `gonzalomelov/meta-hackathon-2026` (64 commits from Oct 21 to 25, private because it also holds the family's planning notes) and reused here. None of its numbers is used as event evidence.
 
 | Prior work | Date | Reused here as |
 |---|---|---|
