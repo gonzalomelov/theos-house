@@ -116,31 +116,50 @@ def transcript(text):
     return bool(text) and not ASSISTANT.search(plain(text))
 
 
-def race(make_ear, wav, calls=RACE, rounds=ROUNDS, pool=None):
+def first_line(text):
+    """The parent's words are one line. Muse sometimes writes them and then answers them, even with medical advice on an
+    emergency ("Llamá ya a emergencias...", Oct 30): only the first line is the parent's."""
+    return (text or "").strip().split("\n")[0].strip()
+
+
+def _late(future, late):
+    """A slower ear call came back after the race: its words to `late`, a failed or cancelled call to nobody."""
+    if future.cancelled() or future.exception() is not None:
+        return
+    late(first_line(future.result()))
+
+
+def race(make_ear, wav, calls=RACE, rounds=ROUNDS, pool=None, late=None):
     """Hears one utterance with `calls` ear calls at once and returns (words, info) as soon as one is a transcript.
-    The slower calls finish in the background and are dropped. A round with no transcript is asked again, up to
+    The slower calls finish in the background: their words go to `late(words)` when it is given (the red flag check
+    reads every call, not only the first), else they are dropped. A round with no transcript is asked again, up to
     `rounds` rounds, then the words are "" (nothing heard). Raises the ear's error only when every call failed."""
     pool = pool or concurrent.futures.ThreadPoolExecutor(max_workers=calls * rounds)
     started = time.monotonic()
-    answers, errors = [], []
+    answers, candidates, errors = [], [], []
     for round_no in range(1, rounds + 1):
         futures = [pool.submit(make_ear().hear, wav) for _ in range(calls)]
+        done = set()
         for future in concurrent.futures.as_completed(futures):
+            done.add(future)
             try:
                 text = future.result()
             except Exception as error:  # one failed call: the others may still hear it
                 errors.append(str(error)[:200])
                 continue
-            # The parent's words are one line. Muse sometimes writes them and then answers them, even with medical
-            # advice on an emergency ("Llamá ya a emergencias...", Oct 30): only the first line is the parent's.
-            text = text.strip().split("\n")[0].strip()
+            text = first_line(text)
             answers.append(text[:120])
+            candidates.append(text)
             if transcript(text):
-                return text, {"calls": round_no * calls, "round": round_no, "answers": answers, "errors": errors,
-                              "seconds": round(time.monotonic() - started, 3)}
+                if late is not None:
+                    for slower in futures:
+                        if slower not in done:
+                            slower.add_done_callback(lambda f: _late(f, late))
+                return text, {"calls": round_no * calls, "round": round_no, "answers": answers, "candidates": candidates,
+                              "errors": errors, "seconds": round(time.monotonic() - started, 3)}
     if errors and not answers:
         raise RuntimeError(errors[0])
-    return "", {"calls": rounds * calls, "round": rounds, "answers": answers, "errors": errors,
+    return "", {"calls": rounds * calls, "round": rounds, "answers": answers, "candidates": candidates, "errors": errors,
                 "seconds": round(time.monotonic() - started, 3)}
 
 

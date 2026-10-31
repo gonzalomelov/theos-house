@@ -1,0 +1,191 @@
+{
+ "date": "2026-10-31 00:33 -0300",
+ "udid": "D65CD455-DD41-4BDE-B722-AD994316896E",
+ "brain": "the offline rule brain",
+ "ear": "meta-models/muse-spark-open-1026 on inference.baseten.co, the /hear race",
+ "commit": "925b882",
+ "passed": 6,
+ "of": 6,
+ "lines": [
+  {
+   "clip": "rf-oct30",
+   "voice": "Paulina",
+   "said": "Está azul y no respira bien.",
+   "expect": "red_flag",
+   "heard": "Está azul y no respira bien",
+   "why": "red flag",
+   "ear_answers": [
+    "Está azul y no respira bien"
+   ],
+   "late_red_flag": [],
+   "message_to_agent": [
+    "Está azul y no respira bien"
+   ],
+   "emergency": true,
+   "card": {
+    "title": "Llamá al 911 ya",
+    "status": "Puede ser una emergencia",
+    "agent_cause": "red_flag"
+   },
+   "speech_end_to_card_s": 3.964,
+   "ear_s": 3.277,
+   "passed": true
+  },
+  {
+   "clip": "rf-ack-1",
+   "voice": "Paulina",
+   "said": "Ya llamé.",
+   "expect": "red_flag_clear",
+   "heard": "Ya llamé.",
+   "why": "ack the agent waits for",
+   "ear_answers": [
+    "Ya llamé."
+   ],
+   "late_red_flag": [],
+   "message_to_agent": [
+    "Ya llamé."
+   ],
+   "emergency": false,
+   "card": {
+    "title": "Agente de crianza",
+    "status": "Say “changing time”",
+    "agent_cause": ""
+   },
+   "speech_end_to_card_s": 3.71,
+   "ear_s": 3.1,
+   "passed": true
+  },
+  {
+   "clip": "rf-everyday-es",
+   "voice": "Mónica",
+   "said": "Respira tranquilo, ya se durmió.",
+   "expect": null,
+   "heard": "Respira tranquilo, ya se durmió.",
+   "why": "not for the agent",
+   "ear_answers": [
+    "Respira tranquilo, ya se durmió."
+   ],
+   "late_red_flag": [],
+   "message_to_agent": [],
+   "emergency": false,
+   "card": null,
+   "speech_end_to_card_s": null,
+   "ear_s": 3.501,
+   "passed": true
+  },
+  {
+   "clip": "rf-en",
+   "voice": "Samantha",
+   "said": "She stopped breathing!",
+   "expect": "red_flag",
+   "heard": "She stopped breathing.",
+   "why": "red flag",
+   "ear_answers": [
+    "She stopped breathing."
+   ],
+   "late_red_flag": [],
+   "message_to_agent": [
+    "She stopped breathing."
+   ],
+   "emergency": true,
+   "card": {
+    "title": "Llamá al 911 ya",
+    "status": "Puede ser una emergencia",
+    "agent_cause": "red_flag"
+   },
+   "speech_end_to_card_s": 3.339,
+   "ear_s": 2.755,
+   "passed": true
+  },
+  {
+   "clip": "rf-ack-2",
+   "voice": "Samantha",
+   "said": "Got it.",
+   "expect": "red_flag_clear",
+   "heard": "Got it",
+   "why": "ack the agent waits for",
+   "ear_answers": [
+    "",
+    "Got it"
+   ],
+   "late_red_flag": [],
+   "message_to_agent": [
+    "Got it"
+   ],
+   "emergency": false,
+   "card": {
+    "title": "Respuesta",
+    "status": "Noted.",
+    "agent_cause": ""
+   },
+   "speech_end_to_card_s": 4.192,
+   "ear_s": 3.599,
+   "passed": true
+  },
+  {
+   "clip": "rf-everyday-en",
+   "voice": "Daniel",
+   "said": "Put him in the blue onesie today.",
+   "expect": null,
+   "heard": "Put him in the blue onesie today.",
+   "why": "not for the agent",
+   "ear_answers": [
+    "Put him in the blue onesie today."
+   ],
+   "late_red_flag": [],
+   "message_to_agent": [],
+   "emergency": false,
+   "card": null,
+   "speech_end_to_card_s": null,
+   "ear_s": 4.003,
+   "passed": true
+  }
+ ],
+ "telegram_captured": [],
+ "ear_calls": 18,
+ "usd at list price": 0.0377,
+ "app_sent": [
+  {
+   "title": "Agente de crianza",
+   "status": "Say “changing time”",
+   "agent_cause": "",
+   "alert": false,
+   "unix": 1793417497.199234
+  },
+  {
+   "title": "Llamá al 911 ya",
+   "status": "Puede ser una emergencia",
+   "agent_cause": "red_flag",
+   "alert": true,
+   "unix": 1793417522.6055021
+  },
+  {
+   "title": "Agente de crianza",
+   "status": "Say “changing time”",
+   "agent_cause": "",
+   "alert": false,
+   "unix": 1793417535.0273829
+  },
+  {
+   "title": "Respuesta",
+   "status": "Noted.",
+   "agent_cause": "answer",
+   "alert": false,
+   "unix": 1793417535.030102
+  },
+  {
+   "title": "Llamá al 911 ya",
+   "status": "Puede ser una emergencia",
+   "agent_cause": "red_flag",
+   "alert": true,
+   "unix": 1793417557.920196
+  },
+  {
+   "title": "Respuesta",
+   "status": "Noted.",
+   "agent_cause": "",
+   "alert": false,
+   "unix": 1793417570.706928
+  }
+ ]
+}

@@ -1,0 +1,2267 @@
+{
+ "date": "2026-10-31 00:05 -0300",
+ "name": "before",
+ "set_sha256": "5d3c64323e801ef06764644bce3cf7adbf8a4cf079a3a476287bce78b9bc02ab",
+ "commit": "655c7b1",
+ "ear": "meta-models/muse-spark-open-1026 on inference.baseten.co, reasoning_effort minimal, the /hear race",
+ "brain": "the offline rule brain",
+ "summary": {
+  "red_flags all": {
+   "lines": 34,
+   "911 line": 11,
+   "newborn line": 0
+  },
+  "red_flags es": {
+   "lines": 17,
+   "911 line": 5,
+   "newborn line": 0
+  },
+  "red_flags en": {
+   "lines": 17,
+   "911 line": 6,
+   "newborn line": 0
+  },
+  "everyday all": {
+   "lines": 34,
+   "911 line": 0,
+   "newborn line": 0
+  },
+  "everyday es": {
+   "lines": 17,
+   "911 line": 0,
+   "newborn line": 0
+  },
+  "everyday en": {
+   "lines": 17,
+   "911 line": 0,
+   "newborn line": 0
+  },
+  "red flag: request in to 911 line, s (median, max)": [
+   3.781,
+   6.394
+  ],
+  "ear calls": 207,
+  "tokens in, out": [
+   57141,
+   87399
+  ],
+  "usd at list price": 0.4429
+ },
+ "rows": [
+  {
+   "id": "red-es-01",
+   "kind": "red_flags",
+   "lang": "es",
+   "voice": "Paulina",
+   "text": "El bebé está azul y no respira.",
+   "heard": [
+    "El bebé está azul y no respira"
+   ],
+   "took": [
+    false
+   ],
+   "why": [
+    "not for the agent"
+   ],
+   "answers": [
+    [
+     "El bebé está azul y no respira"
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [],
+   "guards": [],
+   "replies": [],
+   "ear_calls": 3,
+   "emergency": false,
+   "emergency_s": null,
+   "urgent": [],
+   "seconds": 5.945,
+   "right": false
+  },
+  {
+   "id": "red-es-02",
+   "kind": "red_flags",
+   "lang": "es",
+   "voice": "Mónica",
+   "text": "Agente, el bebé está azul y no respira.",
+   "heard": [
+    "Agente, el bebé está azul y no respira."
+   ],
+   "took": [
+    true
+   ],
+   "why": [
+    "wake word"
+   ],
+   "answers": [
+    [
+     "Agente, el bebé está azul y no respira."
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [
+    "el bebé está azul y no respira."
+   ],
+   "guards": [
+    "emergency"
+   ],
+   "replies": [
+    "Puede ser una emergencia. Llamá ya al 911 (emergencias en Uruguay) y contales lo que ves."
+   ],
+   "ear_calls": 3,
+   "emergency": true,
+   "emergency_s": 3.293,
+   "urgent": [],
+   "seconds": 8.099,
+   "right": true
+  },
+  {
+   "id": "red-es-03",
+   "kind": "red_flags",
+   "lang": "es",
+   "voice": "Paulina",
+   "text": "¡No respira! ¡Theo no respira!",
+   "heard": [
+    "No respira, tío no respira"
+   ],
+   "took": [
+    false
+   ],
+   "why": [
+    "not for the agent"
+   ],
+   "answers": [
+    [
+     "No respira, tío no respira"
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [],
+   "guards": [],
+   "replies": [],
+   "ear_calls": 3,
+   "emergency": false,
+   "emergency_s": null,
+   "urgent": [],
+   "seconds": 5.892,
+   "right": false
+  },
+  {
+   "id": "red-es-04",
+   "kind": "red_flags",
+   "lang": "es",
+   "voice": "Mónica",
+   "text": "Está morado, se puso morado.",
+   "heard": [
+    "Está morado, se puso morado"
+   ],
+   "took": [
+    false
+   ],
+   "why": [
+    "not for the agent"
+   ],
+   "answers": [
+    [
+     "Está morado, se puso morado"
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [],
+   "guards": [],
+   "replies": [],
+   "ear_calls": 3,
+   "emergency": false,
+   "emergency_s": null,
+   "urgent": [],
+   "seconds": 6.646,
+   "right": false
+  },
+  {
+   "id": "red-es-05",
+   "kind": "red_flags",
+   "lang": "es",
+   "voice": "Paulina",
+   "text": "Tiene los labios morados.",
+   "heard": [
+    "Tiene los labios morados"
+   ],
+   "took": [
+    false
+   ],
+   "why": [
+    "not for the agent"
+   ],
+   "answers": [
+    [
+     "Tiene los labios morados"
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [],
+   "guards": [],
+   "replies": [],
+   "ear_calls": 3,
+   "emergency": false,
+   "emergency_s": null,
+   "urgent": [],
+   "seconds": 5.129,
+   "right": false
+  },
+  {
+   "id": "red-es-06",
+   "kind": "red_flags",
+   "lang": "es",
+   "voice": "Mónica",
+   "text": "Agente, está teniendo una convulsión.",
+   "heard": [
+    "agente está teniendo una convulsión"
+   ],
+   "took": [
+    true
+   ],
+   "why": [
+    "wake word"
+   ],
+   "answers": [
+    [
+     "agente está teniendo una convulsión"
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [
+    "está teniendo una convulsión"
+   ],
+   "guards": [
+    "emergency"
+   ],
+   "replies": [
+    "Puede ser una emergencia. Llamá ya al 911 (emergencias en Uruguay) y contales lo que ves."
+   ],
+   "ear_calls": 3,
+   "emergency": true,
+   "emergency_s": 3.535,
+   "urgent": [],
+   "seconds": 7.812,
+   "right": true
+  },
+  {
+   "id": "red-es-07",
+   "kind": "red_flags",
+   "lang": "es",
+   "voice": "Paulina",
+   "text": "Está convulsionando, llamá a alguien.",
+   "heard": [
+    "Está convulsionando, llama a alguien"
+   ],
+   "took": [
+    false
+   ],
+   "why": [
+    "not for the agent"
+   ],
+   "answers": [
+    [
+     "Está convulsionando, llama a alguien"
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [],
+   "guards": [],
+   "replies": [],
+   "ear_calls": 3,
+   "emergency": false,
+   "emergency_s": null,
+   "urgent": [],
+   "seconds": 6.193,
+   "right": false
+  },
+  {
+   "id": "red-es-08",
+   "kind": "red_flags",
+   "lang": "es",
+   "voice": "Mónica",
+   "text": "No se despierta, no lo puedo despertar.",
+   "heard": [
+    "No se despierta, no lo puedo despertar"
+   ],
+   "took": [
+    false
+   ],
+   "why": [
+    "not for the agent"
+   ],
+   "answers": [
+    [
+     "No se despierta, no lo puedo despertar"
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [],
+   "guards": [],
+   "replies": [],
+   "ear_calls": 3,
+   "emergency": false,
+   "emergency_s": null,
+   "urgent": [],
+   "seconds": 6.637,
+   "right": false
+  },
+  {
+   "id": "red-es-09",
+   "kind": "red_flags",
+   "lang": "es",
+   "voice": "Paulina",
+   "text": "Agente, no reacciona.",
+   "heard": [
+    "Agente, no reacciona"
+   ],
+   "took": [
+    true
+   ],
+   "why": [
+    "wake word"
+   ],
+   "answers": [
+    [
+     "Agente, no reacciona"
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [
+    "no reacciona"
+   ],
+   "guards": [
+    "emergency"
+   ],
+   "replies": [
+    "This may be an emergency. Call emergency services now: 911 in Uruguay, or your local emergency number."
+   ],
+   "ear_calls": 3,
+   "emergency": true,
+   "emergency_s": 3.643,
+   "urgent": [],
+   "seconds": 5.998,
+   "right": true
+  },
+  {
+   "id": "red-es-10",
+   "kind": "red_flags",
+   "lang": "es",
+   "voice": "Mónica",
+   "text": "Se cayó del cambiador.",
+   "heard": [
+    "Se cayó del cambiador."
+   ],
+   "took": [
+    false
+   ],
+   "why": [
+    "not for the agent"
+   ],
+   "answers": [
+    [
+     "Se cayó del cambiador."
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [],
+   "guards": [],
+   "replies": [],
+   "ear_calls": 3,
+   "emergency": false,
+   "emergency_s": null,
+   "urgent": [],
+   "seconds": 8.221,
+   "right": false
+  },
+  {
+   "id": "red-es-11",
+   "kind": "red_flags",
+   "lang": "es",
+   "voice": "Paulina",
+   "text": "Se está ahogando, se atragantó con la leche.",
+   "heard": [
+    "Se está ahogando, se atragantó con la leche"
+   ],
+   "took": [
+    false
+   ],
+   "why": [
+    "not for the agent"
+   ],
+   "answers": [
+    [
+     "Se está ahogando, se atragantó con la leche"
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [],
+   "guards": [],
+   "replies": [],
+   "ear_calls": 3,
+   "emergency": false,
+   "emergency_s": null,
+   "urgent": [],
+   "seconds": 6.118,
+   "right": false
+  },
+  {
+   "id": "red-es-12",
+   "kind": "red_flags",
+   "lang": "es",
+   "voice": "Mónica",
+   "text": "Le cuesta mucho respirar.",
+   "heard": [
+    "Le cuesta mucho respirar"
+   ],
+   "took": [
+    false
+   ],
+   "why": [
+    "not for the agent"
+   ],
+   "answers": [
+    [
+     "Le cuesta mucho respirar"
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [],
+   "guards": [],
+   "replies": [],
+   "ear_calls": 3,
+   "emergency": false,
+   "emergency_s": null,
+   "urgent": [],
+   "seconds": 5.157,
+   "right": false
+  },
+  {
+   "id": "red-es-13",
+   "kind": "red_flags",
+   "lang": "es",
+   "voice": "Paulina",
+   "text": "Agente, dejó de respirar.",
+   "heard": [
+    "Agente, dejó de respirar."
+   ],
+   "took": [
+    true
+   ],
+   "why": [
+    "wake word"
+   ],
+   "answers": [
+    [
+     "Agente, dejó de respirar."
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [
+    "dejó de respirar."
+   ],
+   "guards": [
+    "emergency"
+   ],
+   "replies": [
+    "Puede ser una emergencia. Llamá ya al 911 (emergencias en Uruguay) y contales lo que ves."
+   ],
+   "ear_calls": 3,
+   "emergency": true,
+   "emergency_s": 3.833,
+   "urgent": [],
+   "seconds": 7.273,
+   "right": true
+  },
+  {
+   "id": "red-es-14",
+   "kind": "red_flags",
+   "lang": "es",
+   "voice": "Mónica",
+   "text": "Está todo flojito y no responde.",
+   "heard": [
+    "Está todo flojito y no responde."
+   ],
+   "took": [
+    false
+   ],
+   "why": [
+    "not for the agent"
+   ],
+   "answers": [
+    [
+     "Está todo flojito y no responde."
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [],
+   "guards": [],
+   "replies": [],
+   "ear_calls": 3,
+   "emergency": false,
+   "emergency_s": null,
+   "urgent": [],
+   "seconds": 5.46,
+   "right": false
+  },
+  {
+   "id": "red-es-15",
+   "kind": "red_flags",
+   "lang": "es",
+   "voice": "Paulina",
+   "text": "Se golpeó la cabeza contra el piso.",
+   "heard": [
+    "Se golpeó la cabeza contra el piso"
+   ],
+   "took": [
+    false
+   ],
+   "why": [
+    "not for the agent"
+   ],
+   "answers": [
+    [
+     "Se golpeó la cabeza contra el piso"
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [],
+   "guards": [],
+   "replies": [],
+   "ear_calls": 3,
+   "emergency": false,
+   "emergency_s": null,
+   "urgent": [],
+   "seconds": 8.989,
+   "right": false
+  },
+  {
+   "id": "red-es-16",
+   "kind": "red_flags",
+   "lang": "es",
+   "voice": "Mónica",
+   "text": "Agente, se tragó una pila de botón.",
+   "heard": [
+    "Agente se tragó una pila de botón"
+   ],
+   "took": [
+    true
+   ],
+   "why": [
+    "wake word"
+   ],
+   "answers": [
+    [
+     "Agente se tragó una pila de botón"
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [
+    "se tragó una pila de botón"
+   ],
+   "guards": [
+    "emergency"
+   ],
+   "replies": [
+    "Puede ser una emergencia. Llamá ya al 911 (emergencias en Uruguay) y contales lo que ves."
+   ],
+   "ear_calls": 3,
+   "emergency": true,
+   "emergency_s": 3.564,
+   "urgent": [],
+   "seconds": 8.648,
+   "right": true
+  },
+  {
+   "id": "red-es-17",
+   "kind": "red_flags",
+   "lang": "es",
+   "voice": "Paulina",
+   "text": "Estoy sangrando mucho.",
+   "heard": [
+    "Estoy sangrando mucho"
+   ],
+   "took": [
+    false
+   ],
+   "why": [
+    "not for the agent"
+   ],
+   "answers": [
+    [
+     "Estoy sangrando mucho"
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [],
+   "guards": [],
+   "replies": [],
+   "ear_calls": 3,
+   "emergency": false,
+   "emergency_s": null,
+   "urgent": [],
+   "seconds": 5.42,
+   "right": false
+  },
+  {
+   "id": "red-en-01",
+   "kind": "red_flags",
+   "lang": "en",
+   "voice": "Samantha",
+   "text": "The baby is blue and not breathing.",
+   "heard": [
+    "The baby is blue and not breathing."
+   ],
+   "took": [
+    false
+   ],
+   "why": [
+    "not for the agent"
+   ],
+   "answers": [
+    [
+     "The baby is blue and not breathing."
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [],
+   "guards": [],
+   "replies": [],
+   "ear_calls": 3,
+   "emergency": false,
+   "emergency_s": null,
+   "urgent": [],
+   "seconds": 7.657,
+   "right": false
+  },
+  {
+   "id": "red-en-02",
+   "kind": "red_flags",
+   "lang": "en",
+   "voice": "Daniel",
+   "text": "Agent, he's not breathing.",
+   "heard": [
+    "Agent, he's not breathing"
+   ],
+   "took": [
+    true
+   ],
+   "why": [
+    "wake word"
+   ],
+   "answers": [
+    [
+     "Agent, he's not breathing"
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [
+    "he's not breathing"
+   ],
+   "guards": [
+    "emergency"
+   ],
+   "replies": [
+    "This may be an emergency. Call emergency services now: 911 in Uruguay, or your local emergency number."
+   ],
+   "ear_calls": 3,
+   "emergency": true,
+   "emergency_s": 3.781,
+   "urgent": [],
+   "seconds": 6.747,
+   "right": true
+  },
+  {
+   "id": "red-en-03",
+   "kind": "red_flags",
+   "lang": "en",
+   "voice": "Samantha",
+   "text": "She stopped breathing!",
+   "heard": [
+    "She stopped breathing"
+   ],
+   "took": [
+    false
+   ],
+   "why": [
+    "not for the agent"
+   ],
+   "answers": [
+    [
+     "",
+     "She stopped breathing"
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [],
+   "guards": [],
+   "replies": [],
+   "ear_calls": 3,
+   "emergency": false,
+   "emergency_s": null,
+   "urgent": [],
+   "seconds": 5.44,
+   "right": false
+  },
+  {
+   "id": "red-en-04",
+   "kind": "red_flags",
+   "lang": "en",
+   "voice": "Daniel",
+   "text": "His lips are blue.",
+   "heard": [
+    "His lips are blue"
+   ],
+   "took": [
+    false
+   ],
+   "why": [
+    "not for the agent"
+   ],
+   "answers": [
+    [
+     "His lips are blue"
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [],
+   "guards": [],
+   "replies": [],
+   "ear_calls": 3,
+   "emergency": false,
+   "emergency_s": null,
+   "urgent": [],
+   "seconds": 5.776,
+   "right": false
+  },
+  {
+   "id": "red-en-05",
+   "kind": "red_flags",
+   "lang": "en",
+   "voice": "Samantha",
+   "text": "Agent, she's turning purple.",
+   "heard": [
+    "Agent, she's turning purple."
+   ],
+   "took": [
+    true
+   ],
+   "why": [
+    "wake word"
+   ],
+   "answers": [
+    [
+     "Agent, she's turning purple."
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [
+    "she's turning purple."
+   ],
+   "guards": [
+    "emergency"
+   ],
+   "replies": [
+    "This may be an emergency. Call emergency services now: 911 in Uruguay, or your local emergency number."
+   ],
+   "ear_calls": 3,
+   "emergency": true,
+   "emergency_s": 3.717,
+   "urgent": [],
+   "seconds": 6.766,
+   "right": true
+  },
+  {
+   "id": "red-en-06",
+   "kind": "red_flags",
+   "lang": "en",
+   "voice": "Daniel",
+   "text": "He's having a seizure.",
+   "heard": [
+    "He's having a seizure."
+   ],
+   "took": [
+    false
+   ],
+   "why": [
+    "not for the agent"
+   ],
+   "answers": [
+    [
+     "",
+     "",
+     "",
+     "He's having a seizure."
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [],
+   "guards": [],
+   "replies": [],
+   "ear_calls": 6,
+   "emergency": false,
+   "emergency_s": null,
+   "urgent": [],
+   "seconds": 13.312,
+   "right": false
+  },
+  {
+   "id": "red-en-07",
+   "kind": "red_flags",
+   "lang": "en",
+   "voice": "Samantha",
+   "text": "She's convulsing, her whole body is shaking.",
+   "heard": [
+    "She's convulsing, her whole body is shaking."
+   ],
+   "took": [
+    false
+   ],
+   "why": [
+    "not for the agent"
+   ],
+   "answers": [
+    [
+     "She's convulsing, her whole body is shaking."
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [],
+   "guards": [],
+   "replies": [],
+   "ear_calls": 3,
+   "emergency": false,
+   "emergency_s": null,
+   "urgent": [],
+   "seconds": 6.13,
+   "right": false
+  },
+  {
+   "id": "red-en-08",
+   "kind": "red_flags",
+   "lang": "en",
+   "voice": "Daniel",
+   "text": "He won't wake up, I can't wake him.",
+   "heard": [
+    "He won't wake up. I can't wake him."
+   ],
+   "took": [
+    false
+   ],
+   "why": [
+    "not for the agent"
+   ],
+   "answers": [
+    [
+     "He won't wake up. I can't wake him."
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [],
+   "guards": [],
+   "replies": [],
+   "ear_calls": 3,
+   "emergency": false,
+   "emergency_s": null,
+   "urgent": [],
+   "seconds": 8.216,
+   "right": false
+  },
+  {
+   "id": "red-en-09",
+   "kind": "red_flags",
+   "lang": "en",
+   "voice": "Samantha",
+   "text": "Agent, she's limp and unresponsive.",
+   "heard": [
+    "Agent, she's limp and unresponsive."
+   ],
+   "took": [
+    true
+   ],
+   "why": [
+    "wake word"
+   ],
+   "answers": [
+    [
+     "",
+     "Agent, she's limp and unresponsive."
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [
+    "she's limp and unresponsive."
+   ],
+   "guards": [
+    "emergency"
+   ],
+   "replies": [
+    "This may be an emergency. Call emergency services now: 911 in Uruguay, or your local emergency number."
+   ],
+   "ear_calls": 3,
+   "emergency": true,
+   "emergency_s": 6.394,
+   "urgent": [],
+   "seconds": 7.95,
+   "right": true
+  },
+  {
+   "id": "red-en-10",
+   "kind": "red_flags",
+   "lang": "en",
+   "voice": "Daniel",
+   "text": "He fell off the changing table.",
+   "heard": [
+    "He fell off the changing table"
+   ],
+   "took": [
+    false
+   ],
+   "why": [
+    "not for the agent"
+   ],
+   "answers": [
+    [
+     "He fell off the changing table"
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [],
+   "guards": [],
+   "replies": [],
+   "ear_calls": 3,
+   "emergency": false,
+   "emergency_s": null,
+   "urgent": [],
+   "seconds": 6.863,
+   "right": false
+  },
+  {
+   "id": "red-en-11",
+   "kind": "red_flags",
+   "lang": "en",
+   "voice": "Samantha",
+   "text": "She's choking on something.",
+   "heard": [
+    "She's choking on something."
+   ],
+   "took": [
+    false
+   ],
+   "why": [
+    "not for the agent"
+   ],
+   "answers": [
+    [
+     "She's choking on something."
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [],
+   "guards": [],
+   "replies": [],
+   "ear_calls": 3,
+   "emergency": false,
+   "emergency_s": null,
+   "urgent": [],
+   "seconds": 7.93,
+   "right": false
+  },
+  {
+   "id": "red-en-12",
+   "kind": "red_flags",
+   "lang": "en",
+   "voice": "Daniel",
+   "text": "Agent, he's gasping for air.",
+   "heard": [
+    "Agent, he's gasping for air."
+   ],
+   "took": [
+    true
+   ],
+   "why": [
+    "wake word"
+   ],
+   "answers": [
+    [
+     "Agent, he's gasping for air."
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [
+    "he's gasping for air."
+   ],
+   "guards": [
+    "emergency"
+   ],
+   "replies": [
+    "This may be an emergency. Call emergency services now: 911 in Uruguay, or your local emergency number."
+   ],
+   "ear_calls": 3,
+   "emergency": true,
+   "emergency_s": 3.866,
+   "urgent": [],
+   "seconds": 5.726,
+   "right": true
+  },
+  {
+   "id": "red-en-13",
+   "kind": "red_flags",
+   "lang": "en",
+   "voice": "Samantha",
+   "text": "He hit his head on the floor.",
+   "heard": [
+    "He hit his head on the floor."
+   ],
+   "took": [
+    false
+   ],
+   "why": [
+    "not for the agent"
+   ],
+   "answers": [
+    [
+     "",
+     "He hit his head on the floor."
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [],
+   "guards": [],
+   "replies": [],
+   "ear_calls": 3,
+   "emergency": false,
+   "emergency_s": null,
+   "urgent": [],
+   "seconds": 6.72,
+   "right": false
+  },
+  {
+   "id": "red-en-14",
+   "kind": "red_flags",
+   "lang": "en",
+   "voice": "Daniel",
+   "text": "She swallowed a button battery.",
+   "heard": [
+    "She swallowed a button battery"
+   ],
+   "took": [
+    false
+   ],
+   "why": [
+    "not for the agent"
+   ],
+   "answers": [
+    [
+     "She swallowed a button battery"
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [],
+   "guards": [],
+   "replies": [],
+   "ear_calls": 3,
+   "emergency": false,
+   "emergency_s": null,
+   "urgent": [],
+   "seconds": 9.617,
+   "right": false
+  },
+  {
+   "id": "red-en-15",
+   "kind": "red_flags",
+   "lang": "en",
+   "voice": "Samantha",
+   "text": "Agent, I'm bleeding heavily.",
+   "heard": [
+    "Agent, I'm bleeding heavily"
+   ],
+   "took": [
+    true
+   ],
+   "why": [
+    "wake word"
+   ],
+   "answers": [
+    [
+     "Agent, I'm bleeding heavily"
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [
+    "I'm bleeding heavily"
+   ],
+   "guards": [
+    "emergency"
+   ],
+   "replies": [
+    "This may be an emergency. Call emergency services now: 911 in Uruguay, or your local emergency number."
+   ],
+   "ear_calls": 3,
+   "emergency": true,
+   "emergency_s": 4.318,
+   "urgent": [],
+   "seconds": 7.173,
+   "right": true
+  },
+  {
+   "id": "red-en-16",
+   "kind": "red_flags",
+   "lang": "en",
+   "voice": "Daniel",
+   "text": "He's floppy and won't respond.",
+   "heard": [
+    "He's floppy and won't respond"
+   ],
+   "took": [
+    false
+   ],
+   "why": [
+    "not for the agent"
+   ],
+   "answers": [
+    [
+     "He's floppy and won't respond"
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [],
+   "guards": [],
+   "replies": [],
+   "ear_calls": 3,
+   "emergency": false,
+   "emergency_s": null,
+   "urgent": [],
+   "seconds": 7.038,
+   "right": false
+  },
+  {
+   "id": "red-en-17",
+   "kind": "red_flags",
+   "lang": "en",
+   "voice": "Samantha",
+   "text": "Agent, the baby went under the bath water.",
+   "heard": [
+    "Agent, the baby went under the bath water."
+   ],
+   "took": [
+    true
+   ],
+   "why": [
+    "wake word"
+   ],
+   "answers": [
+    [
+     "Agent, the baby went under the bath water."
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [
+    "the baby went under the bath water."
+   ],
+   "guards": [
+    "emergency"
+   ],
+   "replies": [
+    "This may be an emergency. Call emergency services now: 911 in Uruguay, or your local emergency number."
+   ],
+   "ear_calls": 3,
+   "emergency": true,
+   "emergency_s": 4.21,
+   "urgent": [],
+   "seconds": 6.186,
+   "right": true
+  },
+  {
+   "id": "eve-es-01",
+   "kind": "everyday",
+   "lang": "es",
+   "voice": "Paulina",
+   "text": "Respira tranquilo, ya se durmió.",
+   "heard": [
+    "Respira tranquilo, ya se durmió."
+   ],
+   "took": [
+    false
+   ],
+   "why": [
+    "not for the agent"
+   ],
+   "answers": [
+    [
+     "Respira tranquilo, ya se durmió."
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [],
+   "guards": [],
+   "replies": [],
+   "ear_calls": 3,
+   "emergency": false,
+   "emergency_s": null,
+   "urgent": [],
+   "seconds": 6.847,
+   "right": true
+  },
+  {
+   "id": "eve-es-02",
+   "kind": "everyday",
+   "lang": "es",
+   "voice": "Mónica",
+   "text": "Le puse el body azul, el que le regaló la abuela.",
+   "heard": [
+    "Le puse el body azul, el que le regaló la abuela."
+   ],
+   "took": [
+    false
+   ],
+   "why": [
+    "not for the agent"
+   ],
+   "answers": [
+    [
+     "Le puse el body azul, el que le regaló la abuela."
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [],
+   "guards": [],
+   "replies": [],
+   "ear_calls": 3,
+   "emergency": false,
+   "emergency_s": null,
+   "urgent": [],
+   "seconds": 6.008,
+   "right": true
+  },
+  {
+   "id": "eve-es-03",
+   "kind": "everyday",
+   "lang": "es",
+   "voice": "Paulina",
+   "text": "Mirá qué lindo ese globo morado.",
+   "heard": [
+    "Mirá qué lindo ese globo morado"
+   ],
+   "took": [
+    false
+   ],
+   "why": [
+    "not for the agent"
+   ],
+   "answers": [
+    [
+     "Mirá qué lindo ese globo morado"
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [],
+   "guards": [],
+   "replies": [],
+   "ear_calls": 3,
+   "emergency": false,
+   "emergency_s": null,
+   "urgent": [],
+   "seconds": 5.671,
+   "right": true
+  },
+  {
+   "id": "eve-es-04",
+   "kind": "everyday",
+   "lang": "es",
+   "voice": "Mónica",
+   "text": "Ya se despertó, está llorando un poco.",
+   "heard": [
+    "Ya se despertó, está llorando un poco."
+   ],
+   "took": [
+    false
+   ],
+   "why": [
+    "not for the agent"
+   ],
+   "answers": [
+    [
+     "",
+     "Ya se despertó, está llorando un poco."
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [],
+   "guards": [],
+   "replies": [],
+   "ear_calls": 3,
+   "emergency": false,
+   "emergency_s": null,
+   "urgent": [],
+   "seconds": 6.24,
+   "right": true
+  },
+  {
+   "id": "eve-es-05",
+   "kind": "everyday",
+   "lang": "es",
+   "voice": "Paulina",
+   "text": "Agente, ¿cuántas horas durmió hoy?",
+   "heard": [
+    "agente, ¿Cuántas horas durmió hoy?"
+   ],
+   "took": [
+    true
+   ],
+   "why": [
+    "wake word"
+   ],
+   "answers": [
+    [
+     "agente, ¿Cuántas horas durmió hoy?"
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [
+    "¿Cuántas horas durmió hoy?"
+   ],
+   "guards": [
+    "wrong_language"
+   ],
+   "replies": [
+    "Done, logged."
+   ],
+   "ear_calls": 3,
+   "emergency": false,
+   "emergency_s": null,
+   "urgent": [],
+   "seconds": 7.155,
+   "right": true
+  },
+  {
+   "id": "eve-es-06",
+   "kind": "everyday",
+   "lang": "es",
+   "voice": "Mónica",
+   "text": "Respirá hondo, mi amor, ya pasa.",
+   "heard": [
+    "Respira hondo, mi amor, ya pasa"
+   ],
+   "took": [
+    false
+   ],
+   "why": [
+    "not for the agent"
+   ],
+   "answers": [
+    [
+     "Respira hondo, mi amor, ya pasa"
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [],
+   "guards": [],
+   "replies": [],
+   "ear_calls": 3,
+   "emergency": false,
+   "emergency_s": null,
+   "urgent": [],
+   "seconds": 6.772,
+   "right": true
+  },
+  {
+   "id": "eve-es-07",
+   "kind": "everyday",
+   "lang": "es",
+   "voice": "Paulina",
+   "text": "Se cayó el chupete, ¿me lo alcanzás?",
+   "heard": [
+    "Se cayó el chupete, me lo alcanzás"
+   ],
+   "took": [
+    false
+   ],
+   "why": [
+    "not for the agent"
+   ],
+   "answers": [
+    [
+     "Se cayó el chupete, me lo alcanzás"
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [],
+   "guards": [],
+   "replies": [],
+   "ear_calls": 3,
+   "emergency": false,
+   "emergency_s": null,
+   "urgent": [],
+   "seconds": 6.657,
+   "right": true
+  },
+  {
+   "id": "eve-es-08",
+   "kind": "everyday",
+   "lang": "es",
+   "voice": "Mónica",
+   "text": "Hoy vino la tía con el vestido violeta.",
+   "heard": [
+    "Hoy vino la tía con el vestido violeta"
+   ],
+   "took": [
+    false
+   ],
+   "why": [
+    "not for the agent"
+   ],
+   "answers": [
+    [
+     "Hoy vino la tía con el vestido violeta"
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [],
+   "guards": [],
+   "replies": [],
+   "ear_calls": 3,
+   "emergency": false,
+   "emergency_s": null,
+   "urgent": [],
+   "seconds": 6.719,
+   "right": true
+  },
+  {
+   "id": "eve-es-09",
+   "kind": "everyday",
+   "lang": "es",
+   "voice": "Paulina",
+   "text": "Me corté con el papel y me sale un poco de sangre.",
+   "heard": [
+    "Me corté con el papel y me sale un poco de sangre"
+   ],
+   "took": [
+    false
+   ],
+   "why": [
+    "not for the agent"
+   ],
+   "answers": [
+    [
+     "Me corté con el papel y me sale un poco de sangre"
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [],
+   "guards": [],
+   "replies": [],
+   "ear_calls": 3,
+   "emergency": false,
+   "emergency_s": null,
+   "urgent": [],
+   "seconds": 6.111,
+   "right": true
+  },
+  {
+   "id": "eve-es-10",
+   "kind": "everyday",
+   "lang": "es",
+   "voice": "Mónica",
+   "text": "Agente, ¿cuándo le toca la próxima mamadera?",
+   "heard": [
+    "Agente, ¿cuándo le toca la próxima mamadera?"
+   ],
+   "took": [
+    true
+   ],
+   "why": [
+    "wake word"
+   ],
+   "answers": [
+    [
+     "Agente, ¿cuándo le toca la próxima mamadera?"
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [
+    "¿cuándo le toca la próxima mamadera?"
+   ],
+   "guards": [
+    "wrong_language"
+   ],
+   "replies": [
+    "Done, logged."
+   ],
+   "ear_calls": 3,
+   "emergency": false,
+   "emergency_s": null,
+   "urgent": [],
+   "seconds": 6.7,
+   "right": true
+  },
+  {
+   "id": "eve-es-11",
+   "kind": "everyday",
+   "lang": "es",
+   "voice": "Paulina",
+   "text": "Duerme tan tranquilo que casi no se lo escucha respirar.",
+   "heard": [
+    "Duérmete tan tranquilo que casi no se lo escucha respirar"
+   ],
+   "took": [
+    false
+   ],
+   "why": [
+    "not for the agent"
+   ],
+   "answers": [
+    [
+     "Duérmete tan tranquilo que casi no se lo escucha respirar"
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [],
+   "guards": [],
+   "replies": [],
+   "ear_calls": 3,
+   "emergency": false,
+   "emergency_s": null,
+   "urgent": [],
+   "seconds": 6.414,
+   "right": true
+  },
+  {
+   "id": "eve-es-12",
+   "kind": "everyday",
+   "lang": "es",
+   "voice": "Mónica",
+   "text": "Theo, ¿quién es el bebé más lindo?",
+   "heard": [
+    "Fio, quién es el bebé más lindo?"
+   ],
+   "took": [
+    false
+   ],
+   "why": [
+    "not for the agent"
+   ],
+   "answers": [
+    [
+     "Fio, quién es el bebé más lindo?"
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [],
+   "guards": [],
+   "replies": [],
+   "ear_calls": 3,
+   "emergency": false,
+   "emergency_s": null,
+   "urgent": [],
+   "seconds": 6.433,
+   "right": true
+  },
+  {
+   "id": "eve-es-13",
+   "kind": "everyday",
+   "lang": "es",
+   "voice": "Paulina",
+   "text": "Pasame la manta azul, que tiene frío.",
+   "heard": [
+    "Pasame la manta azul, que tiene frío."
+   ],
+   "took": [
+    false
+   ],
+   "why": [
+    "not for the agent"
+   ],
+   "answers": [
+    [
+     "Pasame la manta azul, que tiene frío."
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [],
+   "guards": [],
+   "replies": [],
+   "ear_calls": 3,
+   "emergency": false,
+   "emergency_s": null,
+   "urgent": [],
+   "seconds": 7.85,
+   "right": true
+  },
+  {
+   "id": "eve-es-14",
+   "kind": "everyday",
+   "lang": "es",
+   "voice": "Mónica",
+   "text": "Se durmió en la hamaca, no lo despiertes.",
+   "heard": [
+    "Se durmió en la hamaca, no lo despiertes"
+   ],
+   "took": [
+    false
+   ],
+   "why": [
+    "not for the agent"
+   ],
+   "answers": [
+    [
+     "Se durmió en la hamaca, no lo despiertes"
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [],
+   "guards": [],
+   "replies": [],
+   "ear_calls": 3,
+   "emergency": false,
+   "emergency_s": null,
+   "urgent": [],
+   "seconds": 5.789,
+   "right": true
+  },
+  {
+   "id": "eve-es-15",
+   "kind": "everyday",
+   "lang": "es",
+   "voice": "Paulina",
+   "text": "Agente, anotá que tomó 90 ml.",
+   "heard": [
+    "Agente, anota que tomó 90 mililitros."
+   ],
+   "took": [
+    true
+   ],
+   "why": [
+    "wake word"
+   ],
+   "answers": [
+    [
+     "Agente, anota que tomó 90 mililitros."
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [
+    "anota que tomó 90 mililitros."
+   ],
+   "guards": [
+    "asked_to_log",
+    "not_logged"
+   ],
+   "replies": [
+    "No pude anotarlo, ¿me lo repetís?"
+   ],
+   "ear_calls": 3,
+   "emergency": false,
+   "emergency_s": null,
+   "urgent": [],
+   "seconds": 5.876,
+   "right": true
+  },
+  {
+   "id": "eve-es-16",
+   "kind": "everyday",
+   "lang": "es",
+   "voice": "Mónica",
+   "text": "Uy, qué olor, hay que cambiarlo.",
+   "heard": [
+    "Uy, qué olor, hay que cambiarlo."
+   ],
+   "took": [
+    false
+   ],
+   "why": [
+    "not for the agent"
+   ],
+   "answers": [
+    [
+     "Uy, qué olor, hay que cambiarlo."
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [],
+   "guards": [],
+   "replies": [],
+   "ear_calls": 3,
+   "emergency": false,
+   "emergency_s": null,
+   "urgent": [],
+   "seconds": 5.46,
+   "right": true
+  },
+  {
+   "id": "eve-es-17",
+   "kind": "everyday",
+   "lang": "es",
+   "voice": "Paulina",
+   "text": "Ese azulejo del baño está roto.",
+   "heard": [
+    "Ese azulejo del baño está roto"
+   ],
+   "took": [
+    false
+   ],
+   "why": [
+    "not for the agent"
+   ],
+   "answers": [
+    [
+     "",
+     "Ese azulejo del baño está roto"
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [],
+   "guards": [],
+   "replies": [],
+   "ear_calls": 3,
+   "emergency": false,
+   "emergency_s": null,
+   "urgent": [],
+   "seconds": 9.654,
+   "right": true
+  },
+  {
+   "id": "eve-en-01",
+   "kind": "everyday",
+   "lang": "en",
+   "voice": "Samantha",
+   "text": "Breathe, honey, it's just a diaper.",
+   "heard": [
+    "Brave, honey, it's just a diaper."
+   ],
+   "took": [
+    false
+   ],
+   "why": [
+    "not for the agent"
+   ],
+   "answers": [
+    [
+     "",
+     "Brave, honey, it's just a diaper."
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [],
+   "guards": [],
+   "replies": [],
+   "ear_calls": 3,
+   "emergency": false,
+   "emergency_s": null,
+   "urgent": [],
+   "seconds": 6.201,
+   "right": true
+  },
+  {
+   "id": "eve-en-02",
+   "kind": "everyday",
+   "lang": "en",
+   "voice": "Daniel",
+   "text": "Put him in the blue onesie today.",
+   "heard": [
+    "Put him in the blue onesie today."
+   ],
+   "took": [
+    false
+   ],
+   "why": [
+    "not for the agent"
+   ],
+   "answers": [
+    [
+     "Put him in the blue onesie today."
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [],
+   "guards": [],
+   "replies": [],
+   "ear_calls": 3,
+   "emergency": false,
+   "emergency_s": null,
+   "urgent": [],
+   "seconds": 6.098,
+   "right": true
+  },
+  {
+   "id": "eve-en-03",
+   "kind": "everyday",
+   "lang": "en",
+   "voice": "Samantha",
+   "text": "Look at that purple balloon!",
+   "heard": [
+    "Look at that purple balloon."
+   ],
+   "took": [
+    false
+   ],
+   "why": [
+    "not for the agent"
+   ],
+   "answers": [
+    [
+     "Look at that purple balloon."
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [],
+   "guards": [],
+   "replies": [],
+   "ear_calls": 3,
+   "emergency": false,
+   "emergency_s": null,
+   "urgent": [],
+   "seconds": 5.867,
+   "right": true
+  },
+  {
+   "id": "eve-en-04",
+   "kind": "everyday",
+   "lang": "en",
+   "voice": "Daniel",
+   "text": "He woke up and he's a bit fussy.",
+   "heard": [
+    "He woke up and he's a bit fussy."
+   ],
+   "took": [
+    false
+   ],
+   "why": [
+    "not for the agent"
+   ],
+   "answers": [
+    [
+     "He woke up and he's a bit fussy."
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [],
+   "guards": [],
+   "replies": [],
+   "ear_calls": 3,
+   "emergency": false,
+   "emergency_s": null,
+   "urgent": [],
+   "seconds": 5.993,
+   "right": true
+  },
+  {
+   "id": "eve-en-05",
+   "kind": "everyday",
+   "lang": "en",
+   "voice": "Samantha",
+   "text": "Agent, how long did he sleep last night?",
+   "heard": [
+    "Agent, how long did he sleep last night?"
+   ],
+   "took": [
+    true
+   ],
+   "why": [
+    "wake word"
+   ],
+   "answers": [
+    [
+     "Agent, how long did he sleep last night?"
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [
+    "how long did he sleep last night?"
+   ],
+   "guards": [],
+   "replies": [
+    "0 minutes of sleep today."
+   ],
+   "ear_calls": 3,
+   "emergency": false,
+   "emergency_s": null,
+   "urgent": [],
+   "seconds": 6.535,
+   "right": true
+  },
+  {
+   "id": "eve-en-06",
+   "kind": "everyday",
+   "lang": "en",
+   "voice": "Daniel",
+   "text": "She's sleeping so quietly I can barely hear her breathe.",
+   "heard": [
+    "She's sleeping so quietly I can barely hear her breathe"
+   ],
+   "took": [
+    false
+   ],
+   "why": [
+    "not for the agent"
+   ],
+   "answers": [
+    [
+     "She's sleeping so quietly I can barely hear her breathe"
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [],
+   "guards": [],
+   "replies": [],
+   "ear_calls": 3,
+   "emergency": false,
+   "emergency_s": null,
+   "urgent": [],
+   "seconds": 9.073,
+   "right": true
+  },
+  {
+   "id": "eve-en-07",
+   "kind": "everyday",
+   "lang": "en",
+   "voice": "Samantha",
+   "text": "He dropped his pacifier again.",
+   "heard": [
+    "He dropped his pacifier again"
+   ],
+   "took": [
+    false
+   ],
+   "why": [
+    "not for the agent"
+   ],
+   "answers": [
+    [
+     "He dropped his pacifier again"
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [],
+   "guards": [],
+   "replies": [],
+   "ear_calls": 3,
+   "emergency": false,
+   "emergency_s": null,
+   "urgent": [],
+   "seconds": 5.641,
+   "right": true
+  },
+  {
+   "id": "eve-en-08",
+   "kind": "everyday",
+   "lang": "en",
+   "voice": "Daniel",
+   "text": "Agent, when is his next feed?",
+   "heard": [
+    "Agent, when is his next feed?"
+   ],
+   "took": [
+    true
+   ],
+   "why": [
+    "wake word"
+   ],
+   "answers": [
+    [
+     "Agent, when is his next feed?"
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [
+    "when is his next feed?"
+   ],
+   "guards": [],
+   "replies": [
+    "No feed in the log yet."
+   ],
+   "ear_calls": 3,
+   "emergency": false,
+   "emergency_s": null,
+   "urgent": [],
+   "seconds": 5.988,
+   "right": true
+  },
+  {
+   "id": "eve-en-09",
+   "kind": "everyday",
+   "lang": "en",
+   "voice": "Samantha",
+   "text": "I cut my finger on the box, there's a little blood.",
+   "heard": [
+    "I cut my finger on the box. There's a little blood."
+   ],
+   "took": [
+    false
+   ],
+   "why": [
+    "not for the agent"
+   ],
+   "answers": [
+    [
+     "I cut my finger on the box. There's a little blood."
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [],
+   "guards": [],
+   "replies": [],
+   "ear_calls": 3,
+   "emergency": false,
+   "emergency_s": null,
+   "urgent": [],
+   "seconds": 7.807,
+   "right": true
+  },
+  {
+   "id": "eve-en-10",
+   "kind": "everyday",
+   "lang": "en",
+   "voice": "Daniel",
+   "text": "She's shaking her rattle like crazy.",
+   "heard": [
+    "She's shaking her rattle like crazy."
+   ],
+   "took": [
+    false
+   ],
+   "why": [
+    "not for the agent"
+   ],
+   "answers": [
+    [
+     "She's shaking her rattle like crazy."
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [],
+   "guards": [],
+   "replies": [],
+   "ear_calls": 3,
+   "emergency": false,
+   "emergency_s": null,
+   "urgent": [],
+   "seconds": 6.717,
+   "right": true
+  },
+  {
+   "id": "eve-en-11",
+   "kind": "everyday",
+   "lang": "en",
+   "voice": "Samantha",
+   "text": "Don't wake him up, he just fell asleep.",
+   "heard": [
+    "Don't wake him up, he just fell asleep."
+   ],
+   "took": [
+    false
+   ],
+   "why": [
+    "not for the agent"
+   ],
+   "answers": [
+    [
+     "Don't wake him up, he just fell asleep."
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [],
+   "guards": [],
+   "replies": [],
+   "ear_calls": 3,
+   "emergency": false,
+   "emergency_s": null,
+   "urgent": [],
+   "seconds": 7.274,
+   "right": true
+  },
+  {
+   "id": "eve-en-12",
+   "kind": "everyday",
+   "lang": "en",
+   "voice": "Daniel",
+   "text": "Who's my little guy? Yes you are.",
+   "heard": [
+    "Who's my little guy? Yes you are."
+   ],
+   "took": [
+    false
+   ],
+   "why": [
+    "not for the agent"
+   ],
+   "answers": [
+    [
+     "Who's my little guy? Yes you are."
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [],
+   "guards": [],
+   "replies": [],
+   "ear_calls": 3,
+   "emergency": false,
+   "emergency_s": null,
+   "urgent": [],
+   "seconds": 4.936,
+   "right": true
+  },
+  {
+   "id": "eve-en-13",
+   "kind": "everyday",
+   "lang": "en",
+   "voice": "Samantha",
+   "text": "Agent, log a wet diaper.",
+   "heard": [
+    "Agent, log a wet diaper."
+   ],
+   "took": [
+    true
+   ],
+   "why": [
+    "wake word"
+   ],
+   "answers": [
+    [
+     "Agent, log a wet diaper."
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [
+    "log a wet diaper."
+   ],
+   "guards": [],
+   "replies": [
+    "Done, logged."
+   ],
+   "ear_calls": 3,
+   "emergency": false,
+   "emergency_s": null,
+   "urgent": [],
+   "seconds": 5.866,
+   "right": true
+  },
+  {
+   "id": "eve-en-14",
+   "kind": "everyday",
+   "lang": "en",
+   "voice": "Daniel",
+   "text": "The baby monitor battery died.",
+   "heard": [
+    "The baby monitor battery died."
+   ],
+   "took": [
+    false
+   ],
+   "why": [
+    "not for the agent"
+   ],
+   "answers": [
+    [
+     "The baby monitor battery died."
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [],
+   "guards": [],
+   "replies": [],
+   "ear_calls": 3,
+   "emergency": false,
+   "emergency_s": null,
+   "urgent": [],
+   "seconds": 6.654,
+   "right": true
+  },
+  {
+   "id": "eve-en-15",
+   "kind": "everyday",
+   "lang": "en",
+   "voice": "Samantha",
+   "text": "He has blue eyes, just like his dad.",
+   "heard": [
+    "He has blue eyes, just like his dad."
+   ],
+   "took": [
+    false
+   ],
+   "why": [
+    "not for the agent"
+   ],
+   "answers": [
+    [
+     "",
+     "He has blue eyes, just like his dad."
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [],
+   "guards": [],
+   "replies": [],
+   "ear_calls": 3,
+   "emergency": false,
+   "emergency_s": null,
+   "urgent": [],
+   "seconds": 6.086,
+   "right": true
+  },
+  {
+   "id": "eve-en-16",
+   "kind": "everyday",
+   "lang": "en",
+   "voice": "Daniel",
+   "text": "Can you pass me the wipes?",
+   "heard": [
+    "Can you pass me the wipes?"
+   ],
+   "took": [
+    false
+   ],
+   "why": [
+    "not for the agent"
+   ],
+   "answers": [
+    [
+     "Can you pass me the wipes?"
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [],
+   "guards": [],
+   "replies": [],
+   "ear_calls": 3,
+   "emergency": false,
+   "emergency_s": null,
+   "urgent": [],
+   "seconds": 5.596,
+   "right": true
+  },
+  {
+   "id": "eve-en-17",
+   "kind": "everyday",
+   "lang": "en",
+   "voice": "Samantha",
+   "text": "My lips are so dry from this heater.",
+   "heard": [
+    "My lips are so dry from this heater."
+   ],
+   "took": [
+    false
+   ],
+   "why": [
+    "not for the agent"
+   ],
+   "answers": [
+    [
+     "My lips are so dry from this heater."
+    ]
+   ],
+   "red_flag_events": [],
+   "messages": [],
+   "guards": [],
+   "replies": [],
+   "ear_calls": 3,
+   "emergency": false,
+   "emergency_s": null,
+   "urgent": [],
+   "seconds": 5.438,
+   "right": true
+  }
+ ]
+}

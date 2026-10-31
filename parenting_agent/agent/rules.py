@@ -6,6 +6,7 @@ behaviour the system prompt asks of the real one.
 """
 import datetime
 import re
+import unicodedata
 
 ML = re.compile(r"(\d+(?:\.\d+)?)\s*ml", re.I)
 MINUTES = re.compile(r"(\d+)\s*(?:min|minutes)", re.I)
@@ -34,6 +35,13 @@ EMERGENCY = re.compile(
     r"(est[aá]|se puso|se pone|se ve|se le puso|qued[oó]|labios|cara|boca) (muy |re |medio |todo |toda |bien |un poco )?(morad|violet|gris)\w*|"
     r"dusky|mottled|ashen|(turn\w*|going|gone|went|go(es)?|got|look\w*|is|was|seems?) (a bit |kind of |very |really |so )?gr[ae]y\b|"
     r"labios azules|se puso azul|"
+    # A baby, lips or face that are blue, said with no other sign (the glasses speech run, Oct 30). A blue onesie, a
+    # blue eyed baby or a blue sky is not one: the colour has to be what the baby, the lips or the face are.
+    r"(beb[eé]|beba|nene|nena|labios|cara|boca|piel|cuerpo) (est[aá]n?|se (le )?(puso|pusieron|pone|ve|ven)|qued[oó]) "
+    r"(muy |re |medio |todo |toda |bien |un poco )?azul\w*|se (le |me )?pus(o|ieron) (la cara|la boca|los labios|la piel) "
+    r"(muy |re |medio |toda |bien )?(azul|morad|violet)\w*|"
+    r"(baby|he|she|lips|face|skin)('s| is| are| looks?| went| turned| seems?) (all |really |very |kind of |a bit |so )?"
+    r"blue\b(?![- ]?(eyed|eyes|onesie|outfit|shirt|hat|blanket))|"
     r"se (est[aá] )?ahog\w*|atragant\w*|no se despierta|no reacciona|no responde|"
     r"se (me )?cay[oó](?! (el|la) (chupete|mamadera|biber[oó]n|tete|juguete))(?! (dormid\w*|rendid\w*|frit\w*|redond\w*))|"
     # Falls the round 3 audit found missing: the baby fell, rolled off the bed or the couch.
@@ -428,6 +436,75 @@ EVERYDAY = re.compile(r"\bchok\w* (on|with|from) (laughter|laughing|giggl\w*)|\b
 def is_emergency(text):
     return bool(EMERGENCY.search(EVERYDAY.sub(" ", text or "")))
 
+
+
+# Red flags said out loud. The ear (Muse Spark Open) sometimes mishears one word of an emergency: on Oct 30 it heard
+# "está azul y no respira bien" as "está azulino respira bien", and the 911 line did not fire (results/glasses-speech).
+# So a transcript is read a second time: no accents, the "y no" the ear glued onto a colour split off again, and a key
+# word one letter away (two in a long word) read as that word. The words it fixes are the gate's own, so whatever fires
+# is still a sign on the gate's list.
+SPOKEN_KEYS = ("respira", "respirar", "respirando", "morado", "morada", "morados", "moradas", "convulsion", "convulsiones",
+               "convulsiona", "convulsionando", "despierta", "despertar", "reacciona", "responde", "sangrando", "ahogando",
+               "atraganto", "atragantando", "flojito", "flojita", "inconsciente", "desmayado", "desmayada",
+               "breathing", "breathe", "purple", "seizure", "convulsing", "unresponsive", "choking", "bleeding", "gasping",
+               "floppy")
+# Real words one letter from a key word, never read as it: "no lo despiertes", "respiro hondo", "le respondo".
+SPOKEN_NEAR = frozenset(("respiro", "respire", "respiras", "respiran", "respiren", "respirado", "despierto", "despierte",
+                         "despiertes", "despiertas", "despiertan", "respondo", "responda", "respondi",
+                         "responder", "reaccion", "breathes", "breathed", "bleeds", "choked", "chokes"))
+SPOKEN_COLOURS = ("azul", "morado", "morada", "gris", "palido", "palida", "blue", "purple", "grey", "gray")
+GLUED_NO = re.compile(r"^(\w{3,}?)(?:i|y|e)no$")
+
+
+def _distance(a, b, most):
+    """Edit distance between two words, or most + 1 once it is sure to be more."""
+    if abs(len(a) - len(b)) > most:
+        return most + 1
+    row = list(range(len(b) + 1))
+    for i, x in enumerate(a, 1):
+        prev, row[0] = row[0], i
+        for j, y in enumerate(b, 1):
+            prev, row[j] = row[j], min(row[j] + 1, row[j - 1] + 1, prev + (x != y))
+        if min(row) > most:
+            return most + 1
+    return row[-1]
+
+
+def _key_word(word):
+    """The key word a heard word stands for, or the word itself."""
+    if len(word) < 6 or word in SPOKEN_KEYS or word in SPOKEN_NEAR:
+        return word
+    most = 2 if len(word) >= 9 else 1
+    best = min(SPOKEN_KEYS, key=lambda key: _distance(word, key, most) if key[0] == word[0] else most + 1)
+    return best if best[0] == word[0] and _distance(word, best, most) <= most else word
+
+
+def spoken_forms(text):
+    """What a heard transcript may have been: as heard, then without accents, then with the glued "y no" split and the
+    key words fixed."""
+    text = text or ""
+    yield text
+    bare = unicodedata.normalize("NFD", text.lower().replace("\u2019", "'"))
+    bare = "".join(c for c in bare if unicodedata.category(c) != "Mn")
+    bare = " ".join(re.sub(r"[^a-z0-9' ]+", " ", bare).split())
+    yield bare
+    words = []
+    for word in bare.split():
+        glued = GLUED_NO.match(word)
+        if glued and any(_distance(glued.group(1), colour, 1) <= (1 if len(colour) > 4 else 0) for colour in SPOKEN_COLOURS):
+            words += [glued.group(1), "y", "no"]
+        else:
+            words.append(_key_word(word))
+    yield " ".join(words)
+
+
+def spoken_emergency(text):
+    """The form of a heard transcript that the gate reads as a red flag (is_emergency), or None. The form is what the
+    agent is told, so the 911 line fires on it the same way it fires on typed words."""
+    for form in spoken_forms(text):
+        if form and is_emergency(form):
+            return form
+    return None
 
 # Words of a sign a log guard must never talk over, wider than the gate: labor, bleeding, shaking, a bite. A message
 # with one of these still goes to the brain when the gate does not answer it, but no log honesty guard replaces the reply.

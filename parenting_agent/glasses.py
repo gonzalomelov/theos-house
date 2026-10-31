@@ -49,7 +49,8 @@ from pathlib import Path
 
 from .agent import final_guard
 from . import hud_cards as cards
-from .glasses_speech import EAR_PROMPT, Gate, plain, race
+from .glasses_speech import EAR_PROMPT, Gate, plain, race, strip_wake
+from .agent import rules
 from .agent.people import People
 from .agent.plugins import Plugin
 from .sources import MAX_FRAME_BYTES, Latest
@@ -503,21 +504,38 @@ class Glasses(Plugin):
 
     def hear(self, wav, person=None, meta=None):
         """One utterance from a wearer's glasses: Muse's ear writes it down (or the glasses did), the gate decides if it
-        was for the agent, and only then it becomes a message, the same as words typed on the glasses."""
+        was for the agent, and only then it becomes a message, the same as words typed on the glasses. A red flag comes
+        first: every call of the race is read for one (the slower calls too, when they come back), with the tolerant
+        reading of rules.spoken_emergency, and one goes to the agent even when the gate would have dropped the words."""
         meta = dict(meta or {})
         text, ear_s, error, ear_info = meta.pop("text", ""), None, None, {}
+        utterance = {"lock": threading.Lock(), "decided": False, "fired": False, "pending": []}
         if wav is not None:
             started = time.monotonic()
             try:
-                text, ear_info = race(self.make_ear, wav, pool=self.ear_pool, **self.race_cfg)
+                text, ear_info = race(self.make_ear, wav, pool=self.ear_pool,
+                                      late=lambda words: self.late_words(words, person, utterance), **self.race_cfg)
             except Exception as failure:  # the ear failing must never stop the channel, it is logged and shown
                 error = str(failure)[:200]
             ear_s = round(time.monotonic() - started, 3)
+        with utterance["lock"]:
+            utterance["decided"] = True
+            candidates = [text, *ear_info.get("candidates", []), *utterance["pending"]]
         decision = self.gate.decide(text, person) if error is None else {"take": False, "text": "", "why": "ear failed"}
+        flag = None
+        if not (decision["take"] and rules.is_emergency(decision["text"])):
+            flag = next(((n, form) for n, form in enumerate(map(self.red_flag_words, candidates)) if form), None)
+            if flag:
+                why = "red flag" if flag[0] == 0 else "red flag in another ear call"
+                decision = {"take": True, "text": flag[1], "why": why}
+        if flag or (decision["take"] and rules.is_emergency(decision["text"])):
+            with utterance["lock"]:
+                utterance["fired"] = True
         heard = {"text": text, "took": decision["take"], "why": decision["why"], "ear": "muse" if wav is not None else
                  meta.get("source"), "ear_s": ear_s, "heard_unix": round(self.clock(), 3), **meta}
         self.agent.bus.publish("speech", person=person, **heard, ear_calls=ear_info.get("calls"),
-                               ear_answers=ear_info.get("answers"), **({"error": error} if error else {}))
+                               ear_answers=ear_info.get("answers"), **({"red_flag": flag[1]} if flag else {}),
+                               **({"error": error} if error else {}))
         if person is not None:
             self.hub.push({"kind": "heard", **heard}, person)
         if decision["take"]:
@@ -525,6 +543,35 @@ class Glasses(Plugin):
                 self.gate.wait(person, "answer", False)  # one answer per question, the next question opens it again
             self.heard(decision["text"], person, pushed=True)
         return decision
+
+    def red_flag_words(self, words):
+        """The words to tell the agent when a heard transcript names a red flag, without the wake word, or None."""
+        form = rules.spoken_emergency(words)
+        if not form:
+            return None
+        said = plain(form)
+        for wake in self.gate.wake_words:
+            if said.startswith(wake + " "):
+                rest = strip_wake(form, wake)
+                return rest if rules.is_emergency(rest) else form
+        return form
+
+    def late_words(self, words, person, utterance):
+        """A slower ear call of an utterance came back after the race: a red flag in it still reaches the agent, once."""
+        with utterance["lock"]:
+            if not utterance["decided"]:
+                utterance["pending"].append(words)
+                return
+            if utterance["fired"]:
+                return
+            form = self.red_flag_words(words)
+            if not form:
+                return
+            utterance["fired"] = True
+        self.agent.bus.publish("speech_red_flag", person=person, text=words, red_flag=form, why="red flag in a later ear call")
+        if person is not None:
+            self.hub.push({"kind": "heard", "text": words, "took": True, "why": "red flag in a later ear call"}, person)
+        self.heard(form, person, pushed=True)
 
     def track_waits(self, event):
         kind = event["kind"]

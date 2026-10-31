@@ -10,6 +10,7 @@ import wave
 
 from parenting_agent.agent import build
 from parenting_agent.agent import config as config_mod
+from parenting_agent.agent import rules
 from parenting_agent.glasses import GlassesHub
 from parenting_agent.glasses_speech import Gate, plain, race, transcript, word_errors
 from tests.test_glasses import Events, call
@@ -169,6 +170,18 @@ class Racing(unittest.TestCase):
         self.assertEqual((text, info["round"]), ("Sí", 2))
         self.assertEqual(race(self.ears([("", 0)] * 4), b"wav", calls=2, rounds=2)[0], "")
 
+    def test_slower_calls_reach_late_after_the_race(self):
+        late = []
+        make = self.ears([("Hola Theo", 0.0), ("el bebé no respira", 0.15), (RuntimeError("503"), 0.1)])
+        text, info = race(make, b"wav", calls=3, rounds=1, late=late.append)
+        self.assertEqual(text, "Hola Theo")
+        self.assertEqual(info["candidates"], ["Hola Theo"])
+        deadline = time.monotonic() + 2
+        while not late and time.monotonic() < deadline:
+            time.sleep(0.01)
+        time.sleep(0.1)
+        self.assertEqual(late, ["el bebé no respira"])
+
     def test_errors_only_when_every_call_failed(self):
         self.assertEqual(race(self.ears([(RuntimeError("503"), 0), ("Done", 0.02)]), b"wav", calls=2, rounds=1)[0], "Done")
         with self.assertRaises(RuntimeError):
@@ -233,6 +246,46 @@ class HeardByTheAgent(unittest.TestCase):
         self.agent.bus.publish("reply", channel="glasses", chat_id="gonza", text="¿Empezamos con la silla?")
         self.channel.hear(wav(), "gonza")
         self.assertEqual(self.messages, ["Sí."])
+
+    def red_flags(self):
+        """The messages the agent's gate answers with the 911 line."""
+        return [text for text in self.messages if rules.is_emergency(text)]
+
+    def test_a_red_flag_said_without_the_wake_word_still_reaches_the_agent(self):
+        self.use_ear(["El bebé está azul y no respira", "Theo no respira, está morado", "Respira tranquilo, ya se durmió",
+                      "Le puse el body azul"])
+        decisions = [self.channel.hear(wav(), "gonza") for _ in range(4)]
+        self.assertEqual([d["why"] for d in decisions], ["red flag", "red flag", "not for the agent", "not for the agent"])
+        self.assertEqual(self.messages, ["El bebé está azul y no respira", "Theo no respira, está morado"])
+        self.assertEqual(self.speech()[0]["red_flag"], "El bebé está azul y no respira")
+
+    def test_a_misheard_red_flag_still_brings_the_911_line(self):
+        # Oct 30, rehearsal 1 of results/glasses-speech: "está azul y no respira bien" heard as "está azulino respira bien"
+        self.use_ear(["Agente, está azulino respira bien.", "He is not breating, agent"])
+        first = self.channel.hear(wav(), "gonza")
+        self.assertEqual(first, {"take": True, "text": "esta azul y no respira bien", "why": "red flag"})
+        self.channel.hear(wav(), "gonza")
+        self.assertEqual(self.red_flags(), ["esta azul y no respira bien", "he is not breathing agent"])
+
+    def test_a_red_flag_in_a_slower_call_reaches_the_agent_once(self):
+        delays = iter([(0.0, "Hola mi amor"), (0.2, "el bebé no respira"), (0.3, "el bebé no respira")])
+
+        class Slow:
+            def hear(self, audio):
+                delay, words = next(delays)
+                time.sleep(delay)
+                return words
+        self.channel._make_ear = Slow
+        self.channel.race_cfg = {"calls": 3, "rounds": 1}
+        decision = self.channel.hear(wav(), "gonza")
+        self.assertEqual(decision["why"], "not for the agent")
+        deadline = time.monotonic() + 3
+        while not self.messages and time.monotonic() < deadline:
+            time.sleep(0.02)
+        time.sleep(0.4)
+        self.assertEqual(self.messages, ["el bebé no respira"])
+        self.assertEqual([e["why"] for e in self.agent.bus.history if e["kind"] == "speech_red_flag"],
+                         ["red flag in a later ear call"])
 
     def test_the_car_seat_question_opens_one_yes(self):
         self.channel.hub.camera_person = "gonza"
