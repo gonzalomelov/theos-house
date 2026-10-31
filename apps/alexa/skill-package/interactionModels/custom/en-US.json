@@ -1,0 +1,91 @@
+{
+  "interactionModel": {
+    "languageModel": {
+      "invocationName": "baby agent",
+      "intents": [
+        {
+          "name": "ChatIntent",
+          "slots": [
+            {
+              "name": "query",
+              "type": "ANY_TEXT"
+            }
+          ],
+          "samples": [
+            "{query}",
+            "about {query}",
+            "answer {query}",
+            "tell me {query}"
+          ]
+        },
+        {
+          "name": "AMAZON.StopIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.CancelIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.HelpIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.NavigateHomeIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.FallbackIntent",
+          "samples": []
+        }
+      ],
+      "types": [
+        {
+          "name": "ANY_TEXT",
+          "values": [
+            {
+              "name": {
+                "value": "when did theo last eat"
+              }
+            },
+            {
+              "name": {
+                "value": "how much did he drink today"
+              }
+            },
+            {
+              "name": {
+                "value": "when is the next feed"
+              }
+            },
+            {
+              "name": {
+                "value": "how long did he sleep"
+              }
+            },
+            {
+              "name": {
+                "value": "what is on the prep list"
+              }
+            },
+            {
+              "name": {
+                "value": "he drank ninety milliliters"
+              }
+            },
+            {
+              "name": {
+                "value": "when was the last diaper"
+              }
+            },
+            {
+              "name": {
+                "value": "summary of today"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
