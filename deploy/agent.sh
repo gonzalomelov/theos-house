@@ -96,7 +96,21 @@ checks() {
   echo "== Baby Buddy and Home Assistant, read from inside the container"
   docker exec -i -e PA_NO_HA="${NO_HA:-0}" "$APP" python - < "$DIR/deploy/probe.py" || return 1
   echo "== the wall"
-  walled
+  walled || return 1
+  ha_way_in
+}
+# Home Assistant reaches the agent only through the relay, on the voice bridge port. Two TCP connects from inside
+# Home Assistant, no HTTP request, so nothing there can count as a failed login.
+ha_way_in() {
+  if [ "${NO_HA:-0}" = 1 ]; then return 0; fi
+  echo "== the way in for Home Assistant, from inside the homeassistant container"
+  docker exec homeassistant python3 -c "import socket; socket.create_connection((\"$APP-relay\", 8767), timeout=4)" \
+    || { echo "WRONG Home Assistant cannot reach the voice bridge through the relay" >&2; return 1; }
+  echo "PASS  relay:8767 reached"
+  if docker exec homeassistant python3 -c "import socket; socket.create_connection((\"$APP\", 8767), timeout=4)" 2>/dev/null; then
+    echo "WRONG Home Assistant reaches the agent directly" >&2; return 1
+  fi
+  echo "PASS  the agent itself blocked"
 }
 '
 

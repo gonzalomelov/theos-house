@@ -1,0 +1,39 @@
+# The Echo path, as created in Home Assistant on Oct 31 2026 (automations.yaml, id parenting_agent_echo_voice).
+# A voice command to the kitchen Echo that starts with "baby agent" or "agente del bebé" goes to the family agent,
+# and its answer is said on the Echo. The parenting_agent_echo_ask event does the same with given words, for a test
+# or for a routine that cannot carry the words itself. Needs shell_command.parenting_agent_ask (README.md here).
+id: parenting_agent_echo_voice
+alias: "Parenting agent: answer on the Echo"
+description: "A question to the Echo that starts with baby agent goes to the family agent, its answer is said on the Echo. Read only for anyone the Echo cannot name."
+mode: queued
+max: 3
+triggers:
+  - trigger: state
+    entity_id: event.gonza_s_echo_dot_voice_event
+    id: echo
+  - trigger: event
+    event_type: parenting_agent_echo_ask
+    id: asked
+variables:
+  said: >-
+    {% if trigger.id == 'asked' %}{{ trigger.event.data.text | default('') }}{% else %}{{ state_attr('event.gonza_s_echo_dot_voice_event', 'voice_command') or '' }}{% endif %}
+  speaker: >-
+    {% if trigger.id == 'asked' %}{{ trigger.event.data.person | default('') }}{% else %}{{ state_attr('event.gonza_s_echo_dot_voice_event', 'person_first_name') or '' }}{% endif %}
+conditions:
+  - condition: template
+    value_template: >-
+      {% set s = said | lower %}
+      {{ s is match('^(alexa[, ]+)?(ask |tell )?(the )?baby agent') or s is match('^(alexa[, ]+)?(preguntale al |decile al )?agente') }}
+actions:
+  - action: shell_command.parenting_agent_ask
+    data:
+      source: echo
+      person: "{{ speaker }}"
+      text: "{{ said }}"
+    response_variable: agent
+  - action: notify.send_message
+    target:
+      entity_id: notify.gonza_s_echo_dot_speak
+    data:
+      message: >-
+        {% if agent.returncode == 0 %}{{ (agent.stdout | from_json).reply }}{% else %}El agente del bebé no respondió.{% endif %}

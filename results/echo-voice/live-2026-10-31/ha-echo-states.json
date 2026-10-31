@@ -1,0 +1,84 @@
+{
+ "question": {
+  "text": "agente del bebé, ¿cuándo comió Theo por última vez?",
+  "person": "abuela"
+ },
+ "fired_unix": 1793455860.7012115,
+ "states": [
+  {
+   "t": 1793455859.2797112,
+   "entity": "media_player.gonza_s_echo_dot",
+   "state": "idle",
+   "attributes": {
+    "volume_level": 0.2,
+    "is_volume_muted": false,
+    "device_class": "speaker",
+    "friendly_name": "Gonza's Echo Dot",
+    "supported_features": 5644
+   },
+   "last_changed": "2026-10-31T11:56:33.903084+00:00"
+  },
+  {
+   "t": 1793455859.2861593,
+   "entity": "notify.gonza_s_echo_dot_speak",
+   "state": "2026-09-08T10:42:06.609207+00:00",
+   "attributes": {
+    "friendly_name": "Gonza's Echo Dot Speak",
+    "supported_features": 0
+   },
+   "last_changed": "2026-10-31T11:56:33.903292+00:00"
+  },
+  {
+   "t": 1793455859.29246,
+   "entity": "automation.parenting_agent_answer_on_the_echo",
+   "state": "on",
+   "attributes": {
+    "id": "parenting_agent_echo_voice",
+    "last_triggered": null,
+    "mode": "queued",
+    "current": 0,
+    "max": 3,
+    "friendly_name": "Parenting agent: answer on the Echo"
+   },
+   "last_changed": "2026-10-31T14:10:25.222559+00:00"
+  },
+  {
+   "t": 1793455860.977185,
+   "entity": "automation.parenting_agent_answer_on_the_echo",
+   "state": "on",
+   "attributes": {
+    "id": "parenting_agent_echo_voice",
+    "last_triggered": "2026-10-31T14:11:00.716989+00:00",
+    "mode": "queued",
+    "current": 1,
+    "max": 3,
+    "friendly_name": "Parenting agent: answer on the Echo"
+   },
+   "last_changed": "2026-10-31T14:10:25.222559+00:00"
+  },
+  {
+   "t": 1793455865.1721287,
+   "entity": "notify.gonza_s_echo_dot_speak",
+   "state": "2026-10-31T14:11:04.804584+00:00",
+   "attributes": {
+    "friendly_name": "Gonza's Echo Dot Speak",
+    "supported_features": 0
+   },
+   "last_changed": "2026-10-31T14:11:04.804695+00:00"
+  },
+  {
+   "t": 1793455865.1867225,
+   "entity": "automation.parenting_agent_answer_on_the_echo",
+   "state": "on",
+   "attributes": {
+    "id": "parenting_agent_echo_voice",
+    "last_triggered": "2026-10-31T14:11:00.716989+00:00",
+    "mode": "queued",
+    "current": 0,
+    "max": 3,
+    "friendly_name": "Parenting agent: answer on the Echo"
+   },
+   "last_changed": "2026-10-31T14:10:25.222559+00:00"
+  }
+ ]
+}

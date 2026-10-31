@@ -49,7 +49,8 @@
     "parenting_agent.reminders:Reminders",
     "parenting_agent.rhythm.engine:RhythmPlugin",
     "parenting_agent.sitter:SitterHandover",
-    "parenting_agent.channels.push:FamilyPush"
+    "parenting_agent.channels.push:FamilyPush",
+    "parenting_agent.voice_bridge:VoiceBridge"
   ],
   "baby": {"born": false, "name": "Theo"},
   "rhythm": {"child": "Test", "kinds": ["next_feed"]},
@@ -92,6 +93,13 @@
     "live": false,
     "ha_url": "http://relay:8123",
     "live_actions": ["night_feed_light", "nap_mode_vacuum", "shopping_list_add"]
+  },
+  "voice_bridge": {
+    "host": "container",
+    "port": 8767,
+    "timeout_s": 40,
+    "unknown_speaker": "guest",
+    "guests": ["abuela", "abuelo", "grandma", "grandpa", "guest", "invitado", "invitada"]
   },
   "voice": {
     "service": "http://pa-voice-family:8800",

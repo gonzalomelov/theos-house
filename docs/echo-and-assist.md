@@ -1,5 +1,42 @@
 # Talk to the agent through the Echo Dot and Assist (issue #112)
 
+## Live since Oct 31: the Echo, read only for a guest (issue #170)
+
+Grandma at the kitchen Echo asks "¿Cuándo comió Theo por última vez?" and the Echo says the answer Muse Spark Open read
+from the baby log. One live run: `results/echo-voice/live-2026-10-31/README.md`.
+
+```
+words for the Echo (its voice event, or the parenting_agent_echo_ask event with text and person)
+  -> automation "Parenting agent: answer on the Echo": starts with "baby agent" or "agente del bebé"?
+  -> shell_command.parenting_agent_ask (python3 /config/shell/parenting_agent_ask.py, arguments base64)
+  -> http://parenting-agent-relay:8767/ask, bearer token -> the voice bridge inside the walled family agent
+  -> a parent: a message to the agent, as below. A guest: VoiceGuest, Muse with the log's read tools only
+  -> the reply -> notify.gonza_s_echo_dot_speak says it on the Echo
+```
+
+- **Who is a guest.** A person tag that names a parent in the `people` block is a parent. A name in
+  `voice_bridge.guests` (abuela, grandma, guest, ...) is a guest. Anyone else is a guest too on the Vostro
+  (`unknown_speaker: guest`), because the Echo does not say who spoke.
+- **What a guest gets.** Red flags get the 911 line, newborn signs the call-now line, health questions "call the
+  parents, then the pediatrician", safe sleep the AAP line, all with no brain call. Anything else goes to Muse with
+  three tools: `read_baby_log`, `baby_summary`, `current_time`. No log writes, no house tools, no memory, and a guest's
+  "yes" never runs a call waiting for a parent. A reply that claims a write is replaced by "only the parents can", and
+  a last feed answer without the log's time is replaced by the log's own line. Every answer is a `voice_guest` event.
+- **No Home Assistant restart.** `rest_command` and `intent_script` are not loaded in this house, `shell_command` is
+  (the LG TV uses it) and reloads, and automations reload. Files and steps: `deploy/home-assistant/README.md`.
+- **The wall.** The relay listens on 8767 for Home Assistant and forwards `/ask` and `/health` only to the agent. The
+  wall check proves the relay path answers (401 with no token) and any other path gets the relay's 404. The deploy
+  check connects from inside Home Assistant: the relay answers, the agent itself does not.
+- **The token** is the agent's `/data/voice-bridge-token`, kept across restarts, copied once into Home Assistant's
+  `secrets.yaml` (mode 600). Never printed.
+
+What needs Gonza: a question said out loud does not reach Home Assistant yet. The Echo's voice event has carried no
+words since Oct 1 (its `voice_command` is empty). In the Alexa app, More, Alexa Privacy, Manage Your Alexa Data, choose
+to save voice recordings, then say "Alexa, agente del bebé, ¿cuándo comió Theo por última vez?" once. That the setting
+is the cause is not verified.
+
+## The first design, Oct 29
+
 Built Oct 29 2026, inside the event. Today the agent can only announce on the kitchen Echo. This adds the way back: the parent says "baby agent, fed 90 ml" and the agent logs it and answers out loud.
 
 ## Why this route

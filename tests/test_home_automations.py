@@ -20,6 +20,8 @@ from parenting_agent.laundry import Laundry, Washer, dirtied
 from parenting_agent.laundry import DEFAULTS as LAUNDRY_DEFAULTS
 from parenting_agent.night_feed import NightFeed, predict
 from parenting_agent.virtual_devices import SHOPPING, VirtualSwitch
+from parenting_agent.agent.brain import Reply
+from parenting_agent import voice_bridge as voice_bridge_mod
 from parenting_agent.voice_bridge import VoiceBridge, spoken, strip_wake
 from tests.test_house_tools import FakeHA
 
@@ -490,6 +492,190 @@ class VoiceBridgeTest(unittest.TestCase):
             VoiceBridge(self.agent, {**self.config, "voice_bridge": {"host": "0.0.0.0"}})
         with self.assertRaises(ValueError):
             VoiceBridge(self.agent, {**self.config, "voice_bridge": {"host": "8.8.8.8"}})
+
+
+class ScriptedBrain:
+    """A brain that plays fixed steps: each step is a tool call (name, arguments) or a final text."""
+    name, model, destination = "scripted", "scripted", "nowhere"
+
+    def __init__(self, steps):
+        self.steps, self.seen = list(steps), []
+
+    def step(self, system, transcript, tools):
+        self.seen.append({"system": system, "tools": [t["name"] for t in tools], "last": transcript[-1]})
+        step = self.steps.pop(0)
+        if isinstance(step, tuple):
+            return Reply("", [{"id": f"c{len(self.seen)}", "name": step[0], "arguments": step[1]}])
+        return Reply(step)
+
+
+class VoiceGuestTest(unittest.TestCase):
+    """Grandma at the Echo: a guest who only reads the log, answered by the brain with read tools alone (goals video v9)."""
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.agent, self.config = make_agent(self.tmp.name)
+        self.config["people"] = {"gonza": {"name": "Gonza", "lang": "es"}, "ceci": {"name": "Ceci", "lang": "es"}}
+        self.config["baby"] = {"born": False, "name": "Theo"}
+        self.config["voice_bridge"] = {"port": 0, "host": "127.0.0.1", "timeout_s": 10, "guests": ["abuela"],
+                                       "unknown_speaker": "guest", "token_file": str(Path(self.tmp.name) / "voice-token")}
+        self.agent.people = config_mod_people(self.config["people"])
+        self.bridge = VoiceBridge(self.agent, self.config, token="t" * 24)
+        self.agent.plugins = [self.bridge]
+        self.agent.start()
+        self.agent.baby_log.add("feeding", {"amount_ml": 90.0, "method": "bottle", "type": "formula"},
+                                "2026-10-30T07:55:00-03:00")
+
+    def tearDown(self):
+        self.agent.stop()
+        self.agent.close()
+        self.tmp.cleanup()
+
+    def guest_brain(self, *steps):
+        brain = ScriptedBrain(steps)
+        self.agent.brain = brain
+        return brain
+
+    def test_grandma_hears_the_last_feed_from_the_log_and_nothing_is_written(self):
+        brain = self.guest_brain(("read_baby_log", {"kind": "feeding", "limit": 1}),
+                                 "Theo comió por última vez ayer a las 07:55, una mamadera de 90 ml.")
+        before = len(self.agent.baby_log.entries())
+        result = self.bridge.ask("agente del bebé, ¿cuándo comió Theo por última vez?", "echo", "abuela")
+        self.assertEqual(result["role"], "guest")
+        self.assertIn("07:55", result["reply"])
+        self.assertEqual(sorted(brain.seen[0]["tools"]), ["baby_summary", "current_time", "read_baby_log"])
+        self.assertIn("abuela", brain.seen[0]["system"])
+        self.assertEqual(len(self.agent.baby_log.entries()), before)
+        self.assertEqual(events(self.agent, "message"), [])
+        guest = events(self.agent, "voice_guest")[-1]
+        self.assertEqual((guest["person"], guest["tools"], guest["guard"]), ("abuela", ["read_baby_log"], None))
+        self.assertTrue(events(self.agent, "brain_call", guest=True))
+
+    def test_a_wrong_time_from_the_brain_is_replaced_by_the_log(self):
+        self.guest_brain("Comió hace una hora.")
+        reply = self.bridge.ask("¿cuándo comió Theo por última vez?", "echo", "abuela")["reply"]
+        self.assertIn("07:55", reply)
+        self.assertEqual(events(self.agent, "voice_guest")[-1]["guard"], "last_feed_time")
+
+    def test_a_guest_cannot_log_and_a_write_tool_is_refused(self):
+        self.guest_brain(("log_baby_event", {"kind": "feeding", "details": {"amount_ml": 90}}), "Anoté 90 ml.")
+        before = len(self.agent.baby_log.entries())
+        reply = self.bridge.ask("agente del bebé tomó 90 ml", "echo", "abuela")["reply"]
+        self.assertEqual(len(self.agent.baby_log.entries()), before)
+        self.assertIn("Solo los padres", reply)
+        self.assertEqual(events(self.agent, "guest_denied")[-1]["name"], "log_baby_event")
+
+    def test_a_house_tool_never_reaches_a_guest(self):
+        brain = self.guest_brain("No puedo prender luces, solo los padres pueden.")
+        self.bridge.ask("agente del bebé prendé la luz del estudio", "echo", "abuela")
+        self.assertNotIn("light_on", brain.seen[0]["tools"])
+        self.assertEqual(len(brain.seen[0]["tools"]), 3)
+
+    def test_red_flag_health_and_safe_sleep_get_fixed_lines_with_no_brain_call(self):
+        brain = self.guest_brain()
+        self.assertIn("911", self.bridge.ask("agente del bebé no respira", "echo", "abuela")["reply"])
+        self.assertIn("pediatra", self.bridge.ask("¿le puedo dar paracetamol?", "echo", "abuela")["reply"])
+        self.assertIn("911", self.bridge.ask("está azulino respira bien", "echo", "abuela")["reply"])
+        self.assertEqual(brain.seen, [])
+        self.assertEqual([e["guard"] for e in events(self.agent, "voice_guest")], ["emergency", "health", "emergency"])
+
+    def test_a_guest_yes_runs_nothing_waiting(self):
+        self.agent.wait_for_yes({"id": "x", "name": "remember", "arguments": {"key": "baby_name", "value": "Theo"}},
+                                channel="voice")
+        self.guest_brain("No tengo nada para confirmar.")
+        self.bridge.ask("agente del bebé sí", "echo", "abuela")
+        self.assertEqual(len(self.agent.pending), 1)
+
+    def test_who_is_a_guest(self):
+        self.assertEqual(self.bridge.role("Gonza"), "parent")
+        self.assertEqual(self.bridge.role("ceci"), "parent")
+        self.assertEqual(self.bridge.role("Abuela"), "guest")
+        self.assertEqual(self.bridge.role(""), "guest")
+        self.assertEqual(self.bridge.role("someone"), "guest")
+        open_house = VoiceBridge(self.agent, {**self.config, "voice_bridge": {"host": "127.0.0.1", "guests": ["abuela"]}},
+                                 token="t" * 24)
+        self.assertEqual(open_house.role(""), "parent")
+        self.assertEqual(open_house.role("abuela"), "guest")
+
+
+class VoiceBridgeSetupTest(unittest.TestCase):
+    def test_the_token_survives_a_restart(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            agent, config = make_agent(tmp)
+            config["voice_bridge"] = {"port": 0, "host": "127.0.0.1", "token_file": str(Path(tmp) / "voice-token")}
+            first = VoiceBridge(agent, config)
+            first.start()
+            first.stop()
+            second = VoiceBridge(agent, config)
+            self.assertEqual(second.token, first.token)
+            self.assertEqual((Path(tmp) / "voice-token").stat().st_mode & 0o777, 0o600)
+            agent.close()
+
+    def test_container_listens_on_its_own_private_address(self):
+        real = voice_bridge_mod.socket.gethostbyname
+        voice_bridge_mod.socket.gethostbyname = lambda name: "192.0.2.10"
+        try:
+            self.assertEqual(voice_bridge_mod.own_address("container"), "192.0.2.10")
+        finally:
+            voice_bridge_mod.socket.gethostbyname = real
+        self.assertEqual(voice_bridge_mod.own_address("127.0.0.1"), "127.0.0.1")
+
+
+class HomeAssistantAskScriptTest(unittest.TestCase):
+    """deploy/home-assistant/shell/parenting_agent_ask.py, the script Home Assistant runs, against a real bridge."""
+
+    def setUp(self):
+        import base64
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("ha_ask", ROOT / "deploy/home-assistant/shell/parenting_agent_ask.py")
+        self.script = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(self.script)
+        self.b64 = lambda text: base64.b64encode(text.encode()).decode()
+        self.tmp = tempfile.TemporaryDirectory()
+        self.agent, self.config = make_agent(self.tmp.name)
+        self.config["voice_bridge"] = {"port": 0, "host": "127.0.0.1", "timeout_s": 10, "unknown_speaker": "guest",
+                                       "token_file": str(Path(self.tmp.name) / "voice-token")}
+        self.bridge = VoiceBridge(self.agent, self.config, token="t" * 24)
+        self.agent.plugins = [self.bridge]
+        self.agent.start()
+        self.bridge.start()
+        self.url = f"http://127.0.0.1:{self.bridge.port}/ask"
+        self.secrets = Path(self.tmp.name) / "secrets.yaml"
+        self.secrets.write_text(f'some_password: x\nparenting_agent_voice_url: "{self.url}"\n'
+                                f'parenting_agent_voice_token: "{"t" * 24}"\n')
+
+    def tearDown(self):
+        self.bridge.stop()
+        self.agent.stop()
+        self.agent.close()
+        self.tmp.cleanup()
+
+    def test_a_question_comes_back_as_json_on_stdout(self):
+        import contextlib
+        import io
+        self.agent.brain = ScriptedBrain(["Hoy no hay tomas en el registro."])
+        self.script.SECRETS = str(self.secrets)
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            self.script.main(["x", self.b64("echo"), self.b64("abuela"), self.b64("agente del bebé, ¿cómo está el registro hoy?")])
+        answer = json.loads(out.getvalue())
+        self.assertEqual((answer["status"], answer["role"]), (200, "guest"))
+        self.assertEqual(answer["reply"], "Hoy no hay tomas en el registro.")
+
+    def test_a_wrong_token_says_no_answer_and_never_prints_the_token(self):
+        answer = self.script.ask("echo", "abuela", "agente del bebé hola", self.url, "wrong-token")
+        self.assertEqual((answer["status"], answer["reply"]), (401, self.script.NO_ANSWER))
+        self.assertNotIn("t" * 24, json.dumps(answer))
+
+    def test_secrets_are_read_by_name(self):
+        self.assertEqual(self.script.secret("parenting_agent_voice_url", self.secrets), self.url)
+        with self.assertRaises(KeyError):
+            self.script.secret("missing", self.secrets)
+
+
+def config_mod_people(spec):
+    from parenting_agent.agent.people import People
+    return People(spec)
 
 
 class WordsTest(unittest.TestCase):

@@ -3,7 +3,7 @@
     docker exec -i parenting-agent python - <host addresses...> < deploy/wall_check.py
 
 It must reach Baby Buddy and Home Assistant through the relay, and the brain and Telegram through the egress
-proxy. It must reach nothing else: not the brain directly, not other websites, not the host, not the LAN,
+proxy. Home Assistant's one way in, relay:8767 to the voice bridge, must answer on its two paths only. It must reach nothing else: not the brain directly, not other websites, not the host, not the LAN,
 not other containers. "Reachable" means an HTTP answer of any status, or an open TCP connection.
 Exit 0 when every check matches, 1 otherwise. Prints no secret: requests carry no token.
 """
@@ -36,6 +36,12 @@ def http(url, handler):
         return False, type(error).__name__ + ": " + str(getattr(error, "reason", error))[:60]
 
 
+def http_refused(url, handler):
+    """Reached only when the answer is something other than the relay's own 404."""
+    got, detail = http(url, handler)
+    return (got and detail != "HTTP 404"), detail
+
+
 def tcp(host, port):
     try:
         with socket.create_connection((host, int(port)), timeout=4):
@@ -50,6 +56,8 @@ def main(hosts):
         # A TCP connect, never an HTTP request: a request without a token counts as a failed login in Home
         # Assistant, and a few of them ban the relay's address.
         ("Home Assistant through the relay", lambda: tcp("relay", 8123)),
+        # The one way in, Home Assistant's: the relay forwards 8767 to this agent's voice bridge. No token, so 401.
+        ("voice bridge through the relay (Home Assistant's way in)", lambda: http("http://relay:8767/health", DIRECT)),
         ("Anthropic through the egress proxy", lambda: http("https://api.anthropic.com/v1/models", PROXY)),
         ("Baseten through the egress proxy", lambda: http("https://inference.baseten.co/v1/models", PROXY)),
         ("Telegram through the egress proxy", lambda: http("https://api.telegram.org/bot0/getMe", PROXY)),
@@ -64,6 +72,7 @@ def main(hosts):
         ("Home Assistant MCP server by name, direct", lambda: tcp("home-assistant-mcp-server", 8086)),
         ("Baby Buddy by name, through the egress proxy", lambda: http("http://babybuddy:8000/", PROXY)),
         ("relay on another port", lambda: tcp("relay", 80)),
+        ("relay 8767 on another path", lambda: http_refused("http://relay:8767/api/", DIRECT)),
         ("public DNS server, direct", lambda: tcp("1.1.1.1", 53)),
     ]
     for host in hosts:

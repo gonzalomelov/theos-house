@@ -1,0 +1,186 @@
+{
+ "last_step": "action/1",
+ "run_id": "d7b13062f361994155187eec2f728be5",
+ "state": "stopped",
+ "script_execution": "finished",
+ "timestamp": {
+  "start": "2026-10-31T14:11:00.711899+00:00",
+  "finish": "2026-10-31T14:11:04.805405+00:00"
+ },
+ "domain": "automation",
+ "item_id": "parenting_agent_echo_voice",
+ "trigger": "event 'parenting_agent_echo_ask'",
+ "trace": {
+  "trigger/1": [
+   {
+    "path": "trigger/1",
+    "timestamp": "2026-10-31T14:11:00.714527+00:00",
+    "changed_variables": {
+     "this": {
+      "entity_id": "automation.parenting_agent_answer_on_the_echo",
+      "state": "on",
+      "attributes": {
+       "id": "parenting_agent_echo_voice",
+       "last_triggered": null,
+       "mode": "queued",
+       "current": 0,
+       "max": 3,
+       "friendly_name": "Parenting agent: answer on the Echo"
+      },
+      "last_changed": "2026-10-31T14:10:25.222559+00:00",
+      "last_reported": "2026-10-31T14:10:25.223057+00:00",
+      "last_updated": "2026-10-31T14:10:25.222559+00:00",
+      "context": {
+       "id": "01M694R8A679AWPQQMBV38SBMQ",
+       "parent_id": null,
+       "user_id": null
+      }
+     },
+     "trigger": {
+      "id": "asked",
+      "idx": "1",
+      "alias": null,
+      "platform": "event",
+      "event": {
+       "event_type": "parenting_agent_echo_ask",
+       "data": {
+        "text": "agente del bebé, ¿cuándo comió Theo por última vez?",
+        "person": "abuela"
+       },
+       "origin": "REMOTE",
+       "time_fired": "2026-10-31T14:11:00.707454+00:00",
+       "context": {
+        "id": "01M694SAZ3QZ62GNVMGTW9Q540",
+        "parent_id": null,
+        "user_id": "00000000000000000000000000000000"
+       }
+      },
+      "description": "event 'parenting_agent_echo_ask'"
+     },
+     "said": "agente del bebé, ¿cuándo comió Theo por última vez?",
+     "speaker": "abuela"
+    }
+   }
+  ],
+  "condition/0": [
+   {
+    "path": "condition/0",
+    "timestamp": "2026-10-31T14:11:00.714621+00:00",
+    "result": {
+     "result": true,
+     "entities": []
+    }
+   }
+  ],
+  "action/0": [
+   {
+    "path": "action/0",
+    "timestamp": "2026-10-31T14:11:00.717507+00:00",
+    "changed_variables": {
+     "context": {
+      "id": "01M694SAZ7DR3JXQ47RE26H6TQ",
+      "parent_id": "01M694SAZ3QZ62GNVMGTW9Q540",
+      "user_id": null
+     },
+     "agent": {
+      "stdout": "{\"reply\": \"Theo comió por última vez hoy a las 10:55.\", \"role\": \"guest\", \"status\": 200}",
+      "stderr": "",
+      "returncode": 0
+     }
+    },
+    "result": {
+     "params": {
+      "domain": "shell_command",
+      "service": "parenting_agent_ask",
+      "service_data": {
+       "source": "echo",
+       "person": "abuela",
+       "text": "agente del bebé, ¿cuándo comió Theo por última vez?"
+      },
+      "target": {}
+     },
+     "running_script": false
+    }
+   }
+  ],
+  "action/1": [
+   {
+    "path": "action/1",
+    "timestamp": "2026-10-31T14:11:04.802994+00:00",
+    "result": {
+     "params": {
+      "domain": "notify",
+      "service": "send_message",
+      "service_data": {
+       "message": "Theo comió por última vez hoy a las 10:55.",
+       "entity_id": [
+        "notify.gonza_s_echo_dot_speak"
+       ]
+      },
+      "target": {
+       "entity_id": [
+        "notify.gonza_s_echo_dot_speak"
+       ]
+      }
+     },
+     "running_script": false
+    }
+   }
+  ]
+ },
+ "config": {
+  "id": "parenting_agent_echo_voice",
+  "alias": "Parenting agent: answer on the Echo",
+  "description": "A question to the Echo that starts with baby agent goes to the family agent, its answer is said on the Echo. Read only for anyone the Echo cannot name.",
+  "triggers": [
+   {
+    "trigger": "state",
+    "entity_id": "event.gonza_s_echo_dot_voice_event",
+    "id": "echo"
+   },
+   {
+    "trigger": "event",
+    "event_type": "parenting_agent_echo_ask",
+    "id": "asked"
+   }
+  ],
+  "conditions": [
+   {
+    "condition": "template",
+    "value_template": "{% set s = said | lower %} {{ s is match('^(alexa[, ]+)?(ask |tell )?(the )?baby agent') or s is match('^(alexa[, ]+)?(preguntale al |decile al )?agente') }}"
+   }
+  ],
+  "actions": [
+   {
+    "action": "shell_command.parenting_agent_ask",
+    "data": {
+     "source": "echo",
+     "person": "{{ speaker }}",
+     "text": "{{ said }}"
+    },
+    "response_variable": "agent"
+   },
+   {
+    "action": "notify.send_message",
+    "target": {
+     "entity_id": "notify.gonza_s_echo_dot_speak"
+    },
+    "data": {
+     "message": "{% if agent.returncode == 0 %}{{ (agent.stdout | from_json).reply }}{% else %}El agente del bebé no respondió.{% endif %}"
+    }
+   }
+  ],
+  "mode": "queued",
+  "max": 3,
+  "variables": {
+   "said": "{% if trigger.id == 'asked' %}{{ trigger.event.data.text | default('') }}{% else %}{{ state_attr('event.gonza_s_echo_dot_voice_event', 'voice_command') or '' }}{% endif %}",
+   "speaker": "{% if trigger.id == 'asked' %}{{ trigger.event.data.person | default('') }}{% else %}{{ state_attr('event.gonza_s_echo_dot_voice_event', 'person_first_name') or '' }}{% endif %}"
+  }
+ },
+ "blueprint_inputs": null,
+ "context": {
+  "id": "01M694SAZ7DR3JXQ47RE26H6TQ",
+  "parent_id": "01M694SAZ3QZ62GNVMGTW9Q540",
+  "user_id": null
+ }
+}
