@@ -58,12 +58,12 @@ def main(hosts):
         ("Home Assistant through the relay", lambda: tcp("relay", 8123)),
         # The one way in, Home Assistant's: the relay forwards 8767 to this agent's voice bridge. No token, so 401.
         ("voice bridge through the relay (Home Assistant's way in)", lambda: http("http://relay:8767/health", DIRECT)),
-        ("Anthropic through the egress proxy", lambda: http("https://api.anthropic.com/v1/models", PROXY)),
         ("Baseten through the egress proxy", lambda: http("https://inference.baseten.co/v1/models", PROXY)),
         ("Telegram through the egress proxy", lambda: http("https://api.telegram.org/bot0/getMe", PROXY)),
     ]
     must_fail = [
         ("Anthropic, direct", lambda: http("https://api.anthropic.com/v1/models", DIRECT)),
+        ("Anthropic, through the egress proxy: no other vendor's model", lambda: http("https://api.anthropic.com/v1/models", PROXY)),
         ("public website, direct", lambda: http("https://example.com/", DIRECT)),
         ("public website, through the egress proxy", lambda: http("https://example.com/", PROXY)),
         ("plain HTTP website, through the egress proxy", lambda: http("http://example.com/", PROXY)),

@@ -9,7 +9,7 @@ import os
 import re
 from pathlib import Path
 
-BRAIN_KEYS = ("ANTHROPIC_API_KEY", "BASETEN_API_KEY")
+BRAIN_KEYS = ("BASETEN_API_KEY",)
 SAFE_NAMES = {"PATH", "HOME", "USER", "LOGNAME", "SHELL", "TERM", "TZ", "LANG", "LC_ALL", "LC_CTYPE", "PWD", "TMPDIR",
               "HOSTNAME", "PYTHONPATH", "PYTHONUNBUFFERED", "PYTHONDONTWRITEBYTECODE", "VIRTUAL_ENV",
               "HTTPS_PROXY", "HTTP_PROXY", "NO_PROXY", "https_proxy", "http_proxy", "no_proxy", "SSL_CERT_FILE"}
@@ -20,19 +20,17 @@ HOUSE_VALUES = re.compile(r"(babybuddy|homeassistant|home-assistant|:8123\b|:879
                           r"\b10\.\d+\.\d+\.\d+|\b192\.168\.\d+\.\d+|\b172\.(1[6-9]|2\d|3[01])\.\d+\.\d+|\b100\.(6[4-9]|[7-9]\d|1[01]\d|12[0-7])\.\d+\.\d+)",
                           re.I)
 
-# USD per million tokens, input and output. Claude Haiku 5.5 from the Anthropic pricing page, read 2026-10-28.
-# Muse Spark Open from the Baseten model library page, read 2026-10-28. It always reasons, so output runs long.
-PRICES = {"claude": (0.10, 0.50), "baseten": (1.25, 4.25), "fake": (0.0, 0.0)}
-CLAUDE = {"provider": "claude", "model": "claude-haiku-5-5", "max_tokens": 400,
-          "price_in_per_mtok": PRICES["claude"][0], "price_out_per_mtok": PRICES["claude"][1]}
-# Muse Spark Open is the brain. Claude answers only when a Muse call errors, and each time is a brain_fallback event.
+# USD per million tokens, input and output. Muse Spark Open from the Baseten model library page, read 2026-10-28. It
+# always reasons, so output runs long.
+PRICES = {"baseten": (1.25, 4.25), "fake": (0.0, 0.0)}
+# Muse Spark Open is the brain, the only model. When a Muse call errors the fixed rules answer and the reply says the
+# brain is busy, each time a brain_fallback event. No other vendor's model runs here.
 BRAINS = {
-    "claude": CLAUDE,
     "baseten": {"provider": "openai_compatible", "model": "meta-models/muse-spark-open-1026",
                 "base_url": "https://inference.baseten.co/v1", "key_env": "BASETEN_API_KEY", "max_tokens": 2048,
                 "reasoning_effort": "low", "timeout_s": 45,
                 "price_in_per_mtok": PRICES["baseten"][0], "price_out_per_mtok": PRICES["baseten"][1],
-                "fallback": CLAUDE},
+                "fallback": {"provider": "rules"}},
     "fake": {"provider": "fake"},
 }
 DEFAULT_BRAIN = "baseten"

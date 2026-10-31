@@ -2,12 +2,15 @@
 
 Which model runs is one setting (brain.provider in the agent config), so swapping needs no code change:
 - fake: a small rule-based brain for tests and offline runs. No network.
-- claude: the logged fallback when a Muse call errors. Anthropic Messages API, key ANTHROPIC_API_KEY.
+- rules: the same fixed rules, as the fallback when a Muse call errors. No model, no network.
 - openai_compatible: any OpenAI-compatible chat endpoint. This is how Muse Spark Open runs on Baseten
   (issue #4), and Meta's Model API speaks it too. Key from the env variable named in brain.key_env.
 
-A brain config with a "fallback" block runs that second brain only when the first one errors. Every fallback is
-printed to stderr and carried on the reply, and the agent logs it as a brain_fallback event, so it can be counted.
+Only Meta models run at runtime (the hackathon rule). A brain config with a "fallback" block runs the fixed rules
+only when Muse errors, never another vendor's model, and the agent then tells the parent plainly that the brain is
+busy. Every fallback is printed to stderr and carried on the reply, and the agent logs it as a brain_fallback event,
+so it can be counted. Offline scripts that compare Muse with other models build those brains in scripts/eval_brains.py,
+outside this package.
 
 The agent keeps its own neutral transcript and each provider converts it. Every network call reports
 its destination host so the agent can log where data went.
@@ -108,50 +111,9 @@ class FakeBrain:
         return Reply("Noted.")
 
 
-class ClaudeBrain:
-    name = "claude"
-    url = "https://api.anthropic.com/v1/messages"
-
-    def __init__(self, model, max_tokens=800, thinking=None, timeout=30, prices=None):
-        key = os.environ.get("ANTHROPIC_API_KEY")
-        if not key:
-            raise BrainError("claude: ANTHROPIC_API_KEY is not set")
-        self.model, self.max_tokens, self.timeout, self.prices = model, max_tokens, timeout, prices
-        # Thinking off by default: with it on, small models answered with thinking only (meta-hackathon-2026 PR #10).
-        self.thinking = thinking or {"type": "disabled"}
-        self.headers = {"x-api-key": key, "anthropic-version": "2023-06-01", "content-type": "application/json"}
-        self.destination = urllib.parse.urlparse(self.url).hostname
-
-    @staticmethod
-    def messages(transcript):
-        out = []
-        for item in transcript:
-            if item["role"] == "user":
-                out.append({"role": "user", "content": item["text"]})
-            elif item["role"] == "assistant":
-                blocks = [{"type": "text", "text": item["text"]}] if item.get("text") else []
-                blocks += [{"type": "tool_use", "id": c["id"], "name": c["name"], "input": c["arguments"]} for c in item.get("tool_calls", [])]
-                out.append({"role": "assistant", "content": blocks})
-            else:
-                block = {"type": "tool_result", "tool_use_id": item["id"], "content": json.dumps(item["result"], default=str)}
-                if out and out[-1]["role"] == "user" and isinstance(out[-1]["content"], list):
-                    out[-1]["content"].append(block)
-                else:
-                    out.append({"role": "user", "content": [block]})
-        return out
-
-    def step(self, system, transcript, tools):
-        body = {"model": self.model, "max_tokens": self.max_tokens, "thinking": self.thinking, "system": system,
-                "messages": self.messages(transcript),
-                "tools": [{"name": t["name"], "description": t["description"], "input_schema": t["parameters"]} for t in tools]}
-        reply = post_json(self.url, self.headers, body, self.timeout)
-        text = "".join(b.get("text", "") for b in reply.get("content", []) if b.get("type") == "text")
-        calls = [{"id": b["id"], "name": b["name"], "arguments": b.get("input") or {}}
-                 for b in reply.get("content", []) if b.get("type") == "tool_use"]
-        usage = reply.get("usage") or {}
-        return priced(Reply(without_thinking(text), calls,
-                            {"input_tokens": usage.get("input_tokens", 0) + usage.get("cache_creation_input_tokens", 0)
-                             + usage.get("cache_read_input_tokens", 0), "output_tokens": usage.get("output_tokens", 0)}), self.prices)
+class RulesBrain(FakeBrain):
+    """The fallback when Muse errors: the fixed rules, no model and no network."""
+    name, model, destination = "rules", "fixed rules", "none (local)"
 
 
 class OpenAICompatibleBrain:
@@ -244,14 +206,20 @@ class FallbackBrain:
             return reply
 
 
+# Providers of models that are not Meta's. They never run inside the agent, the demo or the families bot.
+NOT_META = ("claude", "anthropic", "openai")
+
+
 def build_one(config):
     provider = config.get("provider", "fake")
     prices = (config["price_in_per_mtok"], config["price_out_per_mtok"]) if "price_in_per_mtok" in config else None
     if provider == "fake":
         return FakeBrain()
-    if provider == "claude":
-        return ClaudeBrain(config.get("model", "claude-haiku-5-5"), config.get("max_tokens", 800), config.get("thinking"),
-                           timeout=config.get("timeout_s", 30), prices=prices)
+    if provider == "rules":
+        return RulesBrain()
+    if provider in NOT_META:
+        raise BrainError(f"{provider} is not a Meta model: the runtime brain is Muse Spark Open, with the fixed rules as "
+                         "its fallback. Offline model comparisons use scripts/eval_brains.py")
     if provider == "openai_compatible":
         return OpenAICompatibleBrain(config["model"], config["base_url"], config["key_env"], config.get("max_tokens", 800),
                                      timeout=config.get("timeout_s", 30), reasoning_effort=config.get("reasoning_effort"),
@@ -263,12 +231,10 @@ def build(config):
     primary = build_one(config)
     if not config.get("fallback"):
         return primary
-    try:
-        backup = build_one(config["fallback"])
-    except BrainError as error:
-        print(f"brain_fallback_unavailable {error}", file=sys.stderr, flush=True)
-        return primary
-    return FallbackBrain(primary, backup)
+    if config["fallback"].get("provider") != "rules":
+        raise BrainError("brain.fallback must be {\"provider\": \"rules\"}: when Muse errors the fixed rules answer, "
+                         "never another model")
+    return FallbackBrain(primary, build_one(config["fallback"]))
 
 
 def timed(brain, system, transcript, tools):

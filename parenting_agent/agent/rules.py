@@ -1,6 +1,6 @@
 """Rules the fake brain uses offline: turn a parent's note into a log event, answer from a summary, refuse health questions.
 
-The real brain (Claude now, Muse Spark Open later) does this from the tool descriptions. These rules let
+The real brain (Muse Spark Open) does this from the tool descriptions. These rules let
 the tests check the whole path to Baby Buddy and back with no network, and give the fake brain the same
 behaviour the system prompt asks of the real one.
 """

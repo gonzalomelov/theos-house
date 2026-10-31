@@ -1,7 +1,7 @@
 """Persistent memory: the conversation, facts the agent was told, and an offline baby log, in one SQLite file.
 
-The file lives in the agent's data folder on the machine that runs it, so memory survives restarts and
-never leaves the house. Baby Buddy on the family's server is the real baby log (babybuddy.py, issue #2),
+The file lives in the agent's data folder on the machine that runs it, so memory survives restarts. The file
+stays in the house, but each turn sends the recent conversation to the brain, Muse Spark Open on Baseten. Baby Buddy on the family's server is the real baby log (babybuddy.py, issue #2),
 and LocalBabyLog keeps the same shape for offline runs and tests.
 """
 import datetime

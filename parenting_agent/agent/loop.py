@@ -176,6 +176,7 @@ DOUBLE_ANSWER_WINDOW = datetime.timedelta(minutes=30)
 TEXTS = {
     "en": {
         "NOT_CHANGED": "I could not change the log. Tell me which entry and what to change, for example: the 01:30 bottle was 100 ml.",
+        "BRAIN_BUSY": "My brain is busy right now, so this answer comes from my simple fixed rules.",
         "CANNOT_CHANGE": "I cannot change entries in this log, so nothing changed.",
         "ASK_DOUBLE": "Did you send it twice, or were there {two}? So far it is logged once: {entry}.",
         "ASK_DOUBLE_AGAIN": "I did not get that, so it stays logged once: {entry}. Was it one sent twice, or {two}? Reply one or two.",
@@ -209,6 +210,7 @@ TEXTS = {
     },
     "es": {
         "NOT_CHANGED": "No pude cambiar el registro. Decime cuál y qué cambio, por ejemplo: la mamadera de la 1 y media fue de 100 ml.",
+        "BRAIN_BUSY": "Mi cerebro está ocupado ahora, así que te respondo con mis reglas fijas simples.",
         "CANNOT_CHANGE": "En este registro no puedo cambiar entradas, así que no cambió nada.",
         "ASK_DOUBLE": "¿La mandaste dos veces o fueron {two}? Por ahora quedó una sola: {entry}.",
         "ASK_DOUBLE_AGAIN": "No te entendí, así que quedó una sola: {entry}. ¿Fue una sola mandada dos veces, o fueron {two}? Respondé una o dos.",
@@ -494,6 +496,8 @@ class Agent:
     # returns the log operations for the message as data (log_ops.py), with a second checking call in ops-verify.
     log_mode = "guards"
     approval_window_s = APPROVAL_WINDOW_S
+    # Set in a turn where Muse errored and the fixed rules answered: the reply then starts with BRAIN_BUSY.
+    brain_busy = False
 
     def __init__(self, bus, memory, baby_log, tools, brain, max_steps=6, history=20):
         self.bus, self.memory, self.baby_log, self.tools, self.brain = bus, memory, baby_log, tools, brain
@@ -819,11 +823,12 @@ class Agent:
             self.bus.publish("guard", status="health_noted")
             self.say(channel, self.note_observation(text))
             return
+        self.brain_busy = False
         if self.log_mode in ("ops", "ops-verify"):
             reply = log_ops.decide(self, channel, text, verify=self.log_mode == "ops-verify", health=route == "log")
             if reply is not None:
                 self.memory.add_message(channel, "user", text, ts=self.now())
-                self.say(channel, strip_codes(reply))
+                self.say(channel, self.busy_line(strip_codes(reply), text))
                 return
             # No log operations came back (the rule brain behind the spend cap never answers log_ops): the guarded loop.
         if route == "log" and rules.symptom_feed(text) and not rules.MILESTONE.search(text):
@@ -900,6 +905,14 @@ class Agent:
     def no_advice(self, request):
         return rules.NO_ADVICE[self.lang(request)]
 
+    def busy_line(self, text, request):
+        """When Muse errored in this turn and the fixed rules answered, the reply says so plainly, first."""
+        if not self.brain_busy:
+            return text
+        self.brain_busy = False
+        busy = self.text("BRAIN_BUSY", request)
+        return busy + (" " + text if text else "")
+
     def finish(self, channel, text, asked=0, request=None, fixed=False):
         """The one way decide answers. A health message gets a reply built from what the log really holds, never the
         brain's words, and a call that waits for a yes is always named, so the parent knows exactly what a yes runs.
@@ -915,6 +928,8 @@ class Agent:
                 text = logged + (" " + self.no_advice(turn["request"]) if rules.asks_advice(turn["request"]) else "")
             else:
                 text = self.refusal(turn["request"])
+        if request is not None:
+            text = self.busy_line(text, request)
         if asked:
             what = "; ".join(describe_call(c) for c in self.pending[-asked:])
             line = ASK_LINE[self.lang(request)].format(what=what, minutes=max(1, self.approval_window_s // 60))
@@ -1297,6 +1312,9 @@ class Agent:
                     text = self.unbacked_value(text, before, request, editing, ran)
                 elif red_flag and text == "OK.":
                     text = self.safety_line(request)
+            if self.brain_busy and not fixed and not guarded and before is not None:
+                # The fixed rules answer in English: what the log holds now is said in the parent's language instead.
+                text = diff_text(log_diff(before, self.log_state()), lang, self.baby_name()) or text
             text = self.honest(text, before, request, editing, ran, guarded=guarded)
             if safety_said and request is not None and not rules.carries_safety_line(text):
                 # Another guard put its own words in place of the brain's (a claim of an action that never ran, a
@@ -1333,6 +1351,7 @@ class Agent:
                              fallback=bool(reply.fallback))
             if reply.fallback:
                 self.bus.publish("brain_fallback", **reply.fallback)
+                self.brain_busy = True
             if rules.carries_safety_line(reply.text):
                 safety_said.append(True)
             if not reply.tool_calls and request is not None and not (reply.text or "").strip() and not empty_checked:

@@ -1,7 +1,7 @@
 """python -m parenting_agent.demo [--brain-env FILE]
 
-Runs the public demo locally on http://127.0.0.1:8765. --brain-env reads only the brain key (ANTHROPIC_API_KEY
-or BASETEN_API_KEY) from an env file and ignores every other line. Before anything starts, every variable that
+Runs the public demo locally on http://127.0.0.1:8765. --brain-env reads only the brain key (BASETEN_API_KEY,
+Muse Spark Open) from an env file and ignores every other line. Before anything starts, every variable that
 could reach the house is removed from the environment. Settings come from PA_DEMO_* variables (settings.py).
 """
 import argparse

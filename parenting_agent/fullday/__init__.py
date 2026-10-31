@@ -1,6 +1,6 @@
 """The simulated full day (issue #17): the plan page day replayed end to end, from 06:10 to 02:30.
 
-    python -m parenting_agent.fullday                 # Claude brain, Baby Buddy on the Vostro, SAM 3.1 on the Mac GPU
+    python -m parenting_agent.fullday                 # Muse brain, Baby Buddy on the Vostro, SAM 3.1 on the Mac GPU
     python -m parenting_agent.fullday --wipe-only     # remove every entry an earlier run wrote (tag full-day-sim)
 
 Each step of the day goes through the real agent: voice lines become messages, house sounds become

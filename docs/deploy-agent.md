@@ -10,7 +10,7 @@ Three containers in the compose project `parenting-agent` (`deploy/compose.yml`)
 |---|---|---|
 | `parenting-agent` | The agent core, `python -m parenting_agent --config config/agent.vostro.json`. Standard library only | `parenting-agent-internal` only |
 | `parenting-agent-relay` | nginx, forwards `relay:8790` to Baby Buddy and `relay:8123` to Home Assistant, nothing else | internal, `babybuddy-net`, `home-assistant_default` |
-| `parenting-agent-egress` | tinyproxy, HTTPS tunnels only, to `api.anthropic.com`, `inference.baseten.co` and `api.telegram.org` (`deploy/egress/filter`) | internal, its own bridge |
+| `parenting-agent-egress` | tinyproxy, HTTPS tunnels only, to `inference.baseten.co` and `api.telegram.org` (`deploy/egress/filter`) | internal, its own bridge |
 
 - Images: `python:3.12-slim-bookworm`, `nginxinc/nginx-unprivileged` and `alpine` with tinyproxy, each pinned by digest. The agent and egress images are built on the Vostro and tagged with the git commit.
 - Restart `unless-stopped`, read-only root, all capabilities dropped, no new privileges, user 1000, 256 MB, half a CPU, 64 processes.
@@ -34,7 +34,7 @@ Docker already runs every other app on the Vostro, starts at boot, and gives the
 
 ### Voice notes
 
-A voice note on Telegram is heard by Muse Spark Open and answered in text and as a voice note (issue #58, `docs/voice.md`). ffmpeg and MMS-TTS run in the voice service, `pa-voice-family`, a separate container on `parenting-agent-internal` with the weights baked in and no secret (`deploy/voice/`, `sh deploy/voice.sh deploy`). The agent image stays standard library only. The agent reaches it at `http://pa-voice-family:8800` without the proxy. Hearing is the Muse call through the egress proxy, like the brain. So a voice note leaves the house as audio, to Muse Spark Open on Baseten, once and never saved (Baseten keeps no inputs by default, https://docs.baseten.co/observability/security). Video and house audio stay in the house.
+A voice note on Telegram is heard by Muse Spark Open and answered in text and as a voice note (issue #58, `docs/voice.md`). ffmpeg and MMS-TTS run in the voice service, `pa-voice-family`, a separate container on `parenting-agent-internal` with the weights baked in and no secret (`deploy/voice/`, `sh deploy/voice.sh deploy`). The agent image stays standard library only. The agent reaches it at `http://pa-voice-family:8800` without the proxy. Hearing is the Muse call through the egress proxy, like the brain. So a voice note leaves the house as audio, to Muse Spark Open on Baseten, once and never saved by us. These calls run on the free hackathon credits, and Meta said content sent on those credits may be used to train future Meta models, so it is not promised to stay private. Video and house audio stay in the house.
 
 ## The wall
 
@@ -49,7 +49,7 @@ The internal network is created with `--internal` and the isolated gateway mode 
 
 ## Secrets
 
-`~/apps/parenting-agent.env` on the Vostro, mode 600, written by `push-env` over ssh from the git-ignored `.env` of meta-hackathon-2026. Only these names travel: `ANTHROPIC_API_KEY`, `BABYBUDDY_TOKEN`, `HA_MCP_TOKEN`, `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`, `TELEGRAM_CECI_CHAT_ID` (optional, Ceci's chat), `BASETEN_API_KEY`. Values are never printed. See `deploy/env.example`.
+`~/apps/parenting-agent.env` on the Vostro, mode 600, written by `push-env` over ssh from the git-ignored `.env` of meta-hackathon-2026. Only these names travel: `BABYBUDDY_TOKEN`, `HA_MCP_TOKEN`, `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`, `TELEGRAM_CECI_CHAT_ID` (optional, Ceci's chat), `BASETEN_API_KEY`. Values are never printed. See `deploy/env.example`.
 
 ## House actions: three live, the rest dry
 
@@ -117,10 +117,10 @@ The pa-voice image installs torch, which loaded all 4 cores of the Vostro. `voic
 | Health check | healthy |
 | `kill -9` of the agent process from the host | running and healthy again 2 s later, restart count 1 |
 | `docker restart` | healthy again after 11 s |
-| `python -m parenting_agent --check` inside the container | Muse Spark Open brain with the Claude fallback, heartbeat plug-in, five tools, Baby Buddy log |
+| `python -m parenting_agent --check` inside the container | Muse Spark Open brain with the fixed rules as fallback, heartbeat plug-in, five tools, Baby Buddy log |
 | Read Baby Buddy from inside | child found, 20 entries read |
 | Read Home Assistant from inside | HTTP 200, house dry run |
-| One question through the brain from inside | "When was the last diaper?" answered from Baby Buddy, brain host api.anthropic.com |
+| One question through the brain from inside | "When was the last diaper?" answered from Baby Buddy, brain host inference.baseten.co (Oct 28 that was api.anthropic.com, before Muse) |
 | Wall check | 87 of 87 pass: relay and egress reach their five targets, every other target is blocked |
 | Other containers on the Vostro | untouched, same uptime before and after |
 | Reboot | not run, it would restart Home Assistant and every other app |

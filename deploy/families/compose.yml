@@ -30,9 +30,9 @@ services:
     networks: [internal]
     depends_on: [egress]
     environment:
-      # Muse Spark Open on Baseten is the brain. Claude answers only when a Muse call errors, logged as brain_fallback.
+      # Muse Spark Open on Baseten is the brain, the only model. When a Muse call errors the fixed rules answer, logged as
+      # brain_fallback, and the reply says the brain is busy.
       BASETEN_API_KEY: ${BASETEN_API_KEY:?set BASETEN_API_KEY in the env file}
-      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:?set ANTHROPIC_API_KEY in the env file}
       TELEGRAM_FAMILIES_BOT_TOKEN: ${TELEGRAM_FAMILIES_BOT_TOKEN:?set TELEGRAM_FAMILIES_BOT_TOKEN in the env file}
       PA_FAMILIES_BRAIN: ${PA_FAMILIES_BRAIN:-baseten}
       # Voice notes: heard by Muse, answered with MMS-TTS from the voice service on this internal network (deploy/voice).

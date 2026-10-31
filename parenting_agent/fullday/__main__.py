@@ -1,6 +1,6 @@
 """Run the simulated full day and write the timeline report and the KR result files.
 
-    python -m parenting_agent.fullday                       # the real day: Claude brain, Baby Buddy, SAM 3.1, live clips
+    python -m parenting_agent.fullday                       # the real day: Muse brain, Baby Buddy, SAM 3.1, live clips
     python -m parenting_agent.fullday --no-video            # skip the two clip steps (marked pending)
     python -m parenting_agent.fullday --wipe-only           # remove the entries earlier runs wrote
 

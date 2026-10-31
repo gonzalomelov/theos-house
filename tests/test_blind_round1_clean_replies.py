@@ -28,7 +28,7 @@ PEOPLE_ES = {"gonza": {"name": "Gonza", "rota": "Parent A", "chat_ids_env": "TEL
 
 
 class NoBrain:
-    name, model, destination = "claude", "none", "api.anthropic.com"
+    name, model, destination = "scripted", "none", "inference.baseten.co"
 
     def __init__(self):
         self.calls = 0

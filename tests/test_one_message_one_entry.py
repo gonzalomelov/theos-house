@@ -34,7 +34,7 @@ def log(kind, details, ts=None):
 
 class ScriptedBrain:
     """Plays one plan per parent message: each step is a list of tool calls, FAIL (the brain errors) or the answer."""
-    name, model, destination = "claude", "scripted", "api.anthropic.com"
+    name, model, destination = "scripted", "scripted", "inference.baseten.co"
 
     def __init__(self, *plans):
         self.plans, self.steps, self.n = list(plans), [], 0

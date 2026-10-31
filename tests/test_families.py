@@ -42,7 +42,7 @@ def settings(**extra):
 
 class CountingBrain:
     """Answers plainly, reports usage, counts its calls."""
-    name, model, destination = "claude", "test", "api.anthropic.com"
+    name, model, destination = "scripted", "test", "inference.baseten.co"
 
     def __init__(self, tokens=(1000, 100)):
         self.calls, self.tokens = 0, tokens
@@ -240,11 +240,11 @@ class WalledOff(unittest.TestCase):
                  "GITHUB_TOKEN": "g", "SOME_URL": "http://vostro:8790", "TS_NODE": "100.64.0.1"}
 
     def test_scrub_keeps_only_the_brain_key_and_the_families_token(self):
-        env = dict(self.HOUSE_ENV, ANTHROPIC_API_KEY="sk-test", TELEGRAM_FAMILIES_BOT_TOKEN="fam", PATH="/usr/bin",
+        env = dict(self.HOUSE_ENV, BASETEN_API_KEY="sk-test", TELEGRAM_FAMILIES_BOT_TOKEN="fam", PATH="/usr/bin",
                    PA_FAMILIES_BRAIN="fake", HTTPS_PROXY="http://egress:8888")
         removed = settings_mod.scrub_environment(env)
         self.assertEqual(sorted(removed), sorted(self.HOUSE_ENV))
-        self.assertEqual(set(env), {"ANTHROPIC_API_KEY", "TELEGRAM_FAMILIES_BOT_TOKEN", "PATH", "PA_FAMILIES_BRAIN", "HTTPS_PROXY"})
+        self.assertEqual(set(env), {"BASETEN_API_KEY", "TELEGRAM_FAMILIES_BOT_TOKEN", "PATH", "PA_FAMILIES_BRAIN", "HTTPS_PROXY"})
 
     def test_the_family_bot_token_is_refused(self):
         self.assertTrue(settings_mod.same_bot_as_family({"TELEGRAM_BOT_TOKEN": "same", "TELEGRAM_FAMILIES_BOT_TOKEN": "same"}))
@@ -252,14 +252,14 @@ class WalledOff(unittest.TestCase):
 
     def test_keys_env_file_yields_only_the_two_keys(self):
         path = Path(tempfile.mkdtemp()) / ".env"
-        path.write_text("BABYBUDDY_URL=http://127.0.0.1:18790\nHA_TOKEN=abc\nTELEGRAM_BOT_TOKEN=fam\nANTHROPIC_API_KEY=sk\n"
+        path.write_text("BABYBUDDY_URL=http://127.0.0.1:18790\nHA_TOKEN=abc\nTELEGRAM_BOT_TOKEN=fam\nBASETEN_API_KEY=sk\n"
                         "TELEGRAM_FAMILIES_BOT_TOKEN=second\n")
         env = {}
-        self.assertEqual(sorted(settings_mod.read_keys(path, env)), ["ANTHROPIC_API_KEY", "TELEGRAM_FAMILIES_BOT_TOKEN"])
-        self.assertEqual(env, {"ANTHROPIC_API_KEY": "sk", "TELEGRAM_FAMILIES_BOT_TOKEN": "second"})
+        self.assertEqual(sorted(settings_mod.read_keys(path, env)), ["BASETEN_API_KEY", "TELEGRAM_FAMILIES_BOT_TOKEN"])
+        self.assertEqual(env, {"BASETEN_API_KEY": "sk", "TELEGRAM_FAMILIES_BOT_TOKEN": "second"})
 
     def test_settings_hold_no_route_to_the_house(self):
-        for brain in ("claude", "baseten", "fake"):
+        for brain in ("baseten", "fake"):
             dumped = json.dumps(settings_mod.load({"PA_FAMILIES_BRAIN": brain}), default=list)
             self.assertIsNone(settings_mod.HOUSE_VALUES.search(dumped), brain)
             urls = re.findall(r"https?://[^\"]+", dumped)
@@ -283,7 +283,7 @@ class WalledOff(unittest.TestCase):
         self.assertIn("cap_drop: [ALL]", body)
         self.assertRegex(body, r"internal:\n\s+external: true\n\s+name: pa-families-internal")
         hosts = [line for line in (DEPLOY_DIR / "egress" / "filter").read_text().splitlines() if line.strip()]
-        self.assertEqual(hosts, [r"^api\.anthropic\.com$", r"^inference\.baseten\.co$", r"^api\.telegram\.org$"])
+        self.assertEqual(hosts, [r"^inference\.baseten\.co$", r"^api\.telegram\.org$"])
         self.assertIn("FilterDefaultDeny Yes", (DEPLOY_DIR / "egress" / "tinyproxy.conf").read_text())
         dockerfile = (DEPLOY_DIR / "Dockerfile").read_text()
         for word in ("config", ".env", "deploy/", "babybuddy-net"):
@@ -412,9 +412,9 @@ class Caps(unittest.TestCase):
         self.assertEqual(len(app.family(family_of(app, "111")).log.entries("feeding")), 2)
 
     def test_family_spend_cap_falls_back_to_the_free_rules(self):
-        brain = CountingBrain(tokens=(1_000_000, 0))  # $0.10 a call at Haiku prices
+        brain = CountingBrain(tokens=(1_000_000, 0))  # $0.10 a call at these test prices
         # The call counts below are the guarded loop's, the ops mode has its own cap test in test_log_ops.py.
-        app = make(self, brain=brain, PA_FAMILIES_BRAIN="claude", PA_FAMILIES_FAMILY_USD="0.25", PA_FAMILIES_LOG_MODE="guards")
+        app = make(self, brain=brain, PA_FAMILIES_BRAIN="baseten", PA_FAMILIES_PRICE_IN="0.10", PA_FAMILIES_PRICE_OUT="0.50", PA_FAMILIES_FAMILY_USD="0.25", PA_FAMILIES_LOG_MODE="guards")
         onboard(app, "111")
         for i in range(5):
             app.handle("111", "111", f"bottle {100 + 10 * i} ml")  # different bottles, a repeat minutes later is asked about
@@ -429,7 +429,7 @@ class Caps(unittest.TestCase):
 
     def test_global_spend_cap_covers_every_family(self):
         brain = CountingBrain(tokens=(1_000_000, 0))
-        app = make(self, brain=brain, PA_FAMILIES_BRAIN="claude", PA_FAMILIES_DAILY_USD="0.2", PA_FAMILIES_FAMILY_USD="5")
+        app = make(self, brain=brain, PA_FAMILIES_BRAIN="baseten", PA_FAMILIES_PRICE_IN="0.10", PA_FAMILIES_PRICE_OUT="0.50", PA_FAMILIES_DAILY_USD="0.2", PA_FAMILIES_FAMILY_USD="5")
         onboard(app, "111")
         onboard(app, "222")
         app.handle("111", "111", "hello")

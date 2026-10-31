@@ -361,11 +361,13 @@ class Privacy(unittest.TestCase):
     def test_the_note_says_plainly_where_the_text_goes(self):
         for table in (EN, ES):
             note = table["PRIVACY"]
-            self.assertIn("https://privacy.claude.com/en/articles/7996866", note)
-            self.assertIn("Anthropic", note)
+            self.assertNotIn("Anthropic", note)
+            self.assertNotIn("Claude", note)
             self.assertIn("Muse Spark Open", note)
-            self.assertIn("https://docs.baseten.co/observability/security", note)
+            self.assertIn("Baseten", note)
             self.assertIn("Uruguay", note)
+            self.assertRegex(note, r"train|entrenar")
+            self.assertNotIn("does not store", note)
             for wrong in ("does not keep it", "no lo guarda", "never keeps", "no data kept"):
                 self.assertNotIn(wrong, note)
         self.assertIn("/borrarmisdatos", ES["PRIVACY"])

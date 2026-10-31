@@ -154,8 +154,12 @@ class VoicePrivacy(unittest.TestCase):
     def test_the_families_note_says_voice_notes_go_to_baseten(self):
         self.assertIn("Voice notes you send are heard by Muse on Baseten", EN["PRIVACY"])
         self.assertIn("Los audios que mandás también los escucha Muse en Baseten", ES["PRIVACY"])
+        # On the free hackathon credits Meta may train on what is sent (Discord, Oct 27): no note promises otherwise.
+        self.assertIn("may be used to train future Meta models", EN["PRIVACY"])
+        self.assertIn("se puede usar para entrenar futuros modelos de Meta", ES["PRIVACY"])
         for note in (EN["PRIVACY"], ES["PRIVACY"]):
-            self.assertIn("https://docs.baseten.co/observability/security", note)
+            self.assertNotIn("does not store", note)
+            self.assertNotIn("no almacena", note)
 
     def test_the_docs_name_the_voice_note_flow(self):
         import pathlib
@@ -163,10 +167,12 @@ class VoicePrivacy(unittest.TestCase):
         readme = (root / "README.md").read_text()
         self.assertIn("Video and house audio stay in your house. Messages and voice notes go to the brain", readme)
         self.assertNotIn("Only the conversation text goes to the brain", readme)
-        self.assertIn("Telegram voice notes go to Muse Spark Open on Baseten as audio", readme)
+        self.assertIn("Telegram voice notes go there too, as audio", readme)
+        self.assertIn("your content may be used to train future Meta models", readme)
         architecture = (root / "docs/architecture.md").read_text()
         self.assertIn("| A parent's voice note (voice is on by default", architecture)
-        self.assertIn("https://docs.baseten.co/observability/security", architecture)
+        self.assertIn("may be used to train future Meta models", architecture)
+        self.assertNotIn("does not store inputs or outputs", architecture)
         families = (root / "docs/families.md").read_text()
         self.assertIn("Voice notes you send are heard by Muse on Baseten", families)
         self.assertIn("Los audios que mandás también los escucha Muse en Baseten", families)

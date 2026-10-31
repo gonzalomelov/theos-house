@@ -83,4 +83,8 @@ if __name__ == "__main__":
     parser.add_argument("--brain", choices=["baseten", "claude"], default="baseten")
     parser.add_argument("--out")
     args = parser.parse_args()
+    if args.brain == "claude":
+        import eval_brains  # offline model comparison only, never part of the runtime
+        eval_brains.install()
+
     run(args.keys_env, args.brain, args.out or str(ROOT / "results" / "demo-app" / f"run-{args.brain}.json"))

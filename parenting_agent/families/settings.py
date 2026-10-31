@@ -1,7 +1,7 @@
 """Settings for the families service, walled off from Gonza's family agent and house.
 
 Like the demo, the service never loads the family env file. It keeps three secrets at most: the brain key
-(ANTHROPIC_API_KEY or BASETEN_API_KEY) and TELEGRAM_FAMILIES_BOT_TOKEN, the second bot. Everything else that
+(BASETEN_API_KEY, for Muse Spark Open) and TELEGRAM_FAMILIES_BOT_TOKEN, the second bot. Everything else that
 could open a route to the house is removed before anything starts, including Gonza's own bot token.
 """
 import os
@@ -10,7 +10,7 @@ from pathlib import Path
 from ..demo.settings import BRAINS, DEFAULT_BRAIN, HOUSE_VALUES, HOUSE_WORDS, PRICES, SAFE_NAMES
 
 BOT_TOKEN = "TELEGRAM_FAMILIES_BOT_TOKEN"
-BRAIN_KEYS = ("ANTHROPIC_API_KEY", "BASETEN_API_KEY")
+BRAIN_KEYS = ("BASETEN_API_KEY",)
 KEEP = BRAIN_KEYS + (BOT_TOKEN,)
 SAFE_PREFIXES = ("PA_FAMILIES_", "LC_", "__CF", "XPC_")
 FAMILY_BOT_USERNAME = "home_agent_example_bot"

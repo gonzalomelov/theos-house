@@ -4,7 +4,7 @@ Each visitor gets their own Agent with its own bus, an in-memory memory file and
 simulated week, so visitors never see each other. The simulated baby is Theo, a boy a few weeks old, the same baby as
 the story. A second agent per visitor runs prep mode, the before-he-arrives tools on simulated lists with a due date
 counted from today. The brain is the real one (Muse Spark Open on
-Baseten, Claude only as a logged fallback). House tools only simulate: they record what the agent would do and touch nothing. There is no
+Baseten, the only model, with the fixed rules as a logged fallback when a Muse call errors). House tools only simulate: they record what the agent would do and touch nothing. There is no
 Baby Buddy client, no Home Assistant client and no channel plug-in in here. Tonight's house (tonight.py) runs the real
 house brain on the visitor's simulated log, with nothing to arm.
 """
@@ -161,6 +161,8 @@ def answered_by(events, from_log=False):
     calls = [e for e in events if e["kind"] == "brain_call"]
     if calls:
         model = str(calls[-1].get("model") or "")
+        if calls[-1].get("fallback"):
+            return {"kind": "busy"}  # Muse errored and the fixed rules answered, no AI
         return {"kind": "brain", "model": model, "muse": "muse" in model.lower()}
     return {"kind": "log" if from_log else "rule"}
 

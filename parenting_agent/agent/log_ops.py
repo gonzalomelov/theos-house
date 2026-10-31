@@ -306,6 +306,7 @@ def call_brain(agent, system, text, tool):
                       reasoning_tokens=usage.get("reasoning_tokens"), usd=reply.usd, fallback=bool(reply.fallback))
     if reply.fallback:
         agent.bus.publish("brain_fallback", **reply.fallback)
+        agent.brain_busy = True
     return reply
 
 

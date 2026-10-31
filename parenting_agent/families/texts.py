@@ -53,9 +53,9 @@ EN = {
                 "Where: one private file for your family on Gonza's home server in Uruguay. Other families cannot see it. "
                 "To write replies, the conversation text and your log lines are sent to Muse Spark Open, Meta's open model, "
                 "on Baseten. Voice notes you send are heard by Muse on Baseten too: the audio is sent once, never saved by me. "
-                "Baseten's docs say it does not store inputs or outputs by default: https://docs.baseten.co/observability/security. "
-                "Only when that call fails, Claude on Anthropic's API answers instead. By default Anthropic does not train on API data "
-                "and deletes it within 30 days: https://privacy.claude.com/en/articles/7996866. Telegram carries the messages.\n"
+                "These calls run on free hackathon credits, and Meta says content sent on those credits may be used to train "
+                "future Meta models, so I cannot promise it is not kept or used for training. If Muse does not answer, simple "
+                "fixed rules on the server reply instead, and no other company's model is used. Telegram carries the messages.\n"
                 "Delete: send /deletemydata. It removes your family's file, the conversation, the rows and both parents' access, at once."),
     "DELETE_WORD": "DELETE",
     "DELETE_ASK": ("This deletes {name}'s whole log, our conversation and access for everyone in your family. It cannot be undone. "
@@ -153,10 +153,10 @@ ES = {
                 "Dónde: un archivo privado para tu familia en el servidor de la casa de Gonza, en Uruguay. Otras familias "
                 "no lo pueden ver. Para escribir las respuestas, el texto de la conversación y lo que anotaste se mandan a Muse "
                 "Spark Open, el modelo abierto de Meta, en Baseten. Los audios que mandás también los escucha Muse en Baseten: el audio se manda una vez y yo no lo guardo. "
-                "Según su documentación, por defecto Baseten no almacena lo que entra ni lo que sale: "
-                "https://docs.baseten.co/observability/security. Solo si esa llamada falla responde Claude, en la API de "
-                "Anthropic. Por defecto Anthropic no entrena con los datos de su API y los borra en 30 días: "
-                "https://privacy.claude.com/en/articles/7996866. Telegram lleva los mensajes.\n"
+                "Estas llamadas usan créditos gratis de la hackathon, y Meta dice que lo que se manda con esos créditos se puede "
+                "usar para entrenar futuros modelos de Meta, así que no puedo prometer que no se guarde ni se use para entrenar. "
+                "Si Muse no responde, contestan unas reglas fijas simples en el servidor, y no se usa el modelo de ninguna otra "
+                "empresa. Telegram lleva los mensajes.\n"
                 "Borrar: mandá /borrarmisdatos. Borra el archivo de tu familia, la conversación, las filas y el acceso de los dos, de una."),
     "DELETE_WORD": "BORRAR",
     "DELETE_ASK": ("Esto borra todo el registro de {name}, nuestra conversación y el acceso de todos en tu familia. No se puede "

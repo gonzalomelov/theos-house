@@ -2,7 +2,7 @@
 record is read back from Baby Buddy's API by id. Writes results/kr222/voice-log.json in the schema that
 measure-kr222.sh checks.
 
-    python scripts/voice_log_run.py                       # config/agent.json: Claude brain, Baby Buddy on the Vostro
+    python scripts/voice_log_run.py                       # config/agent.json: Muse brain, Baby Buddy on the Vostro
     python scripts/voice_log_run.py --config config/agent.muse-baseten.json
 
 Baby Buddy is reached through the SSH tunnel in docs/deploy-babybuddy.md. Each note is its own conversation,

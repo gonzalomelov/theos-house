@@ -1,7 +1,7 @@
 """The end-to-end day: the real family agent (config/agent.vostro.json, its plug-ins, Muse on Baseten, Baby Buddy, Home
 Assistant reads) through one first-month day and night on a fast clock.
 
-What is real: every plug-in and its own run loop, the brain (Muse Spark Open, Claude Haiku as its fallback), the ear
+What is real: every plug-in and its own run loop, the brain (Muse Spark Open, the fixed rules as its fallback), the ear
 (Muse hears the voice note), Baby Buddy (a new test child per run, entries written by the agent), Home Assistant reads
 (states, weather, the shopping list).
 
@@ -41,7 +41,6 @@ CHILD = "test-baby"
 BASELINE = Path(os.environ.get("E2E_BASELINE", str(Path.home() / ".cache/parenting-agent-e2e-baseline.json")))
 CHATS = {"gonza": "9000001", "ceci": "9000002", "grandma": "9000003"}
 MUSE_PRICE = (1.25, 4.25)       # USD per million tokens in and out, as in the config
-HAIKU_PRICE = (0.10, 0.50)
 BUDGET_USD = 4.5
 
 
@@ -141,7 +140,7 @@ class Transport:
                 return self.real(request, *args, **kwargs)
             finally:
                 self.clear_bb()
-        if host in ("inference.baseten.co", "api.anthropic.com"):
+        if host == "inference.baseten.co":
             if self.usd >= BUDGET_USD:
                 self.over_budget = True
                 raise urllib.error.URLError(f"e2e: brain budget of {BUDGET_USD} USD used")
@@ -156,10 +155,7 @@ class Transport:
             usage = json.loads(body).get("usage") or {}
         except ValueError:
             return
-        if host == "inference.baseten.co":
-            tin, tout, price = usage.get("prompt_tokens", 0), usage.get("completion_tokens", 0), MUSE_PRICE
-        else:
-            tin, tout, price = usage.get("input_tokens", 0), usage.get("output_tokens", 0), HAIKU_PRICE
+        tin, tout, price = usage.get("prompt_tokens", 0), usage.get("completion_tokens", 0), MUSE_PRICE
         with self.lock:
             self.calls[host] += 1
             self.usd += (tin * price[0] + tout * price[1]) / 1_000_000

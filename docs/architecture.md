@@ -18,7 +18,7 @@ flowchart LR
     ha["Home Assistant<br/>tools, dry until house.live (#9)"]
     chan["Channels<br/>console, Telegram, ear, kitchen speaker<br/>router picks one (#3 #8)"]
   end
-  brain["Brain<br/>Muse Spark Open on Baseten<br/>Claude only as a logged fallback"]
+  brain["Brain<br/>Muse Spark Open on Baseten<br/>fixed rules when it errors"]
 
   cam -->|frames, in memory only| reflex
   reflex -->|alert| skills
@@ -44,7 +44,7 @@ flowchart LR
 | Agent core | `parenting_agent/agent/` | Decide-act loop, tools with an allowed list, swappable brain, plug-ins |
 | Agent memory | `parenting_agent/agent/memory.py` | Conversation and facts in `data/memory.sqlite` |
 | Baby Buddy | `docs/deploy-babybuddy.md` | The baby's log on the family server, only on localhost there |
-| Brain | `parenting_agent/agent/brain.py` | Muse Spark Open on Baseten through the OpenAI-compatible provider, Claude as a logged fallback when a Muse call errors, or the fake rule-based brain for tests |
+| Brain | `parenting_agent/agent/brain.py` | Muse Spark Open on Baseten through the OpenAI-compatible provider, the only model. When a Muse call errors the fixed rules answer and the reply says the brain is busy (a logged `brain_fallback`). The fake rule-based brain runs the tests. No other vendor's model runs, `scripts/eval_brains.py` holds Claude for offline comparisons only |
 | Changing-table skill | `parenting_agent/changing_table.py`, `reflex.py`, `alarm.py`, `skill.py` | Arms, holds notifications, chimes then says "hand", logs the change |
 | Camera skills from config | `parenting_agent/camera_skill.py`, `skills/bath.json` | A skill file with an agent block becomes tools, arm and finish phrases, reminders and prompt facts. The bath is the first, see `docs/bath.md` |
 | SAM 3.1 confirm | `parenting_agent/sam3_local.py`, `sam3_worker.py` | Confirms or cancels the hand alarm, locally, see `docs/sam3-local.md` |
@@ -78,12 +78,12 @@ flowchart LR
 | Confirm or cancel | SAM 3.1 | Skill, then bus | No |
 | Baby log entries | Agent core | Baby Buddy on the family server | No |
 | Rhythm reads | Baby Buddy | Daily rhythm | No |
-| Conversation and tool results | Agent core | Brain | **Yes.** Baseten for Muse Spark Open, Anthropic only for a fallback call. With Telegram, voice notes, the car from Nov 5 and the two opt-in Muse senses below, the only flows that leave. Each call logs its model and host as a `brain_call` event, each fallback a `brain_fallback` event |
+| Conversation and tool results | Agent core | Brain | **Yes.** Baseten for Muse Spark Open, on the free hackathon credits: Meta said content sent on those credits may be used to train future Meta models, so this is not promised to stay private. With Telegram, voice notes, the car from Nov 5 and the two opt-in Muse senses below, the only flows that leave. Each call logs its model and host as a `brain_call` event, each fallback a `brain_fallback` event |
 | House actions | Agent core | Home Assistant on the family server | No. Dry except the study light and the vacuum pause and dock, live since Oct 30 |
 | House sound labels | Camera microphone | Bus | No. Audio stays in memory, never saved |
 | Car seat second opinion (opt-in, `car_seat.muse`) | Head camera, one zoomed still per camera step | Muse Spark Open on Baseten | **Yes**, as part of the brain call. Only that still, made in memory, never saved. Each call is a `carseat_muse` event with its host |
 | Cry reason guess (opt-in, `house_sounds.muse_audio`, off by default) | The first 5 s of a cry the Ear detected | Muse Spark Open on Baseten | **Yes**, as part of the brain call, only after a synthetic canary clip passes. The clip is dropped after the one call. Each call is a `cry_sound_guess` event. No other room audio is ever sent |
-| A parent's voice note (voice is on by default in the family agent and the families bot) | Telegram, sent by the parent | Muse Spark Open on Baseten, the ear (`parenting_agent/voice/ear.py`) | **Yes**, the audio of that one note, to be written down. Converted to WAV by the voice service in the house, held in memory, sent once to inference.baseten.co, never saved. Baseten's docs say it does not store inputs or outputs by default (https://docs.baseten.co/observability/security). Muse hears speech, not other sounds (`results/audio-truth/README.md`). Nothing is kept but the words heard. The spoken reply is made in the house (MMS-TTS), see `docs/voice.md` |
+| A parent's voice note (voice is on by default in the family agent and the families bot) | Telegram, sent by the parent | Muse Spark Open on Baseten, the ear (`parenting_agent/voice/ear.py`) | **Yes**, the audio of that one note, to be written down. Converted to WAV by the voice service in the house, held in memory, sent once to inference.baseten.co, never saved by us. It runs on the free hackathon credits, where Meta said content may be used to train future Meta models. Muse hears speech, not other sounds (`results/audio-truth/README.md`). Nothing is kept but the words heard. The spoken reply is made in the house (MMS-TTS), see `docs/voice.md` |
 | Car readings and commands | Agent core | Simulated car today, Home Assistant `tesla_fleet` from Nov 5 | From Nov 5, yes: Home Assistant polls and commands the car through Tesla's Fleet API. Only the public key file is public |
 | A parent talking to the Echo (when Gonza turns it on, `docs/echo-and-assist.md`) | The kitchen Echo, then Home Assistant, then the voice bridge | The agent, then the Echo | **Yes**, to Amazon: Alexa hears the words in Amazon's cloud as every Alexa command does, and the agent's answer goes to Amazon to be said on the Echo, like the announcements. Assist with a local speech engine stays in the house |
 | Messages to parents | Agent core, router | Ear, kitchen speaker, Telegram | Telegram messages go through Telegram's servers. The ear and the speaker stay in the house |

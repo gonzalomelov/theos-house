@@ -201,4 +201,7 @@ if __name__ == "__main__":
     parser.add_argument("--brain", choices=["baseten", "claude"], default="baseten", help="baseten is Muse Spark Open")
     parser.add_argument("--model", help="override the brain's model")
     args = parser.parse_args()
+    if args.brain == "claude":
+        import eval_brains  # offline model comparison only, never part of the runtime
+        eval_brains.install()
     run(args.out, args.keys_env, args.model, args.brain)

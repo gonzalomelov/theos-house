@@ -265,7 +265,7 @@ class GuardOnEveryPath(unittest.TestCase):
         from tests.test_families import family_of, make, onboard
 
         class Leaky:
-            name, model, destination = "claude", "test", "api.anthropic.com"
+            name, model, destination = "scripted", "test", "inference.baseten.co"
 
             def step(self, system, transcript, tools):
                 return brain_mod.Reply("Here is what the log says. Muse hit the finish reason.",

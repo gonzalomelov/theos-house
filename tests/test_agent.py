@@ -1,6 +1,6 @@
 """Tests for the agent core (issue #1).
 
-The scripted conversation runs with the fake brain always, and with Claude when PA_LIVE=1 and a key
+The scripted conversation runs with the fake brain always, and with the configured live brain when PA_LIVE=1 and a key
 is available (python -m unittest tests.test_agent with PA_LIVE=1 set).
 """
 import json
@@ -95,11 +95,6 @@ class ScriptedConversation:
 
 class FakeBrainConversation(ScriptedConversation, unittest.TestCase):
     brain = {"provider": "fake"}
-
-
-@unittest.skipUnless(os.environ.get("PA_LIVE") == "1", "live brain test, set PA_LIVE=1")
-class ClaudeBrainConversation(ScriptedConversation, unittest.TestCase):
-    brain = {"provider": "claude", "model": "claude-haiku-5-5"}
 
 
 class AllowedListPolicy(unittest.TestCase):

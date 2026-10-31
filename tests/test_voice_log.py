@@ -2,7 +2,7 @@
 and health questions get a kind refusal.
 
 Runs against an in-memory Baby Buddy (fake_babybuddy.py). The fake brain runs always. With PA_LIVE=1 the
-same notes, questions and the safety check also run with the Claude brain.
+same notes, questions and the safety check also run with the configured live brain.
 """
 import datetime
 import os
@@ -171,11 +171,6 @@ class VoiceLogBehaviour:
 
 class FakeBrainVoiceLog(VoiceLogBehaviour, unittest.TestCase):
     brain = {"provider": "fake"}
-
-
-@unittest.skipUnless(os.environ.get("PA_LIVE") == "1", "live brain test, set PA_LIVE=1")
-class ClaudeBrainVoiceLog(VoiceLogBehaviour, unittest.TestCase):
-    brain = {"provider": "claude", "model": "claude-haiku-5-5"}
 
 
 class BabyBuddyMapping(unittest.TestCase):

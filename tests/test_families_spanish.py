@@ -103,7 +103,7 @@ class NoEnglishLeak(unittest.TestCase):
     def test_every_fixed_message_in_spanish_mode(self):
         clock = [datetime.datetime(2026, 10, 28, 9, 0, tzinfo=TZ)]
         brain = SpanishBrain(tokens=(1_000_000, 0))  # $0.10 a call, so the cap below is reached after 2 calls
-        app = make(self, brain=brain, clock=lambda: clock[0], PA_FAMILIES_BRAIN="claude", PA_FAMILIES_FAMILY_USD="0.15",
+        app = make(self, brain=brain, clock=lambda: clock[0], PA_FAMILIES_BRAIN="baseten", PA_FAMILIES_PRICE_IN="0.10", PA_FAMILIES_PRICE_OUT="0.50", PA_FAMILIES_FAMILY_USD="0.15",
                    PA_FAMILIES_MAX_MESSAGES="40")
         replies = [text(r) for r in onboard(app, "111", partner="sí")]
         code = re.search(r"\b([A-Z2-9]{8})\b", replies[3]).group(1)
@@ -179,7 +179,7 @@ class Switch(unittest.TestCase):
 
     def test_the_brain_is_told_the_family_language(self):
         brain = CountingBrain()
-        app = make(self, brain=brain, PA_FAMILIES_BRAIN="claude")
+        app = make(self, brain=brain, PA_FAMILIES_BRAIN="baseten", PA_FAMILIES_PRICE_IN="0.10", PA_FAMILIES_PRICE_OUT="0.50")
         onboard(app, "111", lang="es")
         app.handle("111", "111", "hola")
         self.assertIn("Rioplatense Spanish with voseo", brain.last_system)
@@ -212,7 +212,7 @@ class Delete(unittest.TestCase):
 class Medical(unittest.TestCase):
     def test_spanish_health_questions_are_refused_without_the_brain(self):
         brain = CountingBrain()
-        app = make(self, brain=brain, PA_FAMILIES_BRAIN="claude")
+        app = make(self, brain=brain, PA_FAMILIES_BRAIN="baseten", PA_FAMILIES_PRICE_IN="0.10", PA_FAMILIES_PRICE_OUT="0.50")
         onboard(app, "111", lang="es")
         for question in ("¿le doy ibuprofeno?", "¿es normal este sarpullido?", "tiene tos, ¿le doy algo?"):
             self.assertEqual(text(app.handle("111", "111", question)), ES["REFUSAL"])

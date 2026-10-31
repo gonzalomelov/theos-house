@@ -36,7 +36,7 @@ def settings(**extra):
 
 class CountingBrain:
     """A brain that answers plainly, reports usage, and counts its calls."""
-    name, model, destination = "claude", "test", "api.anthropic.com"
+    name, model, destination = "scripted", "test", "inference.baseten.co"
 
     def __init__(self, tokens=(1000, 100)):
         self.calls, self.tokens = 0, tokens
@@ -153,21 +153,21 @@ class WalledOff(unittest.TestCase):
                  "SOME_URL": "http://vostro:8790", "TS_NODE": "100.64.0.1"}
 
     def test_scrub_keeps_only_the_brain_key(self):
-        env = dict(self.HOUSE_ENV, ANTHROPIC_API_KEY="sk-test", PATH="/usr/bin:/Users/x/.local/bin", PA_DEMO_BRAIN="fake",
+        env = dict(self.HOUSE_ENV, BASETEN_API_KEY="sk-test", PATH="/usr/bin:/Users/x/.local/bin", PA_DEMO_BRAIN="fake",
                    HTTPS_PROXY="http://egress:8888", LANG="en_US.UTF-8")
         removed = settings_mod.scrub_environment(env)
         self.assertEqual(sorted(removed), sorted(self.HOUSE_ENV))
-        self.assertEqual(set(env), {"ANTHROPIC_API_KEY", "PATH", "PA_DEMO_BRAIN", "HTTPS_PROXY", "LANG"})
+        self.assertEqual(set(env), {"BASETEN_API_KEY", "PATH", "PA_DEMO_BRAIN", "HTTPS_PROXY", "LANG"})
 
     def test_brain_env_file_yields_only_the_brain_key(self):
         path = Path(tempfile.mkdtemp()) / ".env"
-        path.write_text("BABYBUDDY_URL=http://127.0.0.1:18790\nHA_TOKEN=abc\nANTHROPIC_API_KEY=sk-test\n# comment\n")
+        path.write_text("BABYBUDDY_URL=http://127.0.0.1:18790\nHA_TOKEN=abc\nBASETEN_API_KEY=sk-test\n# comment\n")
         env = {}
-        self.assertEqual(settings_mod.read_brain_key(path, env), ["ANTHROPIC_API_KEY"])
-        self.assertEqual(env, {"ANTHROPIC_API_KEY": "sk-test"})
+        self.assertEqual(settings_mod.read_brain_key(path, env), ["BASETEN_API_KEY"])
+        self.assertEqual(env, {"BASETEN_API_KEY": "sk-test"})
 
     def test_settings_hold_no_route_to_the_house(self):
-        for brain in ("claude", "baseten", "fake"):
+        for brain in ("baseten", "fake"):
             text = json.dumps(settings_mod.load({"PA_DEMO_BRAIN": brain}))
             self.assertIsNone(settings_mod.HOUSE_VALUES.search(text), brain)
             urls = re.findall(r"https?://[^\"]+", text)

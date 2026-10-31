@@ -37,10 +37,10 @@ Each visitor gets their own agent with its own bus, an in-memory memory file and
 
 ## Walled off
 
-- The demo never loads the family env file. `--brain-env FILE` reads only `ANTHROPIC_API_KEY` or `BASETEN_API_KEY` from it and ignores every other line.
+- The demo never loads the family env file. `--brain-env FILE` reads only `BASETEN_API_KEY` from it and ignores every other line.
 - At start, every variable that could reach the house or holds a secret is removed from the process environment: Home Assistant, Baby Buddy, Telegram, tunnels, tokens and other keys. Only their names are printed.
 - The demo has no Baby Buddy client, no Home Assistant client and no channel plug-in. A test checks the demo code imports none of them and that a conversation with the fake brain opens no network connection.
-- In Docker (`deploy/demo/compose.yml`) the container sits on an internal network with no gateway and no host address. Its only way out is a proxy that allows HTTPS to `api.anthropic.com` and `inference.baseten.co`. A small relay publishes the port on 127.0.0.1 only. No host networking. `deploy/demo/check-wall.sh` probes Home Assistant and Baby Buddy from inside the container after a deploy.
+- In Docker (`deploy/demo/compose.yml`) the container sits on an internal network with no gateway and no host address. Its only way out is a proxy that allows HTTPS to `inference.baseten.co` only. A small relay publishes the port on 127.0.0.1 only. No host networking. `deploy/demo/check-wall.sh` probes Home Assistant and Baby Buddy from inside the container after a deploy.
 
 ## Caps
 
@@ -59,7 +59,7 @@ Each visitor gets their own agent with its own bus, an in-memory memory file and
 
 A connection is the address in `CF-Connecting-IP`, which Cloudflare sets on every request through the tunnel and a visitor cannot change (`PA_DEMO_CLIENT_HEADER`, the socket address when unset). An IPv6 address counts by its /64. It is held only as an HMAC under a key made at start, in memory, never stored or logged, and a restart forgets it. Page loads (`GET /api/state`) never create a visitor: a browser with no demo yet sees a fresh copy built once a minute, so cookie-less requests cannot fill the demo or push anyone out (issue #60).
 
-The brain is Muse Spark Open on Baseten, with Claude Haiku 5.5 only when a Muse call errors (a `brain_fallback` event). Spend is computed from the tokens each call reports, at the price of the brain that answered: Muse Spark Open $1.25 input and $4.25 output per million tokens (Baseten library page, read Oct 28 2026), Claude Haiku 5.5 $0.10 and $0.50 (Anthropic pricing page, read Oct 28 2026). A call that reports no usage is charged a fallback of 4000 input and 400 output tokens. A local run of 22 brain calls cost $0.006.
+The brain is Muse Spark Open on Baseten, the only model. When a Muse call errors the fixed rules answer, the reply starts by saying the brain is busy, the page tags it "Fixed rules, Muse was busy, no AI", and a `brain_fallback` event counts it. No other vendor's model runs in the demo. Spend is computed from the tokens each call reports: Muse Spark Open $1.25 input and $4.25 output per million tokens (Baseten library page, read Oct 28 2026). What a visitor types goes to Muse on Baseten on the free hackathon credits, and Meta said content on those credits may be used to train future Meta models, which the page says. A call that reports no usage is charged a fallback of 4000 input and 400 output tokens. A local run of 22 brain calls cost $0.006.
 
 ## Session records for the real-user scorer
 
@@ -79,9 +79,8 @@ python -m parenting_agent.demo.export_sessions --db other/demo_sessions.sqlite
 ## Run it locally
 
 ```bash
-python -m parenting_agent.demo --brain-env ~/.parenting-agent.env   # Muse Spark Open, Claude fallback
+python -m parenting_agent.demo --brain-env ~/.parenting-agent.env   # Muse Spark Open, the fixed rules when it errors
 PA_DEMO_BRAIN=fake python -m parenting_agent.demo                                                  # offline rules
-PA_DEMO_BRAIN=claude python -m parenting_agent.demo --brain-env ...                                # Claude Haiku alone, for comparison
 ```
 
 Then open http://127.0.0.1:8765 on a phone-sized window. Local visits count as internal.
@@ -90,13 +89,13 @@ Then open http://127.0.0.1:8765 on a phone-sized window. Local visits count as i
 
 Deployed on Oct 28 2026. Three containers in the compose project `pa-demo`: `pa-demo` (only on the internal network `pa-demo-internal`, isolated gateway, no host address), `pa-demo-egress` (tinyproxy, HTTPS to the brain hosts only) and `pa-demo-edge` (socat, published on 127.0.0.1:4820 only). The Cloudflare tunnel sends `baby.bygmv.com` to that port. Base images are pinned by digest and the images are tagged with the git commit.
 
-- Env file `~/apps/pa-demo.env`, mode 600, three names: `BASETEN_API_KEY`, `ANTHROPIC_API_KEY` (the fallback) and `PA_DEMO_INTERNAL_SECRET`. `push-env` makes the secret on the Vostro the first time (32 random bytes, hex) and keeps it on later pushes.
+- Env file `~/apps/pa-demo.env`, mode 600, two names: `BASETEN_API_KEY` and `PA_DEMO_INTERNAL_SECRET`. `push-env` makes the secret on the Vostro the first time (32 random bytes, hex) and keeps it on later pushes.
 - Data `~/apps/pa-demo-data`, owned by the container user (uid 10001), mode 700.
 - Backups: `pa-backup.timer` (systemd user unit) copies every SQLite file of the demo and the families service daily at about 04:40 into `~/backups/parenting-agent-public`, keeps 7 days.
 - Mark your own browser as internal before testing: open the address in `~/Engineering/gonza/meta-hackathon-2026/internal-url.txt` once. `sh deploy/public.sh demo internal-url FILE` writes it there (mode 600) without printing it. That file is excluded from git like `invites.txt`. Browsers marked with the old `/internal` address before Oct 28 evening are no longer internal.
 
 ```bash
-sh deploy/public.sh demo push-env     # BASETEN_API_KEY and ANTHROPIC_API_KEY from the meta-hackathon-2026 .env, the internal secret kept or made
+sh deploy/public.sh demo push-env     # BASETEN_API_KEY from the meta-hackathon-2026 .env, the internal secret kept or made
 sh deploy/public.sh demo internal-url ~/Engineering/gonza/meta-hackathon-2026/internal-url.txt
 WALL_EXTRA_TARGETS="192.0.2.10:80 192.0.2.10:22" sh deploy/public.sh demo deploy
 sh deploy/public.sh demo check | status | logs 200 | stop | start

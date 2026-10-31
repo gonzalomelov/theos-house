@@ -4,7 +4,7 @@ Providers, chosen by skill config reasoning.provider:
 - none: no reasoning calls.
 - muse: Muse Spark Open, Meta's open weights, on Baseten's OpenAI-compatible endpoint. Needs BASETEN_API_KEY.
   It always reasons. Its thoughts come back apart (reasoning_content) and are never read.
-- claude: the fallback stand-in. Needs ANTHROPIC_API_KEY.
+Only Meta models run here. Any other provider is refused.
 
 decide() never acts. It returns a proposal ({"action": name or None, "ask_parent": bool, "why": text}) and
 the house layer checks it against the allowed list.
@@ -72,16 +72,6 @@ def build(config):
     provider = config.get("provider", "none")
     if provider == "none":
         return NoReasoning()
-    if provider == "claude":
-        key = os.environ.get("ANTHROPIC_API_KEY")
-        if not key:
-            raise Unavailable("claude: ANTHROPIC_API_KEY is not set")
-        model = config.get("model", "claude-haiku-5-5")
-        return HttpReasoning(
-            "claude", "https://api.anthropic.com/v1/messages",
-            {"x-api-key": key, "anthropic-version": "2023-06-01", "content-type": "application/json"},
-            lambda user: {"model": model, "max_tokens": 300, "system": PROMPT, "messages": [{"role": "user", "content": user}]},
-            lambda reply: "".join(b.get("text", "") for b in reply.get("content", []) if b.get("type") == "text"))
     if provider == "muse":
         key = os.environ.get("BASETEN_API_KEY")
         if not key:

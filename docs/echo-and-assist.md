@@ -72,7 +72,7 @@ agent answers -> the bridge returns the reply -> Assist says it, or notify.gonza
 
 ## What leaves the house
 
-The Echo route sends what the parent says to Amazon, as every Alexa command already does, and the agent's spoken answer goes to Amazon to be said on the Echo, as the announcements already do. So the answer's facts (a time, an amount) reach Amazon. Assist with a local speech engine keeps everything in the house. The brain call to Muse on Baseten is the same as for a typed message.
+The Echo route sends what the parent says to Amazon, as every Alexa command already does, and the agent's spoken answer goes to Amazon to be said on the Echo, as the announcements already do. So the answer's facts (a time, an amount) reach Amazon. Assist with a local speech engine keeps everything in the house. The brain call to Muse on Baseten is the same as for a typed message: it runs on the free hackathon credits, where Meta said content may be used to train future Meta models.
 
 ## What needs Gonza
 

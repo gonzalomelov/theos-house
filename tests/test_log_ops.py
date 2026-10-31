@@ -153,8 +153,8 @@ class OpsRetry(LogOps):
 class OpsSpendCap(unittest.TestCase):
     def test_after_the_cap_the_free_rules_still_log(self):
         from test_families import CountingBrain, family_of, make, onboard
-        brain = CountingBrain(tokens=(1_000_000, 0))  # $0.10 a call at Haiku prices
-        app = make(self, brain=brain, PA_FAMILIES_BRAIN="claude", PA_FAMILIES_FAMILY_USD="0.15")
+        brain = CountingBrain(tokens=(1_000_000, 0))  # $0.10 a call at these test prices
+        app = make(self, brain=brain, PA_FAMILIES_BRAIN="baseten", PA_FAMILIES_PRICE_IN="0.10", PA_FAMILIES_PRICE_OUT="0.50", PA_FAMILIES_FAMILY_USD="0.15")
         onboard(app, "111")
         app.handle("111", "111", "bottle 100 ml")  # two calls: no log_ops back, then the guarded loop, now capped
         app.handle("111", "111", "bottle 130 ml")
