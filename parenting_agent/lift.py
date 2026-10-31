@@ -73,6 +73,7 @@ class LiftCheck:
 
     def reset(self):
         self.base, self.base_s, self.lifted, self.lift_cm, self.failed_s = None, None, False, None, None
+        self.unseen_s = None
         self.recent = deque(maxlen=self.cfg["smooth_frames"])
         self.wants_anchor = self.cfg["regions"] == "sam3"
 
@@ -117,7 +118,7 @@ class LiftCheck:
                           "centre": np.argwhere(mask).mean(axis=0)[::-1]})
         scene = ~near[xy[:, 1], xy[:, 0]]
         self.base = {"hands": hands, "scene_points": points[scene], "scene_descriptors": descriptors[scene]}
-        self.base_s, self.failed_s = stream_s, None
+        self.base_s, self.failed_s, self.unseen_s = stream_s, None, None
         self.recent.clear()
 
     def _match(self, base_points, base_descriptors, points, descriptors, keep=None):
@@ -164,6 +165,8 @@ class LiftCheck:
         cfg = self.cfg
         split = sam and cfg["split_scene"]
         lifts = (self._held_lifts(gray, points, descriptors) or [None]) if split else self._lifts(gray, points, descriptors)
+        if split:  # no anchored region found at all: the hands may have left (unseen_for)
+            self.unseen_s = (stream_s if self.unseen_s is None else self.unseen_s) if lifts == [None] else None
         if any(v is None for v in lifts):  # cannot measure a hand: hold the last reading, start over if it lasts
             self.failed_s = stream_s if self.failed_s is None else self.failed_s
             if stream_s - self.failed_s >= cfg["refresh_s"] and not self.lifted:
@@ -173,6 +176,10 @@ class LiftCheck:
         if self._smooth(lifts, max if split else min) and self.lift_cm < cfg["rest_cm"] and stream_s - self.base_s >= cfg["refresh_s"]:
             self._rebase(points, descriptors, masks, stream_s)
         return self.lifted
+
+    def unseen_for(self, stream_s):
+        """Seconds no anchored hand region has been found by update (split_scene), 0 while one is."""
+        return 0.0 if self.unseen_s is None else stream_s - self.unseen_s
 
     def held(self, gray, stream_s):
         """The anchored hand regions while the reflex has lost the hand (a grip on a diaper hides its landmarks).

@@ -1118,7 +1118,7 @@ YESTERDAY = re.compile(r"\bayer\b|\byesterday\b", re.I)
 SO_FAR = re.compile(r"hasta ahora|hasta hoy|y hoy|\bhoy\b|so far|until now|and today|\btoday\b", re.I)
 # A reply that says the agent did something only one tool does. It goes out only when that tool ran in the turn.
 CLAIM_TOOLS = [
-    (re.compile(r"\b(told|messaged|texted|notified|pinged|let (him|her|them|your partner|\w+) know|asked (him|her|them|your|ceci|"
+    (re.compile(r"\b(told|messaged|texted|notified|pinged|let (?!me\b|us\b)(him|her|them|your partner|\w+) know|asked (him|her|them|your|ceci|"
                 r"gonza|parent)|sent (him|her|them|ceci|gonza|your|a message|parent)|(is|are) on (his|her|their|the) way|"
                 r"le avis[eé]|les avis[eé]|le dije|les dije|le escrib[ií]|le mand[eé]|le ped[ií]|va en camino|est[aá] en camino)\b", re.I),
      {"call_partner", "notify", "send_handover_to_sitter", "reply_to_visitor"}),

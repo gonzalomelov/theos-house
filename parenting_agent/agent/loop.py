@@ -198,7 +198,7 @@ TEXTS = {
         "OLD_EDIT": "I did not change anything: the latest I have is {entry}, more than {hours} hours ago. Which one do you mean, or should I log it new?",
         "EDIT_WHICH": "I did not change anything. The latest I have is {entry}. Is that the one to fix?",
         "LAST_NOT_LOGGED": "I did not change anything: the one before was not logged. Tell me what it was and I log it.",
-        "DID_ONLY": "Nothing was sent. I only did this: {what}.",
+        "DID_ONLY": "Nothing was sent.",
         "DONE": "Done. {what}.", "NOT_DONE": "Not done. {what}.", "NOTHING_WAITING": "Not done. Nothing was waiting.",
         "EDITED": "Fixed {entry}: {changes}.", "NO_ML": "no ml", "ASK_BREAST": "How many minutes was it, and which side?",
         "UNCHANGED": "{entry} already says that, nothing changed.",
@@ -233,7 +233,7 @@ TEXTS = {
         "OLD_EDIT": "No cambié nada: lo último que tengo es {entry}, de hace más de {hours} horas. ¿Cuál querés corregir, o lo anoto nuevo?",
         "EDIT_WHICH": "No cambié nada. Lo último que tengo es {entry}. ¿Es esa la que querés corregir?",
         "LAST_NOT_LOGGED": "No cambié nada: la anterior no quedó anotada. Decime qué fue y la anoto.",
-        "DID_ONLY": "Todavía no mandé nada. Solo hice esto: {what}.",
+        "DID_ONLY": "Todavía no mandé nada.",
         "DONE": "Listo. {what}.", "NOT_DONE": "No se hizo. {what}.", "NOTHING_WAITING": "No se hizo nada. No había nada esperando.",
         "EDITED": "Corregí {entry}: {changes}.", "NO_ML": "sin ml", "ASK_BREAST": "¿Cuántos minutos fue y de qué lado?",
         "UNCHANGED": "{entry} ya decía eso, no cambié nada.",
@@ -430,6 +430,19 @@ LAST_FEED = {"was": {"es": "La última toma fue {what}.", "en": "The last feed w
 def plain_name(name):
     """A tool's name as a parent reads it: "call partner", never the code name call_partner (final_guard.py)."""
     return str(name).replace("_", " ")
+
+
+def did_lines(results, lang):
+    """What the acting tools of a turn did, as a parent reads it: each tool's own short answer ("watching the changing
+    table") that holds no machinery and is in the parent's language. Never the tool's name, which said "I only did this:
+    start changing table" on the lens (results/glasses-live-sam3)."""
+    lines = []
+    for result in results.values():
+        text = result.strip().rstrip(".") if isinstance(result, str) else ""
+        if (text and len(text) <= 120 and "\n" not in text and final_guard.why_of(text + ".", lang) is None
+                and (lang != "es" or rules.looks_spanish(text))):  # the tools answer in English
+            lines.append(text[0].upper() + text[1:] + ".")
+    return list(dict.fromkeys(lines))
 
 
 def describe_call(call):
@@ -1283,7 +1296,7 @@ class Agent:
         logged, kept, changed, stored = {}, [], [], []
         failed, acted, checked, edit_checked = False, None, False, False
         empty_checked = False
-        actors, act_checked = set(), False
+        actors, act_checked = {}, False  # the acting tools that ran this turn: name -> result
         read, next_text, held_delete = set(), None, None
         asked = 0
         wanted = rules.log_kind(request) if request is not None else None
@@ -1429,7 +1442,7 @@ class Agent:
                         continue
                     self.bus.publish("guard", status="claimed_action", asked=bool(asked), unmet=sorted(unmet))
                     if actors and not asked:
-                        return finish(self.text("DID_ONLY", request, what=", ".join(sorted(plain_name(a) for a in actors))), fixed=True)
+                        return finish(" ".join([self.text("DID_ONLY", request)] + did_lines(actors, lang)), fixed=True)
                     if red_flag or safety_said:
                         return finish(NOT_CALLED[lang], fixed=True)
                     return finish((NOT_SENT if asked else NOT_SENT_NOTHING)[lang], fixed=True)
@@ -1717,7 +1730,7 @@ class Agent:
                 elif status == "ran" and call["name"] not in READ_TOOLS and acted is None:
                     acted = call["name"]
                 if status == "ran" and call["name"] not in READ_TOOLS | QUIET_TOOLS:
-                    actors.add(call["name"])
+                    actors[call["name"]] = result
                 if key is not None and status == "ran":
                     logged[key] = result
                     kept.append(call["arguments"])

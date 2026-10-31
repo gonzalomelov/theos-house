@@ -12,6 +12,13 @@ sam3). No hand mask on the baby reads off. Between looks every frame goes throug
 regions, which runs locally in milliseconds and catches a hand held 2 to 5 cm above the baby, which SAM 3.1 itself
 reads as on.
 
+A look takes about 2 s and the one in flight when the hands leave was sent on a frame that still shows them, so the
+looks alone keep "on" for 2 to 4 s after the hands left (3.3 s live, results/glasses-live-sam3). The lift check closes
+that gap: once no anchored hand region can be found for lift.held_gone_s the frames read off ("gone"), and stay off
+until a look of a frame taken after the hands were lost lands. A look of an older frame that still reads on is
+stale and ignored. Gone moves only the frame state, so the lens clears; the alarm still waits for a look that reads
+off, so a region lost to a blur never chimes or speaks.
+
 The alarm here is new and small. A look that reads off raises it, chimes and speaks "hand" at once: SAM 3.1 already is
 the slow, careful look the MediaPipe path waits for. A lifted reading raises it and chimes, and speaks once it has
 lasted voice_hold_s. A look or the lift check reading on for clear_after_on_s clears it, and a prompt not yet spoken is
@@ -105,6 +112,7 @@ class SamOnlySkill:
         self.lift = LiftCheck(lift) if lift.get("enabled") else None
         self.pool = ThreadPoolExecutor(max_workers=1)
         self.job, self.look_state, self.armed_at, self.frames = None, None, None, 0
+        self.gone_s = None  # when the anchored hand regions were lost, while the frames read gone
         source = getattr(getattr(detector, "impl", None), "source", None)
         self.bus.publish("hands_mode", mode="sam3_only", lift=self.lift is not None)
         if source:
@@ -135,6 +143,14 @@ class SamOnlySkill:
             self.bus.publish("sam3_error", error=str(error)[:200])
             return
         on = touching(hands, baby)
+        if self.gone_s is not None:
+            if on and look_s < self.gone_s:  # a frame from before the hands were lost: it cannot say they came back
+                self.bus.publish("sam3_look", stream_s=round(look_s, 3), state="stale", hands=len(hands),
+                                 seconds=round(seconds, 3))
+                return
+            self.gone_s = None
+            if on and self.lift is not None:
+                self.lift.reset()  # the hands are back, maybe elsewhere: anchor them again
         if self.lift is not None and on and (self.lift.base is None or self.lift.wants_anchor) and not self.lift.lifted:
             self.lift.anchor(gray, hands, baby, look_s)
             self.bus.publish("anchor", stream_s=round(look_s, 3), hands=len(hands), based=self.lift.base is not None)
@@ -157,10 +173,15 @@ class SamOnlySkill:
             started = time.monotonic()
             if self.lift.update(gray, [True], stream_s):
                 state = "lifted"
+            elif self.gone_s is None and self.lift.unseen_for(stream_s) >= self.lift.cfg["held_gone_s"]:
+                self.gone_s = self.lift.unseen_s
+                self.bus.publish("hands_gone", stream_s=round(stream_s, 3), since_s=round(self.gone_s, 3))
             lift_cm = None if self.lift.lift_cm is None else round(self.lift.lift_cm, 2)
             lift_s = round(time.monotonic() - started, 4)
-        self.bus.publish("frame", stream_s=round(stream_s, 3), state=state or "unknown", hands=None, seconds=0.0,
-                         lift_cm=lift_cm, lift_s=lift_s)
+        if self.gone_s is not None and state == "on":
+            state = "gone"
+        self.bus.publish("frame", stream_s=round(stream_s, 3), state="off" if state == "gone" else state or "unknown",
+                         hands=None, seconds=0.0, lift_cm=lift_cm, lift_s=lift_s)
         self.alarm.on_state(state, round(stream_s, 3))
         if self.job is None:
             self.job = (gray, stream_s, self.pool.submit(self._look, frame_bgr.copy()))

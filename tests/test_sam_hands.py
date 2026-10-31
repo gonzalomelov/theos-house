@@ -91,6 +91,95 @@ class SamOnly(unittest.TestCase):
         self.assertFalse(touching(masks_for(True)[0], None))
 
 
+class TexturedHands:
+    """A head camera frame: a textured table, and the textured hand patch on the baby while hands_on."""
+    HAND = (slice(140, 250), slice(260, 380))
+
+    def __init__(self):
+        import cv2
+
+        def noise(seed):
+            cells = np.random.default_rng(seed).integers(0, 255, (90, 160), np.uint8)
+            return cv2.GaussianBlur(cv2.resize(cells, SHAPE[::-1], interpolation=cv2.INTER_NEAREST), (3, 3), 0)
+        self.table, self.hand = noise(1), noise(2)
+
+    def frame(self, hands_on):
+        import cv2
+        gray = self.table.copy()
+        if hands_on:
+            gray[self.HAND] = self.hand[self.HAND]
+        return cv2.cvtColor(gray, cv2.COLOR_GRAY2BGR)
+
+
+class SlowSam:
+    """SAM 3.1 that reads the frame it was sent (hand patch there or not) and answers look_s later in stream time."""
+    name = "sam3_local"
+
+    def __init__(self, scene):
+        import threading
+        self.scene, self.release = scene, threading.Event()
+
+    def masks(self, frame_bgr, held=False):
+        self.release.wait(5)
+        self.release.clear()
+        hand = np.zeros(SHAPE, bool)
+        hand[TexturedHands.HAND] = True
+        baby = np.zeros(SHAPE, bool)
+        baby[100:300, 200:440] = True
+        on = np.array_equal(frame_bgr[TexturedHands.HAND][..., 0], self.scene.hand[TexturedHands.HAND])
+        return ([hand] if on else []), baby
+
+
+class HandsLeaveTheLens(unittest.TestCase):
+    """Live Oct 31 (results/glasses-live-sam3): the lens kept "Hand on the baby" 3.3 s after both hands left, because
+    a 2 s look sent while the hands were still there had to land first. The lift check reads the anchored regions
+    gone in under 1 s and the lens clears, while the voice still waits for SAM 3.1."""
+    STEP, LOOK_S = 1 / 3, 2.0  # about 3 frames a second and 2 s a look, as live
+
+    def watch(self, on_until, frames=60):
+        cfg = config()
+        cfg["lift"]["enabled"] = True
+        bus, scene = Bus(), TexturedHands()
+        sam = SlowSam(scene)
+        skill = SamOnlySkill(cfg, bus, sam)
+        skill.arm()
+        for i in range(frames):
+            t = i * self.STEP
+            if skill.job is not None and t - skill.job[1] >= self.LOOK_S - 1e-9:
+                sam.release.set()
+                skill.job[2].result(timeout=5)
+            skill.on_frame(scene.frame(on_until(t)), t)
+        sam.release.set()
+        skill.close()
+        return bus
+
+    def frames(self, bus):
+        return [(e["stream_s"], e["state"]) for e in bus.history if e["kind"] == "frame"]
+
+    def test_the_lens_clears_within_a_second_of_the_hands_leaving(self):
+        left = 9.1
+        bus = self.watch(lambda t: t < left)
+        states = self.frames(bus)
+        self.assertEqual({s for t, s in states if 3 < t < left}, {"on"})  # no flicker while the hands rest
+        first_off = min(t for t, s in states if t >= left and s == "off")
+        self.assertLessEqual(first_off - left, 1.0)
+        self.assertTrue(all(s == "off" for t, s in states if t >= first_off))  # stays off, the stale look is ignored
+        voice = [e["stream_s"] for e in bus.history if e["kind"] == "voice"]
+        self.assertEqual(len(voice), 1)  # spoken once, by the look that saw no hand
+        self.assertGreater(voice[0], first_off)
+        self.assertEqual(bus.count("chime"), 1)
+
+    def test_resting_hands_never_read_gone(self):
+        bus = self.watch(lambda t: True)
+        self.assertEqual({s for t, s in self.frames(bus) if t > 3}, {"on"})
+        self.assertEqual((bus.count("hands_gone"), bus.count("chime"), bus.count("voice")), (0, 0, 0))
+
+    def test_hands_back_before_a_fresh_look_never_alert(self):
+        bus = self.watch(lambda t: not 9.1 <= t < 9.9)
+        self.assertEqual((bus.count("chime"), bus.count("voice")), (0, 0))
+        self.assertEqual(self.frames(bus)[-1][1], "on")
+
+
 class Alarm(unittest.TestCase):
     CFG = {"voice_hold_s": 1.2, "clear_after_on_s": 0.5, "voice_text": "hand"}
 
