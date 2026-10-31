@@ -8,7 +8,7 @@ A persistent agent for new parents, built with Muse Spark Open and SAM 3.1 durin
 
 | When | What | Where |
 |---|---|---|
-| Oct 21 to 25, before the event (prior work) | The MediaPipe hand reflex with the contact rule and the chime then voice alarm, built Oct 22 to 23 in the private prep repo and ported here on Oct 26 | commit f41acfa (`reflex.py`, `alarm.py`), a port, not new work |
+| Oct 21 to 25, before the event (prior work) | The MediaPipe hand reflex with the contact rule and the chime then voice alarm, built Oct 22 to 23 in the private prep repo | Not in this repo since Oct 31: it is the separate private library `a private repo` v0.1.0, installed by `requirements-prior.txt`. `reflex.py` and `alarm.py` here hold only the event-time changes, as subclasses. Without the library the skills run SAM 3.1 only. It was ported in on Oct 26 (f41acfa) and moved out on Oct 31 |
 | Oct 21 to 25, before the event (prior work) | SAM 3.1 run locally on the Mac GPU, the iPhone Safari camera page, the PANNs sound thresholds (PANNs left the runtime on Oct 31) | ported into `scripts/sam3-setup.sh`, `sam3_worker.py`, `sources.py`, `phone.html`, and `hearing.py` until Oct 31. Full list in [Prior work](#prior-work-oct-21-to-25-2026-before-the-event) |
 | Oct 26, after the 12 PM ET start | The repo's first commit, 4f1898a at 14:03 ET, and the agent core skeleton | 4f1898a to 90ca5a3 |
 | Oct 27 | SAM 3.1 confirms or cancels the hand alarm | c0d7b5d (PR #25) |
@@ -28,6 +28,8 @@ python3.11 -m venv .venv && .venv/bin/pip install -r requirements.txt
 .venv/bin/python -m parenting_agent --config config/agent.fake.json --check      # load the agent with the offline, rule-based brain
 .venv/bin/python -m parenting_agent.demo --brain-env FILE                         # the demo on http://127.0.0.1:8765, FILE holds BASETEN_API_KEY
 ```
+
+The camera skills run SAM 3.1 only on such a clone. The MediaPipe reflex and alarm are prior work (Oct 22 to 23) in a separate private library: with access, `.venv/bin/pip install -r requirements-prior.txt` adds it, and `"hands"` in the agent config picks `mediapipe`, `sam3_only` or `auto`.
 
 More in [Run it](#run-it).
 
@@ -81,7 +83,7 @@ One long-running agent sits in the middle. Everything it sees, hears and does go
 
 - **Memory.** The baby's log lives in Baby Buddy, an open-source baby tracker running on the family's own server. The agent's own notes and conversation live in a local SQLite file.
 - **Brain.** A model with tools decides what to do: log a feed, answer a question from the log, arm a skill, act on the house. Anything outside the allowed list waits for the yes of the parent who was asked, on the chat where it was asked.
-- **Skills.** The changing-table and bath skills watch through a head-worn camera. A local hand detector raises the alarm in under a second when both hands leave the baby, and Meta's SAM 3.1 confirms or cancels the alarm. A hand held 2 to 5 cm above the baby looks like a touch to both, so a lift check measures how much the hand grew toward the head camera. On the changing table it measures inside SAM 3.1's hand masks. In the bath it needs both hands, so one hand on the baby never reads as a hover (one hand silent in 10 of 10 baths, both hands off spoken 10 of 10, `results/bath/onehand/README.md`). On a blind set frozen before the design (Oct 29) it caught 22 of 32 hovers and never said hand on 16 touches, 2 touches chimed, against 0 of 32 for the reflex alone and 21 of 32 without SAM 3.1, which said hand on 1 touch. 8 of the 16 bath hovers show one hand and are missed by design (`results/hover/blind/README.md`). An earlier, smaller blind render gave 15 of 16 hovers with 2 false alarms on 16 touches (`results/hover/lift/README.md`). Meta's depth models did not see the lift and are not used. It is untested on a real hand.
+- **Skills.** The changing-table and bath skills watch through a head-worn camera. A local hand detector raises the alarm in under a second when both hands leave the baby, and Meta's SAM 3.1 confirms or cancels the alarm. A hand held 2 to 5 cm above the baby looks like a touch to both, so a lift check measures how much the hand grew toward the head camera. On the changing table it measures inside SAM 3.1's hand masks. In the bath it needs both hands, so one hand on the baby never reads as a hover (one hand silent in 10 of 10 baths, both hands off spoken 10 of 10, `results/bath/onehand/README.md`). On a blind set frozen before the design (Oct 29) it caught 22 of 32 hovers and never said hand on 16 touches, 2 touches chimed, against 0 of 32 for the reflex alone and 21 of 32 without SAM 3.1, which said hand on 1 touch. 8 of the 16 bath hovers show one hand and are missed by design (`results/hover/blind/README.md`). An earlier, smaller blind render gave 15 of 16 hovers with 2 false alarms on 16 touches (`results/hover/lift/README.md`). Meta's depth models did not see the lift and are not used. It is untested on a real hand. One setting, `"hands": "sam3_only"`, runs the skills on SAM 3.1 alone with no MediaPipe, in case the organizers rule MediaPipe out: on the same blind set, scored once on Oct 31, 22 of 32 hovers (table 16 of 16, bath 6 of 16), 0 of 16 touches said hand, 2 chimed, the same totals as the MediaPipe design, but slower when both hands leave at once (a SAM 3.1 look takes 1.5 to 3 s). A clone without the prior work library runs this way (`results/hover/blind/README.md`).
 - **Daily rhythm.** From the log it learns the baby's patterns and speaks first: the next feed, unusual days, a night summary and a fair split of the night between two parents.
 - **House.** Home Assistant is its hands: lights, notifications, speakers, the robot vacuum, the TV, as tools behind the action policy (`parenting_agent/house_tools.py`). Everything runs dry except the actions named in `house.live_actions` (`parenting_agent/house_live.py`). Since Oct 30 that is the night feed's study light, nap mode's vacuum pause and dock and the shopping list add, on the family agent only. Replies say which happened: done for real, or only written down.
 
@@ -291,7 +293,7 @@ The repo was created on Oct 26 2026 at 15:03 Montevideo time (14:03 ET), after t
 | Muse Spark Open as the brain of the family agent, the families bot and the demo, Claude only as a logged fallback (removed from the runtime on Oct 31, the fixed rules answer instead) | #4 | #61 | 115dc2e |
 | Red team round 1 closed, a regression test per attack | #60 | #63 | ed6c488 |
 
-The first commits of Oct 26 (4f1898a to 90ca5a3) are an early skeleton that the issues above reviewed and partly rewrote. Commit f41acfa ports the reflex and the chime then voice alarm from the prior work below.
+The first commits of Oct 26 (4f1898a to 90ca5a3) are an early skeleton that the issues above reviewed and partly rewrote. Commit f41acfa ported the reflex and the chime then voice alarm from the prior work below. On Oct 31 that code moved out to its own private library repository, `a private repo`, and this repo keeps only its own changes on top (see below). The Oct 26 port is still in this repo's git history.
 
 **Planned, not built yet:** the glasses app on real glasses, live Home Assistant actions beyond the study light and the vacuum pause and dock (#9, dry run today), demo and submission (#11).
 
@@ -301,7 +303,7 @@ Built in the prep repo `gonzalomelov/meta-hackathon-2026` (64 commits from Oct 2
 
 | Prior work | Date | Reused here as |
 |---|---|---|
-| MediaPipe hand reflex with the contact rule, chime on every alarm then a spoken prompt after a 1.2 s hold | Oct 22 to 23 | `reflex.py`, `alarm.py` (ported in f41acfa) |
+| MediaPipe hand reflex with the contact rule, chime on every alarm then a spoken prompt after a 1.2 s hold | Oct 22 to 23 | The library `a private repo` v0.1.0, a separate private repository, the files exactly as ported in f41acfa. Installed with `pip install -r requirements-prior.txt`. Our event-time changes are separate code here: `parenting_agent/reflex.py` (near readings, the hands on the baby, their landmarks for the lift check) and `parenting_agent/alarm.py` (the bounded waits for SAM 3.1, returning hands, unseen and lifted alarms) subclass it. Without it, `"hands": "auto"` runs SAM 3.1 only (`parenting_agent/sam_hands.py`, no prior code) |
 | SAM 3.1 run locally from Meta's weights, then on the Mac GPU (MPS) | Oct 23 to 24 | `scripts/sam3-setup.sh`, `sam3_worker.py` |
 | Touch versus hover kill test, 21 of 21 hovers read off on one clip | Oct 23 to 24 | Not used. Replaced by the Oct 28 ablation in `results/hover/README.md` |
 | iPhone Safari page as the head camera over Tailscale | Oct 23 | `sources.py`, `phone.html` |

@@ -18,10 +18,10 @@ from .. import confirm as confirm_mod
 from ..agent.plugins import Plugin
 from ..agent.tools import Tool, schema
 from ..bus import Bus
-from ..reflex import MediaPipeReflex
+from .. import hands as hands_mod
 from ..rhythm import patterns
 from ..rhythm.engine import deliver
-from ..skill import Skill, watch
+from ..skill import watch
 from ..sources import VideoSource
 from ..tracking import BabyBuddy, Tracker
 
@@ -146,7 +146,7 @@ class Day:
         if self.env.get("BABYBUDDY_URL") and self.env.get("BABYBUDDY_TOKEN"):
             client = TaggedBabyBuddy(self.env["BABYBUDDY_URL"], self.env["BABYBUDDY_TOKEN"])
         tracker = Tracker(cfg["tracking"], bus, client=client)
-        skill = Skill(cfg, bus, MediaPipeReflex(cfg["contact"]), confirm_detector=detector, tracker=tracker)
+        skill = hands_mod.build(cfg, bus, hands_mod.mode(cfg.get("hands")), confirm_detector=detector, tracker=tracker)
         source = VideoSource(str(loop), loops=True)
         while source.started is None and not source.stopped:
             time.sleep(0.01)

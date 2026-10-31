@@ -19,8 +19,8 @@ import time
 from . import config as config_mod
 from .agent.plugins import Plugin
 from .agent.tools import Tool, schema
-from .reflex import MediaPipeReflex
-from .skill import Skill, watch
+from . import hands as hands_mod
+from .skill import watch
 from .sources import PhoneSource, open_source
 from .speaker import Speaker
 
@@ -146,9 +146,10 @@ class CameraSkill:
             if busy:
                 return f"another camera skill is still on ({busy}), finish it first"
             # The models load first (SAM 3.1 takes seconds), then the camera opens, so no frame waits for them.
-            reflex = self._reflex or MediaPipeReflex(self.skill_cfg["contact"])
             self.tracker = AgentLogTracker(self.skill_cfg["tracking"], self.agent.bus, self.agent.baby_log, self.name)
-            self.skill = Skill(self.skill_cfg, self.agent.bus, reflex, confirm_detector=self._confirm, tracker=self.tracker)
+            chosen = hands_mod.mode(self.owner.config.get("hands"), self.skill_cfg.get("hands"))
+            self.skill = hands_mod.build(self.skill_cfg, self.agent.bus, chosen, reflex=self._reflex,
+                                         confirm_detector=self._confirm, tracker=self.tracker)
             source = self._source or (lambda: open_source(self.cfg["source"]))
             self.source = source() if callable(source) else source
             if isinstance(self.source, PhoneSource):

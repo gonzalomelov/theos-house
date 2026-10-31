@@ -5,6 +5,11 @@ import time
 import unittest
 from pathlib import Path
 
+from parenting_agent import alarm as _prior_alarm  # noqa: E402
+
+if not _prior_alarm.AVAILABLE:  # the MediaPipe path is prior work in a private repo (requirements-prior.txt)
+    raise unittest.SkipTest("needs the prior work library, the SAM 3.1 only path is in test_sam_hands")
+
 from parenting_agent import confirm as confirm_mod
 from parenting_agent.agent import build
 from parenting_agent.agent import config as agent_config

@@ -26,8 +26,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from parenting_agent import config as config_mod  # noqa: E402
 from parenting_agent import confirm as confirm_mod  # noqa: E402
 from parenting_agent.bus import Bus  # noqa: E402
-from parenting_agent.reflex import MediaPipeReflex  # noqa: E402
-from parenting_agent.skill import Skill, watch  # noqa: E402
+from parenting_agent import hands as hands_mod  # noqa: E402
+from parenting_agent.skill import watch  # noqa: E402
 from parenting_agent.sources import VideoSource  # noqa: E402
 
 SKILLS = {"changing_table": "skills/changing-table.json", "bath": "skills/bath.json"}
@@ -64,9 +64,9 @@ def skill_config(scene, confirm_wait_s, lift=None, lift_cfg=None, alarm_cfg=None
     return cfg
 
 
-def run_moment(moment, clip, cfg, reflex, detector, wait_without_confirm=False):
+def run_moment(moment, clip, cfg, reflex, detector, wait_without_confirm=False, hands="mediapipe"):
     bus = Bus()
-    skill = Skill(cfg, bus, reflex, confirm_detector=detector or confirm_mod.NoConfirm())
+    skill = hands_mod.build(cfg, bus, hands, reflex=reflex, confirm_detector=detector or confirm_mod.NoConfirm())
     if wait_without_confirm:  # control: the same longer hold on a near reading, with nobody to answer it
         skill.alarm.waits_for_confirm = cfg["alarm"].get("confirm_wait_s") is not None
     source = VideoSource(str(clip), loops=False)
@@ -176,6 +176,8 @@ def main(argv=None):
     parser.add_argument("--splits", default=None, help="comma separated, overrides --split (the wave 2 dev set is dev,test)")
     parser.add_argument("--only", default=None, help="comma separated moment ids")
     parser.add_argument("--out", type=Path, required=True)
+    parser.add_argument("--hands", choices=["mediapipe", "sam3_only"], default="mediapipe",
+                        help="sam3_only: SAM 3.1 alone, no MediaPipe (needs --confirm sam3_local)")
     args = parser.parse_args(argv)
 
     root = args.set.expanduser()
@@ -185,13 +187,14 @@ def main(argv=None):
     if args.only:
         moments = [m for m in moments if m["id"] in args.only.split(",")]
     base = config_mod.load(SKILLS["changing_table"])
-    reflex = MediaPipeReflex(base["contact"])
+    reflex = None if args.hands == "sam3_only" else hands_mod.reflex_mod.MediaPipeReflex(base["contact"])
     detector = Shared(confirm_mod.build({**base["confirm"], **(args.confirm_cfg or {})})) if args.confirm == "sam3_local" else None
     rows = []
     try:
         for moment in moments:
             cfg = skill_config(moment["scene"], args.confirm_wait_s, args.lift, args.lift_cfg, args.alarm_cfg)
-            rows.append(run_moment(moment, root / f"{moment['id']}.mp4", cfg, reflex, detector, args.wait_without_confirm))
+            rows.append(run_moment(moment, root / f"{moment['id']}.mp4", cfg, reflex, detector, args.wait_without_confirm,
+                                   args.hands))
             print(json.dumps({k: rows[-1][k] for k in ("id", "spoken", "latency_s", "chimes", "cancels", "confirms",
                                                        "max_lift_cm_after_cue", "lift_s_median")}), flush=True)
     finally:
@@ -199,7 +202,7 @@ def main(argv=None):
             detector.detector.close()
     result = {
         "generated_at": datetime.datetime.now().astimezone().isoformat(timespec="seconds"),
-        "split": ",".join(splits), "confirm": args.confirm, "wait_without_confirm": args.wait_without_confirm,
+        "split": ",".join(splits), "confirm": args.confirm, "hands": args.hands, "wait_without_confirm": args.wait_without_confirm,
         "lift": {scene: skill_config(scene, args.confirm_wait_s, args.lift, args.lift_cfg).get("lift") for scene in SKILLS},
         "alarm": {k: v for k, v in skill_config("changing_table", args.confirm_wait_s, alarm_cfg=args.alarm_cfg)["alarm"].items()
                   if k != "voice_text"},

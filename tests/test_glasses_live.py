@@ -10,6 +10,11 @@ from pathlib import Path
 
 import numpy as np
 
+from parenting_agent import alarm as _prior_alarm  # noqa: E402
+
+if not _prior_alarm.AVAILABLE:  # the MediaPipe path is prior work in a private repo (requirements-prior.txt)
+    raise unittest.SkipTest("needs the prior work library, the SAM 3.1 only path is in test_sam_hands")
+
 from parenting_agent import confirm as confirm_mod
 from parenting_agent import dog_watch, sam3_local
 from parenting_agent.agent import build
@@ -149,12 +154,12 @@ class KeptDetector(unittest.TestCase):
                                                   source=FakeSource(frames=3, step=0.2), quiet=True)
             plugin.start()
             self.assertTrue(wait_until(lambda: agent.bus.count("confirm_ready") == 1))
-            real = changing_table.Skill
-            with mock.patch.object(changing_table, "Skill", side_effect=RuntimeError("no hand model")):
+            real = changing_table.hands_mod.build
+            with mock.patch.object(changing_table.hands_mod, "build", side_effect=RuntimeError("no hand model")):
                 with self.assertRaises(RuntimeError):
                     plugin.arm()
             self.assertIsNone(plugin.skill)
-            with mock.patch.object(changing_table, "Skill", real):
+            with mock.patch.object(changing_table.hands_mod, "build", real):
                 plugin.arm()
             self.assertIs(plugin.skill.confirm.detector.detector, SlowDetector.built[0])
             self.assertEqual(len(SlowDetector.built), 1)
@@ -174,7 +179,7 @@ class KeptDetector(unittest.TestCase):
             plugin = changing_table.ChangingTable(agent, config, reflex=FakeReflex(on_frames=100),
                                                   source=FakeSource(frames=0, step=0.2), quiet=True)
             plugin.start()
-            with mock.patch.object(changing_table, "Skill", side_effect=RuntimeError("no hand model")):
+            with mock.patch.object(changing_table.hands_mod, "build", side_effect=RuntimeError("no hand model")):
                 with self.assertRaises(RuntimeError):
                     plugin.arm()
             plugin.stop()

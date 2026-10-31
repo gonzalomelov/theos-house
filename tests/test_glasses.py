@@ -11,6 +11,11 @@ import urllib.request
 import cv2
 import numpy as np
 
+from parenting_agent import alarm as _prior_alarm  # noqa: E402
+
+if not _prior_alarm.AVAILABLE:  # the MediaPipe path is prior work in a private repo (requirements-prior.txt)
+    raise unittest.SkipTest("needs the prior work library, the SAM 3.1 only path is in test_sam_hands")
+
 from parenting_agent.agent import build
 from parenting_agent.agent import config as config_mod
 from parenting_agent.glasses import GlassesHub, check_host, to_app

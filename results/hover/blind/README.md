@@ -19,8 +19,19 @@ A hover must speak "hand" within 2.5 s of the cue. A touch must stay silent. Rea
 | Lift, MediaPipe regions, SAM 3.1 confirm | 21 of 32 | 14 of 16 | 7 of 16 | **1** | 1.66 s, 1.73 s | `lift-mediapipe-sam3-confirm.json` |
 | Lift with SAM 3.1 hand masks (both scenes), SAM 3.1 confirm | **23 of 32** | 15 of 16 | 8 of 16 | **0** | 1.72 s, 2.22 s | `lift-sam3-masks.json` |
 | Final: table SAM 3.1 masks, bath MediaPipe regions and both hands, SAM 3.1 confirm | 22 of 32 | 15 of 16 | 7 of 16 | **0** | 1.72 s, 2.06 s | `final.json` |
+| SAM 3.1 only, no MediaPipe (`"hands": "sam3_only"`, Oct 31, scored once) | 22 of 32 | 16 of 16 | 6 of 16 | **0** | 1.67 s, 2.29 s | `sam3-only.json` |
 
 The final combination keeps false voices at 0 of 16, under the 1 of 16 limit.
+
+## SAM 3.1 only, Oct 31 2026
+
+Added after the hackathon Discord review, in case the organizers rule that MediaPipe (Google's) cannot run next to Meta's models. `"hands": "sam3_only"` (`parenting_agent/sam_hands.py`) runs no MediaPipe and none of the Oct 22 to 23 prior work: SAM 3.1 looks at the newest frame again and again on a background thread (hand masks with what they hold, about 1.5 to 3 s a look), a hand mask on the baby anchors the lift check, the lift check runs on every frame between looks, a look with no hand on the baby speaks at once, and a lift speaks after the 1.2 s hold. It was checked on 3 dev moments first, then run on this blind set once on Oct 31 at 13:42 Montevideo, with the GPU lock, one process, nothing tuned on the set. The bath used the SAM 3.1 mask threshold chosen on dev for the table (1.7 cm), not its MediaPipe one.
+
+- 22 of 32 hovers spoken within 2.5 s, the same count as the final design. On the changing table 16 of 16, one more than the final. In the bath 6 of 16: the 8 one-hand bath-b hovers are missed by design as in every row, and 2 bath-a hovers were missed (bath-a-hover-s2, bath-a-m-hover-s3).
+- 0 of 16 touches said "hand". 2 table touches chimed (table-a-touch-s0, table-b-touch-s1), the same count as the final design.
+- Latency median 1.67 s, max 2.29 s. Lift check 0.04 s a frame (median of moments).
+
+So, on this set, dropping MediaPipe costs nothing on the table and one bath hover. A blind set this small cannot tell the two apart. What SAM 3.1 only gives up is speed when both hands leave at once: the MediaPipe reflex chimes in under a second, a SAM 3.1 look takes 1.5 to 3 s. This set has no such moment, the KR runs (`results/kr222/`) do and were not rerun this way.
 
 ## What it means
 

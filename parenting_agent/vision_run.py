@@ -13,8 +13,8 @@ from pathlib import Path
 
 from . import config as config_mod
 from .bus import Bus
-from .reflex import MediaPipeReflex
-from .skill import Skill, watch
+from . import hands as hands_mod
+from .skill import watch
 from .sources import PhoneSource, open_source
 from .speaker import Speaker
 
@@ -37,7 +37,7 @@ def main(argv=None):
         print(f"head camera page: {source.url}", flush=True)
     speaker = Speaker(source, quiet=args.quiet)
     bus.subscribe(speaker.on_event, ["chime", "voice"])
-    skill = Skill(skill_cfg, bus, MediaPipeReflex(skill_cfg["contact"]))
+    skill = hands_mod.build(skill_cfg, bus, hands_mod.mode(skill_cfg.get("hands")))
     skill.arm()
     try:
         watch(skill, source, minutes=args.minutes)

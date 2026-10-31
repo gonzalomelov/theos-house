@@ -38,8 +38,8 @@ from . import config as config_mod
 from .camera_skill import phrase
 from .agent.plugins import Plugin
 from .agent.tools import Tool, schema
-from .reflex import MediaPipeReflex
-from .skill import Skill, watch
+from . import hands as hands_mod
+from .skill import watch
 from .sources import PhoneSource, open_source
 from .speaker import Speaker
 
@@ -220,8 +220,9 @@ class ChangingTable(Plugin):
                     self.agent.bus.publish("head_camera", url=self.source.url)
                 speaker = Speaker(self.source, quiet=self.quiet)
                 self.agent.bus.subscribe(speaker.on_event, ["chime", "voice"])
-                reflex = self._reflex or MediaPipeReflex(self.skill_cfg["contact"])
-                self.skill = Skill(self.skill_cfg, self.agent.bus, reflex, confirm_detector=detector)
+                chosen = hands_mod.mode(self.config.get("hands"), self.skill_cfg.get("hands"))
+                self.skill = hands_mod.build(self.skill_cfg, self.agent.bus, chosen, reflex=self._reflex,
+                                             confirm_detector=detector)
                 self.skill.arm()
                 self.thread = threading.Thread(target=watch, args=(self.skill, self.source), name="changing-table", daemon=True)
                 self.thread.start()
