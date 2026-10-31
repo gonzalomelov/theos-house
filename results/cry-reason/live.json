@@ -1,0 +1,313 @@
+{
+ "run": "2026-10-30T22:42:41-03:00",
+ "where": "this Mac, PANNs on CPU in the hearing worker, nothing sent off the Mac",
+ "simulated_moment": "2026-10-21T00:09:00-03:00",
+ "simulated_truth": "tired",
+ "listener_load_s": 1.06,
+ "local_model": {
+  "speak": [],
+  "test": {
+   "balanced_accuracy": 0.187,
+   "balanced_accuracy_95": [
+    0.158,
+    0.293
+   ],
+   "accuracy": 0.675,
+   "always_hungry_accuracy": 0.8,
+   "gate_passed": false
+  }
+ },
+ "network_refused": [],
+ "audio_written": false,
+ "plays": [
+  {
+   "clip": "cry-01",
+   "title": "File:Baby long wanting cry.ogg",
+   "license": "Public domain",
+   "page": "https://commons.wikimedia.org/wiki/File:Baby_long_wanting_cry.ogg",
+   "at": "2026-10-21T00:09:00-03:00",
+   "process_s": 1.21,
+   "events": [
+    {
+     "kind": "sound",
+     "ts": "2026-10-30T22:42:37-03:00",
+     "unix": 1793410957.139,
+     "label": "cry",
+     "phase": "end",
+     "episode": 1,
+     "source": "living room camera",
+     "stream_s": 2,
+     "seconds": 18,
+     "peak": 1.0,
+     "features": {
+      "length_s": 18,
+      "level_dbfs": -23.1,
+      "peak_dbfs": -3.5,
+      "pitch_hz": 444,
+      "voiced_share": 0.8
+     }
+    },
+    {
+     "kind": "cry_sound_guess",
+     "ts": "2026-10-30T22:42:37-03:00",
+     "unix": 1793410957.897,
+     "episode": 1,
+     "listener": "local",
+     "label": "hungry",
+     "confidence": 0.927,
+     "model": "panns-cnn14+donateacry-head",
+     "probs": {
+      "hungry": 0.927,
+      "tired": 0.069,
+      "discomfort": 0.003,
+      "burping": 0.001,
+      "belly_pain": 0.001
+     },
+     "speak": false,
+     "host": "local"
+    },
+    {
+     "kind": "cry_reason",
+     "ts": "2026-10-30T22:42:37-03:00",
+     "unix": 1793410957.91,
+     "episode": 1,
+     "top": "comfort",
+     "text": "Nothing in the log points to a likely reason: last feed 42 min ago, last diaper change 12 min ago, awake 46 min. Things to check: a wet or dirty diaper, too warm or too cold, a burp after the feed, or he may just want to be held. Next feed expected around 01:55.",
+     "ranked": [
+      {
+       "reason": "comfort",
+       "score": 0.3,
+       "evidence": "last feed 42 min ago, last diaper change 12 min ago, awake 46 min"
+      },
+      {
+       "reason": "diaper",
+       "score": 0.025,
+       "evidence": "last diaper change 12 min ago"
+      },
+      {
+       "reason": "hungry",
+       "score": 0.0,
+       "evidence": "last feed 42 min ago, he eats about every 2 h 28 min"
+      }
+     ],
+     "computed_from": [
+      "feeding@2026-10-20T23:27:00-03:00#31",
+      "feeding@2026-10-20T18:31:00-03:00#25",
+      "feeding@2026-10-20T20:45:00-03:00#28",
+      "feeding@2026-10-20T23:27:00-03:00#31",
+      "change@2026-10-20T23:57:00-03:00#33",
+      "sleep@2026-10-20T21:34:00-03:00#30"
+     ],
+     "cry_seconds": 18,
+     "features": {
+      "length_s": 18,
+      "level_dbfs": -23.1,
+      "peak_dbfs": -3.5,
+      "pitch_hz": 444,
+      "voiced_share": 0.8
+     },
+     "night": true,
+     "sound": {
+      "label": "hungry",
+      "confidence": 0.927,
+      "speak": false
+     },
+     "check_now": false
+    },
+    {
+     "kind": "white_noise",
+     "ts": "2026-10-30T22:42:37-03:00",
+     "unix": 1793410957.91,
+     "action": "on",
+     "reason": "short night fuss, 18 s",
+     "device": "white_noise_sim",
+     "dry": true,
+     "on": true,
+     "level": 0.08,
+     "crib_db": 48.1,
+     "noise": "white",
+     "timer_off_at": null,
+     "asked": 0.08,
+     "capped": false
+    },
+    {
+     "kind": "white_noise",
+     "ts": "2026-10-30T22:42:37-03:00",
+     "unix": 1793410957.91,
+     "action": "timer",
+     "reason": "short night fuss",
+     "device": "white_noise_sim",
+     "dry": true,
+     "on": true,
+     "level": 0.08,
+     "crib_db": 48.1,
+     "noise": "white",
+     "timer_off_at": "2026-10-21T00:29:00-03:00",
+     "minutes": 20
+    }
+   ]
+  },
+  {
+   "clip": "cry-04",
+   "title": "File:Newborn baby crying sounds 20190831 061900.wav",
+   "license": "CC BY-SA 4.0",
+   "page": "https://commons.wikimedia.org/wiki/File:Newborn_baby_crying_sounds_20190831_061900.wav",
+   "at": "2026-10-21T00:10:00-03:00",
+   "process_s": 1.4,
+   "events": [
+    {
+     "kind": "sound",
+     "ts": "2026-10-30T22:42:38-03:00",
+     "unix": 1793410958.698,
+     "label": "cry",
+     "phase": "ongoing",
+     "episode": 2,
+     "source": "living room camera",
+     "stream_s": 25,
+     "seconds": 30,
+     "peak": 1.0,
+     "features": {
+      "length_s": 30,
+      "level_dbfs": -22.5,
+      "peak_dbfs": -4.3,
+      "pitch_hz": 421,
+      "voiced_share": 0.74
+     }
+    },
+    {
+     "kind": "cry_sound_guess",
+     "ts": "2026-10-30T22:42:39-03:00",
+     "unix": 1793410959.316,
+     "episode": 2,
+     "listener": "local",
+     "label": "hungry",
+     "confidence": 1.0,
+     "model": "panns-cnn14+donateacry-head",
+     "probs": {
+      "hungry": 1.0,
+      "tired": 0.0,
+      "discomfort": 0.0,
+      "burping": 0.0,
+      "belly_pain": 0.0
+     },
+     "speak": false,
+     "host": "local"
+    },
+    {
+     "kind": "cry_reason",
+     "ts": "2026-10-30T22:42:39-03:00",
+     "unix": 1793410959.317,
+     "episode": 2,
+     "top": "comfort",
+     "text": "Nothing in the log points to a likely reason: last feed 43 min ago, last diaper change 13 min ago, awake 47 min. Things to check: a wet or dirty diaper, too warm or too cold, a burp after the feed, or he may just want to be held. Next feed expected around 01:55.",
+     "ranked": [
+      {
+       "reason": "comfort",
+       "score": 0.3,
+       "evidence": "last feed 43 min ago, last diaper change 13 min ago, awake 47 min"
+      },
+      {
+       "reason": "diaper",
+       "score": 0.027,
+       "evidence": "last diaper change 13 min ago"
+      },
+      {
+       "reason": "hungry",
+       "score": 0.0,
+       "evidence": "last feed 43 min ago, he eats about every 2 h 28 min"
+      }
+     ],
+     "computed_from": [
+      "feeding@2026-10-20T23:27:00-03:00#31",
+      "feeding@2026-10-20T18:31:00-03:00#25",
+      "feeding@2026-10-20T20:45:00-03:00#28",
+      "feeding@2026-10-20T23:27:00-03:00#31",
+      "change@2026-10-20T23:57:00-03:00#33",
+      "sleep@2026-10-20T21:34:00-03:00#30"
+     ],
+     "cry_seconds": 30,
+     "features": {
+      "length_s": 30,
+      "level_dbfs": -22.5,
+      "peak_dbfs": -4.3,
+      "pitch_hz": 421,
+      "voiced_share": 0.74
+     },
+     "night": true,
+     "sound": {
+      "label": "hungry",
+      "confidence": 1.0,
+      "speak": false
+     },
+     "check_now": false
+    },
+    {
+     "kind": "notify",
+     "ts": "2026-10-30T22:42:39-03:00",
+     "unix": 1793410959.317,
+     "text": "Nothing in the log points to a likely reason: last feed 43 min ago, last diaper change 13 min ago, awake 47 min. Things to check: a wet or dirty diaper, too warm or too cold, a burp after the feed, or he may just want to be held. Next feed expected around 01:55. Parent A is on duty.",
+     "sound": "cry",
+     "reason": "comfort",
+     "source": "house-sounds",
+     "routine": "cry",
+     "check_now": false,
+     "parent": "Parent A"
+    },
+    {
+     "kind": "reply",
+     "ts": "2026-10-30T22:42:39-03:00",
+     "unix": 1793410959.317,
+     "channel": "telegram",
+     "text": "Nothing in the log points to a likely reason: last feed 43 min ago, last diaper change 13 min ago, awake 47 min. Things to check: a wet or dirty diaper, too warm or too cold, a burp after the feed, or he may just want to be held. Next feed expected around 01:55. Gonza is on duty.",
+     "person": "gonza",
+     "proactive": true,
+     "source": "house-sounds",
+     "routine": "cry",
+     "check_now": null
+    },
+    {
+     "kind": "glasses_card",
+     "ts": "2026-10-30T22:42:39-03:00",
+     "unix": 1793410959.317,
+     "person": "gonza",
+     "topic": "cry",
+     "via": "telegram",
+     "cause": "cry",
+     "shown": true,
+     "title": "Está llorando",
+     "status": "Nothing in the log points to a likely reason: last feed 43…",
+     "alert": false,
+     "sticky": false
+    },
+    {
+     "kind": "pushed",
+     "ts": "2026-10-30T22:42:39-03:00",
+     "unix": 1793410959.318,
+     "source": "house-sounds",
+     "routine": "cry",
+     "to": [
+      "gonza"
+     ],
+     "missing": [],
+     "reason": "for Gonza"
+    }
+   ]
+  }
+ ],
+ "telegram_captured": [
+  {
+   "to": "gonza",
+   "text": "Nothing in the log points to a likely reason: last feed 43 min ago, last diaper change 13 min ago, awake 47 min. Things to check: a wet or dirty diaper, too warm or too cold, a burp after the feed, or he may just want to be held. Next feed expected around 01:55. Gonza is on duty."
+  }
+ ],
+ "glasses_cards": [
+  {
+   "person": "gonza",
+   "topic": "cry",
+   "title": "Está llorando",
+   "status": "Nothing in the log points to a likely reason: last feed 43…",
+   "detail": "Things to check: a wet or dirty diaper, too warm or too cold, a burp after the feed, or…",
+   "alert": false
+  }
+ ]
+}

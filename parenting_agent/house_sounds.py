@@ -17,12 +17,18 @@ Audio never leaves the Ear in parenting_agent/hearing.py, only labels and number
 exception is opt-in ("muse_audio": {"enabled": true}): the first clip_s seconds of a cry go to Muse Spark Open on
 Baseten for a guess at the reason (parenting_agent/cry_muse.py), only after the audio canary passes, and the clip
 is dropped after that one call.
+
+The local cry model ("cry_model": {"enabled": true}, parenting_agent/cry_sound.py) reads the same clip on the Mac:
+PANNs's embedding and a small head trained on Donate-a-Cry. Its guess is one more signal next to the log, said to the
+parent only for the classes its held-out test cleared, else logged as a "cry_sound_guess" event. Nothing leaves the
+Mac. The cry notify carries source "house-sounds" and routine "cry", so the family push sends it to the parent on
+duty at night and the glasses show it as a cry card.
 """
 import datetime
 import os
 import threading
 
-from . import cry_muse, cry_reason, hearing
+from . import cry_muse, cry_reason, cry_sound, hearing
 from .agent.plugins import Plugin
 from .agent.tools import Tool, schema
 from .rhythm import patterns
@@ -31,7 +37,7 @@ from .rhythm.engine import make_log
 from .white_noise import SimulatedWhiteNoise, WhiteNoisePlan
 
 DEFAULTS = {"source": "none", "listener": {}, "pronoun": "he", "white_noise": {}, "poll_s": 60, "tell_agent": True,
-            "muse_audio": {"enabled": False}}
+            "muse_audio": {"enabled": False}, "cry_model": {"enabled": False}}
 
 
 def active_skill(agent):
@@ -45,7 +51,7 @@ class HouseSounds(Plugin):
     name = "house-sounds"
     kind = "ears"
 
-    def __init__(self, agent, config, listener=None, log=None, clock=None, device=None, ears=None):
+    def __init__(self, agent, config, listener=None, log=None, clock=None, device=None, ears=None, local=None):
         super().__init__(agent, config)
         self.cfg = {**DEFAULTS, **config.get("house_sounds", {})}
         self.rhythm = {**RHYTHM_DEFAULTS, **config.get("rhythm", {})}
@@ -58,6 +64,7 @@ class HouseSounds(Plugin):
         self.fuss = None
         self.handled = set()
         self.ears, self.clips = ears, {}
+        self.local = local
         if self.ears is None and self.cfg["muse_audio"].get("enabled"):
             from .cry_muse import CryEars
             from .muse_senses import MuseSenses
@@ -81,7 +88,9 @@ class HouseSounds(Plugin):
         if self.ear is None:
             self.ear = hearing.Ear(self._listener or hearing.PannsListener(self.cfg["listener"]), self.agent.bus,
                                    self.cfg.get("ear"))
-            if self.ears is not None:
+            if self.local is None and self.cfg["cry_model"].get("enabled"):
+                self.local = cry_sound.CrySound(self.ear.listener, self.cfg["cry_model"])
+            if self.ears is not None or self.local is not None:
                 self.ear.on_cry_clip = self.keep_clip
         return self.ear
 
@@ -130,14 +139,20 @@ class HouseSounds(Plugin):
         self.clips = {episode: samples}
 
     def sound_guess(self, episode):
-        """Muse's guess from the cry clip, or None. The clip is dropped here whatever happens."""
+        """(local guess, Muse's guess) from the cry clip, each None when that listener is off. The clip is dropped
+        here whatever happens."""
         samples = self.clips.pop(episode, None)
-        if self.ears is None or samples is None:
-            return None
-        guess = self.ears.guess(samples, hearing.RATE)
+        if samples is None:
+            return None, None
+        out = []
+        for ears in (self.local, self.ears):
+            guess = ears.guess(samples, hearing.RATE) if ears is not None else None
+            if guess is not None:
+                self.agent.bus.publish("cry_sound_guess", episode=episode, listener=getattr(ears, "name", "muse"),
+                                       **{k: v for k, v in guess.items() if k != "usage"})
+            out.append(guess)
         del samples
-        self.agent.bus.publish("cry_sound_guess", episode=episode, **{k: v for k, v in guess.items() if k != "usage"})
-        return guess
+        return tuple(out)
 
     def reason(self, features, now=None):
         return cry_reason.explain(self.log.entries(), now or self.clock(), self.tz, features, self.cfg["pronoun"])
@@ -172,26 +187,30 @@ class HouseSounds(Plugin):
     def on_cry(self, event):
         now = self.clock()
         features = event.get("features") or {}
-        guess = self.sound_guess(event["episode"])
+        local, guess = self.sound_guess(event["episode"])
         with self.lock:
             result = cry_muse.blend(self.reason(features, now), guess)
+            result = cry_sound.combine(result, local, self.log.entries(), now, self.cfg["pronoun"])
             night = patterns.is_night(now.astimezone(self.tz))
             fussing_again = self.fuss is not None and now < self.fuss["until"]
             self.agent.bus.publish("cry_reason", episode=event["episode"], top=result["top"], text=result["text"],
                                    ranked=result["ranked"], computed_from=result["computed_from"],
-                                   cry_seconds=event["seconds"], features=features, night=night)
-            if night and event["phase"] == "end" and not fussing_again:
+                                   cry_seconds=event["seconds"], features=features, night=night,
+                                   sound=result.get("sound"), check_now=result.get("check_now", False))
+            if night and event["phase"] == "end" and not fussing_again and not result.get("check_now"):
                 fuss = self.plan.night_fuss(now, event["seconds"])
                 if fuss is not None:
                     self.fuss = {"episode": event["episode"], "seconds": event["seconds"],
                                  "until": now + datetime.timedelta(seconds=self.plan.s["fuss_wait_s"])}
                     return result
-            text = result["text"]
+            text, fields = result["text"], {}
             if night:
                 on_duty = self.on_duty(now)
                 text += f" {on_duty} is on duty."
+                fields["parent"] = on_duty
             self.fuss = None
-            self.notify(text, sound="cry", reason=result["top"])
+            self.notify(text, sound="cry", reason=result["top"], source="house-sounds", routine="cry",
+                        check_now=result.get("check_now", False), **fields)
             return result
 
     def on_duty(self, now):

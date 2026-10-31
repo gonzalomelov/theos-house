@@ -24,6 +24,7 @@ WINDOW = 2 * RATE
 REPO = Path(__file__).resolve().parent.parent
 DEFAULT_PYTHON = Path.home() / "Engineering/gonza/sam3-native/venv/bin/python"
 WORKER = Path(__file__).with_name("hearing_worker.py")
+EMBED = 0x80000000
 
 GROUPS = {
     "cry": ["Baby cry, infant cry", "Crying, sobbing", "Whimper"],
@@ -68,6 +69,16 @@ class PannsListener:
         self.process.stdin.write(struct.pack(">I", len(data)) + data)
         self.process.stdin.flush()
         return json.loads(self.process.stdout.readline() or b'{"scores": {}}')
+
+    def embed(self, samples):
+        """CNN14's 2048 number embedding of a clip, averaged over its 2 s windows. The local cry reason model reads it."""
+        data = np.ascontiguousarray(samples, np.float32).tobytes()
+        self.process.stdin.write(struct.pack(">I", len(data) | EMBED) + data)
+        self.process.stdin.flush()
+        reply = json.loads(self.process.stdout.readline() or b'{}')
+        if "embedding" not in reply:
+            raise Unavailable(f"hearing: no embedding, {reply.get('error', 'worker gave none')}")
+        return np.asarray(reply["embedding"], np.float32)
 
     def close(self):
         if self.process.poll() is None:

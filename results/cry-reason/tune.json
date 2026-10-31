@@ -1,0 +1,124 @@
+{
+ "train_clips": 337,
+ "train_devices": 169,
+ "folds": 5,
+ "grid": [
+  {
+   "l2": 0.01,
+   "balanced": true,
+   "cv_balanced_accuracy": 0.24,
+   "cv_accuracy": 0.516,
+   "cv_recall": {
+    "hungry": 0.584,
+    "tired": 0.167,
+    "discomfort": 0.118,
+    "burping": 0.333,
+    "belly_pain": 0.0
+   }
+  },
+  {
+   "l2": 0.01,
+   "balanced": false,
+   "cv_balanced_accuracy": 0.215,
+   "cv_accuracy": 0.593,
+   "cv_recall": {
+    "hungry": 0.682,
+    "tired": 0.111,
+    "discomfort": 0.118,
+    "burping": 0.167,
+    "belly_pain": 0.0
+   }
+  },
+  {
+   "l2": 0.1,
+   "balanced": true,
+   "cv_balanced_accuracy": 0.25,
+   "cv_accuracy": 0.751,
+   "cv_recall": {
+    "hungry": 0.871,
+    "tired": 0.056,
+    "discomfort": 0.059,
+    "burping": 0.167,
+    "belly_pain": 0.1
+   }
+  },
+  {
+   "l2": 0.1,
+   "balanced": false,
+   "cv_balanced_accuracy": 0.227,
+   "cv_accuracy": 0.685,
+   "cv_recall": {
+    "hungry": 0.794,
+    "tired": 0.056,
+    "discomfort": 0.118,
+    "burping": 0.167,
+    "belly_pain": 0.0
+   }
+  },
+  {
+   "l2": 1.0,
+   "balanced": true,
+   "cv_balanced_accuracy": 0.21,
+   "cv_accuracy": 0.718,
+   "cv_recall": {
+    "hungry": 0.836,
+    "tired": 0.056,
+    "discomfort": 0.059,
+    "burping": 0.0,
+    "belly_pain": 0.1
+   }
+  },
+  {
+   "l2": 1.0,
+   "balanced": false,
+   "cv_balanced_accuracy": 0.203,
+   "cv_accuracy": 0.813,
+   "cv_recall": {
+    "hungry": 0.955,
+    "tired": 0.0,
+    "discomfort": 0.059,
+    "burping": 0.0,
+    "belly_pain": 0.0
+   }
+  },
+  {
+   "l2": 10.0,
+   "balanced": true,
+   "cv_balanced_accuracy": 0.206,
+   "cv_accuracy": 0.783,
+   "cv_recall": {
+    "hungry": 0.916,
+    "tired": 0.056,
+    "discomfort": 0.059,
+    "burping": 0.0,
+    "belly_pain": 0.0
+   }
+  },
+  {
+   "l2": 10.0,
+   "balanced": false,
+   "cv_balanced_accuracy": 0.207,
+   "cv_accuracy": 0.831,
+   "cv_recall": {
+    "hungry": 0.976,
+    "tired": 0.0,
+    "discomfort": 0.059,
+    "burping": 0.0,
+    "belly_pain": 0.0
+   }
+  }
+ ],
+ "chosen": {
+  "l2": 0.1,
+  "balanced": true,
+  "cv_balanced_accuracy": 0.25,
+  "cv_accuracy": 0.751,
+  "cv_recall": {
+   "hungry": 0.871,
+   "tired": 0.056,
+   "discomfort": 0.059,
+   "burping": 0.167,
+   "belly_pain": 0.1
+  }
+ }
+}

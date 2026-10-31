@@ -49,7 +49,7 @@ WORDS = {
            "step": "Step {i} of {n}", "say_yes_no": "Say yes or no", "bath": "Bath", "bath_on": "Keep a hand on the baby",
            "bath_note": "The camera never replaces your hand", "dog": "Dog near the baby", "answer": "Answer",
            "reminder": "Reminder", "tonight": "Tonight's plan", "house": "House", "meals": "Meals", "sitter": "Sitter",
-           "door": "Door", "note": "Parenting agent", "got_it": "Got it"},
+           "door": "Door", "note": "Parenting agent", "got_it": "Got it", "cry": "He is crying"},
     "es": {"red_flag": "Llamá al 911 ya", "urgent": "Pediatra o emergencia ya", "fever": "Fiebre en menos de 3 meses",
            "urgent_status": "Señal en recién nacido: actuar ya", "emergency": "Puede ser una emergencia",
            "tell": "Contales lo que ves", "no_reach": "Si no los ubicás: 911", "aap": "Guía pública de la AAP",
@@ -63,7 +63,7 @@ WORDS = {
            "say_yes_no": "Decí sí o no", "bath": "Baño", "bath_on": "Una mano siempre en el bebé",
            "bath_note": "La cámara nunca reemplaza tu mano", "dog": "Perro cerca del bebé", "answer": "Respuesta",
            "reminder": "Recordatorio", "tonight": "Plan de esta noche", "house": "Casa", "meals": "Comidas",
-           "sitter": "Cuidadora", "door": "Puerta", "note": "Agente de crianza", "got_it": "Entendido"},
+           "sitter": "Cuidadora", "door": "Puerta", "note": "Agente de crianza", "got_it": "Entendido", "cry": "Está llorando"},
 }
 
 # The car seat coach's steps (carseat/coach.py plan()), in a glance: what to do, never "safe".
@@ -94,7 +94,7 @@ TOPICS = {
     ("house-brain", "tonight"): "tonight", ("house-brain", "replan"): "tonight", ("house-brain", "plan_message"): "tonight",
     ("day-engine", "supplies"): "supplies", ("day-engine", "nap_mode"): "nap", ("day-engine", "floor_clean"): "house",
     ("day-engine", "parents_meals"): "meals", ("reminders", None): "reminder", ("sitter", "sitter_summary"): "sitter",
-    ("house-plan", None): "house", ("laundry", None): "house", ("bath", None): "bath",
+    ("house-plan", None): "house", ("laundry", None): "house", ("bath", None): "bath", ("house-sounds", "cry"): "cry",
 }
 LOOKS = {  # (icon, title word) per topic
     "morning": ("cloudCrescentMoon", "morning"), "next_feed": ("clock", "next_feed"), "handover": ("person", "handover"),
@@ -103,6 +103,7 @@ LOOKS = {  # (icon, title word) per topic
     "house": ("house", "house"), "meals": ("forkKnife", "meals"), "reminder": ("bell", "reminder"),
     "sitter": ("threePeopleOverlapping", "sitter"), "bath": ("dropper", "bath"), "dog": ("exclamationTriangle", "dog"),
     "answer": ("speechBubble", "answer"), "note": ("iCircle", "note"), "door": ("bell", "door"),
+    "cry": ("exclamationTriangle", "cry"),
 }
 
 
@@ -276,6 +277,8 @@ def from_push(event, lang):
         return on_duty(text, lang, topic)
     if topic == "supplies" and SHOPPING.search(text):
         return from_text("supplies", text, lang)
+    if topic == "cry":
+        return from_text("cry", text, lang, alert=bool(event.get("check_now")))
     return from_text(topic, text, lang)
 
 

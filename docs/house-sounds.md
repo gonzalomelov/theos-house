@@ -23,7 +23,7 @@ The reason comes from the log, not the sound. `parenting_agent/cry_reason.py` re
 
 Cry length and voicing move a score by at most 0.05, a weak extra signal only. Example output: "Probably hungry: last feed 2 h 51 min ago, he eats about every 2 h 26 min."
 
-It never names pain, illness or any medical cause. Every text passes `no_medical()` and the rhythm's `no_advice()`, and a test runs both over every output. ChatterBaby was ruled out (audio goes to UCLA servers, and pain is a medical reading), and so is any third-party cloud audio service. The one exception is Muse Spark Open, the agent's own brain, below. The Donate-a-cry corpus (ODbL, mostly hungry clips) is not used yet.
+It never names pain, illness or any medical cause. Every text passes `no_medical()` and the rhythm's `no_advice()`, and a test runs both over every output. ChatterBaby cannot be used: its model and data are not public and the app sends each cry to UCLA's servers (docs/research/cry-reason.md). No third-party cloud audio service is called. The one exception is Muse Spark Open, the agent's own brain, below.
 
 **Evaluation on the simulated week**, where the true reason is known. The same rhythm assumptions build the week and the reasoner, so this checks the logic, not real cries. `simweek/cries.py` puts a cry 1 to 12 minutes before what the week does next: a feed (hungry), the diaper change after a feed (diaper), or falling asleep (tired).
 
@@ -33,6 +33,15 @@ It never names pain, illness or any medical cause. Every text passes `no_medical
 | Whole week | 166 of 184 (hungry 60 of 66, tired 55 of 63, diaper 51 of 55) |
 
 Details in `results/sounds/cry-eval.json`. The miss in the 10 is a night diaper cry read as tired, since night awake times are short.
+
+## The sound as one more signal, on the Mac (issue #161, logged only today)
+
+Built Oct 30 2026 after Gonza asked to reconsider ChatterBaby. `parenting_agent/cry_sound.py`: on a cry, the Ear hands the cry's samples (in memory, at most 10 s used) to PANNs CNN14, which gives a 2048 number embedding, and a small softmax head (`parenting_agent/assets/cry_reason_head.json`, trained on the Donate-a-Cry corpus, ODbL) reads it as hungry, tired, discomfort, burping or belly pain. Nothing leaves the Mac. Turn it on with `"house_sounds": {"cry_model": {"enabled": true}}`.
+
+- The log's reason stays first. When a class may be said, the sound adds "The sound agrees." or "From the sound alone, a guess: ...".
+- Belly pain is never said as pain. It becomes "Check on him now", which skips the white noise at night and makes the glasses card an alert. With a red flag in a log note of the last 24 h, the fixed call-the-doctor line from `agent/rules.py` follows.
+- A class is said only when it cleared the bar on a held-out test written before training. **None did:** balanced accuracy 0.19 on 120 held-out clips, chance 0.20 (`results/cry-reason/README.md`). So today each guess is a `cry_sound_guess` event only and the parent hears the log reason alone.
+- The cry notify now carries `source: house-sounds` and `routine: cry`, so the family push sends it to the parent on duty at night and the glasses show a cry card ("He is crying"). Live run on the Mac with two licensed recordings: `scripts/cry_reason_live.py`, `results/cry-reason/live.json`.
 
 ## Muse Spark Open listens to the cry (opt-in, blocked today)
 

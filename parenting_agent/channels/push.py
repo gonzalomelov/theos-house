@@ -165,7 +165,7 @@ class FamilyPush(Plugin):
                 continue
             self.agent.bus.publish("reply", channel=self.s["channel"], chat_id=chat, text=text,
                                    person=None if person == "chat" else person, proactive=True, source=event.get("source"),
-                                   routine=event.get("routine"))
+                                   routine=event.get("routine"), check_now=event.get("check_now") or None)
             sent.append(person)
         if event.get("ask") and sent and hasattr(self.agent, "bind_ask"):
             self.agent.bind_ask(sent)

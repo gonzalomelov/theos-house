@@ -1,0 +1,95 @@
+{
+ "run": "2026-10-30T22:38:42-03:00",
+ "test_clips": 120,
+ "test_devices": 52,
+ "balanced_accuracy": 0.187,
+ "balanced_accuracy_95": [
+  0.158,
+  0.293
+ ],
+ "chance_and_always_hungry_balanced_accuracy": 0.2,
+ "accuracy": 0.675,
+ "always_hungry_accuracy": 0.8,
+ "hungry_vs_not_auc": 0.51,
+ "per_class": {
+  "hungry": {
+   "clips": 96,
+   "recall": 0.833,
+   "predicted": 100,
+   "precision": 0.8
+  },
+  "tired": {
+   "clips": 6,
+   "recall": 0.0,
+   "predicted": 7,
+   "precision": 0.0
+  },
+  "discomfort": {
+   "clips": 10,
+   "recall": 0.1,
+   "predicted": 8,
+   "precision": 0.125
+  },
+  "burping": {
+   "clips": 2,
+   "recall": 0.0,
+   "predicted": 2,
+   "precision": 0.0
+  },
+  "belly_pain": {
+   "clips": 6,
+   "recall": 0.0,
+   "predicted": 3,
+   "precision": 0.0
+  }
+ },
+ "confusion": {
+  "rows_true_cols_predicted": [
+   "hungry",
+   "tired",
+   "discomfort",
+   "burping",
+   "belly_pain"
+  ],
+  "counts": [
+   [
+    80,
+    7,
+    5,
+    2,
+    2
+   ],
+   [
+    5,
+    0,
+    0,
+    0,
+    1
+   ],
+   [
+    9,
+    0,
+    1,
+    0,
+    0
+   ],
+   [
+    1,
+    0,
+    1,
+    0,
+    0
+   ],
+   [
+    5,
+    0,
+    1,
+    0,
+    0
+   ]
+  ]
+ },
+ "decision_rule": "The sound guess enters what the parent is told only if the lower end of the 95% interval of test balanced accuracy is above 0.20, and then only for the classes whose test precision is at least 0.5 with at least 3 test clips predicted. Otherwise the model still runs on every cry and its guess is logged as an event, and the parent hears the log-based reason alone.",
+ "gate_passed": false,
+ "speak": []
+}

@@ -6,7 +6,7 @@ Built with Muse Spark Open.
 
 The `LICENSE` file (MIT) covers only the code and docs written in this repo. It does not cover any model, SDK, service or data listed below. Each of those keeps its own terms, and anyone who runs this project agrees to them separately.
 
-This repo does not ship any model weights or SDK binaries. Weights are downloaded at setup time by the scripts named below or baked into the voice image at build time, the iOS SDK is fetched by Xcode, and Muse Spark Open is called through Baseten's API.
+This repo ships one small set of weights of its own, the cry reason head (`parenting_agent/assets/cry_reason_head.json`, 5 x 2048 numbers), trained here on the Donate-a-Cry corpus, listed under Data. Otherwise it does not ship any model weights or SDK binaries. Weights are downloaded at setup time by the scripts named below or baked into the voice image at build time, the iOS SDK is fetched by Xcode, and Muse Spark Open is called through Baseten's API.
 
 Why MIT: our own code has no reason to be more restrictive than the parts it calls, and a permissive license keeps it compatible with all of them. MIT does not grant any rights in the third-party parts. In particular, using the glasses app means accepting the Meta Wearables Developer Terms, running SAM 3.1 means accepting the SAM License, and the MMS-TTS voice is CC BY-NC 4.0, which limits commercial use of that part even though the code calling it is MIT.
 
@@ -53,6 +53,8 @@ Checked against origin/main on Oct 28 2026. Licenses were read from the linked p
 |---|---|---|---|
 | Newborn crying sound, Wikimedia Commons | House sound test (`results/sounds/run.json`), audio not in this repo | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:Newborn_baby_crying_sounds_20190831_061900.wav |
 | Doorbell sound, Wikimedia Commons | House sound test, audio not in this repo | Public domain | https://commons.wikimedia.org/wiki/File:Doorbell-cheap-dingdong.ogg |
+| Donate-a-Cry corpus (cleaned set, commit 6baf5ac) | Training and held-out test of the cry reason head. The head in `parenting_agent/assets/cry_reason_head.json` is a Produced Work of this database: it contains information from the Donate-a-Cry corpus, which is made available under the Open Database License (ODbL) 1.0. Audio not in this repo, the file names and tags are listed in `results/cry-reason/split.json` | ODbL 1.0, contents DbCL 1.0 | https://github.com/gveres/donateacry-corpus |
+| Baby crying recordings cry-01 (public domain) and cry-04 (CC BY-SA 4.0), Wikimedia Commons | The live cry run (`results/cry-reason/live.json`), audio not in this repo | Public domain, CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:Baby_long_wanting_cry.ogg |
 | Joie i-Snug 2 instruction manual | Car seat steps and limits in `skills/carseat/joie-i-snug-2.json`, written in our words with the manual's URL and hash. The PDF is not in this repo | Joie's document, all rights with Joie | https://dl.joiebaby.com/Instruction_Manual/GL/i-Snug-2/Joie-carseat-i-snug-2-instruction-manual.pdf |
 | Tesla child seat pages | Car rules in the simulated Tesla | Tesla's published pages, linked not copied | https://www.tesla.com |
 

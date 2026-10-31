@@ -10,6 +10,8 @@ Protocol on stdin and stdout, like the SAM 3.1 worker:
   start: one JSON line {"ready": true, ...} or {"blocked": "reason"}
   each request: 4-byte big-endian length, then that many bytes of float32 mono PCM at 16 kHz
   each reply: one JSON line {"scores": {group: max over windows}, "speech": float, "seconds": float}
+  with the top bit of the length set (EMBED), the reply is {"embedding": [2048 floats], "seconds": float} instead:
+  CNN14's embedding averaged over the 2 s windows, the input of the local cry reason model (cry_sound.py)
 Audio stays in memory: the worker never opens a file for writing.
 """
 import csv
@@ -24,6 +26,7 @@ from pathlib import Path
 RATE = 16000
 WINDOW = 2 * RATE
 HOP = 7680
+EMBED = 0x80000000
 SPEECH_CLASSES = ("Speech", "Conversation", "Narration, monologue", "Child speech, kid speaking",
                   "Hubbub, speech noise, speech babble", "Speech synthesizer")
 
@@ -110,15 +113,24 @@ class Panns:
         self.groups = {label: [index[c] for c in classes] for label, classes in groups.items()}
         self.speech = [index[c] for c in SPEECH_CLASSES]
 
-    def score(self, samples):
+    def forward(self, samples):
         np, torch = self.np, self.torch
-        started = time.monotonic()
         if samples.size < WINDOW:
             samples = np.pad(samples, (0, WINDOW - samples.size))
         starts = range(0, samples.size - WINDOW + 1, HOP)
         batch = torch.from_numpy(np.stack([samples[s:s + WINDOW] for s in starts]).astype(np.float32))
         with torch.no_grad():
-            frames = self.model(batch)["clipwise_output"].numpy()
+            return self.model(batch)
+
+    def embed(self, samples):
+        started = time.monotonic()
+        mean = self.forward(samples)["embedding"].numpy().mean(axis=0)
+        return {"embedding": [round(float(v), 5) for v in mean], "seconds": round(time.monotonic() - started, 3)}
+
+    def score(self, samples):
+        np = self.np
+        started = time.monotonic()
+        frames = self.forward(samples)["clipwise_output"].numpy()
         # Wide groups summed per window, then the loudest window: the "wide-sum" listener chosen in meta-hackathon-2026.
         scores = {label: round(float(np.clip(frames[:, cols].sum(axis=1), 0, 1).max()), 4)
                   for label, cols in self.groups.items()}
@@ -143,9 +155,11 @@ def main():
         header = read(4)
         if len(header) < 4:
             return 0
-        data = read(struct.unpack(">I", header)[0])
+        length = struct.unpack(">I", header)[0]
+        data = read(length & ~EMBED)
         try:
-            reply = model.score(np.frombuffer(data, np.float32))
+            samples = np.frombuffer(data, np.float32)
+            reply = model.embed(samples) if length & EMBED else model.score(samples)
         except Exception as error:  # one bad window never kills the worker
             reply = {"scores": {}, "error": str(error)[:200]}
         out.write(json.dumps(reply) + "\n")
