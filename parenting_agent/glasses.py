@@ -6,6 +6,9 @@ parent says and listens for what the agent says back, which it shows as text and
 
     POST /frame   one JPEG, kept in memory as the newest frame, never written to disk
     POST /say     {"text": "..."} becomes a "message" on the "glasses" channel
+    POST /hear    one utterance from the glasses microphone, a 16 kHz mono WAV (or {"text": ...} from glasses that
+                  transcribe on the device). Muse's ear writes it down and the speech gate decides if it was meant for
+                  the agent (glasses_speech.py)
     GET  /events  server-sent events: replies, chime, voice, skill state, hand state
     GET  /health  frame and listener counts
 
@@ -31,6 +34,7 @@ glasses are listening. The Telegram copy still goes out. Only the parent a messa
 person the Telegram copy went to, and for the agent's own events (nap mode) the family push's routing.
 """
 import collections
+import concurrent.futures
 import hmac
 import ipaddress
 import json
@@ -44,13 +48,15 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
 from . import hud_cards as cards
+from .glasses_speech import EAR_PROMPT, Gate, plain, race
 from .agent.people import People
 from .agent.plugins import Plugin
 from .sources import MAX_FRAME_BYTES, Latest
 
 DEFAULT_PORT = 8766
-# A short acknowledgement of a red flag card on the glasses ("entendido", "got it"): the sticky card goes.
-ACK = re.compile(r"^\s*(ok|okay|got it|understood|entendido|entendí|listo|dale|ya llamé|llamé|i called|called)\b", re.I)
+# A short acknowledgement of a red flag card on the glasses ("entendido", "got it"): the sticky card goes. Matched on the
+# plain words (glasses_speech.plain), so the ear's "Ya llame" without the accent counts too.
+ACK = re.compile(r"^(ok|okay|got it|understood|entendido|entendi|listo|dale|ya llame|llame|i called|called)\b")
 TAILSCALE = ipaddress.ip_network("100.64.0.0/10")
 ARRIVALS_KEPT = 600  # about a minute of frames at 10 per second
 
@@ -98,6 +104,7 @@ class GlassesHub(Latest):
         self.tokens = {self.token: person}  # token -> the wearer it belongs to (None: a pairing with no person)
         self.profiles = {}                  # wearer -> {"name", "lang"}, sent in the hello
         self.on_say = on_say
+        self.on_hear = None                 # (wav bytes or None, wearer, {"text", "speech_end_unix", ...}) -> None
         self.camera_person = person         # whose glasses sent the newest frame
         self.clients = []                   # [(inbox, wearer)]
         self.frames_in, self.rejected = 0, 0
@@ -237,10 +244,37 @@ class GlassesHub(Latest):
                     else:
                         hub.on_say(text[:500]) if self.person is None else hub.on_say(text[:500], self.person)
                         self.reply(204)
+                elif path == "/hear":
+                    self.reply(*hub._hear(body, self.headers, self.person))
                 else:
                     self.reply(404)
 
         return Handler
+
+    def _hear(self, body, headers, person):
+        """One utterance: a WAV from the microphone, or {"text"} from glasses that transcribe. Handled off this thread."""
+        meta = {}
+        for name, key in (("X-Speech-End-Unix", "speech_end_unix"), ("X-Speech-Seconds", "speech_s")):
+            try:
+                meta[key] = float(headers.get(name))
+            except (TypeError, ValueError):
+                pass
+        meta["source"] = str(headers.get("X-Speech-Source") or "glasses mic")[:40]
+        wav = None
+        if body[:4] == b"RIFF" and body[8:12] == b"WAVE":
+            wav = body
+        else:
+            try:
+                meta["text"] = str(json.loads(body or b"{}").get("text", "")).strip()[:500]
+            except (ValueError, AttributeError):
+                meta["text"] = ""
+            if not meta["text"]:
+                return 400, b"a WAV or {\"text\": ...}"
+        if self.on_hear is None:
+            return 503, b"no agent is running on this endpoint"
+        meta["received_unix"] = round(time.time(), 3)
+        threading.Thread(target=self.on_hear, args=(wav, person, meta), name="glasses-hear", daemon=True).start()
+        return 202, b""
 
     def _frame(self, body):
         import cv2
@@ -400,13 +434,18 @@ def to_app(event):
 
 class Glasses(Plugin):
     """The glasses as an agent channel. Config block "glasses":
-        {"port": 8766, "host": "127.0.0.1", "person": "gonza", "wearers": ["gonza", "ceci"]}
+        {"port": 8766, "host": "127.0.0.1", "person": "gonza", "wearers": ["gonza", "ceci"],
+         "speech": {"wake_words": ["agente", "agent"], "ear": {"reasoning_effort": "minimal"}}}
     "wearers" pairs each parent's glasses with their own token (data/glasses-token-<person>, or the env variable
-    PARENTING_AGENT_GLASSES_TOKEN_<PERSON>). "person" names the wearer of the single legacy token."""
+    PARENTING_AGENT_GLASSES_TOKEN_<PERSON>). "person" names the wearer of the single legacy token. "speech" sets the
+    glasses microphone's gate and Muse's ear (glasses_speech.py)."""
 
     name = "glasses"
     kind = "channel"
     CARD_KINDS = ("routine", "carseat_step", "carseat_summary", "voice")
+    # What the agent waits to hear, by the event that opens or closes the wait (glasses_speech.Gate)
+    WAITS = {"changing_armed": ("finish", True), "change_read_back": ("finish", False), "ask_parent": ("answer", True),
+             "carseat_heard": ("answer", False), "carseat_summary": ("answer", False)}
 
     def __init__(self, agent, config, clock=time.time):
         super().__init__(agent, config)
@@ -427,6 +466,14 @@ class Glasses(Plugin):
         if self.cfg.get("person"):
             self.hub.profiles[self.cfg["person"]] = self.profile(self.cfg["person"])
         agent.bus.subscribe(self.forward, list(FORWARDED) + list(self.CARD_KINDS))
+        speech = self.cfg.get("speech") or {}
+        self.gate = Gate(**({"wake_words": speech["wake_words"]} if speech.get("wake_words") else {}))
+        self.ear_cfg = speech.get("ear") or {}
+        self.race_cfg = {k: speech[k] for k in ("calls", "rounds") if k in speech}
+        self._make_ear = None
+        self.ear_pool = concurrent.futures.ThreadPoolExecutor(max_workers=12, thread_name_prefix="glasses-ear")
+        self.hub.on_hear = self.hear
+        agent.bus.subscribe(self.track_waits, list(self.WAITS) + ["carseat_step", "skill_closed"])
 
     def profile(self, person):
         return {"name": self.people.name(person) or person.capitalize(), "lang": self.lang(person)}
@@ -434,13 +481,62 @@ class Glasses(Plugin):
     def lang(self, person):
         return self.people.lang(person) or "en"
 
-    def heard(self, text, person=None):
+    def heard(self, text, person=None, pushed=False):
         if person is not None:
-            self.hub.push({"kind": "heard", "text": text}, person)
-            if ACK.match(text) and len(text) <= 40:
+            if not pushed:
+                self.hub.push({"kind": "heard", "text": text}, person)
+            if ACK.match(plain(text)) and len(text) <= 40:
                 self.hub.push({"kind": "red_flag_clear", "by": "parent"}, person)
+                self.gate.wait(person, "ack", False)
         self.agent.bus.publish("message", channel=self.name, text=text, person=person,
                                **({"chat_id": person} if person is not None else {}))
+
+    # Speech
+
+    def make_ear(self):
+        """One ear call: Muse Spark Open on Baseten, the same as voice notes, one attempt (the race asks again)."""
+        if self._make_ear is not None:
+            return self._make_ear()
+        from .voice.ear import Ear
+        return Ear(**{"reasoning_effort": "minimal", "attempts": 1, "prompt": EAR_PROMPT, **self.ear_cfg})
+
+    def hear(self, wav, person=None, meta=None):
+        """One utterance from a wearer's glasses: Muse's ear writes it down (or the glasses did), the gate decides if it
+        was for the agent, and only then it becomes a message, the same as words typed on the glasses."""
+        meta = dict(meta or {})
+        text, ear_s, error, ear_info = meta.pop("text", ""), None, None, {}
+        if wav is not None:
+            started = time.monotonic()
+            try:
+                text, ear_info = race(self.make_ear, wav, pool=self.ear_pool, **self.race_cfg)
+            except Exception as failure:  # the ear failing must never stop the channel, it is logged and shown
+                error = str(failure)[:200]
+            ear_s = round(time.monotonic() - started, 3)
+        decision = self.gate.decide(text, person) if error is None else {"take": False, "text": "", "why": "ear failed"}
+        heard = {"text": text, "took": decision["take"], "why": decision["why"], "ear": "muse" if wav is not None else
+                 meta.get("source"), "ear_s": ear_s, "heard_unix": round(self.clock(), 3), **meta}
+        self.agent.bus.publish("speech", person=person, **heard, ear_calls=ear_info.get("calls"),
+                               ear_answers=ear_info.get("answers"), **({"error": error} if error else {}))
+        if person is not None:
+            self.hub.push({"kind": "heard", **heard}, person)
+        if decision["take"]:
+            if decision["why"].startswith("answer"):
+                self.gate.wait(person, "answer", False)  # one answer per question, the next question opens it again
+            self.heard(decision["text"], person, pushed=True)
+        return decision
+
+    def track_waits(self, event):
+        kind = event["kind"]
+        person = self.hub.camera_person
+        if kind == "carseat_step":
+            self.gate.wait(person, "answer", event.get("step_kind") == "ask")
+        elif kind == "skill_closed":
+            self.gate.wait(person, "finish", False)
+        elif kind == "ask_parent" and event.get("channel") != self.name:
+            return
+        elif kind in self.WAITS:
+            wait, on = self.WAITS[kind]
+            self.gate.wait(person, wait, on)
 
     # Cards
 
@@ -449,6 +545,8 @@ class Glasses(Plugin):
         if card is None or person is None:
             return None
         live = self.hub.live(person)
+        if card.get("sticky"):
+            self.gate.wait(person, "ack")
         self.agent.bus.publish("glasses_card", person=person, topic=card["topic"], via=via, cause=cause, shown=live,
                                title=card["title"], status=card["status"], alert=card["alert"], sticky=card["sticky"])
         if live:
@@ -495,6 +593,8 @@ class Glasses(Plugin):
         person = self.hub.camera_person
         if kind == "reply":
             person = event.get("chat_id") or person
+            if (event.get("text") or "").rstrip().endswith("?"):
+                self.gate.wait(person, "answer")  # the agent asked this wearer something: a spoken "sí" answers it
             self.send_card(cards.from_reply(event, self.lang(person)), person, "reply", self.name)
         elif kind == "skill_armed" and event.get("skill") == "bath":
             self.send_card(cards.bath(self.lang(person)), person, "skill_armed bath", "camera")
@@ -526,6 +626,7 @@ class Glasses(Plugin):
 
     def stop(self):
         self.hub.close()
+        self.ear_pool.shutdown(wait=False, cancel_futures=True)
 
 
 def car_seat_steps(skill="skills/car-seat.json"):

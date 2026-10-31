@@ -52,6 +52,9 @@ struct ContentView: View {
         Chip(text: agent.connected ? "Agent connected" : "Agent offline", on: agent.connected)
         Chip(text: "\(Int(glasses.sendFPS)) fps · \(agent.framesSent) sent", on: agent.framesSent > 0)
       }
+      if let mic = companion.micStatus {
+        Text(mic).font(.caption2).foregroundStyle(.secondary).lineLimit(1)
+      }
     }
   }
 
@@ -131,7 +134,7 @@ struct ContentView: View {
         HStack {
           Button("Connect glasses") {
             if glasses.registration != .registered { glasses.register() }
-            Task { await glasses.start() }
+            Task { await companion.connect() }
           }
           .buttonStyle(.borderedProminent)
           #if DEBUG
@@ -200,6 +203,7 @@ struct SettingsView: View {
   @AppStorage("agentURL") private var agentURL = "http://127.0.0.1:8766"
   @AppStorage("agentToken") private var agentToken = ""
   @AppStorage("sendFPS") private var sendFPS = 10.0
+  @AppStorage("micSource") private var micSource = MicSource.hfp.rawValue
   @Environment(\.dismiss) private var dismiss
 
   var body: some View {
@@ -212,6 +216,15 @@ struct SettingsView: View {
         }
         Section("Frames to the agent") {
           Stepper("\(Int(sendFPS)) per second", value: $sendFPS, in: 1...15)
+        }
+        Section {
+          Picker("Microphone", selection: $micSource) {
+            ForEach([MicSource.hfp, .stream, .glassesASR, .off]) { Text($0.label).tag($0.rawValue) }
+          }
+        } header: {
+          Text("Your voice")
+        } footer: {
+          Text("Heard by Muse Spark Open, the agent's model. Only words for the agent count: \"changing time\", an answer it is waiting for, or anything after \"agente\". Takes effect at the next connect.")
         }
       }
       .navigationTitle("Settings")

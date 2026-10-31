@@ -1,6 +1,8 @@
+import AVFoundation
 import Foundation
 import MWDATCamera
 import MWDATCore
+import MWDATSpeech
 import UIKit
 
 #if DEBUG
@@ -51,6 +53,14 @@ final class GlassesCamera {
   @ObservationIgnored var onSample: ((Data) -> Void)?
   /// Called once the device session is up, before the camera starts. The HUD attaches the display here.
   @ObservationIgnored var onSessionStarted: ((DeviceSession) -> Void)?
+  /// The glasses microphones, in band with the camera stream (DAT 1.0 `StreamConfiguration.audioCodec`, beta): 16 kHz
+  /// mono PCM, called on the SDK's thread. Set before `start()`. Nil streams video only.
+  @ObservationIgnored var onAudio: (@Sendable (AVAudioPCMBuffer, CMTime) -> Void)?
+  var audioFrames = 0
+  /// Final transcriptions from DAT's Speech capability (on-glasses recognition, beta). Set before `start()`.
+  @ObservationIgnored var onTranscript: ((String) -> Void)?
+  var speechLocale: String?
+  @ObservationIgnored private var speech: MWDATSpeech.Speech?
   #if DEBUG
   @ObservationIgnored private(set) var mockGlasses: (any MockGlasses)?
   #endif
@@ -163,13 +173,51 @@ final class GlassesCamera {
     sessionState = state
     if state == .started, camera == nil {
       if let session { onSessionStarted?(session) }
+      if onTranscript != nil { Task { await startSpeech() } }
       Task { await startStream() }
     } else if state == .stopped {
       sessionTokens.clear()
       streamTokens.clear()
       session = nil
       camera = nil
+      speech = nil
       streamState = .stopped
+    }
+  }
+
+  /// DAT's Speech capability: the glasses recognize speech on the device and send text, never audio. It needs the
+  /// microphone permission through the Meta AI app, and it can stop after a quiet spell, so it is started again.
+  private func startSpeech() async {
+    guard let session, speech == nil else { return }
+    do {
+      if try await wearables.checkPermissionStatus(.microphone) != .granted {
+        guard try await wearables.requestPermission(.microphone) == .granted else {
+          message = "Microphone permission was not given in the Meta AI app."
+          return
+        }
+      }
+      guard let speech = try session.addSpeech() else { return }
+      self.speech = speech
+      speech.transcriptionPublisher.listen { [weak self] result in
+        guard result.isFinal, !result.text.isEmpty else { return }
+        Task { @MainActor in self?.onTranscript?(result.text) }
+      }.store(in: sessionTokens)
+      speech.localePublisher.listen { [weak self] locale in
+        Task { @MainActor in self?.speechLocale = locale }
+      }.store(in: sessionTokens)
+      speech.errorPublisher.listen { [weak self] error in
+        Task { @MainActor in self?.message = "glasses speech: \(error.localizedDescription)" }
+      }.store(in: sessionTokens)
+      speech.statePublisher.listen { [weak self] state in
+        guard state == .stopped else { return }
+        Task { @MainActor in
+          try? await Task.sleep(for: .seconds(1))
+          if let speech = self?.speech, speech.state == .stopped { speech.start() }
+        }
+      }.store(in: sessionTokens)
+      speech.start()
+    } catch {
+      message = "glasses speech: \(error.localizedDescription)"
     }
   }
 
@@ -183,7 +231,11 @@ final class GlassesCamera {
         }
       }
       // Decoded frames, the medium size, 15 fps from the glasses. The app samples them down to sendFPS.
-      let config = StreamConfiguration(videoCodec: .raw, resolution: .medium, frameRate: 15)
+      // With a listener the stream also carries the glasses microphones: 16 kHz mono, the rate Meta suggests for speech.
+      let config = onAudio == nil
+        ? StreamConfiguration(videoCodec: .raw, resolution: .medium, frameRate: 15)
+        : StreamConfiguration(videoCodec: .raw, audioCodec: .pcm(sampleRate: .rate16000, numberOfChannels: 1),
+                              resolution: .medium, frameRate: 15)
       guard let camera = try session.addCamera(config: config) else {
         message = "The glasses camera could not start. Try again."
         return
@@ -208,6 +260,12 @@ final class GlassesCamera {
           if let jpeg { self.onSample?(jpeg) }
         }
       }.store(in: streamTokens)
+      if let onAudio {
+        stream.audioFramePublisher.listen { [weak self] frame in
+          onAudio(frame.pcmBuffer, frame.presentationTimeStamp)
+          Task { @MainActor in self?.audioFrames += 1 }
+        }.store(in: streamTokens)
+      }
       streamState = .starting
       stream.start()
     } catch {

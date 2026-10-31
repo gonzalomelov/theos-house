@@ -1,0 +1,2730 @@
+{
+ "date": "2026-10-30 23:11 -0300",
+ "port": 8767,
+ "lines": [
+  {
+   "clip": "en-changing",
+   "voice": "Samantha",
+   "text": "Changing time.",
+   "expect": "armed",
+   "speech_start_s": 0.0,
+   "speech_end_s": 0.97,
+   "played": {
+    "seconds": 0.9733125,
+    "clip": "en-changing",
+    "unix": 1793412055.507697,
+    "kind": "mock_mic"
+   },
+   "heard": {
+    "text": "Changing time",
+    "took": true,
+    "why": "start phrase",
+    "ear_s": 3.606,
+    "speech_end_unix": 1793412056.448,
+    "speech_s": 1.1,
+    "received_unix": 1793412057.04,
+    "heard_unix": 1793412060.647,
+    "error": null
+   },
+   "word_errors": 0,
+   "words": 2,
+   "speech_end_unix": 1793412056.478,
+   "cutter_end_unix": 1793412056.448,
+   "card": {
+    "title": "Cambiador",
+    "status": "Mano en el bebé",
+    "detail": "",
+    "meta": "Watch on · armed by Muse in 3.3 s",
+    "cause": "armed",
+    "agent_cause": "",
+    "unix": 1793412063.990018
+   },
+   "latency": {
+    "speech_end_to_card_s": 7.512,
+    "speech_end_to_cutter_end_s": -0.03,
+    "upload_s": 0.592,
+    "ear_s": 3.606,
+    "heard_to_card_s": 3.343
+   },
+   "passed": true
+  },
+  {
+   "clip": "es-baby-talk",
+   "voice": "Paulina",
+   "text": "Hola Theo, ¿quién es el bebé más lindo de la casa?",
+   "expect": null,
+   "speech_start_s": 0.0,
+   "speech_end_s": 3.06,
+   "played": {
+    "kind": "mock_mic",
+    "clip": "es-baby-talk",
+    "unix": 1793412070.100841,
+    "seconds": 3.0626875
+   },
+   "heard": null,
+   "passed": false
+  },
+  {
+   "clip": "en-done-dirty",
+   "voice": "Daniel",
+   "text": "Done, it was dirty.",
+   "expect": "logged",
+   "speech_start_s": 0.0,
+   "speech_end_s": 1.5,
+   "played": {
+    "clip": "en-done-dirty",
+    "kind": "mock_mic",
+    "seconds": 1.5001875,
+    "unix": 1793412130.308694
+   },
+   "heard": {
+    "text": "Done. It was dirty.",
+    "took": true,
+    "why": "finish the agent waits for",
+    "ear_s": 4.333,
+    "speech_end_unix": 1793412131.793,
+    "speech_s": 1.66,
+    "received_unix": 1793412132.406,
+    "heard_unix": 1793412136.739,
+    "error": null
+   },
+   "word_errors": 0,
+   "words": 4,
+   "speech_end_unix": 1793412131.809,
+   "cutter_end_unix": 1793412131.793,
+   "card": {
+    "title": "Anotado",
+    "status": "Diaper at 23:02",
+    "detail": "",
+    "meta": "Read back from Baby Buddy · entry 229",
+    "cause": "logged",
+    "agent_cause": "",
+    "unix": 1793412140.736689
+   },
+   "latency": {
+    "speech_end_to_card_s": 8.928,
+    "speech_end_to_cutter_end_s": -0.016,
+    "upload_s": 0.613,
+    "ear_s": 4.333,
+    "heard_to_card_s": 3.998
+   },
+   "passed": true
+  },
+  {
+   "clip": "es-hora-cambio",
+   "voice": "Mónica",
+   "text": "Hora del cambio.",
+   "expect": "armed",
+   "speech_start_s": 0.0,
+   "speech_end_s": 0.83,
+   "played": {
+    "kind": "mock_mic",
+    "unix": 1793412146.788477,
+    "seconds": 0.8335,
+    "clip": "es-hora-cambio"
+   },
+   "heard": {
+    "text": "Hora del cambio",
+    "took": true,
+    "why": "start phrase",
+    "ear_s": 3.118,
+    "speech_end_unix": 1793412147.612,
+    "speech_s": 0.96,
+    "received_unix": 1793412148.217,
+    "heard_unix": 1793412151.336,
+    "error": null
+   },
+   "word_errors": 0,
+   "words": 3,
+   "speech_end_unix": 1793412147.618,
+   "cutter_end_unix": 1793412147.612,
+   "card": {
+    "title": "Cambiador",
+    "status": "Mano en el bebé",
+    "detail": "Got it - 0 hand alerts this change. Logged dry diaper at 23:02.",
+    "meta": "Watch on · armed by Muse in 17.0 s",
+    "cause": "armed",
+    "agent_cause": "",
+    "unix": 1793412153.781211
+   },
+   "latency": {
+    "speech_end_to_card_s": 6.163,
+    "speech_end_to_cutter_end_s": -0.006,
+    "upload_s": 0.605,
+    "ear_s": 3.118,
+    "heard_to_card_s": 2.445
+   },
+   "passed": true
+  },
+  {
+   "clip": "es-listo",
+   "voice": "Paulina",
+   "text": "Listo, solo pis.",
+   "expect": "logged",
+   "speech_start_s": 0.0,
+   "speech_end_s": 1.55,
+   "played": {
+    "kind": "mock_mic",
+    "unix": 1793412159.8390322,
+    "seconds": 1.5525625,
+    "clip": "es-listo"
+   },
+   "heard": null,
+   "passed": false
+  },
+  {
+   "clip": "es-question",
+   "voice": "Paulina",
+   "text": "Agente, ¿cuándo comió por última vez?",
+   "expect": "answer",
+   "speech_start_s": 0.0,
+   "speech_end_s": 2.64,
+   "played": {
+    "kind": "mock_mic",
+    "unix": 1793412219.9738832,
+    "clip": "es-question",
+    "seconds": 2.6446875
+   },
+   "heard": {
+    "text": "Agente, ¿cuándo comió por última vez?",
+    "took": true,
+    "why": "wake word",
+    "ear_s": 4.274,
+    "speech_end_unix": 1793412222.572,
+    "speech_s": 2.76,
+    "received_unix": 1793412223.169,
+    "heard_unix": 1793412227.443,
+    "error": null
+   },
+   "word_errors": 0,
+   "words": 6,
+   "speech_end_unix": 1793412222.614,
+   "cutter_end_unix": 1793412222.572,
+   "card": null,
+   "passed": false
+  },
+  {
+   "clip": "en-question",
+   "voice": "Samantha",
+   "text": "Agent, how many diapers has he had today?",
+   "expect": "answer",
+   "speech_start_s": 0.0,
+   "speech_end_s": 2.61,
+   "played": {
+    "unix": 1793412293.5730739,
+    "seconds": 2.6088125,
+    "kind": "mock_mic",
+    "clip": "en-question"
+   },
+   "heard": {
+    "text": "Agent, how many diapers has he had today?",
+    "took": true,
+    "why": "wake word",
+    "ear_s": 4.399,
+    "speech_end_unix": 1793412296.146,
+    "speech_s": 2.74,
+    "received_unix": 1793412296.751,
+    "heard_unix": 1793412301.15,
+    "error": null
+   },
+   "word_errors": 0,
+   "words": 8,
+   "speech_end_unix": 1793412296.183,
+   "cutter_end_unix": 1793412296.146,
+   "card": null,
+   "passed": false
+  },
+  {
+   "clip": "es-red-flag",
+   "voice": "Mónica",
+   "text": "Agente, está azul y no respira bien.",
+   "expect": "red_flag",
+   "speech_start_s": 0.0,
+   "speech_end_s": 2.16,
+   "played": {
+    "kind": "mock_mic",
+    "unix": 1793412367.2544131,
+    "seconds": 2.156375,
+    "clip": "es-red-flag"
+   },
+   "heard": {
+    "text": "Agente, está azulino respira bien,",
+    "took": true,
+    "why": "wake word",
+    "ear_s": 3.355,
+    "speech_end_unix": 1793412369.399,
+    "speech_s": 2.32,
+    "received_unix": 1793412370.008,
+    "heard_unix": 1793412373.363,
+    "error": null
+   },
+   "word_errors": 3,
+   "words": 7,
+   "speech_end_unix": 1793412369.414,
+   "cutter_end_unix": 1793412369.399,
+   "card": null,
+   "passed": false
+  },
+  {
+   "clip": "es-ya-llame",
+   "voice": "Paulina",
+   "text": "Ya llamé.",
+   "expect": "red_flag_clear",
+   "speech_start_s": 0.0,
+   "speech_end_s": 0.64,
+   "played": {
+    "clip": "es-ya-llame",
+    "kind": "mock_mic",
+    "seconds": 0.63575,
+    "unix": 1793412439.552353
+   },
+   "heard": {
+    "text": "Ya llamé",
+    "took": false,
+    "why": "not for the agent",
+    "ear_s": 3.505,
+    "speech_end_unix": 1793412440.16,
+    "speech_s": 0.78,
+    "received_unix": 1793412440.767,
+    "heard_unix": 1793412444.272,
+    "error": null
+   },
+   "word_errors": 0,
+   "words": 2,
+   "speech_end_unix": 1793412440.192,
+   "cutter_end_unix": 1793412440.16,
+   "card": null,
+   "passed": false
+  },
+  {
+   "clip": "es-car-seat",
+   "voice": "Paulina",
+   "text": "Agente, ayudame a instalar la silla del auto.",
+   "expect": "car_seat",
+   "speech_start_s": 0.0,
+   "speech_end_s": 3.13,
+   "played": {
+    "seconds": 3.1323125,
+    "clip": "es-car-seat",
+    "unix": 1793412510.386763,
+    "kind": "mock_mic"
+   },
+   "heard": {
+    "text": "agente, ayúdame a instalar la silla del auto",
+    "took": true,
+    "why": "wake word",
+    "ear_s": 4.665,
+    "speech_end_unix": 1793412513.479,
+    "speech_s": 3.4,
+    "received_unix": 1793412514.086,
+    "heard_unix": 1793412518.751,
+    "error": null
+   },
+   "word_errors": 0,
+   "words": 8,
+   "speech_end_unix": 1793412513.517,
+   "cutter_end_unix": 1793412513.479,
+   "card": null,
+   "passed": false
+  },
+  {
+   "clip": "es-si",
+   "voice": "Mónica",
+   "text": "Sí.",
+   "expect": "car_seat_answer",
+   "speech_start_s": 0.0,
+   "speech_end_s": 0.28,
+   "played": {
+    "clip": "es-si",
+    "kind": "mock_mic",
+    "seconds": 0.281625,
+    "unix": 1793412644.802784
+   },
+   "heard": {
+    "text": "Sí,",
+    "took": true,
+    "why": "answer the agent waits for",
+    "ear_s": 3.34,
+    "speech_end_unix": 1793412645.063,
+    "speech_s": 0.42,
+    "received_unix": 1793412645.648,
+    "heard_unix": 1793412648.989,
+    "error": null
+   },
+   "word_errors": 0,
+   "words": 1,
+   "speech_end_unix": 1793412645.083,
+   "cutter_end_unix": 1793412645.063,
+   "card": {
+    "title": "Silla del auto",
+    "status": "Cinturón de cadera en las dos guías",
+    "detail": "",
+    "meta": "Paso 2 de 8",
+    "cause": "card",
+    "agent_cause": "car_seat",
+    "unix": 1793412648.993201
+   },
+   "latency": {
+    "speech_end_to_card_s": 3.91,
+    "speech_end_to_cutter_end_s": -0.02,
+    "upload_s": 0.585,
+    "ear_s": 3.34,
+    "heard_to_card_s": 0.004
+   },
+   "passed": true
+  }
+ ],
+ "passed": 4,
+ "of": 11,
+ "word_accuracy": 0.927,
+ "word_errors": 3,
+ "words": 41,
+ "speech_end_to_card_s": [
+  3.91,
+  6.163,
+  7.512,
+  8.928
+ ],
+ "brain_models": [
+  "meta-models/muse-spark-open-1026 on inference.baseten.co"
+ ],
+ "brain_calls": 18,
+ "speech_events": [
+  {
+   "kind": "speech",
+   "t": 11.886,
+   "ts": "2026-10-30T23:01:00-03:00",
+   "unix": 1793412060.647,
+   "person": "gonza",
+   "text": "Changing time",
+   "took": true,
+   "why": "start phrase",
+   "ear": "muse",
+   "ear_s": 3.606,
+   "heard_unix": 1793412060.647,
+   "speech_end_unix": 1793412056.448,
+   "speech_s": 1.1,
+   "source": "mock",
+   "received_unix": 1793412057.04,
+   "ear_calls": 3,
+   "ear_answers": [
+    "",
+    "Changing time"
+   ]
+  },
+  {
+   "kind": "speech",
+   "t": 87.98,
+   "ts": "2026-10-30T23:02:16-03:00",
+   "unix": 1793412136.739,
+   "person": "gonza",
+   "text": "Done. It was dirty.",
+   "took": true,
+   "why": "finish the agent waits for",
+   "ear": "muse",
+   "ear_s": 4.333,
+   "heard_unix": 1793412136.739,
+   "speech_end_unix": 1793412131.793,
+   "speech_s": 1.66,
+   "source": "mock",
+   "received_unix": 1793412132.406,
+   "ear_calls": 3,
+   "ear_answers": [
+    "Done. It was dirty."
+   ]
+  },
+  {
+   "kind": "speech",
+   "t": 102.578,
+   "ts": "2026-10-30T23:02:31-03:00",
+   "unix": 1793412151.336,
+   "person": "gonza",
+   "text": "Hora del cambio",
+   "took": true,
+   "why": "start phrase",
+   "ear": "muse",
+   "ear_s": 3.118,
+   "heard_unix": 1793412151.336,
+   "speech_end_unix": 1793412147.612,
+   "speech_s": 0.96,
+   "source": "mock",
+   "received_unix": 1793412148.217,
+   "ear_calls": 3,
+   "ear_answers": [
+    "Hora del cambio"
+   ]
+  },
+  {
+   "kind": "speech",
+   "t": 178.687,
+   "ts": "2026-10-30T23:03:47-03:00",
+   "unix": 1793412227.443,
+   "person": "gonza",
+   "text": "Agente, ¿cuándo comió por última vez?",
+   "took": true,
+   "why": "wake word",
+   "ear": "muse",
+   "ear_s": 4.274,
+   "heard_unix": 1793412227.443,
+   "speech_end_unix": 1793412222.572,
+   "speech_s": 2.76,
+   "source": "mock",
+   "received_unix": 1793412223.169,
+   "ear_calls": 3,
+   "ear_answers": [
+    "Agente, ¿cuándo comió por última vez?"
+   ]
+  },
+  {
+   "kind": "speech",
+   "t": 252.396,
+   "ts": "2026-10-30T23:05:01-03:00",
+   "unix": 1793412301.15,
+   "person": "gonza",
+   "text": "Agent, how many diapers has he had today?",
+   "took": true,
+   "why": "wake word",
+   "ear": "muse",
+   "ear_s": 4.399,
+   "heard_unix": 1793412301.15,
+   "speech_end_unix": 1793412296.146,
+   "speech_s": 2.74,
+   "source": "mock",
+   "received_unix": 1793412296.751,
+   "ear_calls": 3,
+   "ear_answers": [
+    "Agent, how many diapers has he had today?"
+   ]
+  },
+  {
+   "kind": "speech",
+   "t": 324.611,
+   "ts": "2026-10-30T23:06:13-03:00",
+   "unix": 1793412373.363,
+   "person": "gonza",
+   "text": "Agente, está azulino respira bien,",
+   "took": true,
+   "why": "wake word",
+   "ear": "muse",
+   "ear_s": 3.355,
+   "heard_unix": 1793412373.363,
+   "speech_end_unix": 1793412369.399,
+   "speech_s": 2.32,
+   "source": "mock",
+   "received_unix": 1793412370.008,
+   "ear_calls": 3,
+   "ear_answers": [
+    "Agente, está azulino respira bien,"
+   ]
+  },
+  {
+   "kind": "speech",
+   "t": 395.435,
+   "ts": "2026-10-30T23:07:24-03:00",
+   "unix": 1793412444.272,
+   "person": "gonza",
+   "text": "Ya llamé",
+   "took": false,
+   "why": "not for the agent",
+   "ear": "muse",
+   "ear_s": 3.505,
+   "heard_unix": 1793412444.272,
+   "speech_end_unix": 1793412440.16,
+   "speech_s": 0.78,
+   "source": "mock",
+   "received_unix": 1793412440.767,
+   "ear_calls": 3,
+   "ear_answers": [
+    "Ya llamé"
+   ]
+  },
+  {
+   "kind": "speech",
+   "t": 469.915,
+   "ts": "2026-10-30T23:08:38-03:00",
+   "unix": 1793412518.751,
+   "person": "gonza",
+   "text": "agente, ayúdame a instalar la silla del auto",
+   "took": true,
+   "why": "wake word",
+   "ear": "muse",
+   "ear_s": 4.665,
+   "heard_unix": 1793412518.751,
+   "speech_end_unix": 1793412513.479,
+   "speech_s": 3.4,
+   "source": "mock",
+   "received_unix": 1793412514.086,
+   "ear_calls": 3,
+   "ear_answers": [
+    "agente, ayúdame a instalar la silla del auto"
+   ]
+  },
+  {
+   "kind": "speech",
+   "t": 600.153,
+   "ts": "2026-10-30T23:10:48-03:00",
+   "unix": 1793412648.989,
+   "person": "gonza",
+   "text": "Sí,",
+   "took": true,
+   "why": "answer the agent waits for",
+   "ear": "muse",
+   "ear_s": 3.34,
+   "heard_unix": 1793412648.989,
+   "speech_end_unix": 1793412645.063,
+   "speech_s": 0.42,
+   "source": "mock",
+   "received_unix": 1793412645.648,
+   "ear_calls": 3,
+   "ear_answers": [
+    "Sí,"
+   ]
+  }
+ ],
+ "conversation": [
+  {
+   "unix": 1793412060.648,
+   "who": "parent",
+   "text": "Changing time"
+  },
+  {
+   "unix": 1793412067.478,
+   "who": "agent",
+   "text": "All set, Gonza. I'm watching the changing table, just tell me when you're done and if it was wet or dirty."
+  },
+  {
+   "unix": 1793412136.739,
+   "who": "parent",
+   "text": "Done."
+  },
+  {
+   "unix": 1793412141.811,
+   "who": "agent",
+   "text": "Got it - 0 hand alerts this change. Logged dry diaper at 23:02."
+  },
+  {
+   "unix": 1793412151.337,
+   "who": "parent",
+   "text": "Hora del cambio"
+  },
+  {
+   "unix": 1793412155.965,
+   "who": "agent",
+   "text": "Listo, Gonza. Estoy mirando la mesa de cambio, avisame cuando termines y si estuvo mojado o sucio."
+  },
+  {
+   "unix": 1793412227.443,
+   "who": "parent",
+   "text": "¿cuándo comió por última vez?"
+  },
+  {
+   "unix": 1793412236.182,
+   "who": "agent",
+   "text": "Última toma hoy a las 08:10, 90 ml en mamadera. Llevan 4 tomas hoy con 350 ml en total."
+  },
+  {
+   "unix": 1793412301.15,
+   "who": "parent",
+   "text": "how many diapers has he had today?"
+  },
+  {
+   "unix": 1793412309.922,
+   "who": "agent",
+   "text": "He's had 9 diapers today. 8 dirty, last dirty at 20:22, and last wet at 22:37."
+  },
+  {
+   "unix": 1793412373.363,
+   "who": "parent",
+   "text": "está azulino respira bien,"
+  },
+  {
+   "unix": 1793412379.941,
+   "who": "agent",
+   "text": "Anotado. No puedo dar consejos de salud, y si te preocupa que esté azul, llama a su pediatra o a emergencias si es urgente."
+  },
+  {
+   "unix": 1793412518.751,
+   "who": "parent",
+   "text": "ayúdame a instalar la silla del auto"
+  },
+  {
+   "unix": 1793412536.607,
+   "who": "agent",
+   "text": "Listo, Gonza, te ayudo paso a paso con la Joie i-Snug 2 con cinturón. Vamos a empezar, ¿está la silla mirando hacia atrás en el asiento trasero?"
+  },
+  {
+   "unix": 1793412648.989,
+   "who": "parent",
+   "text": "Sí,"
+  },
+  {
+   "unix": 1793412649.004,
+   "who": "agent",
+   "text": "Anotado: sí."
+  },
+  {
+   "unix": 1793412672.282,
+   "who": "agent",
+   "text": "Se terminó un cambio a las 23:11, sin nada mojado ni sucio. Hubo 7 alertas de manos en este cambio."
+  }
+ ],
+ "glasses_cards": [
+  {
+   "kind": "glasses_card",
+   "t": 18.717,
+   "ts": "2026-10-30T23:01:07-03:00",
+   "unix": 1793412067.478,
+   "person": "gonza",
+   "topic": "answer",
+   "via": "glasses",
+   "cause": "reply",
+   "shown": true,
+   "title": "Respuesta",
+   "status": "All set, Gonza.",
+   "alert": false,
+   "sticky": false
+  },
+  {
+   "kind": "glasses_card",
+   "t": 93.053,
+   "ts": "2026-10-30T23:02:21-03:00",
+   "unix": 1793412141.811,
+   "person": "gonza",
+   "topic": "answer",
+   "via": "glasses",
+   "cause": "reply",
+   "shown": true,
+   "title": "Respuesta",
+   "status": "Got it - 0 hand alerts this change.",
+   "alert": false,
+   "sticky": false
+  },
+  {
+   "kind": "glasses_card",
+   "t": 107.208,
+   "ts": "2026-10-30T23:02:35-03:00",
+   "unix": 1793412155.966,
+   "person": "gonza",
+   "topic": "answer",
+   "via": "glasses",
+   "cause": "reply",
+   "shown": true,
+   "title": "Respuesta",
+   "status": "Listo, Gonza.",
+   "alert": false,
+   "sticky": false
+  },
+  {
+   "kind": "glasses_card",
+   "t": 187.426,
+   "ts": "2026-10-30T23:03:56-03:00",
+   "unix": 1793412236.182,
+   "person": "gonza",
+   "topic": "answer",
+   "via": "glasses",
+   "cause": "reply",
+   "shown": true,
+   "title": "Respuesta",
+   "status": "Última toma hoy a las 08:10, 90 ml en mamadera.",
+   "alert": false,
+   "sticky": false
+  },
+  {
+   "kind": "glasses_card",
+   "t": 261.168,
+   "ts": "2026-10-30T23:05:09-03:00",
+   "unix": 1793412309.922,
+   "person": "gonza",
+   "topic": "answer",
+   "via": "glasses",
+   "cause": "reply",
+   "shown": true,
+   "title": "Respuesta",
+   "status": "He's had 9 diapers today.",
+   "alert": false,
+   "sticky": false
+  },
+  {
+   "kind": "glasses_card",
+   "t": 331.103,
+   "ts": "2026-10-30T23:06:19-03:00",
+   "unix": 1793412379.941,
+   "person": "gonza",
+   "topic": "answer",
+   "via": "glasses",
+   "cause": "reply",
+   "shown": true,
+   "title": "Respuesta",
+   "status": "Anotado.",
+   "alert": false,
+   "sticky": false
+  },
+  {
+   "kind": "glasses_card",
+   "t": 486.493,
+   "ts": "2026-10-30T23:08:55-03:00",
+   "unix": 1793412535.329,
+   "person": "gonza",
+   "topic": "car_seat",
+   "via": "camera",
+   "cause": "car seat car_position",
+   "shown": true,
+   "title": "Silla del auto",
+   "status": "¿Silla atrás, mirando hacia atrás?",
+   "alert": false,
+   "sticky": false
+  },
+  {
+   "kind": "glasses_card",
+   "t": 487.771,
+   "ts": "2026-10-30T23:08:56-03:00",
+   "unix": 1793412536.608,
+   "person": "gonza",
+   "topic": "answer",
+   "via": "glasses",
+   "cause": "reply",
+   "shown": true,
+   "title": "Respuesta",
+   "status": "Listo, Gonza, te ayudo paso a paso con la Joie i-Snug 2…",
+   "alert": false,
+   "sticky": false
+  },
+  {
+   "kind": "glasses_card",
+   "t": 600.154,
+   "ts": "2026-10-30T23:10:48-03:00",
+   "unix": 1793412648.99,
+   "person": "gonza",
+   "topic": "car_seat",
+   "via": "camera",
+   "cause": "car seat lap_guides",
+   "shown": true,
+   "title": "Silla del auto",
+   "status": "Cinturón de cadera en las dos guías",
+   "alert": false,
+   "sticky": false
+  },
+  {
+   "kind": "glasses_card",
+   "t": 600.168,
+   "ts": "2026-10-30T23:10:49-03:00",
+   "unix": 1793412649.004,
+   "person": "gonza",
+   "topic": "answer",
+   "via": "glasses",
+   "cause": "reply",
+   "shown": true,
+   "title": "Respuesta",
+   "status": "Anotado: sí.",
+   "alert": false,
+   "sticky": false
+  },
+  {
+   "kind": "glasses_card",
+   "t": 608.399,
+   "ts": "2026-10-30T23:10:57-03:00",
+   "unix": 1793412657.235,
+   "person": "gonza",
+   "topic": "car_seat",
+   "via": "camera",
+   "cause": "car seat lap_guides",
+   "shown": true,
+   "title": "Silla del auto",
+   "status": "Cinturón de cadera en las dos guías",
+   "alert": false,
+   "sticky": false
+  },
+  {
+   "kind": "glasses_card",
+   "t": 608.419,
+   "ts": "2026-10-30T23:10:57-03:00",
+   "unix": 1793412657.254,
+   "person": "gonza",
+   "topic": "car_seat",
+   "via": "camera",
+   "cause": "car seat shoulder_guide",
+   "shown": true,
+   "title": "Silla del auto",
+   "status": "Cinturón de hombro en la guía de atrás",
+   "alert": false,
+   "sticky": false
+  },
+  {
+   "kind": "glasses_card",
+   "t": 617.265,
+   "ts": "2026-10-30T23:11:06-03:00",
+   "unix": 1793412666.1,
+   "person": "gonza",
+   "topic": "car_seat",
+   "via": "camera",
+   "cause": "car seat shoulder_guide",
+   "shown": true,
+   "title": "Silla del auto",
+   "status": "Cinturón de hombro en la guía de atrás",
+   "alert": false,
+   "sticky": false
+  },
+  {
+   "kind": "glasses_card",
+   "t": 617.285,
+   "ts": "2026-10-30T23:11:06-03:00",
+   "unix": 1793412666.121,
+   "person": "gonza",
+   "topic": "car_seat",
+   "via": "camera",
+   "cause": "car seat no_twist",
+   "shown": true,
+   "title": "Silla del auto",
+   "status": "Cinturón tenso y plano, sin giros",
+   "alert": false,
+   "sticky": false
+  },
+  {
+   "kind": "glasses_card",
+   "t": 621.99,
+   "ts": "2026-10-30T23:11:10-03:00",
+   "unix": 1793412670.825,
+   "person": "gonza",
+   "topic": "car_seat",
+   "via": "camera",
+   "cause": "car seat no_twist",
+   "shown": false,
+   "title": "Silla del auto",
+   "status": "Cinturón tenso y plano, sin giros",
+   "alert": false,
+   "sticky": false
+  },
+  {
+   "kind": "glasses_card",
+   "t": 622.029,
+   "ts": "2026-10-30T23:11:10-03:00",
+   "unix": 1793412670.864,
+   "person": "gonza",
+   "topic": "car_seat",
+   "via": "camera",
+   "cause": "carseat_summary",
+   "shown": false,
+   "title": "Silla del auto",
+   "status": "Revisión de la silla terminada",
+   "alert": false,
+   "sticky": false
+  },
+  {
+   "kind": "glasses_card",
+   "t": 623.446,
+   "ts": "2026-10-30T23:11:12-03:00",
+   "unix": 1793412672.282,
+   "person": "gonza",
+   "topic": "answer",
+   "via": "glasses",
+   "cause": "reply",
+   "shown": false,
+   "title": "Respuesta",
+   "status": "Se terminó un cambio a las 23:11, sin nada mojado ni sucio.",
+   "alert": false,
+   "sticky": false
+  }
+ ],
+ "baby_log": [
+  {
+   "kind": "tracked",
+   "id": 229,
+   "time": null,
+   "wet": null,
+   "solid": null,
+   "entry": "changes"
+  },
+  {
+   "kind": "change_read_back",
+   "id": 229,
+   "time": "2026-10-31T02:02:20Z",
+   "wet": false,
+   "solid": false,
+   "entry": null
+  },
+  {
+   "kind": "tracked",
+   "id": 230,
+   "time": null,
+   "wet": null,
+   "solid": null,
+   "entry": "changes"
+  },
+  {
+   "kind": "change_read_back",
+   "id": 230,
+   "time": "2026-10-31T02:11:10Z",
+   "wet": false,
+   "solid": false,
+   "entry": null
+  }
+ ],
+ "sam3": [
+  {
+   "kind": "carseat_check",
+   "t": 600.154,
+   "ts": "2026-10-30T23:10:48-03:00",
+   "unix": 1793412648.989,
+   "check": "car_position",
+   "check_kind": "hand",
+   "result": "pass",
+   "answer": "Sí,"
+  },
+  {
+   "kind": "carseat_frame",
+   "t": 602.526,
+   "ts": "2026-10-30T23:10:51-03:00",
+   "unix": 1793412651.362,
+   "step": "lap_guides",
+   "frame_s": 596.714,
+   "sam_s": 2.139,
+   "result": "unseen"
+  },
+  {
+   "kind": "carseat_frame",
+   "t": 603.991,
+   "ts": "2026-10-30T23:10:52-03:00",
+   "unix": 1793412652.827,
+   "step": "lap_guides",
+   "frame_s": 598.65,
+   "sam_s": 1.46,
+   "result": "unseen"
+  },
+  {
+   "kind": "carseat_frame",
+   "t": 605.508,
+   "ts": "2026-10-30T23:10:54-03:00",
+   "unix": 1793412654.343,
+   "step": "lap_guides",
+   "frame_s": 600.176,
+   "sam_s": 1.512,
+   "result": "unseen"
+  },
+  {
+   "kind": "carseat_frame",
+   "t": 606.923,
+   "ts": "2026-10-30T23:10:55-03:00",
+   "unix": 1793412655.759,
+   "step": "lap_guides",
+   "frame_s": 601.652,
+   "sam_s": 1.411,
+   "result": "unseen"
+  },
+  {
+   "kind": "carseat_frame",
+   "t": 608.396,
+   "ts": "2026-10-30T23:10:57-03:00",
+   "unix": 1793412657.232,
+   "step": "lap_guides",
+   "frame_s": 603.243,
+   "sam_s": 1.469,
+   "result": "unseen"
+  },
+  {
+   "kind": "carseat_check",
+   "t": 608.418,
+   "ts": "2026-10-30T23:10:57-03:00",
+   "unix": 1793412657.254,
+   "check": "lap_guides",
+   "check_kind": "camera",
+   "result": "unseen",
+   "step_started_s": 596.489,
+   "frame_s": null,
+   "spoken_s": 604.754
+  },
+  {
+   "kind": "carseat_frame",
+   "t": 609.895,
+   "ts": "2026-10-30T23:10:58-03:00",
+   "unix": 1793412658.731,
+   "step": "shoulder_guide",
+   "frame_s": 604.806,
+   "sam_s": 1.419,
+   "result": "unseen"
+  },
+  {
+   "kind": "carseat_frame",
+   "t": 611.495,
+   "ts": "2026-10-30T23:11:00-03:00",
+   "unix": 1793412660.33,
+   "step": "shoulder_guide",
+   "frame_s": 606.113,
+   "sam_s": 1.595,
+   "result": "unseen"
+  },
+  {
+   "kind": "carseat_frame",
+   "t": 612.934,
+   "ts": "2026-10-30T23:11:01-03:00",
+   "unix": 1793412661.77,
+   "step": "shoulder_guide",
+   "frame_s": 607.673,
+   "sam_s": 1.435,
+   "result": "unseen"
+  },
+  {
+   "kind": "carseat_frame",
+   "t": 614.414,
+   "ts": "2026-10-30T23:11:03-03:00",
+   "unix": 1793412663.249,
+   "step": "shoulder_guide",
+   "frame_s": 609.211,
+   "sam_s": 1.475,
+   "result": "unseen"
+  },
+  {
+   "kind": "carseat_frame",
+   "t": 615.841,
+   "ts": "2026-10-30T23:11:04-03:00",
+   "unix": 1793412664.677,
+   "step": "shoulder_guide",
+   "frame_s": 610.543,
+   "sam_s": 1.423,
+   "result": "unseen"
+  },
+  {
+   "kind": "carseat_frame",
+   "t": 617.265,
+   "ts": "2026-10-30T23:11:06-03:00",
+   "unix": 1793412666.1,
+   "step": "shoulder_guide",
+   "frame_s": 612.08,
+   "sam_s": 1.419,
+   "result": "unseen"
+  },
+  {
+   "kind": "carseat_check",
+   "t": 617.285,
+   "ts": "2026-10-30T23:11:06-03:00",
+   "unix": 1793412666.121,
+   "check": "shoulder_guide",
+   "check_kind": "camera",
+   "result": "unseen",
+   "step_started_s": 604.754,
+   "frame_s": null,
+   "spoken_s": 613.62
+  },
+  {
+   "kind": "carseat_frame",
+   "t": 619.002,
+   "ts": "2026-10-30T23:11:07-03:00",
+   "unix": 1793412667.837,
+   "step": "no_twist",
+   "frame_s": 613.842,
+   "sam_s": 1.491,
+   "result": "unseen"
+  },
+  {
+   "kind": "carseat_frame",
+   "t": 620.804,
+   "ts": "2026-10-30T23:11:09-03:00",
+   "unix": 1793412669.639,
+   "step": "no_twist",
+   "frame_s": 615.177,
+   "sam_s": 1.797,
+   "result": "unseen"
+  },
+  {
+   "kind": "carseat_frame",
+   "t": 621.989,
+   "ts": "2026-10-30T23:11:10-03:00",
+   "unix": 1793412670.825,
+   "step": "no_twist",
+   "frame_s": 616.978,
+   "sam_s": 0.0,
+   "result": "unseen"
+  },
+  {
+   "kind": "carseat_check",
+   "t": 622.012,
+   "ts": "2026-10-30T23:11:10-03:00",
+   "unix": 1793412670.847,
+   "check": "no_twist",
+   "check_kind": "camera",
+   "result": "unseen",
+   "step_started_s": 613.62,
+   "frame_s": null,
+   "spoken_s": 618.347
+  }
+ ],
+ "house": [
+  {
+   "kind": "house_dry",
+   "t": 15.219,
+   "ts": "2026-10-30T23:01:03-03:00",
+   "unix": 1793412063.98,
+   "action": "hold_notifications",
+   "moment": "armed",
+   "service": "switch.turn_on"
+  },
+  {
+   "kind": "house_dry",
+   "t": 15.22,
+   "ts": "2026-10-30T23:01:03-03:00",
+   "unix": 1793412063.98,
+   "action": "mute_media",
+   "moment": "armed",
+   "service": "media_player.volume_mute"
+  },
+  {
+   "kind": "house_dry",
+   "t": 91.458,
+   "ts": "2026-10-30T23:02:20-03:00",
+   "unix": 1793412140.217,
+   "action": "restore_notifications",
+   "moment": "closed",
+   "service": "switch.turn_off"
+  },
+  {
+   "kind": "house_dry",
+   "t": 105.018,
+   "ts": "2026-10-30T23:02:33-03:00",
+   "unix": 1793412153.776,
+   "action": "hold_notifications",
+   "moment": "armed",
+   "service": "switch.turn_on"
+  },
+  {
+   "kind": "house_dry",
+   "t": 105.018,
+   "ts": "2026-10-30T23:02:33-03:00",
+   "unix": 1793412153.776,
+   "action": "mute_media",
+   "moment": "armed",
+   "service": "media_player.volume_mute"
+  },
+  {
+   "kind": "house_dry",
+   "t": 621.608,
+   "ts": "2026-10-30T23:11:10-03:00",
+   "unix": 1793412670.443,
+   "action": "restore_notifications",
+   "moment": "closed",
+   "service": "switch.turn_off"
+  }
+ ],
+ "app_log": [
+  {
+   "kind": "hello",
+   "lang": "es",
+   "wearer": "gonza",
+   "unix": 1793412050.64802
+  },
+  {
+   "alert": false,
+   "meta": "",
+   "event_unix": 1793412050.647056,
+   "agent_unix": 0,
+   "wearer": "gonza",
+   "unix": 1793412050.71826,
+   "detail": "",
+   "status": "Say “changing time”",
+   "icon": "smartGlasses",
+   "frame_unix": 0,
+   "agent_cause": "",
+   "title": "Agente de crianza",
+   "action": "",
+   "cause": "hello",
+   "kind": "sent"
+  },
+  {
+   "kind": "feed_start",
+   "unix": 1793412052.457607
+  },
+  {
+   "text": "",
+   "verdict": "",
+   "state": "",
+   "frame_unix": 0,
+   "kind": "event",
+   "unix": 1793412055.4894161,
+   "event": "caption"
+  },
+  {
+   "name": "Spoken: “Changing time.”",
+   "kind": "caption",
+   "unix": 1793412055.489723
+  },
+  {
+   "text": "",
+   "verdict": "",
+   "state": "",
+   "frame_unix": 0,
+   "kind": "event",
+   "unix": 1793412055.493379,
+   "event": "mock_mic"
+  },
+  {
+   "seconds": 0.9733125,
+   "clip": "en-changing",
+   "unix": 1793412055.507697,
+   "kind": "mock_mic"
+  },
+  {
+   "start_unix": 1793412055.507638,
+   "seconds": 1.1,
+   "source": "mock",
+   "unix": 1793412057.034013,
+   "end_unix": 1793412056.447638,
+   "kind": "utterance"
+  },
+  {
+   "kind": "mock_mic_done",
+   "unix": 1793412057.468195,
+   "clip": "en-changing",
+   "start_unix": 1793412055.507638,
+   "seconds": 0.9733125
+  },
+  {
+   "text": "Changing time",
+   "verdict": "",
+   "state": "",
+   "frame_unix": 0,
+   "kind": "event",
+   "unix": 1793412060.6486201,
+   "event": "heard"
+  },
+  {
+   "text": "Changing time",
+   "took": true,
+   "ear_s": 3.606,
+   "kind": "heard",
+   "unix": 1793412060.649191,
+   "why": "start phrase",
+   "speech_end_unix": 1793412056.448
+  },
+  {
+   "text": "changing-table armed, watching through the glasses",
+   "verdict": "",
+   "state": "",
+   "frame_unix": 0,
+   "kind": "event",
+   "unix": 1793412063.9805841,
+   "event": "skill"
+  },
+  {
+   "text": "",
+   "verdict": "",
+   "state": "",
+   "frame_unix": 0,
+   "kind": "event",
+   "unix": 1793412063.982226,
+   "event": "armed"
+  },
+  {
+   "agent_unix": 0,
+   "meta": "Watch on · armed by agent",
+   "title": "Cambiador",
+   "icon": "eye",
+   "alert": false,
+   "frame_unix": 0,
+   "agent_cause": "",
+   "cause": "skill",
+   "detail": "",
+   "wearer": "gonza",
+   "status": "Mano en el bebé",
+   "kind": "sent",
+   "action": "",
+   "unix": 1793412063.988966,
+   "event_unix": 1793412063.98069
+  },
+  {
+   "agent_unix": 0,
+   "meta": "Watch on · armed by Muse in 3.3 s",
+   "title": "Cambiador",
+   "icon": "eye",
+   "alert": false,
+   "frame_unix": 0,
+   "agent_cause": "",
+   "cause": "armed",
+   "detail": "",
+   "wearer": "gonza",
+   "status": "Mano en el bebé",
+   "kind": "sent",
+   "action": "",
+   "unix": 1793412063.990018,
+   "event_unix": 1793412063.982298
+  },
+  {
+   "text": "",
+   "verdict": "",
+   "state": "",
+   "frame_unix": 0,
+   "kind": "event",
+   "unix": 1793412067.479567,
+   "event": "card"
+  },
+  {
+   "text": "All set, Gonza. I'm watching the changing table, just tell me when you're done and if it was wet or dirty.",
+   "verdict": "",
+   "state": "",
+   "frame_unix": 0,
+   "kind": "event",
+   "unix": 1793412067.481432,
+   "event": "reply"
+  },
+  {
+   "title": "Respuesta",
+   "kind": "sent",
+   "event_unix": 1793412067.479675,
+   "alert": false,
+   "meta": "",
+   "icon": "speechBubble",
+   "frame_unix": 0,
+   "wearer": "gonza",
+   "action": "",
+   "status": "All set, Gonza.",
+   "detail": "I'm watching the changing table, just tell me when you're done and if it was wet or dirty.",
+   "agent_unix": 1793412067.478,
+   "unix": 1793412067.564972,
+   "cause": "card",
+   "agent_cause": "answer"
+  },
+  {
+   "on": true,
+   "unix": 1793412067.58933,
+   "kind": "mic_muted"
+  },
+  {
+   "kind": "event",
+   "text": "",
+   "event": "caption",
+   "state": "",
+   "verdict": "",
+   "frame_unix": 0,
+   "unix": 1793412070.095485
+  },
+  {
+   "unix": 1793412070.0957708,
+   "kind": "caption",
+   "name": "Spoken: “Hola Theo, ¿quién es el bebé más lindo de la casa?”"
+  },
+  {
+   "kind": "event",
+   "text": "",
+   "event": "mock_mic",
+   "state": "",
+   "verdict": "",
+   "frame_unix": 0,
+   "unix": 1793412070.098295
+  },
+  {
+   "kind": "mock_mic",
+   "clip": "es-baby-talk",
+   "unix": 1793412070.100841,
+   "seconds": 3.0626875
+  },
+  {
+   "unix": 1793412074.165148,
+   "clip": "es-baby-talk",
+   "kind": "mock_mic_done",
+   "start_unix": 1793412070.100754,
+   "seconds": 3.0626875
+  },
+  {
+   "on": false,
+   "unix": 1793412074.956064,
+   "kind": "mic_muted"
+  },
+  {
+   "kind": "event",
+   "text": "",
+   "event": "caption",
+   "state": "",
+   "verdict": "",
+   "frame_unix": 0,
+   "unix": 1793412130.302623
+  },
+  {
+   "unix": 1793412130.3031778,
+   "kind": "caption",
+   "name": "Spoken: “Done, it was dirty.”"
+  },
+  {
+   "kind": "event",
+   "text": "",
+   "event": "mock_mic",
+   "state": "",
+   "verdict": "",
+   "frame_unix": 0,
+   "unix": 1793412130.3071098
+  },
+  {
+   "clip": "en-done-dirty",
+   "kind": "mock_mic",
+   "seconds": 1.5001875,
+   "unix": 1793412130.308694
+  },
+  {
+   "unix": 1793412132.396133,
+   "kind": "utterance",
+   "start_unix": 1793412130.312618,
+   "end_unix": 1793412131.792618,
+   "seconds": 1.66,
+   "source": "mock"
+  },
+  {
+   "unix": 1793412132.809603,
+   "clip": "en-done-dirty",
+   "kind": "mock_mic_done",
+   "start_unix": 1793412130.308618,
+   "seconds": 1.5001875
+  },
+  {
+   "kind": "event",
+   "text": "Done. It was dirty.",
+   "event": "heard",
+   "state": "",
+   "verdict": "",
+   "frame_unix": 0,
+   "unix": 1793412136.73946
+  },
+  {
+   "took": true,
+   "kind": "heard",
+   "text": "Done. It was dirty.",
+   "ear_s": 4.333,
+   "speech_end_unix": 1793412131.793,
+   "why": "finish the agent waits for",
+   "unix": 1793412136.739672
+  },
+  {
+   "kind": "event",
+   "text": "changing-table closed after 349 frames",
+   "event": "skill",
+   "state": "",
+   "verdict": "",
+   "frame_unix": 0,
+   "unix": 1793412140.556886
+  },
+  {
+   "wearer": "gonza",
+   "status": "Anotando el cambio",
+   "kind": "sent",
+   "alert": false,
+   "unix": 1793412140.570972,
+   "cause": "skill",
+   "agent_cause": "",
+   "title": "Listo",
+   "detail": "",
+   "meta": "Vigilancia cerrada",
+   "icon": "pencil",
+   "frame_unix": 0,
+   "action": "",
+   "event_unix": 1793412140.557055,
+   "agent_unix": 0
+  },
+  {
+   "frame_unix": 0,
+   "state": "",
+   "kind": "event",
+   "text": "",
+   "event": "logged",
+   "verdict": "",
+   "unix": 1793412140.735729
+  },
+  {
+   "kind": "sent",
+   "wearer": "gonza",
+   "alert": false,
+   "title": "Anotado",
+   "icon": "checkmarkCircle",
+   "frame_unix": 0,
+   "event_unix": 1793412140.7358708,
+   "cause": "logged",
+   "agent_cause": "",
+   "agent_unix": 0,
+   "status": "Diaper at 23:02",
+   "meta": "Read back from Baby Buddy · entry 229",
+   "unix": 1793412140.736689,
+   "detail": "",
+   "action": ""
+  },
+  {
+   "frame_unix": 0,
+   "state": "",
+   "kind": "event",
+   "text": "",
+   "event": "card",
+   "verdict": "",
+   "unix": 1793412141.811996
+  },
+  {
+   "frame_unix": 0,
+   "state": "",
+   "kind": "event",
+   "text": "Got it - 0 hand alerts this change. Logged dry diaper at 23:02.",
+   "event": "reply",
+   "verdict": "",
+   "unix": 1793412141.813324
+  },
+  {
+   "action": "",
+   "frame_unix": 0,
+   "agent_unix": 1793412141.811,
+   "cause": "card",
+   "meta": "",
+   "event_unix": 1793412141.8122,
+   "wearer": "gonza",
+   "title": "Respuesta",
+   "kind": "sent",
+   "detail": "Logged dry diaper at 23:02.",
+   "status": "Got it - 0 hand alerts this change.",
+   "unix": 1793412141.832263,
+   "icon": "speechBubble",
+   "agent_cause": "answer",
+   "alert": false
+  },
+  {
+   "on": true,
+   "kind": "mic_muted",
+   "unix": 1793412141.837378
+  },
+  {
+   "kind": "event",
+   "text": "",
+   "event": "caption",
+   "state": "",
+   "verdict": "",
+   "frame_unix": 0,
+   "unix": 1793412146.782456
+  },
+  {
+   "kind": "caption",
+   "unix": 1793412146.782767,
+   "name": "Spoken: “Hora del cambio.”"
+  },
+  {
+   "kind": "event",
+   "text": "",
+   "event": "mock_mic",
+   "state": "",
+   "verdict": "",
+   "frame_unix": 0,
+   "unix": 1793412146.7854052
+  },
+  {
+   "kind": "mock_mic",
+   "unix": 1793412146.788477,
+   "seconds": 0.8335,
+   "clip": "es-hora-cambio"
+  },
+  {
+   "on": false,
+   "unix": 1793412146.820732,
+   "kind": "mic_muted"
+  },
+  {
+   "kind": "utterance",
+   "source": "mock",
+   "unix": 1793412148.2134218,
+   "start_unix": 1793412146.8121974,
+   "end_unix": 1793412147.6121974,
+   "seconds": 0.96
+  },
+  {
+   "kind": "mock_mic_done",
+   "unix": 1793412148.614462,
+   "seconds": 0.8335,
+   "clip": "es-hora-cambio",
+   "start_unix": 1793412146.788385
+  },
+  {
+   "kind": "event",
+   "text": "Hora del cambio",
+   "event": "heard",
+   "state": "",
+   "verdict": "",
+   "frame_unix": 0,
+   "unix": 1793412151.339007
+  },
+  {
+   "why": "start phrase",
+   "kind": "heard",
+   "ear_s": 3.118,
+   "unix": 1793412151.3392591,
+   "text": "Hora del cambio",
+   "took": true,
+   "speech_end_unix": 1793412147.612
+  },
+  {
+   "frame_unix": 0,
+   "state": "",
+   "kind": "event",
+   "text": "changing-table armed, watching through the glasses",
+   "event": "skill",
+   "verdict": "",
+   "unix": 1793412153.776607
+  },
+  {
+   "verdict": "",
+   "event": "armed",
+   "state": "",
+   "unix": 1793412153.779461,
+   "kind": "event",
+   "text": "",
+   "frame_unix": 0
+  },
+  {
+   "title": "Cambiador",
+   "kind": "sent",
+   "event_unix": 1793412153.7768312,
+   "alert": false,
+   "meta": "Watch on · armed by agent",
+   "icon": "eye",
+   "frame_unix": 0,
+   "wearer": "gonza",
+   "action": "",
+   "status": "Mano en el bebé",
+   "detail": "Got it - 0 hand alerts this change. Logged dry diaper at 23:02.",
+   "agent_unix": 0,
+   "unix": 1793412153.78015,
+   "cause": "skill",
+   "agent_cause": ""
+  },
+  {
+   "title": "Cambiador",
+   "kind": "sent",
+   "event_unix": 1793412153.779562,
+   "alert": false,
+   "meta": "Watch on · armed by Muse in 17.0 s",
+   "icon": "eye",
+   "frame_unix": 0,
+   "wearer": "gonza",
+   "action": "",
+   "status": "Mano en el bebé",
+   "detail": "Got it - 0 hand alerts this change. Logged dry diaper at 23:02.",
+   "agent_unix": 0,
+   "unix": 1793412153.781211,
+   "cause": "armed",
+   "agent_cause": ""
+  },
+  {
+   "verdict": "",
+   "event": "card",
+   "state": "",
+   "unix": 1793412155.966121,
+   "kind": "event",
+   "text": "",
+   "frame_unix": 0
+  },
+  {
+   "frame_unix": 0,
+   "state": "",
+   "kind": "event",
+   "text": "Listo, Gonza. Estoy mirando la mesa de cambio, avisame cuando termines y si estuvo mojado o sucio.",
+   "event": "reply",
+   "verdict": "",
+   "unix": 1793412155.967804
+  },
+  {
+   "wearer": "gonza",
+   "action": "",
+   "frame_unix": 0,
+   "detail": "Estoy mirando la mesa de cambio, avisame cuando termines y si estuvo mojado o sucio.",
+   "agent_cause": "answer",
+   "cause": "card",
+   "title": "Respuesta",
+   "icon": "speechBubble",
+   "kind": "sent",
+   "alert": false,
+   "agent_unix": 1793412155.966,
+   "meta": "",
+   "event_unix": 1793412155.966244,
+   "unix": 1793412155.969689,
+   "status": "Listo, Gonza."
+  },
+  {
+   "unix": 1793412155.970958,
+   "kind": "mic_muted",
+   "on": true
+  },
+  {
+   "verdict": "",
+   "event": "caption",
+   "state": "",
+   "unix": 1793412159.8350558,
+   "kind": "event",
+   "text": "",
+   "frame_unix": 0
+  },
+  {
+   "unix": 1793412159.8352551,
+   "name": "Spoken: “Listo, solo pis.”",
+   "kind": "caption"
+  },
+  {
+   "verdict": "",
+   "event": "mock_mic",
+   "state": "",
+   "unix": 1793412159.8369842,
+   "kind": "event",
+   "text": "",
+   "frame_unix": 0
+  },
+  {
+   "kind": "mock_mic",
+   "unix": 1793412159.8390322,
+   "seconds": 1.5525625,
+   "clip": "es-listo"
+  },
+  {
+   "start_unix": 1793412159.8388782,
+   "clip": "es-listo",
+   "kind": "mock_mic_done",
+   "seconds": 1.5525625,
+   "unix": 1793412162.385663
+  },
+  {
+   "kind": "mic_muted",
+   "on": false,
+   "unix": 1793412164.55144
+  },
+  {
+   "verdict": "",
+   "event": "alarm",
+   "state": "unknown",
+   "unix": 1793412202.3839679,
+   "kind": "event",
+   "text": "",
+   "frame_unix": 1793412202.346
+  },
+  {
+   "action": "",
+   "frame_unix": 1793412202.346,
+   "alert": false,
+   "unix": 1793412202.384709,
+   "kind": "sent",
+   "title": "Cambiador",
+   "icon": "eye",
+   "cause": "state",
+   "wearer": "gonza",
+   "event_unix": 1793412202.3838692,
+   "agent_unix": 0,
+   "detail": "Listo, Gonza. Estoy mirando la mesa de cambio, avisame cuando termines y si estuvo mojado o sucio.",
+   "agent_cause": "",
+   "meta": "Watch on · armed by Muse in 17.0 s",
+   "status": "Mano en el bebé"
+  },
+  {
+   "action": "",
+   "meta": "Tone · “hand” if it lasts 1.2 s",
+   "cause": "alarm",
+   "wearer": "gonza",
+   "detail": "",
+   "agent_cause": "",
+   "alert": true,
+   "title": "Manos afuera",
+   "unix": 1793412202.3874211,
+   "frame_unix": 1793412202.346,
+   "event_unix": 1793412202.384089,
+   "icon": "exclamationTriangle",
+   "agent_unix": 0,
+   "status": "Ninguna mano en el bebé",
+   "kind": "sent"
+  },
+  {
+   "frame_unix": 1793412202.346,
+   "text": "",
+   "unix": 1793412202.40305,
+   "verdict": "",
+   "kind": "event",
+   "event": "chime",
+   "state": ""
+  },
+  {
+   "frame_unix": 1793412203.646,
+   "state": "",
+   "kind": "event",
+   "text": "hand",
+   "event": "voice",
+   "verdict": "",
+   "unix": 1793412203.699779
+  },
+  {
+   "on": true,
+   "unix": 1793412203.703484,
+   "kind": "mic_muted"
+  },
+  {
+   "frame_unix": 1793412203.646,
+   "action": "",
+   "icon": "speakerWithThreeArcs",
+   "alert": true,
+   "cause": "voice",
+   "kind": "sent",
+   "event_unix": 1793412203.699924,
+   "meta": "Dicho en los lentes",
+   "agent_unix": 0,
+   "wearer": "gonza",
+   "unix": 1793412203.704201,
+   "status": "Ninguna mano en el bebé",
+   "detail": "",
+   "title": "“hand”",
+   "agent_cause": ""
+  },
+  {
+   "on": false,
+   "kind": "mic_muted",
+   "unix": 1793412204.6518068
+  },
+  {
+   "unix": 1793412205.406444,
+   "icon": "exclamationTriangle",
+   "frame_unix": 0,
+   "action": "",
+   "agent_cause": "",
+   "agent_unix": 0,
+   "status": "Ninguna mano en el bebé",
+   "kind": "sent",
+   "detail": "",
+   "event_unix": 0,
+   "title": "Manos afuera",
+   "wearer": "gonza",
+   "meta": "“hand” spoken",
+   "alert": true,
+   "cause": ""
+  },
+  {
+   "frame_unix": 0,
+   "text": "",
+   "unix": 1793412219.963818,
+   "verdict": "",
+   "kind": "event",
+   "event": "caption",
+   "state": ""
+  },
+  {
+   "kind": "caption",
+   "name": "Spoken: “Agente, ¿cuándo comió por última vez?”",
+   "unix": 1793412219.964519
+  },
+  {
+   "verdict": "",
+   "event": "mock_mic",
+   "state": "",
+   "unix": 1793412219.971462,
+   "kind": "event",
+   "text": "",
+   "frame_unix": 0
+  },
+  {
+   "kind": "mock_mic",
+   "unix": 1793412219.9738832,
+   "clip": "es-question",
+   "seconds": 2.6446875
+  },
+  {
+   "end_unix": 1793412222.5715091,
+   "unix": 1793412223.15923,
+   "seconds": 2.76,
+   "source": "mock",
+   "kind": "utterance",
+   "start_unix": 1793412219.9715092
+  },
+  {
+   "kind": "mock_mic_done",
+   "unix": 1793412223.6164532,
+   "clip": "es-question",
+   "start_unix": 1793412219.9737592,
+   "seconds": 2.6446875
+  },
+  {
+   "frame_unix": 0,
+   "text": "Agente, ¿cuándo comió por última vez?",
+   "unix": 1793412227.443635,
+   "verdict": "",
+   "kind": "event",
+   "event": "heard",
+   "state": ""
+  },
+  {
+   "why": "wake word",
+   "kind": "heard",
+   "ear_s": 4.274,
+   "unix": 1793412227.4441009,
+   "text": "Agente, ¿cuándo comió por última vez?",
+   "took": true,
+   "speech_end_unix": 1793412222.572
+  },
+  {
+   "frame_unix": 0,
+   "state": "",
+   "kind": "event",
+   "text": "",
+   "event": "card",
+   "verdict": "",
+   "unix": 1793412236.183072
+  },
+  {
+   "verdict": "",
+   "event": "reply",
+   "state": "",
+   "unix": 1793412236.185472,
+   "kind": "event",
+   "text": "Última toma hoy a las 08:10, 90 ml en mamadera. Llevan 4 tomas hoy con 350 ml en total.",
+   "frame_unix": 0
+  },
+  {
+   "kind": "mic_muted",
+   "on": true,
+   "unix": 1793412236.192987
+  },
+  {
+   "on": false,
+   "kind": "mic_muted",
+   "unix": 1793412244.750366
+  },
+  {
+   "frame_unix": 0,
+   "state": "",
+   "kind": "event",
+   "text": "",
+   "event": "caption",
+   "verdict": "",
+   "unix": 1793412293.567933
+  },
+  {
+   "name": "Spoken: “Agent, how many diapers has he had today?”",
+   "unix": 1793412293.56826,
+   "kind": "caption"
+  },
+  {
+   "frame_unix": 0,
+   "text": "",
+   "unix": 1793412293.571255,
+   "verdict": "",
+   "kind": "event",
+   "event": "mock_mic",
+   "state": ""
+  },
+  {
+   "unix": 1793412293.5730739,
+   "seconds": 2.6088125,
+   "kind": "mock_mic",
+   "clip": "en-question"
+  },
+  {
+   "kind": "utterance",
+   "source": "mock",
+   "unix": 1793412296.741672,
+   "end_unix": 1793412296.1460185,
+   "start_unix": 1793412293.5660186,
+   "seconds": 2.74
+  },
+  {
+   "unix": 1793412297.1797872,
+   "start_unix": 1793412293.572956,
+   "seconds": 2.6088125,
+   "kind": "mock_mic_done",
+   "clip": "en-question"
+  },
+  {
+   "frame_unix": 0,
+   "state": "",
+   "kind": "event",
+   "text": "Agent, how many diapers has he had today?",
+   "event": "heard",
+   "verdict": "",
+   "unix": 1793412301.1511478
+  },
+  {
+   "text": "Agent, how many diapers has he had today?",
+   "unix": 1793412301.151497,
+   "kind": "heard",
+   "speech_end_unix": 1793412296.146,
+   "ear_s": 4.399,
+   "why": "wake word",
+   "took": true
+  },
+  {
+   "verdict": "",
+   "event": "card",
+   "state": "",
+   "unix": 1793412309.9227629,
+   "kind": "event",
+   "text": "",
+   "frame_unix": 0
+  },
+  {
+   "verdict": "",
+   "event": "reply",
+   "state": "",
+   "unix": 1793412309.925253,
+   "kind": "event",
+   "text": "He's had 9 diapers today. 8 dirty, last dirty at 20:22, and last wet at 22:37.",
+   "frame_unix": 0
+  },
+  {
+   "kind": "mic_muted",
+   "on": true,
+   "unix": 1793412309.928928
+  },
+  {
+   "unix": 1793412316.701611,
+   "kind": "mic_muted",
+   "on": false
+  },
+  {
+   "verdict": "",
+   "event": "caption",
+   "state": "",
+   "unix": 1793412367.2498899,
+   "kind": "event",
+   "text": "",
+   "frame_unix": 0
+  },
+  {
+   "kind": "caption",
+   "name": "Spoken: “Agente, está azul y no respira bien.”",
+   "unix": 1793412367.2501411
+  },
+  {
+   "frame_unix": 0,
+   "state": "",
+   "kind": "event",
+   "text": "",
+   "event": "mock_mic",
+   "verdict": "",
+   "unix": 1793412367.252388
+  },
+  {
+   "kind": "mock_mic",
+   "unix": 1793412367.2544131,
+   "seconds": 2.156375,
+   "clip": "es-red-flag"
+  },
+  {
+   "kind": "utterance",
+   "end_unix": 1793412369.398595,
+   "unix": 1793412369.998085,
+   "start_unix": 1793412367.258595,
+   "seconds": 2.32,
+   "source": "mock"
+  },
+  {
+   "start_unix": 1793412367.254345,
+   "kind": "mock_mic_done",
+   "unix": 1793412370.396264,
+   "clip": "es-red-flag",
+   "seconds": 2.156375
+  },
+  {
+   "verdict": "",
+   "event": "heard",
+   "state": "",
+   "unix": 1793412373.363523,
+   "kind": "event",
+   "text": "Agente, está azulino respira bien,",
+   "frame_unix": 0
+  },
+  {
+   "took": true,
+   "kind": "heard",
+   "text": "Agente, está azulino respira bien,",
+   "ear_s": 3.355,
+   "speech_end_unix": 1793412369.399,
+   "why": "wake word",
+   "unix": 1793412373.36406
+  },
+  {
+   "verdict": "",
+   "event": "card",
+   "state": "",
+   "unix": 1793412379.94164,
+   "kind": "event",
+   "text": "",
+   "frame_unix": 0
+  },
+  {
+   "verdict": "",
+   "event": "reply",
+   "state": "",
+   "unix": 1793412379.944134,
+   "kind": "event",
+   "text": "Anotado. No puedo dar consejos de salud, y si te preocupa que esté azul, llama a su pediatra o a emergencias si es urgente.",
+   "frame_unix": 0
+  },
+  {
+   "on": true,
+   "kind": "mic_muted",
+   "unix": 1793412379.947289
+  },
+  {
+   "on": false,
+   "unix": 1793412389.59432,
+   "kind": "mic_muted"
+  },
+  {
+   "verdict": "",
+   "event": "caption",
+   "state": "",
+   "unix": 1793412439.5486631,
+   "kind": "event",
+   "text": "",
+   "frame_unix": 0
+  },
+  {
+   "unix": 1793412439.548884,
+   "kind": "caption",
+   "name": "Spoken: “Ya llamé.”"
+  },
+  {
+   "verdict": "",
+   "event": "mock_mic",
+   "state": "",
+   "unix": 1793412439.550819,
+   "kind": "event",
+   "text": "",
+   "frame_unix": 0
+  },
+  {
+   "clip": "es-ya-llame",
+   "kind": "mock_mic",
+   "seconds": 0.63575,
+   "unix": 1793412439.552353
+  },
+  {
+   "end_unix": 1793412440.160179,
+   "start_unix": 1793412439.540179,
+   "kind": "utterance",
+   "seconds": 0.78,
+   "unix": 1793412440.758412,
+   "source": "mock"
+  },
+  {
+   "kind": "mock_mic_done",
+   "seconds": 0.63575,
+   "start_unix": 1793412439.552304,
+   "clip": "es-ya-llame",
+   "unix": 1793412441.1826339
+  },
+  {
+   "verdict": "",
+   "event": "heard",
+   "state": "",
+   "unix": 1793412444.272541,
+   "kind": "event",
+   "text": "Ya llamé",
+   "frame_unix": 0
+  },
+  {
+   "took": false,
+   "kind": "heard",
+   "text": "Ya llamé",
+   "ear_s": 3.505,
+   "speech_end_unix": 1793412440.16,
+   "why": "not for the agent",
+   "unix": 1793412444.272769
+  },
+  {
+   "verdict": "",
+   "event": "caption",
+   "state": "",
+   "unix": 1793412510.381843,
+   "kind": "event",
+   "text": "",
+   "frame_unix": 0
+  },
+  {
+   "name": "Spoken: “Agente, ayudame a instalar la silla del auto.”",
+   "unix": 1793412510.382144,
+   "kind": "caption"
+  },
+  {
+   "frame_unix": 0,
+   "state": "",
+   "kind": "event",
+   "text": "",
+   "event": "mock_mic",
+   "verdict": "",
+   "unix": 1793412510.3850079
+  },
+  {
+   "seconds": 3.1323125,
+   "clip": "es-car-seat",
+   "unix": 1793412510.386763,
+   "kind": "mock_mic"
+  },
+  {
+   "kind": "utterance",
+   "source": "mock",
+   "unix": 1793412514.076232,
+   "end_unix": 1793412513.478796,
+   "start_unix": 1793412510.378796,
+   "seconds": 3.4
+  },
+  {
+   "seconds": 3.1323125,
+   "clip": "es-car-seat",
+   "unix": 1793412514.514399,
+   "kind": "mock_mic_done",
+   "start_unix": 1793412510.386671
+  },
+  {
+   "verdict": "",
+   "event": "heard",
+   "state": "",
+   "unix": 1793412518.75178,
+   "kind": "event",
+   "text": "agente, ayúdame a instalar la silla del auto",
+   "frame_unix": 0
+  },
+  {
+   "took": true,
+   "kind": "heard",
+   "text": "agente, ayúdame a instalar la silla del auto",
+   "ear_s": 4.665,
+   "speech_end_unix": 1793412513.479,
+   "why": "wake word",
+   "unix": 1793412518.752028
+  },
+  {
+   "verdict": "",
+   "event": "skill",
+   "state": "",
+   "unix": 1793412535.328738,
+   "kind": "event",
+   "text": "car-seat armed, watching through the glasses",
+   "frame_unix": 0
+  },
+  {
+   "verdict": "",
+   "event": "card",
+   "state": "",
+   "unix": 1793412535.340241,
+   "kind": "event",
+   "text": "",
+   "frame_unix": 0
+  },
+  {
+   "verdict": "",
+   "event": "voice",
+   "state": "",
+   "unix": 1793412535.3411798,
+   "kind": "event",
+   "text": "Coaching the Joie i-Snug 2 in the Tesla Model 3 (2027), installed with the seat belt and no base. Put the carrier on a rear seat, facing the back of the car. Never put a rear-facing seat in the front passenger seat while the airbag is on. Is the carrier on a rear seat, facing the back? Say yes or no.",
+   "frame_unix": 0
+  },
+  {
+   "verdict": "",
+   "event": "voice",
+   "state": "",
+   "unix": 1793412535.4218159,
+   "kind": "event",
+   "text": "Coaching the Joie i-Snug 2 in the Tesla Model 3 (2027), installed with the seat belt and no base. Put the carrier on a rear seat, facing the back of the car. Never put a rear-facing seat in the front passenger seat while the airbag is on. Is the carrier on a rear seat, facing the back? Say yes or no.",
+   "frame_unix": 0
+  },
+  {
+   "kind": "mic_muted",
+   "on": true,
+   "unix": 1793412535.4615111
+  },
+  {
+   "verdict": "",
+   "event": "card",
+   "state": "",
+   "unix": 1793412536.60793,
+   "kind": "event",
+   "text": "",
+   "frame_unix": 0
+  },
+  {
+   "verdict": "",
+   "event": "reply",
+   "state": "",
+   "unix": 1793412536.6092901,
+   "kind": "event",
+   "text": "Listo, Gonza, te ayudo paso a paso con la Joie i-Snug 2 con cinturón. Vamos a empezar, ¿está la silla mirando hacia atrás en el asiento trasero?",
+   "frame_unix": 0
+  },
+  {
+   "on": true,
+   "unix": 1793412554.7689939,
+   "kind": "mic_muted"
+  },
+  {
+   "unix": 1793412574.0212889,
+   "kind": "mic_muted",
+   "on": true
+  },
+  {
+   "on": false,
+   "unix": 1793412585.594252,
+   "kind": "mic_muted"
+  },
+  {
+   "verdict": "",
+   "event": "clear",
+   "state": "",
+   "unix": 1793412623.0917978,
+   "kind": "event",
+   "text": "",
+   "frame_unix": 1793412623.023
+  },
+  {
+   "cause": "clear",
+   "event_unix": 1793412623.092016,
+   "alert": false,
+   "action": "",
+   "agent_cause": "",
+   "kind": "sent",
+   "title": "Cambiador",
+   "meta": "Watch on · armed by Muse in 17.0 s",
+   "frame_unix": 1793412623.023,
+   "status": "Mano en el bebé",
+   "detail": "Listo, Gonza, te ayudo paso a paso con la Joie i-Snug 2 con cinturón. Vamos a empezar, ¿está la silla mirando hacia atrás en el asiento trasero?",
+   "icon": "eye",
+   "wearer": "gonza",
+   "unix": 1793412623.143764,
+   "agent_unix": 0
+  },
+  {
+   "verdict": "",
+   "event": "caption",
+   "state": "",
+   "unix": 1793412644.78924,
+   "kind": "event",
+   "text": "",
+   "frame_unix": 0
+  },
+  {
+   "unix": 1793412644.789527,
+   "kind": "caption",
+   "name": "Spoken: “Sí.”"
+  },
+  {
+   "verdict": "",
+   "event": "mock_mic",
+   "state": "",
+   "unix": 1793412644.796879,
+   "kind": "event",
+   "text": "",
+   "frame_unix": 0
+  },
+  {
+   "clip": "es-si",
+   "kind": "mock_mic",
+   "seconds": 0.281625,
+   "unix": 1793412644.802784
+  },
+  {
+   "seconds": 0.42,
+   "start_unix": 1793412644.8025436,
+   "end_unix": 1793412645.0625436,
+   "source": "mock",
+   "kind": "utterance",
+   "unix": 1793412645.6450958
+  },
+  {
+   "clip": "es-si",
+   "kind": "mock_mic_done",
+   "start_unix": 1793412644.802731,
+   "seconds": 0.281625,
+   "unix": 1793412646.0852451
+  },
+  {
+   "verdict": "",
+   "event": "heard",
+   "state": "",
+   "unix": 1793412648.9892879,
+   "kind": "event",
+   "text": "Sí,",
+   "frame_unix": 0
+  },
+  {
+   "text": "Sí,",
+   "unix": 1793412648.989579,
+   "kind": "heard",
+   "speech_end_unix": 1793412645.063,
+   "ear_s": 3.34,
+   "why": "answer the agent waits for",
+   "took": true
+  },
+  {
+   "verdict": "",
+   "event": "card",
+   "state": "",
+   "unix": 1793412648.9913359,
+   "kind": "event",
+   "text": "",
+   "frame_unix": 0
+  },
+  {
+   "unix": 1793412648.993201,
+   "status": "Cinturón de cadera en las dos guías",
+   "frame_unix": 0,
+   "kind": "sent",
+   "action": "",
+   "alert": false,
+   "agent_unix": 1793412648.99,
+   "detail": "",
+   "meta": "Paso 2 de 8",
+   "icon": "carFrontView",
+   "cause": "card",
+   "title": "Silla del auto",
+   "agent_cause": "car_seat",
+   "event_unix": 1793412648.991403,
+   "wearer": "gonza"
+  },
+  {
+   "verdict": "",
+   "event": "voice",
+   "state": "",
+   "unix": 1793412649.0042849,
+   "kind": "event",
+   "text": "Slide the lap belt into both side guides of the carrier, then show me the belt path from the door.",
+   "frame_unix": 0
+  },
+  {
+   "kind": "mic_muted",
+   "on": true,
+   "unix": 1793412649.008541
+  },
+  {
+   "verdict": "",
+   "event": "card",
+   "state": "",
+   "unix": 1793412649.0319219,
+   "kind": "event",
+   "text": "",
+   "frame_unix": 0
+  },
+  {
+   "verdict": "",
+   "event": "reply",
+   "state": "",
+   "unix": 1793412649.034908,
+   "kind": "event",
+   "text": "Anotado: sí.",
+   "frame_unix": 0
+  },
+  {
+   "wearer": "gonza",
+   "action": "",
+   "frame_unix": 0,
+   "detail": "",
+   "agent_cause": "answer",
+   "cause": "card",
+   "title": "Respuesta",
+   "icon": "speechBubble",
+   "kind": "sent",
+   "alert": false,
+   "agent_unix": 1793412649.013,
+   "meta": "",
+   "event_unix": 1793412649.032126,
+   "unix": 1793412649.036937,
+   "status": "Anotado: sí."
+  },
+  {
+   "verdict": "",
+   "event": "voice",
+   "state": "",
+   "unix": 1793412649.057458,
+   "kind": "event",
+   "text": "Slide the lap belt into both side guides of the carrier, then show me the belt path from the door.",
+   "frame_unix": 0
+  },
+  {
+   "on": true,
+   "unix": 1793412654.128374,
+   "kind": "mic_muted"
+  },
+  {
+   "on": true,
+   "kind": "mic_muted",
+   "unix": 1793412655.694467
+  },
+  {
+   "frame_unix": 0,
+   "text": "",
+   "unix": 1793412657.235124,
+   "verdict": "",
+   "kind": "event",
+   "event": "card",
+   "state": ""
+  },
+  {
+   "title": "Silla del auto",
+   "kind": "sent",
+   "event_unix": 1793412657.235286,
+   "alert": false,
+   "meta": "Paso 2 de 8",
+   "icon": "carFrontView",
+   "frame_unix": 0,
+   "wearer": "gonza",
+   "action": "",
+   "status": "Cinturón de cadera en las dos guías",
+   "detail": "No lo vi, queda sin revisar",
+   "agent_unix": 1793412657.235,
+   "unix": 1793412657.239202,
+   "cause": "card",
+   "agent_cause": "car_seat"
+  },
+  {
+   "frame_unix": 0,
+   "text": "I could not see the lap belt and both side guides. I am listing it as not checked.",
+   "unix": 1793412657.243433,
+   "verdict": "",
+   "kind": "event",
+   "event": "voice",
+   "state": ""
+  },
+  {
+   "frame_unix": 0,
+   "state": "",
+   "kind": "event",
+   "text": "I could not see the lap belt and both side guides. I am listing it as not checked.",
+   "event": "voice",
+   "verdict": "",
+   "unix": 1793412657.2487202
+  },
+  {
+   "frame_unix": 0,
+   "text": "",
+   "unix": 1793412657.25477,
+   "verdict": "",
+   "kind": "event",
+   "event": "card",
+   "state": ""
+  },
+  {
+   "agent_unix": 1793412657.254,
+   "detail": "",
+   "cause": "card",
+   "agent_cause": "car_seat",
+   "meta": "Paso 3 de 8",
+   "wearer": "gonza",
+   "status": "Cinturón de hombro en la guía de atrás",
+   "unix": 1793412657.256085,
+   "action": "",
+   "icon": "carFrontView",
+   "frame_unix": 0,
+   "kind": "sent",
+   "alert": false,
+   "event_unix": 1793412657.254854,
+   "title": "Silla del auto"
+  },
+  {
+   "frame_unix": 0,
+   "state": "",
+   "kind": "event",
+   "text": "Slide the shoulder belt into the rear guide behind the carrier's head end.",
+   "event": "voice",
+   "verdict": "",
+   "unix": 1793412657.2615361
+  },
+  {
+   "frame_unix": 0,
+   "state": "",
+   "kind": "event",
+   "text": "Slide the shoulder belt into the rear guide behind the carrier's head end.",
+   "event": "voice",
+   "verdict": "",
+   "unix": 1793412657.2694721
+  },
+  {
+   "kind": "mic_muted",
+   "unix": 1793412660.825064,
+   "on": true
+  },
+  {
+   "kind": "mic_muted",
+   "on": true,
+   "unix": 1793412665.529736
+  },
+  {
+   "frame_unix": 0,
+   "state": "",
+   "kind": "event",
+   "text": "",
+   "event": "card",
+   "verdict": "",
+   "unix": 1793412666.10094
+  },
+  {
+   "cause": "card",
+   "event_unix": 1793412666.101077,
+   "alert": false,
+   "action": "",
+   "agent_cause": "car_seat",
+   "kind": "sent",
+   "title": "Silla del auto",
+   "meta": "Paso 3 de 8",
+   "frame_unix": 0,
+   "status": "Cinturón de hombro en la guía de atrás",
+   "detail": "No lo vi, queda sin revisar",
+   "icon": "carFrontView",
+   "wearer": "gonza",
+   "unix": 1793412666.104095,
+   "agent_unix": 1793412666.1
+  },
+  {
+   "frame_unix": 0,
+   "state": "",
+   "kind": "event",
+   "text": "I could not see the rear guide. I am listing it as not checked.",
+   "event": "voice",
+   "verdict": "",
+   "unix": 1793412666.108913
+  },
+  {
+   "frame_unix": 0,
+   "text": "I could not see the rear guide. I am listing it as not checked.",
+   "unix": 1793412666.1147308,
+   "verdict": "",
+   "kind": "event",
+   "event": "voice",
+   "state": ""
+  },
+  {
+   "frame_unix": 0,
+   "text": "",
+   "unix": 1793412666.126535,
+   "verdict": "",
+   "kind": "event",
+   "event": "card",
+   "state": ""
+  },
+  {
+   "frame_unix": 1793412666.12,
+   "text": "Pull the shoulder belt tight and keep the belt flat, with no twist.",
+   "unix": 1793412666.1291819,
+   "verdict": "",
+   "kind": "event",
+   "event": "voice",
+   "state": ""
+  },
+  {
+   "action": "",
+   "frame_unix": 0,
+   "cause": "card",
+   "agent_unix": 1793412666.121,
+   "meta": "Paso 4 de 8",
+   "icon": "carFrontView",
+   "kind": "sent",
+   "detail": "",
+   "event_unix": 1793412666.1266541,
+   "agent_cause": "car_seat",
+   "unix": 1793412666.131325,
+   "wearer": "gonza",
+   "title": "Silla del auto",
+   "alert": false,
+   "status": "Cinturón tenso y plano, sin giros"
+  },
+  {
+   "frame_unix": 1793412666.12,
+   "state": "",
+   "kind": "event",
+   "text": "Pull the shoulder belt tight and keep the belt flat, with no twist.",
+   "event": "voice",
+   "verdict": "",
+   "unix": 1793412666.135209
+  },
+  {
+   "on": true,
+   "unix": 1793412670.2488499,
+   "kind": "mic_muted"
+  }
+ ]
+}

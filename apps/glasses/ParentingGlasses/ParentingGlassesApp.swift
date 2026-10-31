@@ -30,7 +30,7 @@ struct ParentingGlassesApp: App {
             await companion.runHUDReplay()
           } else if UserDefaults.standard.bool(forKey: "hudLive") {
             await companion.runHUDLive()
-          } else if UserDefaults.standard.bool(forKey: "hudDay") {
+          } else if UserDefaults.standard.bool(forKey: "hudDay") || UserDefaults.standard.bool(forKey: "hudSpeech") {
             await companion.runHUDDay()
           } else if UserDefaults.standard.bool(forKey: "autoDemo") {
             await companion.runDemo()

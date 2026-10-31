@@ -23,6 +23,18 @@ final class Companion {
   var spokenCount = 0
   var alerts = 0
 
+  /// The parent's voice: the microphone cut into utterances on the phone, each one sent to the agent's ear.
+  let cutter = UtteranceCutter()
+  var micSource: MicSource = .off
+  /// What the microphone did last, for the screen: listening, sent, heard and whether it was for the agent.
+  var micStatus: String?
+  var utterancesSent = 0
+  @ObservationIgnored private var hfp: HFPMicrophone?
+  @ObservationIgnored private var speaking = false
+  #if DEBUG
+  @ObservationIgnored private(set) var mockMic: MockMicrophone?
+  #endif
+
   /// The glasses display (HUD). The same card goes to the real display and, in the simulator, to Meta's mock preview.
   let hud = DisplayHUD()
   var hudState = HUDState()
@@ -49,6 +61,8 @@ final class Companion {
     glasses.onSample = { [weak self] jpeg in self?.agent.send(frame: jpeg) }
     agent.onEvent = { [weak self] event, data in self?.received(event, data: data) }
     voice.onSpoken = { [weak self] _ in self?.spokenCount += 1 }
+    voice.onSpeaking = { [weak self] on in self?.speakingChanged(on) }
+    cutter.onUtterance = { [weak self] utterance in Task { @MainActor in self?.utterance(utterance) } }
     glasses.onSessionStarted = { [weak self] session in self?.hud.attach(to: session) }
     hud.onSent = { [weak self] card, unix in self?.sent(card, at: unix) }
     hud.onAction = { [weak self] in self?.acknowledge() }
@@ -121,6 +135,70 @@ final class Companion {
     #endif
   }
 
+  /// Connect: the microphone first (Meta: the HFP route settles before the camera stream starts), then the glasses.
+  func connect() async {
+    let saved = UserDefaults.standard.string(forKey: "micSource") ?? MicSource.hfp.rawValue
+    await startMic(MicSource(rawValue: saved) ?? .hfp)
+    await glasses.start()
+  }
+
+  func startMic(_ source: MicSource) async {
+    micSource = source
+    switch source {
+    case .hfp:
+      let mic = HFPMicrophone()
+      do {
+        try await mic.start(into: cutter)
+        hfp = mic
+        micStatus = "Listening · \(mic.route)"
+      } catch {
+        micStatus = "Microphone off: \(error.localizedDescription)"
+      }
+    case .stream:
+      let mic = StreamMicrophone(cutter: cutter)
+      glasses.onAudio = { buffer, _ in mic.feed(buffer) }
+      micStatus = "Listening · glasses mic in the camera stream"
+    case .glassesASR:
+      glasses.onTranscript = { [weak self] text in
+        guard let self, !self.speaking else { return }
+        self.agent.hear(text: text, endUnix: Date().timeIntervalSince1970, seconds: 0, source: "glasses speech")
+        self.micStatus = "Glasses heard \"\(text)\""
+      }
+      micStatus = "Listening · speech recognized on the glasses"
+    case .off:
+      micStatus = nil
+    #if DEBUG
+    case .mock:
+      mockMic = MockMicrophone(cutter: cutter)
+      micStatus = "Listening · recorded audio as the microphone (simulator)"
+    #endif
+    }
+  }
+
+  /// While the app speaks through the glasses the microphone is muted, and 0.3 s after, so it never hears itself.
+  private func speakingChanged(_ on: Bool) {
+    speaking = on
+    if on {
+      cutter.setMuted(true)
+      log(["kind": "mic_muted", "on": true, "unix": Date().timeIntervalSince1970])
+      return
+    }
+    Task { [weak self] in
+      try? await Task.sleep(for: .milliseconds(300))
+      guard let self, !self.speaking else { return }
+      self.cutter.setMuted(false)
+      self.log(["kind": "mic_muted", "on": false, "unix": Date().timeIntervalSince1970])
+    }
+  }
+
+  private func utterance(_ utterance: Utterance) {
+    utterancesSent += 1
+    micStatus = String(format: "Heard %.1f s of speech · sent to the agent's ear", utterance.seconds)
+    log(["kind": "utterance", "start_unix": utterance.startUnix, "end_unix": utterance.endUnix, "seconds": utterance.seconds,
+         "source": micSource.rawValue, "unix": Date().timeIntervalSince1970])
+    agent.hear(wav: utterance.wav, endUnix: utterance.endUnix, seconds: utterance.seconds, source: micSource.rawValue)
+  }
+
   func say(_ text: String) {
     let text = text.trimmingCharacters(in: .whitespacesAndNewlines)
     guard !text.isEmpty else { return }
@@ -160,6 +238,16 @@ final class Companion {
     case "heard":
       // What the agent heard from this wearer: shown unless the app itself just sent it.
       guard let text = event.text, !text.isEmpty else { return }
+      if let row = try? JSONSerialization.jsonObject(with: data) as? [String: Any], row["took"] != nil {
+        let took = row["took"] as? Bool ?? false
+        let ear = (row["ear_s"] as? Double).map { String(format: " in %.1f s", $0) } ?? ""
+        micStatus = took ? "Muse heard \"\(text)\"\(ear)" : "Muse heard \"\(text)\"\(ear) · not for the agent"
+        log(["kind": "heard", "text": text, "took": took, "why": row["why"] as? String ?? "", "ear_s": row["ear_s"] as? Double ?? 0,
+             "speech_end_unix": row["speech_end_unix"] as? Double ?? 0, "unix": Date().timeIntervalSince1970])
+        add(took ? .parent : .system, took ? text : "not for the agent: \(text)")
+        lastSaid = nil
+        return
+      }
       if text != lastSaid {
         add(.parent, text)
         log(["kind": "say", "text": text, "unix": Date().timeIntervalSince1970, "by": "agent heard"])
@@ -170,6 +258,10 @@ final class Companion {
         add(.system, "card · \(card.title)")
         if card.sticky { voice.chime() }
       }
+    #if DEBUG
+    case "mock_mic":
+      playMock(data)
+    #endif
     case "caption":
       if let row = try? JSONSerialization.jsonObject(with: data) as? [String: Any] {
         dayCaption = ((row["name"] as? String) ?? "", (row["source"] as? String) ?? "")
@@ -205,6 +297,26 @@ final class Companion {
   }
 
   #if DEBUG
+  /// Set in the speech run: the parent's words are recorded audio played into the microphone path (`-hudSpeech YES`).
+  var speechRun = false
+
+  /// The run's script plays a recorded clip into the mock microphone. Only the samples reach the cutter.
+  private func playMock(_ data: Data) {
+    guard
+      let mic = mockMic,
+      let row = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+      let clip = row["clip"] as? String
+    else { return }
+    let seconds = mic.play(clip) { [weak self] started, seconds in
+      Task { @MainActor in
+        self?.log(["kind": "mock_mic_done", "clip": clip, "start_unix": started, "seconds": seconds,
+                   "unix": Date().timeIntervalSince1970])
+      }
+    }
+    micStatus = seconds == nil ? "No clip \(clip) in the app" : "Microphone: playing a recorded clip (simulator)"
+    log(["kind": "mock_mic", "clip": clip, "seconds": seconds ?? -1, "unix": Date().timeIntervalSince1970])
+  }
+
   /// Simulator HUD replay: a mock Meta Ray-Ban Display whose camera plays `MockFeed/hud-feed.mp4` (our synthetic
   /// clips) while the HUD replays recorded detector outputs from `HUD/hud-replay.json`, on the clock of the first
   /// camera frame. No agent and no model run. Both files come from `scripts/glasses_hud_replay.py`.
@@ -311,6 +423,10 @@ final class Companion {
       return
     }
     dayCaption = ("Waiting for the agent", "")
+    if UserDefaults.standard.bool(forKey: "hudSpeech") {
+      speechRun = true
+      await startMic(.mock)
+    }
     add(.system, "Mock Meta Ray-Ban Display paired (DAT MockDeviceKit)")
     glasses.pairMockGlasses(feed: feed, model: .metaRayBanDisplay)
     for _ in 0..<100 where !agent.connected { try? await Task.sleep(for: .milliseconds(100)) }

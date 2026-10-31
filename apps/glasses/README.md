@@ -6,7 +6,7 @@ An iPhone app that makes Ray-Ban Meta glasses the agent's head camera. Built dur
 - On Meta Ray-Ban Display glasses it also draws the agent's HUD on the in-lens display (`HUD.md`).
 - It streams the glasses camera at 15 fps, medium size (504 x 896), decoded frames, and samples them down to 10 fps (Settings, 1 to 15).
 - Each sampled frame goes as a JPEG to the agent on the parent's own Mac (`parenting_agent/glasses.py`), over the home network, never the internet. A frame that arrives while the last one is still uploading is dropped, so the agent always sees the newest view.
-- What the parent says (typed or the quick buttons for now) goes to the agent as a message on the `glasses` channel.
+- What the parent says goes to the agent as a message on the `glasses` channel: spoken (the glasses microphone over Bluetooth HFP, or the iPhone's, cut into utterances on the phone and heard by Muse Spark Open, `SPEECH.md`), typed, or the quick buttons.
 - The agent's replies, the chime and the spoken "hand" come back as server-sent events. The app shows them and speaks them with the iPhone voice, which plays on the glasses speakers when they are connected.
 - In a Debug build, "Mock glasses" pairs a simulated Ray-Ban Meta from DAT's MockDeviceKit and plays a video file as its camera. This is how it runs in the simulator.
 
@@ -19,6 +19,7 @@ An iPhone app that makes Ray-Ban Meta glasses the agent's head camera. Built dur
 | `ParentingGlasses/Companion.swift` | Wires glasses to agent, the conversation log, the simulator demo |
 | `ParentingGlasses/Voice.swift` | Speaks replies, plays the chime |
 | `ParentingGlasses/ContentView.swift` | The screen and the settings sheet |
+| `ParentingGlasses/Speech/` | The microphone routes, the utterance cutter and the simulator's recorded microphone. See `SPEECH.md` |
 | `ParentingGlasses/HUD/` | The glasses display (HUD) on Meta Ray-Ban Display through DAT's Display API, and the recorded HUD replay. See `HUD.md` |
 | `Config/Info.plist` | DAT keys (`MWDAT`), Bluetooth, external accessory and local network entries, DAT analytics and crash reporting opted out |
 | `scripts/make-mock-feed.sh` | Builds the mock camera feed from the synthetic clips (HEVC, kept out of git) |
@@ -34,7 +35,7 @@ python -m parenting_agent --config config/agent.glasses.json      # prints the e
 xcrun simctl launch booted com.bygmv.parentingglasses -agentToken <token> -autoDemo YES
 ```
 
-`-hudLive YES` runs the live HUD: the mock Meta Ray-Ban Display streams `MockFeed/hud-live-feed.mp4` to the running agent and the lens shows its events (`scripts/glasses_hud_live.py`, `results/glasses-live/README.md`). `-hudReplay YES` runs the HUD replay instead: a mock Meta Ray-Ban Display whose in-lens display shows our checks, driven by recorded detector outputs, no agent needed (`HUD.md`).
+`-hudSpeech YES` runs the speech run: the parent's lines are recorded clips played into the microphone path (`scripts/glasses_hud_speech.py`, `results/glasses-speech/README.md`). `-hudLive YES` runs the live HUD: the mock Meta Ray-Ban Display streams `MockFeed/hud-live-feed.mp4` to the running agent and the lens shows its events (`scripts/glasses_hud_live.py`, `results/glasses-live/README.md`). `-hudReplay YES` runs the HUD replay instead: a mock Meta Ray-Ban Display whose in-lens display shows our checks, driven by recorded detector outputs, no agent needed (`HUD.md`).
 
 Debug launch arguments for the simulator demo: `-mockFeed NAME` plays `MockFeed/NAME.mp4`, `-demoAsk TEXT` asks one more question after "done", and `-recordSpeech YES` also renders every line the app speaks to `Documents/speech/NNN.wav` with a play log, because the simulator's screen recording has no audio. `scripts/glasses_hero_run.py` uses all three for the recorded hero run (`results/hero/README.md`).
 

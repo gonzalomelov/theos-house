@@ -9,6 +9,9 @@ final class Voice: NSObject, AVSpeechSynthesizerDelegate {
   private let recorder = UserDefaults.standard.bool(forKey: "recordSpeech") ? SpeechRecorder() : nil
   #endif
   var onSpoken: ((String) -> Void)?
+  /// True from the first word to the last: the microphone is muted meanwhile so the agent never hears itself.
+  var onSpeaking: ((Bool) -> Void)?
+  private var playing = 0
 
   override init() {
     super.init()
@@ -36,7 +39,14 @@ final class Voice: NSObject, AVSpeechSynthesizerDelegate {
     tone.play()
   }
 
+  private func playing(_ delta: Int) {
+    let was = playing > 0
+    playing = max(0, playing + delta)
+    if was != (playing > 0) { onSpeaking?(playing > 0) }
+  }
+
   nonisolated func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didStart utterance: AVSpeechUtterance) {
+    Task { @MainActor in self.playing(1) }
     #if DEBUG
     let id = ObjectIdentifier(utterance), at = Date().timeIntervalSince1970
     Task { @MainActor in self.recorder?.played(id, "started", at: at) }
@@ -44,6 +54,7 @@ final class Voice: NSObject, AVSpeechSynthesizerDelegate {
   }
 
   nonisolated func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didCancel utterance: AVSpeechUtterance) {
+    Task { @MainActor in self.playing(-1) }
     #if DEBUG
     let id = ObjectIdentifier(utterance), at = Date().timeIntervalSince1970
     Task { @MainActor in self.recorder?.played(id, "cancelled", at: at) }
@@ -52,6 +63,7 @@ final class Voice: NSObject, AVSpeechSynthesizerDelegate {
 
   nonisolated func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
     let text = utterance.speechString
+    Task { @MainActor in self.playing(-1) }
     #if DEBUG
     let id = ObjectIdentifier(utterance), at = Date().timeIntervalSince1970
     Task { @MainActor in self.recorder?.played(id, "finished", at: at) }

@@ -60,6 +60,10 @@ Every message the agent sends a parent that fits a glance is now also a card on 
 
 The live run of a compressed day with these cards: `results/glasses-day/README.md`.
 
+## Speech (Oct 30)
+
+The parent's words on the glasses are spoken now, not typed: the glasses microphone (or the iPhone's) is cut into utterances on the phone, Muse Spark Open hears them, and a gate passes only what was meant for the agent. What DAT 1.0.1 allows for audio and speech and what was built: `SPEECH.md`. The live run: `results/glasses-speech/README.md`.
+
 ## Run it
 
 ```bash
@@ -82,4 +86,5 @@ python scripts/glasses_hud_day.py --build-feed && python scripts/glasses_hud_day
 
 - Not run on real Meta Ray-Ban Display glasses, only on the mock. The live path (frames up, the running agent with MediaPipe, SAM 3.1 and Muse, its events to the display) ran on Oct 30: `results/glasses-live/README.md`.
 - No Neural Band input. Inputs is experimental and needs approval in the Wearables Developer Center.
+- Speech ran with recorded voices fed into the app's microphone path, not the glasses microphone (`SPEECH.md`).
 - The HUD is text and icons. Sending the SAM 3.1 mask picture to the display as an `Image` would work through the API but was not built.

@@ -53,7 +53,12 @@ struct HUDReplayScreen: View {
           .background(live ? Color.green : Color.orange, in: Capsule()).foregroundStyle(.black)
         Text("Meta Ray-Ban Display HUD").font(.headline)
       }
-      if day {
+      if companion.speechRun {
+        Text("Live: spoken words heard by Muse Spark Open, the family agent running on this Mac")
+          .font(.caption.bold()).fixedSize(horizontal: false, vertical: true)
+        Text("Mocked: the microphone (recorded TTS voices, not a person), the glasses and lens (Meta's mock). No Telegram, house dry.")
+          .font(.caption2).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
+      } else if day {
         Text("Live: the family agent running on this Mac, glasses and lens simulated by Meta's mock")
           .font(.caption.bold()).fixedSize(horizontal: false, vertical: true)
         Text("A day compressed: the agent's clock jumps between moments. Telegram captured, house dry.")
@@ -131,6 +136,9 @@ struct HUDReplayScreen: View {
            + (live ? " · \(companion.agent.framesSent) frames to the agent" : "")
            + (companion.lastFrameToCard.map { String(format: " · frame to card %.2f s", $0) } ?? ""))
         .font(.caption2.monospacedDigit()).foregroundStyle(.secondary)
+      if companion.speechRun, let mic = companion.micStatus {
+        Text("Mic · \(mic)").font(.caption.bold()).foregroundStyle(.cyan).lineLimit(2)
+      }
       if let error = companion.hud.lastError { Text(error).font(.caption2).foregroundStyle(.orange) }
     }
   }
@@ -147,7 +155,9 @@ struct HUDReplayScreen: View {
   }
 
   private var footer: some View {
-    Text(day
+    Text(companion.speechRun
+         ? "Microphone: recorded clips (macOS voices) played into the app's microphone path in real time, cut into utterances on the phone and heard by Muse Spark Open on Baseten. No words are typed. Camera: our synthetic clips by DAT MockDeviceKit. Baby Buddy with the test child. Real time, not edited."
+         : day
          ? "Camera: our synthetic car seat clip played by DAT MockDeviceKit. The family agent runs here: Muse Spark Open on Baseten, Baby Buddy with the test child, SAM 3.1 on this Mac for the car seat step. The parents' words are typed by the run's script. Real time on screen, the agent's clock jumps between moments of the day."
          : live
          ? "Camera: our synthetic clips and a licensed photo, played by DAT MockDeviceKit. MediaPipe and SAM 3.1 run on this Mac, Muse Spark Open on Baseten, the diaper goes to Baby Buddy (test child). The parent's words are typed by the run's script. Recorded in real time, not edited. Camera dimmed so the additive display reads on video."

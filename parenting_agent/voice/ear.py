@@ -44,13 +44,14 @@ class Ear:
     name = "muse"
 
     def __init__(self, model=MODEL, base_url=BASE_URL, key_env="BASETEN_API_KEY", reasoning_effort="low",
-                 max_tokens=1500, timeout=60, attempts=3):
+                 max_tokens=1500, timeout=60, attempts=3, prompt=PROMPT):
         self.url = base_url.rstrip("/") + "/chat/completions"
         self.key_env, self.model, self.reasoning_effort = key_env, model, reasoning_effort
         self.max_tokens, self.timeout = max_tokens, timeout
         self.destination = urllib.parse.urlparse(self.url).hostname
         self.usage = None
         self.attempts = attempts
+        self.prompt = prompt
         self.tries = 0
         self.calls = []
 
@@ -62,7 +63,7 @@ class Ear:
             raise BrainError(f"ear: {self.key_env} is not set")
         audio = {"type": "input_audio", "input_audio": {"data": base64.b64encode(wav).decode(), "format": "wav"}}
         body = {"model": self.model, "max_tokens": self.max_tokens, "reasoning_effort": self.reasoning_effort,
-                "messages": [{"role": "user", "content": [{"type": "text", "text": PROMPT}, audio]}]}
+                "messages": [{"role": "user", "content": [{"type": "text", "text": self.prompt}, audio]}]}
         started = time.monotonic()
         self.usage = {"input_tokens": 0, "output_tokens": 0}
         self.calls = []

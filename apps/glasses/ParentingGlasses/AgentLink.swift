@@ -83,6 +83,26 @@ final class AgentLink {
     }
   }
 
+  /// Sends one utterance from the microphone (a WAV) or from glasses that transcribe (text) to the agent's ear. The agent
+  /// writes it down, decides whether it was meant for it, and answers on the event stream.
+  func hear(wav: Data? = nil, text: String? = nil, endUnix: Double, seconds: Double, source: String) {
+    var request = request("hear", method: "POST")
+    request.setValue(wav == nil ? "application/json" : "audio/wav", forHTTPHeaderField: "Content-Type")
+    request.setValue(String(format: "%.3f", endUnix), forHTTPHeaderField: "X-Speech-End-Unix")
+    request.setValue(String(format: "%.3f", seconds), forHTTPHeaderField: "X-Speech-Seconds")
+    request.setValue(source, forHTTPHeaderField: "X-Speech-Source")
+    let body = wav ?? (try? JSONSerialization.data(withJSONObject: ["text": text ?? ""])) ?? Data()
+    Task {
+      do {
+        let (_, response) = try await URLSession.shared.upload(for: request, from: body)
+        let code = (response as? HTTPURLResponse)?.statusCode ?? 0
+        if code != 202 { lastError = "agent answered \(code) to speech" }
+      } catch {
+        lastError = "speech not sent: \(error.localizedDescription)"
+      }
+    }
+  }
+
   /// Listens to the agent's events and reconnects after a drop.
   func listen() {
     listenTask?.cancel()

@@ -67,6 +67,10 @@
 	</array>
 	<key>NSBluetoothAlwaysUsageDescription</key>
 	<string>Connects to your Ray-Ban Meta glasses.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Hears what you say to the parenting agent through your glasses, for example "changing time" or "listo".</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Recognizes short commands like "listo" and "sí" on this iPhone, so the agent answers fast.</string>
 	<key>NSLocalNetworkUsageDescription</key>
 	<string>Connects to your glasses over Wi-Fi and sends the head camera to the parenting agent on your own computer.</string>
 	<key>NSBonjourServices</key>
