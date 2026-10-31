@@ -26,3 +26,8 @@ What looked wrong:
 
 - Muse's reply to "changing time" was "Nothing was sent. I only did this: start changing table." It was spoken and stays as the detail line of the "Changing table" card until the alarm. It names a tool on the lens.
 - With SAM 3.1 alone the lens says "Hand on the baby" for about 3 s after both hands left, then "hand" lands as the next scene's hand comes back.
+
+Fixed after this run:
+
+- "Let me know when you're done" no longer reads as a claim that the agent told someone (`rules.CLAIM_TOOLS`), the honest line after a false claim says what the tool did ("Watching the changing table."), never its name, and the final guard drops any "I only did this: ..." report (`final_guard.TOOL_REPORT`).
+- With SAM 3.1 alone the lift check reads the anchored hand regions gone after `lift.held_gone_s` (0.6 s) and the lens clears, about 0.9 s after the hands leave at 3 frames a second instead of 2.9 to 3.3 s. A stale look of a frame from before cannot bring "Hand on the baby" back, and the tone and "hand" still wait for a SAM 3.1 look that reads off (`parenting_agent/sam_hands.py`).

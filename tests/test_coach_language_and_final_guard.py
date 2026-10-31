@@ -298,5 +298,77 @@ class GuardOnEveryPath(unittest.TestCase):
         self.assertEqual(final_guard.guard(line, "es").text, line)
 
 
+class NoToolReportOnTheLens(unittest.TestCase):
+    """Live Oct 31 (results/glasses-live-sam3): "changing time" was answered "Nothing was sent. I only did this: start
+    changing table." It was spoken and stayed on the lens. "Let me know when you are done" was read as a claim that
+    the agent told someone, and the honest line named the tool that ran."""
+    LIVE = "Nothing was sent. I only did this: start changing table."
+
+    def test_the_guard_drops_the_tool_report_and_close_variants(self):
+        cases = [
+            (self.LIVE, "en", "Nothing was sent."),
+            ("Nothing was sent. I only did this: start_changing_table.", "en", "Nothing was sent."),
+            ("Nothing was sent. I only did this: dim lights, start changing table.", "en", "Nothing was sent."),
+            ("Nothing was sent. I just did this: start changing table", "en", "Nothing was sent."),
+            ("I only did: start changing table. Watching now.", "en", "Watching now."),
+            ("Watching the table. Tools run: start changing table.", "en", "Watching the table."),
+            ("Todavía no mandé nada. Solo hice esto: start changing table.", "es", "Todavía no mandé nada."),
+            ("Todavía no mandé nada. Sólo hice esto: empezar cambiador.", "es", "Todavía no mandé nada."),
+        ]
+        for text, lang, want in cases:
+            result = final_guard.guard(text, lang)
+            self.assertEqual(result.text, want, text)
+            self.assertIn("internal: tool report", [r["why"] for r in result.removed], text)
+
+    def test_plain_did_and_done_lines_stay(self):
+        for text in ("I did the bottle at 3, she took 90 ml.", "Done: the lights are dim.", "I only did the left side."):
+            self.assertEqual(final_guard.guard(text, "en").text, text)
+
+    def test_let_me_know_is_a_request_to_the_parent_not_a_claim(self):
+        self.assertEqual(rules.unmet_claims("Watching the changing table. Let me know when you're done.", {"start_changing_table"}),
+                         set())
+        self.assertEqual(rules.unmet_claims("Watching. Let us know when it's done.", set()), set())
+        self.assertEqual(rules.unmet_claims("I let your partner know.", set()), {"let your partner know"})
+        self.assertEqual(rules.unmet_claims("I let Ceci know.", set()), {"let ceci know"})
+
+    def agent(self, *plans):
+        from parenting_agent.agent.tools import Tool, schema
+        from test_redteam_r2 import family
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        agent, _ = family(ScriptedBrain(*plans), tmp.name)
+        self.addCleanup(agent.close)
+        agent.tools.add(Tool("start_changing_table", "Start watching the changing table.", schema({}),
+                             lambda: "watching the changing table"))
+        agent.tools.allowed.add("start_changing_table")
+        return agent
+
+    def reply_to(self, agent, text):
+        from test_redteam_r2 import replies, say
+        say(agent, text)
+        return replies(agent)[-1]
+
+    def test_changing_time_answered_with_let_me_know_goes_out(self):
+        from test_redteam_r1 import call
+        agent = self.agent([[call("start_changing_table")], "Watching the changing table. Let me know when you're done."])
+        self.assertEqual(self.reply_to(agent, "changing time"), "Watching the changing table. Let me know when you're done.")
+        self.assertFalse([e for e in agent.bus.history if e["kind"] == "guard" and e["status"] == "claimed_action"])
+
+    def test_a_false_claim_after_a_tool_ran_says_what_it_did_never_its_name(self):
+        from test_redteam_r1 import call
+        agent = self.agent([[call("start_changing_table")], "Watching. I told your partner."], ["I told your partner."])
+        reply = self.reply_to(agent, "changing time")
+        self.assertEqual(reply, "Nothing was sent. Watching the changing table.")
+        self.assertNotIn("start changing table", reply.lower())
+        self.assertNotIn("only did", reply.lower())
+
+    def test_in_spanish_the_english_tool_answer_is_left_out(self):
+        from parenting_agent.agent.loop import did_lines
+        self.assertEqual(did_lines({"start_changing_table": "watching the changing table"}, "es"), [])
+        self.assertEqual(did_lines({"start_changing_table": "watching the changing table"}, "en"),
+                         ["Watching the changing table."])
+        self.assertEqual(did_lines({"x": {"id": 3}, "y": "ran dim_lights on light.nursery"}, "en"), [])
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -31,6 +31,11 @@ INTERNAL = re.compile(
 MODELS = re.compile(r"\bMuse(?: Spark(?: Open)?)?\b|\bClaude\b|\bHaiku\b|\bAnthropic\b|\bBaseten\b|\bOpenAI\b|"
                     r"\bGPT-?\d|\bSAM ?3(?:\.1)?\b|\bMediaPipe\b|\bPANNs\b|\bPerception Encoder\b|\bpe-a-frame\b", re.I)
 ROTA = re.compile(r"\bParent [AB]\b")
+# The agent's own report of the tools it ran: "Nothing was sent. I only did this: start changing table." (live on the
+# lens, Oct 31). Dropped up to the end of its sentence, before sentences are split on the colon.
+TOOL_REPORT = re.compile(r"\b(?:I\s+)?(?:only|just)\s+did(?:\s+(?:this|these|that))?\s*:[^.!?\n]*[.!?]?|"
+                         r"\b(?:Solo|Sólo|Nada más)\s+hice(?:\s+esto)?\s*:[^.!?\n]*[.!?]?|"
+                         r"\b(?:Tools?|Actions?) (?:run|ran|called|used)\s*:[^.!?\n]*[.!?]?", re.I)
 JSONISH = re.compile(r"```.*?```|\{\s*\"[^\"]+\"\s*:.*?\}|\[\s*\{.*?\}\s*\]", re.S)
 QUOTED = re.compile(r"«[^»]*»|\"[^\"\n]*\"|“[^”\n]*”")
 SENTENCE = re.compile(r"(?<=[.!?:;])\s+")
@@ -91,7 +96,10 @@ def guard(text, lang=None, names=None, models_ok=False):
     def drop_json(match):
         removed.append({"why": "internal: JSON or code", "text": match.group(0)[:200]})
         return " "
-    body = JSONISH.sub(drop_json, original)
+    def drop_tools(match):
+        removed.append({"why": "internal: tool report", "text": match.group(0)[:200]})
+        return " "
+    body = TOOL_REPORT.sub(drop_tools, JSONISH.sub(drop_json, original))
     lines = []
     for line in body.split("\n"):
         pieces = [[sentence.strip(), why_of(sentence, lang, allowed, models_ok)] for sentence in SENTENCE.split(line)
