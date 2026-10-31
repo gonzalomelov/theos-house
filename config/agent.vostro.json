@@ -55,6 +55,9 @@
   "rhythm": {"child": "Test", "kinds": ["next_feed"]},
   "day_engine": {"door_sensors": []},
   "sitter": {"family_notes": "/data/family-notes.json"},
+  "night_feed": {
+    "night_bed": {"from": "22:00", "to": "06:00", "en": "the side bed in your room", "es": "el colecho, en el cuarto de ustedes"}
+  },
   "house_brain": {
     "budget_usd": 0.5,
     "bedtime": "20:30",

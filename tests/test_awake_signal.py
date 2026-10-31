@@ -6,6 +6,7 @@ wrong signal turns a real light on at night.
 import tempfile
 import unittest
 
+from parenting_agent.house_live import STUDY_LIGHT
 from parenting_agent.house_tools import HouseTools
 from parenting_agent.night_feed import NightFeed, awake_message
 from tests.test_home_automations import Clock, FakeHA, at, events, make_agent, night_log
@@ -72,6 +73,50 @@ class AwakeOnTheNightFeedTest(unittest.TestCase):
         self.say("se despertó")
         prepare = events(self.agent, "night_feed", step="prepare")
         self.assertEqual((len(prepare), prepare[0]["trigger"]), (1, "parent"))
+
+
+class SideBedAtNightTest(unittest.TestCase):
+    """Theo sleeps in the side bed in the parents' room from 22:00 to 06:00. Before Oct 31 the night push said
+    "Luz del estudio tenue" and the study light was switched while he was in the side bed."""
+
+    BED = {"from": "22:00", "to": "06:00", "en": "the side bed in your room", "es": "el colecho, en el cuarto de ustedes"}
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.agent, self.config = make_agent(self.tmp.name)
+        self.config["people"] = {"gonza": {"name": "Gonza", "rota": "Parent A"},
+                                 "ceci": {"name": "Ceci", "rota": "Parent B"}}
+        self.config["night_feed"] = {"night_bed": self.BED}
+        self.clock = Clock(at(21, 1, 0))
+        self.house = HouseTools(self.agent, self.config, client=FakeHA())
+        self.feed = NightFeed(self.agent, self.config, log=night_log(), clock=self.clock)
+        self.agent.plugins = [self.house, self.feed]
+
+    def tearDown(self):
+        self.agent.close()
+        self.tmp.cleanup()
+
+    def say(self, text):
+        self.agent.bus.publish("message", channel="telegram", text=text)
+
+    def study_light_calls(self):
+        return [e for e in self.agent.bus.history if STUDY_LIGHT in str(e.get("entity")) or "study_light" in str(e.get("action"))]
+
+    def test_the_night_push_says_where_he_is_and_never_the_study_light(self):
+        self.say("se despertó")
+        notify = events(self.agent, "notify", source="night_feed")
+        self.assertEqual(len(notify), 1)
+        texts = notify[0]["texts"]
+        self.assertIn("colecho", texts["es"])
+        self.assertIn("side bed", texts["en"])
+        for text in texts.values():
+            self.assertNotRegex(text.lower(), "estudio|study")
+        self.assertEqual(self.study_light_calls(), [])
+
+    def test_the_wind_down_leaves_the_study_light_alone_too(self):
+        self.say("se despertó")
+        self.feed.wind_down(at(21, 2, 0), "test", None)
+        self.assertEqual(self.study_light_calls(), [])
 
 
 if __name__ == "__main__":

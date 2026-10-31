@@ -21,9 +21,9 @@ The house acts only on a real awake signal:
 Awake means:
 - the bottle warmer plug on (VirtualSwitch, dry, virtual_devices.py) with a software auto off after warmer_max_on_min. The
   warmer holds water only: the bottle stays in the fridge until the parent is up, so no milk waits out of the fridge.
-- the study light on, dim and warm. Live since Oct 30 on the family agent when "night_feed_light" is in
-  house.live_actions (house_live.py): on only from this awake path, off only when the same episode turned it on for
-  real, at most 6 writes a night. Otherwise it goes through house_tools as a dry run.
+- the study light on, dim and warm, unless he sleeps somewhere else at night (night_bed below). Live since Oct 30 on
+  the family agent when "night_feed_light" is in house.live_actions (house_live.py): on only from this awake path,
+  off only when the same episode turned it on for real, at most 6 writes a night. Otherwise it goes through house_tools as a dry run.
 - the white noise down to a share of its level, if it is on (the house_sounds device).
 - one push to the parent on duty from the night rota (patterns.next_on_duty over the night wake-up notes), unless the
   signal came from the log, where a parent is already up and logging.
@@ -39,6 +39,11 @@ baby is known awake, and without a feed log reminder_min after that, one reminde
 pre-warm with no awake signal closes quietly. The warmer runs when a bottle was logged in the last 24 hours by default
 ("warmer": "bottle_days"), or "always" or "never". Every step is a "night_feed" event. The texts state times and
 actions only, never advice (patterns.no_advice).
+
+"night_bed" says where he sleeps at night when it is not near the study: {"from": "22:00", "to": "06:00", "en": "...",
+"es": "..."}. Theo sleeps in the side bed, the co-sleeper in the parents' room, from 22:00 to 06:00. In that window the
+night feed never turns the study light on or off, not even as a dry run, and the push says where he is instead. Before
+Oct 31 the 02:50 push named the study light while he was in the side bed.
 
 Add "parenting_agent.night_feed:NightFeed" to the agent plugins, after "parenting_agent.house_tools:HouseTools" and
 "parenting_agent.house_sounds:HouseSounds" when they are used. Settings live under "night_feed", see DEFAULTS. "push"
@@ -65,7 +70,7 @@ from .virtual_devices import SHOPPING, VirtualSwitch
 DEFAULTS = {"lead_min": 10, "cry_window_min": 45, "late_window_min": 30, "warmer_max_on_min": 30, "light_pct": 10,
             "white_noise_share": 0.5, "reminder_min": 30, "after_feed_min": 30, "give_up_min": 120, "warmer": "bottle_days",
             "again_min": 15, "max_gap_h": 6, "poll_s": 30, "warmer_night_max_min": 90, "log_signal_min": 20,
-            "warmer_entity": "switch.bottle_warmer_plug", "push": {}}
+            "warmer_entity": "switch.bottle_warmer_plug", "push": {}, "night_bed": None}
 WARMER_CAP_MIN = 45  # no setting keeps the warmer on longer than this in one go
 WARMER_NIGHT_CAP_MIN = 120  # no setting lets the warmer run longer than this in one night, all switch-ons together
 
@@ -479,7 +484,7 @@ class NightFeed(Plugin):
         else:
             self.event("warmer", now, action="left off", reason="no bottle in the last 24 hours" if self.s["warmer"] == "bottle_days"
                        else "warmer set to never")
-        light = self.light(now, True, trigger, why)
+        light = self.in_night_bed(now) or self.light(now, True, trigger, why)
         noise = self.noise_down(now)
         if push:
             name = self.people.display(ep["parent"])
@@ -489,11 +494,13 @@ class NightFeed(Plugin):
 
     @staticmethod
     def awake_text(trigger, light, warm, noise, parent):
-        """The push says truthfully what moved in the house and what was only written down."""
+        """The push says truthfully what moved in the house and what was only written down. light is a status, or
+        the night_bed place when he sleeps there and no light was touched."""
         said = {"live": "Study light on, dim and warm: done for real.",
                 "failed": "Study light: tried for real, Home Assistant did not take it.",
                 "unavailable": "Study light: unavailable in Home Assistant, nothing moved.",
-                "dry": "Study light dim and warm: only written down (dry run)."}[light]
+                "dry": "Study light dim and warm: only written down (dry run)."}
+        said = f"He is in {light['en']}." if isinstance(light, dict) else said[light]
         dry = [w for w, on in (("bottle warmer on", warm), ("white noise down", noise)) if on]
         rest = f" {' and '.join(dry).capitalize()}: only written down (dry run)." if dry else ""
         return f"He is awake, {SIGNAL[trigger]}. {said}{rest} {parent} is on duty."
@@ -503,10 +510,25 @@ class NightFeed(Plugin):
         said = {"live": "Luz del estudio encendida, tenue y cálida: de verdad.",
                 "failed": "Luz del estudio: se intentó de verdad, Home Assistant no la tomó.",
                 "unavailable": "Luz del estudio: no disponible en Home Assistant, no se movió nada.",
-                "dry": "Luz del estudio tenue: solo anotada (prueba en seco)."}[light]
+                "dry": "Luz del estudio tenue: solo anotada (prueba en seco)."}
+        said = f"Está en {light['es']}." if isinstance(light, dict) else said[light]
         dry = [w for w, on in (("calentador de mamadera encendido", warm), ("ruido blanco más bajo", noise)) if on]
         rest = f" {' y '.join(dry).capitalize()}: solo anotado (prueba en seco)." if dry else ""
         return f"Se despertó, {SIGNAL_ES[trigger]}. {said}{rest} Estás de turno, {name}."
+
+    def in_night_bed(self, now):
+        """The night_bed place when he sleeps there now, and the episode keeps the study light off to its end."""
+        bed = self.s["night_bed"]
+        if not bed:
+            return None
+        hhmm = now.astimezone(self.tz).strftime("%H:%M")
+        start, end = bed.get("from", "22:00"), bed.get("to", "06:00")
+        inside = start <= hhmm < end if start < end else hhmm >= start or hhmm < end
+        if not inside:
+            return None
+        self.episode["night_bed"] = True
+        self.event("light", now, action="left off", reason=f"he is in {bed['en']}, no light is moved there")
+        return bed
 
     def light(self, now, on, signal, why):
         """The study light, live through the gate when it allows, else the dry path. Returns live, failed or dry."""
@@ -612,7 +634,8 @@ class NightFeed(Plugin):
     def wind_down(self, now, why, ref):
         self.warmer.off(now, why)
         if self.episode["awake"]:
-            self.light(now, False, "wind_down", why)
+            if not self.episode.get("night_bed"):
+                self.light(now, False, "wind_down", why)
             self.noise_back()
         self.event("done", now, reason=why, logged=ref, minutes=round((now - self.episode["started"]).total_seconds() / 60))
         ended, self.episode = self.episode, None
