@@ -97,3 +97,24 @@ Alexa answers first with her own reply (something like "Sorry, I don't know that
 ## Tested
 
 See `results/echo-voice/README.md`.
+
+## The Alexa skill "baby agent" (issue #177, Oct 31)
+
+A private custom skill, in development stage on Gonza's Amazon account only, never submitted or published. It is
+built like his "our house" skill, without Claude: the Lambda posts the words to `/ask` and speaks the reply.
+
+```
+"Echo, ask baby agent when Theo last ate" ("Echo, pregúntale a agente del bebé ...")
+  -> Alexa -> Lambda alexaMuseBabyAgent (us-east-1, invokable by this skill only)
+  -> https://baby-voice.home.example/ask, Cloudflare Access service token alexa-muse-baby-lambda
+  -> cloudflared on the Vostro (checks the Access token again) -> 127.0.0.1:4830, parenting-agent-door
+  -> parenting-agent-relay:8767 -> the voice bridge, the skill's own bearer token -> Muse Spark Open
+```
+
+- Source: `apps/alexa/`.
+- Role: `voice_bridge.skill.role` in `config/agent.vostro.json` caps what a skill caller can be. It is `parent`, so a
+  skill request that names a parent can log. The Lambda names nobody unless its `PA_PERSON` env var is set, so today
+  every Echo question is a guest's: read only, answered from the log.
+- Alexa allows 8 seconds. The Lambda waits 6, then says a holding line and keeps the question's id. "Again" or "de
+  nuevo" asks the bridge for the same id, which returns the first answer and never runs the question twice.
+- The bridge token lives in the agent's `data/voice-skill-token` and the Lambda's env vars only, never in git.

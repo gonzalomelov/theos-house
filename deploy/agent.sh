@@ -74,7 +74,38 @@ walled() {
   [ -z "$(docker port "$APP")$(docker port "$APP-relay")$(docker port "$APP-egress")" ] || { echo "a port is published" >&2; return 1; }
   network_is_walled || return 1
   # shellcheck disable=SC2046
-  docker exec -i "$APP" python - $(host_addresses) < "$DIR/deploy/wall_check.py"
+  docker exec -i "$APP" python - $(host_addresses) < "$DIR/deploy/wall_check.py" || return 1
+  door_walled
+}
+# The door of the Alexa skill (issue #177): published on loopback only, on the door network only, two paths through it, and
+# from inside it no Home Assistant, Baby Buddy, agent or LAN. Requests carry no token, and none can reach Home
+# Assistant: the relay refuses the door network on 8123 before anything is forwarded.
+door_walled() {
+  echo "== the door of the Alexa skill"
+  [ "$(docker port "$APP-door")" = "8080/tcp -> 127.0.0.1:4830" ] || { echo "WRONG the door is published on: $(docker port "$APP-door")" >&2; return 1; }
+  DOOR_NETS="$(docker inspect "$APP-door" --format "{{range \$name, \$_ := .NetworkSettings.Networks}}{{\$name}} {{end}}")"
+  [ "$DOOR_NETS" = "parenting-agent_door " ] || { echo "WRONG the door is on: $DOOR_NETS" >&2; return 1; }
+  echo "PASS  published on 127.0.0.1:4830 only, on parenting-agent_door only"
+  python3 - door < "$DIR/deploy/wall_check.py" || return 1
+  BAD=0
+  TARGETS="homeassistant:8123 babybuddy:8000 home-assistant-mcp-server:8086 parenting-agent:8767 parenting-agent-egress:8888 192.0.2.10:80"
+  for ADDR in $(host_addresses); do TARGETS="$TARGETS $ADDR:22 $ADDR:8123 $ADDR:8790"; done
+  for TARGET in $TARGETS; do
+    if docker exec "$APP-door" nc -z -w 3 "${TARGET%:*}" "${TARGET##*:}" 2>/dev/null; then
+      echo "WRONG the door reaches $TARGET" >&2; BAD=1
+    else
+      echo "PASS  the door cannot reach $TARGET"
+    fi
+  done
+  for PORT in 8123 8790; do
+    if docker exec "$APP-door" wget -S -q -O /dev/null -T 4 "http://$APP-relay:$PORT/" 2>&1 | grep -q " 403 "; then
+      echo "PASS  the relay refuses the door on $PORT"
+    else
+      echo "WRONG the relay answers the door on $PORT" >&2; BAD=1
+    fi
+  done
+  [ "$BAD" = 0 ] && echo "door holds"
+  return "$BAD"
 }
 # One Home Assistant request before any other. Home Assistant bans an IP after a few failed logins,
 # so a rejected token (probe exit 3) stops the check here instead of trying again.

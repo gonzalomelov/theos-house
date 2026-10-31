@@ -2,6 +2,13 @@
 
     docker exec -i parenting-agent python - <host addresses...> < deploy/wall_check.py
 
+The Alexa skill's door (issue #177) is proved from the Vostro itself, where cloudflared reaches it:
+
+    python3 - door [door url] < deploy/wall_check.py
+
+Through the door only /ask and /health reach the voice bridge (a 401 without a token). Every Home Assistant, Baby Buddy
+or other agent path gets the door's own 403 or 404.
+
 It must reach Baby Buddy and Home Assistant through the relay, and the brain and Telegram through the egress
 proxy. Home Assistant's one way in, relay:8767 to the voice bridge, must answer on its two paths only. It must reach nothing else: not the brain directly, not other websites, not the host, not the LAN,
 not other containers. "Reachable" means an HTTP answer of any status, or an open TCP connection.
@@ -73,13 +80,64 @@ def main(hosts):
         ("Baby Buddy by name, through the egress proxy", lambda: http("http://babybuddy:8000/", PROXY)),
         ("relay on another port", lambda: tcp("relay", 80)),
         ("relay 8767 on another path", lambda: http_refused("http://relay:8767/api/", DIRECT)),
+        ("the Alexa skill's door by name, direct", lambda: tcp("parenting-agent-door", 8080)),
         ("public DNS server, direct", lambda: tcp("1.1.1.1", 53)),
     ]
     for host in hosts:
-        for port in (22, 80, 443, 8086, 8123, 8790):
+        for port in (22, 80, 443, 4830, 8086, 8123, 8790):
             must_fail.append((f"{host}:{port}, direct", lambda h=host, p=port: tcp(h, p)))
         must_fail.append((f"{host}:8123, through the egress proxy", lambda h=host: http(f"http://{h}:8123/", PROXY)))
         must_fail.append((f"{host}:443, through the egress proxy", lambda h=host: http(f"https://{h}/", PROXY)))
+    return report(must_work, must_fail)
+
+
+DOOR_URL = "http://127.0.0.1:4830"
+# Paths of Home Assistant, Baby Buddy, the demo and the bridge itself that must never pass the door.
+DOOR_CLOSED = ("/", "/api/", "/api/states", "/api/config", "/api/websocket", "/auth/token", "/auth/authorize",
+               "/api/mcp", "/mcp", "/api/children/", "/admin/", "/internal/x", "/healthz", "/ask/", "/health/",
+               "/ask/../api/states", "/%61pi/states", "/static/x.js", "/lovelace/0")
+
+
+def door_reached(url, method="GET"):
+    """The voice bridge answered: its own JSON 401, since a door check carries no token."""
+    request = urllib.request.Request(url, method=method, data=b"{}" if method == "POST" else None)
+    try:
+        with urllib.request.build_opener(DIRECT, NoRedirect).open(request, timeout=8) as response:
+            return False, f"HTTP {response.status} with no token"
+    except urllib.error.HTTPError as error:
+        body = error.read(200).decode("utf-8", "replace")
+        return (error.code == 401 and "unauthorized" in body), f"HTTP {error.code}"
+    except Exception as error:
+        return False, type(error).__name__ + ": " + str(getattr(error, "reason", error))[:60]
+
+
+def door_closed(url, method="GET"):
+    """Reached only when the answer is something other than the door's own 403 or 404."""
+    request = urllib.request.Request(url, method=method, data=b"{}" if method in ("POST", "PUT") else None)
+    try:
+        with urllib.request.build_opener(DIRECT, NoRedirect).open(request, timeout=8) as response:
+            return True, f"HTTP {response.status}"
+    except urllib.error.HTTPError as error:
+        return error.code not in (403, 404), f"HTTP {error.code}"
+    except Exception as error:
+        return False, type(error).__name__ + ": " + str(getattr(error, "reason", error))[:60]
+
+
+def door(base=DOOR_URL):
+    base = base.rstrip("/")
+    must_work = [
+        ("/health through the door reaches the voice bridge", lambda: door_reached(base + "/health")),
+        ("/ask through the door reaches the voice bridge", lambda: door_reached(base + "/ask", "POST")),
+    ]
+    must_fail = [(f"{path} through the door", lambda p=path: door_closed(base + p)) for path in DOOR_CLOSED]
+    must_fail += [
+        ("POST /api/services/light/turn_on through the door", lambda: door_closed(base + "/api/services/light/turn_on", "POST")),
+        ("PUT /ask through the door", lambda: door_closed(base + "/ask", "PUT")),
+    ]
+    return report(must_work, must_fail)
+
+
+def report(must_work, must_fail):
     failed = 0
     for want, checks in ((True, must_work), (False, must_fail)):
         print("-- must work" if want else "-- must fail")
@@ -93,4 +151,6 @@ def main(hosts):
 
 
 if __name__ == "__main__":
+    if sys.argv[1:2] == ["door"]:
+        raise SystemExit(door(*sys.argv[2:3]))
     raise SystemExit(main(sys.argv[1:]))

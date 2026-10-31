@@ -98,7 +98,8 @@
     "port": 8767,
     "timeout_s": 40,
     "unknown_speaker": "guest",
-    "guests": ["abuela", "abuelo", "grandma", "grandpa", "guest", "invitado", "invitada"]
+    "guests": ["abuela", "abuelo", "grandma", "grandpa", "guest", "invitado", "invitada"],
+    "skill": {"role": "parent"}
   },
   "voice": {
     "service": "http://pa-voice-family:8800",

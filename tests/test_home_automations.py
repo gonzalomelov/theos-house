@@ -598,6 +598,107 @@ class VoiceGuestTest(unittest.TestCase):
         self.assertEqual(open_house.role("abuela"), "guest")
 
 
+class VoiceSkillDoorTest(unittest.TestCase):
+    """The Alexa skill's own door (#177): its own token, its role capped by config, an asked-again id never runs twice."""
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.agent, self.config = make_agent(self.tmp.name)
+        self.config["people"] = {"gonza": {"name": "Gonza", "lang": "es"}}
+        self.agent.people = config_mod_people(self.config["people"])
+        self.agent.baby_log.add("feeding", {"amount_ml": 90.0, "method": "bottle", "type": "formula"},
+                                "2026-10-30T07:55:00-03:00")
+        self.bridges = []
+
+    def tearDown(self):
+        for bridge in self.bridges:
+            bridge.stop()
+        self.agent.stop()
+        self.agent.close()
+        self.tmp.cleanup()
+
+    def bridge(self, role):
+        self.config["voice_bridge"] = {"port": 0, "host": "127.0.0.1", "timeout_s": 10, "unknown_speaker": "guest",
+                                       "token_file": str(Path(self.tmp.name) / "voice-token"),
+                                       "skill": {"role": role, "token_file": str(Path(self.tmp.name) / "skill-token")}}
+        bridge = VoiceBridge(self.agent, self.config, token="h" * 24, skill_token="s" * 24)
+        self.agent.plugins = [bridge]
+        self.agent.start()
+        bridge.start()
+        self.bridges.append(bridge)
+        self.url = f"http://127.0.0.1:{bridge.port}"
+        return bridge
+
+    def post(self, body, token):
+        request = urllib.request.Request(self.url + "/ask", data=json.dumps(body).encode(), method="POST",
+                                         headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json"})
+        with urllib.request.urlopen(request, timeout=15) as response:
+            return json.loads(response.read())
+
+    def test_the_skill_has_its_own_token_and_home_assistant_keeps_its_own(self):
+        bridge = self.bridge("guest")
+        self.assertEqual(bridge.authorized({"Authorization": "Bearer " + "s" * 24}), "skill")
+        self.assertEqual(bridge.authorized({"Authorization": "Bearer " + "h" * 24}), "home-assistant")
+        self.assertIsNone(bridge.authorized({"Authorization": "Bearer " + "x" * 24}))
+        self.assertIsNone(bridge.authorized({}))
+        self.assertEqual((Path(self.tmp.name) / "skill-token").stat().st_mode & 0o777, 0o600)
+
+    def test_a_guest_skill_stays_a_guest_even_when_it_names_a_parent(self):
+        self.bridge("guest")
+        self.agent.brain = ScriptedBrain(["Theo comió por última vez ayer a las 07:55."])
+        before = len(self.agent.baby_log.entries())
+        body = self.post({"text": "tomó 90 ml", "source": "echo", "person": "gonza"}, "s" * 24)
+        self.assertEqual(body["role"], "guest")
+        self.assertEqual(len(self.agent.baby_log.entries()), before)
+        self.assertEqual(events(self.agent, "message"), [])
+        self.assertEqual(events(self.agent, "voice_bridge", status="answered")[-1]["via"], "skill")
+
+    def test_a_parent_skill_logs_for_a_named_parent_and_reads_for_anyone_else(self):
+        self.bridge("parent")
+        body = self.post({"text": "fed 90 ml", "source": "echo", "person": "gonza"}, "s" * 24)
+        self.assertEqual((body["role"], body["reply"]), ("parent", "Done, logged."))
+        self.agent.brain = ScriptedBrain(["Ayer a las 07:55."])
+        self.assertEqual(self.post({"text": "¿cuándo comió?", "source": "echo"}, "s" * 24)["role"], "guest")
+
+    def test_the_same_request_id_asked_again_returns_the_first_answer_and_runs_once(self):
+        self.bridge("guest")
+        brain = ScriptedBrain(["Ayer a las 07:55."])
+        self.agent.brain = brain
+        first = self.post({"text": "¿cuándo comió Theo?", "source": "echo", "request_id": "r1"}, "s" * 24)
+        again = self.post({"text": "¿cuándo comió Theo?", "source": "echo", "request_id": "r1"}, "s" * 24)
+        self.assertEqual(first, again)
+        self.assertEqual(len(brain.seen), 1)
+        self.assertEqual(len(events(self.agent, "voice_guest")), 1)
+        self.assertEqual([e["repeat"] for e in events(self.agent, "voice_bridge", status="answered")], [False, True])
+
+    def test_a_repeat_while_the_first_still_runs_waits_for_it(self):
+        import threading
+        bridge = self.bridge("guest")
+        gate, calls, out = threading.Event(), [], {}
+
+        def slow():
+            calls.append(1)
+            gate.wait(5)
+            return {"reply": "done"}
+
+        first = threading.Thread(target=lambda: out.setdefault("first", bridge.once(("skill", "r2"), slow)))
+        first.start()
+        time.sleep(0.1)
+        second = threading.Thread(target=lambda: out.setdefault("second", bridge.once(("skill", "r2"), slow)))
+        second.start()
+        time.sleep(0.1)
+        gate.set()
+        first.join(5)
+        second.join(5)
+        self.assertEqual(calls, [1])
+        self.assertEqual((out["first"], out["second"]), (({"reply": "done"}, False), ({"reply": "done"}, True)))
+
+    def test_a_skill_role_must_be_guest_or_parent(self):
+        self.config["voice_bridge"] = {"host": "127.0.0.1", "skill": {"role": "admin"}}
+        with self.assertRaises(ValueError):
+            VoiceBridge(self.agent, self.config, token="h" * 24)
+
+
 class VoiceBridgeSetupTest(unittest.TestCase):
     def test_the_token_survives_a_restart(self):
         with tempfile.TemporaryDirectory() as tmp:

@@ -29,6 +29,12 @@ same fixed lines as a parent, with no brain call.
 Settings under "voice_bridge": host ("container" for the agent's own address on its internal network), port, timeout_s,
 token_file, guests, unknown_speaker ("parent" or "guest"). The token is kept in its file across restarts, so Home
 Assistant's copy stays valid.
+
+The Alexa skill "baby agent" (issue #177) comes in through its own door: a Cloudflare hostname behind an Access service
+token, then deploy/door, then the relay on 8767. It carries its own token, "skill" in the settings: {"token_file": ...,
+"role": "guest" | "parent"}. "guest" keeps every skill caller a guest whatever person it names. A skill request may
+carry a "request_id": the same id asked again waits for the first answer and never runs the question twice, so the
+skill can say a holding line within Alexa's 8 seconds and fetch the answer on the next turn.
 """
 import hmac
 import json
@@ -203,7 +209,7 @@ class VoiceGuest:
 class VoiceBridge(Plugin):
     name = "voice-bridge"
 
-    def __init__(self, agent, config, token=None):
+    def __init__(self, agent, config, token=None, skill_token=None):
         super().__init__(agent, config)
         self.s = {"port": DEFAULT_PORT, "host": "127.0.0.1", "timeout_s": 35, "guests": [], "unknown_speaker": "parent",
                   **(config.get("voice_bridge") or {})}
@@ -212,6 +218,16 @@ class VoiceBridge(Plugin):
                            or os.path.join(config.get("data_dir", "data"), "voice-bridge-token"))
         self.kept = token is None and not os.environ.get("PARENTING_AGENT_VOICE_TOKEN") and kept_token(self.token_file)
         self.token = token or os.environ.get("PARENTING_AGENT_VOICE_TOKEN") or self.kept or secrets.token_urlsafe(24)
+        self.skill = None
+        if self.s.get("skill"):
+            skill = self.s["skill"]
+            if skill.get("role", "guest") not in ("guest", "parent"):
+                raise ValueError("voice_bridge.skill.role must be guest or parent")
+            path = skill.get("token_file") or os.path.join(config.get("data_dir", "data"), "voice-skill-token")
+            kept = None if skill_token else kept_token(path)
+            self.skill = {"token": skill_token or kept or secrets.token_urlsafe(24), "file": path, "kept": bool(kept),
+                          "role": skill.get("role", "guest")}
+        self.answers, self.answers_lock = {}, threading.Lock()
         self.people = getattr(agent, "people", None) or People(config.get("people"))
         self.guests = {str(g).lower() for g in self.s["guests"]}
         self.guest = VoiceGuest(agent, (config.get("baby") or {}).get("name") or "the baby")
@@ -228,6 +244,9 @@ class VoiceBridge(Plugin):
         if not os.environ.get("PARENTING_AGENT_VOICE_TOKEN"):
             path = self.token_file if self.kept else write_token(self.token, self.token_file)
             print(f"voice bridge: http://{self.host}:{self.port}/ask token in {path} (readable by this user only)", flush=True)
+        if self.skill:
+            path = self.skill["file"] if self.skill["kept"] else write_token(self.skill["token"], self.skill["file"])
+            print(f"voice bridge: the Alexa skill's token in {path}, role {self.skill['role']}", flush=True)
         threading.Thread(target=self.server.serve_forever, name="voice-bridge", daemon=True).start()
 
     def stop(self):
@@ -254,7 +273,7 @@ class VoiceBridge(Plugin):
             return "guest"
         return "guest" if self.s["unknown_speaker"] == "guest" else "parent"
 
-    def ask(self, text, source="assist", person=None):
+    def ask(self, text, source="assist", person=None, via="home-assistant"):
         """One utterance in, the agent's answer out. Raises TimeoutError when the agent did not finish in time."""
         if source not in SOURCES:
             raise ValueError(f"source must be one of {SOURCES}")
@@ -266,7 +285,10 @@ class VoiceBridge(Plugin):
         try:
             self.asked += 1
             who = re.sub(r"[^a-z0-9_-]", "", str(person or "house").lower())[:32] or "house"
-            if self.role(person) == "guest":
+            role = self.role(person)
+            if via == "skill" and self.skill["role"] == "guest":
+                role = "guest"
+            if role == "guest":
                 reply = spoken(self.guest.ask(words, who if person else "guest"))
                 return {"reply": reply, "replies": [reply], "role": "guest"}
             self.waiting = {"replies": [], "done": threading.Event()}
@@ -280,9 +302,41 @@ class VoiceBridge(Plugin):
             self.waiting = None
             self.one_at_a_time.release()
 
+    def once(self, key, work):
+        """The first request with this key does the work. The same key again waits for that answer, never a second run."""
+        with self.answers_lock:
+            entry = self.answers.get(key)
+            first = entry is None
+            if first:
+                entry = self.answers[key] = {"done": threading.Event(), "result": None, "error": None}
+                while len(self.answers) > 32:
+                    self.answers.pop(next(iter(self.answers)))
+        if first:
+            try:
+                entry["result"] = work()
+            except Exception as error:
+                entry["error"] = error
+                raise
+            finally:
+                entry["done"].set()
+            return entry["result"], False
+        if not entry["done"].wait(self.s["timeout_s"]):
+            raise TimeoutError("the agent is still answering this question")
+        if entry["error"] is not None:
+            raise entry["error"]
+        return entry["result"], True
+
     def authorized(self, headers):
+        """Which door the request came through, "home-assistant" or "skill", or None for a wrong or missing token."""
         given = headers.get("Authorization", "")
-        return given.startswith("Bearer ") and hmac.compare_digest(given[7:].encode(), self.token.encode())
+        if not given.startswith("Bearer "):
+            return None
+        given = given[7:].encode()
+        if hmac.compare_digest(given, self.token.encode()):
+            return "home-assistant"
+        if self.skill and hmac.compare_digest(given, self.skill["token"].encode()):
+            return "skill"
+        return None
 
     def handler(self):
         bridge = self
@@ -293,11 +347,14 @@ class VoiceBridge(Plugin):
 
             def reply(self, code, body):
                 data = json.dumps(body).encode()
-                self.send_response(code)
-                self.send_header("Content-Type", "application/json")
-                self.send_header("Content-Length", str(len(data)))
-                self.end_headers()
-                self.wfile.write(data)
+                try:
+                    self.send_response(code)
+                    self.send_header("Content-Type", "application/json")
+                    self.send_header("Content-Length", str(len(data)))
+                    self.end_headers()
+                    self.wfile.write(data)
+                except (BrokenPipeError, ConnectionResetError):
+                    pass  # the skill stopped waiting at its 8 s limit: the answer is kept for its request_id
 
             def do_GET(self):
                 if not bridge.authorized(self.headers):
@@ -307,24 +364,34 @@ class VoiceBridge(Plugin):
                 return self.reply(404, {"error": "not found"})
 
             def do_POST(self):
-                if not bridge.authorized(self.headers):
+                via = bridge.authorized(self.headers)
+                if not via:
                     bridge.agent.bus.publish("voice_bridge", status="unauthorized")
                     return self.reply(401, {"error": "unauthorized"})
                 if self.path != "/ask":
                     return self.reply(404, {"error": "not found"})
+                repeat = False
                 try:
                     length = int(self.headers.get("Content-Length") or 0)
                     if length > 4096:
                         return self.reply(413, {"error": "too long"})
                     body = json.loads(self.rfile.read(length) or b"{}")
-                    result = bridge.ask(body.get("text", ""), body.get("source") or "assist", body.get("person"))
+                    request_id = str(body.get("request_id") or "")[:80]
+
+                    def work():
+                        return bridge.ask(body.get("text", ""), body.get("source") or "assist", body.get("person"), via)
+
+                    if request_id:
+                        result, repeat = bridge.once((via, request_id), work)
+                    else:
+                        result = work()
                 except (ValueError, json.JSONDecodeError) as error:
                     return self.reply(400, {"error": str(error)[:120]})
                 except TimeoutError as error:
-                    bridge.agent.bus.publish("voice_bridge", status="timeout")
+                    bridge.agent.bus.publish("voice_bridge", status="timeout", via=via)
                     return self.reply(504, {"error": str(error), "reply": "The baby agent is still thinking, ask again in a moment."})
                 bridge.agent.bus.publish("voice_bridge", status="answered", source=body.get("source") or "assist",
-                                         role=result.get("role"), chars=len(result["reply"]))
+                                         role=result.get("role"), chars=len(result["reply"]), via=via, repeat=repeat)
                 return self.reply(200, result)
 
         return Handler

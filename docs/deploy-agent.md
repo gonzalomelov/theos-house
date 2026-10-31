@@ -44,8 +44,9 @@ The agent is the private family agent, so it reaches only what it needs:
 - The brain and Telegram, through the egress proxy. Every other host is refused.
 - Nothing else: not the internet directly, not the host, not the LAN, not Tailscale, not other containers.
 - One way in, since Oct 31: Home Assistant asks the voice bridge at `parenting-agent-relay:8767`, which forwards `/ask` and `/health` to the agent and nothing else (the Echo path, `docs/echo-and-assist.md`). The bridge listens on the agent's internal address and checks a bearer token.
+- A second way in, since Oct 31 (issue #177): the Alexa skill "baby agent". Cloudflare Access checks the skill's service token at `baby-voice.home.example`, cloudflared checks the Access token again and hands the request to the door, `parenting-agent-door` on `127.0.0.1:4830`. The door forwards `/ask` and `/health` to `parenting-agent-relay:8767` and nothing else. It sits on its own network (`192.0.2.0/29`) with the relay only, and the relay refuses that network on its Home Assistant and Baby Buddy ports. The skill has its own bearer token, `data/voice-skill-token`, separate from Home Assistant's.
 
-The internal network is created with `--internal` and the isolated gateway mode (Docker Engine 28 or newer), so its bridge has no address on the host. Nothing is published on the host, not even on 127.0.0.1, and nothing is on the Cloudflare tunnel. `deploy/wall_check.py` proves it from inside the agent on every deploy and every `check`.
+The internal network is created with `--internal` and the isolated gateway mode (Docker Engine 28 or newer), so its bridge has no address on the host. Nothing of the agent, the relay or the egress proxy is published on the host. Only the door is, on 127.0.0.1:4830, for the Cloudflare tunnel. `deploy/wall_check.py` proves it from inside the agent on every deploy and every `check`, and its door mode (`python3 - door`) proves from the Vostro that only the bridge's two paths pass the door. `agent.sh` also checks from inside the door that it reaches no Home Assistant, Baby Buddy, agent or LAN address, and that the relay refuses it on 8123 and 8790.
 
 ## Secrets
 
