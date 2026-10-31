@@ -1,0 +1,2430 @@
+{
+"feedings": [
+{
+"start": "2026-10-20T03:20:00Z",
+"end": "2026-10-20T03:47:00Z",
+"type": "breast milk",
+"method": "both breasts",
+"notes": "Night feed",
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-20T05:48:00Z",
+"end": "2026-10-20T06:09:00Z",
+"type": "breast milk",
+"method": "left breast",
+"notes": "Night feed",
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-20T08:28:00Z",
+"end": "2026-10-20T08:46:00Z",
+"type": "breast milk",
+"method": "left breast",
+"notes": "Night feed",
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-20T11:09:00Z",
+"end": "2026-10-20T11:19:00Z",
+"type": "breast milk",
+"method": "bottle",
+"amount": 70.0,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-20T13:50:00Z",
+"end": "2026-10-20T14:10:00Z",
+"type": "breast milk",
+"method": "bottle",
+"amount": 100.0,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-20T16:31:00Z",
+"end": "2026-10-20T17:03:00Z",
+"type": "breast milk",
+"method": "right breast",
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-20T19:05:00Z",
+"end": "2026-10-20T19:18:00Z",
+"type": "breast milk",
+"method": "bottle",
+"amount": 70.0,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-20T21:31:00Z",
+"end": "2026-10-20T21:48:00Z",
+"type": "breast milk",
+"method": "left breast",
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-20T23:45:00Z",
+"end": "2026-10-20T23:56:00Z",
+"type": "formula",
+"method": "bottle",
+"amount": 110.0,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-21T02:27:00Z",
+"end": "2026-10-21T02:50:00Z",
+"type": "breast milk",
+"method": "right breast",
+"notes": "Night feed",
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-21T05:13:00Z",
+"end": "2026-10-21T05:33:00Z",
+"type": "formula",
+"method": "bottle",
+"amount": 90.0,
+"notes": "Night feed",
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-21T07:40:00Z",
+"end": "2026-10-21T08:01:00Z",
+"type": "breast milk",
+"method": "right breast",
+"notes": "Night feed",
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-21T09:50:00Z",
+"end": "2026-10-21T10:13:00Z",
+"type": "breast milk",
+"method": "left breast",
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-21T12:40:00Z",
+"end": "2026-10-21T13:07:00Z",
+"type": "breast milk",
+"method": "left breast",
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-21T14:45:00Z",
+"end": "2026-10-21T14:57:00Z",
+"type": "formula",
+"method": "bottle",
+"amount": 60.0,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-21T16:58:00Z",
+"end": "2026-10-21T17:30:00Z",
+"type": "breast milk",
+"method": "right breast",
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-21T19:06:00Z",
+"end": "2026-10-21T19:35:00Z",
+"type": "breast milk",
+"method": "left breast",
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-21T21:47:00Z",
+"end": "2026-10-21T22:21:00Z",
+"type": "breast milk",
+"method": "left breast",
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-22T00:31:00Z",
+"end": "2026-10-22T00:57:00Z",
+"type": "breast milk",
+"method": "both breasts",
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-22T03:05:00Z",
+"end": "2026-10-22T03:16:00Z",
+"type": "formula",
+"method": "bottle",
+"amount": 70.0,
+"notes": "Night feed",
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-22T05:20:00Z",
+"end": "2026-10-22T05:35:00Z",
+"type": "breast milk",
+"method": "bottle",
+"amount": 100.0,
+"notes": "Night feed",
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-22T07:44:00Z",
+"end": "2026-10-22T08:07:00Z",
+"type": "breast milk",
+"method": "both breasts",
+"notes": "Night feed",
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-22T10:11:00Z",
+"end": "2026-10-22T10:42:00Z",
+"type": "breast milk",
+"method": "right breast",
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-22T13:04:00Z",
+"end": "2026-10-22T13:26:00Z",
+"type": "breast milk",
+"method": "left breast",
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-22T15:10:00Z",
+"end": "2026-10-22T15:29:00Z",
+"type": "formula",
+"method": "bottle",
+"amount": 110.0,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-22T17:37:00Z",
+"end": "2026-10-22T17:54:00Z",
+"type": "breast milk",
+"method": "bottle",
+"amount": 70.0,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-22T20:21:00Z",
+"end": "2026-10-22T20:47:00Z",
+"type": "breast milk",
+"method": "both breasts",
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-22T23:16:00Z",
+"end": "2026-10-22T23:44:00Z",
+"type": "breast milk",
+"method": "both breasts",
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-23T02:07:00Z",
+"end": "2026-10-23T02:24:00Z",
+"type": "breast milk",
+"method": "both breasts",
+"notes": "Night feed",
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-23T04:49:00Z",
+"end": "2026-10-23T05:23:00Z",
+"type": "breast milk",
+"method": "right breast",
+"notes": "Night feed",
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-23T07:03:00Z",
+"end": "2026-10-23T07:23:00Z",
+"type": "breast milk",
+"method": "bottle",
+"amount": 110.0,
+"notes": "Night feed",
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-23T09:21:00Z",
+"end": "2026-10-23T09:34:00Z",
+"type": "formula",
+"method": "bottle",
+"amount": 100.0,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-23T11:29:00Z",
+"end": "2026-10-23T12:00:00Z",
+"type": "breast milk",
+"method": "right breast",
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-23T14:06:00Z",
+"end": "2026-10-23T14:21:00Z",
+"type": "breast milk",
+"method": "right breast",
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-23T16:22:00Z",
+"end": "2026-10-23T16:40:00Z",
+"type": "breast milk",
+"method": "both breasts",
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-23T19:02:00Z",
+"end": "2026-10-23T19:18:00Z",
+"type": "breast milk",
+"method": "left breast",
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-23T21:39:00Z",
+"end": "2026-10-23T21:56:00Z",
+"type": "breast milk",
+"method": "right breast",
+"notes": "Cluster feeding in the evening",
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-23T22:50:00Z",
+"end": "2026-10-23T23:22:00Z",
+"type": "breast milk",
+"method": "right breast",
+"notes": "Cluster feeding in the evening",
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-24T00:07:00Z",
+"end": "2026-10-24T00:28:00Z",
+"type": "breast milk",
+"method": "right breast",
+"notes": "Cluster feeding in the evening",
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-24T01:04:00Z",
+"end": "2026-10-24T01:18:00Z",
+"type": "breast milk",
+"method": "bottle",
+"amount": 110.0,
+"notes": "Night feed",
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-24T03:51:00Z",
+"end": "2026-10-24T04:08:00Z",
+"type": "breast milk",
+"method": "bottle",
+"amount": 70.0,
+"notes": "Night feed",
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-24T06:21:00Z",
+"end": "2026-10-24T06:43:00Z",
+"type": "breast milk",
+"method": "left breast",
+"notes": "Night feed",
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-24T08:47:00Z",
+"end": "2026-10-24T09:04:00Z",
+"type": "breast milk",
+"method": "both breasts",
+"notes": "Night feed",
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-24T11:20:00Z",
+"end": "2026-10-24T11:34:00Z",
+"type": "breast milk",
+"method": "bottle",
+"amount": 100.0,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-24T14:15:00Z",
+"end": "2026-10-24T14:25:00Z",
+"type": "breast milk",
+"method": "bottle",
+"amount": 80.0,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-24T17:03:00Z",
+"end": "2026-10-24T17:22:00Z",
+"type": "formula",
+"method": "bottle",
+"amount": 100.0,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-24T19:35:00Z",
+"end": "2026-10-24T20:10:00Z",
+"type": "breast milk",
+"method": "left breast",
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-24T21:54:00Z",
+"end": "2026-10-24T22:23:00Z",
+"type": "breast milk",
+"method": "left breast",
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-25T00:25:00Z",
+"end": "2026-10-25T00:38:00Z",
+"type": "breast milk",
+"method": "bottle",
+"amount": 110.0,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-25T03:10:00Z",
+"end": "2026-10-25T03:30:00Z",
+"type": "breast milk",
+"method": "bottle",
+"amount": 100.0,
+"notes": "Night feed",
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-25T04:37:00Z",
+"end": "2026-10-25T05:09:00Z",
+"type": "breast milk",
+"method": "left breast",
+"notes": "Night feed",
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-25T06:08:00Z",
+"end": "2026-10-25T06:40:00Z",
+"type": "breast milk",
+"method": "right breast",
+"notes": "Night feed",
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-25T07:54:00Z",
+"end": "2026-10-25T08:20:00Z",
+"type": "breast milk",
+"method": "left breast",
+"notes": "Night feed",
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-25T09:46:00Z",
+"end": "2026-10-25T10:04:00Z",
+"type": "formula",
+"method": "bottle",
+"amount": 90.0,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-25T12:02:00Z",
+"end": "2026-10-25T12:25:00Z",
+"type": "breast milk",
+"method": "right breast",
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-25T14:42:00Z",
+"end": "2026-10-25T14:55:00Z",
+"type": "formula",
+"method": "bottle",
+"amount": 80.0,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-25T17:04:00Z",
+"end": "2026-10-25T17:15:00Z",
+"type": "formula",
+"method": "bottle",
+"amount": 60.0,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-25T19:34:00Z",
+"end": "2026-10-25T19:45:00Z",
+"type": "breast milk",
+"method": "bottle",
+"amount": 70.0,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-25T22:29:00Z",
+"end": "2026-10-25T22:59:00Z",
+"type": "breast milk",
+"method": "left breast",
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-26T00:36:00Z",
+"end": "2026-10-26T01:07:00Z",
+"type": "breast milk",
+"method": "left breast",
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-26T02:42:00Z",
+"end": "2026-10-26T02:54:00Z",
+"type": "formula",
+"method": "bottle",
+"amount": 60.0,
+"notes": "Night feed",
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-26T04:10:00Z",
+"end": "2026-10-26T04:32:00Z",
+"type": "breast milk",
+"method": "right breast",
+"notes": "Night feed",
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-26T07:02:00Z",
+"end": "2026-10-26T07:19:00Z",
+"type": "breast milk",
+"method": "both breasts",
+"notes": "Night feed",
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-26T09:23:00Z",
+"end": "2026-10-26T09:40:00Z",
+"type": "formula",
+"method": "bottle",
+"amount": 110.0,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-26T12:11:00Z",
+"end": "2026-10-26T12:46:00Z",
+"type": "breast milk",
+"method": "left breast",
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-26T14:55:00Z",
+"end": "2026-10-26T15:12:00Z",
+"type": "formula",
+"method": "bottle",
+"amount": 60.0,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-26T17:18:00Z",
+"end": "2026-10-26T17:47:00Z",
+"type": "breast milk",
+"method": "left breast",
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-26T19:53:00Z",
+"end": "2026-10-26T20:24:00Z",
+"type": "breast milk",
+"method": "right breast",
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-26T22:11:00Z",
+"end": "2026-10-26T22:25:00Z",
+"type": "formula",
+"method": "bottle",
+"amount": 100.0,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-27T00:33:00Z",
+"end": "2026-10-27T00:49:00Z",
+"type": "breast milk",
+"method": "bottle",
+"amount": 90.0,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-27T19:57:00Z",
+"end": "2026-10-27T20:12:00Z",
+"type": "formula",
+"method": "bottle",
+"amount": 120.0,
+"tags": [
+"agent"
+]
+},
+{
+"start": "2026-10-29T01:12:01Z",
+"end": "2026-10-29T01:27:01Z",
+"type": "formula",
+"method": "bottle",
+"amount": 120.0,
+"tags": [
+"agent"
+]
+},
+{
+"start": "2026-10-29T01:27:02Z",
+"end": "2026-10-29T01:36:54Z",
+"type": "formula",
+"method": "bottle",
+"amount": 120.0,
+"tags": [
+"agent"
+]
+},
+{
+"start": "2026-10-29T03:57:38Z",
+"end": "2026-10-29T04:12:38Z",
+"type": "formula",
+"method": "bottle",
+"amount": 120.0,
+"tags": [
+"agent",
+"full-day-sim"
+]
+},
+{
+"start": "2026-10-29T04:12:39Z",
+"end": "2026-10-29T04:13:47Z",
+"type": "formula",
+"method": "bottle",
+"amount": 90.0,
+"tags": [
+"agent",
+"full-day-sim"
+]
+}
+],
+"changes": [
+{
+"time": "2026-10-20T03:49:00Z",
+"wet": true,
+"solid": false,
+"tags": [
+"simulated-week"
+]
+},
+{
+"time": "2026-10-20T06:11:00Z",
+"wet": true,
+"solid": true,
+"color": "yellow",
+"tags": [
+"simulated-week"
+]
+},
+{
+"time": "2026-10-20T08:53:00Z",
+"wet": true,
+"solid": false,
+"tags": [
+"simulated-week"
+]
+},
+{
+"time": "2026-10-20T11:23:00Z",
+"wet": true,
+"solid": false,
+"tags": [
+"simulated-week"
+]
+},
+{
+"time": "2026-10-20T14:14:00Z",
+"wet": true,
+"solid": false,
+"tags": [
+"simulated-week"
+]
+},
+{
+"time": "2026-10-20T17:11:00Z",
+"wet": true,
+"solid": false,
+"tags": [
+"simulated-week"
+]
+},
+{
+"time": "2026-10-20T19:24:00Z",
+"wet": true,
+"solid": false,
+"tags": [
+"simulated-week"
+]
+},
+{
+"time": "2026-10-20T21:54:00Z",
+"wet": true,
+"solid": false,
+"tags": [
+"simulated-week"
+]
+},
+{
+"time": "2026-10-21T00:00:00Z",
+"wet": true,
+"solid": false,
+"tags": [
+"simulated-week"
+]
+},
+{
+"time": "2026-10-21T02:57:00Z",
+"wet": true,
+"solid": true,
+"color": "yellow",
+"tags": [
+"simulated-week"
+]
+},
+{
+"time": "2026-10-21T08:04:00Z",
+"wet": true,
+"solid": true,
+"color": "green",
+"tags": [
+"simulated-week"
+]
+},
+{
+"time": "2026-10-21T10:21:00Z",
+"wet": true,
+"solid": false,
+"tags": [
+"simulated-week"
+]
+},
+{
+"time": "2026-10-21T13:10:00Z",
+"wet": true,
+"solid": true,
+"color": "yellow",
+"tags": [
+"simulated-week"
+]
+},
+{
+"time": "2026-10-21T15:03:00Z",
+"wet": true,
+"solid": false,
+"tags": [
+"simulated-week"
+]
+},
+{
+"time": "2026-10-21T17:35:00Z",
+"wet": true,
+"solid": true,
+"color": "green",
+"tags": [
+"simulated-week"
+]
+},
+{
+"time": "2026-10-21T19:37:00Z",
+"wet": true,
+"solid": true,
+"color": "yellow",
+"tags": [
+"simulated-week"
+]
+},
+{
+"time": "2026-10-22T01:01:00Z",
+"wet": true,
+"solid": true,
+"color": "green",
+"tags": [
+"simulated-week"
+]
+},
+{
+"time": "2026-10-22T03:23:00Z",
+"wet": true,
+"solid": false,
+"tags": [
+"simulated-week"
+]
+},
+{
+"time": "2026-10-22T05:42:00Z",
+"wet": true,
+"solid": true,
+"color": "brown",
+"tags": [
+"simulated-week"
+]
+},
+{
+"time": "2026-10-22T10:49:00Z",
+"wet": true,
+"solid": false,
+"tags": [
+"simulated-week"
+]
+},
+{
+"time": "2026-10-22T13:32:00Z",
+"wet": true,
+"solid": false,
+"tags": [
+"simulated-week"
+]
+},
+{
+"time": "2026-10-22T15:34:00Z",
+"wet": true,
+"solid": false,
+"tags": [
+"simulated-week"
+]
+},
+{
+"time": "2026-10-22T17:58:00Z",
+"wet": true,
+"solid": false,
+"tags": [
+"simulated-week"
+]
+},
+{
+"time": "2026-10-22T20:49:00Z",
+"wet": true,
+"solid": true,
+"color": "green",
+"tags": [
+"simulated-week"
+]
+},
+{
+"time": "2026-10-22T23:48:00Z",
+"wet": true,
+"solid": false,
+"tags": [
+"simulated-week"
+]
+},
+{
+"time": "2026-10-23T02:27:00Z",
+"wet": true,
+"solid": true,
+"color": "yellow",
+"tags": [
+"simulated-week"
+]
+},
+{
+"time": "2026-10-23T07:29:00Z",
+"wet": true,
+"solid": true,
+"color": "yellow",
+"tags": [
+"simulated-week"
+]
+},
+{
+"time": "2026-10-23T09:38:00Z",
+"wet": true,
+"solid": false,
+"tags": [
+"simulated-week"
+]
+},
+{
+"time": "2026-10-23T14:29:00Z",
+"wet": true,
+"solid": true,
+"color": "yellow",
+"tags": [
+"simulated-week"
+]
+},
+{
+"time": "2026-10-23T16:42:00Z",
+"wet": true,
+"solid": false,
+"tags": [
+"simulated-week"
+]
+},
+{
+"time": "2026-10-23T19:21:00Z",
+"wet": true,
+"solid": false,
+"tags": [
+"simulated-week"
+]
+},
+{
+"time": "2026-10-23T22:00:00Z",
+"wet": true,
+"solid": false,
+"tags": [
+"simulated-week"
+]
+},
+{
+"time": "2026-10-24T00:31:00Z",
+"wet": true,
+"solid": true,
+"color": "yellow",
+"tags": [
+"simulated-week"
+]
+},
+{
+"time": "2026-10-24T01:26:00Z",
+"wet": true,
+"solid": false,
+"tags": [
+"simulated-week"
+]
+},
+{
+"time": "2026-10-24T06:50:00Z",
+"wet": true,
+"solid": false,
+"tags": [
+"simulated-week"
+]
+},
+{
+"time": "2026-10-24T09:08:00Z",
+"wet": true,
+"solid": false,
+"tags": [
+"simulated-week"
+]
+},
+{
+"time": "2026-10-24T14:29:00Z",
+"wet": true,
+"solid": false,
+"tags": [
+"simulated-week"
+]
+},
+{
+"time": "2026-10-24T17:29:00Z",
+"wet": true,
+"solid": true,
+"color": "yellow",
+"tags": [
+"simulated-week"
+]
+},
+{
+"time": "2026-10-24T20:18:00Z",
+"wet": true,
+"solid": false,
+"tags": [
+"simulated-week"
+]
+},
+{
+"time": "2026-10-25T00:41:00Z",
+"wet": true,
+"solid": true,
+"color": "yellow",
+"tags": [
+"simulated-week"
+]
+},
+{
+"time": "2026-10-25T03:34:00Z",
+"wet": true,
+"solid": true,
+"color": "yellow",
+"tags": [
+"simulated-week"
+]
+},
+{
+"time": "2026-10-25T05:15:00Z",
+"wet": true,
+"solid": false,
+"tags": [
+"simulated-week"
+]
+},
+{
+"time": "2026-10-25T06:46:00Z",
+"wet": true,
+"solid": true,
+"color": "yellow",
+"tags": [
+"simulated-week"
+]
+},
+{
+"time": "2026-10-25T08:28:00Z",
+"wet": true,
+"solid": true,
+"color": "yellow",
+"tags": [
+"simulated-week"
+]
+},
+{
+"time": "2026-10-25T10:10:00Z",
+"wet": true,
+"solid": true,
+"color": "green",
+"tags": [
+"simulated-week"
+]
+},
+{
+"time": "2026-10-25T14:58:00Z",
+"wet": true,
+"solid": true,
+"color": "green",
+"tags": [
+"simulated-week"
+]
+},
+{
+"time": "2026-10-25T17:23:00Z",
+"wet": true,
+"solid": true,
+"color": "yellow",
+"tags": [
+"simulated-week"
+]
+},
+{
+"time": "2026-10-25T23:03:00Z",
+"wet": true,
+"solid": false,
+"tags": [
+"simulated-week"
+]
+},
+{
+"time": "2026-10-26T01:13:00Z",
+"wet": true,
+"solid": false,
+"tags": [
+"simulated-week"
+]
+},
+{
+"time": "2026-10-26T02:56:00Z",
+"wet": true,
+"solid": false,
+"tags": [
+"simulated-week"
+]
+},
+{
+"time": "2026-10-26T04:36:00Z",
+"wet": true,
+"solid": false,
+"tags": [
+"simulated-week"
+]
+},
+{
+"time": "2026-10-26T07:26:00Z",
+"wet": true,
+"solid": false,
+"tags": [
+"simulated-week"
+]
+},
+{
+"time": "2026-10-26T09:48:00Z",
+"wet": true,
+"solid": false,
+"tags": [
+"simulated-week"
+]
+},
+{
+"time": "2026-10-26T12:48:00Z",
+"wet": true,
+"solid": true,
+"color": "yellow",
+"tags": [
+"simulated-week"
+]
+},
+{
+"time": "2026-10-26T15:19:00Z",
+"wet": true,
+"solid": true,
+"color": "green",
+"tags": [
+"simulated-week"
+]
+},
+{
+"time": "2026-10-26T17:53:00Z",
+"wet": true,
+"solid": false,
+"tags": [
+"simulated-week"
+]
+},
+{
+"time": "2026-10-26T20:28:00Z",
+"wet": true,
+"solid": false,
+"tags": [
+"simulated-week"
+]
+},
+{
+"time": "2026-10-26T22:28:00Z",
+"wet": true,
+"solid": false,
+"tags": [
+"simulated-week"
+]
+},
+{
+"time": "2026-10-27T00:52:00Z",
+"wet": true,
+"solid": false,
+"tags": [
+"simulated-week"
+]
+},
+{
+"time": "2026-10-27T20:04:38Z",
+"wet": false,
+"solid": false,
+"notes": "logged by changing-table, 2026-10-27T17:02:37-03:00 to 2026-10-27T17:04:38-03:00"
+},
+{
+"time": "2026-10-27T20:12:00Z",
+"wet": true,
+"solid": false,
+"tags": [
+"agent"
+]
+},
+{
+"time": "2026-10-27T20:12:34Z",
+"wet": true,
+"solid": true,
+"tags": [
+"agent"
+]
+},
+{
+"time": "2026-10-29T01:27:04Z",
+"wet": true,
+"solid": true,
+"tags": [
+"agent"
+]
+},
+{
+"time": "2026-10-29T01:27:12Z",
+"wet": true,
+"solid": false,
+"tags": [
+"agent"
+]
+},
+{
+"time": "2026-10-29T01:37:05Z",
+"wet": true,
+"solid": true,
+"tags": [
+"agent"
+]
+},
+{
+"time": "2026-10-29T01:37:18Z",
+"wet": true,
+"solid": false,
+"tags": [
+"agent"
+]
+},
+{
+"time": "2026-10-29T03:57:32Z",
+"wet": false,
+"solid": false,
+"notes": "logged by changing-table, 2026-10-29T00:56:42-03:00 to 2026-10-29T00:57:32-03:00"
+},
+{
+"time": "2026-10-29T04:03:01Z",
+"wet": false,
+"solid": false,
+"notes": "logged by changing-table, 2026-10-29T01:02:41-03:00 to 2026-10-29T01:03:01-03:00"
+},
+{
+"time": "2026-10-29T04:03:52Z",
+"wet": false,
+"solid": false,
+"notes": "logged by changing-table, 2026-10-29T01:03:32-03:00 to 2026-10-29T01:03:52-03:00"
+},
+{
+"time": "2026-10-29T04:05:41Z",
+"wet": false,
+"solid": false,
+"notes": "logged by changing-table, 2026-10-29T01:04:49-03:00 to 2026-10-29T01:05:41-03:00"
+},
+{
+"time": "2026-10-29T04:06:58Z",
+"wet": false,
+"solid": false,
+"notes": "logged by changing-table, 2026-10-29T01:06:07-03:00 to 2026-10-29T01:06:58-03:00"
+},
+{
+"time": "2026-10-29T04:13:18Z",
+"wet": false,
+"solid": true,
+"tags": [
+"agent",
+"full-day-sim"
+]
+},
+{
+"time": "2026-10-29T06:24:01Z",
+"wet": false,
+"solid": false,
+"notes": "logged by changing-table, 2026-10-29T03:23:49-03:00 to 2026-10-29T03:24:01-03:00"
+},
+{
+"time": "2026-10-29T06:26:25Z",
+"wet": false,
+"solid": false,
+"notes": "logged by changing-table, 2026-10-29T03:26:09-03:00 to 2026-10-29T03:26:25-03:00"
+},
+{
+"time": "2026-10-29T06:27:13Z",
+"wet": false,
+"solid": false,
+"notes": "logged by changing-table, 2026-10-29T03:26:56-03:00 to 2026-10-29T03:27:13-03:00"
+},
+{
+"time": "2026-10-29T06:28:01Z",
+"wet": false,
+"solid": false,
+"notes": "logged by changing-table, 2026-10-29T03:27:43-03:00 to 2026-10-29T03:28:01-03:00"
+},
+{
+"time": "2026-10-29T06:28:49Z",
+"wet": false,
+"solid": false,
+"notes": "logged by changing-table, 2026-10-29T03:28:32-03:00 to 2026-10-29T03:28:49-03:00"
+},
+{
+"time": "2026-10-29T06:29:36Z",
+"wet": false,
+"solid": false,
+"notes": "logged by changing-table, 2026-10-29T03:29:19-03:00 to 2026-10-29T03:29:36-03:00"
+},
+{
+"time": "2026-10-29T06:31:59Z",
+"wet": false,
+"solid": false,
+"notes": "logged by changing-table, 2026-10-29T03:31:39-03:00 to 2026-10-29T03:31:59-03:00"
+},
+{
+"time": "2026-10-29T06:32:42Z",
+"wet": false,
+"solid": false,
+"notes": "logged by changing-table, 2026-10-29T03:32:22-03:00 to 2026-10-29T03:32:42-03:00"
+},
+{
+"time": "2026-10-29T06:33:26Z",
+"wet": false,
+"solid": false,
+"notes": "logged by changing-table, 2026-10-29T03:33:05-03:00 to 2026-10-29T03:33:26-03:00"
+},
+{
+"time": "2026-10-29T06:34:09Z",
+"wet": false,
+"solid": false,
+"notes": "logged by changing-table, 2026-10-29T03:33:48-03:00 to 2026-10-29T03:34:09-03:00"
+},
+{
+"time": "2026-10-29T06:34:52Z",
+"wet": false,
+"solid": false,
+"notes": "logged by changing-table, 2026-10-29T03:34:30-03:00 to 2026-10-29T03:34:52-03:00"
+},
+{
+"time": "2026-10-29T06:36:17Z",
+"wet": false,
+"solid": false,
+"notes": "logged by changing-table, 2026-10-29T03:35:37-03:00 to 2026-10-29T03:36:17-03:00"
+},
+{
+"time": "2026-10-29T06:38:35Z",
+"wet": false,
+"solid": false,
+"notes": "logged by changing-table, 2026-10-29T03:37:53-03:00 to 2026-10-29T03:38:35-03:00"
+},
+{
+"time": "2026-10-29T06:40:45Z",
+"wet": false,
+"solid": false,
+"notes": "logged by changing-table, 2026-10-29T03:40:02-03:00 to 2026-10-29T03:40:45-03:00"
+},
+{
+"time": "2026-10-29T06:42:12Z",
+"wet": false,
+"solid": false,
+"notes": "logged by changing-table, 2026-10-29T03:41:30-03:00 to 2026-10-29T03:42:12-03:00"
+},
+{
+"time": "2026-10-29T06:45:24Z",
+"wet": false,
+"solid": false,
+"notes": "logged by changing-table, 2026-10-29T03:44:40-03:00 to 2026-10-29T03:45:24-03:00"
+},
+{
+"time": "2026-10-29T06:46:58Z",
+"wet": false,
+"solid": false,
+"notes": "logged by changing-table, 2026-10-29T03:46:13-03:00 to 2026-10-29T03:46:58-03:00"
+},
+{
+"time": "2026-10-29T06:48:30Z",
+"wet": false,
+"solid": false,
+"notes": "logged by changing-table, 2026-10-29T03:47:46-03:00 to 2026-10-29T03:48:30-03:00"
+},
+{
+"time": "2026-10-29T07:18:28Z",
+"wet": false,
+"solid": true,
+"tags": [
+"agent"
+]
+},
+{
+"time": "2026-10-29T07:20:55Z",
+"wet": false,
+"solid": true,
+"notes": "logged by changing-table, 2026-10-29T04:20:12-03:00 to 2026-10-29T04:20:55-03:00"
+},
+{
+"time": "2026-10-29T07:30:23Z",
+"wet": false,
+"solid": true,
+"notes": "logged by changing-table, 2026-10-29T04:29:39-03:00 to 2026-10-29T04:30:23-03:00"
+},
+{
+"time": "2026-10-29T07:36:48Z",
+"wet": false,
+"solid": true,
+"notes": "logged by changing-table, 2026-10-29T04:36:04-03:00 to 2026-10-29T04:36:48-03:00"
+},
+{
+"time": "2026-10-29T07:41:02Z",
+"wet": false,
+"solid": false,
+"notes": "logged by changing-table, 2026-10-29T04:40:18-03:00 to 2026-10-29T04:41:02-03:00"
+},
+{
+"time": "2026-10-29T07:42:31Z",
+"wet": false,
+"solid": false,
+"notes": "logged by changing-table, 2026-10-29T04:41:47-03:00 to 2026-10-29T04:42:31-03:00"
+},
+{
+"time": "2026-10-29T07:44:03Z",
+"wet": false,
+"solid": false,
+"notes": "logged by changing-table, 2026-10-29T04:43:18-03:00 to 2026-10-29T04:44:03-03:00"
+},
+{
+"time": "2026-10-29T07:45:42Z",
+"wet": false,
+"solid": false,
+"notes": "logged by changing-table, 2026-10-29T04:44:58-03:00 to 2026-10-29T04:45:42-03:00"
+},
+{
+"time": "2026-10-29T07:47:11Z",
+"wet": false,
+"solid": false,
+"notes": "logged by changing-table, 2026-10-29T04:46:26-03:00 to 2026-10-29T04:47:11-03:00"
+},
+{
+"time": "2026-10-29T07:48:41Z",
+"wet": false,
+"solid": false,
+"notes": "logged by changing-table, 2026-10-29T04:47:56-03:00 to 2026-10-29T04:48:41-03:00"
+},
+{
+"time": "2026-10-29T07:53:21Z",
+"wet": false,
+"solid": true,
+"notes": "logged by changing-table, 2026-10-29T04:52:37-03:00 to 2026-10-29T04:53:21-03:00"
+},
+{
+"time": "2026-10-29T07:54:49Z",
+"wet": false,
+"solid": false,
+"notes": "logged by changing-table, 2026-10-29T04:54:13-03:00 to 2026-10-29T04:54:49-03:00"
+},
+{
+"time": "2026-10-29T07:57:28Z",
+"wet": false,
+"solid": true,
+"notes": "logged by changing-table, 2026-10-29T04:56:43-03:00 to 2026-10-29T04:57:28-03:00"
+},
+{
+"time": "2026-10-29T07:59:01Z",
+"wet": false,
+"solid": true,
+"notes": "logged by changing-table, 2026-10-29T04:58:17-03:00 to 2026-10-29T04:59:01-03:00"
+},
+{
+"time": "2026-10-29T08:00:38Z",
+"wet": false,
+"solid": true,
+"notes": "logged by changing-table, 2026-10-29T04:59:53-03:00 to 2026-10-29T05:00:38-03:00"
+},
+{
+"time": "2026-10-29T08:04:02Z",
+"wet": false,
+"solid": true,
+"notes": "logged by changing-table, 2026-10-29T05:03:18-03:00 to 2026-10-29T05:04:02-03:00"
+},
+{
+"time": "2026-10-29T08:05:44Z",
+"wet": false,
+"solid": true,
+"notes": "logged by changing-table, 2026-10-29T05:05:01-03:00 to 2026-10-29T05:05:44-03:00"
+}
+],
+"sleep": [
+{
+"start": "2026-10-20T04:06:00Z",
+"end": "2026-10-20T05:45:00Z",
+"nap": false,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-20T06:25:00Z",
+"end": "2026-10-20T08:25:00Z",
+"nap": false,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-20T09:10:00Z",
+"end": "2026-10-20T11:00:00Z",
+"nap": false,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-20T11:52:00Z",
+"end": "2026-10-20T13:45:00Z",
+"nap": true,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-20T14:35:00Z",
+"end": "2026-10-20T16:25:00Z",
+"nap": true,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-20T17:42:00Z",
+"end": "2026-10-20T18:58:00Z",
+"nap": true,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-20T19:58:00Z",
+"end": "2026-10-20T21:24:00Z",
+"nap": true,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-20T22:29:00Z",
+"end": "2026-10-20T23:36:00Z",
+"nap": false,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-21T00:34:00Z",
+"end": "2026-10-21T02:23:00Z",
+"nap": false,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-21T03:14:00Z",
+"end": "2026-10-21T05:03:00Z",
+"nap": false,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-21T05:45:00Z",
+"end": "2026-10-21T07:36:00Z",
+"nap": false,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-21T08:14:00Z",
+"end": "2026-10-21T09:40:00Z",
+"nap": false,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-21T10:54:00Z",
+"end": "2026-10-21T12:32:00Z",
+"nap": true,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-21T13:45:00Z",
+"end": "2026-10-21T14:40:00Z",
+"nap": true,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-21T15:39:00Z",
+"end": "2026-10-21T16:55:00Z",
+"nap": true,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-21T18:01:00Z",
+"end": "2026-10-21T19:02:00Z",
+"nap": true,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-21T20:01:00Z",
+"end": "2026-10-21T21:43:00Z",
+"nap": true,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-21T22:55:00Z",
+"end": "2026-10-22T00:26:00Z",
+"nap": false,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-22T01:36:00Z",
+"end": "2026-10-22T02:55:00Z",
+"nap": false,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-22T03:39:00Z",
+"end": "2026-10-22T05:17:00Z",
+"nap": false,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-22T06:00:00Z",
+"end": "2026-10-22T07:40:00Z",
+"nap": false,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-22T08:31:00Z",
+"end": "2026-10-22T10:05:00Z",
+"nap": false,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-22T11:15:00Z",
+"end": "2026-10-22T12:58:00Z",
+"nap": true,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-22T14:00:00Z",
+"end": "2026-10-22T15:00:00Z",
+"nap": true,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-22T16:05:00Z",
+"end": "2026-10-22T17:33:00Z",
+"nap": true,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-22T18:18:00Z",
+"end": "2026-10-22T20:11:00Z",
+"nap": true,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-22T21:15:00Z",
+"end": "2026-10-22T23:06:00Z",
+"nap": true,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-23T00:20:00Z",
+"end": "2026-10-23T01:57:00Z",
+"nap": false,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-23T02:42:00Z",
+"end": "2026-10-23T04:44:00Z",
+"nap": false,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-23T05:46:00Z",
+"end": "2026-10-23T06:58:00Z",
+"nap": false,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-23T07:37:00Z",
+"end": "2026-10-23T09:14:00Z",
+"nap": false,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-23T10:09:00Z",
+"end": "2026-10-23T11:19:00Z",
+"nap": true,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-23T12:32:00Z",
+"end": "2026-10-23T14:01:00Z",
+"nap": true,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-23T14:53:00Z",
+"end": "2026-10-23T16:12:00Z",
+"nap": true,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-23T17:17:00Z",
+"end": "2026-10-23T18:58:00Z",
+"nap": true,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-23T19:55:00Z",
+"end": "2026-10-23T21:36:00Z",
+"nap": true,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-24T01:39:00Z",
+"end": "2026-10-24T03:46:00Z",
+"nap": false,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-24T04:30:00Z",
+"end": "2026-10-24T06:16:00Z",
+"nap": false,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-24T07:04:00Z",
+"end": "2026-10-24T08:41:00Z",
+"nap": false,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-24T09:28:00Z",
+"end": "2026-10-24T11:11:00Z",
+"nap": false,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-24T12:03:00Z",
+"end": "2026-10-24T14:11:00Z",
+"nap": true,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-24T14:57:00Z",
+"end": "2026-10-24T16:54:00Z",
+"nap": true,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-24T17:51:00Z",
+"end": "2026-10-24T19:28:00Z",
+"nap": true,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-24T20:40:00Z",
+"end": "2026-10-24T21:47:00Z",
+"nap": true,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-24T22:55:00Z",
+"end": "2026-10-25T00:20:00Z",
+"nap": false,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-25T01:10:00Z",
+"end": "2026-10-25T03:04:00Z",
+"nap": false,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-25T03:42:00Z",
+"end": "2026-10-25T04:34:00Z",
+"nap": false,
+"notes": "Short, fussy sleep",
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-25T05:33:00Z",
+"end": "2026-10-25T05:59:00Z",
+"nap": false,
+"notes": "Short, fussy sleep",
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-25T06:57:00Z",
+"end": "2026-10-25T07:49:00Z",
+"nap": false,
+"notes": "Short, fussy sleep",
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-25T08:38:00Z",
+"end": "2026-10-25T09:43:00Z",
+"nap": false,
+"notes": "Short, fussy sleep",
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-25T10:35:00Z",
+"end": "2026-10-25T11:55:00Z",
+"nap": true,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-25T12:59:00Z",
+"end": "2026-10-25T14:36:00Z",
+"nap": true,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-25T15:34:00Z",
+"end": "2026-10-25T16:58:00Z",
+"nap": true,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-25T17:43:00Z",
+"end": "2026-10-25T19:27:00Z",
+"nap": true,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-25T20:31:00Z",
+"end": "2026-10-25T22:20:00Z",
+"nap": true,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-25T23:39:00Z",
+"end": "2026-10-26T00:27:00Z",
+"nap": false,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-26T01:31:00Z",
+"end": "2026-10-26T02:36:00Z",
+"nap": false,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-26T03:14:00Z",
+"end": "2026-10-26T04:07:00Z",
+"nap": false,
+"notes": "Short, fussy sleep",
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-26T04:52:00Z",
+"end": "2026-10-26T06:58:00Z",
+"nap": false,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-26T07:37:00Z",
+"end": "2026-10-26T09:17:00Z",
+"nap": false,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-26T10:17:00Z",
+"end": "2026-10-26T12:08:00Z",
+"nap": true,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-26T13:26:00Z",
+"end": "2026-10-26T14:50:00Z",
+"nap": true,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-26T15:55:00Z",
+"end": "2026-10-26T17:11:00Z",
+"nap": true,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-26T18:13:00Z",
+"end": "2026-10-26T19:46:00Z",
+"nap": true,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-26T20:50:00Z",
+"end": "2026-10-26T22:07:00Z",
+"nap": true,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-26T22:51:00Z",
+"end": "2026-10-27T00:25:00Z",
+"nap": false,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-27T01:24:00Z",
+"end": "2026-10-27T02:59:00Z",
+"nap": false,
+"tags": [
+"simulated-week"
+]
+},
+{
+"start": "2026-10-29T02:02:27Z",
+"end": "2026-10-29T04:13:27Z",
+"nap": false,
+"tags": [
+"agent",
+"full-day-sim"
+]
+}
+],
+"notes": [
+{
+"note": "[simulated] Night wake-up handled by Parent A",
+"time": "2026-10-20T03:20:00Z",
+"tags": [
+"simulated-week"
+]
+},
+{
+"note": "[simulated] Night wake-up handled by Parent B",
+"time": "2026-10-20T05:48:00Z",
+"tags": [
+"simulated-week"
+]
+},
+{
+"note": "[simulated] Night wake-up handled by Parent A",
+"time": "2026-10-20T08:28:00Z",
+"tags": [
+"simulated-week"
+]
+},
+{
+"note": "[simulated] Bath",
+"time": "2026-10-20T21:24:00Z",
+"tags": [
+"simulated-week"
+]
+},
+{
+"note": "[simulated] Night wake-up handled by Parent B",
+"time": "2026-10-21T02:27:00Z",
+"tags": [
+"simulated-week"
+]
+},
+{
+"note": "[simulated] Night wake-up handled by Parent A",
+"time": "2026-10-21T05:13:00Z",
+"tags": [
+"simulated-week"
+]
+},
+{
+"note": "[simulated] Night wake-up handled by Parent B",
+"time": "2026-10-21T07:40:00Z",
+"tags": [
+"simulated-week"
+]
+},
+{
+"note": "[simulated] Bath",
+"time": "2026-10-21T21:41:00Z",
+"tags": [
+"simulated-week"
+]
+},
+{
+"note": "[simulated] Night wake-up handled by Parent A",
+"time": "2026-10-22T03:05:00Z",
+"tags": [
+"simulated-week"
+]
+},
+{
+"note": "[simulated] Night wake-up handled by Parent B",
+"time": "2026-10-22T05:20:00Z",
+"tags": [
+"simulated-week"
+]
+},
+{
+"note": "[simulated] Night wake-up handled by Parent A",
+"time": "2026-10-22T07:44:00Z",
+"tags": [
+"simulated-week"
+]
+},
+{
+"note": "[simulated] Night wake-up handled by Parent B",
+"time": "2026-10-23T02:07:00Z",
+"tags": [
+"simulated-week"
+]
+},
+{
+"note": "[simulated] Night wake-up handled by Parent A",
+"time": "2026-10-23T04:49:00Z",
+"tags": [
+"simulated-week"
+]
+},
+{
+"note": "[simulated] Night wake-up handled by Parent B",
+"time": "2026-10-23T07:03:00Z",
+"tags": [
+"simulated-week"
+]
+},
+{
+"note": "[simulated] Bath",
+"time": "2026-10-23T21:37:00Z",
+"tags": [
+"simulated-week"
+]
+},
+{
+"note": "[simulated] Unusual day: evening cluster feeding",
+"time": "2026-10-24T00:00:00Z",
+"tags": [
+"simulated-week"
+]
+},
+{
+"note": "[simulated] Night wake-up handled by Parent A",
+"time": "2026-10-24T01:04:00Z",
+"tags": [
+"simulated-week"
+]
+},
+{
+"note": "[simulated] Night wake-up handled by Parent B",
+"time": "2026-10-24T03:51:00Z",
+"tags": [
+"simulated-week"
+]
+},
+{
+"note": "[simulated] Night wake-up handled by Parent A",
+"time": "2026-10-24T06:21:00Z",
+"tags": [
+"simulated-week"
+]
+},
+{
+"note": "[simulated] Night wake-up handled by Parent B",
+"time": "2026-10-24T08:47:00Z",
+"tags": [
+"simulated-week"
+]
+},
+{
+"note": "[simulated] Bath",
+"time": "2026-10-24T21:39:00Z",
+"tags": [
+"simulated-week"
+]
+},
+{
+"note": "[simulated] Night wake-up handled by Parent A",
+"time": "2026-10-25T03:10:00Z",
+"tags": [
+"simulated-week"
+]
+},
+{
+"note": "[simulated] Night wake-up handled by Parent B",
+"time": "2026-10-25T04:37:00Z",
+"tags": [
+"simulated-week"
+]
+},
+{
+"note": "[simulated] Night wake-up handled by Parent A",
+"time": "2026-10-25T06:08:00Z",
+"tags": [
+"simulated-week"
+]
+},
+{
+"note": "[simulated] Night wake-up handled by Parent B",
+"time": "2026-10-25T07:54:00Z",
+"tags": [
+"simulated-week"
+]
+},
+{
+"note": "[simulated] Unusual night: short, fussy sleep",
+"time": "2026-10-26T02:00:00Z",
+"tags": [
+"simulated-week"
+]
+},
+{
+"note": "[simulated] Night wake-up handled by Parent A",
+"time": "2026-10-26T02:42:00Z",
+"tags": [
+"simulated-week"
+]
+},
+{
+"note": "[simulated] Night wake-up handled by Parent B",
+"time": "2026-10-26T04:10:00Z",
+"tags": [
+"simulated-week"
+]
+},
+{
+"note": "[simulated] Night wake-up handled by Parent A",
+"time": "2026-10-26T07:02:00Z",
+"tags": [
+"simulated-week"
+]
+},
+{
+"note": "[simulated] Bath",
+"time": "2026-10-26T21:35:00Z",
+"tags": [
+"simulated-week"
+]
+},
+{
+"note": "Bath. Baby had a bath",
+"time": "2026-10-27T20:12:38Z",
+"tags": [
+"agent"
+]
+},
+{
+"note": "Bath.",
+"time": "2026-10-29T01:27:08Z",
+"tags": [
+"agent"
+]
+},
+{
+"note": "bath",
+"time": "2026-10-29T01:37:13Z",
+"tags": [
+"agent"
+]
+},
+{
+"note": "Bath 01:07 to 01:07, logged by the bath skill",
+"time": "2026-10-29T04:07:49Z",
+"tags": [
+"agent",
+"bath-sim"
+]
+},
+{
+"note": "Bath 01:08 to 01:08, logged by the bath skill",
+"time": "2026-10-29T04:08:22Z",
+"tags": [
+"agent",
+"bath-sim"
+]
+},
+{
+"note": "Bath 01:08 to 01:08, logged by the bath skill",
+"time": "2026-10-29T04:08:59Z",
+"tags": [
+"agent",
+"bath-sim"
+]
+},
+{
+"note": "Bath 01:09 to 01:09, logged by the bath skill",
+"time": "2026-10-29T04:09:28Z",
+"tags": [
+"agent",
+"bath-sim"
+]
+},
+{
+"note": "Bath 01:09 to 01:10, logged by the bath skill",
+"time": "2026-10-29T04:10:00Z",
+"tags": [
+"agent",
+"bath-sim"
+]
+},
+{
+"note": "Bath 01:10 to 01:10, logged by the bath skill",
+"time": "2026-10-29T04:10:29Z",
+"tags": [
+"agent",
+"bath-sim"
+]
+},
+{
+"note": "Bath.",
+"time": "2026-10-29T04:10:32Z",
+"tags": [
+"agent",
+"bath-sim"
+]
+},
+{
+"note": "Bath 01:10 to 01:11, logged by the bath skill",
+"time": "2026-10-29T04:11:01Z",
+"tags": [
+"agent",
+"bath-sim"
+]
+},
+{
+"note": "Bath 01:11 to 01:11, logged by the bath skill",
+"time": "2026-10-29T04:11:30Z",
+"tags": [
+"agent",
+"bath-sim"
+]
+},
+{
+"note": "Bath 01:11 to 01:12, logged by the bath skill",
+"time": "2026-10-29T04:12:00Z",
+"tags": [
+"agent",
+"bath-sim"
+]
+},
+{
+"note": "Bath 01:12 to 01:12, logged by the bath skill",
+"time": "2026-10-29T04:12:29Z",
+"tags": [
+"agent",
+"bath-sim"
+]
+},
+{
+"note": "bath 2026-10-29T01:13:27-03:00 to 2026-10-29T01:13:35-03:00",
+"time": "2026-10-29T04:13:35Z",
+"tags": [
+"full-day-sim"
+]
+},
+{
+"note": "Night wake-up handled by Parent B",
+"time": "2026-10-29T04:13:53Z",
+"tags": [
+"agent",
+"full-day-sim"
+]
+}
+]
+}

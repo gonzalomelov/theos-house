@@ -1,6 +1,6 @@
 """One realistic first-month day and night, as the parents live it: what they say, when, and what should follow.
 
-The baby is the test child "Test Baby" (born Oct 1, 28 days old on Oct 29), its own test history before the day. Gonza and Ceci write in Spanish, log by message, Ceci asks to sleep tonight, the
+The baby is the e2e child "E2E Baby" (born Oct 1, 28 days old on Oct 29), with Test Baby's test history before the day. Gonza and Ceci write in Spanish, log by message, Ceci asks to sleep tonight, the
 grandmother looks after him in the afternoon and writes to the bot herself, a cry at night, a voice note for the
 3 AM bottle. Times are the family's (UTC-3). Day 0 is the day the run starts.
 """
