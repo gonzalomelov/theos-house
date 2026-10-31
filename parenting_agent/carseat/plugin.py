@@ -15,12 +15,19 @@ import json
 import threading
 from pathlib import Path
 
+from ..agent import rules
 from ..agent.plugins import Plugin
 from ..agent.tools import Tool, schema
 from ..sources import PhoneSource, open_source
 from ..speaker import Speaker
 from . import outgrow
-from .coach import Coach, load_profiles
+from .coach import Coach, _yes_no, load_profiles
+
+# While the coach runs, it says the steps itself: the brain must not write its own install steps (Oct 30 rehearsal: Muse
+# told the parent to place a base the Joie i-Snug does not have, over the coach's own step).
+COACHING_NOTE = ("The car seat coach is running and speaks each install step itself from the seat's manual. Do not give "
+                 "car seat install steps or advice of your own. Answer in one short sentence, and pass a yes or no to "
+                 "the coach's question with answer_car_seat_check.")
 
 
 class CarSeatCoach(Plugin):
@@ -35,6 +42,8 @@ class CarSeatCoach(Plugin):
         self._vision, self._source, self.quiet = vision, source, quiet
         self.coach, self.thread, self.source = None, None, None
         self.lock = threading.Lock()
+        if hasattr(agent, "answer_takers"):
+            agent.answer_takers.append(self.take_answer)
         agent.tools.add(Tool("start_car_seat_coach", "Coach the parent through installing the infant car seat with the car's seat belt, step by step, with the head camera.",
                              schema({}), self.start_coach))
         agent.tools.add(Tool("answer_car_seat_check", "Pass the parent's yes or no answer to the car seat coach's current question.",
@@ -56,6 +65,9 @@ class CarSeatCoach(Plugin):
             self.agent.bus.subscribe(speaker.on_event, ["voice"])
             self.coach = Coach(self.skill_cfg, self.agent.bus, vision, self.source, self.seat, self.car, recheck=True,
                                muse=self.muse_check())
+            notes = getattr(self.agent, "prompt_notes", None)
+            if notes is not None and COACHING_NOTE not in notes:
+                notes.append(COACHING_NOTE)
             self.thread = threading.Thread(target=self._run, name="car-seat", daemon=True)
             self.thread.start()
             return f"coaching the {self.seat['seat']} install, one step at a time"
@@ -68,8 +80,29 @@ class CarSeatCoach(Plugin):
         from .muse_check import MuseSeatCheck
         return MuseSeatCheck(MuseSenses(muse.get("senses")), samples=muse.get("samples", 3))
 
+    def take_answer(self, event, text):
+        """A plain yes or no on the coach's channel answers the step it is asking, so the answer never depends on the
+        brain choosing the tool (Oct 30 rehearsal: Muse answered "sí" in its own words and the step stayed open, then
+        the agent said nothing was waiting for a yes). Returns the short reply, or None for a message not for the coach."""
+        coach = self.coach
+        said = _yes_no(text)
+        if coach is None or event.get("channel") != self.cfg["channel"] or said is None:
+            return None
+        asking = getattr(coach, "asking", None)
+        if asking is None or asking in coach.answers:
+            return None
+        coach.answer(asking, text)
+        self.agent.bus.publish("carseat_heard", check=asking, answer=said)
+        spanish = rules.looks_spanish(text) or text.strip().lower().startswith(("sí", "si"))
+        return ("Anotado: sí." if said == "yes" else "Anotado: no.") if spanish else f"Noted: {said}."
+
     def _run(self):
-        self.coach.run()
+        try:
+            self.coach.run()
+        finally:
+            notes = getattr(self.agent, "prompt_notes", None)
+            if notes is not None and COACHING_NOTE in notes:
+                notes.remove(COACHING_NOTE)
         summary = next(e for e in reversed(self.agent.bus.history) if e["kind"] == "carseat_summary")
         self.agent.bus.publish("observation", source=self.name, channel=self.cfg["channel"], text="Car seat coach finished. " + summary["text"])
 

@@ -180,6 +180,63 @@ do {
   expect(event(#"{"kind":"voice","frame_unix":1001.25}"#).frameUnix == 1001.25, "frame time decodes")
 }
 
+
+// Agent cards (parenting_agent/hud_cards.py): shown whole, in the parent's language, replaced by a newer camera check.
+do {
+  var state = HUDState()
+  func feed(_ json: String, at t: Double) {
+    for e in HUDState.live(event(json), at: t, current: state) { state.apply(e) }
+  }
+  feed(#"{"kind":"hello","wearer":"gonza","name":"Gonza","lang":"es"}"#, at: 0)
+  expect(state.lang == "es", "the hello sets the language")
+  expect(state.card(at: 0).title == "Agente de crianza", "idle card in Spanish: \(state.card(at: 0).title)")
+  feed(#"{"kind":"card","card":{"topic":"next_feed","icon":"clock","title":"Próxima toma","status":"Cerca de las 11:40 · en 20 min","detail":"Cada 3 h 05 min más o menos","alert":false,"sticky":false,"lang":"es"},"cause":"next_feed","agent_unix":1000.0}"#, at: 1)
+  let feedCard = state.card(at: 1)
+  expect(feedCard.title == "Próxima toma" && feedCard.icon == "clock" && feedCard.status == "Cerca de las 11:40 · en 20 min", "agent card shown whole")
+  expect(state.card(at: 60).title == "Próxima toma", "an agent card stays until something newer, no timer wakes the display")
+  feed(#"{"kind":"skill","skill":"bath","text":"bath armed, watching through the glasses"}"#, at: 61)
+  expect(state.card(at: 61.1).title == "Baño", "a new watch replaces an older agent card, in Spanish: \(state.card(at: 61.1).title)")
+  feed(#"{"kind":"card","card":{"topic":"nap","icon":"bedSide","title":"Modo siesta","status":"Siesta desde las 11:30","alert":false,"sticky":false}}"#, at: 71)
+  feed(#"{"kind":"state","state":"on","hands":1}"#, at: 71.5)
+  expect(state.card(at: 72).title == "Modo siesta", "an unchanged hand state does not hide a new agent card")
+  feed(#"{"kind":"alarm","state":"off","episode":1}"#, at: 73)
+  expect(state.card(at: 73).title == "Manos afuera", "a camera alarm always wins over an agent card: \(state.card(at: 73).title)")
+  feed(#"{"kind":"clear","episode":1}"#, at: 74)
+  expect(state.card(at: 74).title == "Modo siesta", "a card holds agentHoldS over the watch states")
+  feed(#"{"kind":"state","state":"off","hands":0}"#, at: 78)
+  expect(state.card(at: 78).title != "Modo siesta", "then a newer camera check replaces it: \(state.card(at: 78).title)")
+  expect(HUDState.live(event(#"{"kind":"voice","skill":"car-seat","step":"lap_guides","text":"Slide the lap belt"}"#), at: 75, current: state).isEmpty,
+         "the car seat coach's speech is never the changing table's hand")
+}
+
+// A red flag: above everything, never dimmed (its meta line changes before Meta's 20 s dim), until acknowledged.
+do {
+  var state = HUDState()
+  state.apply(event(#"{"t":0,"kind":"hello","lang":"es"}"#))
+  state.apply(event(#"{"t":1,"kind":"card","card":{"topic":"red_flag","icon":"phoneHandsetArrowUpRight","title":"Llamá al 911 ya","status":"Puede ser una emergencia","detail":"Contales lo que ves","meta":"911","alert":true,"sticky":true}}"#))
+  let first = state.card(at: 1)
+  expect(first.title == "Llamá al 911 ya" && first.alert && first.action == "Entendido", "red flag card with its button")
+  expect(first.meta == "911 · hace 0:00", "red flag meta: \(first.meta ?? "nil")")
+  expect(state.card(at: 14).meta == first.meta, "no change inside 15 s")
+  expect(state.card(at: 16).meta == "911 · hace 0:15", "changes before the 20 s dim: \(state.card(at: 16).meta ?? "nil")")
+  var t = 1.0
+  var last = first
+  var unchanged = 0.0
+  while t < 120 {
+    let now = state.card(at: t)
+    unchanged = now == last ? unchanged + 0.5 : 0
+    expect(unchanged < Double(20), "the red flag card never goes 20 s without a change (at \(t))")
+    last = now
+    t += 0.5
+  }
+  state.apply(event(#"{"t":20,"kind":"alarm","state":"off","episode":1}"#))
+  state.apply(event(#"{"t":21,"kind":"dog","verdict":"near","ratio":0.1}"#))
+  state.apply(event(#"{"t":22,"kind":"card","card":{"topic":"next_feed","icon":"clock","title":"Próxima toma","status":"x"}}"#))
+  expect(state.card(at: 22).title == "Llamá al 911 ya", "nothing replaces a red flag")
+  state.apply(event(#"{"t":30,"kind":"red_flag_clear","by":"parent"}"#))
+  expect(state.card(at: 30).title != "Llamá al 911 ya", "the parent's acknowledgement clears it")
+}
+
 // The live script picks the scene playing at a feed time.
 do {
   let json = #"{"feed":"hud-live-feed","duration_s":20,"scenes":[{"name":"one hand","source":"live","at":0,"length":10},{"name":"dog","source":"live","at":10,"length":10}],"say":[{"at":1,"text":"changing time"}]}"#

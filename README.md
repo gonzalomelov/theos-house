@@ -53,6 +53,7 @@ Built with Muse Spark Open. Every number below is from a run during the event, n
 | [results/carseat/](results/carseat/test.md) | Car seat coach on rendered clips: 11 of 12 wrong installs flagged, 1 of 12 false alarms, 4 of 4 unseen clips abstained. SAM 3.1 is essential here: Muse alone got the shoulder belt right 12 of 28 times, and nothing else checks a belt ([results/meta-models/](results/meta-models/README.md)) | Oct 28, Oct 29 |
 | [results/fullday/](results/fullday/README.md) | The simulated full day with Muse as the brain, the clips and SAM 3.1: 7 of 7 steps at 01:13, 6 of 7 at 01:00 (the doorbell failed) | Oct 29 |
 | [results/kr222/](results/kr222/) | Changing table on generated clips streamed live: both hands off spoken 15 of 15, max 1.68 s, SAM 3.1 confirming. No brain call in this check | Oct 27 |
+| [results/glasses-day/](results/glasses-day/README.md) | Everything the agent tells a parent as a card on that parent's Ray-Ban Display, live on a compressed day: the family agent on this Mac, Muse, Baby Buddy, SAM 3.1 for the car seat, the display through DAT's Display API on Meta's mock. 11 of 11 scenes, each card only on the right parent's glasses, red flags sticky and never dimmed. Glasses and lens simulated | Oct 30 |
 | [results/glasses/](results/glasses/README.md) | Full glasses loop in the iOS simulator with Meta's mock Ray-Ban Meta. Real glasses not paired yet | Oct 28 |
 | [results/muse/](results/muse/README.md) | Muse Spark Open as the brain: latency, cost, fallbacks and per-call logs | Oct 28 |
 

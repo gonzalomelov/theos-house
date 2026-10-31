@@ -130,11 +130,17 @@ class FamilyPush(Plugin):
         """The day a scheduled push belongs to: a night that runs past midnight is still the evening's day."""
         return (now.astimezone(self.tz) - datetime.timedelta(hours=6)).date().isoformat()
 
+    def route(self, event):
+        """(people keys, reason) for an event now: the routing table above, with tonight's rota at night. The glasses
+        cards (glasses.py) use it for the agent's own events, so a card reaches the parent the Telegram copy would."""
+        now = self.clock()
+        night = is_night(now.astimezone(self.tz), self.s["night"])
+        return recipients(event, self.people, self.on_duty(now) if night else None, night, self.s["asks_to"])
+
     def deliver(self, event, texts=None):
         """texts, when given, is {person: text}: a message written for each parent (the morning message)."""
         now = self.clock()
-        night = is_night(now.astimezone(self.tz), self.s["night"])
-        to, reason = recipients(event, self.people, self.on_duty(now) if night else None, night, self.s["asks_to"])
+        to, reason = self.route(event)
         if texts is not None:
             to, reason = list(texts), "one morning message each"
         chats = self.chats()
@@ -158,7 +164,8 @@ class FamilyPush(Plugin):
                 missing.append(person)
                 continue
             self.agent.bus.publish("reply", channel=self.s["channel"], chat_id=chat, text=text,
-                                   person=None if person == "chat" else person, proactive=True, source=event.get("source"))
+                                   person=None if person == "chat" else person, proactive=True, source=event.get("source"),
+                                   routine=event.get("routine"))
             sent.append(person)
         if event.get("ask") and sent and hasattr(self.agent, "bind_ask"):
             self.agent.bind_ask(sent)

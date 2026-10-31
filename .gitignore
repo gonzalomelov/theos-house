@@ -32,3 +32,4 @@ glasses-token
 # Raw recordings and generated media outside results/ (results/ keeps only small, synthetic, reviewed files)
 /recordings/
 /clips/
+glasses-token-*

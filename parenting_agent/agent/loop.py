@@ -502,6 +502,9 @@ class Agent:
         self.reply_guards = []
         # Standing instructions a plug-in adds to the system prompt. Never a fact: a fact can be overwritten by remember.
         self.prompt_notes = []
+        # Callables (event, text) -> a reply or None, run before anything else on a parent's message: a skill that is
+        # asking the parent a question (the car seat coach's yes or no) takes its answer and the agent says the reply.
+        self.answer_takers = []
         self.cancelled = []       # calls that waited for a yes and were cancelled: a bare yes never brings them back
         self.recent_actions = []  # (signature, clock_s) of acting tools that ran: a bare yes never replays one
         self.open_ask = None      # clock_s of a plug-in's "Reply yes" ask on a channel
@@ -571,7 +574,9 @@ class Agent:
     def text(self, key, request, **values):
         return TEXTS[self.lang(request)][key].format(**values)
 
-    def say(self, channel, text):
+    def say(self, channel, text, **about):
+        """about tags the reply for the channels that show it differently, for example flag="emergency" for a red flag
+        line, which the glasses keep on the display until the parent acknowledges it (hud_cards.py)."""
         for guard in getattr(self, "reply_guards", []):
             text = guard(text)
         self.said += 1
@@ -581,7 +586,7 @@ class Agent:
         to = {"chat_id": event["chat_id"]} if event.get("channel") == channel and event.get("chat_id") else {}
         if to:
             self.last_reply[(channel, str(to["chat_id"]))] = text
-        self.bus.publish("reply", channel=channel, text=text, **to)
+        self.bus.publish("reply", channel=channel, text=text, **to, **about)
 
     def system_prompt(self):
         facts = {key: item["value"] for key, item in self.memory.facts().items()} or "none yet"
@@ -655,6 +660,13 @@ class Agent:
         if event["kind"] == "message":
             text = rules.parent_text(rules.without_test_prefix(event["text"])).strip()
             word = text.lower().strip(" .!¡")
+            for take in list(getattr(self, "answer_takers", [])):
+                said = take(event, text)
+                if said:
+                    self.memory.add_message(channel, "user", text, ts=self.now())
+                    self.bus.publish("guard", status="answer_taken", by=getattr(take, "__self__", None).__class__.__name__)
+                    self.say(channel, said)
+                    return
             # Only the calls asked of this person, on this chat and channel, are theirs to answer. Another parent's yes,
             # or a yes from the glasses for a question asked on Telegram, runs nothing and leaves the question open.
             mine = [call for call in self.pending if self.asked(call, event)]
@@ -728,7 +740,7 @@ class Agent:
             # Red flags never wait for the brain: the emergency number at once.
             self.memory.add_message(channel, "user", text, ts=self.now())
             self.bus.publish("guard", status="emergency")
-            self.say(channel, self.emergency(text))
+            self.say(channel, self.emergency(text), flag="emergency")
             return
         urgent = rules.newborn_red_flag(text, rules.under_3_months(self.birth_date(), self.now().date()))
         if urgent:
@@ -736,7 +748,7 @@ class Agent:
             # call, and what the parent said kept as a note for the pediatrician, in the same turn.
             self.memory.add_message(channel, "user", text, ts=self.now())
             self.bus.publish("guard", status=f"urgent_{urgent}")
-            self.say(channel, self.urgent(text, urgent))
+            self.say(channel, self.urgent(text, urgent), flag=f"urgent_{urgent}")
             return
         if rules.is_safe_sleep_question(text):
             # How a baby sleeps safely: the AAP's public line with its source, the same every time, no brain call.
@@ -750,7 +762,7 @@ class Agent:
             # On Oct 30 Muse said it had nothing on who was on duty, while the rota held it.
             self.memory.add_message(channel, "user", text, ts=self.now())
             self.bus.publish("guard", status="night_rota")
-            self.say(channel, rota.answer(self.lang(text)))
+            self.say(channel, rota.answer(self.lang(text)), topic="on_duty")
             return
         if rules.is_courtesy(text) and rules.THANKS.search(text) and self.double is None:
             # "ok thanks": a short fixed reply in the turn's language, no brain call, nothing said about the baby.

@@ -28,7 +28,8 @@ struct HUDReplayScreen: View {
   let companion: Companion
 
   private var glasses: GlassesCamera { companion.glasses }
-  private var live: Bool { companion.liveScript != nil }
+  private var day: Bool { companion.dayCaption != nil }
+  private var live: Bool { companion.liveScript != nil || day }
 
   var body: some View {
     VStack(alignment: .leading, spacing: 10) {
@@ -52,7 +53,12 @@ struct HUDReplayScreen: View {
           .background(live ? Color.green : Color.orange, in: Capsule()).foregroundStyle(.black)
         Text("Meta Ray-Ban Display HUD").font(.headline)
       }
-      if live {
+      if day {
+        Text("Live: the family agent running on this Mac, glasses and lens simulated by Meta's mock")
+          .font(.caption.bold()).fixedSize(horizontal: false, vertical: true)
+        Text("A day compressed: the agent's clock jumps between moments. Telegram captured, house dry.")
+          .font(.caption2).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
+      } else if live {
         Text("Live: detectors and agent running, glasses and lens simulated by Meta's mock")
           .font(.caption.bold()).fixedSize(horizontal: false, vertical: true)
       }
@@ -105,7 +111,10 @@ struct HUDReplayScreen: View {
 
   private var sceneCaption: some View {
     VStack(alignment: .leading, spacing: 3) {
-      if let script = companion.liveScript, let scene = companion.liveScene,
+      if let caption = companion.dayCaption {
+        Text("\(caption.name)\(companion.wearer.map { " · \($0.capitalized)'s glasses" } ?? "")").font(.subheadline.bold())
+        if !caption.source.isEmpty { Text(caption.source).font(.caption).foregroundStyle(.secondary) }
+      } else if let script = companion.liveScript, let scene = companion.liveScene,
          let index = script.scenes.firstIndex(of: scene) {
         Text("Scene \(index + 1) of \(script.scenes.count) · \(scene.name.capitalized)").font(.subheadline.bold())
         Text(scene.source).font(.caption).foregroundStyle(.secondary)
@@ -138,7 +147,9 @@ struct HUDReplayScreen: View {
   }
 
   private var footer: some View {
-    Text(live
+    Text(day
+         ? "Camera: our synthetic car seat clip played by DAT MockDeviceKit. The family agent runs here: Muse Spark Open on Baseten, Baby Buddy with the test child, SAM 3.1 on this Mac for the car seat step. The parents' words are typed by the run's script. Real time on screen, the agent's clock jumps between moments of the day."
+         : live
          ? "Camera: our synthetic clips and a licensed photo, played by DAT MockDeviceKit. MediaPipe and SAM 3.1 run on this Mac, Muse Spark Open on Baseten, the diaper goes to Baby Buddy (test child). The parent's words are typed by the run's script. Recorded in real time, not edited. Camera dimmed so the additive display reads on video."
          : "Camera: our synthetic clips and a licensed photo. MediaPipe and SAM 3.1 outputs are recorded (Oct 29), not run now. Gaps between scenes shortened. Camera dimmed so the additive display reads on video.")
       .font(.caption2).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
@@ -148,7 +159,7 @@ struct HUDReplayScreen: View {
   private func label(_ who: LogLine.Who) -> String {
     switch who {
     case .parent: return "You"
-    case .agent: return "Muse"
+    case .agent: return day ? "Agent" : "Muse"
     case .alert: return "Glasses"
     case .system: return "App"
     }

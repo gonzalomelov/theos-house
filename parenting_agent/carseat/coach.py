@@ -100,6 +100,7 @@ class Coach:
         self.results = {}
         self.answers, self.answer_ready = {}, threading.Condition()
         self.stop_flag = False
+        self.asking = None  # the ask step waiting for the parent's yes or no
 
     # ---------- speech and logging ----------
 
@@ -136,8 +137,10 @@ class Coach:
     # ---------- steps ----------
 
     def run_ask(self, step):
+        self.asking = step["id"]
         self.say(step["say"], step=step["id"])
         reply = self._wait_answer(step["id"])
+        self.asking = None
         said = _yes_no(reply)
         if said is None:
             result = "open"
@@ -146,9 +149,9 @@ class Coach:
         self.results[step["id"]] = {"kind": "hand", "result": result, "answer": reply}
         self.bus.publish("carseat_check", check=step["id"], check_kind="hand", result=result, answer=reply)
         if result == "fail":
-            self.say("Noted. Please fix this before driving, and ask me to check again.", step=step["id"])
+            self.say("Noted. Please fix this before driving, and ask me to check again.", step=step["id"], result="fail")
         elif result == "open":
-            self.say("I will keep this check open in the summary.", step=step["id"])
+            self.say("I will keep this check open in the summary.", step=step["id"], result="open")
 
     def run_camera(self, step):
         spec = CAMERA_STEPS[step["id"]]

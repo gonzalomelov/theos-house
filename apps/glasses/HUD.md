@@ -47,6 +47,19 @@ So the agent can draw its own cards on the lens from the iPhone app it already h
 
 `-hudLive YES` drives the same HUD from the running agent instead of a recording: the mock glasses stream `MockFeed/hud-live-feed.mp4` to the agent, MediaPipe, one SAM 3.1 process and Muse run on the frames, and every card comes from an agent event (`parenting_agent/glasses.py` `TO_APP`, one entry per event kind, mapped to one card kind in `HUDState.live`). `scripts/glasses_hud_live.py` builds the feed and runs the whole thing. Results, latency and what is still simulated: `results/glasses-live/README.md`.
 
+## Everything that fits a glance (Oct 30)
+
+Every message the agent sends a parent that fits a glance is now also a card on that parent's glasses, while their glasses are live, and the Telegram copy still goes out.
+
+- **Whose glasses.** Each parent pairs with their own token (`"glasses": {"wearers": ["gonza", "ceci"]}`, one file each, `data/glasses-token-<person>`). The endpoint knows which parent each app is, and sends a card only to the glasses of the parent the Telegram copy went to. The agent's own events that never reach Telegram (nap mode on and off) follow the family push's routing (`FamilyPush.route`): both parents by day, the parent on duty at night.
+- **The cards** (`parenting_agent/hud_cards.py`, in the parent's language from the people block): who is on duty tonight and the night handover, tonight's plan, the next feed reminder, the night feed (awake signal, warmer, light), nap mode on and off, the morning message (the hello as the title, then the two lines that matter for this parent), supplies low and the shopping list, the car seat coach step by step (what to do, then what SAM 3.1 saw, step n of 8, never "safe"), the bath watch, the answer to anything the parent asked on the glasses or on Telegram, reminders, the sitter, the house. The dog near the baby and the changing table keep their own cards.
+- **Red flags.** The safety gate's fixed lines (911 now, or the newborn call-now line) are sticky: above every other card, never dimmed (the meta line changes every 15 s, under Meta's 20 s dim), with a "Got it" button. They go when the parent taps it or says "listo", "entendido" or "ya llamé" on the glasses.
+- **Meta's display rules.** 600 x 600: a title, one status line, at most one detail and one meta line, each cut at a word to a fixed length. Additive: no backgrounds of our own. One send replaces all: each card is whole. The icon catalog: every icon is a DAT 1.0.1 `IconName` case, mapped by name in `DisplayHUD.icons` (the enum's raw values are not its case names, so before Oct 30 `IconName(rawValue:)` found nothing and every card showed the "i" icon).
+- **Never internal text.** Event names, tool names, entity ids, JSON and error words drop the line, and a card with no line left is not sent.
+- **The HUD's own cards** (changing table, bath, dog) speak the wearer's language too, from the agent's hello.
+
+The live run of a compressed day with these cards: `results/glasses-day/README.md`.
+
 ## Run it
 
 ```bash
@@ -56,6 +69,7 @@ xcodebuild -project apps/glasses/ParentingGlasses.xcodeproj -scheme ParentingGla
 xcrun simctl install booted apps/glasses/build/Build/Products/Debug-iphonesimulator/ParentingGlasses.app
 xcrun simctl launch booted com.bygmv.parentingglasses -hudReplay YES
 apps/glasses/scripts/test-hud.sh                 # the HUD logic tests, on the Mac
+python scripts/glasses_hud_day.py --build-feed && python scripts/glasses_hud_day.py --udid SIM   # the day of cards, live
 ```
 
 `-hudReplay YES` needs no agent. The replay clock starts at the first camera frame. MockDeviceKit plays the feed at 30 frames per second whatever the file says, so the feed is encoded at 30 fps (a 24 fps feed ran 1.25 times fast and drifted from the replay).

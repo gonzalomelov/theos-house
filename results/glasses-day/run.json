@@ -1,0 +1,3086 @@
+{
+ "date": "2026-10-30 21:18 -0300",
+ "day": "2026-10-30",
+ "child": "test-baby",
+ "removed_before_run": 3,
+ "seeded": [
+  {
+   "id": 216,
+   "end": "00:30",
+   "amount_ml": 90
+  },
+  {
+   "id": 217,
+   "end": "03:30",
+   "amount_ml": 90
+  }
+ ],
+ "loops": [
+  "prep",
+  "day-engine",
+  "night-feed",
+  "house-brain",
+  "reminders",
+  "rhythm",
+  "sitter"
+ ],
+ "scenes": [
+  {
+   "scene": "Early feed",
+   "agent_time": "2026-10-30T06:00-03:00",
+   "note": "The feed the rhythm reminder will count from. No card: Gonza wrote it himself.",
+   "actions": [
+    {
+     "at": "2026-10-30T06:00:00-03:00",
+     "unix": 1793405594.121,
+     "action": [
+      "tg",
+      "gonza",
+      "Le di 80 ml de mamadera."
+     ]
+    }
+   ],
+   "expected": {},
+   "cards": {
+    "gonza": [
+     {
+      "topic": "answer",
+      "title": "Respuesta",
+      "status": "Anotado, 80 ml en mamadera.",
+      "detail": "",
+      "meta": "",
+      "alert": false,
+      "agent_unix": 1793405594.109,
+      "shown_unix": 1793405594.126713
+     }
+    ],
+    "ceci": []
+   },
+   "topics": {
+    "gonza": [
+     "answer"
+    ],
+    "ceci": []
+   },
+   "passed": true
+  },
+  {
+   "scene": "Morning message",
+   "agent_time": "2026-10-30T07:31-03:00",
+   "note": "The day engine's brief, the house brain's night and the prep lines, one message per parent.",
+   "actions": [],
+   "expected": {
+    "gonza": [
+     "morning"
+    ],
+    "ceci": [
+     "morning"
+    ]
+   },
+   "cards": {
+    "gonza": [
+     {
+      "topic": "morning",
+      "title": "Buen día, Gonza",
+      "status": "Esta noche te toca a vos.",
+      "detail": "Anoche: 3 tomas, el sueño más largo 0.0 h, no te levantaste.",
+      "meta": "",
+      "alert": false,
+      "agent_unix": 1793405671.622,
+      "shown_unix": 1793405671.624189
+     }
+    ],
+    "ceci": [
+     {
+      "topic": "morning",
+      "icon": "cloudCrescentMoon",
+      "title": "Buen día, Ceci",
+      "status": "Anoche: 3 tomas, el sueño más largo 0.0 h, no te levantaste.",
+      "alert": false,
+      "sticky": false,
+      "lang": "es",
+      "detail": "Clima: nublado, 14 a 15 C.",
+      "agent_unix": 1793405671.622,
+      "shown_unix": 1793405671.623
+     }
+    ]
+   },
+   "topics": {
+    "gonza": [
+     "morning"
+    ],
+    "ceci": [
+     "morning"
+    ]
+   },
+   "passed": true
+  },
+  {
+   "scene": "Next feed reminder",
+   "agent_time": "2026-10-30T08:10-03:00",
+   "note": "The rhythm plug-in, 20 minutes before the feed it predicts, to both parents by day.",
+   "actions": [],
+   "expected": {
+    "gonza": [
+     "next_feed"
+    ],
+    "ceci": [
+     "next_feed"
+    ]
+   },
+   "cards": {
+    "gonza": [
+     {
+      "topic": "next_feed",
+      "title": "Próxima toma",
+      "status": "Cerca de las 08:30 · en 20 min",
+      "detail": "Cada 2 h 45 min más o menos",
+      "meta": "",
+      "alert": false,
+      "agent_unix": 1793405700.985,
+      "shown_unix": 1793405700.9873881
+     }
+    ],
+    "ceci": [
+     {
+      "topic": "next_feed",
+      "icon": "clock",
+      "title": "Próxima toma",
+      "status": "Cerca de las 08:30 · en 20 min",
+      "alert": false,
+      "sticky": false,
+      "lang": "es",
+      "detail": "Cada 2 h 45 min más o menos",
+      "agent_unix": 1793405700.985,
+      "shown_unix": 1793405700.986
+     }
+    ]
+   },
+   "topics": {
+    "gonza": [
+     "next_feed"
+    ],
+    "ceci": [
+     "next_feed"
+    ]
+   },
+   "passed": true
+  },
+  {
+   "scene": "Nap mode on",
+   "agent_time": "2026-10-30T08:12-03:00",
+   "note": "Ceci logs the feed and the nap on Telegram, the day engine turns nap mode on (house writes dry).",
+   "actions": [
+    {
+     "at": "2026-10-30T08:10:00-03:00",
+     "unix": 1793405713.972,
+     "action": [
+      "tg",
+      "ceci",
+      "Le di 90 ml de mamadera."
+     ]
+    },
+    {
+     "at": "2026-10-30T08:10:00-03:00",
+     "unix": 1793405719.432,
+     "action": [
+      "tg",
+      "ceci",
+      "Se durmió."
+     ]
+    }
+   ],
+   "expected": {
+    "gonza": [
+     "nap"
+    ],
+    "ceci": [
+     "nap"
+    ]
+   },
+   "cards": {
+    "gonza": [
+     {
+      "topic": "nap",
+      "title": "Modo siesta",
+      "status": "Siesta desde las 08:10",
+      "detail": "La casa queda en silencio",
+      "meta": "Prueba en seco, no se movió nada",
+      "alert": false,
+      "agent_unix": 1793405726.127,
+      "shown_unix": 1793405726.130316
+     }
+    ],
+    "ceci": [
+     {
+      "topic": "answer",
+      "icon": "speechBubble",
+      "title": "Respuesta",
+      "status": "Anotado, 90 ml en mamadera.",
+      "alert": false,
+      "sticky": false,
+      "lang": "es",
+      "agent_unix": 1793405713.962,
+      "shown_unix": 1793405713.962
+     },
+     {
+      "topic": "answer",
+      "icon": "speechBubble",
+      "title": "Respuesta",
+      "status": "Se durmió anotado.",
+      "alert": false,
+      "sticky": false,
+      "lang": "es",
+      "agent_unix": 1793405719.398,
+      "shown_unix": 1793405719.399
+     },
+     {
+      "topic": "nap",
+      "icon": "bedSide",
+      "title": "Modo siesta",
+      "status": "Siesta desde las 08:10",
+      "alert": false,
+      "sticky": false,
+      "lang": "es",
+      "detail": "La casa queda en silencio",
+      "meta": "Prueba en seco, no se movió nada",
+      "agent_unix": 1793405726.127,
+      "shown_unix": 1793405726.128
+     }
+    ]
+   },
+   "topics": {
+    "gonza": [
+     "nap"
+    ],
+    "ceci": [
+     "answer",
+     "answer",
+     "nap"
+    ]
+   },
+   "passed": true
+  },
+  {
+   "scene": "Nap mode off",
+   "agent_time": "2026-10-30T09:28-03:00",
+   "note": "He woke up: nap mode off.",
+   "actions": [
+    {
+     "at": "2026-10-30T09:27:00-03:00",
+     "unix": 1793405783.819,
+     "action": [
+      "tg",
+      "ceci",
+      "Se despertó."
+     ]
+    }
+   ],
+   "expected": {
+    "gonza": [
+     "nap"
+    ],
+    "ceci": [
+     "nap"
+    ]
+   },
+   "cards": {
+    "gonza": [
+     {
+      "topic": "nap",
+      "title": "Fin de la siesta",
+      "status": "Se despertó, la casa vuelve a lo normal",
+      "detail": "",
+      "meta": "Prueba en seco, no se movió nada",
+      "alert": false,
+      "agent_unix": 1793405791.287,
+      "shown_unix": 1793405791.291572
+     }
+    ],
+    "ceci": [
+     {
+      "topic": "answer",
+      "icon": "speechBubble",
+      "title": "Respuesta",
+      "status": "Se despertó anotado.",
+      "alert": false,
+      "sticky": false,
+      "lang": "es",
+      "agent_unix": 1793405783.761,
+      "shown_unix": 1793405783.761
+     },
+     {
+      "topic": "nap",
+      "icon": "speakerWithTwoArcs",
+      "title": "Fin de la siesta",
+      "status": "Se despertó, la casa vuelve a lo normal",
+      "alert": false,
+      "sticky": false,
+      "lang": "es",
+      "meta": "Prueba en seco, no se movió nada",
+      "agent_unix": 1793405791.287,
+      "shown_unix": 1793405791.288
+     }
+    ]
+   },
+   "topics": {
+    "gonza": [
+     "nap"
+    ],
+    "ceci": [
+     "answer",
+     "nap"
+    ]
+   },
+   "passed": true
+  },
+  {
+   "scene": "Voice question",
+   "agent_time": "2026-10-30T09:33-03:00",
+   "note": "Asked on Gonza's glasses, answered on his glasses only.",
+   "actions": [
+    {
+     "at": "2026-10-30T09:33:00-03:00",
+     "unix": 1793405809.317,
+     "action": [
+      "glasses",
+      "gonza",
+      "¿Cuándo comió por última vez?"
+     ]
+    }
+   ],
+   "expected": {
+    "gonza": [
+     "answer"
+    ],
+    "ceci": []
+   },
+   "cards": {
+    "gonza": [
+     {
+      "topic": "answer",
+      "title": "Respuesta",
+      "status": "Fue a las 08:10, 90 ml en mamadera.",
+      "detail": "",
+      "meta": "",
+      "alert": false,
+      "agent_unix": 1793405809.263,
+      "shown_unix": 1793405809.330045
+     }
+    ],
+    "ceci": []
+   },
+   "topics": {
+    "gonza": [
+     "answer"
+    ],
+    "ceci": []
+   },
+   "passed": true
+  },
+  {
+   "scene": "Who is on duty tonight",
+   "agent_time": "2026-10-30T09:36-03:00",
+   "note": "Asked on Telegram, the night rota answers, the card reaches the glasses of the parent who asked.",
+   "actions": [
+    {
+     "at": "2026-10-30T09:36:00-03:00",
+     "unix": 1793405818.49,
+     "action": [
+      "tg",
+      "gonza",
+      "¿Quién está de turno esta noche?"
+     ]
+    }
+   ],
+   "expected": {
+    "gonza": [
+     "on_duty"
+    ],
+    "ceci": []
+   },
+   "cards": {
+    "gonza": [
+     {
+      "topic": "on_duty",
+      "title": "Esta noche",
+      "status": "De turno: Gonza",
+      "detail": "",
+      "meta": "",
+      "alert": false,
+      "agent_unix": 1793405818.443,
+      "shown_unix": 1793405818.459834
+     }
+    ],
+    "ceci": []
+   },
+   "topics": {
+    "gonza": [
+     "on_duty"
+    ],
+    "ceci": []
+   },
+   "passed": true
+  },
+  {
+   "scene": "Shopping list",
+   "agent_time": "2026-10-30T09:39-03:00",
+   "note": "Ceci asks, Ceci's glasses get it (the list write is dry).",
+   "actions": [
+    {
+     "at": "2026-10-30T09:39:00-03:00",
+     "unix": 1793405829.969,
+     "action": [
+      "tg",
+      "ceci",
+      "Quedan pocos pañales, agregalos a la lista de compras."
+     ]
+    }
+   ],
+   "expected": {
+    "gonza": [],
+    "ceci": [
+     "shopping"
+    ]
+   },
+   "cards": {
+    "gonza": [],
+    "ceci": [
+     {
+      "topic": "shopping",
+      "icon": "cart",
+      "title": "Lista de compras",
+      "status": "Pañales está listo para la lista de compras.",
+      "alert": false,
+      "sticky": false,
+      "lang": "es",
+      "detail": "¿Lo agrego?",
+      "agent_unix": 1793405829.932,
+      "shown_unix": 1793405829.933
+     }
+    ]
+   },
+   "topics": {
+    "gonza": [],
+    "ceci": [
+     "shopping"
+    ]
+   },
+   "passed": true
+  },
+  {
+   "scene": "Car seat coach",
+   "agent_time": "2026-10-30T09:44-03:00",
+   "note": "Muse starts the coach, step 1 is asked, Gonza answers on the glasses, SAM 3.1 checks the next steps.",
+   "actions": [
+    {
+     "at": "2026-10-30T09:44:00-03:00",
+     "unix": 1793405851.765,
+     "action": [
+      "glasses",
+      "gonza",
+      "Ayudame a instalar la silla del auto."
+     ]
+    },
+    {
+     "at": "2026-10-30T09:44:00-03:00",
+     "unix": 1793405851.765,
+     "action": [
+      "wait_card",
+      "gonza",
+      "car_seat",
+      90
+     ]
+    },
+    {
+     "at": "2026-10-30T09:44:00-03:00",
+     "unix": 1793405851.817,
+     "action": [
+      "glasses",
+      "gonza",
+      "Sí."
+     ]
+    },
+    {
+     "at": "2026-10-30T09:44:00-03:00",
+     "unix": 1793405860.44,
+     "action": [
+      "wait_steps",
+      "gonza",
+      5,
+      150
+     ]
+    },
+    {
+     "at": "2026-10-30T09:44:00-03:00",
+     "unix": 1793405860.44,
+     "action": [
+      "stop_coach"
+     ]
+    }
+   ],
+   "expected": {
+    "gonza": [
+     "car_seat"
+    ],
+    "ceci": []
+   },
+   "cards": {
+    "gonza": [
+     {
+      "topic": "car_seat",
+      "title": "Silla del auto",
+      "status": "¿Silla atrás, mirando hacia atrás?",
+      "detail": "Decí sí o no",
+      "meta": "Paso 1 de 8",
+      "alert": false,
+      "agent_unix": 1793405850.515,
+      "shown_unix": 1793405850.518777
+     },
+     {
+      "topic": "answer",
+      "title": "Respuesta",
+      "status": "Vamos paso a paso con la silla Joie i-Snug 2 con cinturón.",
+      "detail": "Primero, ponela mirando hacia atrás en el asiento trasero.",
+      "meta": "",
+      "alert": false,
+      "agent_unix": 1793405851.744,
+      "shown_unix": 1793405851.755949
+     },
+     {
+      "topic": "car_seat",
+      "title": "Silla del auto",
+      "status": "Cinturón de cadera en las dos guías",
+      "detail": "",
+      "meta": "Paso 2 de 8",
+      "alert": false,
+      "agent_unix": 1793405851.767,
+      "shown_unix": 1793405851.768687
+     },
+     {
+      "topic": "answer",
+      "title": "Respuesta",
+      "status": "Anotado: sí.",
+      "detail": "",
+      "meta": "",
+      "alert": false,
+      "agent_unix": 1793405851.774,
+      "shown_unix": 1793405851.776479
+     },
+     {
+      "topic": "car_seat",
+      "title": "Silla del auto",
+      "status": "Cinturón de cadera en las dos guías",
+      "detail": "Visto en cámara: bien",
+      "meta": "Paso 2 de 8",
+      "alert": false,
+      "agent_unix": 1793405853.999,
+      "shown_unix": 1793405854.100214
+     },
+     {
+      "topic": "car_seat",
+      "title": "Silla del auto",
+      "status": "Cinturón de hombro en la guía de atrás",
+      "detail": "",
+      "meta": "Paso 3 de 8",
+      "alert": false,
+      "agent_unix": 1793405854.003,
+      "shown_unix": 1793405854.118207
+     },
+     {
+      "topic": "car_seat",
+      "title": "Silla del auto",
+      "status": "Cinturón de hombro en la guía de atrás",
+      "detail": "Visto en cámara: bien",
+      "meta": "Paso 3 de 8",
+      "alert": false,
+      "agent_unix": 1793405855.695,
+      "shown_unix": 1793405855.7004561
+     },
+     {
+      "topic": "car_seat",
+      "title": "Silla del auto",
+      "status": "Cinturón tenso y plano, sin giros",
+      "detail": "",
+      "meta": "Paso 4 de 8",
+      "alert": false,
+      "agent_unix": 1793405855.7,
+      "shown_unix": 1793405855.702333
+     },
+     {
+      "topic": "car_seat",
+      "title": "Silla del auto",
+      "status": "Cinturón tenso y plano, sin giros",
+      "detail": "Visto en cámara: bien",
+      "meta": "Paso 4 de 8",
+      "alert": false,
+      "agent_unix": 1793405857.345,
+      "shown_unix": 1793405857.3501291
+     },
+     {
+      "topic": "car_seat",
+      "title": "Silla del auto",
+      "status": "Mostrame la línea de nivel",
+      "detail": "",
+      "meta": "Paso 5 de 8",
+      "alert": false,
+      "agent_unix": 1793405857.349,
+      "shown_unix": 1793405857.3588529
+     },
+     {
+      "topic": "car_seat",
+      "title": "Silla del auto",
+      "status": "Mostrame la línea de nivel",
+      "detail": "Visto en cámara: bien",
+      "meta": "Paso 5 de 8",
+      "alert": false,
+      "agent_unix": 1793405858.708,
+      "shown_unix": 1793405858.712523
+     },
+     {
+      "topic": "car_seat",
+      "title": "Silla del auto",
+      "status": "Manija arriba, posición de auto",
+      "detail": "",
+      "meta": "Paso 6 de 8",
+      "alert": false,
+      "agent_unix": 1793405858.713,
+      "shown_unix": 1793405858.715475
+     },
+     {
+      "topic": "car_seat",
+      "title": "Silla del auto",
+      "status": "Manija arriba, posición de auto",
+      "detail": "Visto en cámara: bien",
+      "meta": "Paso 6 de 8",
+      "alert": false,
+      "agent_unix": 1793405860.669,
+      "shown_unix": 1793405860.671826
+     },
+     {
+      "topic": "car_seat",
+      "title": "Silla del auto",
+      "status": "Revisión de la silla terminada",
+      "detail": "No es un veredicto: consultá a un técnico",
+      "meta": "",
+      "alert": false,
+      "agent_unix": 1793405860.68,
+      "shown_unix": 1793405860.6823049
+     },
+     {
+      "topic": "answer",
+      "title": "Respuesta",
+      "status": "Quedó así la silla Joie i-Snug 2 con cinturón:",
+      "detail": "Pasó en cámara: cinturón ventral en ambas guías laterales, bandeo al hombro en la guía…",
+      "meta": "",
+      "alert": false,
+      "agent_unix": 1793405862.695,
+      "shown_unix": 1793405862.703755
+     }
+    ],
+    "ceci": []
+   },
+   "topics": {
+    "gonza": [
+     "car_seat",
+     "answer",
+     "car_seat",
+     "answer",
+     "car_seat",
+     "car_seat",
+     "car_seat",
+     "car_seat",
+     "car_seat",
+     "car_seat",
+     "car_seat",
+     "car_seat",
+     "car_seat",
+     "car_seat",
+     "answer"
+    ],
+    "ceci": []
+   },
+   "passed": true
+  },
+  {
+   "scene": "Red flag",
+   "agent_time": "2026-10-30T09:54-03:00",
+   "note": "The safety gate's fixed 911 line, no brain call. The card stays above everything and never dims.",
+   "actions": [
+    {
+     "at": "2026-10-30T09:54:00-03:00",
+     "unix": 1793405873.067,
+     "action": [
+      "tg",
+      "gonza",
+      "Test: está azul y no respira bien."
+     ]
+    }
+   ],
+   "expected": {
+    "gonza": [
+     "red_flag"
+    ],
+    "ceci": []
+   },
+   "cards": {
+    "gonza": [
+     {
+      "topic": "red_flag",
+      "title": "Llamá al 911 ya",
+      "status": "Puede ser una emergencia",
+      "detail": "Contales lo que ves",
+      "meta": "911 · hace 0:00",
+      "alert": true,
+      "agent_unix": 1793405873.019,
+      "shown_unix": 1793405873.2639341
+     }
+    ],
+    "ceci": []
+   },
+   "topics": {
+    "gonza": [
+     "red_flag"
+    ],
+    "ceci": []
+   },
+   "passed": true
+  },
+  {
+   "scene": "Red flag acknowledged",
+   "agent_time": "2026-10-30T09:55-03:00",
+   "note": "Gonza says it on the glasses: the red flag card goes.",
+   "actions": [
+    {
+     "at": "2026-10-30T09:55:00-03:00",
+     "unix": 1793405918.689,
+     "action": [
+      "glasses",
+      "gonza",
+      "Listo, ya llamé al 911."
+     ]
+    }
+   ],
+   "expected": {},
+   "cards": {
+    "gonza": [
+     {
+      "topic": "answer",
+      "title": "Respuesta",
+      "status": "Gracias por avisar, Gonza.",
+      "detail": "Quedate al teléfono con el 911 y seguí sus indicaciones.",
+      "meta": "",
+      "alert": false,
+      "agent_unix": 1793405918.662,
+      "shown_unix": 1793405918.664165
+     }
+    ],
+    "ceci": []
+   },
+   "topics": {
+    "gonza": [
+     "answer"
+    ],
+    "ceci": []
+   },
+   "passed": true
+  }
+ ],
+ "passed": 11,
+ "of": 11,
+ "glasses_cards": [
+  {
+   "kind": "glasses_card",
+   "t": 300.0,
+   "ts": "2026-10-30T06:00:00-03:00",
+   "unix": 1793350800.0,
+   "person": "gonza",
+   "topic": "answer",
+   "via": "telegram",
+   "cause": "reply",
+   "shown": true,
+   "title": "Respuesta",
+   "status": "Anotado, 80 ml en mamadera.",
+   "alert": false,
+   "sticky": false
+  },
+  {
+   "kind": "glasses_card",
+   "t": 5700.0,
+   "ts": "2026-10-30T07:30:00-03:00",
+   "unix": 1793356200.0,
+   "person": "gonza",
+   "topic": "morning",
+   "via": "telegram",
+   "cause": "morning",
+   "shown": true,
+   "title": "Buen día, Gonza",
+   "status": "Esta noche te toca a vos.",
+   "alert": false,
+   "sticky": false
+  },
+  {
+   "kind": "glasses_card",
+   "t": 5700.0,
+   "ts": "2026-10-30T07:30:00-03:00",
+   "unix": 1793356200.0,
+   "person": "ceci",
+   "topic": "morning",
+   "via": "telegram",
+   "cause": "morning",
+   "shown": true,
+   "title": "Buen día, Ceci",
+   "status": "Anoche: 3 tomas, el sueño más largo 0.0 h, no te levantaste.",
+   "alert": false,
+   "sticky": false
+  },
+  {
+   "kind": "glasses_card",
+   "t": 8100.0,
+   "ts": "2026-10-30T08:10:00-03:00",
+   "unix": 1793358600.0,
+   "person": "gonza",
+   "topic": "next_feed",
+   "via": "telegram",
+   "cause": "next_feed",
+   "shown": true,
+   "title": "Próxima toma",
+   "status": "Cerca de las 08:30 · en 20 min",
+   "alert": false,
+   "sticky": false
+  },
+  {
+   "kind": "glasses_card",
+   "t": 8100.0,
+   "ts": "2026-10-30T08:10:00-03:00",
+   "unix": 1793358600.0,
+   "person": "ceci",
+   "topic": "next_feed",
+   "via": "telegram",
+   "cause": "next_feed",
+   "shown": true,
+   "title": "Próxima toma",
+   "status": "Cerca de las 08:30 · en 20 min",
+   "alert": false,
+   "sticky": false
+  },
+  {
+   "kind": "glasses_card",
+   "t": 8100.0,
+   "ts": "2026-10-30T08:10:00-03:00",
+   "unix": 1793358600.0,
+   "person": "ceci",
+   "topic": "answer",
+   "via": "telegram",
+   "cause": "reply",
+   "shown": true,
+   "title": "Respuesta",
+   "status": "Anotado, 90 ml en mamadera.",
+   "alert": false,
+   "sticky": false
+  },
+  {
+   "kind": "glasses_card",
+   "t": 8100.0,
+   "ts": "2026-10-30T08:10:00-03:00",
+   "unix": 1793358600.0,
+   "person": "ceci",
+   "topic": "answer",
+   "via": "telegram",
+   "cause": "reply",
+   "shown": true,
+   "title": "Respuesta",
+   "status": "Se durmió anotado.",
+   "alert": false,
+   "sticky": false
+  },
+  {
+   "kind": "glasses_card",
+   "t": 8160.0,
+   "ts": "2026-10-30T08:11:00-03:00",
+   "unix": 1793358660.0,
+   "person": "gonza",
+   "topic": "nap",
+   "via": "house",
+   "cause": "nap_mode on",
+   "shown": true,
+   "title": "Modo siesta",
+   "status": "Siesta desde las 08:10",
+   "alert": false,
+   "sticky": false
+  },
+  {
+   "kind": "glasses_card",
+   "t": 8160.0,
+   "ts": "2026-10-30T08:11:00-03:00",
+   "unix": 1793358660.0,
+   "person": "ceci",
+   "topic": "nap",
+   "via": "house",
+   "cause": "nap_mode on",
+   "shown": true,
+   "title": "Modo siesta",
+   "status": "Siesta desde las 08:10",
+   "alert": false,
+   "sticky": false
+  },
+  {
+   "kind": "glasses_card",
+   "t": 12720.0,
+   "ts": "2026-10-30T09:27:00-03:00",
+   "unix": 1793363220.0,
+   "person": "ceci",
+   "topic": "answer",
+   "via": "telegram",
+   "cause": "reply",
+   "shown": true,
+   "title": "Respuesta",
+   "status": "Se despertó anotado.",
+   "alert": false,
+   "sticky": false
+  },
+  {
+   "kind": "glasses_card",
+   "t": 12780.0,
+   "ts": "2026-10-30T09:28:00-03:00",
+   "unix": 1793363280.0,
+   "person": "gonza",
+   "topic": "nap",
+   "via": "house",
+   "cause": "nap_mode off",
+   "shown": true,
+   "title": "Fin de la siesta",
+   "status": "Se despertó, la casa vuelve a lo normal",
+   "alert": false,
+   "sticky": false
+  },
+  {
+   "kind": "glasses_card",
+   "t": 12780.0,
+   "ts": "2026-10-30T09:28:00-03:00",
+   "unix": 1793363280.0,
+   "person": "ceci",
+   "topic": "nap",
+   "via": "house",
+   "cause": "nap_mode off",
+   "shown": true,
+   "title": "Fin de la siesta",
+   "status": "Se despertó, la casa vuelve a lo normal",
+   "alert": false,
+   "sticky": false
+  },
+  {
+   "kind": "glasses_card",
+   "t": 12900.0,
+   "ts": "2026-10-30T09:30:00-03:00",
+   "unix": 1793363400.0,
+   "person": "gonza",
+   "topic": "house",
+   "via": "telegram",
+   "cause": "floor_clean",
+   "shown": true,
+   "title": "Casa",
+   "status": "Podría pasar la aspiradora antes de las 10:11, pero el…",
+   "alert": false,
+   "sticky": false
+  },
+  {
+   "kind": "glasses_card",
+   "t": 12900.0,
+   "ts": "2026-10-30T09:30:00-03:00",
+   "unix": 1793363400.0,
+   "person": "ceci",
+   "topic": "house",
+   "via": "telegram",
+   "cause": "floor_clean",
+   "shown": true,
+   "title": "Casa",
+   "status": "Podría pasar la aspiradora antes de las 10:11, pero el…",
+   "alert": false,
+   "sticky": false
+  },
+  {
+   "kind": "glasses_card",
+   "t": 13080.0,
+   "ts": "2026-10-30T09:33:00-03:00",
+   "unix": 1793363580.0,
+   "person": "gonza",
+   "topic": "answer",
+   "via": "glasses",
+   "cause": "reply",
+   "shown": true,
+   "title": "Respuesta",
+   "status": "Fue a las 08:10, 90 ml en mamadera.",
+   "alert": false,
+   "sticky": false
+  },
+  {
+   "kind": "glasses_card",
+   "t": 13260.0,
+   "ts": "2026-10-30T09:36:00-03:00",
+   "unix": 1793363760.0,
+   "person": "gonza",
+   "topic": "on_duty",
+   "via": "telegram",
+   "cause": "reply",
+   "shown": true,
+   "title": "Esta noche",
+   "status": "De turno: Gonza",
+   "alert": false,
+   "sticky": false
+  },
+  {
+   "kind": "glasses_card",
+   "t": 13440.0,
+   "ts": "2026-10-30T09:39:00-03:00",
+   "unix": 1793363940.0,
+   "person": "ceci",
+   "topic": "shopping",
+   "via": "telegram",
+   "cause": "reply",
+   "shown": true,
+   "title": "Lista de compras",
+   "status": "Pañales está listo para la lista de compras.",
+   "alert": false,
+   "sticky": false
+  },
+  {
+   "kind": "glasses_card",
+   "t": 13740.0,
+   "ts": "2026-10-30T09:44:00-03:00",
+   "unix": 1793364240.0,
+   "person": "gonza",
+   "topic": "car_seat",
+   "via": "camera",
+   "cause": "car seat car_position",
+   "shown": true,
+   "title": "Silla del auto",
+   "status": "¿Silla atrás, mirando hacia atrás?",
+   "alert": false,
+   "sticky": false
+  },
+  {
+   "kind": "glasses_card",
+   "t": 13740.0,
+   "ts": "2026-10-30T09:44:00-03:00",
+   "unix": 1793364240.0,
+   "person": "gonza",
+   "topic": "answer",
+   "via": "glasses",
+   "cause": "reply",
+   "shown": true,
+   "title": "Respuesta",
+   "status": "Vamos paso a paso con la silla Joie i-Snug 2 con cinturón.",
+   "alert": false,
+   "sticky": false
+  },
+  {
+   "kind": "glasses_card",
+   "t": 13740.0,
+   "ts": "2026-10-30T09:44:00-03:00",
+   "unix": 1793364240.0,
+   "person": "gonza",
+   "topic": "car_seat",
+   "via": "camera",
+   "cause": "car seat lap_guides",
+   "shown": true,
+   "title": "Silla del auto",
+   "status": "Cinturón de cadera en las dos guías",
+   "alert": false,
+   "sticky": false
+  },
+  {
+   "kind": "glasses_card",
+   "t": 13740.0,
+   "ts": "2026-10-30T09:44:00-03:00",
+   "unix": 1793364240.0,
+   "person": "gonza",
+   "topic": "answer",
+   "via": "glasses",
+   "cause": "reply",
+   "shown": true,
+   "title": "Respuesta",
+   "status": "Anotado: sí.",
+   "alert": false,
+   "sticky": false
+  },
+  {
+   "kind": "glasses_card",
+   "t": 13740.0,
+   "ts": "2026-10-30T09:44:00-03:00",
+   "unix": 1793364240.0,
+   "person": "gonza",
+   "topic": "car_seat",
+   "via": "camera",
+   "cause": "car seat lap_guides",
+   "shown": true,
+   "title": "Silla del auto",
+   "status": "Cinturón de cadera en las dos guías",
+   "alert": false,
+   "sticky": false
+  },
+  {
+   "kind": "glasses_card",
+   "t": 13740.0,
+   "ts": "2026-10-30T09:44:00-03:00",
+   "unix": 1793364240.0,
+   "person": "gonza",
+   "topic": "car_seat",
+   "via": "camera",
+   "cause": "car seat shoulder_guide",
+   "shown": true,
+   "title": "Silla del auto",
+   "status": "Cinturón de hombro en la guía de atrás",
+   "alert": false,
+   "sticky": false
+  },
+  {
+   "kind": "glasses_card",
+   "t": 13740.0,
+   "ts": "2026-10-30T09:44:00-03:00",
+   "unix": 1793364240.0,
+   "person": "gonza",
+   "topic": "car_seat",
+   "via": "camera",
+   "cause": "car seat shoulder_guide",
+   "shown": true,
+   "title": "Silla del auto",
+   "status": "Cinturón de hombro en la guía de atrás",
+   "alert": false,
+   "sticky": false
+  },
+  {
+   "kind": "glasses_card",
+   "t": 13740.0,
+   "ts": "2026-10-30T09:44:00-03:00",
+   "unix": 1793364240.0,
+   "person": "gonza",
+   "topic": "car_seat",
+   "via": "camera",
+   "cause": "car seat no_twist",
+   "shown": true,
+   "title": "Silla del auto",
+   "status": "Cinturón tenso y plano, sin giros",
+   "alert": false,
+   "sticky": false
+  },
+  {
+   "kind": "glasses_card",
+   "t": 13740.0,
+   "ts": "2026-10-30T09:44:00-03:00",
+   "unix": 1793364240.0,
+   "person": "gonza",
+   "topic": "car_seat",
+   "via": "camera",
+   "cause": "car seat no_twist",
+   "shown": true,
+   "title": "Silla del auto",
+   "status": "Cinturón tenso y plano, sin giros",
+   "alert": false,
+   "sticky": false
+  },
+  {
+   "kind": "glasses_card",
+   "t": 13740.0,
+   "ts": "2026-10-30T09:44:00-03:00",
+   "unix": 1793364240.0,
+   "person": "gonza",
+   "topic": "car_seat",
+   "via": "camera",
+   "cause": "car seat level_line",
+   "shown": true,
+   "title": "Silla del auto",
+   "status": "Mostrame la línea de nivel",
+   "alert": false,
+   "sticky": false
+  },
+  {
+   "kind": "glasses_card",
+   "t": 13740.0,
+   "ts": "2026-10-30T09:44:00-03:00",
+   "unix": 1793364240.0,
+   "person": "gonza",
+   "topic": "car_seat",
+   "via": "camera",
+   "cause": "car seat level_line",
+   "shown": true,
+   "title": "Silla del auto",
+   "status": "Mostrame la línea de nivel",
+   "alert": false,
+   "sticky": false
+  },
+  {
+   "kind": "glasses_card",
+   "t": 13740.0,
+   "ts": "2026-10-30T09:44:00-03:00",
+   "unix": 1793364240.0,
+   "person": "gonza",
+   "topic": "car_seat",
+   "via": "camera",
+   "cause": "car seat handle",
+   "shown": true,
+   "title": "Silla del auto",
+   "status": "Manija arriba, posición de auto",
+   "alert": false,
+   "sticky": false
+  },
+  {
+   "kind": "glasses_card",
+   "t": 13740.0,
+   "ts": "2026-10-30T09:44:00-03:00",
+   "unix": 1793364240.0,
+   "person": "gonza",
+   "topic": "car_seat",
+   "via": "camera",
+   "cause": "car seat handle",
+   "shown": true,
+   "title": "Silla del auto",
+   "status": "Manija arriba, posición de auto",
+   "alert": false,
+   "sticky": false
+  },
+  {
+   "kind": "glasses_card",
+   "t": 13740.0,
+   "ts": "2026-10-30T09:44:00-03:00",
+   "unix": 1793364240.0,
+   "person": "gonza",
+   "topic": "car_seat",
+   "via": "camera",
+   "cause": "carseat_summary",
+   "shown": true,
+   "title": "Silla del auto",
+   "status": "Revisión de la silla terminada",
+   "alert": false,
+   "sticky": false
+  },
+  {
+   "kind": "glasses_card",
+   "t": 13740.0,
+   "ts": "2026-10-30T09:44:00-03:00",
+   "unix": 1793364240.0,
+   "person": "gonza",
+   "topic": "answer",
+   "via": "glasses",
+   "cause": "reply",
+   "shown": true,
+   "title": "Respuesta",
+   "status": "Quedó así la silla Joie i-Snug 2 con cinturón:",
+   "alert": false,
+   "sticky": false
+  },
+  {
+   "kind": "glasses_card",
+   "t": 14340.0,
+   "ts": "2026-10-30T09:54:00-03:00",
+   "unix": 1793364840.0,
+   "person": "gonza",
+   "topic": "red_flag",
+   "via": "telegram",
+   "cause": "reply",
+   "shown": true,
+   "title": "Llamá al 911 ya",
+   "status": "Puede ser una emergencia",
+   "alert": true,
+   "sticky": true
+  },
+  {
+   "kind": "glasses_card",
+   "t": 14400.0,
+   "ts": "2026-10-30T09:55:00-03:00",
+   "unix": 1793364900.0,
+   "person": "gonza",
+   "topic": "next_feed",
+   "via": "telegram",
+   "cause": "next_feed",
+   "shown": true,
+   "title": "Próxima toma",
+   "status": "Cerca de las 10:15 · en 20 min",
+   "alert": false,
+   "sticky": false
+  },
+  {
+   "kind": "glasses_card",
+   "t": 14400.0,
+   "ts": "2026-10-30T09:55:00-03:00",
+   "unix": 1793364900.0,
+   "person": "ceci",
+   "topic": "next_feed",
+   "via": "telegram",
+   "cause": "next_feed",
+   "shown": true,
+   "title": "Próxima toma",
+   "status": "Cerca de las 10:15 · en 20 min",
+   "alert": false,
+   "sticky": false
+  },
+  {
+   "kind": "glasses_card",
+   "t": 14400.0,
+   "ts": "2026-10-30T09:55:00-03:00",
+   "unix": 1793364900.0,
+   "person": "gonza",
+   "topic": "answer",
+   "via": "glasses",
+   "cause": "reply",
+   "shown": true,
+   "title": "Respuesta",
+   "status": "Gracias por avisar, Gonza.",
+   "alert": false,
+   "sticky": false
+  }
+ ],
+ "telegram_captured": [
+  {
+   "at": "2026-10-30T06:00:00-03:00",
+   "chat": "9000001",
+   "text": "Anotado, 80 ml en mamadera."
+  },
+  {
+   "at": "2026-10-30T07:30:00-03:00",
+   "chat": "9000001",
+   "text": "Buen día, Gonza.\nAnoche: 3 tomas, el sueño más largo 0.0 h, no te levantaste.\nEsta noche te toca a vos.\nClima: nublado, 14 a 15 C."
+  },
+  {
+   "at": "2026-10-30T07:30:00-03:00",
+   "chat": "9000002",
+   "text": "Buen día, Ceci.\nAnoche: 3 tomas, el sueño más largo 0.0 h, no te levantaste.\nClima: nublado, 14 a 15 C."
+  },
+  {
+   "at": "2026-10-30T08:10:00-03:00",
+   "chat": "9000001",
+   "text": "Próxima toma en unos 20 min, cerca de las 08:30. Las tomas vienen cada 2 h 45 min más o menos."
+  },
+  {
+   "at": "2026-10-30T08:10:00-03:00",
+   "chat": "9000002",
+   "text": "Próxima toma en unos 20 min, cerca de las 08:30. Las tomas vienen cada 2 h 45 min más o menos."
+  },
+  {
+   "at": "2026-10-30T08:10:00-03:00",
+   "chat": "9000002",
+   "text": "Anotado, 90 ml en mamadera."
+  },
+  {
+   "at": "2026-10-30T08:10:00-03:00",
+   "chat": "9000002",
+   "text": "Se durmió anotado."
+  },
+  {
+   "at": "2026-10-30T09:27:00-03:00",
+   "chat": "9000002",
+   "text": "Se despertó anotado."
+  },
+  {
+   "at": "2026-10-30T09:30:00-03:00",
+   "chat": "9000001",
+   "text": "Podría pasar la aspiradora antes de las 10:11, pero el registro no dice dónde está en las últimas 2 horas, así que queda en su base. Decime dónde está, o si salió con ustedes."
+  },
+  {
+   "at": "2026-10-30T09:30:00-03:00",
+   "chat": "9000002",
+   "text": "Podría pasar la aspiradora antes de las 10:11, pero el registro no dice dónde está en las últimas 2 horas, así que queda en su base. Decime dónde está, o si salió con ustedes."
+  },
+  {
+   "at": "2026-10-30T09:36:00-03:00",
+   "chat": "9000001",
+   "text": "Esta noche está de turno Gonza. Lo decide la rota de la noche: le toca a quien se levantó menos veces de noche, y si empatan, a quien no se levantó la última vez. Hasta ahora: Gonza 12, Ceci 12, según las notas de despertares nocturnos del registro."
+  },
+  {
+   "at": "2026-10-30T09:39:00-03:00",
+   "chat": "9000002",
+   "text": "Pañales está listo para la lista de compras. ¿Lo agrego?"
+  },
+  {
+   "at": "2026-10-30T09:54:00-03:00",
+   "chat": "9000001",
+   "text": "Puede ser una emergencia. Llamá ya al 911 (emergencias en Uruguay) y contales lo que ves."
+  },
+  {
+   "at": "2026-10-30T09:55:00-03:00",
+   "chat": "9000001",
+   "text": "Próxima toma en unos 20 min, cerca de las 10:15. Las tomas vienen cada 2 h 20 min más o menos."
+  },
+  {
+   "at": "2026-10-30T09:55:00-03:00",
+   "chat": "9000002",
+   "text": "Próxima toma en unos 20 min, cerca de las 10:15. Las tomas vienen cada 2 h 20 min más o menos."
+  }
+ ],
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "refused": [],
+ "brain_usd": 0.1274,
+ "brain_calls": {
+  "inference.baseten.co": 21
+ },
+ "brain_models": [
+  "meta-models/muse-spark-open-1026 on inference.baseten.co"
+ ],
+ "house": [
+  {
+   "kind": "house_plan",
+   "t": 360.0,
+   "ts": "2026-10-30T06:01:00-03:00",
+   "unix": 1793405611.464,
+   "trigger": "night_wake",
+   "what": "a night feed was logged at 05:45",
+   "at": "2026-10-30T06:01:00-03:00",
+   "accepted": true,
+   "plan": {
+    "on_duty": "Parent A",
+    "messages": [
+     {
+      "to": "Parent A",
+      "text": "On duty until 18:01. Next feed predicted 08:30. Floor clean armed 07:16-08:16."
+     },
+     {
+      "to": "Parent B",
+      "text": "Next feed predicted 08:30. Floor clean armed 07:16-08:16."
+     }
+    ],
+    "summary": "Floor clean window 07:16-08:16 placed in awake gap, no bottle or quiet windows needed before 18:01.",
+    "why_changed": "Night feed at 05:45 logged, next feed predicted 08:30, plan set for awake gaps.",
+    "floor_clean": [
+     {
+      "start": "07:16",
+      "end": "08:16",
+      "why": "gap between predicted sleeps, before next sleep at 08:16"
+     }
+    ],
+    "bottle_prewarm": [],
+    "door_quiet": [],
+    "white_noise_boost": []
+   },
+   "refused": {},
+   "dropped": [],
+   "muse": {
+    "seconds": 2.927,
+    "usd": 0.004778,
+    "input_tokens": 1351,
+    "output_tokens": 727,
+    "host": "inference.baseten.co",
+    "model": "meta-models/muse-spark-open-1026"
+   }
+  },
+  {
+   "kind": "house_plan",
+   "t": 3900.0,
+   "ts": "2026-10-30T07:00:00-03:00",
+   "unix": 1793405650.612,
+   "trigger": "before_nap",
+   "what": "a nap is predicted around 07:00",
+   "at": "2026-10-30T07:00:00-03:00",
+   "accepted": true,
+   "plan": {
+    "on_duty": "Parent A",
+    "messages": [
+     {
+      "to": "Parent A",
+      "text": "On duty until 19:00. Next feed predicted 08:30. Floor clean armed 08:16-09:14."
+     },
+     {
+      "to": "Parent B",
+      "text": "Next feed predicted 08:30. Floor clean armed 08:16-09:14."
+     }
+    ],
+    "summary": "Floor clean moved to 08:16-09:14 awake gap, no bottle or quiet windows in day period until 19:00.",
+    "why_changed": "Nap predicted 07:00-08:15, previous window overlapped sleep so moved to next awake gap.",
+    "floor_clean": [
+     {
+      "start": "08:16",
+      "end": "09:14",
+      "why": "awake gap between predicted sleeps, outside sleep windows"
+     }
+    ],
+    "bottle_prewarm": [],
+    "door_quiet": [],
+    "white_noise_boost": []
+   },
+   "refused": {},
+   "dropped": [],
+   "muse": {
+    "seconds": 3.039,
+    "usd": 0.005379,
+    "input_tokens": 1553,
+    "output_tokens": 809,
+    "host": "inference.baseten.co",
+    "model": "meta-models/muse-spark-open-1026"
+   }
+  },
+  {
+   "kind": "house_explain",
+   "t": 5700.0,
+   "ts": "2026-10-30T07:30:00-03:00",
+   "unix": 1793405671.614,
+   "at": "2026-10-30T07:30:00-03:00",
+   "telegram": "Overnight the house got ready for 0 night feeds, the virtual bottle warmer went on 0 times. 0 device actions done for real, everything else only written down.",
+   "echo": "Good morning. The house got ready for 0 night feeds.",
+   "source": "fixed",
+   "muse": {
+    "seconds": 3.926,
+    "usd": 0.005601,
+    "input_tokens": 442,
+    "output_tokens": 1188,
+    "host": "inference.baseten.co",
+    "model": "meta-models/muse-spark-open-1026"
+   },
+   "events": 2
+  },
+  {
+   "kind": "house_dry",
+   "t": 5700.0,
+   "ts": "2026-10-30T07:30:00-03:00",
+   "unix": 1793356200.0,
+   "routine": "house_brain",
+   "action": "notify.send_message",
+   "entity": "notify.gonza_s_echo_dot_announce",
+   "request": {
+    "method": "POST",
+    "path": "/api/services/notify/send_message",
+    "body": {
+     "entity_id": "notify.gonza_s_echo_dot_announce",
+     "message": "Good morning. The house got ready for 0 night feeds."
+    }
+   },
+   "reason": "Muse's morning explanation",
+   "at": "2026-10-30T07:30:00-03:00"
+  },
+  {
+   "kind": "house_dry",
+   "t": 8160.0,
+   "ts": "2026-10-30T08:11:00-03:00",
+   "unix": 1793358660.0,
+   "routine": "nap_mode",
+   "action": "media_player.volume_mute",
+   "entity": "media_player.lg_webos_tv_oled55b3psa",
+   "request": {
+    "method": "POST",
+    "path": "/api/services/media_player/volume_mute",
+    "body": {
+     "entity_id": "media_player.lg_webos_tv_oled55b3psa",
+     "is_volume_muted": true
+    }
+   },
+   "reason": "nap started at 08:10",
+   "at": "2026-10-30T08:11:00-03:00"
+  },
+  {
+   "kind": "house_dry",
+   "t": 8160.0,
+   "ts": "2026-10-30T08:11:00-03:00",
+   "unix": 1793358660.0,
+   "routine": "nap_mode",
+   "action": "switch.turn_on",
+   "entity": "switch.gonza_s_echo_dot_do_not_disturb",
+   "request": {
+    "method": "POST",
+    "path": "/api/services/switch/turn_on",
+    "body": {
+     "entity_id": "switch.gonza_s_echo_dot_do_not_disturb"
+    }
+   },
+   "reason": "nap started at 08:10",
+   "at": "2026-10-30T08:11:00-03:00"
+  },
+  {
+   "kind": "house_plan",
+   "t": 12780.0,
+   "ts": "2026-10-30T09:28:00-03:00",
+   "unix": 1793405795.482,
+   "trigger": "wake_up",
+   "what": "he woke up at 09:27",
+   "at": "2026-10-30T09:28:00-03:00",
+   "accepted": true,
+   "plan": {
+    "on_duty": "Parent A",
+    "messages": [
+     {
+      "to": "Parent A",
+      "text": "On duty. Woke 09:27. Next feed predicted 10:15. Floor clean armed 09:30-10:11."
+     },
+     {
+      "to": "Parent B",
+      "text": "Woke 09:27. Next feed predicted 10:15. Floor clean armed 09:30-10:11."
+     }
+    ],
+    "summary": "Floor clean armed in morning awake gap 09:30-10:11 before next nap, no night prewarm or quiet windows in day period.",
+    "why_changed": "Woke at 09:27 so previous floor clean window expired and new awake window armed.",
+    "floor_clean": [
+     {
+      "start": "09:30",
+      "end": "10:11",
+      "why": "awake gap between predicted sleeps, outside sleep windows"
+     }
+    ],
+    "bottle_prewarm": [],
+    "door_quiet": [],
+    "white_noise_boost": []
+   },
+   "refused": {},
+   "dropped": [],
+   "muse": {
+    "seconds": 4.202,
+    "usd": 0.007047,
+    "input_tokens": 1578,
+    "output_tokens": 1194,
+    "host": "inference.baseten.co",
+    "model": "meta-models/muse-spark-open-1026"
+   }
+  },
+  {
+   "kind": "house_dry",
+   "t": 13440.0,
+   "ts": "2026-10-30T09:39:00-03:00",
+   "unix": 1793363940.0,
+   "routine": "shopping",
+   "action": "todo.add_item",
+   "entity": "todo.shopping_list",
+   "request": {
+    "method": "POST",
+    "path": "/api/services/todo/add_item",
+    "body": {
+     "entity_id": "todo.shopping_list",
+     "item": "pañales"
+    }
+   },
+   "reason": "a parent asked",
+   "at": "2026-10-30T09:39:00-03:00"
+  }
+ ],
+ "sam3": [
+  {
+   "kind": "carseat_check",
+   "t": -1793144118.181,
+   "ts": "2026-10-30T09:44:00-03:00",
+   "unix": 1793405851.767,
+   "check": "car_position",
+   "check_kind": "hand",
+   "result": "pass",
+   "answer": "Sí."
+  },
+  {
+   "kind": "carseat_frame",
+   "t": -1793144115.951,
+   "ts": "2026-10-30T09:44:00-03:00",
+   "unix": 1793405853.996,
+   "step": "lap_guides",
+   "frame_s": 270.075,
+   "sam_s": 2.003,
+   "result": "pass"
+  },
+  {
+   "kind": "carseat_check",
+   "t": -1793144115.945,
+   "ts": "2026-10-30T09:44:00-03:00",
+   "unix": 1793405854.003,
+   "check": "lap_guides",
+   "check_kind": "camera",
+   "result": "pass",
+   "coverage": [
+    0.19,
+    0.199
+   ],
+   "between": 1.0,
+   "missed": [],
+   "step_started_s": 269.911,
+   "frame_s": 270.075,
+   "spoken_s": 272.143
+  },
+  {
+   "kind": "carseat_frame",
+   "t": -1793144114.253,
+   "ts": "2026-10-30T09:44:00-03:00",
+   "unix": 1793405855.695,
+   "step": "shoulder_guide",
+   "frame_s": 272.341,
+   "sam_s": 1.44,
+   "result": "pass"
+  },
+  {
+   "kind": "carseat_check",
+   "t": -1793144114.248,
+   "ts": "2026-10-30T09:44:00-03:00",
+   "unix": 1793405855.699,
+   "check": "shoulder_guide",
+   "check_kind": "camera",
+   "result": "pass",
+   "coverage": 0.238,
+   "step_started_s": 272.147,
+   "frame_s": 272.341,
+   "spoken_s": 273.839
+  },
+  {
+   "kind": "carseat_frame",
+   "t": -1793144112.602,
+   "ts": "2026-10-30T09:44:00-03:00",
+   "unix": 1793405857.345,
+   "step": "no_twist",
+   "frame_s": 273.907,
+   "sam_s": 1.523,
+   "result": "pass"
+  },
+  {
+   "kind": "carseat_check",
+   "t": -1793144112.599,
+   "ts": "2026-10-30T09:44:00-03:00",
+   "unix": 1793405857.349,
+   "check": "no_twist",
+   "check_kind": "camera",
+   "result": "pass",
+   "ratio": 0.862,
+   "step_started_s": 273.844,
+   "frame_s": 273.907,
+   "spoken_s": 275.489
+  },
+  {
+   "kind": "carseat_frame",
+   "t": -1793144111.24,
+   "ts": "2026-10-30T09:44:00-03:00",
+   "unix": 1793405858.707,
+   "step": "level_line",
+   "frame_s": 275.642,
+   "sam_s": 1.194,
+   "result": "pass"
+  },
+  {
+   "kind": "carseat_check",
+   "t": -1793144111.235,
+   "ts": "2026-10-30T09:44:00-03:00",
+   "unix": 1793405858.712,
+   "check": "level_line",
+   "check_kind": "camera",
+   "result": "pass",
+   "angle_deg": -2.6,
+   "step_started_s": 275.493,
+   "frame_s": 275.642,
+   "spoken_s": 276.851
+  },
+  {
+   "kind": "carseat_frame",
+   "t": -1793144109.278,
+   "ts": "2026-10-30T09:44:00-03:00",
+   "unix": 1793405860.669,
+   "step": "handle",
+   "frame_s": 276.941,
+   "sam_s": 1.8,
+   "result": "pass"
+  },
+  {
+   "kind": "carseat_check",
+   "t": -1793144109.273,
+   "ts": "2026-10-30T09:44:00-03:00",
+   "unix": 1793405860.675,
+   "check": "handle",
+   "check_kind": "camera",
+   "result": "pass",
+   "deg_from_vertical": 4.0,
+   "score": 0.157,
+   "step_started_s": 276.856,
+   "frame_s": 276.941,
+   "spoken_s": 278.813
+  }
+ ],
+ "app_log": [
+  {
+   "unix": 1793405580.5173922,
+   "kind": "hello",
+   "lang": "es",
+   "wearer": "gonza"
+  },
+  {
+   "agent_unix": 0,
+   "unix": 1793405580.5989041,
+   "kind": "sent",
+   "action": "",
+   "agent_cause": "",
+   "wearer": "gonza",
+   "icon": "smartGlasses",
+   "detail": "",
+   "meta": "",
+   "frame_unix": 0,
+   "status": "Say “changing time”",
+   "alert": false,
+   "event_unix": 1793405580.516751,
+   "cause": "hello",
+   "title": "Agente de crianza"
+  },
+  {
+   "unix": 1793405581.8994498,
+   "kind": "feed_start"
+  },
+  {
+   "state": "",
+   "kind": "event",
+   "frame_unix": 0,
+   "verdict": "",
+   "event": "caption",
+   "text": "",
+   "unix": 1793405586.818163
+  },
+  {
+   "name": "06:00 · Early feed",
+   "kind": "caption",
+   "unix": 1793405586.818469
+  },
+  {
+   "verdict": "",
+   "text": "",
+   "kind": "event",
+   "unix": 1793405594.111796,
+   "event": "card",
+   "state": "",
+   "frame_unix": 0
+  },
+  {
+   "agent_unix": 1793405594.109,
+   "title": "Respuesta",
+   "frame_unix": 0,
+   "detail": "",
+   "unix": 1793405594.126713,
+   "status": "Anotado, 80 ml en mamadera.",
+   "alert": false,
+   "action": "",
+   "cause": "card",
+   "event_unix": 1793405594.11198,
+   "wearer": "gonza",
+   "meta": "",
+   "icon": "speechBubble",
+   "agent_cause": "answer",
+   "kind": "sent"
+  },
+  {
+   "state": "",
+   "kind": "event",
+   "frame_unix": 0,
+   "verdict": "",
+   "event": "caption",
+   "text": "",
+   "unix": 1793405662.764855
+  },
+  {
+   "kind": "caption",
+   "name": "07:20 · Morning message",
+   "unix": 1793405662.765425
+  },
+  {
+   "state": "",
+   "kind": "event",
+   "frame_unix": 0,
+   "verdict": "",
+   "event": "card",
+   "text": "",
+   "unix": 1793405671.622608
+  },
+  {
+   "frame_unix": 0,
+   "meta": "",
+   "detail": "Anoche: 3 tomas, el sueño más largo 0.0 h, no te levantaste.",
+   "agent_unix": 1793405671.622,
+   "unix": 1793405671.624189,
+   "cause": "card",
+   "icon": "cloudCrescentMoon",
+   "agent_cause": "morning",
+   "action": "",
+   "alert": false,
+   "wearer": "gonza",
+   "title": "Buen día, Gonza",
+   "status": "Esta noche te toca a vos.",
+   "kind": "sent",
+   "event_unix": 1793405671.622738
+  },
+  {
+   "state": "",
+   "kind": "event",
+   "frame_unix": 0,
+   "verdict": "",
+   "event": "caption",
+   "text": "",
+   "unix": 1793405679.301867
+  },
+  {
+   "kind": "caption",
+   "name": "07:31 · Next feed reminder",
+   "unix": 1793405679.302104
+  },
+  {
+   "state": "",
+   "kind": "event",
+   "frame_unix": 0,
+   "verdict": "",
+   "event": "card",
+   "text": "",
+   "unix": 1793405700.985709
+  },
+  {
+   "action": "",
+   "event_unix": 1793405700.9857879,
+   "frame_unix": 0,
+   "detail": "Cada 2 h 45 min más o menos",
+   "agent_cause": "next_feed",
+   "unix": 1793405700.9873881,
+   "alert": false,
+   "status": "Cerca de las 08:30 · en 20 min",
+   "wearer": "gonza",
+   "kind": "sent",
+   "meta": "",
+   "agent_unix": 1793405700.985,
+   "title": "Próxima toma",
+   "icon": "clock",
+   "cause": "card"
+  },
+  {
+   "state": "",
+   "kind": "event",
+   "frame_unix": 0,
+   "verdict": "",
+   "event": "caption",
+   "text": "",
+   "unix": 1793405708.576828
+  },
+  {
+   "kind": "caption",
+   "name": "08:10 · Nap mode on",
+   "unix": 1793405708.577354
+  },
+  {
+   "verdict": "",
+   "text": "",
+   "kind": "event",
+   "unix": 1793405726.127973,
+   "event": "card",
+   "state": "",
+   "frame_unix": 0
+  },
+  {
+   "agent_unix": 1793405726.127,
+   "status": "Siesta desde las 08:10",
+   "event_unix": 1793405726.128164,
+   "alert": false,
+   "cause": "card",
+   "wearer": "gonza",
+   "meta": "Prueba en seco, no se movió nada",
+   "detail": "La casa queda en silencio",
+   "kind": "sent",
+   "agent_cause": "nap",
+   "unix": 1793405726.130316,
+   "frame_unix": 0,
+   "action": "",
+   "title": "Modo siesta",
+   "icon": "bedSide"
+  },
+  {
+   "verdict": "",
+   "text": "",
+   "kind": "event",
+   "unix": 1793405777.141079,
+   "event": "caption",
+   "state": "",
+   "frame_unix": 0
+  },
+  {
+   "kind": "caption",
+   "name": "09:27 · Nap mode off",
+   "unix": 1793405777.141241
+  },
+  {
+   "state": "",
+   "kind": "event",
+   "frame_unix": 0,
+   "verdict": "",
+   "event": "card",
+   "text": "",
+   "unix": 1793405791.288243
+  },
+  {
+   "agent_unix": 1793405791.287,
+   "title": "Fin de la siesta",
+   "frame_unix": 0,
+   "detail": "",
+   "unix": 1793405791.291572,
+   "status": "Se despertó, la casa vuelve a lo normal",
+   "alert": false,
+   "action": "",
+   "cause": "card",
+   "event_unix": 1793405791.288419,
+   "wearer": "gonza",
+   "meta": "Prueba en seco, no se movió nada",
+   "icon": "speakerWithTwoArcs",
+   "agent_cause": "nap",
+   "kind": "sent"
+  },
+  {
+   "state": "",
+   "kind": "event",
+   "frame_unix": 0,
+   "verdict": "",
+   "event": "card",
+   "text": "",
+   "unix": 1793405803.737994
+  },
+  {
+   "action": "",
+   "event_unix": 1793405803.7381968,
+   "frame_unix": 0,
+   "detail": "Decime dónde está, o si salió con ustedes.",
+   "agent_cause": "house",
+   "unix": 1793405803.741654,
+   "alert": false,
+   "status": "Podría pasar la aspiradora antes de las 10:11, pero el…",
+   "wearer": "gonza",
+   "kind": "sent",
+   "meta": "",
+   "agent_unix": 1793405803.736,
+   "title": "Casa",
+   "icon": "house",
+   "cause": "card"
+  },
+  {
+   "state": "",
+   "kind": "event",
+   "frame_unix": 0,
+   "verdict": "",
+   "event": "caption",
+   "text": "",
+   "unix": 1793405805.376456
+  },
+  {
+   "unix": 1793405805.376717,
+   "name": "09:33 · Voice question",
+   "kind": "caption"
+  },
+  {
+   "state": "",
+   "kind": "event",
+   "frame_unix": 0,
+   "verdict": "",
+   "event": "heard",
+   "text": "¿Cuándo comió por última vez?",
+   "unix": 1793405805.378936
+  },
+  {
+   "by": "agent heard",
+   "text": "¿Cuándo comió por última vez?",
+   "kind": "say",
+   "unix": 1793405805.379029
+  },
+  {
+   "verdict": "",
+   "text": "",
+   "kind": "event",
+   "unix": 1793405809.2637382,
+   "event": "card",
+   "state": "",
+   "frame_unix": 0
+  },
+  {
+   "state": "",
+   "kind": "event",
+   "frame_unix": 0,
+   "verdict": "",
+   "event": "reply",
+   "text": "Fue a las 08:10, 90 ml en mamadera.",
+   "unix": 1793405809.265163
+  },
+  {
+   "frame_unix": 0,
+   "unix": 1793405809.330045,
+   "agent_cause": "answer",
+   "action": "",
+   "cause": "card",
+   "detail": "",
+   "kind": "sent",
+   "wearer": "gonza",
+   "alert": false,
+   "event_unix": 1793405809.263825,
+   "title": "Respuesta",
+   "meta": "",
+   "status": "Fue a las 08:10, 90 ml en mamadera.",
+   "agent_unix": 1793405809.263,
+   "icon": "speechBubble"
+  },
+  {
+   "verdict": "",
+   "frame_unix": 0,
+   "event": "caption",
+   "kind": "event",
+   "state": "",
+   "text": "",
+   "unix": 1793405818.436709
+  },
+  {
+   "unix": 1793405818.4370298,
+   "kind": "caption",
+   "name": "09:36 · Who is on duty tonight"
+  },
+  {
+   "verdict": "",
+   "frame_unix": 0,
+   "event": "card",
+   "kind": "event",
+   "state": "",
+   "text": "",
+   "unix": 1793405818.443396
+  },
+  {
+   "alert": false,
+   "action": "",
+   "status": "De turno: Gonza",
+   "icon": "person",
+   "agent_unix": 1793405818.443,
+   "detail": "",
+   "wearer": "gonza",
+   "unix": 1793405818.459834,
+   "frame_unix": 0,
+   "title": "Esta noche",
+   "meta": "",
+   "kind": "sent",
+   "cause": "card",
+   "event_unix": 1793405818.4435291,
+   "agent_cause": "on_duty"
+  },
+  {
+   "event": "caption",
+   "verdict": "",
+   "state": "",
+   "kind": "event",
+   "text": "",
+   "frame_unix": 0,
+   "unix": 1793405827.181694
+  },
+  {
+   "name": "09:39 · Shopping list",
+   "unix": 1793405827.1821609,
+   "kind": "caption"
+  },
+  {
+   "unix": 1793405839.799018,
+   "frame_unix": 0,
+   "event": "caption",
+   "kind": "event",
+   "verdict": "",
+   "state": "",
+   "text": ""
+  },
+  {
+   "kind": "caption",
+   "name": "09:44 · Car seat coach",
+   "unix": 1793405839.7994251
+  },
+  {
+   "unix": 1793405839.802757,
+   "frame_unix": 0,
+   "event": "heard",
+   "kind": "event",
+   "verdict": "",
+   "state": "",
+   "text": "Ayudame a instalar la silla del auto."
+  },
+  {
+   "kind": "say",
+   "unix": 1793405839.802912,
+   "by": "agent heard",
+   "text": "Ayudame a instalar la silla del auto."
+  },
+  {
+   "verdict": "",
+   "frame_unix": 0,
+   "event": "skill",
+   "kind": "event",
+   "state": "",
+   "text": "car-seat armed, watching through the glasses",
+   "unix": 1793405850.5147219
+  },
+  {
+   "unix": 1793405850.515821,
+   "frame_unix": 0,
+   "event": "card",
+   "kind": "event",
+   "verdict": "",
+   "state": "",
+   "text": ""
+  },
+  {
+   "verdict": "",
+   "frame_unix": 0,
+   "event": "voice",
+   "kind": "event",
+   "state": "",
+   "text": "Coaching the Joie i-Snug 2 in the Tesla Model 3 (2027), installed with the seat belt and no base. Put the carrier on a rear seat, facing the back of the car. Never put a rear-facing seat in the front passenger seat while the airbag is on. Is the carrier on a rear seat, facing the back? Say yes or no.",
+   "unix": 1793405850.5164042
+  },
+  {
+   "action": "",
+   "title": "Silla del auto",
+   "cause": "card",
+   "wearer": "gonza",
+   "status": "¿Silla atrás, mirando hacia atrás?",
+   "meta": "Paso 1 de 8",
+   "kind": "sent",
+   "icon": "carFrontView",
+   "event_unix": 1793405850.515867,
+   "frame_unix": 0,
+   "agent_cause": "car_seat",
+   "agent_unix": 1793405850.515,
+   "detail": "Decí sí o no",
+   "unix": 1793405850.518777,
+   "alert": false
+  },
+  {
+   "event": "card",
+   "verdict": "",
+   "state": "",
+   "kind": "event",
+   "text": "",
+   "frame_unix": 0,
+   "unix": 1793405851.74504
+  },
+  {
+   "verdict": "",
+   "frame_unix": 0,
+   "event": "reply",
+   "kind": "event",
+   "state": "",
+   "text": "Vamos paso a paso con la silla Joie i-Snug 2 con cinturón.\n\nPrimero, ponela mirando hacia atrás en el asiento trasero. ¿La tenés ubicada ahí?",
+   "unix": 1793405851.750031
+  },
+  {
+   "action": "",
+   "event_unix": 1793405851.7452059,
+   "frame_unix": 0,
+   "detail": "Primero, ponela mirando hacia atrás en el asiento trasero.",
+   "agent_cause": "answer",
+   "unix": 1793405851.755949,
+   "alert": false,
+   "status": "Vamos paso a paso con la silla Joie i-Snug 2 con cinturón.",
+   "wearer": "gonza",
+   "kind": "sent",
+   "meta": "",
+   "agent_unix": 1793405851.744,
+   "title": "Respuesta",
+   "icon": "speechBubble",
+   "cause": "card"
+  },
+  {
+   "event": "heard",
+   "verdict": "",
+   "state": "",
+   "kind": "event",
+   "text": "Sí.",
+   "frame_unix": 0,
+   "unix": 1793405851.766438
+  },
+  {
+   "kind": "say",
+   "unix": 1793405851.766568,
+   "by": "agent heard",
+   "text": "Sí."
+  },
+  {
+   "verdict": "",
+   "frame_unix": 0,
+   "event": "card",
+   "kind": "event",
+   "state": "",
+   "text": "",
+   "unix": 1793405851.7675672
+  },
+  {
+   "event_unix": 1793405851.76761,
+   "agent_unix": 1793405851.767,
+   "cause": "card",
+   "action": "",
+   "frame_unix": 0,
+   "kind": "sent",
+   "alert": false,
+   "wearer": "gonza",
+   "icon": "carFrontView",
+   "title": "Silla del auto",
+   "status": "Cinturón de cadera en las dos guías",
+   "meta": "Paso 2 de 8",
+   "unix": 1793405851.768687,
+   "detail": "",
+   "agent_cause": "car_seat"
+  },
+  {
+   "event": "voice",
+   "verdict": "",
+   "state": "",
+   "kind": "event",
+   "text": "Slide the lap belt into both side guides of the carrier, then show me the belt path from the door.",
+   "frame_unix": 0,
+   "unix": 1793405851.769958
+  },
+  {
+   "event": "card",
+   "verdict": "",
+   "state": "",
+   "kind": "event",
+   "text": "",
+   "frame_unix": 0,
+   "unix": 1793405851.77436
+  },
+  {
+   "event": "reply",
+   "verdict": "",
+   "state": "",
+   "kind": "event",
+   "text": "Anotado: sí.",
+   "frame_unix": 0,
+   "unix": 1793405851.775356
+  },
+  {
+   "detail": "",
+   "meta": "",
+   "alert": false,
+   "cause": "card",
+   "agent_cause": "answer",
+   "kind": "sent",
+   "icon": "speechBubble",
+   "action": "",
+   "event_unix": 1793405851.7744498,
+   "wearer": "gonza",
+   "agent_unix": 1793405851.774,
+   "title": "Respuesta",
+   "frame_unix": 0,
+   "status": "Anotado: sí.",
+   "unix": 1793405851.776479
+  },
+  {
+   "verdict": "",
+   "frame_unix": 0,
+   "event": "card",
+   "kind": "event",
+   "state": "",
+   "text": "",
+   "unix": 1793405854.0054169
+  },
+  {
+   "verdict": "",
+   "frame_unix": 0,
+   "event": "voice",
+   "kind": "event",
+   "state": "",
+   "text": "I can see the lap belt in both side guides.",
+   "unix": 1793405854.031551
+  },
+  {
+   "agent_cause": "car_seat",
+   "title": "Silla del auto",
+   "wearer": "gonza",
+   "action": "",
+   "event_unix": 1793405854.008935,
+   "unix": 1793405854.100214,
+   "icon": "carFrontView",
+   "meta": "Paso 2 de 8",
+   "alert": false,
+   "agent_unix": 1793405853.999,
+   "status": "Cinturón de cadera en las dos guías",
+   "frame_unix": 0,
+   "kind": "sent",
+   "cause": "card",
+   "detail": "Visto en cámara: bien"
+  },
+  {
+   "event": "card",
+   "verdict": "",
+   "state": "",
+   "kind": "event",
+   "text": "",
+   "frame_unix": 0,
+   "unix": 1793405854.115079
+  },
+  {
+   "event": "voice",
+   "verdict": "",
+   "state": "",
+   "kind": "event",
+   "text": "Slide the shoulder belt into the rear guide behind the carrier's head end.",
+   "frame_unix": 0,
+   "unix": 1793405854.117605
+  },
+  {
+   "agent_unix": 1793405854.003,
+   "title": "Silla del auto",
+   "frame_unix": 0,
+   "detail": "",
+   "unix": 1793405854.118207,
+   "status": "Cinturón de hombro en la guía de atrás",
+   "alert": false,
+   "action": "",
+   "cause": "card",
+   "event_unix": 1793405854.115191,
+   "wearer": "gonza",
+   "meta": "Paso 3 de 8",
+   "icon": "carFrontView",
+   "agent_cause": "car_seat",
+   "kind": "sent"
+  },
+  {
+   "verdict": "",
+   "frame_unix": 0,
+   "event": "card",
+   "kind": "event",
+   "state": "",
+   "text": "",
+   "unix": 1793405855.695709
+  },
+  {
+   "verdict": "",
+   "frame_unix": 0,
+   "event": "voice",
+   "kind": "event",
+   "state": "",
+   "text": "I can see the shoulder belt in the rear guide.",
+   "unix": 1793405855.697482
+  },
+  {
+   "agent_cause": "car_seat",
+   "icon": "carFrontView",
+   "kind": "sent",
+   "action": "",
+   "alert": false,
+   "wearer": "gonza",
+   "title": "Silla del auto",
+   "detail": "Visto en cámara: bien",
+   "event_unix": 1793405855.6958408,
+   "agent_unix": 1793405855.695,
+   "cause": "card",
+   "unix": 1793405855.7004561,
+   "status": "Cinturón de hombro en la guía de atrás",
+   "meta": "Paso 3 de 8",
+   "frame_unix": 0
+  },
+  {
+   "verdict": "",
+   "frame_unix": 0,
+   "event": "card",
+   "kind": "event",
+   "state": "",
+   "text": "",
+   "unix": 1793405855.700772
+  },
+  {
+   "icon": "carFrontView",
+   "action": "",
+   "frame_unix": 0,
+   "detail": "",
+   "alert": false,
+   "title": "Silla del auto",
+   "status": "Cinturón tenso y plano, sin giros",
+   "event_unix": 1793405855.70084,
+   "agent_cause": "car_seat",
+   "unix": 1793405855.702333,
+   "meta": "Paso 4 de 8",
+   "cause": "card",
+   "kind": "sent",
+   "agent_unix": 1793405855.7,
+   "wearer": "gonza"
+  },
+  {
+   "verdict": "",
+   "frame_unix": 0,
+   "event": "voice",
+   "kind": "event",
+   "state": "",
+   "text": "Pull the shoulder belt tight and keep the belt flat, with no twist.",
+   "unix": 1793405855.702791
+  },
+  {
+   "verdict": "",
+   "frame_unix": 0,
+   "event": "card",
+   "kind": "event",
+   "state": "",
+   "text": "",
+   "unix": 1793405857.345845
+  },
+  {
+   "verdict": "",
+   "frame_unix": 0,
+   "event": "voice",
+   "kind": "event",
+   "state": "",
+   "text": "The lap belt looks flat across the carrier.",
+   "unix": 1793405857.349069
+  },
+  {
+   "action": "",
+   "event_unix": 1793405857.3460321,
+   "frame_unix": 0,
+   "detail": "Visto en cámara: bien",
+   "agent_cause": "car_seat",
+   "unix": 1793405857.3501291,
+   "alert": false,
+   "status": "Cinturón tenso y plano, sin giros",
+   "wearer": "gonza",
+   "kind": "sent",
+   "meta": "Paso 4 de 8",
+   "agent_unix": 1793405857.345,
+   "title": "Silla del auto",
+   "icon": "carFrontView",
+   "cause": "card"
+  },
+  {
+   "verdict": "",
+   "frame_unix": 0,
+   "event": "card",
+   "kind": "event",
+   "state": "",
+   "text": "",
+   "unix": 1793405857.350389
+  },
+  {
+   "verdict": "",
+   "frame_unix": 0,
+   "event": "voice",
+   "kind": "event",
+   "state": "",
+   "text": "Show me the level line on the side of the carrier, with the phone held level.",
+   "unix": 1793405857.352834
+  },
+  {
+   "kind": "sent",
+   "alert": false,
+   "icon": "carFrontView",
+   "agent_cause": "car_seat",
+   "wearer": "gonza",
+   "detail": "",
+   "title": "Silla del auto",
+   "cause": "card",
+   "status": "Mostrame la línea de nivel",
+   "event_unix": 1793405857.350482,
+   "frame_unix": 0,
+   "agent_unix": 1793405857.349,
+   "action": "",
+   "unix": 1793405857.3588529,
+   "meta": "Paso 5 de 8"
+  },
+  {
+   "event": "card",
+   "verdict": "",
+   "state": "",
+   "kind": "event",
+   "text": "",
+   "frame_unix": 0,
+   "unix": 1793405858.708765
+  },
+  {
+   "event": "voice",
+   "verdict": "",
+   "state": "",
+   "kind": "event",
+   "text": "The level line looks level.",
+   "frame_unix": 0,
+   "unix": 1793405858.711633
+  },
+  {
+   "agent_cause": "car_seat",
+   "title": "Silla del auto",
+   "wearer": "gonza",
+   "action": "",
+   "event_unix": 1793405858.708915,
+   "unix": 1793405858.712523,
+   "icon": "carFrontView",
+   "meta": "Paso 5 de 8",
+   "alert": false,
+   "agent_unix": 1793405858.708,
+   "status": "Mostrame la línea de nivel",
+   "frame_unix": 0,
+   "kind": "sent",
+   "cause": "card",
+   "detail": "Visto en cámara: bien"
+  },
+  {
+   "event": "card",
+   "verdict": "",
+   "state": "",
+   "kind": "event",
+   "text": "",
+   "frame_unix": 0,
+   "unix": 1793405858.713735
+  },
+  {
+   "agent_unix": 1793405858.713,
+   "status": "Manija arriba, posición de auto",
+   "event_unix": 1793405858.713803,
+   "alert": false,
+   "cause": "card",
+   "wearer": "gonza",
+   "meta": "Paso 6 de 8",
+   "detail": "",
+   "kind": "sent",
+   "agent_cause": "car_seat",
+   "unix": 1793405858.715475,
+   "frame_unix": 0,
+   "action": "",
+   "title": "Silla del auto",
+   "icon": "carFrontView"
+  },
+  {
+   "event": "voice",
+   "verdict": "",
+   "state": "",
+   "kind": "event",
+   "text": "Put the handle upright, in position 1, the car position.",
+   "frame_unix": 0,
+   "unix": 1793405858.715632
+  },
+  {
+   "verdict": "",
+   "frame_unix": 0,
+   "event": "card",
+   "kind": "event",
+   "state": "",
+   "text": "",
+   "unix": 1793405860.6696339
+  },
+  {
+   "action": "",
+   "title": "Silla del auto",
+   "meta": "Paso 6 de 8",
+   "agent_unix": 1793405860.669,
+   "frame_unix": 0,
+   "cause": "card",
+   "alert": false,
+   "status": "Manija arriba, posición de auto",
+   "icon": "carFrontView",
+   "event_unix": 1793405860.669715,
+   "detail": "Visto en cámara: bien",
+   "agent_cause": "car_seat",
+   "kind": "sent",
+   "wearer": "gonza",
+   "unix": 1793405860.671826
+  },
+  {
+   "verdict": "",
+   "frame_unix": 0,
+   "event": "voice",
+   "kind": "event",
+   "state": "",
+   "text": "The handle is upright.",
+   "unix": 1793405860.6724129
+  },
+  {
+   "verdict": "",
+   "frame_unix": 0,
+   "event": "voice",
+   "kind": "event",
+   "state": "",
+   "text": "Visible checks that passed: lap belt in both side guides, shoulder belt in the rear guide, no twist in the lap belt, level line level, handle upright. Hand checks you confirmed: carrier on a rear seat facing back. Not done yet: less than 2.5 centimeters of movement at the belt path, no slack in the harness pinch test. This is not a verdict on the install. Before the first real trip, book one check by a certified child passenger safety technician. Cybex offers a free virtual check, and Fundacion Gonzalo Rodriguez runs check days in Montevideo.",
+   "unix": 1793405860.6752071
+  },
+  {
+   "verdict": "",
+   "frame_unix": 0,
+   "event": "card",
+   "kind": "event",
+   "state": "",
+   "text": "",
+   "unix": 1793405860.68012
+  },
+  {
+   "agent_cause": "car_seat",
+   "icon": "carFrontView",
+   "kind": "sent",
+   "action": "",
+   "alert": false,
+   "wearer": "gonza",
+   "title": "Silla del auto",
+   "detail": "No es un veredicto: consultá a un técnico",
+   "event_unix": 1793405860.680239,
+   "agent_unix": 1793405860.68,
+   "cause": "card",
+   "unix": 1793405860.6823049,
+   "status": "Revisión de la silla terminada",
+   "meta": "",
+   "frame_unix": 0
+  },
+  {
+   "verdict": "",
+   "frame_unix": 0,
+   "event": "card",
+   "kind": "event",
+   "state": "",
+   "text": "",
+   "unix": 1793405862.695959
+  },
+  {
+   "unix": 1793405862.702671,
+   "frame_unix": 0,
+   "event": "reply",
+   "kind": "event",
+   "verdict": "",
+   "state": "",
+   "text": "Quedó así la silla Joie i-Snug 2 con cinturón:\n\nPasó en cámara: cinturón ventral en ambas guías laterales, bandeo al hombro en la guía trasera, sin torsión en el tramo ventral, línea de nivel nivelada, asa arriba.\nConfirmaste a mano: huevito en asiento trasero mirando hacia atrás.\n\nFaltan estas dos comprobaciones a mano: que se mueva menos de 2,5 cm en la zona del cinturón, y que el arnés no tenga holgura con la prueba del pellizco.\n\nEsto no es un veredicto sobre la instalación. Antes del primer viaje real, agendá una revisión con un técnico certificado en seguridad infantil. Cybex ofrece una revisión virtual gratuita y Fundación Gonzalo Rodríguez hace jornadas de revisión en Montevideo."
+  },
+  {
+   "agent_unix": 1793405862.695,
+   "status": "Quedó así la silla Joie i-Snug 2 con cinturón:",
+   "event_unix": 1793405862.696126,
+   "alert": false,
+   "cause": "card",
+   "wearer": "gonza",
+   "meta": "",
+   "detail": "Pasó en cámara: cinturón ventral en ambas guías laterales, bandeo al hombro en la guía…",
+   "kind": "sent",
+   "agent_cause": "answer",
+   "unix": 1793405862.703755,
+   "frame_unix": 0,
+   "action": "",
+   "title": "Respuesta",
+   "icon": "speechBubble"
+  },
+  {
+   "verdict": "",
+   "frame_unix": 0,
+   "event": "caption",
+   "kind": "event",
+   "state": "",
+   "text": "",
+   "unix": 1793405873.015414
+  },
+  {
+   "name": "09:54 · Red flag",
+   "kind": "caption",
+   "unix": 1793405873.022577
+  },
+  {
+   "unix": 1793405873.0788631,
+   "frame_unix": 0,
+   "event": "card",
+   "kind": "event",
+   "verdict": "",
+   "state": "",
+   "text": ""
+  },
+  {
+   "action": "Entendido",
+   "title": "Llamá al 911 ya",
+   "meta": "911 · hace 0:00",
+   "agent_unix": 1793405873.019,
+   "frame_unix": 0,
+   "cause": "card",
+   "alert": true,
+   "status": "Puede ser una emergencia",
+   "icon": "phoneHandsetArrowUpRight",
+   "event_unix": 1793405873.079122,
+   "detail": "Contales lo que ves",
+   "agent_cause": "red_flag",
+   "kind": "sent",
+   "wearer": "gonza",
+   "unix": 1793405873.2639341
+  },
+  {
+   "agent_cause": "",
+   "wearer": "gonza",
+   "status": "Puede ser una emergencia",
+   "agent_unix": 0,
+   "action": "Entendido",
+   "title": "Llamá al 911 ya",
+   "kind": "sent",
+   "detail": "Contales lo que ves",
+   "icon": "phoneHandsetArrowUpRight",
+   "alert": true,
+   "cause": "",
+   "frame_unix": 0,
+   "unix": 1793405888.192184,
+   "event_unix": 0,
+   "meta": "911 · hace 0:15"
+  },
+  {
+   "event_unix": 0,
+   "agent_unix": 0,
+   "cause": "",
+   "action": "Entendido",
+   "frame_unix": 0,
+   "kind": "sent",
+   "alert": true,
+   "wearer": "gonza",
+   "icon": "phoneHandsetArrowUpRight",
+   "title": "Llamá al 911 ya",
+   "status": "Puede ser una emergencia",
+   "meta": "911 · hace 0:30",
+   "unix": 1793405903.284488,
+   "detail": "Contales lo que ves",
+   "agent_cause": ""
+  },
+  {
+   "verdict": "",
+   "frame_unix": 0,
+   "event": "card",
+   "kind": "event",
+   "state": "",
+   "text": "",
+   "unix": 1793405913.352518
+  },
+  {
+   "unix": 1793405913.970928,
+   "frame_unix": 0,
+   "event": "caption",
+   "kind": "event",
+   "verdict": "",
+   "state": "",
+   "text": ""
+  },
+  {
+   "name": "09:55 · Red flag acknowledged",
+   "unix": 1793405913.9712849,
+   "kind": "caption"
+  },
+  {
+   "unix": 1793405913.976562,
+   "frame_unix": 0,
+   "event": "heard",
+   "kind": "event",
+   "verdict": "",
+   "state": "",
+   "text": "Listo, ya llamé al 911."
+  },
+  {
+   "kind": "say",
+   "text": "Listo, ya llamé al 911.",
+   "unix": 1793405913.97674,
+   "by": "agent heard"
+  },
+  {
+   "unix": 1793405913.977882,
+   "frame_unix": 0,
+   "event": "red_flag_clear",
+   "kind": "event",
+   "verdict": "",
+   "state": "",
+   "text": ""
+  },
+  {
+   "action": "",
+   "wearer": "gonza",
+   "title": "Próxima toma",
+   "agent_unix": 0,
+   "unix": 1793405913.97887,
+   "frame_unix": 0,
+   "kind": "sent",
+   "cause": "red_flag_clear",
+   "detail": "Cada 2 h 20 min más o menos",
+   "status": "Cerca de las 10:15 · en 20 min",
+   "meta": "",
+   "icon": "clock",
+   "agent_cause": "",
+   "event_unix": 1793405913.9779239,
+   "alert": false
+  },
+  {
+   "unix": 1793405918.662375,
+   "frame_unix": 0,
+   "event": "card",
+   "kind": "event",
+   "verdict": "",
+   "state": "",
+   "text": ""
+  },
+  {
+   "unix": 1793405918.663594,
+   "frame_unix": 0,
+   "event": "reply",
+   "kind": "event",
+   "verdict": "",
+   "state": "",
+   "text": "Gracias por avisar, Gonza. Quedate al teléfono con el 911 y seguí sus indicaciones.\n\nEstoy acá con ustedes mientras llega la ayuda."
+  },
+  {
+   "agent_unix": 1793405918.662,
+   "cause": "card",
+   "event_unix": 1793405918.662466,
+   "status": "Gracias por avisar, Gonza.",
+   "frame_unix": 0,
+   "agent_cause": "answer",
+   "action": "",
+   "kind": "sent",
+   "meta": "",
+   "detail": "Quedate al teléfono con el 911 y seguí sus indicaciones.",
+   "wearer": "gonza",
+   "icon": "speechBubble",
+   "alert": false,
+   "unix": 1793405918.664165,
+   "title": "Respuesta"
+  }
+ ],
+ "ceci_events": [
+  {
+   "kind": "card",
+   "card": {
+    "topic": "morning",
+    "icon": "cloudCrescentMoon",
+    "title": "Buen día, Ceci",
+    "status": "Anoche: 3 tomas, el sueño más largo 0.0 h, no te levantaste.",
+    "alert": false,
+    "sticky": false,
+    "lang": "es",
+    "detail": "Clima: nublado, 14 a 15 C."
+   },
+   "cause": "morning",
+   "via": "telegram",
+   "agent_unix": 1793405671.622,
+   "received_unix": 1793405671.623
+  },
+  {
+   "kind": "card",
+   "card": {
+    "topic": "next_feed",
+    "icon": "clock",
+    "title": "Próxima toma",
+    "status": "Cerca de las 08:30 · en 20 min",
+    "alert": false,
+    "sticky": false,
+    "lang": "es",
+    "detail": "Cada 2 h 45 min más o menos"
+   },
+   "cause": "next_feed",
+   "via": "telegram",
+   "agent_unix": 1793405700.985,
+   "received_unix": 1793405700.986
+  },
+  {
+   "kind": "card",
+   "card": {
+    "topic": "answer",
+    "icon": "speechBubble",
+    "title": "Respuesta",
+    "status": "Anotado, 90 ml en mamadera.",
+    "alert": false,
+    "sticky": false,
+    "lang": "es"
+   },
+   "cause": "reply",
+   "via": "telegram",
+   "agent_unix": 1793405713.962,
+   "received_unix": 1793405713.962
+  },
+  {
+   "kind": "card",
+   "card": {
+    "topic": "answer",
+    "icon": "speechBubble",
+    "title": "Respuesta",
+    "status": "Se durmió anotado.",
+    "alert": false,
+    "sticky": false,
+    "lang": "es"
+   },
+   "cause": "reply",
+   "via": "telegram",
+   "agent_unix": 1793405719.398,
+   "received_unix": 1793405719.399
+  },
+  {
+   "kind": "card",
+   "card": {
+    "topic": "nap",
+    "icon": "bedSide",
+    "title": "Modo siesta",
+    "status": "Siesta desde las 08:10",
+    "alert": false,
+    "sticky": false,
+    "lang": "es",
+    "detail": "La casa queda en silencio",
+    "meta": "Prueba en seco, no se movió nada"
+   },
+   "cause": "nap_mode on",
+   "via": "house",
+   "agent_unix": 1793405726.127,
+   "received_unix": 1793405726.128
+  },
+  {
+   "kind": "card",
+   "card": {
+    "topic": "answer",
+    "icon": "speechBubble",
+    "title": "Respuesta",
+    "status": "Se despertó anotado.",
+    "alert": false,
+    "sticky": false,
+    "lang": "es"
+   },
+   "cause": "reply",
+   "via": "telegram",
+   "agent_unix": 1793405783.761,
+   "received_unix": 1793405783.761
+  },
+  {
+   "kind": "card",
+   "card": {
+    "topic": "nap",
+    "icon": "speakerWithTwoArcs",
+    "title": "Fin de la siesta",
+    "status": "Se despertó, la casa vuelve a lo normal",
+    "alert": false,
+    "sticky": false,
+    "lang": "es",
+    "meta": "Prueba en seco, no se movió nada"
+   },
+   "cause": "nap_mode off",
+   "via": "house",
+   "agent_unix": 1793405791.287,
+   "received_unix": 1793405791.288
+  },
+  {
+   "kind": "card",
+   "card": {
+    "topic": "house",
+    "icon": "house",
+    "title": "Casa",
+    "status": "Podría pasar la aspiradora antes de las 10:11, pero el…",
+    "alert": false,
+    "sticky": false,
+    "lang": "es",
+    "detail": "Decime dónde está, o si salió con ustedes."
+   },
+   "cause": "floor_clean",
+   "via": "telegram",
+   "agent_unix": 1793405803.736,
+   "received_unix": 1793405803.745
+  },
+  {
+   "kind": "card",
+   "card": {
+    "topic": "shopping",
+    "icon": "cart",
+    "title": "Lista de compras",
+    "status": "Pañales está listo para la lista de compras.",
+    "alert": false,
+    "sticky": false,
+    "lang": "es",
+    "detail": "¿Lo agrego?"
+   },
+   "cause": "reply",
+   "via": "telegram",
+   "agent_unix": 1793405829.932,
+   "received_unix": 1793405829.933
+  },
+  {
+   "kind": "card",
+   "card": {
+    "topic": "next_feed",
+    "icon": "clock",
+    "title": "Próxima toma",
+    "status": "Cerca de las 10:15 · en 20 min",
+    "alert": false,
+    "sticky": false,
+    "lang": "es",
+    "detail": "Cada 2 h 20 min más o menos"
+   },
+   "cause": "next_feed",
+   "via": "telegram",
+   "agent_unix": 1793405913.352,
+   "received_unix": 1793405913.352
+  }
+ ],
+ "video": {
+  "file": "/Users/gonza/Engineering/gonza/meta-hackathon-2026-synthetic/video-v5/rec/hud/hud-day.mp4",
+  "bytes": 7543370,
+  "start_unix": 1793405578.041777
+ }
+}

@@ -110,8 +110,8 @@ class FamilyAgent(Agent):
     health_gate = True
     confirm_from_log = True
 
-    def say(self, channel, text):
-        super().say(channel, es_uy(text) if self.lang() == "es" else text)
+    def say(self, channel, text, **about):
+        super().say(channel, es_uy(text) if self.lang() == "es" else text, **about)
 
     def baby_name(self):
         return self.memory.facts().get("baby_name", {}).get("value") or None

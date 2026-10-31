@@ -22,6 +22,13 @@ token. A home network address is for a network only the family uses.
 
 Add "parenting_agent.glasses:Glasses" to the agent plugins and set a skill's source to "glasses". The skill
 gets a view on the one shared server, so arming and finishing a skill never drops the phone's connection.
+
+Each parent who wears glasses pairs with their own token ("wearers" in the glasses block, one token file each), so
+the endpoint knows whose glasses are live. Everything the agent tells that parent that fits a glance also becomes a
+display card on their glasses (hud_cards.py): the answer to what they said on the glasses, and the copy of what
+reached them on another channel (a Telegram push or the answer to their Telegram message), while that parent's
+glasses are listening. The Telegram copy still goes out. Only the parent a message is for gets its card: the same
+person the Telegram copy went to, and for the agent's own events (nap mode) the family push's routing.
 """
 import collections
 import hmac
@@ -29,16 +36,21 @@ import ipaddress
 import json
 import os
 import queue
+import re
 import secrets
 import threading
 import time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
+from . import hud_cards as cards
+from .agent.people import People
 from .agent.plugins import Plugin
 from .sources import MAX_FRAME_BYTES, Latest
 
 DEFAULT_PORT = 8766
+# A short acknowledgement of a red flag card on the glasses ("entendido", "got it"): the sticky card goes.
+ACK = re.compile(r"^\s*(ok|okay|got it|understood|entendido|entendí|listo|dale|ya llamé|llamé|i called|called)\b", re.I)
 TAILSCALE = ipaddress.ip_network("100.64.0.0/10")
 ARRIVALS_KEPT = 600  # about a minute of frames at 10 per second
 
@@ -54,6 +66,11 @@ def check_host(host):
     if not (ip.is_loopback or ip in TAILSCALE or (ip.is_private and not ip.is_link_local)):
         raise ValueError(f"glasses: {host} is not a private address, refusing to serve")
     return str(ip)
+
+
+def token_path(person, data_dir="data"):
+    """The token file of one wearer: data/glasses-token-<person>."""
+    return Path(data_dir) / f"glasses-token-{person}"
 
 
 def write_token(token, path=None):
@@ -73,13 +90,16 @@ class GlassesHub(Latest):
     _hubs = {}
     _hubs_lock = threading.Lock()
 
-    def __init__(self, port=DEFAULT_PORT, host=None, token=None, on_say=None):
+    def __init__(self, port=DEFAULT_PORT, host=None, token=None, on_say=None, person=None):
         super().__init__()
         self.is_file = False
         self.host = check_host(host or os.environ.get("PARENTING_AGENT_GLASSES_HOST") or "127.0.0.1")
         self.token = token or os.environ.get("PARENTING_AGENT_GLASSES_TOKEN") or secrets.token_urlsafe(12)
+        self.tokens = {self.token: person}  # token -> the wearer it belongs to (None: a pairing with no person)
+        self.profiles = {}                  # wearer -> {"name", "lang"}, sent in the hello
         self.on_say = on_say
-        self.clients = []
+        self.camera_person = person         # whose glasses sent the newest frame
+        self.clients = []                   # [(inbox, wearer)]
         self.frames_in, self.rejected = 0, 0
         self.arrivals = collections.OrderedDict()  # stream_s (3 decimals) -> Unix time the frame arrived
         self.server = ThreadingHTTPServer((self.host, port), self._handler())
@@ -88,6 +108,31 @@ class GlassesHub(Latest):
         self.url = f"http://{self.host}:{self.port}/"
         self.thread = threading.Thread(target=self.server.serve_forever, name="glasses", daemon=True)
         self.thread.start()
+
+    def add_wearer(self, person, token=None, profile=None):
+        """Pairs one more parent's glasses: their own token. Returns the token, never printed."""
+        token = token or secrets.token_urlsafe(12)
+        self.tokens[token] = person
+        if profile:
+            self.profiles[person] = profile
+        return token
+
+    def wearer(self, headers):
+        """(True, the wearer) for a known token, (False, None) otherwise. Compared in constant time."""
+        given = headers.get("Authorization", "")
+        if not given.startswith("Bearer "):
+            return False, None
+        for token, person in list(self.tokens.items()):
+            if hmac.compare_digest(given[7:].encode(), token.encode()):
+                return True, person
+        return False, None
+
+    def live(self, person):
+        """True while that parent's glasses app listens to the events: their glasses session is live."""
+        return any(who == person for _, who in list(self.clients))
+
+    def wearers_live(self):
+        return sorted({who for _, who in list(self.clients) if who is not None})
 
     @classmethod
     def shared(cls, port=DEFAULT_PORT, token_file=None, **kwargs):
@@ -107,8 +152,7 @@ class GlassesHub(Latest):
         return GlassesView(self)
 
     def authorized(self, headers):
-        given = headers.get("Authorization", "")
-        return given.startswith("Bearer ") and hmac.compare_digest(given[7:].encode(), self.token.encode())
+        return self.wearer(headers)[0]
 
     def _handler(self):
         hub = self
@@ -136,7 +180,8 @@ class GlassesHub(Latest):
                 return length if length >= 0 else None
 
             def guard(self):
-                if hub.authorized(self.headers):
+                ok, self.person = hub.wearer(self.headers)
+                if ok:
                     return True
                 hub.rejected += 1
                 length = self.length()
@@ -152,9 +197,10 @@ class GlassesHub(Latest):
                     return
                 path = self.path.split("?", 1)[0]
                 if path == "/events":
-                    hub._stream(self)
+                    hub._stream(self, self.person)
                 elif path == "/health":
-                    body = {"frames": hub.frames_in, "listeners": len(hub.clients), "agent": hub.on_say is not None}
+                    body = {"frames": hub.frames_in, "listeners": len(hub.clients), "agent": hub.on_say is not None,
+                            "wearer": self.person}
                     self.reply(200, json.dumps(body).encode(), "application/json")
                 else:
                     self.reply(404)
@@ -175,7 +221,10 @@ class GlassesHub(Latest):
                 body = self.rfile.read(length)
                 path = self.path.split("?", 1)[0]
                 if path == "/frame":
-                    self.reply(204 if hub._frame(body) else 400)
+                    ok = hub._frame(body)
+                    if ok and self.person is not None:
+                        hub.camera_person = self.person
+                    self.reply(204 if ok else 400)
                 elif path == "/say":
                     try:
                         text = str(json.loads(body or b"{}").get("text", "")).strip()
@@ -186,7 +235,7 @@ class GlassesHub(Latest):
                     elif hub.on_say is None:
                         self.reply(503, b"no agent is running on this endpoint")
                     else:
-                        hub.on_say(text[:500])
+                        hub.on_say(text[:500]) if self.person is None else hub.on_say(text[:500], self.person)
                         self.reply(204)
                 else:
                     self.reply(404)
@@ -216,14 +265,18 @@ class GlassesHub(Latest):
         with self.lock:
             return self.arrivals.get(round(stream_s, 3))
 
-    def _stream(self, handler):
+    def _stream(self, handler, person=None):
         handler.send_response(200)
         handler.send_header("Content-Type", "text/event-stream")
         handler.send_header("Cache-Control", "no-store")
         handler.end_headers()
         inbox = queue.Queue(maxsize=200)
-        inbox.put({"kind": "hello"})
-        self.clients.append(inbox)
+        hello = {"kind": "hello"}
+        if person is not None:
+            hello.update(wearer=person, **self.profiles.get(person, {}))
+        inbox.put(hello)
+        client = (inbox, person)
+        self.clients.append(client)
         try:
             while not self.stopped:
                 try:
@@ -234,13 +287,16 @@ class GlassesHub(Latest):
         except (BrokenPipeError, ConnectionResetError, OSError):
             pass
         finally:
-            self.clients.remove(inbox)
+            self.clients.remove(client)
 
-    def push(self, event):
-        """Events with a frame's stream_s carry frame_unix, the time that frame arrived, so the app can time frame to card."""
+    def push(self, event, person=None):
+        """Events with a frame's stream_s carry frame_unix, the time that frame arrived, so the app can time frame to card.
+        With a person, only that parent's glasses get the event, else every listening app."""
         if event.get("stream_s") is not None and "frame_unix" not in event:
             event = {**event, "frame_unix": self.arrival(event["stream_s"])}
-        for inbox in list(self.clients):
+        for inbox, who in list(self.clients):
+            if person is not None and who != person:
+                continue
             try:
                 inbox.put_nowait(event)
             except queue.Full:
@@ -277,8 +333,9 @@ class GlassesView:
         return None if self.stopped else self.hub.latest(after_seq)
 
     def push(self, event):
+        """A skill's event goes to the glasses whose camera it watches (the newest frame's wearer)."""
         if not self.stopped:
-            self.hub.push(event)
+            self.hub.push(event, self.hub.camera_person)
 
     def close(self):
         self.closed = True
@@ -318,8 +375,8 @@ def _logged(event):
 TO_APP = {
     "reply": lambda e: {"kind": "reply", "text": e.get("text", "")},
     "ask_parent": lambda e: {"kind": "reply", "text": f"I want to use {e.get('name')}. Say yes to let me."},
-    "skill_armed": lambda e: {"kind": "skill", "text": f"{e.get('skill')} armed, watching through the glasses"},
-    "skill_closed": lambda e: {"kind": "skill", "text": f"{e.get('skill')} closed after {e.get('frames')} frames"},
+    "skill_armed": lambda e: {"kind": "skill", "skill": e.get("skill"), "text": f"{e.get('skill')} armed, watching through the glasses"},
+    "skill_closed": lambda e: {"kind": "skill", "skill": e.get("skill"), "text": f"{e.get('skill')} closed after {e.get('frames')} frames"},
     "frame": lambda e: {"kind": "state", "state": e.get("state"), "hands": e.get("hands"), "lift_cm": e.get("lift_cm"),
                         **({"held": e["held"]} if e.get("held") else {}), **_frame(e)},
     "changing_armed": lambda e: {"kind": "armed", "by": e.get("via"), "seconds": e.get("since_words_s"),
@@ -342,31 +399,144 @@ def to_app(event):
 
 
 class Glasses(Plugin):
-    """The glasses as an agent channel. Config block "glasses": {"port": 8766, "host": "127.0.0.1"}."""
+    """The glasses as an agent channel. Config block "glasses":
+        {"port": 8766, "host": "127.0.0.1", "person": "gonza", "wearers": ["gonza", "ceci"]}
+    "wearers" pairs each parent's glasses with their own token (data/glasses-token-<person>, or the env variable
+    PARENTING_AGENT_GLASSES_TOKEN_<PERSON>). "person" names the wearer of the single legacy token."""
 
     name = "glasses"
     kind = "channel"
+    CARD_KINDS = ("routine", "carseat_step", "carseat_summary", "voice")
 
-    def __init__(self, agent, config):
+    def __init__(self, agent, config, clock=time.time):
         super().__init__(agent, config)
         self.cfg = {"port": DEFAULT_PORT, **config.get("glasses", {})}
+        self.data_dir = config.get("data_dir", "data")
+        self.people = getattr(agent, "people", None) or People(config.get("people"))
+        self.house_live = bool((config.get("house") or {}).get("live"))
+        self.clock = clock  # the real time a card left the agent, for latency
+        self.car_seat = {"steps": [], "index": 0}
         self.hub = GlassesHub.shared(self.cfg["port"], host=self.cfg.get("host"), token=self.cfg.get("token"),
-                                     token_file=self.cfg.get("token_file") or Path(config.get("data_dir", "data")) / "glasses-token",
-                                     on_say=self.heard)
-        agent.bus.subscribe(self.forward, list(FORWARDED))
+                                     token_file=self.cfg.get("token_file") or Path(self.data_dir) / "glasses-token",
+                                     on_say=self.heard, person=self.cfg.get("person"))
+        for person in self.cfg.get("wearers") or []:
+            env = f"PARENTING_AGENT_GLASSES_TOKEN_{person.upper()}"
+            token = self.hub.add_wearer(person, os.environ.get(env), self.profile(person))
+            path = write_token(token, token_path(person, self.data_dir))
+            print(f"glasses: {person}'s pairing token in {path} (readable by this user only)", flush=True)
+        if self.cfg.get("person"):
+            self.hub.profiles[self.cfg["person"]] = self.profile(self.cfg["person"])
+        agent.bus.subscribe(self.forward, list(FORWARDED) + list(self.CARD_KINDS))
 
-    def heard(self, text):
-        self.agent.bus.publish("message", channel=self.name, text=text)
+    def profile(self, person):
+        return {"name": self.people.name(person) or person.capitalize(), "lang": self.lang(person)}
+
+    def lang(self, person):
+        return self.people.lang(person) or "en"
+
+    def heard(self, text, person=None):
+        if person is not None:
+            self.hub.push({"kind": "heard", "text": text}, person)
+            if ACK.match(text) and len(text) <= 40:
+                self.hub.push({"kind": "red_flag_clear", "by": "parent"}, person)
+        self.agent.bus.publish("message", channel=self.name, text=text, person=person,
+                               **({"chat_id": person} if person is not None else {}))
+
+    # Cards
+
+    def send_card(self, card, person, cause, via):
+        """One card to one parent's glasses, while they are live. Every send is a "glasses_card" event in the log."""
+        if card is None or person is None:
+            return None
+        live = self.hub.live(person)
+        self.agent.bus.publish("glasses_card", person=person, topic=card["topic"], via=via, cause=cause, shown=live,
+                               title=card["title"], status=card["status"], alert=card["alert"], sticky=card["sticky"])
+        if live:
+            self.hub.push({"kind": "card", "card": card, "cause": cause, "via": via, "agent_unix": round(self.clock(), 3)},
+                          person)
+        return card
+
+    def person_of_reply(self, event):
+        """The parent a reply on another channel reached: its person, or the person of its chat."""
+        if event.get("person"):
+            return self.people.person(event["person"]) or event["person"]
+        channel = find_plugin(self.agent, event.get("channel"))
+        person_of = getattr(channel, "person_of", None)
+        return person_of(str(event["chat_id"])) if person_of and event.get("chat_id") else None
+
+    def routed(self, event):
+        """The parents an event of the agent's own is for: the family push's routing (the Telegram rule), else all."""
+        push = find_plugin(self.agent, "family-push")
+        if push is not None and hasattr(push, "route"):
+            return push.route(event)[0]
+        return self.people.keys()
 
     def forward(self, event):
-        if event["kind"] in ("reply", "ask_parent") and event.get("channel") != self.name:
-            return
+        kind = event["kind"]
+        if kind == "reply" and event.get("channel") != self.name:
+            person = self.person_of_reply(event)
+            if person is None:
+                return None
+            lang = self.lang(person)
+            card = cards.from_push(event, lang) if event.get("proactive") else cards.from_reply(event, lang)
+            return self.send_card(card, person, event.get("routine") or event.get("source") or "reply", event.get("channel"))
+        if kind == "ask_parent" and event.get("channel") != self.name:
+            return None
+        if kind == "routine":
+            if event.get("name") != "nap_mode" or event.get("step") not in ("on", "off"):
+                return None
+            since = _hhmm(event["since"]) if event.get("since") else None
+            for person in self.routed({"routine": "nap_mode", **event}):
+                self.send_card(cards.nap_mode(event["step"], self.lang(person), event.get("sleep"), since, self.house_live),
+                               person, f"nap_mode {event['step']}", "house")
+            return None
+        if kind in ("carseat_step", "carseat_summary", "voice"):
+            return self.car_seat_card(event)
+        person = self.hub.camera_person
+        if kind == "reply":
+            person = event.get("chat_id") or person
+            self.send_card(cards.from_reply(event, self.lang(person)), person, "reply", self.name)
+        elif kind == "skill_armed" and event.get("skill") == "bath":
+            self.send_card(cards.bath(self.lang(person)), person, "skill_armed bath", "camera")
         shown = to_app(event)
         if shown is not None:
-            self.hub.push(shown)
+            self.hub.push(shown, person)
+        return None
+
+    def car_seat_card(self, event):
+        """The car seat coach (carseat/coach.py), step by step, on the glasses whose camera it watches."""
+        state = self.car_seat
+        if event["kind"] == "carseat_step":
+            if not state["steps"] or event["step"] in state["steps"][:state["index"]]:
+                state["steps"] = car_seat_steps()
+            state["index"] = state["steps"].index(event["step"]) + 1 if event["step"] in state["steps"] else state["index"] + 1
+            state["kind"] = event.get("step_kind")
+            return None
+        person = self.hub.camera_person
+        if event["kind"] == "carseat_summary":
+            return self.send_card(cards.car_seat("summary", self.lang(person)), person, "carseat_summary", "camera")
+        if event.get("skill") != "car-seat" or event.get("step") in (None, "summary"):
+            return None
+        card = cards.car_seat(event["step"], self.lang(person), state["index"], len(state["steps"]), event.get("result"),
+                              ask=state.get("kind") == "ask")
+        return self.send_card(card, person, f"car seat {event['step']}", "camera")
 
     def start(self):
         self.agent.bus.publish("channel_started", channel=self.name, url=self.hub.url)
 
     def stop(self):
         self.hub.close()
+
+
+def car_seat_steps(skill="skills/car-seat.json"):
+    """The coach's step ids in order, from the same plan the coach runs."""
+    from .carseat.coach import CAMERA_STEPS
+    try:
+        hand = [h["id"] for h in json.loads(Path(skill).read_text())["hand_checks"]]
+    except (OSError, ValueError, KeyError):
+        hand = []
+    return ["car_position", *CAMERA_STEPS, *hand]
+
+
+def find_plugin(agent, name):
+    return next((p for p in getattr(agent, "plugins", []) if getattr(p, "name", "") == name), None)

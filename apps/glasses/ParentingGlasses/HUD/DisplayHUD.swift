@@ -20,6 +20,8 @@ final class DisplayHUD {
   @ObservationIgnored private var sending = false
   /// Called on the main actor after the display accepted a card, with the Unix time the send finished.
   @ObservationIgnored var onSent: ((HUDCard, Double) -> Void)?
+  /// Called on the main actor when the wearer taps the card's button (a red flag's "Got it").
+  @ObservationIgnored var onAction: (() -> Void)?
 
   /// Attaches the display to a started device session. Glasses without a display throw, and the HUD stays off.
   func attach(to session: DeviceSession) {
@@ -66,13 +68,16 @@ final class DisplayHUD {
     pending = nil
     guard card != shown else { return }
     sending = true
+    let tapped: @Sendable () -> Void = { [weak self] in
+      Task { @MainActor in self?.onAction?() }
+    }
     Task {
       defer {
         sending = false
         flush()
       }
       do {
-        try await display.send(Self.view(card))
+        try await display.send(Self.view(card, onAction: tapped))
         shown = card
         sent += 1
         onSent?(card, Date().timeIntervalSince1970)
@@ -82,9 +87,41 @@ final class DisplayHUD {
     }
   }
 
-  /// The card as Display components: icon and title, the status line, then the supporting lines.
-  static func view(_ card: HUDCard) -> FlexBox {
-    let icon = IconName(rawValue: card.icon) ?? .iCircle
+  /// The catalog icons the cards use, by case name. IconName's raw values are not its case names (DAT 1.0.1 defines
+  /// its own rawValue), so `IconName(rawValue: "clock")` finds nothing: before Oct 30 every card fell back to iCircle.
+  /// Kept in step with ICONS in parenting_agent/hud_cards.py.
+  static let icons: [String: IconName] = [
+    "bedSide": .bedSide,
+    "bell": .bell,
+    "calendar": .calendar,
+    "carFrontView": .carFrontView,
+    "cart": .cart,
+    "checkmark": .checkmark,
+    "checkmarkCircle": .checkmarkCircle,
+    "clock": .clock,
+    "cloudCrescentMoon": .cloudCrescentMoon,
+    "dropper": .dropper,
+    "exclamationTriangle": .exclamationTriangle,
+    "eye": .eye,
+    "forkKnife": .forkKnife,
+    "house": .house,
+    "iCircle": .iCircle,
+    "lightBulb": .lightBulb,
+    "pencil": .pencil,
+    "person": .person,
+    "phoneHandsetArrowUpRight": .phoneHandsetArrowUpRight,
+    "smartGlasses": .smartGlasses,
+    "speakerOff": .speakerOff,
+    "speakerWithThreeArcs": .speakerWithThreeArcs,
+    "speakerWithTwoArcs": .speakerWithTwoArcs,
+    "speechBubble": .speechBubble,
+    "threePeopleOverlapping": .threePeopleOverlapping,
+  ]
+
+  /// The card as Display components: icon and title, the status line, then the supporting lines, and a red flag's one
+  /// button. Text styles and the system card background only: the display adds light, so no colors of our own.
+  static func view(_ card: HUDCard, onAction: (@Sendable () -> Void)? = nil) -> FlexBox {
+    let icon = Self.icons[card.icon] ?? .iCircle
     return FlexBox(direction: .column, spacing: 12, padding: EdgeInsets(all: 28)) {
       FlexBox(direction: .row, spacing: 12, crossAlignment: .center) {
         Icon(name: icon, style: card.alert ? .filled : .outline)
@@ -96,6 +133,11 @@ final class DisplayHUD {
       }
       if let meta = card.meta {
         Text(meta, style: .meta, color: .secondary)
+      }
+      if let action = card.action {
+        ButtonGroup {
+          Button(label: action, style: .primary, iconName: .checkmark, onClick: onAction)
+        }
       }
     }
     .background(.card)

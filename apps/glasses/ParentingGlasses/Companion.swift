@@ -40,6 +40,8 @@ final class Companion {
   /// What made each card, for the latency log: the event kind, its frame's arrival and the event's arrival (Unix).
   @ObservationIgnored private var causes: [HUDCard: (kind: String, frameUnix: Double?, eventUnix: Double)] = [:]
   @ObservationIgnored private var hudLog: FileHandle?
+  /// For agent cards: what made the card and the Unix time it left the agent, so agent to lens latency is logged.
+  @ObservationIgnored private var agentCauses: [HUDCard: (cause: String, agentUnix: Double)] = [:]
 
   init() {
     let fps = UserDefaults.standard.double(forKey: "sendFPS")
@@ -49,10 +51,35 @@ final class Companion {
     voice.onSpoken = { [weak self] _ in self?.spokenCount += 1 }
     glasses.onSessionStarted = { [weak self] session in self?.hud.attach(to: session) }
     hud.onSent = { [weak self] card, unix in self?.sent(card, at: unix) }
+    hud.onAction = { [weak self] in self?.acknowledge() }
+    startTicking()
     #if DEBUG
     if UserDefaults.standard.bool(forKey: "hudReplay") { return }
     #endif
     agent.listen()
+  }
+
+  /// Who wears these glasses, from the agent's hello, and the day run's caption (Debug only).
+  var wearer: String?
+  var dayCaption: (name: String, source: String)?
+  @ObservationIgnored private var lastSaid: String?
+
+  /// Cards that change with time (a red flag's meta line before Meta's 20 s dim) need a clock, not only events.
+  private func startTicking() {
+    Task { [weak self] in
+      while true {
+        try? await Task.sleep(for: .seconds(1))
+        guard let self else { return }
+        self.hudApply([], at: Date().timeIntervalSince(self.started))
+      }
+    }
+  }
+
+  /// The wearer tapped "Got it" on a red flag: it goes from the display, the agent keeps the message in its log.
+  func acknowledge() {
+    let t = Date().timeIntervalSince(started)
+    log(["kind": "acknowledged", "unix": Date().timeIntervalSince1970])
+    hudApply([HUDEvent(t: t, kind: "red_flag_clear")], at: t)
   }
 
   private func hudApply(_ events: [HUDEvent], at t: Double, cause: (kind: String, frameUnix: Double?)? = nil) {
@@ -61,6 +88,9 @@ final class Companion {
     if card != hudCard, let cause {  // the newest cause of a card, so a card shown before never lends its old frame
       causes[card] = (cause.kind, cause.frameUnix, Date().timeIntervalSince1970)
     }
+    if let agentUnix = events.first(where: { $0.kind == "card" })?.agentUnix, card != hudCard {
+      agentCauses[card] = (events.first(where: { $0.kind == "card" })?.card?.topic ?? "card", agentUnix)
+    }
     hudCard = card
     hud.show(hudCard)
   }
@@ -68,9 +98,12 @@ final class Companion {
   /// The display accepted a card: log it with what made it, so frame to card latency can be read from the run.
   private func sent(_ card: HUDCard, at unix: Double) {
     let cause = causes.removeValue(forKey: card)
+    let agent = agentCauses.removeValue(forKey: card)
     if let frame = cause?.frameUnix { lastFrameToCard = unix - frame }
     log(["kind": "sent", "title": card.title, "status": card.status, "detail": card.detail ?? "", "meta": card.meta ?? "",
-         "cause": cause?.kind ?? "", "frame_unix": cause?.frameUnix ?? 0, "event_unix": cause?.eventUnix ?? 0, "unix": unix])
+         "icon": card.icon, "alert": card.alert, "action": card.action ?? "",
+         "cause": cause?.kind ?? "", "frame_unix": cause?.frameUnix ?? 0, "event_unix": cause?.eventUnix ?? 0,
+         "agent_cause": agent?.cause ?? "", "agent_unix": agent?.agentUnix ?? 0, "wearer": wearer ?? "", "unix": unix])
   }
 
   /// Debug runs with -hudLog YES append every agent event, parent line and display send to Documents/hud-live.jsonl.
@@ -92,6 +125,7 @@ final class Companion {
     let text = text.trimmingCharacters(in: .whitespacesAndNewlines)
     guard !text.isEmpty else { return }
     add(.parent, text)
+    lastSaid = text
     log(["kind": "say", "text": text, "unix": Date().timeIntervalSince1970])
     agent.say(text)
   }
@@ -118,6 +152,29 @@ final class Companion {
       }
     }
     switch event.kind {
+    case "hello":
+      if let live = try? JSONDecoder().decode(HUDEvent.self, from: data), live.lang != nil {
+        wearer = (try? JSONSerialization.jsonObject(with: data) as? [String: Any])?["wearer"] as? String
+        log(["kind": "hello", "wearer": wearer ?? "", "lang": live.lang ?? "", "unix": Date().timeIntervalSince1970])
+      }
+    case "heard":
+      // What the agent heard from this wearer: shown unless the app itself just sent it.
+      guard let text = event.text, !text.isEmpty else { return }
+      if text != lastSaid {
+        add(.parent, text)
+        log(["kind": "say", "text": text, "unix": Date().timeIntervalSince1970, "by": "agent heard"])
+      }
+      lastSaid = nil
+    case "card":
+      if let card = (try? JSONDecoder().decode(HUDEvent.self, from: data))?.card {
+        add(.system, "card · \(card.title)")
+        if card.sticky { voice.chime() }
+      }
+    case "caption":
+      if let row = try? JSONSerialization.jsonObject(with: data) as? [String: Any] {
+        dayCaption = ((row["name"] as? String) ?? "", (row["source"] as? String) ?? "")
+        log(["kind": "caption", "name": dayCaption?.name ?? "", "unix": Date().timeIntervalSince1970])
+      }
     case "reply":
       guard let text = event.text, !text.isEmpty else { return }
       lastReply = text
@@ -125,6 +182,11 @@ final class Companion {
       voice.speak(text)
     case "voice":
       let text = event.text ?? "hand"
+      if let live = try? JSONDecoder().decode(HUDEvent.self, from: data), live.skill == "car-seat" {
+        add(.agent, text)
+        voice.speak(text)
+        return
+      }
       alerts += 1
       lastReply = text
       add(.alert, "said \"\(text)\"")
@@ -236,6 +298,25 @@ final class Companion {
       try? await Task.sleep(for: .milliseconds(50))
     }
     log(["kind": "feed_end", "unix": Date().timeIntervalSince1970])
+  }
+
+  /// Simulator day run: a mock Meta Ray-Ban Display whose camera plays `MockFeed/<-mockFeed>.mp4` to the running family
+  /// agent. Nothing is scripted in the app: the day's driver (`scripts/glasses_hud_day.py`) moves the agent's clock,
+  /// writes as the parents on the captured Telegram and speaks on the glasses endpoint, and the display shows the cards
+  /// the agent sends to this wearer.
+  func runHUDDay() async {
+    let name = UserDefaults.standard.string(forKey: "mockFeed") ?? "hud-day-feed"
+    guard let feed = Bundle.main.url(forResource: name, withExtension: "mp4") else {
+      add(.system, "No mock feed \(name) in the app. Run scripts/glasses_hud_day.py --build-feed and build again.")
+      return
+    }
+    dayCaption = ("Waiting for the agent", "")
+    add(.system, "Mock Meta Ray-Ban Display paired (DAT MockDeviceKit)")
+    glasses.pairMockGlasses(feed: feed, model: .metaRayBanDisplay)
+    for _ in 0..<100 where !agent.connected { try? await Task.sleep(for: .milliseconds(100)) }
+    await glasses.start()
+    for _ in 0..<150 where glasses.framesIn == 0 { try? await Task.sleep(for: .milliseconds(100)) }
+    log(["kind": "feed_start", "unix": Date().timeIntervalSince1970])
   }
 
   /// Simulator demo: mock glasses on, the synthetic changing-table clip as their camera, then the parent's two lines.
