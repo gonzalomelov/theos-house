@@ -54,7 +54,7 @@ class NoSimulatorDay(hud_day.Day):
             if stale.is_file():
                 stale.unlink()
         bb = harness.BabyBuddy(os.environ["BABYBUDDY_URL"], os.environ["BABYBUDDY_TOKEN"])
-        child = bb.child(harness.CHILD)
+        child = bb.child(harness.SHARED_CHILD)
         baseline = json.loads(harness.BASELINE.read_text())
         start = hud_day.at(self.day0, "06:00") - datetime.timedelta(minutes=5)
         end = hud_day.at(self.day0, "16:00")

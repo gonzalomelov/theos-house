@@ -2,8 +2,8 @@
 Assistant reads) through one first-month day and night on a fast clock.
 
 What is real: every plug-in and its own run loop, the brain (Muse Spark Open, the fixed rules as its fallback), the ear
-(Muse hears the voice note), Baby Buddy (a new test child per run, entries written by the agent), Home Assistant reads
-(states, weather, the shopping list).
+(Muse hears the voice note), Baby Buddy (its own child "E2E Baby", reset to a fixed history before each run), Home
+Assistant reads (states, weather, the shopping list).
 
 What the harness replaces, and why:
 - The clock: freezegun moves it one minute per step (clock.py). Each plug-in loop waits in virtual time.
@@ -35,9 +35,14 @@ from .clock import REAL
 ROOT = Path(__file__).resolve().parents[2]
 ENV_FILE = Path.home() / ".parenting-agent.env"
 TZ = datetime.timezone(datetime.timedelta(hours=-3))
-# The API user cannot create a child (docs/deploy-babybuddy.md), so the run uses the test child "Test Baby" in a
-# window after its last entry (Oct 29 05:05) and before now, and removes what it added before the next run.
-CHILD = "test-baby"
+# The run has its own child, "E2E Baby", that nothing else writes to: before each run every entry it holds is deleted
+# and the fixed history in history.json (Test Baby's test entries up to Oct 29 05:05) is written again, so the agent
+# under test sees only that history and the run's own entries. Demo, video and glasses runs write to the shared test
+# child "Test Baby" instead. The API user cannot create a child: E2E Baby was made once on the Vostro
+# (docs/deploy-babybuddy.md).
+E2E_CHILD = "e2e-baby"
+SHARED_CHILD = "test-baby"
+HISTORY = Path(__file__).with_name("history.json")
 BASELINE = Path(os.environ.get("E2E_BASELINE", str(Path.home() / ".cache/parenting-agent-e2e-baseline.json")))
 CHATS = {"gonza": "9000001", "ceci": "9000002", "grandma": "9000003"}
 MUSE_PRICE = (1.25, 4.25)       # USD per million tokens in and out, as in the config
@@ -217,7 +222,7 @@ class LocalEarVoice:
         return b"OggS e2e reply, not synthesized"
 
 
-# Baby Buddy: a new test child per run, with three days of history
+# Baby Buddy: the run's own child, reset to a fixed history
 
 class BabyBuddy:
     def __init__(self, url, token):
@@ -256,6 +261,21 @@ class BabyBuddy:
                 self.call("DELETE", f"/api/{row['endpoint']}/{row['id']}/")
                 removed += 1
         return removed
+
+
+    def reset(self, child, history):
+        """Deletes every entry the run's child holds and writes the fixed history again. Only E2E Baby: a run never
+        wipes a child that other runs or the family write to."""
+        if child["slug"] != E2E_CHILD:
+            raise RuntimeError(f"e2e: refusing to reset {child['slug']!r}, only {E2E_CHILD!r} belongs to the harness")
+        removed = 0
+        for row in self.entries(child["id"]):
+            self.call("DELETE", f"/api/{row['endpoint']}/{row['id']}/")
+            removed += 1
+        written = {}
+        for endpoint, rows in history.items():
+            written[endpoint] = [self.call("POST", f"/api/{endpoint}/", {**row, "child": child["id"]})["id"] for row in rows]
+        return removed, written
 
 
 ENDPOINTS = ("feedings", "changes", "sleep", "notes", "timers")
@@ -299,16 +319,10 @@ class Run:
         load_env()
         self.out.mkdir(parents=True, exist_ok=True)
         bb = BabyBuddy(os.environ["BABYBUDDY_URL"], os.environ["BABYBUDDY_TOKEN"])
-        child = bb.child(CHILD)
-        baseline_path = BASELINE
-        if not baseline_path.exists():
-            rows = bb.entries(child["id"])
-            baseline_path.write_text(json.dumps({e: [r["id"] for r in rows if r["endpoint"] == e] for e in ENDPOINTS}))
-        baseline = json.loads(baseline_path.read_text())
-        window = (self.start - datetime.timedelta(minutes=30), self.end + datetime.timedelta(minutes=1))
-        removed = bb.cleanup(child["id"], *window, baseline)
-        seeded = {"history": "Test Baby's own test entries up to Oct 29 05:05, nothing seeded",
-                  "removed_before_run": removed}
+        child = bb.child(E2E_CHILD)
+        removed, history = bb.reset(child, json.loads(HISTORY.read_text()))
+        seeded = {"history": "E2E Baby reset to history.json: Test Baby's test entries up to Oct 29 05:05",
+                  "history_entries": sum(map(len, history.values())), "removed_before_run": removed}
         config = self.config(child)
         (self.out / "config.json").write_text(json.dumps(config, indent=2))
 
@@ -363,7 +377,7 @@ class Run:
                "brain_usd": round(transport.usd, 4), "brain_calls": dict(transport.calls),
                "refused": transport.refused, "over_budget": transport.over_budget,
                "chats": CHATS, "tunnel_down": transport.down[:5], "stopped_at": self.last,
-               "baby_buddy": [r for r in bb.entries(child["id"]) if r["id"] not in baseline.get(r["endpoint"], ())]}
+               "baby_buddy": [r for r in bb.entries(child["id"]) if r["id"] not in history.get(r["endpoint"], ())]}
         (self.out / "run.json").write_text(json.dumps(run, indent=1, ensure_ascii=False, default=str))
         return run
 

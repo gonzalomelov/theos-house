@@ -28,7 +28,15 @@ ssh -f -N -L 127.0.0.1:18790:127.0.0.1:8790 vostro
 
 ## Data
 
-One child, "Test Baby", with no real data. Real data starts when Gonza decides.
+Two children, no real data. Real data starts when Gonza decides.
+
+- "Test Baby" (`test-baby`): the shared test child the configs, demos, video and glasses runs write to.
+- "E2E Baby" (`e2e-baby`), made on Oct 31 2026: only the end-to-end day writes to it, and it resets it to a fixed history before each run (`parenting_agent/e2e/harness.py`). Nothing else may use it. The API user cannot create a child, so it was made once on the Vostro with Baby Buddy's own Django shell:
+
+```bash
+ssh vostro 'docker exec -w /app/www/public -e DJANGO_SETTINGS_MODULE=babybuddy.settings.base babybuddy python3 manage.py shell -c \
+  "import datetime; from core.models import Child; Child.objects.get_or_create(slug=\"e2e-baby\", defaults=dict(first_name=\"E2E\", last_name=\"Baby\", birth_date=datetime.date(2026, 10, 1)))"'
+```
 
 ## Run command
 
