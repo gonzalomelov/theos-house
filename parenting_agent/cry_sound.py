@@ -33,6 +33,12 @@ WORDS = {"hungry": "hungry", "tired": "tired", "discomfort": "uncomfortable, a d
          "burping": "a burp", "belly_pain": None}
 AGREES = {"hungry": "hungry", "tired": "tired", "discomfort": "diaper"}
 CHECK_NOW = "The cry sounds like ones parents tagged as hard crying. Check on {p} now."
+# The same lines in Spanish (es-UY), for a parent who reads Spanish. Never pain, never a diagnosis.
+WORDS_ES = {"hungry": "hambre", "tired": "sueño", "discomfort": "incomodidad, el pañal o calor o frío",
+            "burping": "un provechito", "belly_pain": None}
+CHECK_NOW_ES = "El llanto suena como los que otros padres marcaron como llanto fuerte. Fijate cómo está ahora."
+AGREES_ES = "El sonido coincide."
+GUESS_ES = "Solo por el sonido, una pista: {word}."
 DEFAULTS = {"enabled": False, "clip_s": 10.0, "min_confidence": 0.5, "head": None, "red_flag_hours": 24}
 
 
@@ -150,13 +156,20 @@ def combine(result, guess, entries, now, pronoun="he"):
         if line:
             text += " " + line
         out.update(text=text, check_now=True, safety_line=bool(line))
+        if result.get("text_es"):
+            line_es = rules.EMERGENCY_REPLY["es"] if flag == "emergency" else (
+                rules.URGENT_REPLY[flag]["es"] if flag else None)
+            out["text_es"] = " ".join(t for t in (CHECK_NOW_ES, result["text_es"], line_es) if t)
         return out
     if not guess["speak"] or WORDS.get(label) is None:
         return out
-    if AGREES.get(label) == result["top"] and result.get("likely"):
+    agrees = AGREES.get(label) == result["top"] and result.get("likely")
+    if agrees:
         text = result["text"] + " The sound agrees."
     else:
         text = result["text"] + f" From the sound alone, a guess: {WORDS[label]}."
     if no_medical(text):
         out["text"] = text
+        if result.get("text_es"):
+            out["text_es"] = result["text_es"] + " " + (AGREES_ES if agrees else GUESS_ES.format(word=WORDS_ES[label]))
     return out

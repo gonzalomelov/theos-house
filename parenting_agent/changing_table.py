@@ -51,8 +51,10 @@ ARMED_FACT = ("The changing-table watch is on now. When the parent says done, ca
 IDLE_FACT = "No diaper change in progress, the changing-table watch is off."
 # How long "changing time" waits for a SAM 3.1 that is still loading before it watches with MediaPipe alone.
 PRELOAD_WAIT_S = 5
-REGIONS_ONLY = ("Watching the changing table with the MediaPipe hand regions only, SAM 3.1 is still loading. "
-                "The chime works, the hand check is not confirmed by SAM this change.")
+# Plain words for the parent: no model names (agent/final_guard.py). The tool result for the brain names them.
+REGIONS_ONLY = ("Watching the changing table with the hand check only, the second check is still loading. "
+                "The chime works, this change the hand check is not confirmed a second time.")
+REGIONS_ONLY_TOOL = "MediaPipe hand regions only, SAM 3.1 is still loading: " + REGIONS_ONLY
 
 LAST_CHANGE = "last-diaper-change"
 CONTENT = {"wet": {"type": "boolean", "description": "true when the parent said wet or pee"},
@@ -231,7 +233,7 @@ class ChangingTable(Plugin):
             self.arming = False
         if isinstance(detector, confirm_mod.NoConfirm) and self._confirm is None:
             self.agent.say(self.cfg["channel"], REGIONS_ONLY)
-            return REGIONS_ONLY
+            return REGIONS_ONLY_TOOL
         return "watching the changing table"
 
     def finish(self, wet=False, solid=False, via="direct"):

@@ -10,47 +10,131 @@ failed or were not seen, which hand checks remain, and suggests one check by a c
 Frames stay in memory on this machine. Only the spoken text and the summary reach the bus and the brain.
 """
 import json
+import re
 import threading
 import time
 from pathlib import Path
 
 from . import checks as checks_mod
 
+# Every line the coach says, in English and in Spanish (es-UY, voseo). The parent hears, reads on Telegram and sees on
+# the glasses card the language of the people block. Never "safe", never "seguro" or "segura".
 CAMERA_STEPS = {
     "lap_guides": {
-        "say": "Slide the lap belt into both side guides of the carrier, then show me the belt path from the door.",
         "prompts": ("belt", "guide"), "manual_step": 0,
-        "pass": "I can see the lap belt in both side guides.",
-        "fail": "The lap belt is not in the {missed}.",
-        "unseen": "I could not see the lap belt and both side guides."},
+        "en": {"say": "Slide the lap belt into both side guides of the carrier, then show me the belt path from the door.",
+               "pass": "I can see the lap belt in both side guides.",
+               "fail": "The lap belt is not in the {missed}.",
+               "unseen": "I could not see the lap belt and both side guides."},
+        "es": {"say": "Pasá el cinturón de cadera por las dos guías laterales de la silla y mostrame el recorrido del "
+                      "cinturón desde la puerta.",
+               "pass": "Veo el cinturón de cadera en las dos guías laterales.",
+               "fail": "El cinturón de cadera no está en {missed}.",
+               "unseen": "No pude ver el cinturón de cadera y las dos guías laterales."}},
     "shoulder_guide": {
-        "say": "Slide the shoulder belt into the rear guide behind the carrier's head end.",
         "prompts": ("belt", "guide"), "manual_step": 1,
-        "pass": "I can see the shoulder belt in the rear guide.",
-        "fail": "The shoulder belt is not in the rear guide.",
-        "unseen": "I could not see the rear guide."},
+        "en": {"say": "Slide the shoulder belt into the rear guide behind the carrier's head end.",
+               "pass": "I can see the shoulder belt in the rear guide.",
+               "fail": "The shoulder belt is not in the rear guide.",
+               "unseen": "I could not see the rear guide."},
+        "es": {"say": "Pasá el cinturón de hombro por la guía de atrás, detrás de la cabecera de la silla.",
+               "pass": "Veo el cinturón de hombro en la guía de atrás.",
+               "fail": "El cinturón de hombro no está en la guía de atrás.",
+               "unseen": "No pude ver la guía de atrás."}},
     "no_twist": {
-        "say": "Pull the shoulder belt tight and keep the belt flat, with no twist.",
         "prompts": ("belt", "guide"), "manual_step": 2,
-        "pass": "The lap belt looks flat across the carrier.",
-        "fail": "The lap belt looks twisted across the carrier.",
-        "unseen": "I could not see the lap belt well enough to check for a twist."},
+        "en": {"say": "Pull the shoulder belt tight and keep the belt flat, with no twist.",
+               "pass": "The lap belt looks flat across the carrier.",
+               "fail": "The lap belt looks twisted across the carrier.",
+               "unseen": "I could not see the lap belt well enough to check for a twist."},
+        "es": {"say": "Tirá del cinturón de hombro hasta que quede tenso y mantenelo plano, sin giros.",
+               "pass": "El cinturón de cadera se ve plano sobre la silla.",
+               "fail": "El cinturón de cadera se ve girado sobre la silla.",
+               "unseen": "No pude ver bien el cinturón de cadera para revisar si está girado."}},
     "level_line": {
-        "say": "Show me the level line on the side of the carrier, with the phone held level.",
         "prompts": ("level",), "manual_step": 3,
-        "pass": "The level line looks level.",
-        "fail": "The level line is tilted about {angle} degrees. The manual says it must be level to the ground.",
-        "unseen": "I could not see the level line."},
+        "en": {"say": "Show me the level line on the side of the carrier, with the phone held level.",
+               "pass": "The level line looks level.",
+               "fail": "The level line is tilted about {angle} degrees. The manual says it must be level to the ground.",
+               "unseen": "I could not see the level line."},
+        "es": {"say": "Mostrame la línea de nivel al costado de la silla, con el teléfono derecho.",
+               "pass": "La línea de nivel se ve nivelada.",
+               "fail": "La línea de nivel está inclinada unos {angle} grados. El manual dice que tiene que quedar "
+                       "nivelada con el piso.",
+               "unseen": "No pude ver la línea de nivel."}},
     "handle": {
-        "say": "Put the handle upright, in position {position}, the car position.",
         "prompts": ("handle", "belt", "guide"), "manual_step": None,
-        "pass": "The handle is upright.",
-        "fail": "The handle is not upright. Move it to position {position}.",
-        "unseen": "I could not see the handle."},
+        "en": {"say": "Put the handle upright, in position {position}, the car position.",
+               "pass": "The handle is upright.",
+               "fail": "The handle is not upright. Move it to position {position}.",
+               "unseen": "I could not see the handle."},
+        "es": {"say": "Poné la manija hacia arriba, en la posición {position}, la posición para el auto.",
+               "pass": "La manija está hacia arriba.",
+               "fail": "La manija no está hacia arriba. Movela a la posición {position}.",
+               "unseen": "No pude ver la manija."}},
 }
-FORBIDDEN = ("safe",)
-UNSURE = ("My two checks disagree here, so I am not counting it as passed. Show me another view, or check it by hand "
-          "against the manual.")
+LINES = {
+    "en": {"unsure": "My two checks disagree here, so I am not counting it as passed. Show me another view, or check it "
+                     "by hand against the manual.",
+           "not_checked": " I am listing it as not checked.",
+           "fix": "Noted. Please fix this before driving, and ask me to check again.",
+           "open": "I will keep this check open in the summary.",
+           "both_guides": "near and far side guides", "one_guide": "{side} side guide", "side": "side",
+           "near": "near", "far": "far", "a_few": "a few",
+           "start": "Coaching the {seat} in the {car}, installed with the seat belt and no base. Put the carrier on a "
+                    "rear seat, facing the back of the car. {rule} Is the carrier on a rear seat, facing the back? Say "
+                    "yes or no.",
+           "not_a_verdict": "This is not a verdict on the install.",
+           "missing": "Not done yet"},
+    "es": {"unsure": "Mis dos chequeos no coinciden acá, así que no lo cuento como bien. Mostrame otra vista, o revisalo "
+                     "a mano con el manual.",
+           "not_checked": " Lo dejo como no revisado.",
+           "fix": "Anotado. Corregilo antes de manejar y pedime que lo revise de nuevo.",
+           "open": "Dejo este chequeo abierto en el resumen.",
+           "both_guides": "las guías laterales de los dos lados", "one_guide": "la guía lateral del lado {side}",
+           "side": "de la puerta", "near": "de la puerta", "far": "de adentro", "a_few": "unos pocos",
+           "start": "Te guío con la {seat} en el {car}, instalada con el cinturón del auto y sin base. Poné la silla en "
+                    "un asiento de atrás, mirando hacia la parte de atrás del auto. {rule} ¿La silla está en un asiento "
+                    "de atrás, mirando hacia atrás? Decí sí o no.",
+           "not_a_verdict": "Esto no es un veredicto sobre la instalación.",
+           "missing": "Falta hacer"},
+}
+SUMMARY = {
+    "en": (("camera", "pass", "Visible checks that passed"), ("camera", "fail", "Visible checks that failed"),
+           ("camera", "unseen", "Visible checks I could not see"),
+           ("camera", "unsure", "Visible checks my two checks disagree on, check them by hand"),
+           ("hand", "pass", "Hand checks you confirmed"), ("hand", "fail", "Hand checks that need fixing"),
+           ("hand", "open", "Hand checks still open")),
+    "es": (("camera", "pass", "Chequeos con cámara que pasaron"), ("camera", "fail", "Chequeos con cámara que fallaron"),
+           ("camera", "unseen", "Chequeos con cámara que no pude ver"),
+           ("camera", "unsure", "Chequeos con cámara en los que mis dos chequeos no coinciden, revisalos a mano"),
+           ("hand", "pass", "Chequeos a mano que confirmaste"), ("hand", "fail", "Chequeos a mano para corregir"),
+           ("hand", "open", "Chequeos a mano todavía abiertos")),
+}
+NAMES = {
+    "en": {"lap_guides": "lap belt in both side guides", "shoulder_guide": "shoulder belt in the rear guide",
+           "no_twist": "no twist in the lap belt", "level_line": "level line level", "handle": "handle upright",
+           "car_position": "carrier on a rear seat facing back",
+           "belt_path_movement": "less than 2.5 centimeters of movement at the belt path",
+           "harness_pinch": "no slack in the harness pinch test"},
+    "es": {"lap_guides": "cinturón de cadera en las dos guías laterales", "shoulder_guide": "cinturón de hombro en la guía de atrás",
+           "no_twist": "sin giros en el cinturón de cadera", "level_line": "línea de nivel nivelada",
+           "handle": "manija hacia arriba", "car_position": "silla en un asiento de atrás mirando hacia atrás",
+           "belt_path_movement": "menos de 2,5 centímetros de movimiento en el cinturón",
+           "harness_pinch": "sin correa de sobra en la prueba del pellizco"},
+}
+# Words the coach never says about an install, in either language. "Cinturón de seguridad" is the seat belt and
+# "seguridad" alone is allowed, "seguro" and "segura" (safe) are not.
+FORBIDDEN = ("safe", "safely", "seguro", "segura", "seguros", "seguras")
+
+
+def lang_of(lang):
+    return "es" if lang == "es" else "en"
+
+
+def localized(item, key, lang):
+    """item[key + "_es"] in Spanish when the profile has it, else item[key]."""
+    return (item.get(f"{key}_es") if lang == "es" else None) or item[key]
 
 
 def load_profiles(cfg, root="."):
@@ -60,21 +144,20 @@ def load_profiles(cfg, root="."):
     return seat, car
 
 
-def plan(cfg, seat, car):
-    """The ordered steps for this seat and car."""
+def plan(cfg, seat, car, lang="en"):
+    """The ordered steps for this seat and car, each said in lang."""
+    lang = lang_of(lang)
+    rule = " ".join(localized(r, "text", lang) for r in car["rules"] if r["id"] == "no_front_airbag")
     steps = [{"id": "car_position", "kind": "ask",
-              "say": (f"Coaching the {seat['seat']} in the {car['car']}, installed with the seat belt and no base. "
-                      "Put the carrier on a rear seat, facing the back of the car. "
-                      + " ".join(r["text"] for r in car["rules"] if r["id"] == "no_front_airbag")
-                      + " Is the carrier on a rear seat, facing the back? Say yes or no."),
+              "say": " ".join(LINES[lang]["start"].format(seat=seat["seat"], car=car["car"], rule=rule).split()),
               "pass_answer": "yes"}]
     position = seat.get("handle_car_position") or 1
     for check_id, step in CAMERA_STEPS.items():
         manual = seat["steps"][step["manual_step"]] if step["manual_step"] is not None and step["manual_step"] < len(seat["steps"]) else None
-        steps.append({"id": check_id, "kind": "camera", "say": step["say"].format(position=position), "manual": manual})
+        steps.append({"id": check_id, "kind": "camera", "say": step[lang]["say"].format(position=position), "manual": manual})
     for hand in cfg["hand_checks"]:
-        steps.append({"id": hand["id"], "kind": "ask", "say": hand["ask"], "pass_answer": hand.get("pass_answer", "yes"),
-                      "source": hand.get("source")})
+        steps.append({"id": hand["id"], "kind": "ask", "say": localized(hand, "ask", lang),
+                      "pass_answer": hand.get("pass_answer", "yes"), "source": hand.get("source")})
     return steps
 
 
@@ -91,12 +174,14 @@ def _yes_no(text):
 
 class Coach:
     def __init__(self, cfg, bus, vision, source, seat, car, recheck=False, answer_timeout_s=None, clock=time.monotonic,
-                 muse=None):
+                 muse=None, lang="en"):
         self.cfg, self.bus, self.vision, self.source = cfg, bus, vision, source
+        self.lang = lang_of(lang)
+        self.lines = LINES[self.lang]
         self.muse = muse  # a MuseSeatCheck: Muse Spark Open's second opinion on the same frame
         self.seat, self.car = seat, car
         self.recheck, self.answer_timeout_s, self.clock = recheck, answer_timeout_s, clock
-        self.steps = plan(cfg, seat, car)
+        self.steps = plan(cfg, seat, car, self.lang)
         self.results = {}
         self.answers, self.answer_ready = {}, threading.Condition()
         self.stop_flag = False
@@ -105,11 +190,11 @@ class Coach:
     # ---------- speech and logging ----------
 
     def say(self, text, **fields):
-        lowered = text.lower()
+        words = set(re.findall(r"[^\W\d_]+", text.lower()))
         for word in FORBIDDEN:
-            if f" {word} " in f" {lowered.replace('.', ' ').replace(',', ' ')} ":
+            if word in words:
                 raise ValueError(f"the coach must never say '{word}': {text}")
-        self.bus.publish("voice", text=text, skill="car-seat", stream_s=self.stream_now(), **fields)
+        self.bus.publish("voice", text=text, skill="car-seat", lang=self.lang, stream_s=self.stream_now(), **fields)
 
     def stream_now(self):
         started = getattr(self.source, "started", None)
@@ -149,12 +234,12 @@ class Coach:
         self.results[step["id"]] = {"kind": "hand", "result": result, "answer": reply}
         self.bus.publish("carseat_check", check=step["id"], check_kind="hand", result=result, answer=reply)
         if result == "fail":
-            self.say("Noted. Please fix this before driving, and ask me to check again.", step=step["id"], result="fail")
+            self.say(self.lines["fix"], step=step["id"], result="fail")
         elif result == "open":
-            self.say("I will keep this check open in the summary.", step=step["id"], result="open")
+            self.say(self.lines["open"], step=step["id"], result="open")
 
     def run_camera(self, step):
-        spec = CAMERA_STEPS[step["id"]]
+        spec = {**CAMERA_STEPS[step["id"]], **CAMERA_STEPS[step["id"]][self.lang]}
         position = self.seat.get("handle_car_position") or 1
         started_at = self.stream_now()
         _, start_seq, _ = self._latest(0) or (None, 0, 0.0)
@@ -181,9 +266,8 @@ class Coach:
             if first is None:
                 verdict = self.second_opinion(step["id"], frame, verdict)
                 first = verdict
-                missed = verdict.get("missed") or []
-                missed = "near and far side guides" if len(missed) == 2 else f"{missed[0] if missed else 'side'} side guide"
-                text = (spec[verdict["result"]] if verdict["result"] in spec else UNSURE).format(missed=missed,
+                missed = self.missed(verdict.get("missed") or [])
+                text = (spec[verdict["result"]] if verdict["result"] in spec else self.lines["unsure"]).format(missed=missed,
                                                       angle=round(abs(verdict.get("angle_deg", 0))), position=position)
                 spoken_at = self.stream_now()
                 self.say(text, step=step["id"], result=verdict["result"])
@@ -195,12 +279,19 @@ class Coach:
         if first is None:
             verdict = self.second_opinion(step["id"], last_frame, {"result": "unseen"}) if last_frame is not None else {"result": "unseen"}
             if verdict["result"] == "unseen":
-                self.say(spec["unseen"] + " I am listing it as not checked.", step=step["id"], result="unseen")
+                self.say(spec["unseen"] + self.lines["not_checked"], step=step["id"], result="unseen")
             else:
-                text = spec["fail"].format(missed="side guide", angle="a few", position=position) \
-                    if verdict["result"] == "fail" else UNSURE
+                text = spec["fail"].format(missed=self.missed([]), angle=self.lines["a_few"], position=position) \
+                    if verdict["result"] == "fail" else self.lines["unsure"]
                 self.say(text, step=step["id"], result=verdict["result"])
             self._record(step, verdict, started_at, None, self.stream_now())
+
+    def missed(self, sides):
+        """The side guides a fail names: both, or the one ("near" or "far") the belt is not in."""
+        if len(sides) == 2:
+            return self.lines["both_guides"]
+        side = self.lines.get(sides[0], sides[0]) if sides else self.lines["side"]
+        return self.lines["one_guide"].format(side=side)
 
     def second_opinion(self, check_id, frame, verdict):
         """SAM's verdict combined with Muse's on the same frame, for the checks Muse votes on (muse_check.py)."""
@@ -239,25 +330,16 @@ class Coach:
         return self.results
 
     def summary(self):
-        names = {"lap_guides": "lap belt in both side guides", "shoulder_guide": "shoulder belt in the rear guide",
-                 "no_twist": "no twist in the lap belt", "level_line": "level line level", "handle": "handle upright",
-                 "car_position": "carrier on a rear seat facing back", "belt_path_movement": "less than 2.5 centimeters of movement at the belt path",
-                 "harness_pinch": "no slack in the harness pinch test"}
-        group = lambda kind, result: [names.get(k, k) for k, v in self.results.items() if v["kind"] == kind and v["result"] == result]
+        names = NAMES[self.lang]
         parts = []
-        for label, items in (("Visible checks that passed", group("camera", "pass")),
-                             ("Visible checks that failed", group("camera", "fail")),
-                             ("Visible checks I could not see", group("camera", "unseen")),
-                             ("Visible checks my two checks disagree on, check them by hand", group("camera", "unsure")),
-                             ("Hand checks you confirmed", group("hand", "pass")),
-                             ("Hand checks that need fixing", group("hand", "fail")),
-                             ("Hand checks still open", group("hand", "open"))):
+        for kind, result, label in SUMMARY[self.lang]:
+            items = [names.get(k, k) for k, v in self.results.items() if v["kind"] == kind and v["result"] == result]
             if items:
                 parts.append(f"{label}: {', '.join(items)}.")
         missing = [s["id"] for s in self.steps if s["id"] not in self.results]
         if missing:
-            parts.append(f"Not done yet: {', '.join(names.get(m, m) for m in missing)}.")
-        parts.append("This is not a verdict on the install. " + self.cfg["technician"])
+            parts.append(f"{self.lines['missing']}: {', '.join(names.get(m, m) for m in missing)}.")
+        parts.append(self.lines["not_a_verdict"] + " " + localized(self.cfg, "technician", self.lang))
         return " ".join(parts)
 
     def stop(self):

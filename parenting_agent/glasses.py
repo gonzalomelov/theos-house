@@ -47,6 +47,7 @@ import time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
+from .agent import final_guard
 from . import hud_cards as cards
 from .glasses_speech import EAR_PROMPT, Gate, plain, race
 from .agent.people import People
@@ -571,6 +572,10 @@ class Glasses(Plugin):
 
     def forward(self, event):
         kind = event["kind"]
+        if kind == "reply" and event.get("source") == "car-seat":
+            return None  # the coach's own line on a chat: its card comes from the coach's step (car_seat_card)
+        if kind == "reply" and not event.get("flag"):
+            event = self.final_guard(event)
         if kind == "reply" and event.get("channel") != self.name:
             person = self.person_of_reply(event)
             if person is None:
@@ -602,6 +607,15 @@ class Glasses(Plugin):
         if shown is not None:
             self.hub.push(shown, person)
         return None
+
+    def final_guard(self, event):
+        """The reply as the parent whose glasses show it may read it: no machinery, in their language."""
+        person = self.person_of_reply(event) if event.get("channel") != self.name else \
+            (event.get("chat_id") or self.hub.camera_person)
+        lang = self.people.lang(person) if person else None  # the language only when the people block says it
+        text = final_guard.apply(event.get("text") or "", lang, self.agent.bus, where="glasses",
+                                 names=self.people.rota_names(), person=person)
+        return event if text == event.get("text") else {**event, "text": text}
 
     def car_seat_card(self, event):
         """The car seat coach (carseat/coach.py), step by step, on the glasses whose camera it watches."""

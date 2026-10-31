@@ -99,3 +99,34 @@ What a parent would have felt:
 | English dry-run note under a Spanish reply | "Prueba en seco: solo quedó anotado, no se movió nada en la casa." |
 
 Still open, not scored: the brain named the grandmother "Mamá de Ceci" in the draft, and after the draft it offered to send it although sending to a sitter is not built (the draft itself says "Reenviáselo vos"). There is no grandma user, so a grandmother who writes to the bot herself gets nothing: adding her needs her chat id, which only Gonza has.
+
+## Final guard, the coach in Spanish, and blind round 1 (Oct 30 to 31, issue #165)
+
+The same harness, before and after the changes of issue #165, on the same day. Before is origin/main at 3f27109 run from a clean worktree, after is the PR branch. Both with `--set baby.born=true`, the after day of #148. The glasses day scenes are the 11 scenes of `scripts/glasses_hud_day.py` with no simulator and no SAM 3.1 (`scripts/glasses_day_noise.py`): both parents' glasses are event-stream listeners and the car seat coach looks at the unit tests' fixed picture of a correct install, so its camera steps pass without a heavy model. Every text that reached a parent counts: Telegram, glasses cards, glasses replies and the coach's spoken lines.
+
+Two scores. "Scorer noise" is `parenting_agent/e2e/score.py` as it was: English to a Spanish parent or its internal words. "Strict noise" adds what the scorer misses: any sentence the final guard would remove for a Spanish parent, and any "0.0 h".
+
+| Run | Texts to a parent | Scorer noise | Strict noise | Muse |
+|---|---|---|---|---|
+| After day, before (`guard-before/`) | 58 | 0 | 0 | 0.58 USD |
+| After day, after (`guard-after/`) | 58 | 0 | 0 | 0.59 USD |
+| Glasses day scenes, before (`glasses-before.json`) | 64 | 11 (all 14 coach lines were English, 11 long enough to count) | 15 (the 11, plus "el sueño más largo 0.0 h" in both morning messages and both morning cards) | 0.13 USD |
+| Glasses day scenes, after (`glasses-after.json`) | 62 | 0 | 0 | 0.11 USD |
+
+Muse spend for the four runs: 1.40 USD.
+
+What the numbers say, plainly:
+
+- The after day was already clean before (0 of 58, as in the #148 after run). The final guard removed nothing in either after run: there were no `final_guard` events. The guard is a net for Muse's bad days, these two runs had none. The unit tests show it removing finish reason, JSON, tool and model names, Parent A or B and English sentences on every path (`tests/test_coach_language_and_final_guard.py`).
+- The glasses scenes carried the real noise, and it is gone: the car seat coach now speaks Spanish to Gonza (all 14 lines, "Te guío con la Joie i-Snug 2 en el Tesla Model 3...", the summary "Chequeos con cámara que pasaron: ..."), and its summary is its own last line. Before, Muse rewrote it as "Instalación casi lista, Gonza", a near verdict.
+- "el sueño más largo 0.0 h" came from the night summary counting only sleeps that started after 22:00, so the night's sleep from 19:40 counted as nothing. After: "el sueño más largo 2.7 h".
+- "¿Cuándo comió por última vez?" on the glasses: before Muse answered "La última toma fue a las 8:10, 90 ml en mamadera.", after plain code from the log with no brain call, "La última toma fue la mamadera de 90 ml de fórmula de 15 min de las 08:10.", the same every time.
+- Things to get stayed at 30 of 34 on the after day and log entries right at 25 of 25. The glasses scenes passed 9 of 11 in both runs: nap mode on and off never drew a card in this no-simulator harness, before and after, so that is the harness, not this change (the recorded day with the app passed both).
+- `log_extra` went from 8 to 21 between the two after-day runs. Those are Baby Buddy entries on the test child timed Oct 30 23:01 UTC to Oct 31 02:42 UTC, real time, outside the run's window (Oct 29 09:00 to Oct 30 11:30 UTC): another agent working on the test child at the same time, not this run.
+
+Regression tests for blind round 1: `tests/test_blind_round1_clean_replies.py` (the last feed in one line on the family agent, the families bot and the demo, no brain call, three times the same; no 0.0 h; the Spanish demo never mixes Parent B, Persona B and English "why" lines; the cry text in Spanish).
+
+```bash
+python -m parenting_agent.e2e --label guard-after --set baby.born=true --out results/e2e-day/guard-after
+python scripts/glasses_day_noise.py --out results/e2e-day/glasses-after.json
+```

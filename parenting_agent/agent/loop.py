@@ -16,6 +16,7 @@ import time
 from . import brain as brain_mod
 from . import log_ops
 from . import rules
+from . import final_guard
 from .memory import parse_time
 
 SYSTEM = """You are a persistent agent built for new parents. You know their baby from the log and the facts below,
@@ -418,14 +419,23 @@ def entry_key(arguments):
     return (arguments.get("kind"), when, *values)
 
 
+LAST_FEED = {"was": {"es": "La última toma fue {what}.", "en": "The last feed was {what}."},
+             "none": {"es": "Todavía no hay ninguna toma en el registro.", "en": "There is no feed in the log yet."}}
+
+
+def plain_name(name):
+    """A tool's name as a parent reads it: "call partner", never the code name call_partner (final_guard.py)."""
+    return str(name).replace("_", " ")
+
+
 def describe_call(call):
-    """A call waiting for a yes in a few words: call_partner "come to the nursery"."""
+    """A call waiting for a yes in a few words: call partner "come to the nursery"."""
     arguments = call.get("arguments") or {}
     text = arguments.get("text") or arguments.get("message")
     if isinstance(text, str) and text:
-        return f"{call['name']} \"{text[:80]}\""
-    shown = ", ".join(f"{k} {v}" for k, v in arguments.items())[:80]
-    return f"{call['name']} ({shown})" if shown else call["name"]
+        return f"{plain_name(call['name'])} \"{text[:80]}\""
+    shown = ", ".join(f"{plain_name(k)} {v}" for k, v in arguments.items())[:80]
+    return f"{plain_name(call['name'])} ({shown})" if shown else plain_name(call["name"])
 
 
 def log_diff(before, after):
@@ -579,6 +589,10 @@ class Agent:
         line, which the glasses keep on the display until the parent acknowledges it (hud_cards.py)."""
         for guard in getattr(self, "reply_guards", []):
             text = guard(text)
+        if not about.get("flag") and not about.get("card"):  # a red flag line and a card the agent built are its own
+            text = final_guard.apply(text, self.reply_lang(), self.bus, where=f"agent:{channel}",
+                                     names=self.guard_names(), log_text=self.guard_logs_text,
+                                     models_ok=self.guard_models_ok)
         self.said += 1
         self.memory.add_message(channel, "assistant", text, ts=self.now())
         # The answer goes back to the chat that asked, so two parents on one channel each get their own answer.
@@ -587,6 +601,21 @@ class Agent:
         if to:
             self.last_reply[(channel, str(to["chat_id"]))] = text
         self.bus.publish("reply", channel=channel, text=text, **to, **about)
+
+    guard_logs_text = True  # the final guard's event says what it removed (False: only why, for other families)
+    guard_models_ok = False  # True only in the public demo, which names Muse Spark Open on purpose
+
+    def reply_lang(self):
+        """The language the answer must be in, for the final guard: the person's "lang" in the people block, or None
+        when it is not known for sure (the chat channel's own guard enforces it on the way out)."""
+        event = self.current_event or {}
+        people = getattr(self, "people", None)
+        return people.lang(event["person"]) if people and event.get("person") else None
+
+    def guard_names(self):
+        """Rota labels and the names a parent reads, for the final guard: {"Parent A": "Gonza"}."""
+        people = getattr(self, "people", None)
+        return people.rota_names() if people else {}
 
     def system_prompt(self):
         facts = {key: item["value"] for key, item in self.memory.facts().items()} or "none yet"
@@ -648,7 +677,7 @@ class Agent:
                 # A call the tool refuses, for example a partner message holding a code, fails plainly and runs nothing.
                 result, status = str(error), "failed_after_yes"
             self.bus.publish("tool", name=call["name"], status=status)
-            (done if status == "ran_after_yes" else failed).append(f"{call['name']}: {str(result)[:80]}")
+            (done if status == "ran_after_yes" else failed).append(f"{plain_name(call['name'])}: {str(result)[:80]}")
         self.pending = [call for call in self.pending if call not in calls]
         texts = TEXTS.get(lang, TEXTS["en"])
         parts = (([texts["DONE"].format(what="; ".join(done))] if done else [])
@@ -763,6 +792,13 @@ class Agent:
             self.memory.add_message(channel, "user", text, ts=self.now())
             self.bus.publish("guard", status="night_rota")
             self.say(channel, rota.answer(self.lang(text)), topic="on_duty")
+            return
+        if rules.asks_last_feed(text) and not rules.is_health(text):
+            # "¿Cuándo comió por última vez?": the newest feed in the log, in one line, the same every time, with no
+            # brain call (blind round 1, Oct 31: Muse said it would check the log and asked something else instead).
+            self.memory.add_message(channel, "user", text, ts=self.now())
+            self.bus.publish("guard", status="last_feed")
+            self.say(channel, self.last_feed_text(self.lang(text)))
             return
         if rules.is_courtesy(text) and rules.THANKS.search(text) and self.double is None:
             # "ok thanks": a short fixed reply in the turn's language, no brain call, nothing said about the baby.
@@ -1049,6 +1085,22 @@ class Agent:
             state[("sleep", OPEN_SLEEP_ID)] = {"id": OPEN_SLEEP_ID, "kind": "sleep", "ts": str(opened),
                                                "details": {"action": "start"}}
         return state
+
+    def last_feed_text(self, lang):
+        """The newest feed in the log in one line: "La última toma fue la mamadera de 90 ml de las 10:40."."""
+        lang = lang if lang in ("es", "en") else "en"
+        entry = self.latest_of("feeding")
+        if entry is None:
+            return LAST_FEED["none"][lang]
+        what = describe_stored(entry, lang)
+        day = str(entry.get("ts") or "")[:10]
+        try:
+            today = self.now().date().isoformat()
+        except Exception:  # noqa: BLE001 no clock, no day word
+            today = day
+        if day and day != today:
+            what += (" del " if lang == "es" else " on ") + f"{int(day[8:10])}/{int(day[5:7])}"
+        return LAST_FEED["was"][lang].format(what=what)
 
     def latest_of(self, kind):
         """The newest entry of one kind in the log, or None."""
@@ -1354,7 +1406,7 @@ class Agent:
                         continue
                     self.bus.publish("guard", status="claimed_action", asked=bool(asked), unmet=sorted(unmet))
                     if actors and not asked:
-                        return finish(self.text("DID_ONLY", request, what=", ".join(sorted(actors))), fixed=True)
+                        return finish(self.text("DID_ONLY", request, what=", ".join(sorted(plain_name(a) for a in actors))), fixed=True)
                     if red_flag or safety_said:
                         return finish(NOT_CALLED[lang], fixed=True)
                     return finish((NOT_SENT if asked else NOT_SENT_NOTHING)[lang], fixed=True)

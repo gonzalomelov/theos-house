@@ -176,6 +176,8 @@ def night_es(text):
                    (" feeds,", " tomas,"), ("longest sleep", "sueño más largo"), ("Wake-ups:", "Despertares:"),
                    ("Next on duty:", "Le toca:"), (", a parent asked.", ", porque alguien lo pidió."), ("Next feed expected around", "Próxima toma cerca de las")):
         out = out.replace(en, es)
+    for label, persona in tonight.NAMES_ES.items():  # the Spanish page says Persona A, never Parent A (blind round 1)
+        out = re.sub(rf"\b{label}\b", persona, out)
     return out
 
 
@@ -267,6 +269,16 @@ class DemoAgent(Agent):
 
     def lang(self, request):
         return message_lang(request, self.page_lang)
+
+    turn_lang = None  # the language of the visitor's message being answered, set by Visitor.talk
+    guard_models_ok = True  # the demo names Muse Spark Open on purpose, the page says which model answered
+
+    def reply_lang(self):
+        return self.turn_lang or self.page_lang
+
+    def guard_names(self):
+        """The simulated parents are Parent A and Parent B on the English page, Persona A and B on the Spanish one."""
+        return tonight.NAMES_ES if self.reply_lang() == "es" else {label: label for label in PARENTS}
 
     def refusal(self, request):
         return TEXTS[self.lang(request)]["REFUSAL"]
@@ -384,7 +396,7 @@ class Visitor:
         """(reply, actions, mode). A message about getting ready goes to prep mode from either tab. lang is the page's
         language, used only when the message's own words do not tell."""
         self.agent.page_lang = lang
-        self.turn_lang = self.agent.lang(text)
+        self.turn_lang = self.agent.turn_lang = self.agent.lang(text)
         if mode == "prep" or is_prep(text):
             self.prep().agent.page_lang = lang
             prep_start = len(self.prep().bus.history)
@@ -398,7 +410,7 @@ class Visitor:
         if house:
             self.memory.add_message("demo", "user", text, ts=self.baby_log.now())
             card, _ = self.house_plan(house)
-            self.agent.say("demo", tonight.text(card, self.turn_lang))
+            self.agent.say("demo", tonight.text(card, self.turn_lang), card="tonight")
             reply = " ".join(e["text"] for e in self.replies)
             self.answered_by = {"kind": "house", "muse": card["source"] == "muse"}
             return reply, self.actions_since(start), "baby"
@@ -510,7 +522,8 @@ class Visitor:
             summary["text"] = summary["text"].replace(f"Next on duty: {summary['on_duty']}.",
                                                       f"Next on duty: {self.duty}, a parent asked.")
             summary["on_duty"] = self.duty
-        out["night_summary"] = {"text": night_es(summary["text"]) if lang == "es" else summary["text"], "on_duty": summary["on_duty"]}
+        out["night_summary"] = {"text": night_es(summary["text"]) if lang == "es" else summary["text"],
+                                "on_duty": tonight.name(summary["on_duty"], lang)}
         notes = patterns.unusual_notes(rows, TZ, lang=lang)
         out["unusual"] = [n["text"] for n in notes[-2:]]
         return out
@@ -638,7 +651,7 @@ class PrepMode:
         return out
 
     def talk(self, text):
-        self.reply_lang = self.agent.lang(text)
+        self.reply_lang = self.agent.turn_lang = self.agent.lang(text)
         start = len(self.bus.history)
         self.replies.clear()
         self.agent.handle({"kind": "message", "channel": "demo", "text": text})

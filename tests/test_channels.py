@@ -92,7 +92,7 @@ class TelegramChannel(unittest.TestCase):
         chat, answer = self.messenger.sent[1]
         print(f"\ntelegram round trip: {self.messenger.sent}")
         self.assertEqual(chat, FAMILY)
-        self.assertIn("last feed was at", answer)
+        self.assertRegex(answer, r"[Ll]ast feed was")
         channels = {m["channel"] for m in self.agent.memory.recent_messages(10)}
         self.assertEqual(channels, {"telegram"})
 

@@ -60,6 +60,10 @@ class People:
         person = self.person(who)
         return self.name(person) if person else who
 
+    def rota_names(self):
+        """{rota label: name} for every person with a rota label."""
+        return {spec["rota"]: self.name(person) for person, spec in self.spec.items() if spec.get("rota")}
+
     def named(self, text):
         """The text with every rota label replaced by the person's name: "For Parent A" becomes "For Gonza"."""
         for person, spec in self.spec.items():

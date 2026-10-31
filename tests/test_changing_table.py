@@ -243,7 +243,7 @@ class ConfirmPreload(unittest.TestCase):
             self.assertIn("MediaPipe", done.get("arm", ""))
             self.assertIsInstance(plugin.skill.confirm.detector, confirm_mod.NoConfirm)
             self.assertEqual(agent.bus.count("confirm_preload_timeout"), 1)
-            self.assertTrue(any("MediaPipe" in e.get("text", "") for e in agent.bus.history if e["kind"] == "reply"))
+            self.assertTrue(any("hand check only" in e.get("text", "") for e in agent.bus.history if e["kind"] == "reply"))
             finish = threading.Thread(target=lambda: done.setdefault("finish", plugin.finish()), daemon=True)
             finish.start()
             finish.join(3)

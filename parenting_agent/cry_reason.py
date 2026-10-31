@@ -136,6 +136,47 @@ def scores(ctx, features=None):
     return out
 
 
+# The same sentence in Spanish (es-UY), from the same scores, for a parent who reads Spanish (the people block "lang").
+ES = {"probably": "Por el registro, capaz que es {reason}: {evidence}.",
+      "no_reason": "En el registro no hay una razón probable{known}. Para revisar: {checks}.",
+      "next": "Si no, {reason}: {evidence}.",
+      "hungry": "la última toma fue hace {ago} y suele comer cada {gap}",
+      "tired": "está despierto hace {ago} y suele volver a dormirse después de unos {usual}",
+      "diaper": "el último cambio de pañal fue hace {ago}",
+      "diaper_since_feed": "no hay cambio de pañal anotado desde la toma de las {at}",
+      "feed_fact": "la última toma fue hace {ago}", "change_fact": "el último cambio de pañal fue hace {ago}",
+      "awake_fact": "está despierto hace {ago}",
+      "checks": "el pañal mojado o sucio, si tiene calor o frío, un provechito después de la toma, o capaz que solo quiere brazos",
+      "words": {"hungry": "hambre", "tired": "sueño", "diaper": "el pañal"},
+      "next_feed": "Próxima toma cerca de las {at}.", "late_feed": "Se esperaba una toma cerca de las {at}, hace {late} min."}
+
+
+def spanish(ctx, ranked, likely, now, tz):
+    """The cry sentence in Spanish, from the same context and ranking as explain()."""
+    evidence = {}
+    if "since_feed_min" in ctx and "feed_gap_min" in ctx:
+        evidence["hungry"] = ES["hungry"].format(ago=_hm(ctx["since_feed_min"]), gap=_hm(ctx["feed_gap_min"]))
+    if "awake_min" in ctx and "usual_awake_min" in ctx and not ctx["asleep"]:
+        evidence["tired"] = ES["tired"].format(ago=_hm(ctx["awake_min"]), usual=_hm(ctx["usual_awake_min"]))
+    if "since_change_min" in ctx:
+        evidence["diaper"] = (ES["diaper_since_feed"].format(at=patterns.hhmm(ctx["last_feed"].astimezone(tz)))
+                              if diaper_after_feed(ctx) else ES["diaper"].format(ago=_hm(ctx["since_change_min"])))
+    top = ranked[0][1]
+    if not likely or top not in evidence:
+        known = [ES[f"{k}_fact"].format(ago=_hm(ctx[m])) for k, m in (("feed", "since_feed_min"),
+                 ("change", "since_change_min"), ("awake", "awake_min")) if m in ctx and not (k == "awake" and ctx["asleep"])]
+        text = ES["no_reason"].format(known=(": " + ", ".join(known)) if known else "", checks=ES["checks"])
+    else:
+        text = ES["probably"].format(reason=ES["words"][top], evidence=evidence[top])
+        if len(ranked) > 1 and ranked[1][1] in evidence and ranked[1][0] >= LIKELY:
+            text += " " + ES["next"].format(reason=ES["words"][ranked[1][1]], evidence=evidence[ranked[1][1]])
+    if ctx.get("next_feed_at") and top != "hungry":
+        at = patterns.hhmm(ctx["next_feed"]["at"].astimezone(tz))
+        late = round((now - ctx["next_feed"]["at"]).total_seconds() / 60)
+        text += " " + (ES["next_feed"].format(at=at) if late <= 0 else ES["late_feed"].format(at=at, late=late))
+    return text
+
+
 def explain(entries, now, tz, features=None, pronoun="he"):
     """The ranked reasons and the sentence the agent says, for a cry heard at now."""
     ctx = context(entries, now, tz)
@@ -157,6 +198,6 @@ def explain(entries, now, tz, features=None, pronoun="he"):
         text = re.sub(r"\bhe\b", pronoun, text)
     if not (no_medical(text) and patterns.no_advice(text)):
         raise ValueError("cry reason text failed the no-medical guard")
-    return {"top": top, "likely": likely, "text": text, "ranked": [{"reason": r, "score": s, "evidence": t} for s, r, t in ranked],
+    return {"top": top, "likely": likely, "text": text, "text_es": spanish(ctx, ranked, likely, now, tz), "ranked": [{"reason": r, "score": s, "evidence": t} for s, r, t in ranked],
             "computed_from": ctx["refs"], "asleep": ctx["asleep"],
             "next_sleep_at": ctx["next_sleep_at"].isoformat() if ctx.get("next_sleep_at") else None}

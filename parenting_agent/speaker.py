@@ -14,6 +14,7 @@ import threading
 
 CHIME = "/System/Library/Sounds/Tink.aiff"
 WARM = ("hand",)
+SAY_VOICES = {"es": "Paulina"}  # a Spanish line through say in a Spanish voice, never read out in an English one
 
 
 class Speaker:
@@ -31,15 +32,17 @@ class Speaker:
         for text in WARM:
             self.mms.synth(text, self.lang)
 
-    def say(self, text):
-        """Speaks text on the default output. Returns at once."""
+    def say(self, text, lang=None):
+        """Speaks text on the default output, in lang (the line's language, else the speaker's). Returns at once."""
+        lang = lang or self.lang
         if self.mms is None:
-            subprocess.Popen(["say", text], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            voice = ["-v", SAY_VOICES[lang]] if lang in SAY_VOICES else []
+            subprocess.Popen(["say", *voice, text], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             return
-        threading.Thread(target=self.play_mms, args=(text,), daemon=True).start()
+        threading.Thread(target=self.play_mms, args=(text, lang), daemon=True).start()
 
-    def play_mms(self, text):
-        wav, _ = self.mms.synth(text, self.lang)
+    def play_mms(self, text, lang=None):
+        wav, _ = self.mms.synth(text, lang or self.lang)
         with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as out:
             out.write(wav)
         try:
@@ -50,10 +53,10 @@ class Speaker:
     def on_event(self, event):
         if self.source is not None:
             self.source.push({"kind": event["kind"], "text": event.get("text"),
-                              **{k: event[k] for k in ("stream_s", "episode", "skill", "step") if event.get(k) is not None}})
+                              **{k: event[k] for k in ("stream_s", "episode", "skill", "step", "lang") if event.get(k) is not None}})
         if not self.local:
             return
         if event["kind"] == "chime":
             subprocess.Popen(["afplay", CHIME], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         elif event["kind"] == "voice":
-            self.say(event.get("text") or "hand")
+            self.say(event.get("text") or "hand", event.get("lang"))

@@ -97,7 +97,7 @@ class FamiliesGuard(unittest.TestCase):
         self.assertEqual(app.handle(7, 7, "120 de fórmula", "private", "es-UY")[0][1], ES["NOT_LOGGED"])
 
     def test_questions_and_small_talk_go_through(self):
-        cases = [("en", "when did she last eat?", "The last feed logged was at 14:00."),
+        cases = [("en", "how much did she drink this morning?", "She drank 120 ml this morning, all logged."),
                  ("es", "¿cuánto tomó hoy?", "Hoy tomó 240 ml, todo anotado."),
                  ("en", "thanks!", "You are welcome."),
                  ("es", "gracias", "De nada.")]

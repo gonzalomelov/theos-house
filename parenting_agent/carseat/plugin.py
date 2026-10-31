@@ -4,8 +4,11 @@ Add "parenting_agent.carseat.plugin:CarSeatCoach" to the agent config plugins an
 allowed_tools, with an optional "car_seat" block:
     {"skill": "skills/car-seat.json", "source": "phone" | "0" | "clip.mp4",
      "muse": {"enabled": true, "samples": 3}}
-The parent says "help me install the car seat": the brain calls start_car_seat_coach. Each spoken answer
-("yes", "no") reaches the coach through answer_car_seat_check. car_seat_outgrow reads weight and height
+The parent says "help me install the car seat": the brain calls start_car_seat_coach. The coach speaks the language of
+the parent who asked (the people block "lang", else the words of the request), and every line it says also goes to that
+parent's chat when the request came on a chat channel such as Telegram: the glasses show it as a card and speak it. Its
+summary is the last line, said by the coach itself, never rewritten by the brain. Each spoken answer ("yes", "no",
+"sí") reaches the coach through answer_car_seat_check. car_seat_outgrow reads weight and height
 from Baby Buddy and compares them with the seat's limits. Frames stay on this Mac, the brain gets text only, except
 with "muse" enabled: then one zoomed still per camera step goes to Muse Spark Open on Baseten for a second opinion
 (parenting_agent/carseat/muse_check.py).
@@ -41,7 +44,9 @@ class CarSeatCoach(Plugin):
         self.seat, self.car = load_profiles(self.skill_cfg)
         self._vision, self._source, self.quiet = vision, source, quiet
         self.coach, self.thread, self.source = None, None, None
+        self.asked = {}  # the channel, chat and person that started the coach, and the language it speaks
         self.lock = threading.Lock()
+        agent.bus.subscribe(self.relay, ["voice"])
         if hasattr(agent, "answer_takers"):
             agent.answer_takers.append(self.take_answer)
         agent.tools.add(Tool("start_car_seat_coach", "Coach the parent through installing the infant car seat with the car's seat belt, step by step, with the head camera.",
@@ -63,14 +68,39 @@ class CarSeatCoach(Plugin):
                 self.agent.bus.publish("head_camera", url=self.source.url)
             speaker = Speaker(self.source, quiet=self.quiet)
             self.agent.bus.subscribe(speaker.on_event, ["voice"])
+            self.asked = self.who_asked()
             self.coach = Coach(self.skill_cfg, self.agent.bus, vision, self.source, self.seat, self.car, recheck=True,
-                               muse=self.muse_check())
+                               muse=self.muse_check(), lang=self.asked["lang"])
             notes = getattr(self.agent, "prompt_notes", None)
             if notes is not None and COACHING_NOTE not in notes:
                 notes.append(COACHING_NOTE)
             self.thread = threading.Thread(target=self._run, name="car-seat", daemon=True)
             self.thread.start()
             return f"coaching the {self.seat['seat']} install, one step at a time"
+
+    def who_asked(self):
+        """The channel, chat and person of the message that started the coach, and the language to coach in: the
+        person's "lang" in the people block, else Spanish for a request in Spanish, else the family's language."""
+        event = getattr(self.agent, "current_event", None) or {}
+        people = getattr(self.agent, "people", None)
+        person = event.get("person")
+        lang = people.lang(person) if people is not None and person else None
+        if lang is None and event.get("kind") == "message" and event.get("text"):
+            lang = "es" if rules.looks_spanish(event["text"]) else "en"
+        lang = lang or self.cfg.get("lang") or (people.family_lang() if people is not None else None) or "en"
+        channel = event.get("channel") if event.get("kind") == "message" else None
+        return {"channel": channel or self.cfg["channel"], "chat_id": event.get("chat_id"), "person": person,
+                "lang": lang}
+
+    def relay(self, event):
+        """Each coach line to the chat the coach was started from (Telegram), as the agent's own message. On the
+        glasses and the console the line is already spoken and shown, so nothing more goes there."""
+        channel = self.asked.get("channel")
+        if event.get("skill") != "car-seat" or channel in (None, "glasses", "console") or not event.get("text"):
+            return
+        to = {"chat_id": self.asked["chat_id"]} if self.asked.get("chat_id") else {}
+        self.agent.bus.publish("reply", channel=channel, text=event["text"], person=self.asked.get("person"),
+                               proactive=True, source="car-seat", routine="car_seat", step=event.get("step"), **to)
 
     def muse_check(self):
         muse = self.cfg.get("muse") or {}
@@ -86,15 +116,16 @@ class CarSeatCoach(Plugin):
         the agent said nothing was waiting for a yes). Returns the short reply, or None for a message not for the coach."""
         coach = self.coach
         said = _yes_no(text)
-        if coach is None or event.get("channel") != self.cfg["channel"] or said is None:
+        if coach is None or event.get("channel") not in (self.cfg["channel"], self.asked.get("channel")) or said is None:
             return None
         asking = getattr(coach, "asking", None)
         if asking is None or asking in coach.answers:
             return None
         coach.answer(asking, text)
         self.agent.bus.publish("carseat_heard", check=asking, answer=said)
-        spanish = rules.looks_spanish(text) or text.strip().lower().startswith(("sí", "si"))
-        return ("Anotado: sí." if said == "yes" else "Anotado: no.") if spanish else f"Noted: {said}."
+        if getattr(coach, "lang", "en") == "es" or rules.looks_spanish(text) or text.strip().lower().startswith(("sí", "si")):
+            return "Anotado: sí." if said == "yes" else "Anotado: no."
+        return f"Noted: {said}."
 
     def _run(self):
         try:
@@ -103,8 +134,13 @@ class CarSeatCoach(Plugin):
             notes = getattr(self.agent, "prompt_notes", None)
             if notes is not None and COACHING_NOTE in notes:
                 notes.remove(COACHING_NOTE)
-        summary = next(e for e in reversed(self.agent.bus.history) if e["kind"] == "carseat_summary")
-        self.agent.bus.publish("observation", source=self.name, channel=self.cfg["channel"], text="Car seat coach finished. " + summary["text"])
+        # The summary is the coach's own last line, already spoken and sent. It is kept in the conversation so a later
+        # question about the install has it, and never handed to the brain to say again in its own words.
+        summary = next((e for e in reversed(self.agent.bus.history) if e["kind"] == "carseat_summary"), None)
+        memory = getattr(self.agent, "memory", None)
+        if summary is not None and memory is not None:
+            memory.add_message(self.asked.get("channel") or self.cfg["channel"], "assistant", summary["text"],
+                               ts=self.agent.now())
 
     def answer(self, check, answer):
         if self.coach is None:

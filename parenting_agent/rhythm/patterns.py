@@ -186,8 +186,12 @@ def night_summary(entries, now, tz, parents, current=False, aliases=None):
     in_night = [e for e in ordered(entries, now) if start <= when(e) < end]
     night_feeds = [e for e in in_night if e["kind"] == "feeding"]
     wakes = [{**w, "parent": label(w["parent"])} for w in night_wakeups(entries, tz) if start <= w["at"] < end]
-    sleeps = [e for e in in_night if e["kind"] == "sleep" and e.get("end")]
-    longest = max(((parse(e["end"]) - parse(e["start"])).total_seconds() / 3600 for e in sleeps), default=0.0)
+    # Every finished sleep that overlaps the night counts, also the one that started at 19:40 "para la noche": before,
+    # only sleeps that started after 22:00 counted, and a night slept in one stretch said "longest sleep 0.0 h".
+    sleeps = [e for e in ordered(entries, now) if e["kind"] == "sleep" and e.get("end")
+              and when(e) < end and parse(e["end"]) > start]
+    longest = max(((parse(e["end"]) - parse(e["start"])).total_seconds() / 3600 for e in sleeps), default=None)
+    longest = round(longest, 1) if longest and longest >= 0.05 else None  # no sleep in the log is no line, never 0.0 h
     handled_all = [label(w["parent"]) for w in night_wakeups(entries, tz) if w["at"] < now.astimezone(tz)]
     on_duty = next_on_duty(handled_all, parents)
     per_parent = ", ".join(f"{p} {sum(1 for w in wakes if w['parent'] == p)}" for p in parents)
@@ -197,10 +201,10 @@ def night_summary(entries, now, tz, parents, current=False, aliases=None):
              else f"Night summary for {start:%a %d}")
     text = (f"{label}: {len(night_feeds)} feeds"
             + (f" at {', '.join(hhmm(when(e).astimezone(tz)) for e in night_feeds)}" if night_feeds else "")
-            + f", longest sleep {longest:.1f} h. Wake-ups: {per_parent}. Next on duty: {on_duty}.")
+            + (f", longest sleep {longest:.1f} h" if longest else "") + f". Wake-ups: {per_parent}. Next on duty: {on_duty}.")
     if nxt:
         text += " " + next_feed_sentence(nxt, now, tz)
     refs = [e["ref"] for e in in_night] + [w["ref"] for w in wakes]
     return {"text": text, "on_duty": on_duty, "computed_from": refs or (nxt or {}).get("computed_from", []),
-            "feeds": len(night_feeds), "longest_h": round(longest, 1),
+            "feeds": len(night_feeds), "longest_h": longest,
             "wakeups": {p: sum(1 for w in wakes if w["parent"] == p) for p in parents}}

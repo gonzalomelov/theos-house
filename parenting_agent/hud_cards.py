@@ -18,6 +18,8 @@ line left is not sent. Every card here is plain data, so the routing (glasses.py
 """
 import re
 
+from .agent import final_guard
+
 # The icons this module uses, every one a case of IconName in MWDATDisplay 1.0.1 (the Meta icon catalog).
 ICONS = frozenset({
     "phoneHandsetArrowUpRight", "exclamationTriangle", "clock", "bedSide", "lightBulb", "cart", "carFrontView",
@@ -27,7 +29,8 @@ ICONS = frozenset({
 LIMITS = {"title": 26, "status": 60, "detail": 90, "meta": 40}
 DIM_S, SLEEP_S, KEEPALIVE_S = 20, 25, 15  # Meta: dims after 20 s without a change, sleeps at 25 s
 
-# Words of the machinery, never on a lens (house_brain.INTERNAL_RE plus the agent's own event and tool vocabulary).
+# Words of the machinery, never on a lens (house_brain.INTERNAL_RE plus the agent's own event and tool vocabulary), on
+# top of the shared final guard's (final_guard.py).
 INTERNAL = re.compile(
     r"finish[_ ]?reason|reason length|\bJSON\b|invalid answer|\bfallback\b|\btoken\b|\btrigger\b|\bschema\b|<\||"
     r"\btraceback\b|\bexception\b|\berror:|\bHTTP \d{3}\b|\b[a-z]+_[a-z_]+\(|\b(?:switch|light|media_player|todo|notify|"
@@ -114,7 +117,7 @@ def lang_of(lang):
 def clean(text):
     """The text a lens may show: no "Test:" mark, no internal words. None when nothing is left."""
     text = TEST_MARK.sub("", " ".join(str(text or "").split()))
-    if not text or INTERNAL.search(text):
+    if not text or INTERNAL.search(text) or final_guard.why_internal(text) or final_guard.ROTA.search(text):
         return None
     return text
 

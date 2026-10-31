@@ -59,7 +59,7 @@ TEXT = {
     },
     "es": {
         "duty": "De turno esta noche", "warm": "El calienta mamaderas precalienta", "noise": "Ruido blanco",
-        "door": "Timbre en silencio", "floor": "Limpieza del piso", "why": "Por qué, según Muse (en inglés)",
+        "door": "Timbre en silencio", "floor": "Limpieza del piso", "why": "Por qué, según Muse",
         "changed": "Qué cambió",
         "rota": "{p}, por el turno de la noche (reparto justo de despertares)",
         "moved": "{p}, Muse cambió la noche porque alguien pidió dormir",
@@ -283,6 +283,26 @@ def changes(card, lang="en"):
     return out or [t["no_change"]]
 
 
+def why_line(text, lang):
+    """Muse's own words about the plan, through the final guard (final_guard.py) in the visitor's language: on the
+    Spanish page an English sentence goes and Parent B reads Persona B, so the card never mixes the two (blind round 1).
+    An empty line when nothing is left: the card then shows no "why" line at all."""
+    if not text:
+        return ""
+    from ..agent import final_guard
+    names = NAMES_ES if lang == "es" else {label: label for label in NAMES_ES}
+    result = final_guard.guard(text, "es" if lang == "es" else "en", names, models_ok=True)
+    if result.fallback:
+        return ""
+    if lang != "es":
+        return result.text
+    # A short English sentence ("Persona B takes the night.") is below the guard's two English words: the Spanish card
+    # drops every sentence with an English word that does not read Spanish.
+    from ..agent import rules
+    return " ".join(p for p in final_guard.SENTENCE.split(result.text)
+                    if rules.looks_spanish(p) or not rules.ENGLISH.search(p)).strip()
+
+
 def view(card, lang="en"):
     """The card as the page shows it: every text already in the visitor's language, plus the plain data."""
     t = TEXT["es" if lang == "es" else "en"]
@@ -292,7 +312,7 @@ def view(card, lang="en"):
             "span": (t["plan_ahead"].format(now=card["now"], until=card["until"], at=card["planned_at"])
                      if card.get("planned_at") else t["plan_until"].format(now=card["now"], until=card["until"])),
             "rows": [{"label": a, "text": b} for a, b in rows(card, lang)],
-            "why": card["summary"], "why_label": t["why"], "why_changed": card["why_changed"],
+            "why": why_line(card["summary"], lang), "why_label": t["why"], "why_changed": why_line(card["why_changed"], lang),
             "changes": changes(card, lang), "changes_label": t["changed"], "on_duty": card["on_duty"],
             "seconds": (card.get("muse") or {}).get("seconds")}
 

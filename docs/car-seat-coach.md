@@ -33,6 +33,8 @@ The coach never says the install is safe. It says which visible checks passed, w
 
 Hand checks are never skipped. An unanswered one stays open in the summary.
 
+Every line is in the language of the parent who started the coach: their "lang" in the people block, else Spanish for a request in Spanish, else the family's language (`LINES`, `CAMERA_STEPS`, `SUMMARY` and `NAMES` in `coach.py`, `ask_es` and `technician_es` in `skills/car-seat.json`, `text_es` for the car rule). The same words are spoken (each voice event carries its `lang`, and `say` on the Mac uses a Spanish voice for Spanish), shown on the glasses card and, when the coach was started from Telegram, sent to that parent's chat. The summary is the coach's last line and is kept in the conversation, it is never handed to the brain to say again. The coach refuses "safe", "safely", "seguro" and "segura" in either language. "Cinturón de seguridad" is the seat belt's name and is allowed.
+
 ## Seat profile from a manual
 
 ```bash

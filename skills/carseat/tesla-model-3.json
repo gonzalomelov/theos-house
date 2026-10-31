@@ -6,7 +6,8 @@
   "note": "Tesla's site refused automated downloads on 2026-10-28, so these rules come from the issue and Tesla's published child seat pages. Check them against the printed manual in the car when it arrives on Nov 5."
  },
  "rules": [
-  {"id": "no_front_airbag", "text": "Never put a rear-facing seat in the front passenger seat while the airbag is on."},
+  {"id": "no_front_airbag", "text": "Never put a rear-facing seat in the front passenger seat while the airbag is on.",
+   "text_es": "Nunca pongas una silla mirando hacia atrás en el asiento del acompañante con el airbag prendido."},
   {"id": "isofix_outboard", "text": "ISOFIX anchors are on the two outer rear seats only."},
   {"id": "center_belt_only", "text": "The rear center seat takes a seat installed with the seat belt only."}
  ],

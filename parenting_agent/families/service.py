@@ -109,6 +109,13 @@ def es_uy(text):
 class FamilyAgent(Agent):
     health_gate = True
     confirm_from_log = True
+    guard_logs_text = False  # the final guard logs why it removed something, never a family's words
+
+    def reply_lang(self):
+        return self.lang()
+
+    def guard_names(self):
+        return {}
 
     def say(self, channel, text, **about):
         super().say(channel, es_uy(text) if self.lang() == "es" else text, **about)

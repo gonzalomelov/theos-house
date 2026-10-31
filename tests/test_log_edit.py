@@ -472,7 +472,7 @@ class FixedTextsInTheReplyLanguage(Base):
     def test_out_of_steps_in_english_for_an_english_message(self):
         brain = Recording([[self.READ]] * 10)
         app, f, clock = self.family(brain)
-        self.assertEqual(self.send(app, clock, "05:10", "when did she last eat"), TEXTS["en"]["TOO_MANY_STEPS"])
+        self.assertEqual(self.send(app, clock, "05:10", "how is her sleep going"), TEXTS["en"]["TOO_MANY_STEPS"])
 
     def test_every_fixed_agent_text_has_both_languages(self):
         self.assertEqual(set(TEXTS["en"]), set(TEXTS["es"]))

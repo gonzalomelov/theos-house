@@ -182,7 +182,8 @@ class HouseSounds(Plugin):
                                        text=f"The doorbell just rang at the front door. The parent is at the {skill} "
                                             "with both hands on the baby.")
         else:
-            self.notify("Doorbell at the front door.", sound="doorbell")
+            self.notify("Doorbell at the front door.", sound="doorbell",
+                        texts={"en": "Doorbell at the front door.", "es": "Tocaron el timbre de la puerta."})
 
     def on_cry(self, event):
         now = self.clock()
@@ -204,10 +205,15 @@ class HouseSounds(Plugin):
                                  "until": now + datetime.timedelta(seconds=self.plan.s["fuss_wait_s"])}
                     return result
             text, fields = result["text"], {}
+            text_es = result.get("text_es")
             if night:
                 on_duty = self.on_duty(now)
                 text += f" {on_duty} is on duty."
+                text_es = text_es and text_es + f" De turno: {on_duty}."
                 fields["parent"] = on_duty
+            if text_es:
+                # Each parent reads the cry in their own language (channels/push.py), the final guard checks it on the way.
+                fields["texts"] = {"en": text, "es": text_es}
             self.fuss = None
             self.notify(text, sound="cry", reason=result["top"], source="house-sounds", routine="cry",
                         check_now=result.get("check_now", False), **fields)

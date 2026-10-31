@@ -24,6 +24,7 @@ import time
 from dataclasses import dataclass
 from pathlib import Path
 
+from ..agent import final_guard
 from ..agent import rules
 from ..agent.plugins import Plugin
 from ..voice import client as voice_client
@@ -220,6 +221,15 @@ class MessagingChannel(Plugin):
         self.agent.bus.publish("channel_sent", channel=self.name, chat_id=chat, message_id=sent, voice=True,
                                seconds=round(time.monotonic() - started, 3))
 
+    def final_guard(self, text, event, chat):
+        """The text as it may reach the parent of this chat: no machinery, in the language of the people block."""
+        people = getattr(self.agent, "people", None)
+        person = event.get("person") or self.person_of(chat)
+        lang = people.lang(person) if people and person else None
+        return final_guard.apply(text, lang, self.agent.bus, where=f"channel:{self.name}",
+                                 names=people.rota_names() if people else None, person=person,
+                                 source=event.get("source"))
+
     def speak(self, event):
         if event.get("channel") != self.name:
             return
@@ -228,6 +238,8 @@ class MessagingChannel(Plugin):
             self.agent.bus.publish("channel_error", channel=self.name, error="no family chat to send to")
             return
         text = event["text"] if event["kind"] == "reply" else f"I want to use {event['name']}. Say yes to let me."
+        if not event.get("flag"):  # a red flag line is fixed text, never touched
+            text = self.final_guard(text, event, chat)
         if event.get("proactive"):
             # A push the agent starts (channels/push.py) is not the answer to a voice note: no heard words before it.
             self.send_text(chat, text)

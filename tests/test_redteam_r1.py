@@ -95,7 +95,7 @@ class StaleApproval(unittest.TestCase):
         app = demo(brain)
         self.addCleanup(app.close)
         _, asked = app.message("v", False, "ask my partner to come")
-        self.assertIn('Waiting for your yes: call_partner "Please come and help"', asked["reply"])
+        self.assertIn('Waiting for your yes: call partner "Please come and help"', asked["reply"])
         _, done = app.message("v", False, "yes")
         self.assertEqual([(e["action"], e["arguments"]) for e in house_actions(app, "v")],
                          [("call_partner", {"text": "Please come and help"})])

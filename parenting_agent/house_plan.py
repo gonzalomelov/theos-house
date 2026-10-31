@@ -59,7 +59,7 @@ MESS_RE = re.compile(r"\b(mess|messy|spill\w*|spit[- ]?up|crumbs?|food on the fl
 STOCK_RE = re.compile(r"\bstock:?\s*(diapers|wipes|formula)\s+(\d+)", re.I)
 # What every reply about a device action says while house.live is false: it was written down, nothing moved.
 DRY_WRITE = "only written down, house.live is off (dry run), nothing moved in the house"
-DRY_NOTE = "Dry run: house.live is off, so this was only written down and nothing moved in the house."
+DRY_NOTE = "Dry run: this was only written down and nothing moved in the house."
 DEVICE_WORDS = re.compile(r"\b(vacuum|aspiradora|lights?|lamps?|luz|luces|white noise|ruido blanco|speakers?|echo|"
                           r"warmer|tv|doorbell|timbre|shopping list|lista de (las )?compras|lista del s[uú]per)\b", re.I)
 DONE_WORDS = re.compile(r"\b(start(ed|ing)?|running|runs|paused|stopped|docked|dimmed|turned|switched|is on|are on|"

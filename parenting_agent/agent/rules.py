@@ -897,6 +897,24 @@ RELAYED_QUESTION = re.compile(r"\b(?:pregunta|preguntan|quiere saber|quieren sab
                               r"d[oó]nde|when|how|what|where)", re.I)
 
 
+# "¿Cuándo comió por última vez?", "when did he last eat?", "¿a qué hora fue la última toma?": answered from the log in one
+# line by plain code. Blind round 1 (Oct 31): on the demo Muse said "Voy a revisar el registro de Theo para vos." and asked
+# something else, and only a third try gave the time.
+LAST_FEED = re.compile(
+    r"\b(?:cu[aá]ndo|a qu[eé] hora|hace cu[aá]nto)\b[^?.!]{0,40}\b(?:comi[oó]|tom[oó]|mam[oó]|le di(?:mos)?|"
+    r"(?:la )?[uú]ltima (?:toma|mamadera|teta))\b|"
+    r"\b(?:cu[aá]l|cu[aá]ndo) (?:fue|es) la [uú]ltima (?:toma|mamadera)\b|"
+    r"\bwhen (?:did|was|has) (?:he|she|the baby|theo|it|they)?\s*(?:last )?(?:eat|ate|feed|fed|eaten|had a bottle)\b|"
+    r"\bwhen was (?:the |his |her )?last (?:feed|feeding|bottle|meal)\b|"
+    r"\b(?:time of |what time was )(?:the |his |her )?last (?:feed|feeding|bottle)\b", re.I)
+
+
+def asks_last_feed(text):
+    """True for a question about when the baby last ate, never for a message that logs a feed."""
+    text = text or ""
+    return bool(LAST_FEED.search(text)) and is_question(text) and not re.search(r"\b\d+\s*(?:ml|cc|oz)\b", text, re.I)
+
+
 def is_question(text):
     return "?" in text or bool(QUESTION_START.search(text.strip())) or bool(RELAYED_QUESTION.search(text))
 
