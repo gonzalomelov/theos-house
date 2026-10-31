@@ -177,6 +177,7 @@ TEXTS = {
     "en": {
         "NOT_CHANGED": "I could not change the log. Tell me which entry and what to change, for example: the 01:30 bottle was 100 ml.",
         "BRAIN_BUSY": "My brain is busy right now, so this answer comes from my simple fixed rules.",
+        "BUSY_RETRY": "I could not answer that with them. Ask me again in a little while.",
         "CANNOT_CHANGE": "I cannot change entries in this log, so nothing changed.",
         "ASK_DOUBLE": "Did you send it twice, or were there {two}? So far it is logged once: {entry}.",
         "ASK_DOUBLE_AGAIN": "I did not get that, so it stays logged once: {entry}. Was it one sent twice, or {two}? Reply one or two.",
@@ -211,6 +212,7 @@ TEXTS = {
     "es": {
         "NOT_CHANGED": "No pude cambiar el registro. Decime cuál y qué cambio, por ejemplo: la mamadera de la 1 y media fue de 100 ml.",
         "BRAIN_BUSY": "Mi cerebro está ocupado ahora, así que te respondo con mis reglas fijas simples.",
+        "BUSY_RETRY": "Con ellas no pude responder eso. Preguntame de nuevo en un rato.",
         "CANNOT_CHANGE": "En este registro no puedo cambiar entradas, así que no cambió nada.",
         "ASK_DOUBLE": "¿La mandaste dos veces o fueron {two}? Por ahora quedó una sola: {entry}.",
         "ASK_DOUBLE_AGAIN": "No te entendí, así que quedó una sola: {entry}. ¿Fue una sola mandada dos veces, o fueron {two}? Respondé una o dos.",
@@ -1315,6 +1317,8 @@ class Agent:
             if self.brain_busy and not fixed and not guarded and before is not None:
                 # The fixed rules answer in English: what the log holds now is said in the parent's language instead.
                 text = diff_text(log_diff(before, self.log_state()), lang, self.baby_name()) or text
+                if lang in LANG_NAMES and rules.message_lang(text) not in (None, lang):
+                    text = self.text("BUSY_RETRY", request)
             text = self.honest(text, before, request, editing, ran, guarded=guarded)
             if safety_said and request is not None and not rules.carries_safety_line(text):
                 # Another guard put its own words in place of the brain's (a claim of an action that never ran, a
@@ -1450,7 +1454,7 @@ class Agent:
                     return finish(next_text)
                 said_lang = rules.message_lang(reply.text or "")
                 if request is not None and not lang_checked and said_lang and said_lang != lang and lang in LANG_NAMES \
-                        and not rules.is_health(request):
+                        and not rules.is_health(request) and not self.brain_busy:  # the fixed rules write English only
                     # "bottle 120 ml" answered "Anotada mamadera de 120 ml": the brain is asked once for the right language.
                     lang_checked = True
                     self.bus.publish("guard", status="wrong_language", said=said_lang, wanted=lang)

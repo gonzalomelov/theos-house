@@ -147,6 +147,19 @@ class Fallback(unittest.TestCase):
         fake.close()
 
     @mock.patch.dict(os.environ, KEYS)
+    def test_a_spanish_question_the_rules_cannot_answer_in_spanish_gets_a_spanish_retry(self):
+        """Oct 31 on the Vostro: the rules answered "¿cuánto tomó hoy?" with "Done, logged." after a language check."""
+        fake = FakeBaseten([], status=503)
+        with tempfile.TemporaryDirectory() as tmp:
+            agent, replies = self.agent(tmp, fake)
+            agent.handle({"kind": "message", "channel": "console", "text": "¿cuánto tomó hoy?"})
+            self.assertEqual(replies[-1], TEXTS["es"]["BRAIN_BUSY"] + " " + TEXTS["es"]["BUSY_RETRY"])
+            self.assertEqual(agent.baby_log.entries("feeding", None, 10), [])
+            self.assertFalse(any(e["kind"] == "guard" and e.get("status") == "wrong_language" for e in agent.bus.history))
+            agent.close()
+        fake.close()
+
+    @mock.patch.dict(os.environ, KEYS)
     def test_the_next_turn_after_muse_is_back_says_nothing_about_being_busy(self):
         fake = FakeBaseten([], status=503)
         with tempfile.TemporaryDirectory() as tmp:
