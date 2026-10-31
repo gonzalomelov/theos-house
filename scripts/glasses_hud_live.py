@@ -6,6 +6,7 @@ to Baby Buddy and reads it back, and its events draw the HUD through DAT's Displ
     # build and install the app (apps/glasses/README.md), then:
     python scripts/glasses_hud_live.py --udid SIM --out-dir results/glasses-live --name run \\
         --video ~/Engineering/gonza/meta-hackathon-2026-synthetic/video-v5/rec/hud/hud-live.mp4
+    # --hands sam3_only runs the camera skills on SAM 3.1 alone (no MediaPipe), the "hands" setting in hands.py
 
 Mocked, because it does not exist here: the glasses hardware and their lens (DAT MockDeviceKit and MockDisplayKit),
 the camera picture (our synthetic clips and one licensed photo), the baby, and the parent's words (typed by the app at
@@ -219,6 +220,11 @@ def run(args):
     config = json.loads((ROOT / CONFIG).read_text())
     data = ROOT / config["data_dir"]
     data.mkdir(exist_ok=True)
+    config_path = CONFIG
+    if args.hands:  # the same config with the "hands" setting, written next to the run's data, out of git
+        config["hands"] = args.hands
+        config_path = str((data / "agent.json").relative_to(ROOT))
+        (ROOT / config_path).write_text(json.dumps(config, indent=1) + "\n")
     for stale in ("events.jsonl", "telegram-captured.jsonl"):
         (data / stale).unlink(missing_ok=True)
     out = Path(args.out_dir)
@@ -231,7 +237,7 @@ def run(args):
     raw = Path(os.path.expanduser(args.video)).with_name(Path(args.video).stem + "-raw.mp4") if args.video else None
     try:
         with (data / "agent.log").open("w") as agent_log:  # stays in the data dir, out of git
-            agent = subprocess.Popen([sys.executable, "-u", "-m", "parenting_agent", "--config", CONFIG], cwd=ROOT, env=env,
+            agent = subprocess.Popen([sys.executable, "-u", "-m", "parenting_agent", "--config", config_path], cwd=ROOT, env=env,
                                      stdin=subprocess.PIPE, stdout=agent_log, stderr=subprocess.STDOUT)
         deadline = time.monotonic() + 180
         while not any(e["kind"] == "confirm_ready" for e in rows(data / "events.jsonl")):
@@ -287,6 +293,7 @@ def run(args):
     brains = hero.brain_calls(events)
     result = {
         "name": args.name, "date": time.strftime("%Y-%m-%d %H:%M %z"), "config": CONFIG, "plan": plan,
+        "hands": next((e.get("mode") for e in events if e["kind"] == "hands_mode"), None),
         "models": {"brain": sorted({f"{b['model']} on {b['destination']}" for b in brains}),
                    "vision": next(({k: e.get(k) for k in ("provider", "repo", "device")} for e in events if e["kind"] == "confirm_model"), None),
                    "sam3_processes": "one (sam3_local, kept between changes, shared with the dog look)"},
@@ -330,6 +337,7 @@ def main():
     parser.add_argument("--out-dir", default="results/glasses-live")
     parser.add_argument("--name", default="run")
     parser.add_argument("--video", help="where the muxed screen recording goes")
+    parser.add_argument("--hands", choices=("auto", "mediapipe", "sam3_only"), help="the hand detector, default the config's")
     args = parser.parse_args()
     if args.build_feed:
         plan = timeline()
