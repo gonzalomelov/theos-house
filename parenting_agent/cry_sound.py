@@ -1,20 +1,18 @@
-"""The cry reason from the sound, on the Mac, never sent anywhere (issue #161).
+"""The cry reason from the sound: the head and the wording, kept for the record (issues #161 and the Oct 31 Meta swap).
 
-ChatterBaby (UCLA) cannot run here: its model is not published and the app sends each cry to UCLA's servers
-(docs/research/cry-reason.md). This is the closest real thing that keeps audio in the house: PANNs CNN14, the model
-that already hears "a baby is crying", gives a 2048 number embedding of the cry, and a small softmax head trained on
-the Donate-a-Cry corpus (ODbL 1.0, contents DbCL 1.0) reads it as one of the five tags parents gave there: hungry,
-tired, discomfort, burping, belly_pain. The head is 5 x 2048 weights in parenting_agent/assets/cry_reason_head.json.
+On Oct 30 a small softmax head (5 x 2048 weights in parenting_agent/assets/cry_reason_head.json) was trained on PANNs
+CNN14 embeddings of the Donate-a-Cry corpus (ODbL 1.0, contents DbCL 1.0) to read a cry as hungry, tired, discomfort,
+burping or belly_pain. It was at chance on its held-out test (balanced accuracy 0.19, chance 0.20,
+results/cry-reason/README.md), so no class was ever said. On Oct 31 PANNs left the runtime because it is not a Meta
+model, and the head went with it: the agent never computes an embedding. The cry reason the parent hears comes from
+the baby log alone (cry_reason.py).
 
-What the parent hears:
-- The log's reason stays first (cry_reason.py). The sound is one more signal: when it agrees with the log the text
-  says so, when it points elsewhere it is one short sentence, framed as a guess from the sound.
-- A class is said only when the held-out test cleared the bar written before training (results/cry-reason/split.json),
-  listed in the head's "speak". Every other guess is a "cry_sound_guess" event in the log only.
-- belly_pain is never said as pain. It becomes "check on him now", and when the baby log holds a red flag in the last
-  24 h (a note the safety gate in agent/rules.py reads as one) the fixed call-the-doctor line from agent/rules.py.
-
-The samples come from the Ear in memory and are dropped after the one embedding call. Nothing is written.
+What stays here:
+- Head: fit, load and probs, used offline by scripts/cry_reason_train.py to reproduce the Oct 30 result.
+- combine: how any sound guess would be blended with the log reason, used by house_sounds.py for the guess the
+  plug-in gets (Muse's opt-in guess goes through cry_muse.blend first). The log's reason stays first. A class is said
+  only when the guess says it may be ("speak"). belly_pain is never said as pain: it becomes "check on him now", and
+  with a red flag in the baby log of the last 24 h the fixed call-the-doctor line from agent/rules.py follows.
 """
 import datetime
 import json
@@ -39,7 +37,6 @@ WORDS_ES = {"hungry": "hambre", "tired": "sueño", "discomfort": "incomodidad, e
 CHECK_NOW_ES = "El llanto suena como los que otros padres marcaron como llanto fuerte. Fijate cómo está ahora."
 AGREES_ES = "El sonido coincide."
 GUESS_ES = "Solo por el sonido, una pista: {word}."
-DEFAULTS = {"enabled": False, "clip_s": 10.0, "min_confidence": 0.5, "head": None, "red_flag_hours": 24}
 
 
 def softmax(z):
@@ -93,35 +90,6 @@ class Head:
     def load(cls, path=None):
         data = json.loads(Path(path or HEAD).read_text())
         return cls(data["mean"], data["std"], data["weights"], data["bias"], data["classes"], data.get("meta"))
-
-
-class CrySound:
-    """One guess per cry, from the Ear's PANNs listener and the head. The samples are dropped after the call."""
-
-    name = "local"
-
-    def __init__(self, listener, config=None, head=None):
-        self.cfg = {**DEFAULTS, **(config or {})}
-        self.listener = listener
-        self.head = head or Head.load(self.cfg["head"])
-        self.speak = set(self.head.meta.get("speak", []))
-
-    def guess(self, samples, rate=16000):
-        if not self.cfg["enabled"]:
-            return {"skipped": "the local cry model is off in the config"}
-        clip = np.asarray(samples[:int(self.cfg["clip_s"] * rate)], np.float32)
-        try:
-            embedding = self.listener.embed(clip)
-        except Exception as error:  # a worker hiccup must not drop the cry, the log reason still goes out
-            return {"skipped": f"no embedding: {str(error)[:120]}"}
-        finally:
-            del clip
-        p = self.head.probs(embedding)[0]
-        top = int(np.argmax(p))
-        label = self.head.classes[top]
-        return {"label": label, "confidence": round(float(p[top]), 3), "model": "panns-cnn14+donateacry-head",
-                "probs": {c: round(float(v), 3) for c, v in zip(self.head.classes, p)},
-                "speak": label in self.speak and float(p[top]) >= self.cfg["min_confidence"], "host": "local"}
 
 
 def red_flag_in_log(entries, now, hours=24):

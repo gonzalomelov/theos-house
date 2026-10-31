@@ -1,4 +1,7 @@
-"""Real run for issues #14 and #32: licensed test clips through PANNs and the agent, numbers and labels only.
+"""Real run for issues #14 and #32: licensed test clips through the Ear's listener and the agent, numbers and labels only.
+
+Since Oct 31 2026 the listener is hearing.default_listener (Meta Perception Encoder Audio and signal processing),
+the Oct 28 run in results/sounds/run.json used PANNs.
 
     python scripts/sounds_run.py                     # writes results/sounds/run.json and results/sounds/cry-eval.json
     python scripts/sounds_run.py --camera-seconds 60 # also listens to the living room camera, writes results/sounds/camera.json
@@ -85,7 +88,7 @@ def listen_camera(agent, sounds, skill, args):
             "camera": "Tapo C200 living room, RTSP audio track only, labels only", "seconds_heard": seconds,
             "wall_s": round(time.monotonic() - began, 1), "error": error,
             "median_dbfs": levels[len(levels) // 2] if levels else None,
-            "seconds_fired": {label: sum(label in r["fired"] for r in rows) for label in hearing.THRESHOLDS},
+            "seconds_fired": {label: sum(label in r["fired"] for r in rows) for label in sounds.ear.s["thresholds"]},
             "events": [clean(e) for e in list(agent.bus.history)[first:] if e["kind"] in KEEP]}
 
 
@@ -112,7 +115,7 @@ def main(argv=None):
                         outputs={"ear": lambda text: ear_said.append(text) or {"played": False, "dry": True}})
         skill = ArmedSkill()
         started = time.monotonic()
-        listener = hearing.PannsListener()
+        listener = hearing.default_listener()
         load_s = round(time.monotonic() - started, 2)
         sounds = HouseSounds(agent, config, listener=listener, clock=lambda: case["at"])
         agent.plugins = [router, skill, sounds]
@@ -138,8 +141,8 @@ def main(argv=None):
     reason = next(e for e in clips[0]["events"] if e["kind"] == "cry_reason")
     doorbell = [e for e in clips[1]["events"] if e["kind"] in ("sound", "routed")]
     run = {"generated_at": datetime.datetime.now().astimezone().isoformat(timespec="seconds"),
-           "job": "licensed clips decoded on a pipe into memory, through the 8 kHz camera channel, PANNs labels, agent events",
-           "audio_written": False, "listener": {**listener.info, "load_s": load_s, "thresholds": hearing.THRESHOLDS},
+           "job": f"licensed clips decoded on a pipe into memory, through the 8 kHz camera channel, {listener.name} labels, agent events",
+           "audio_written": False, "listener": {**listener.info, "load_s": load_s, "thresholds": sounds.ear.s["thresholds"]},
            "cry_heard_at": case["at"].isoformat(), "cry_true_reason": case["truth"], "cry_top_guess": reason["top"],
            "cry_text": reason["text"], "doorbell_channel": next((e["channel"] for e in doorbell if e["kind"] == "routed"), None),
            "ear_said": ear_said, "seconds_scored": seconds_scored, "clips": clips}

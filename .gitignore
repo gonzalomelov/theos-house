@@ -1,5 +1,6 @@
 .env
 .venv/
+.venv-hearing/
 .models/
 runs/
 __pycache__/

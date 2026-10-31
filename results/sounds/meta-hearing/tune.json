@@ -1,0 +1,123 @@
+{
+ "written": "2026-10-31T12:41:29-03:00",
+ "rule": "per label, maximize hits minus 3 x false alarms on the tune set. Ties go to the higher threshold. The held-out set is scored once, after every choice is written to tune.json",
+ "meta": {
+  "cry": {
+   "mode": "logit",
+   "raw_threshold": 4.43,
+   "threshold": 0.9882,
+   "tune_hits": "112 of 113",
+   "tune_false_alarms": "0 of 37",
+   "objective": 112,
+   "other": [
+    {
+     "mode": "margin",
+     "raw_threshold": -0.3315,
+     "threshold": 0.4179,
+     "tune_hits": "108 of 113",
+     "tune_false_alarms": "0 of 37",
+     "objective": 108
+    }
+   ]
+  },
+  "doorbell": {
+   "mode": "logit",
+   "raw_threshold": 8.3168,
+   "threshold": 0.9998,
+   "tune_hits": "4 of 5",
+   "tune_false_alarms": "0 of 145",
+   "objective": 4,
+   "other": [
+    {
+     "mode": "margin",
+     "raw_threshold": Infinity,
+     "threshold": 1.0,
+     "tune_hits": "0 of 5",
+     "tune_false_alarms": "0 of 145",
+     "objective": 0
+    }
+   ]
+  },
+  "dog": {
+   "mode": "logit",
+   "raw_threshold": 6.4588,
+   "threshold": 0.9984,
+   "tune_hits": "4 of 5",
+   "tune_false_alarms": "0 of 145",
+   "objective": 4,
+   "other": [
+    {
+     "mode": "margin",
+     "raw_threshold": 1.6806,
+     "threshold": 0.843,
+     "tune_hits": "4 of 5",
+     "tune_false_alarms": "0 of 145",
+     "objective": 4
+    }
+   ]
+  },
+  "splash": {
+   "mode": "logit",
+   "raw_threshold": 7.6583,
+   "threshold": 0.9995,
+   "tune_hits": "3 of 4",
+   "tune_false_alarms": "0 of 146",
+   "objective": 3,
+   "other": [
+    {
+     "mode": "margin",
+     "raw_threshold": 5.8326,
+     "threshold": 0.9971,
+     "tune_hits": "2 of 4",
+     "tune_false_alarms": "0 of 146",
+     "objective": 2
+    }
+   ]
+  }
+ },
+ "signal": {
+  "cry_limits": {
+   "level_dbfs": -40,
+   "voiced_share": 0.2,
+   "longest_s": 0.2,
+   "harmonicity": 0.8
+  },
+  "tune_hits": "98 of 113",
+  "tune_false_alarms": "2 of 37",
+  "grid": {
+   "level_dbfs": [
+    -55,
+    -50,
+    -45,
+    -40,
+    -35,
+    -30
+   ],
+   "voiced_share": [
+    0.1,
+    0.2,
+    0.3,
+    0.4,
+    0.5,
+    0.6,
+    0.7
+   ],
+   "longest_s": [
+    0.1,
+    0.2,
+    0.3,
+    0.5,
+    0.75,
+    1.0
+   ],
+   "harmonicity": [
+    0.45,
+    0.5,
+    0.6,
+    0.7,
+    0.8,
+    0.9
+   ]
+  }
+ }
+}

@@ -1,0 +1,199 @@
+{
+ "generated_at": "2026-10-31T12:55:19-03:00",
+ "job": "licensed clips decoded on a pipe into memory, through the 8 kHz camera channel, pe-a-frame labels, agent events",
+ "audio_written": false,
+ "listener": {
+  "ready": true,
+  "model": "facebook/pe-a-frame-small",
+  "device": "cpu",
+  "labels": [
+   "cry",
+   "dog",
+   "doorbell",
+   "splash"
+  ],
+  "load_s": 2.35,
+  "thresholds": {
+   "cry": 4.43,
+   "dog": 6.4588,
+   "doorbell": 8.3168,
+   "splash": 7.6583
+  }
+ },
+ "cry_heard_at": "2026-10-22T10:02:00-03:00",
+ "cry_true_reason": "hungry",
+ "cry_top_guess": "hungry",
+ "cry_text": "Probably hungry: last feed 2 h 51 min ago, he eats about every 2 h 26 min.",
+ "doorbell_channel": "ear",
+ "ear_said": [
+  "Doorbell at the front door. Your hands stay on the baby, I can ask the visitor to wait."
+ ],
+ "seconds_scored": 32,
+ "clips": [
+  {
+   "id": "cry-04",
+   "title": "File:Newborn baby crying sounds 20190831 061900.wav",
+   "license": "CC BY-SA 4.0",
+   "page": "https://commons.wikimedia.org/wiki/File:Newborn_baby_crying_sounds_20190831_061900.wav",
+   "split": "test",
+   "seconds_of_audio": 20.0,
+   "skill_armed": false,
+   "process_s": 4.69,
+   "events": [
+    {
+     "kind": "sound",
+     "ts": "2026-10-31T12:55:16-03:00",
+     "unix": 1793462116.955,
+     "label": "cry",
+     "phase": "end",
+     "episode": 1,
+     "source": "living room camera",
+     "stream_s": 2,
+     "seconds": 20,
+     "peak": 9.7258,
+     "features": {
+      "length_s": 20,
+      "level_dbfs": -22.0,
+      "peak_dbfs": -4.3,
+      "pitch_hz": 432,
+      "voiced_share": 0.69
+     }
+    },
+    {
+     "kind": "cry_reason",
+     "ts": "2026-10-31T12:55:16-03:00",
+     "unix": 1793462116.956,
+     "episode": 1,
+     "top": "hungry",
+     "text": "Probably hungry: last feed 2 h 51 min ago, he eats about every 2 h 26 min.",
+     "ranked": [
+      {
+       "reason": "hungry",
+       "score": 1.0,
+       "evidence": "last feed 2 h 51 min ago, he eats about every 2 h 26 min"
+      },
+      {
+       "reason": "comfort",
+       "score": 0.3,
+       "evidence": "last feed 2 h 51 min ago, last diaper change 2 h 13 min ago, awake 4 min"
+      },
+      {
+       "reason": "diaper",
+       "score": 0.277,
+       "evidence": "last diaper change 2 h 13 min ago"
+      },
+      {
+       "reason": "tired",
+       "score": 0.0,
+       "evidence": "awake 4 min, he usually sleeps again after about 1 h 6 min"
+      }
+     ],
+     "computed_from": [
+      "feeding@2026-10-22T07:11:00-03:00#74",
+      "feeding@2026-10-22T02:20:00-03:00#67",
+      "feeding@2026-10-22T04:44:00-03:00#71",
+      "feeding@2026-10-22T07:11:00-03:00#74",
+      "change@2026-10-22T07:49:00-03:00#75",
+      "sleep@2026-10-22T08:15:00-03:00#76"
+     ],
+     "cry_seconds": 20,
+     "features": {
+      "length_s": 20,
+      "level_dbfs": -22.0,
+      "peak_dbfs": -4.3,
+      "pitch_hz": 432,
+      "voiced_share": 0.69
+     },
+     "night": false,
+     "sound": null,
+     "check_now": false
+    },
+    {
+     "kind": "notify",
+     "ts": "2026-10-31T12:55:16-03:00",
+     "unix": 1793462116.956,
+     "text": "Probably hungry: last feed 2 h 51 min ago, he eats about every 2 h 26 min.",
+     "sound": "cry",
+     "reason": "hungry",
+     "source": "house-sounds",
+     "routine": "cry",
+     "check_now": false,
+     "texts": {
+      "en": "Probably hungry: last feed 2 h 51 min ago, he eats about every 2 h 26 min.",
+      "es": "Por el registro, capaz que es hambre: la \u00faltima toma fue hace 2 h 51 min y suele comer cada 2 h 26 min."
+     }
+    },
+    {
+     "kind": "routed",
+     "ts": "2026-10-31T12:55:16-03:00",
+     "unix": 1793462116.956,
+     "channel": "home_speaker",
+     "reason": "at home with hands free",
+     "presence": "home",
+     "skill_active": false,
+     "seconds": 0.0
+    }
+   ]
+  },
+  {
+   "id": "doorbell-01",
+   "title": "File:Doorbell-cheap-dingdong.ogg",
+   "license": "Public domain",
+   "page": "https://commons.wikimedia.org/wiki/File:Doorbell-cheap-dingdong.ogg",
+   "split": "test",
+   "seconds_of_audio": 2.58,
+   "skill_armed": true,
+   "process_s": 1.57,
+   "events": [
+    {
+     "kind": "sound",
+     "ts": "2026-10-31T12:55:17-03:00",
+     "unix": 1793462117.505,
+     "label": "doorbell",
+     "phase": "start",
+     "episode": 2,
+     "source": "living room camera",
+     "stream_s": 26,
+     "seconds": 1,
+     "peak": 9.0148
+    },
+    {
+     "kind": "house_sound",
+     "ts": "2026-10-31T12:55:17-03:00",
+     "unix": 1793462117.505,
+     "label": "doorbell",
+     "source": "living room camera",
+     "peak": 9.0148,
+     "skill_active": true,
+     "skill": "changing-table"
+    },
+    {
+     "kind": "notify",
+     "ts": "2026-10-31T12:55:17-03:00",
+     "unix": 1793462117.506,
+     "text": "Doorbell at the front door. Your hands stay on the baby, I can ask the visitor to wait.",
+     "sound": "doorbell",
+     "skill": "changing-table"
+    },
+    {
+     "kind": "routed",
+     "ts": "2026-10-31T12:55:17-03:00",
+     "unix": 1793462117.506,
+     "channel": "ear",
+     "reason": "at home with hands on the baby",
+     "presence": "home",
+     "skill_active": true,
+     "seconds": 0.0
+    },
+    {
+     "kind": "observation",
+     "ts": "2026-10-31T12:55:17-03:00",
+     "unix": 1793462117.506,
+     "source": "house-sounds",
+     "channel": "auto",
+     "text": "The doorbell just rang at the front door. The parent is at the changing-table with both hands on the baby."
+    }
+   ]
+  }
+ ]
+}

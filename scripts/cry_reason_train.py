@@ -6,7 +6,8 @@
 
 The split and the protocol were committed before this script existed (results/cry-reason/split.json). Embeddings are
 numbers, not audio, and are cached in .models/cry-reason (git ignored). Audio is decoded on a pipe into memory.
-Runs PANNs in the hearing worker (the SAM 3.1 venv's torch, CPU).
+Runs PANNs offline through scripts/panns_baseline.py (the SAM 3.1 venv's torch, CPU). PANNs is not a Meta model and
+the agent no longer calls it, this script only reproduces the Oct 30 result.
 """
 import argparse
 import datetime
@@ -21,6 +22,8 @@ REPO = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO))
 
 from parenting_agent import hearing  # noqa: E402
+sys.path.insert(0, str(REPO / "scripts"))
+from panns_baseline import PannsListener  # noqa: E402
 from parenting_agent.cry_sound import CLASSES, HEAD, Head  # noqa: E402
 
 CORPUS = Path.home() / "Engineering/gonza/parenting-agent/.models/donateacry/src/donateacry_corpus_cleaned_and_updated_data"
@@ -38,7 +41,7 @@ def split():
 
 def features():
     clips = split()["clips"]
-    listener = hearing.PannsListener({})
+    listener = PannsListener({})
     rows = []
     try:
         for i, clip in enumerate(clips):

@@ -1,7 +1,7 @@
 """House sounds as an agent plug-in: cry, doorbell and dog become events the agent acts on (issues #14 and #32).
 
 Add "parenting_agent.house_sounds:HouseSounds" to the agent config plugins, with an optional "house_sounds" block:
-    {"source": "camera" | "none", "listener": {"python": ..., "model_dir": ...}, "pronoun": "he",
+    {"source": "camera" | "none", "listener": {"python": ..., "model_dir": ..., "device": "cpu" | "mps"}, "pronoun": "he",
      "white_noise": {"bedtime": "20:30", "timer_min": 30, "calibration": [[1.0, 70.0]]}, "poll_s": 60}
 The log is read the way the daily rhythm reads it (the "rhythm" block: Baby Buddy or the simulated-week fixture).
 
@@ -18,11 +18,11 @@ exception is opt-in ("muse_audio": {"enabled": true}): the first clip_s seconds 
 Baseten for a guess at the reason (parenting_agent/cry_muse.py), only after the audio canary passes, and the clip
 is dropped after that one call.
 
-The local cry model ("cry_model": {"enabled": true}, parenting_agent/cry_sound.py) reads the same clip on the Mac:
-PANNs's embedding and a small head trained on Donate-a-Cry. Its guess is one more signal next to the log, said to the
-parent only for the classes its held-out test cleared, else logged as a "cry_sound_guess" event. Nothing leaves the
-Mac. The cry notify carries source "house-sounds" and routine "cry", so the family push sends it to the parent on
-duty at night and the glasses show it as a cry card.
+The listener is hearing.default_listener: Meta's Perception Encoder Audio and plain signal processing, as the held-out
+test chose (results/sounds/meta-hearing/README.md). The Oct 30 local cry model read PANNs embeddings and was at
+chance, so it left with PANNs on Oct 31 (cry_sound.py). A guesser can still be handed in as "local" (tests do), its
+guess is blended by cry_sound.combine. The cry notify carries source "house-sounds" and routine "cry", so the family
+push sends it to the parent on duty at night and the glasses show it as a cry card.
 """
 import datetime
 import os
@@ -37,7 +37,7 @@ from .rhythm.engine import make_log
 from .white_noise import SimulatedWhiteNoise, WhiteNoisePlan
 
 DEFAULTS = {"source": "none", "listener": {}, "pronoun": "he", "white_noise": {}, "poll_s": 60, "tell_agent": True,
-            "muse_audio": {"enabled": False}, "cry_model": {"enabled": False}}
+            "muse_audio": {"enabled": False}}
 
 
 def active_skill(agent):
@@ -86,10 +86,8 @@ class HouseSounds(Plugin):
     def listen(self):
         """The Ear, built on first use so a config without a source never starts the model worker."""
         if self.ear is None:
-            self.ear = hearing.Ear(self._listener or hearing.PannsListener(self.cfg["listener"]), self.agent.bus,
+            self.ear = hearing.Ear(self._listener or hearing.default_listener(self.cfg["listener"]), self.agent.bus,
                                    self.cfg.get("ear"))
-            if self.local is None and self.cfg["cry_model"].get("enabled"):
-                self.local = cry_sound.CrySound(self.ear.listener, self.cfg["cry_model"])
             if self.ears is not None or self.local is not None:
                 self.ear.on_cry_clip = self.keep_clip
         return self.ear

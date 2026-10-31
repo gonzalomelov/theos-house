@@ -29,7 +29,7 @@ INTERNAL = re.compile(
 # Model and provider names. The public demo names Muse Spark Open on purpose (its page says which model answered), so it
 # lets them through, nothing else does.
 MODELS = re.compile(r"\bMuse(?: Spark(?: Open)?)?\b|\bClaude\b|\bHaiku\b|\bAnthropic\b|\bBaseten\b|\bOpenAI\b|"
-                    r"\bGPT-?\d|\bSAM ?3(?:\.1)?\b|\bMediaPipe\b|\bPANNs\b", re.I)
+                    r"\bGPT-?\d|\bSAM ?3(?:\.1)?\b|\bMediaPipe\b|\bPANNs\b|\bPerception Encoder\b|\bpe-a-frame\b", re.I)
 ROTA = re.compile(r"\bParent [AB]\b")
 JSONISH = re.compile(r"```.*?```|\{\s*\"[^\"]+\"\s*:.*?\}|\[\s*\{.*?\}\s*\]", re.S)
 QUOTED = re.compile(r"«[^»]*»|\"[^\"\n]*\"|“[^”\n]*”")

@@ -1,4 +1,6 @@
-"""Muse Spark Open's ears against PANNs on the licensed hearing set (issue #14).
+"""Muse Spark Open's ears against PANNs on the licensed hearing set (issue #14). Run Oct 29 2026.
+
+PANNs is the BEFORE baseline only (scripts/panns_baseline.py), the agent no longer calls it since Oct 31.
 
     python scripts/sounds_muse_eval.py            # writes results/sounds/muse/run.json
     python scripts/sounds_muse_eval.py --no-muse  # PANNs only, no Baseten spend
@@ -24,6 +26,8 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
 from parenting_agent import hearing  # noqa: E402
+sys.path.insert(0, str(ROOT / "scripts"))
+from panns_baseline import THRESHOLDS as PANNS_THRESHOLDS, PannsListener  # noqa: E402
 from parenting_agent.agent.brain import BrainError  # noqa: E402
 from parenting_agent.agent.config import load_env  # noqa: E402
 from parenting_agent.cry_reason import REASONS  # noqa: E402
@@ -91,7 +95,7 @@ def panns_label(listener, samples):
             window = hearing.np.pad(window, (0, hearing.WINDOW - window.size))
         for label, score in listener.score(window).get("scores", {}).items():
             best[label] = max(best.get(label, 0.0), score)
-    fired = {k: v / t for k, v in best.items() for kk, t in hearing.THRESHOLDS.items() if k == kk and v >= t}
+    fired = {k: v / t for k, v in best.items() for kk, t in PANNS_THRESHOLDS.items() if k == kk and v >= t}
     return (max(fired, key=fired.get) if fired else "none"), {k: round(v, 4) for k, v in best.items()}
 
 
@@ -102,7 +106,7 @@ def main():
     args = ap.parse_args()
     load_env("~/.parenting-agent.env")
     sources = [s for s in json.loads(SOURCES.read_text()) if (MEDIA / s["file"]).is_file() and s["label"] in TRUTH]
-    listener = hearing.PannsListener({"model_dir": str(Path.home() / "Engineering/gonza/parenting-agent/.models/panns")})
+    listener = PannsListener({"model_dir": str(Path.home() / "Engineering/gonza/parenting-agent/.models/panns")})
     senses = None if args.no_muse else MuseSenses({"max_tokens": 4000})
     canary_rows = controls(senses) if senses else []
     rows = []

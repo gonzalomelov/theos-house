@@ -1,8 +1,8 @@
-"""Tests for the local cry reason from the sound (issue #161): the head, the guess, the blend with the log, the wiring.
+"""Tests for the cry reason from the sound (issue #161): the head kept for the record, the blend with the log, the wiring.
 
-Offline: a fake listener whose embedding is chosen by the test, the tone listener from test_sounds, the simulated-week
-fixture. The PANNs run on the held-out Donate-a-Cry test is scripts/cry_reason_train.py, the live run
-scripts/cry_reason_live.py.
+Offline: a fake local guesser, the tone listener from test_sounds, the simulated-week fixture. The Oct 30 head read
+PANNs embeddings and was at chance, so since Oct 31 the agent never builds it (PANNs is not a Meta model). The offline
+reproduction of its held-out test is scripts/cry_reason_train.py with scripts/panns_baseline.py.
 """
 import datetime
 import json
@@ -22,24 +22,17 @@ REPO = Path(__file__).resolve().parent.parent
 NOW = datetime.datetime(2026, 10, 24, 14, 0, tzinfo=TZ)
 
 
-def one_hot_head(speak=()):
-    """A head that reads the class straight off the first five embedding numbers."""
-    w = np.zeros((8, 5), np.float32)
-    w[:5, :5] = 10 * np.eye(5)
-    return cry_sound.Head(np.zeros(8), np.ones(8), w, np.zeros(5), meta={"speak": list(speak)})
+class FakeLocal:
+    """A local sound guesser handed in to the plug-in. The agent builds none since the PANNs head left."""
 
+    name = "local"
 
-class FakeEmbedder(ToneListener):
-    def __init__(self, label="hungry", fail=False):
-        self.label, self.fail, self.calls = label, fail, []
+    def __init__(self, label="hungry", speak=True):
+        self.label, self.speak, self.calls = label, speak, []
 
-    def embed(self, samples):
+    def guess(self, samples, rate=16000):
         self.calls.append(samples.size)
-        if self.fail:
-            raise hearing.Unavailable("worker gone")
-        x = np.zeros(8, np.float32)
-        x[cry_sound.CLASSES.index(self.label)] = 1
-        return x
+        return {"label": self.label, "confidence": 0.9, "speak": self.speak, "host": "local"}
 
 
 def log_result(top="hungry", likely=True, text="Probably hungry: last feed 2 h 51 min ago, he eats about every 2 h 26 min."):
@@ -82,21 +75,18 @@ class HeadTest(unittest.TestCase):
         self.assertIn("decision_rule", split["protocol"])
 
 
-class GuessTest(unittest.TestCase):
-    def test_guess_reads_the_embedding_and_says_only_cleared_classes(self):
-        listener = FakeEmbedder("tired")
-        ears = cry_sound.CrySound(listener, {"enabled": True, "clip_s": 2}, head=one_hot_head(speak=["hungry"]))
-        got = ears.guess(np.zeros(5 * hearing.RATE, np.float32))
-        self.assertEqual((got["label"], got["speak"], got["host"]), ("tired", False, "local"))
-        self.assertEqual(listener.calls, [2 * hearing.RATE])
-        listener.label = "hungry"
-        self.assertTrue(ears.guess(np.zeros(hearing.RATE, np.float32))["speak"])
-
-    def test_off_or_a_broken_worker_skips_without_raising(self):
-        head = one_hot_head()
-        self.assertIn("skipped", cry_sound.CrySound(FakeEmbedder(), {"enabled": False}, head=head).guess(np.zeros(10)))
-        got = cry_sound.CrySound(FakeEmbedder(fail=True), {"enabled": True}, head=head).guess(np.zeros(10))
-        self.assertIn("worker gone", got["skipped"])
+class RuntimeTest(unittest.TestCase):
+    def test_the_agent_builds_no_local_cry_model(self):
+        tmp = tempfile.TemporaryDirectory()
+        agent, config = make_agent(tmp.name)
+        config["house_sounds"] = {"cry_model": {"enabled": True}}
+        sounds = HouseSounds(agent, config, listener=ToneListener())
+        hearing.play(sounds.listen(), tone("cry", 8))
+        self.assertIsNone(sounds.local)
+        self.assertFalse(events(agent.bus, "cry_sound_guess"))
+        self.assertFalse(hasattr(cry_sound, "CrySound"))
+        agent.close()
+        tmp.cleanup()
 
 
 class CombineTest(unittest.TestCase):
@@ -142,9 +132,8 @@ class WiringTest(unittest.TestCase):
         self.tmp.cleanup()
 
     def sounds(self, now, label, speak):
-        listener = FakeEmbedder(label)
-        local = cry_sound.CrySound(listener, {"enabled": True}, head=one_hot_head(speak=speak))
-        sounds = HouseSounds(self.agent, self.config, listener=listener, clock=lambda: now, local=local)
+        local = FakeLocal(label, speak=bool(speak))
+        sounds = HouseSounds(self.agent, self.config, listener=ToneListener(), clock=lambda: now, local=local)
         self.agent.plugins = [sounds]
         return sounds
 

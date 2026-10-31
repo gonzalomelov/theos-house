@@ -6,7 +6,7 @@ One persistent agent. Every part publishes to and listens on one event bus. Part
 flowchart LR
   subgraph House["Inside the house"]
     cam["Head camera<br/>Ray-Ban Meta app (DAT) or iPhone page<br/>home network only"]
-    mic["Camera microphone<br/>PANNs labels #14"]
+    mic["Camera microphone<br/>Perception Encoder Audio labels #14"]
     reflex["Local reflex<br/>MediaPipe hands"]
     sam["SAM 3.1 open weights<br/>Mac GPU"]
     bus(("Event bus"))
@@ -82,7 +82,7 @@ flowchart LR
 | House actions | Agent core | Home Assistant on the family server | No. Dry except the study light and the vacuum pause and dock, live since Oct 30 |
 | House sound labels | Camera microphone | Bus | No. Audio stays in memory, never saved |
 | Car seat second opinion (opt-in, `car_seat.muse`) | Head camera, one zoomed still per camera step | Muse Spark Open on Baseten | **Yes**, as part of the brain call. Only that still, made in memory, never saved. Each call is a `carseat_muse` event with its host |
-| Cry reason guess (opt-in, `house_sounds.muse_audio`, off by default) | The first 5 s of a cry PANNs detected | Muse Spark Open on Baseten | **Yes**, as part of the brain call, only after a synthetic canary clip passes. The clip is dropped after the one call. Each call is a `cry_sound_guess` event. No other room audio is ever sent |
+| Cry reason guess (opt-in, `house_sounds.muse_audio`, off by default) | The first 5 s of a cry the Ear detected | Muse Spark Open on Baseten | **Yes**, as part of the brain call, only after a synthetic canary clip passes. The clip is dropped after the one call. Each call is a `cry_sound_guess` event. No other room audio is ever sent |
 | A parent's voice note (voice is on by default in the family agent and the families bot) | Telegram, sent by the parent | Muse Spark Open on Baseten, the ear (`parenting_agent/voice/ear.py`) | **Yes**, the audio of that one note, to be written down. Converted to WAV by the voice service in the house, held in memory, sent once to inference.baseten.co, never saved. Baseten's docs say it does not store inputs or outputs by default (https://docs.baseten.co/observability/security). Muse hears speech, not other sounds (`results/audio-truth/README.md`). Nothing is kept but the words heard. The spoken reply is made in the house (MMS-TTS), see `docs/voice.md` |
 | Car readings and commands | Agent core | Simulated car today, Home Assistant `tesla_fleet` from Nov 5 | From Nov 5, yes: Home Assistant polls and commands the car through Tesla's Fleet API. Only the public key file is public |
 | A parent talking to the Echo (when Gonza turns it on, `docs/echo-and-assist.md`) | The kitchen Echo, then Home Assistant, then the voice bridge | The agent, then the Echo | **Yes**, to Amazon: Alexa hears the words in Amazon's cloud as every Alexa command does, and the agent's answer goes to Amazon to be said on the Echo, like the announcements. Assist with a local speech engine stays in the house |

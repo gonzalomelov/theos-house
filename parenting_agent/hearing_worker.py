@@ -1,141 +1,90 @@
-"""PANNs CNN14 hearing worker: 2 s of 16 kHz audio in, label scores out, nothing written anywhere.
+"""Meta Perception Encoder Audio hearing worker: 2 s of 16 kHz audio in, label scores out, nothing written anywhere.
 
-Runs in a Python that has torch (the SAM 3.1 venv, see docs/house-sounds.md), started by parenting_agent.hearing.
-Model code is qiuqiangkong/audioset_tagging_cnn pytorch/models.py at commit 542c8c8, weights Cnn14_16k_mAP=0.438.pth
-from Zenodo record 3987831, both fetched by scripts/fetch-panns.sh with checksums. The checkpoint already holds the
-STFT kernels and the mel filter bank, so torchlibrosa is replaced by a stub that only declares those tensors and
-librosa is not needed. load_state_dict is strict, so a stub that does not match the checkpoint fails at start.
+Runs in a Python that has torch and transformers 5.21 or later (scripts/hearing-setup.sh makes one), started by
+parenting_agent.hearing.MetaListener. The model is facebook/pe-a-frame-small (Perception Encoder Audio Frame, Meta,
+Apache 2.0), loaded from a local folder with no network: it scores every 40 ms of audio against text prompts, zero
+shot. The prompts per label and the background prompts come from HEARING_CONFIG, their text embeddings are computed
+once at start.
 
-Protocol on stdin and stdout, like the SAM 3.1 worker:
+Per label two numbers, each the best 40 ms frame of the window:
+  logit: the best prompt's frame logit (the model's own sigmoid scale)
+  margin: the best prompt's logit minus the best background prompt's logit, in the same frame
+"scores" holds the one the config names for that label ("mode"), on the logit scale, so the Ear's thresholds are the
+raw thresholds chosen on the tune set. The model's probability is its sigmoid. "raw" holds both numbers.
+
+Protocol on stdin and stdout, the same as the SAM 3.1 worker:
   start: one JSON line {"ready": true, ...} or {"blocked": "reason"}
   each request: 4-byte big-endian length, then that many bytes of float32 mono PCM at 16 kHz
-  each reply: one JSON line {"scores": {group: max over windows}, "speech": float, "seconds": float}
-  with the top bit of the length set (EMBED), the reply is {"embedding": [2048 floats], "seconds": float} instead:
-  CNN14's embedding averaged over the 2 s windows, the input of the local cry reason model (cry_sound.py)
+  each reply: one JSON line {"scores": {label: logit scale}, "raw": {label: {"logit", "margin"}}, "seconds": float}
 Audio stays in memory: the worker never opens a file for writing.
 """
-import csv
 import json
 import os
 import struct
 import sys
 import time
-import types
-from pathlib import Path
 
 RATE = 16000
-WINDOW = 2 * RATE
-HOP = 7680
-EMBED = 0x80000000
-SPEECH_CLASSES = ("Speech", "Conversation", "Narration, monologue", "Child speech, kid speaking",
-                  "Hubbub, speech noise, speech babble", "Speech synthesizer")
+MODEL_RATE = 48000
 
 
-def torchlibrosa_stub():
-    """Same module shapes as torchlibrosa 0.1.0 Spectrogram and LogmelFilterBank, values come from the checkpoint."""
-    import torch
-    import torch.nn as nn
-    import torch.nn.functional as F
-
-    class STFT(nn.Module):
-        def __init__(self, n_fft, hop_length, center=True, pad_mode="reflect"):
-            super().__init__()
-            self.n_fft, self.hop, self.center, self.pad_mode = n_fft, hop_length, center, pad_mode
-            bins = n_fft // 2 + 1
-            self.conv_real = nn.Conv1d(1, bins, n_fft, stride=hop_length, bias=False)
-            self.conv_imag = nn.Conv1d(1, bins, n_fft, stride=hop_length, bias=False)
-
-        def forward(self, x):
-            x = x[:, None, :]
-            if self.center:
-                x = F.pad(x, (self.n_fft // 2, self.n_fft // 2), mode=self.pad_mode)
-            return self.conv_real(x)[:, None].transpose(2, 3), self.conv_imag(x)[:, None].transpose(2, 3)
-
-    class Spectrogram(nn.Module):
-        def __init__(self, n_fft=2048, hop_length=None, win_length=None, window="hann", center=True,
-                     pad_mode="reflect", power=2.0, freeze_parameters=True):
-            super().__init__()
-            assert window == "hann" and power == 2.0 and (win_length or n_fft) == n_fft
-            self.stft = STFT(n_fft, hop_length, center, pad_mode)
-
-        def forward(self, x):
-            real, imag = self.stft(x)
-            return real ** 2 + imag ** 2
-
-    class LogmelFilterBank(nn.Module):
-        def __init__(self, sr=22050, n_fft=2048, n_mels=64, fmin=0.0, fmax=None, is_log=True, ref=1.0, amin=1e-10,
-                     top_db=80.0, freeze_parameters=True):
-            super().__init__()
-            assert is_log and ref == 1.0 and top_db is None
-            self.amin = amin
-            self.melW = nn.Parameter(torch.zeros(n_fft // 2 + 1, n_mels), requires_grad=False)
-
-        def forward(self, x):
-            return 10.0 * torch.log10(torch.clamp(torch.matmul(x, self.melW), min=self.amin))
-
-    class SpecAugmentation(nn.Module):
-        """Training only. The worker runs the model in eval mode, so this never runs."""
-
-        def __init__(self, *args, **kwargs):
-            super().__init__()
-
-        def forward(self, x):
-            raise RuntimeError("SpecAugmentation is training only")
-
-    package = types.ModuleType("torchlibrosa")
-    stft = types.ModuleType("torchlibrosa.stft")
-    augmentation = types.ModuleType("torchlibrosa.augmentation")
-    stft.Spectrogram, stft.LogmelFilterBank = Spectrogram, LogmelFilterBank
-    augmentation.SpecAugmentation = SpecAugmentation
-    package.stft, package.augmentation = stft, augmentation
-    sys.modules.update({"torchlibrosa": package, "torchlibrosa.stft": stft, "torchlibrosa.augmentation": augmentation})
+def upsample(np, samples):
+    """16 kHz to 48 kHz by zero padding the spectrum, so nothing is added above 8 kHz."""
+    n = samples.size
+    spectrum = np.fft.rfft(samples)
+    out = np.zeros(3 * n // 2 + 1, np.complex128)
+    out[:spectrum.size] = spectrum
+    return (np.fft.irfft(out, 3 * n) * 3).astype(np.float32)
 
 
-class Panns:
-    def __init__(self, model_dir, groups):
+class Encoder:
+    def __init__(self, cfg):
         import numpy as np
         import torch
-        torchlibrosa_stub()
-        sys.path.insert(0, str(model_dir))
-        from models import Cnn14_16k
+        from transformers import AutoTokenizer, PeAudioFeatureExtractor, PeAudioFrameLevelModel
         self.np, self.torch = np, torch
-        self.model = Cnn14_16k(sample_rate=RATE, window_size=512, hop_size=160, mel_bins=64, fmin=50, fmax=8000,
-                               classes_num=527)
-        # The checkpoint also stores a few numpy scalars, so only those numpy types are allowlisted.
-        allowed = [np.core.multiarray._reconstruct, np.ndarray, np.dtype, type(np.dtype("float64")),
-                   type(np.dtype("int64")), np.core.multiarray.scalar]
-        with torch.serialization.safe_globals(allowed):
-            state = torch.load(Path(model_dir) / "Cnn14_16k.pth", map_location="cpu", weights_only=True)
-        self.model.load_state_dict(state["model"], strict=True)
-        self.model.eval()
-        names = [row[2] for row in list(csv.reader(open(Path(model_dir) / "class_labels_indices.csv")))[1:]]
-        index = {name: i for i, name in enumerate(names)}
-        self.groups = {label: [index[c] for c in classes] for label, classes in groups.items()}
-        self.speech = [index[c] for c in SPEECH_CLASSES]
-
-    def forward(self, samples):
-        np, torch = self.np, self.torch
-        if samples.size < WINDOW:
-            samples = np.pad(samples, (0, WINDOW - samples.size))
-        starts = range(0, samples.size - WINDOW + 1, HOP)
-        batch = torch.from_numpy(np.stack([samples[s:s + WINDOW] for s in starts]).astype(np.float32))
+        device = cfg.get("device") or "cpu"
+        if device == "mps" and not torch.backends.mps.is_available():
+            device = "cpu"
+        self.device = device
+        path = os.path.expanduser(cfg["model_dir"])
+        self.model = PeAudioFrameLevelModel.from_pretrained(path, local_files_only=True).to(device).eval()
+        self.features = PeAudioFeatureExtractor.from_pretrained(path, local_files_only=True)
+        tokenizer = AutoTokenizer.from_pretrained(path, local_files_only=True)
+        self.prompts = cfg["prompts"]
+        self.background = cfg.get("background", [])
+        self.modes = cfg.get("modes", {})
+        texts = [p for label in self.prompts for p in self.prompts[label]] + list(self.background)
+        tokens = tokenizer(texts, padding=True, return_tensors="pt").to(device)
         with torch.no_grad():
-            return self.model(batch)
-
-    def embed(self, samples):
-        started = time.monotonic()
-        mean = self.forward(samples)["embedding"].numpy().mean(axis=0)
-        return {"embedding": [round(float(v), 5) for v in mean], "seconds": round(time.monotonic() - started, 3)}
+            hidden = self.model.text_model(input_ids=tokens["input_ids"], attention_mask=tokens["attention_mask"],
+                                           output_hidden_states=True, return_dict=True).hidden_states[-1][:, 0]
+            self.text = self.model.text_audio_head(hidden)
+        self.slices, start = {}, 0
+        for label, prompts in self.prompts.items():
+            self.slices[label] = slice(start, start + len(prompts))
+            start += len(prompts)
+        self.bg = slice(start, start + len(self.background))
+        self.scale = float(self.model.text_audio_logit_scale)
+        self.bias = float(self.model.text_audio_logit_bias)
 
     def score(self, samples):
-        np = self.np
+        np, torch = self.np, self.torch
         started = time.monotonic()
-        frames = self.forward(samples)["clipwise_output"].numpy()
-        # Wide groups summed per window, then the loudest window: the "wide-sum" listener chosen in meta-hackathon-2026.
-        scores = {label: round(float(np.clip(frames[:, cols].sum(axis=1), 0, 1).max()), 4)
-                  for label, cols in self.groups.items()}
-        return {"scores": scores, "speech": round(float(frames[:, self.speech].max()), 4),
-                "seconds": round(time.monotonic() - started, 3)}
+        wave = upsample(np, np.asarray(samples, np.float32))
+        inputs = self.features(wave, sampling_rate=MODEL_RATE, return_tensors="pt")
+        with torch.no_grad():
+            audio = self.model.get_audio_embeds(inputs["input_values"].to(self.device),
+                                                inputs["padding_mask"].to(self.device))
+            logits = (audio[0] @ self.text.T) * self.scale + self.bias
+        logits = logits.float().cpu().numpy()
+        bg = logits[:, self.bg].max(axis=1) if self.background else np.zeros(logits.shape[0], np.float32)
+        raw, scores = {}, {}
+        for label, cols in self.slices.items():
+            best = logits[:, cols].max(axis=1)
+            raw[label] = {"logit": round(float(best.max()), 4), "margin": round(float((best - bg).max()), 4)}
+            scores[label] = raw[label][self.modes.get(label, "logit")]
+        return {"scores": scores, "raw": raw, "seconds": round(time.monotonic() - started, 3)}
 
 
 def main():
@@ -143,23 +92,22 @@ def main():
     cfg = json.loads(os.environ.get("HEARING_CONFIG", "{}"))
     out = sys.stdout
     try:
-        model = Panns(Path(cfg["model_dir"]), cfg["groups"])
+        model = Encoder(cfg)
     except Exception as error:
         out.write(json.dumps({"blocked": f"{type(error).__name__}: {str(error)[:300]}"}) + "\n")
         out.flush()
         return 1
-    out.write(json.dumps({"ready": True, "model": "PANNs Cnn14_16k mAP 0.438", "groups": sorted(model.groups)}) + "\n")
+    out.write(json.dumps({"ready": True, "model": "facebook/pe-a-frame-small", "device": model.device,
+                          "labels": sorted(model.prompts)}) + "\n")
     out.flush()
     read = sys.stdin.buffer.read
     while True:
         header = read(4)
         if len(header) < 4:
             return 0
-        length = struct.unpack(">I", header)[0]
-        data = read(length & ~EMBED)
+        data = read(struct.unpack(">I", header)[0])
         try:
-            samples = np.frombuffer(data, np.float32)
-            reply = model.embed(samples) if length & EMBED else model.score(samples)
+            reply = model.score(np.frombuffer(data, np.float32))
         except Exception as error:  # one bad window never kills the worker
             reply = {"scores": {}, "error": str(error)[:200]}
         out.write(json.dumps(reply) + "\n")

@@ -1,0 +1,450 @@
+{
+ "run": "2026-10-31T12:51:37-03:00",
+ "tune_choices": "tune.json",
+ "tune": {
+  "panns": {
+   "tally": {
+    "cry": {
+     "items": 113,
+     "hits": 108,
+     "misses": 5,
+     "false_alarms": 0,
+     "negatives": 37,
+     "false_alarms_from": [],
+     "hits_hearing": "2 of 2",
+     "hits_donateacry": "106 of 111"
+    },
+    "doorbell": {
+     "items": 5,
+     "hits": 4,
+     "misses": 1,
+     "false_alarms": 1,
+     "negatives": 145,
+     "false_alarms_from": [
+      "negative-07 (none)"
+     ]
+    },
+    "dog": {
+     "items": 5,
+     "hits": 4,
+     "misses": 1,
+     "false_alarms": 29,
+     "negatives": 145,
+     "false_alarms_from": [
+      "donateacry:04c3386b-e6bc-4bd0-8456-d46ae21a73fc (cry)",
+      "donateacry:0a983cd2-0078-4698-a048-99ac01eb167a (cry)",
+      "donateacry:1445575b-80ad-477b-8e48-36194cac728e (cry)",
+      "donateacry:24f2a4e1-7161-42a3-a2a2-a29a2422c0b8 (cry)",
+      "donateacry:4be720ce-a5e5-4a48-930f-a212f8a239f6 (cry)",
+      "donateacry:5afc6a14-a9d8-45f8-b31d-c79dd87cc8c6 (cry)",
+      "donateacry:643D64AD-B711-469A-AF69-55C0D5D3E30F (cry)",
+      "donateacry:86c2b87a-ae7c-46a3-b6fb-7ebe748812cf (cry)",
+      "donateacry:89964233-cbdb-4f34-a819-5f4b5ce3f5f5 (cry)",
+      "donateacry:8c920fd0-fa9f-4926-bcac-074767dcbfcd (cry)",
+      "donateacry:999bf14b-e417-4b44-b746-9253f81efe38 (cry)",
+      "donateacry:AEA8AE04-D00E-48A7-8A0B-6D87E2175121 (cry)",
+      "donateacry:DBA77EDC-D457-4B3A-83B8-B7AFBF272D4E (cry)",
+      "donateacry:F1AF5794-AD3B-4181-B010-AB835E5BDA64 (cry)",
+      "donateacry:F6C6D3EE-F139-48A4-9EAC-0A50EB011CDC (cry)",
+      "donateacry:cecd525b-18fd-49e3-b2b9-dfb08b93ad95 (cry)",
+      "donateacry:d6cda191-4962-4308-9a36-46d5648a95ed (cry)",
+      "donateacry:e36730a9-d62b-4752-856f-b42feb1585df (cry)",
+      "donateacry:e4051e62-d21d-4bb8-a235-fd7e859ad787 (cry)"
+     ]
+    },
+    "splash": {
+     "items": 4,
+     "hits": 3,
+     "misses": 1,
+     "false_alarms": 1,
+     "negatives": 146,
+     "false_alarms_from": [
+      "dog-07 (dog)"
+     ]
+    }
+   },
+   "window_s": {
+    "median": 0.016,
+    "p95": 0.017
+   },
+   "load_s": 1.34,
+   "info": {
+    "ready": true,
+    "model": "PANNs Cnn14_16k mAP 0.438",
+    "groups": [
+     "cry",
+     "dog",
+     "doorbell",
+     "splash"
+    ]
+   }
+  },
+  "meta": {
+   "tally": {
+    "cry": {
+     "items": 113,
+     "hits": 112,
+     "misses": 1,
+     "false_alarms": 0,
+     "negatives": 37,
+     "false_alarms_from": [],
+     "hits_hearing": "2 of 2",
+     "hits_donateacry": "110 of 111"
+    },
+    "doorbell": {
+     "items": 5,
+     "hits": 4,
+     "misses": 1,
+     "false_alarms": 0,
+     "negatives": 145,
+     "false_alarms_from": []
+    },
+    "dog": {
+     "items": 5,
+     "hits": 4,
+     "misses": 1,
+     "false_alarms": 0,
+     "negatives": 145,
+     "false_alarms_from": []
+    },
+    "splash": {
+     "items": 4,
+     "hits": 3,
+     "misses": 1,
+     "false_alarms": 0,
+     "negatives": 146,
+     "false_alarms_from": []
+    }
+   },
+   "window_s": {
+    "median": 0.062,
+    "p95": 0.075
+   },
+   "load_s": 2.74,
+   "info": {
+    "ready": true,
+    "model": "facebook/pe-a-frame-small",
+    "device": "mps",
+    "labels": [
+     "cry",
+     "dog",
+     "doorbell",
+     "splash"
+    ]
+   }
+  },
+  "signal": {
+   "tally": {
+    "cry": {
+     "items": 113,
+     "hits": 98,
+     "misses": 15,
+     "false_alarms": 2,
+     "negatives": 37,
+     "false_alarms_from": [
+      "doorbell-05 (doorbell)",
+      "doorbell-09 (doorbell)"
+     ],
+     "hits_hearing": "2 of 2",
+     "hits_donateacry": "96 of 111"
+    },
+    "doorbell": {
+     "items": 5,
+     "hits": 0,
+     "misses": 5,
+     "false_alarms": 0,
+     "negatives": 145,
+     "false_alarms_from": []
+    },
+    "dog": {
+     "items": 5,
+     "hits": 0,
+     "misses": 5,
+     "false_alarms": 0,
+     "negatives": 145,
+     "false_alarms_from": []
+    },
+    "splash": {
+     "items": 4,
+     "hits": 0,
+     "misses": 4,
+     "false_alarms": 0,
+     "negatives": 146,
+     "false_alarms_from": []
+    }
+   },
+   "window_s": null,
+   "load_s": 0.0,
+   "info": {
+    "ready": true,
+    "model": "signal processing, no learned model",
+    "limits": {
+     "level_dbfs": -40.0,
+     "voiced_share": 0.4,
+     "longest_s": 0.5,
+     "harmonicity": 0.6
+    }
+   }
+  }
+ },
+ "held_out": {
+  "panns": {
+   "tally": {
+    "cry": {
+     "items": 348,
+     "hits": 331,
+     "misses": 17,
+     "false_alarms": 0,
+     "negatives": 51,
+     "false_alarms_from": [],
+     "hits_hearing": "2 of 2",
+     "hits_donateacry": "329 of 346"
+    },
+    "doorbell": {
+     "items": 4,
+     "hits": 4,
+     "misses": 0,
+     "false_alarms": 0,
+     "negatives": 395,
+     "false_alarms_from": []
+    },
+    "dog": {
+     "items": 3,
+     "hits": 3,
+     "misses": 0,
+     "false_alarms": 104,
+     "negatives": 396,
+     "false_alarms_from": [
+      "donateacry:02ead89b-aa02-453e-8b83-6ebde9fe7551 (cry)",
+      "donateacry:06c4cfa2-7fa6-4fda-91a1-ea186a4acc64 (cry)",
+      "donateacry:090C15A8-5406-4EA5-97A3-81F6527227C0 (cry)",
+      "donateacry:0c8f14a9-6999-485b-97a2-913c1cbf099c (cry)",
+      "donateacry:11417AC2-DCC9-48CD-8177-CA8665E51B2F (cry)",
+      "donateacry:189b78c6-9e78-43f2-bcb8-6cc8a462f4dc (cry)",
+      "donateacry:1f40790f-68f2-4e7e-845e-715bd97c82d0 (cry)",
+      "donateacry:21c07aff-0a8d-4e74-ad5e-e3c7f7bcb11b (cry)",
+      "donateacry:2439388A-9CF2-4D3B-9534-E6951FC9EAD4 (cry)",
+      "donateacry:2562ad82-485a-44c2-ad25-f70fce71480b (cry)",
+      "donateacry:2a0e6a88-b049-4f46-a3d6-d73ffae470d5 (cry)",
+      "donateacry:2e25d0a5-0b2b-44ef-8491-e445b16ea75c (cry)",
+      "donateacry:3030d0e9-0c9b-4616-9b83-f10dc2dedbfd (cry)",
+      "donateacry:31e785de-b0c9-464f-88e2-bd8f1dd5cda4 (cry)",
+      "donateacry:35D58153-7AB7-443D-BED0-2D7ABF73743F (cry)",
+      "donateacry:37105492-58b1-432e-a1ce-ea154425abab (cry)",
+      "donateacry:376C006E-3664-4056-80D0-7661F631A062 (cry)",
+      "donateacry:3DF341FA-E90B-4335-A51A-A9B0769150CE (cry)",
+      "donateacry:3bb2445a-9ae9-4dc8-9a2e-86c696ffa405 (cry)",
+      "donateacry:3c51dedc-6e4c-47dd-a179-86a25e95f1ef (cry)",
+      "donateacry:415d69b4-6d84-4bf8-97b0-10f8f108dc1d (cry)",
+      "donateacry:42ec6f14-6ba6-457f-8a80-101ee201195c (cry)",
+      "donateacry:459c3f85-5710-4efa-bcc9-8012aa1af55e (cry)",
+      "donateacry:50DC5FBC-AC95-44F2-B55F-E4E5FB03AC96 (cry)",
+      "donateacry:52dfc27a-fbc4-4d9f-bbcf-6406c919324a (cry)",
+      "donateacry:549a46d8-9c84-430e-ade8-97eae2bef787 (cry)",
+      "donateacry:5b49f19f-a3a7-411e-bb32-755da3cbd6f0 (cry)",
+      "donateacry:602b06a7-31f0-4370-b35a-9cc81d205958 (cry)",
+      "donateacry:63CA92F7-973A-4DCA-A410-7B19811A2478 (cry)",
+      "donateacry:64acb345-a61e-4ef3-a5a6-cf83c04b83f1 (cry)",
+      "donateacry:653bf718-94bd-40d0-af7c-8fe44e07640c (cry)",
+      "donateacry:6639C63C-F634-489C-91B3-E3DB5930EFD5 (cry)",
+      "donateacry:665BDF6D-2897-49F9-8AD0-978B3B2A0468 (cry)",
+      "donateacry:6bd76f21-f279-4c46-9453-58c95e7b2475 (cry)",
+      "donateacry:719bb382-a592-46b7-82d2-8b4a625263b7 (cry)",
+      "donateacry:7616E8F4-B1A7-45A6-9A0C-C9BB2DE64FC3 (cry)",
+      "donateacry:79FF400A-97E2-4701-987D-C7C850D5523C (cry)",
+      "donateacry:7B924575-21FC-462A-969E-BABB46D1CBF5 (cry)",
+      "donateacry:7b0e160e-0505-459e-8ecb-304d7afae9d2 (cry)",
+      "donateacry:7b23d26e-6f97-4e8b-b520-a9fdde21ee91 (cry)",
+      "donateacry:88da3fbd-926b-4ee7-ae8f-85f92f2783b0 (cry)",
+      "donateacry:8C13A1F9-62CC-46AA-9192-BECE5CDD5CB0 (cry)",
+      "donateacry:8b1faa77-e3ac-48af-bf2a-58aadebefcba (cry)",
+      "donateacry:8c66887c-8251-49fa-903b-c02d56405f58 (cry)",
+      "donateacry:8f4dbf5a-b504-4452-b6ac-94e646a6a052 (cry)",
+      "donateacry:96986c8b-9988-4c37-a0f8-e7c4269cc3ac (cry)",
+      "donateacry:9aa8bac5-eeb9-4f19-a4bf-7c439e87364b (cry)",
+      "donateacry:9fe37482-6a64-401d-b8b9-3e47d6ed9ac0 (cry)",
+      "donateacry:A123AD65-38D3-4A65-AB37-330034765840 (cry)",
+      "donateacry:AE02C934-F4E5-4C73-818D-56AA6887EC18 (cry)",
+      "donateacry:B0D9116D-8FA4-41AF-B626-BE508FD5CA04 (cry)",
+      "donateacry:B327333E-2DE2-4833-A75A-4C576208BED3 (cry)",
+      "donateacry:B400D2D0-9FCE-472E-A152-1FF349B9B407 (cry)",
+      "donateacry:B456CE9D-CBD4-43E5-899B-8B8B0483F17D (cry)",
+      "donateacry:C249BCDD-0F65-4D6A-82BE-43C4006E3DDB (cry)",
+      "donateacry:CC8771B1-C84E-4223-A010-029A7629A975 (cry)",
+      "donateacry:DB95BF4A-E3E5-4429-A660-DBBCF486E6DF (cry)",
+      "donateacry:F24DE44B-762C-4149-AC92-96A5E57ED118 (cry)",
+      "donateacry:F3BAEDDA-CDC0-4A65-90EE-5C372CEE4F3B (cry)",
+      "donateacry:F950E7E3-A1A5-4A01-99F4-9B155C3C6606 (cry)",
+      "donateacry:F95D4BCE-2FB0-4A0C-A058-BFB0674539AF (cry)",
+      "donateacry:FAE74A94-9968-43ED-958C-50D7C4C1F13C (cry)",
+      "donateacry:FF2CD2F6-404D-4626-8718-6E6C751F63B8 (cry)",
+      "donateacry:a40b9b8d-e4bc-457a-badf-f38bdbc0c358 (cry)",
+      "donateacry:aaa57dbd-7b88-454a-963e-6faa2f4ed4e7 (cry)",
+      "donateacry:adb53808-8b13-4c08-b055-6653c75298be (cry)",
+      "donateacry:ae5f103b-5fee-442f-bb1b-d9d0570c46ab (cry)",
+      "donateacry:afa44e7f-4187-4f1c-9437-b49ba75f542e (cry)",
+      "donateacry:b9d0daab-43c8-41f1-86af-3bcdea9af63c (cry)",
+      "donateacry:be21ef2a-a415-4e8b-bfe6-731bf9956e2c (cry)",
+      "donateacry:c10e2b0f-0cb8-4485-b82f-d453edf97db7 (cry)",
+      "donateacry:cda99fcf-d010-47b4-8987-f54be313ddbd (cry)",
+      "donateacry:d1e236a0-e030-4137-9030-5625026cd098 (cry)",
+      "donateacry:dc5429de-26b4-48e2-bc47-bc607b9bba06 (cry)",
+      "donateacry:e1e640e2-78cb-4cb7-9ccc-93813bfc251c (cry)",
+      "donateacry:edb5924c-07ba-4eaa-838b-aaf9511a219b (cry)",
+      "donateacry:efd13da0-d40e-48bc-b14e-dee28af4d3c6 (cry)",
+      "donateacry:f5b29377-7cd6-4688-942c-5a07add39dc5 (cry)",
+      "donateacry:f896b69d-6241-4b51-9c45-0d628bc827c1 (cry)",
+      "negative-01 (none)",
+      "negative-04 (none)"
+     ]
+    },
+    "splash": {
+     "items": 3,
+     "hits": 3,
+     "misses": 0,
+     "false_alarms": 4,
+     "negatives": 396,
+     "false_alarms_from": [
+      "donateacry:f5b29377-7cd6-4688-942c-5a07add39dc5 (cry)",
+      "negative-02 (none)",
+      "negative-04 (none)"
+     ]
+    }
+   },
+   "window_s": {
+    "median": 0.016,
+    "p95": 0.016
+   },
+   "load_s": 1.38,
+   "info": {
+    "ready": true,
+    "model": "PANNs Cnn14_16k mAP 0.438",
+    "groups": [
+     "cry",
+     "dog",
+     "doorbell",
+     "splash"
+    ]
+   }
+  },
+  "meta": {
+   "tally": {
+    "cry": {
+     "items": 348,
+     "hits": 339,
+     "misses": 9,
+     "false_alarms": 1,
+     "negatives": 51,
+     "false_alarms_from": [
+      "cough-06 (none)"
+     ],
+     "hits_hearing": "2 of 2",
+     "hits_donateacry": "337 of 346"
+    },
+    "doorbell": {
+     "items": 4,
+     "hits": 3,
+     "misses": 1,
+     "false_alarms": 3,
+     "negatives": 395,
+     "false_alarms_from": [
+      "donateacry:0F4B1065-4012-47C8-88B7-ACE11B1A536E (cry)",
+      "donateacry:1abb2260-a652-4ba7-bd98-7d463312730f (cry)",
+      "donateacry:50DC5FBC-AC95-44F2-B55F-E4E5FB03AC96 (cry)"
+     ]
+    },
+    "dog": {
+     "items": 3,
+     "hits": 3,
+     "misses": 0,
+     "false_alarms": 3,
+     "negatives": 396,
+     "false_alarms_from": [
+      "donateacry:5C2F730C-9721-40B7-A2D8-C257DB518978 (cry)",
+      "donateacry:653bf718-94bd-40d0-af7c-8fe44e07640c (cry)",
+      "donateacry:e1e640e2-78cb-4cb7-9ccc-93813bfc251c (cry)"
+     ]
+    },
+    "splash": {
+     "items": 3,
+     "hits": 3,
+     "misses": 0,
+     "false_alarms": 1,
+     "negatives": 396,
+     "false_alarms_from": [
+      "negative-02 (none)"
+     ]
+    }
+   },
+   "window_s": {
+    "median": 0.062,
+    "p95": 0.106
+   },
+   "load_s": 4.74,
+   "info": {
+    "ready": true,
+    "model": "facebook/pe-a-frame-small",
+    "device": "mps",
+    "labels": [
+     "cry",
+     "dog",
+     "doorbell",
+     "splash"
+    ]
+   }
+  },
+  "signal": {
+   "tally": {
+    "cry": {
+     "items": 348,
+     "hits": 283,
+     "misses": 65,
+     "false_alarms": 2,
+     "negatives": 51,
+     "false_alarms_from": [
+      "doorbell-01 (doorbell)",
+      "doorbell-03 (doorbell)"
+     ],
+     "hits_hearing": "2 of 2",
+     "hits_donateacry": "281 of 346"
+    },
+    "doorbell": {
+     "items": 4,
+     "hits": 0,
+     "misses": 4,
+     "false_alarms": 0,
+     "negatives": 395,
+     "false_alarms_from": []
+    },
+    "dog": {
+     "items": 3,
+     "hits": 0,
+     "misses": 3,
+     "false_alarms": 0,
+     "negatives": 396,
+     "false_alarms_from": []
+    },
+    "splash": {
+     "items": 3,
+     "hits": 0,
+     "misses": 3,
+     "false_alarms": 0,
+     "negatives": 396,
+     "false_alarms_from": []
+    }
+   },
+   "window_s": null,
+   "load_s": 0.0,
+   "info": {
+    "ready": true,
+    "model": "signal processing, no learned model",
+    "limits": {
+     "level_dbfs": -40.0,
+     "voiced_share": 0.2,
+     "longest_s": 0.2,
+     "harmonicity": 0.8
+    }
+   }
+  }
+ }
+}

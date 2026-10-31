@@ -3,8 +3,8 @@
     python scripts/cry_reason_live.py
 
 What runs for real: ffmpeg decoding licensed cry recordings on a pipe through the Tapo camera's 8 kHz A-law channel,
-the Ear one second at a time, PANNs CNN14 in the hearing worker, the local cry model (cry_sound.py, PANNs embedding and
-the Donate-a-Cry head), the log reason (cry_reason.py) on the simulated week, the HouseSounds plug-in, the family push
+the Ear one second at a time with the Ear's own listener (hearing.default_listener, Meta models and signal processing
+only since Oct 31, the Oct 30 run used PANNs and the local cry model that left with it), the log reason (cry_reason.py) on the simulated week, the HouseSounds plug-in, the family push
 routing to the parent on duty, the Telegram channel plug-in, and the glasses channel with its HTTP endpoint on
 127.0.0.1, read by two event-stream clients the way the glasses app reads it.
 
@@ -32,7 +32,7 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO))
 
-from parenting_agent import cry_sound, hearing  # noqa: E402
+from parenting_agent import hearing  # noqa: E402
 from parenting_agent.agent import build  # noqa: E402
 from parenting_agent.agent import config as config_mod  # noqa: E402
 from parenting_agent.channels.push import FamilyPush  # noqa: E402
@@ -105,13 +105,12 @@ def main():
                        "rhythm": {"source": "fixture", "fixture": str(FIXTURE)},
                        "telegram": {"allowed_chat_ids": list(CHATS.values())},
                        "family_push": {"channel": "telegram"},
-                       "glasses": {"port": 0, "host": "127.0.0.1", "wearers": list(PEOPLE)},
-                       "house_sounds": {"cry_model": {"enabled": True}}})
+                       "glasses": {"port": 0, "host": "127.0.0.1", "wearers": list(PEOPLE)}})
         agent = build(config)
         captured = Path(tmp) / "telegram-captured.jsonl"
         telegram = Telegram(agent, config, messenger=CapturedMessages(captured))
         started = time.monotonic()
-        listener = hearing.PannsListener()
+        listener = hearing.default_listener()
         load_s = round(time.monotonic() - started, 2)
         sounds = HouseSounds(agent, config, listener=listener, clock=lambda: clock["now"])
         push = FamilyPush(agent, config, clock=lambda: clock["now"])
@@ -142,13 +141,12 @@ def main():
         glasses.hub.close()
         agent.close()
     urllib.request.urlopen = guard.real
-    head = cry_sound.Head.load()
     names = {v: k for k, v in CHATS.items()}
     result = {
         "run": datetime.datetime.now().astimezone().isoformat(timespec="seconds"),
-        "where": "this Mac, PANNs on CPU in the hearing worker, nothing sent off the Mac",
+        "where": f"this Mac, listener {listener.name}, nothing sent off the Mac",
         "simulated_moment": case["at"].isoformat(), "simulated_truth": case["truth"],
-        "listener_load_s": load_s, "local_model": {"speak": head.meta.get("speak"), "test": head.meta.get("test")},
+        "listener_load_s": load_s,
         "network_refused": guard.refused, "audio_written": False,
         "plays": plays,
         "telegram_captured": [{"to": names.get(m["chat"], m["chat"]), "text": m["text"]} for m in sent],

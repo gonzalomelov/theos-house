@@ -1,7 +1,8 @@
 """Tests for house sounds (issue #14), why is he crying and white noise (issue #32).
 
-Offline: a fake listener that labels synthetic tones, the fake brain, the simulated-week fixture. The PANNs run on
-licensed clips is scripts/sounds_run.py.
+Offline: a fake listener that labels synthetic tones, the fake brain, the simulated-week fixture. The cry signal
+listener runs for real on synthetic sounds, and the Meta worker's own code is checked without its model. The run with
+the Meta model on licensed clips is scripts/sounds_run.py, the held-out test scripts/meta_hearing_eval.py.
 """
 import builtins
 import datetime
@@ -15,7 +16,7 @@ from unittest import mock
 
 import numpy as np
 
-from parenting_agent import cry_reason, hearing
+from parenting_agent import cry_reason, cry_signal, hearing, hearing_worker
 from parenting_agent.agent import build
 from parenting_agent.agent import config as config_mod
 from parenting_agent.bus import Bus
@@ -36,8 +37,9 @@ def tone(label, seconds, level=0.3):
 
 
 class ToneListener:
-    """Stands in for PANNs: the strongest frequency in the last second decides the label."""
+    """Stands in for the Meta listener: the strongest frequency in the last second decides the label."""
     name = "tones"
+    thresholds = {"cry": 0.5, "doorbell": 0.5, "dog": 0.5, "splash": 0.5}
 
     def score(self, samples):
         last = samples[-hearing.RATE:]
@@ -135,6 +137,98 @@ class EarTest(unittest.TestCase):
     def test_camera_url_is_masked_in_errors(self):
         url = hearing.camera_url({"TAPO_USER": "u", "TAPO_PASS": "secret", "TAPO_HOST": "192.0.2.10"})
         self.assertNotIn("secret", hearing.mask(f"failed to open {url}"))
+
+
+def voiced(f0, seconds, level=0.3, harmonics=4):
+    """A sound with a fundamental and its harmonics, like a voice holding one pitch."""
+    t = np.arange(int(seconds * hearing.RATE)) / hearing.RATE
+    wave = sum(np.sin(2 * np.pi * f0 * k * t) / k for k in range(1, harmonics + 1))
+    return (level * wave / np.abs(wave).max()).astype(np.float32)
+
+
+class ListenerTest(unittest.TestCase):
+    LIMITS = {"level_dbfs": -40, "voiced_share": 0.5, "longest_s": 0.5, "harmonicity": 0.6}
+
+    def test_signal_listener_hears_a_high_held_voice_as_a_cry(self):
+        listener = hearing.SignalListener({"cry_limits": self.LIMITS})
+        got = listener.score(voiced(420, 2))
+        self.assertEqual(got["scores"], {"cry": 1.0})
+        self.assertAlmostEqual(got["cry_signal"]["pitch_hz"], 420, delta=15)
+
+    def test_signal_listener_stays_quiet_for_a_low_voice_noise_quiet_and_a_short_chirp(self):
+        listener = hearing.SignalListener({"cry_limits": self.LIMITS})
+        rng = np.random.default_rng(0)
+        chirp = np.concatenate([voiced(420, 0.2), np.zeros(int(1.8 * hearing.RATE), np.float32)])
+        for name, sound in (("adult voice at 120 Hz", voiced(120, 2)), ("noise", 0.3 * rng.standard_normal(2 * hearing.RATE)),
+                            ("quiet cry", voiced(420, 2, level=0.001)), ("short chirp", chirp)):
+            self.assertEqual(listener.score(sound.astype(np.float32))["scores"], {"cry": 0.0}, name)
+
+    def test_cry_features_are_plain_numbers(self):
+        feats = cry_signal.features(voiced(400, 2))
+        self.assertEqual(set(feats), {*cry_signal.FEATURES, "pitch_hz"})
+        self.assertTrue(all(isinstance(v, (int, float)) for v in feats.values()))
+        self.assertEqual(cry_signal.features(np.zeros(10, np.float32))["voiced_share"], 0.0)
+
+    def test_listeners_take_each_label_from_its_owner(self):
+        both = hearing.Listeners([(hearing.SignalListener({"cry_limits": self.LIMITS}), ["cry"]), (ToneListener(), ["doorbell", "dog"])])
+        got = both.score(voiced(420, 2))
+        self.assertEqual(set(got["scores"]), {"cry", "doorbell", "dog"})
+        self.assertEqual(got["scores"]["cry"], 1.0)
+        self.assertIn("cry_signal", got)
+        self.assertEqual(both.thresholds, {"cry": 0.5, "doorbell": 0.5, "dog": 0.5})
+        self.assertEqual(hearing.Ear(both, Bus()).s["thresholds"], both.thresholds)
+
+    def test_a_cry_heard_by_the_signal_listener_becomes_a_cry_event(self):
+        ear = hearing.Ear(hearing.SignalListener({"cry_limits": self.LIMITS}), Bus())
+        cry = [e for e in hearing.play(ear, voiced(420, 6)) if e["label"] == "cry"]
+        self.assertEqual([e["phase"] for e in cry], ["end"])
+        self.assertGreaterEqual(cry[0]["seconds"], 5)
+
+    def test_the_meta_listener_says_what_is_missing_instead_of_failing_later(self):
+        with self.assertRaisesRegex(hearing.Unavailable, "hearing-setup.sh"):
+            hearing.MetaListener({"python": "/nonexistent/python"})
+        with tempfile.TemporaryDirectory() as tmp:
+            with self.assertRaisesRegex(hearing.Unavailable, "Perception Encoder weights"):
+                hearing.MetaListener({"python": os.sys.executable, "model_dir": tmp})
+
+    def test_every_label_has_an_owner_and_the_meta_labels_have_prompts(self):
+        self.assertEqual(set(hearing.OWNERS), set(hearing.LABELS))
+        self.assertTrue(set(hearing.OWNERS.values()) <= {"meta", "signal"})
+        for label, owner in hearing.OWNERS.items():
+            if owner == "meta":
+                self.assertTrue(hearing.PROMPTS[label])
+                self.assertIn(hearing.MODES[label], ("logit", "margin"))
+            self.assertIn(label, hearing.THRESHOLDS)
+
+    def test_shipped_settings_are_the_tune_set_choices_and_the_split_came_first(self):
+        results = Path(__file__).resolve().parent.parent / "results/sounds/meta-hearing"
+        tune = json.loads((results / "tune.json").read_text())
+        split = json.loads((results / "split.json").read_text())
+        for label in hearing.LABELS:
+            self.assertEqual(hearing.MODES[label], tune["meta"][label]["mode"])
+            self.assertAlmostEqual(hearing.THRESHOLDS[label], tune["meta"][label]["raw_threshold"], places=4)
+            self.assertEqual(hearing.PROMPTS[label], split["protocol"]["prompts"][label])
+        self.assertEqual(hearing.BACKGROUND, split["protocol"]["background_prompts"])
+        self.assertEqual(hearing.CRY_LIMITS, {k: float(v) for k, v in tune["signal"]["cry_limits"].items()})
+        tune_ids = {i["source"] for i in split["items"] if i["split"] == "tune"}
+        held_ids = {i["source"] for i in split["items"] if i["split"] == "held_out"}
+        self.assertFalse(tune_ids & held_ids, "no clip or Donate-a-Cry install on both sides")
+
+    def test_the_worker_upsamples_without_adding_sound_above_8_khz(self):
+        t = np.arange(hearing.RATE) / hearing.RATE
+        wave = np.sin(2 * np.pi * 1000 * t).astype(np.float32)
+        up = hearing_worker.upsample(np, wave)
+        self.assertEqual(up.size, 3 * wave.size)
+        spectrum = np.abs(np.fft.rfft(up))
+        self.assertEqual(int(np.argmax(spectrum)), 1000)
+        self.assertLess(spectrum[8001:].max(), 1e-3 * spectrum.max())
+        np.testing.assert_allclose(up[::3], wave, atol=1e-4)
+
+    def test_no_runtime_code_calls_panns(self):
+        package = Path(__file__).resolve().parent.parent / "parenting_agent"
+        offenders = [p.name for p in package.rglob("*.py")
+                     if any(word in p.read_text() for word in ("Cnn14", "PannsListener", "panns_worker", "audioset_tagging"))]
+        self.assertEqual(offenders, [])
 
 
 class DoorbellTest(unittest.TestCase):
