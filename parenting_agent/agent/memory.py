@@ -36,6 +36,18 @@ def hhmm(ts, tz=None):
     return parse_time(ts, tz).strftime("%H:%M") if ts else None
 
 
+def start_after_feeds(start, end, feeds):
+    """A sleep never spans a feed: its start moves past the end of the last feed logged inside it. feeds are (start,
+    end) pairs. Raises ValueError when a feed covers the sleep's end, so there is no sleep left to log."""
+    inside = [(a, b) for a, b in feeds if a < end and b > start]
+    if not inside:
+        return start
+    last_start, last_end = max(inside, key=lambda pair: pair[1])
+    if last_end >= end or last_start >= end:
+        raise ValueError(f"a feed at {last_start.strftime('%H:%M')} is logged in that time, tell me when the baby fell asleep")
+    return last_end
+
+
 class Memory:
     def __init__(self, path):
         self.db = sqlite3.connect(str(path), check_same_thread=False)

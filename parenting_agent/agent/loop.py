@@ -52,6 +52,7 @@ Rules:
 - Answer the parent's message itself. Never talk about your own bookkeeping: never say a message has nothing new to log,
   never say "ahora sí" or "now it is logged", never apologize for or mention an answer the parent did not see, never
   comment on the time the log gave an entry.
+- """ + rules.SELF_FACTS + """
 - Keep replies short, the parent's hands are often on the baby. Confirm only what this message changed, never list
   earlier entries again. Write plain sentences with commas and periods, never an em dash.
 Today is {today}. Facts you were told: {facts}
@@ -509,13 +510,15 @@ class Agent:
     # health message that also reports a medicine given or a milestone. The family agent leaves it to the brain.
     health_gate = False
     # The families bot confirms every log from the stored entry, never in the brain's words.
-    confirm_from_log = False
+    confirm_from_log = True
     # "guards": the brain logs through the tools and the rules in decide check it. "ops" and "ops-verify": the brain
     # returns the log operations for the message as data (log_ops.py), with a second checking call in ops-verify.
     log_mode = "guards"
     approval_window_s = APPROVAL_WINDOW_S
     # Set in a turn where Muse errored and the fixed rules answered: the reply then starts with BRAIN_BUSY.
     brain_busy = False
+    # Reads a message for a red flag by its meaning (danger.py). None: the conservative signs alone.
+    danger = None
 
     def __init__(self, bus, memory, baby_log, tools, brain, max_steps=6, history=20):
         self.bus, self.memory, self.baby_log, self.tools, self.brain = bus, memory, baby_log, tools, brain
@@ -615,6 +618,8 @@ class Agent:
             text = final_guard.apply(text, self.reply_lang(), self.bus, where=f"agent:{channel}",
                                      names=self.guard_names(), log_text=self.guard_logs_text,
                                      models_ok=self.guard_models_ok)
+            # "I run on Meta's servers" (round b5) is never said: the agent runs on Muse Spark Open on Baseten.
+            text = rules.right_host(text, self.reply_lang() or rules.message_lang(text) or "en")
         self.said += 1
         self.memory.add_message(channel, "assistant", text, ts=self.now())
         # The answer goes back to the chat that asked, so two parents on one channel each get their own answer.
@@ -801,6 +806,24 @@ class Agent:
             self.bus.publish("guard", status=f"urgent_{urgent}")
             self.say(channel, self.urgent(text, urgent), flag=f"urgent_{urgent}")
             return
+        screened = self.screened_emergency(text)
+        if screened:
+            # Not on the word list, but a red flag by its meaning (blind round b5: "face in the pillow and now very
+            # still"): the same fixed emergency text, and nothing generated after it.
+            self.memory.add_message(channel, "user", text, ts=self.now())
+            self.bus.publish("guard", status="emergency_by_meaning", source=screened)
+            self.say(channel, self.emergency(text), flag="emergency")
+            return
+        if rules.reports_total(text) and not rules.is_health(text):
+            # "Only took 20 ml since morning" is a total, never a new 20 ml feed (round b5): asked, with the log's day.
+            self.memory.add_message(channel, "user", text, ts=self.now())
+            self.bus.publish("guard", status="total_not_entry")
+            try:
+                summary = self.baby_log.summary()
+            except Exception:  # noqa: BLE001 the question still goes out without the log's numbers
+                summary = None
+            self.say(channel, rules.total_reply(summary, self.lang(text)))
+            return
         if rules.is_safe_sleep_question(text):
             # How a baby sleeps safely: the AAP's public line with its source, the same every time, no brain call.
             self.memory.add_message(channel, "user", text, ts=self.now())
@@ -875,6 +898,16 @@ class Agent:
     def emergency(self, request):
         return rules.EMERGENCY_REPLY[self.lang(request)]
 
+    def screened_emergency(self, text):
+        """"muse" or "fallback" when a message the word list let through is a red flag by its meaning, else None. A
+        courtesy ("ok thanks") is never read. With no screen set, the conservative signs alone decide."""
+        if rules.is_courtesy(text):
+            return None
+        if self.danger is None:
+            return "fallback" if rules.maybe_danger(text) else None
+        found, source = self.danger.screen(text, self.bus)
+        return source if found else None
+
     def safety_line(self, request):
         """The fixed line that keeps a parent pointed at help when a guard took the brain's words away."""
         return self.emergency(request) if rules.is_emergency(request) else self.no_advice(request)
@@ -882,6 +915,24 @@ class Agent:
     def birth_date(self):
         """The baby's birth date, or None when it is not known yet."""
         return None
+
+    def logged_fever(self):
+        """(when, entry) for a fever note in the log in the last 24 h, for a baby under 3 months (or of unknown age),
+        else None. What speaks first (the panel, tonight's plan, the morning message, the Echo) leads with it."""
+        now = self.now()
+        if not rules.under_3_months(self.birth_date(), now.date()):
+            return None
+        try:
+            since = (now - datetime.timedelta(hours=rules.FEVER_HOURS)).isoformat(timespec="seconds")
+            entries = self.baby_log.entries("note", since, 50)
+        except Exception:  # noqa: BLE001 a log that cannot be read shows no fever line, the rest still goes out
+            return None
+        return rules.logged_fever(entries, now)
+
+    def fever_line(self, lang, spoken=False):
+        """The fixed call-now line for a logged fever, or None. No dose and no advice, the gate's own words."""
+        found = self.logged_fever()
+        return rules.fever_line(found, lang, spoken) if found else None
 
     def urgent(self, request, kind):
         """The call-now line first, then the note that keeps the parent's words, and a feed told in the same message
@@ -956,6 +1007,12 @@ class Agent:
         """The one way decide answers. A health message gets a reply built from what the log really holds, never the
         brain's words, and a call that waits for a yes is always named, so the parent knows exactly what a yes runs.
         fixed marks the agent's own text (a bounds question, a change that ran), which a health reply keeps."""
+        if not fixed and request is not None and rules.urges_emergency(text):
+            # The brain read an emergency and sent the parent to 911 now: the fixed emergency text alone, never the
+            # first aid steps it wrote after it (round b5).
+            self.bus.publish("guard", status="emergency_from_brain")
+            self.say(channel, self.emergency(request), flag="emergency")
+            return
         if self.health_turn is not None:
             turn = self.health_turn
             lang = self.lang(turn["request"])
@@ -1049,6 +1106,14 @@ class Agent:
             return self.baby_log.open_sleep()
         except Exception:  # noqa: BLE001 a log with no open sleep to read has none
             return None
+
+    def fed_since(self, start):
+        """True when the log holds a feed that ends after an ISO time."""
+        try:
+            moment = parse_time(start)
+            return any(parse_time(e["ts"]) > moment for e in self.baby_log.entries("feeding", start, 20))
+        except Exception:  # noqa: BLE001 a log that cannot be read keeps the open sleep as it is
+            return False
 
     def follows_same_kind(self, stored):
         """True when an entry this turn stored has an earlier one of the same kind within 30 minutes: "corregido a 70"
@@ -1574,6 +1639,11 @@ class Agent:
                             arguments["details"]["amount_ml"] = rules.half_ml(request)
                         if arguments.get("kind") == "sleep":
                             arguments = self.sleep_call(arguments, request)
+                        if arguments.get("kind") == "sleep" and rules.asleep_now(request):
+                            # "She is napping now" is asleep now: a sleep that starts and stays open, never a finished
+                            # nap (round b5 logged one from 15:13 over two feeds). The start is now, or the time named.
+                            named = rules.named_time(request, self.now())
+                            arguments = {"kind": "sleep", "details": {"action": "start"}, **({"ts": named} if named else {})}
                     elif isinstance(arguments.get("details"), dict) and arguments["details"].get("amount_ml") is not None:
                         ounces = rules.ounces_ml(request) or rules.ounce_followup_ml(request, previous)
                         if ounces:
@@ -1668,6 +1738,11 @@ class Agent:
                         else:
                             recent_start = opened and self.now() - parse_time(opened) <= ASLEEP_AGAIN
                     except (TypeError, ValueError):
+                        recent_start = False
+                    if recent_start and self.fed_since(opened):
+                        # A feed was logged after that start, so the baby was awake: this is a new sleep, never "still
+                        # asleep since" a time before the feed (round b5).
+                        self.bus.publish("guard", status="stale_open_sleep")
                         recent_start = False
                     if recent_start:
                         # "se quedo frita en upa" sent twice a minute apart: run 1 of the held-out set moved the 03:20

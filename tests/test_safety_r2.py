@@ -165,7 +165,9 @@ class VoicePrivacy(unittest.TestCase):
         import pathlib
         root = pathlib.Path(__file__).resolve().parents[1]
         readme = (root / "README.md").read_text()
-        self.assertIn("Video and house audio stay in your house. Messages and voice notes go to the brain", readme)
+        # The claim as PR #186 worded it exactly: the two opt-in senses, then what goes to the brain.
+        self.assertIn("Video and house audio stay in your house, apart from two opt-in senses", readme)
+        self.assertIn("Messages, voice notes and the log lines the agent reads go to the brain", readme)
         self.assertNotIn("Only the conversation text goes to the brain", readme)
         self.assertIn("Telegram voice notes go there too, as audio", readme)
         self.assertIn("your content may be used to train future Meta models", readme)

@@ -148,7 +148,7 @@ class SharedLoop(unittest.TestCase):
     def test_plain_agent_logs_when_the_brain_calls_the_tool(self):
         agent, baby_log, replies = self.agent(ScriptedBrain([[log("feeding", BOTTLE)], "Logged."]))
         agent.handle({"kind": "message", "channel": "test", "text": "bottle 120 ml"})
-        self.assertEqual(replies[-1]["text"], "Logged.")
+        self.assertRegex(replies[-1]["text"], r"^Logged the \d\d:\d\d bottle of 120 ml\.$")  # from the log itself
         self.assertEqual(len(baby_log.entries("feeding")), 1)
 
     def test_an_observation_from_a_skill_is_not_guarded(self):

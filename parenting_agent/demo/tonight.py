@@ -18,7 +18,7 @@ from .. import house_brain as hb
 from ..agent.brain import BrainError
 from ..bus import Bus
 from ..rhythm import patterns
-from ..sleep_forecast import as_of, predict_feed, sleep_windows
+from ..sleep_forecast import as_of, predict_feed, sessions, sleep_windows
 from .babylog import TZ, finished, started
 
 # The night feed's rhythm lead and the white noise cap at the crib. night_feed.py and white_noise.py are not in the
@@ -124,10 +124,26 @@ class TonightHouse:
         self.at, self.ahead = None, []
 
     def cached(self):
+        self.drop_stale()
         return dict(self.plans)
+
+    def feeds_key(self):
+        """The feeds the plan was made from. A feed logged since (round b5: two test logs moved the next feed from 154
+        to 54 min while the warmer kept its times) makes the plan stale."""
+        rows = sessions(self.baby_log.rhythm_rows())
+        return tuple(sorted(patterns.when(r).isoformat() for r in rows if r["kind"] == "feeding"))[-8:]
+
+    def drop_stale(self):
+        """Plans made from other feeds than the log holds now are dropped, and the next ask plans again, so the warmer's
+        times and the next feed on the panel come from the same log."""
+        key = self.feeds_key()
+        if any(card.get("feeds_key") != key for card in self.plans.values()):
+            self.bus.publish("guard", status="house_plan_stale", plans=sorted(self.plans))
+            self.plans = {}
 
     def plan(self, action, lang="en", said=None):
         """said is what the parent typed to ask for sleep in the chat, given to Muse as what happened, never logged."""
+        self.drop_stale()
         if action == "tonight" and "sleep" in self.plans:
             return self.plans["sleep"], 0  # after "let me sleep" the night is the re-planned one
         if action in self.plans:
@@ -157,7 +173,6 @@ class TonightHouse:
                  and (r["kind"], r.get("start") or r.get("time")) not in have]
         seen = as_of(rows, now)
         reason = None
-        self.brain.s["text_lang"] = "es" if lang == "es" else "en"
         if not self.allow_muse():
             reason = "resting"
             self.brain.plan = None
@@ -173,6 +188,7 @@ class TonightHouse:
                     self.brain.plan = first
                 calls += 1
         card = self.card(seen, now, trigger, what, reason)
+        card["feeds_key"] = self.feeds_key()
         card["lang"] = "es" if lang == "es" else "en"
         card["planned_at"] = hm(real_now) if now > real_now else ""
         if action == "sleep":
@@ -207,14 +223,16 @@ class TonightHouse:
             out["muse_on_duty"] = plan["on_duty"]
             for name in hb.ROUTINES:
                 out[name] = windows(plan[name])
-            out["summary"], out["why_changed"] = plan["summary"], plan["why_changed"]
+            for field in hb.WHY_FIELDS:
+                out[field] = plan.get(field) or ""
             meta = next((e.get("muse") for e in reversed(self.bus.history) if e["kind"] == "house_plan"), None) or {}
             out["muse"] = {"seconds": meta.get("seconds"), "model": meta.get("model")}
         else:
             out["on_duty"], out["on_duty_by"] = rota, "rota"
             for name in hb.ROUTINES:
                 out[name] = "fixed"
-            out["summary"] = out["why_changed"] = ""
+            for field in hb.WHY_FIELDS:
+                out[field] = ""
             nxt = predict_feed(seen, now)
             horizon = now + datetime.timedelta(hours=self.brain.s["horizon_h"])
             at = nxt["at"] if nxt else None
@@ -232,7 +250,16 @@ def told(plan, trigger, lang):
     """True when a Muse plan has a why the card can show in the visitor's language."""
     if not plan:
         return False
-    return bool((trigger == "adapt" and why_line(plan.get("why_changed"), lang)) or why_line(plan.get("summary"), lang))
+    return bool((trigger == "adapt" and why_line(why_in(plan, "why_changed", lang), lang))
+                or why_line(why_in(plan, "summary", lang), lang))
+
+
+def why_in(card, field, lang):
+    """Muse's why in the visitor's language: the Spanish one on the Spanish page, so a plan made while the page was in
+    English still has its why after a switch (round b5), and the English one as it was when there is no Spanish."""
+    if lang == "es" and card.get(field + "_es"):
+        return card[field + "_es"]
+    return card.get(field) or ""
 
 
 def name(parent, lang):
@@ -331,7 +358,8 @@ def view(card, lang="en"):
             "span": (t["plan_ahead"].format(now=card["now"], until=card["until"], at=card["planned_at"])
                      if card.get("planned_at") else t["plan_until"].format(now=card["now"], until=card["until"])),
             "rows": [{"label": a, "text": b} for a, b in rows(card, lang)],
-            "why": why_line(card["summary"], lang), "why_label": t["why"], "why_changed": why_line(card["why_changed"], lang),
+            "why": why_line(why_in(card, "summary", lang), lang), "why_label": t["why"],
+            "why_changed": why_line(why_in(card, "why_changed", lang), lang),
             "changes": changes(card, lang), "changes_label": t["changed"], "on_duty": name(card["on_duty"], lang),
             "seconds": (card.get("muse") or {}).get("seconds")}
 

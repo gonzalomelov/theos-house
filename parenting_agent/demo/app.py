@@ -21,6 +21,7 @@ import time
 
 from .. import cry_reason
 from ..agent import brain as brain_mod
+from ..agent import danger as danger_mod
 from ..agent import rules
 from ..agent.loop import SYSTEM, Agent
 from ..agent.memory import LocalBabyLog, Memory
@@ -134,6 +135,23 @@ MONTHS_ES = {"Jan": "ene", "Feb": "feb", "Mar": "mar", "Apr": "abr", "May": "may
              "Aug": "ago", "Sep": "set", "Oct": "oct", "Nov": "nov", "Dec": "dic"}
 
 
+# "Persona B queda de turno y él recibe los avisos" (round b5): Persona A and B have no gender, so a pronoun next to
+# them goes. Only in a sentence that names a Persona and not Theo, whose él is right.
+PERSONA = re.compile(r"\bPersona [AB]\b")
+
+
+def neutral_persona(text):
+    """A Spanish reply never gives Persona A or B a gender."""
+    out = []
+    for sentence in re.split(r"((?<=[.!?])\s+)", text or ""):  # the spaces and line breaks between are kept
+        if PERSONA.search(sentence) and not re.search(r"\bTheo\b", sentence):
+            sentence = re.sub(r"\b([ÉéEe]l|[Ee]lla)\s+(?=(recibe|queda|est[aá]|va|se encarga|tiene|hace|duerme|descansa|atiende|"
+                              r"le toca|toma|sigue|puede|cubre|se levanta|lleva)\b)", "", sentence)
+            sentence = sentence[:1].upper() + sentence[1:]
+        out.append(sentence)
+    return "".join(out)
+
+
 def plain_reply(text):
     """The page shows text as it is: no markdown bold and no em dash, even when the brain writes them."""
     text = re.sub(r"\s*[\u2014\u2013]\s*", ", ", text.replace("**", "").replace("__", ""))
@@ -203,7 +221,8 @@ SIMULATED = "Simulated in the demo, nothing ran in a real house"
 SIMULATED_ES = "Simulado en la demo, nada corrió en una casa real"
 DEMO_NOTE = """
 This is a public demo. The baby is a simulated baby boy called Theo, a few weeks old, and the log is a simulated week.
-Always say he and him for Theo. The parents are Parent A and Parent B, simulated too.
+Always say he and him for Theo. The parents are Parent A and Parent B, simulated too. They have no gender: never say he,
+she, him or her for a parent, and in Spanish never write él or ella for Persona A or Persona B, say the label again.
 For who is up next at night, call night_rota and answer with its text: the night rota is the fair split of wake-ups.
 For what the house will do tonight, call tonight_house and answer from its text: Muse's checked plan for the simulated
 house. When a parent is exhausted or asks to sleep tonight, call tonight_house with asked_to_sleep true: it re-plans the
@@ -323,7 +342,7 @@ class Visitor:
                        "nothing moves.", schema({"asked_to_sleep": {"type": "boolean"}}), self.tonight_text))
         self.agent = DemoAgent(self.bus, self.memory, self.baby_log, tools, brain,
                                max_steps=settings["max_steps"], history=settings["history"])
-        self.agent.reply_guards.append(plain_reply)
+        self.agent.reply_guards += [plain_reply, neutral_persona]
         self.memory.remember("baby_name", "Theo (simulated)")
         self.memory.remember("baby", "a simulated baby boy, a few weeks old: he and him")
         self.memory.remember("parents", "Parent A and Parent B")
@@ -371,7 +390,7 @@ class Visitor:
             self.duty = parent
             self.bus.publish("house_dry", action="set_on_duty", arguments={"parent": parent})
             if self.turn_lang == "es":
-                return f"{SIMULATED_ES}. {tonight.name(parent, 'es')} queda de turno esta noche y recibe los avisos de la noche."
+                return f"{SIMULATED_ES}. {tonight.name(parent, 'es')} queda de turno esta noche y le llegan los avisos de la noche."
             return f"{SIMULATED}. {parent} is on duty tonight and gets the night pushes."
         tools.add(Tool("set_on_duty", "Put one parent on duty tonight, for example when the other asks to sleep. The panel's "
                        "rota shows it. Simulated in the demo.", schema({"parent": {"type": "string", "enum": PARENTS}},
@@ -405,6 +424,7 @@ class Visitor:
         date PREP_DUE_IN_DAYS from today. Copying a list to Home Assistant is not in the demo at all."""
         if self._prep is None:
             self._prep = PrepMode(self.brain, self.settings, self.clock)
+            self._prep.agent.danger = self.agent.danger
         return self._prep
 
     def talk(self, text, mode="baby", lang="en"):
@@ -425,7 +445,7 @@ class Visitor:
         if house:
             self.memory.add_message("demo", "user", text, ts=self.baby_log.now())
             card, _ = self.house_plan(house, said=text if house == "sleep" else None)
-            self.agent.say("demo", tonight.text(card, self.turn_lang), card="tonight")
+            self.agent.say("demo", self.night_text(card), card="tonight")
             reply = " ".join(e["text"] for e in self.replies)
             self.answered_by = {"kind": "house", "muse": card["source"] == "muse"}
             return reply, self.actions_since(start), "baby"
@@ -498,10 +518,16 @@ class Visitor:
 
     def tonight_text(self, asked_to_sleep=False):
         card, _ = self.house_plan("sleep" if asked_to_sleep else "tonight")
-        return tonight.text(card, self.turn_lang)
+        return self.night_text(card)
+
+    def night_text(self, card):
+        """Tonight's plan for the chat, led by the fixed fever line when a fever is in the log (round b5)."""
+        fever = self.agent.fever_line(self.turn_lang)
+        return (fever + "\n" if fever else "") + tonight.text(card, self.turn_lang)
 
     def house_cards(self, lang="en"):
-        return {action: tonight.view(card, lang) for action, card in self.house.cached().items()}
+        fever = self.agent.fever_line(lang)
+        return {action: {**tonight.view(card, lang), "fever": fever or ""} for action, card in self.house.cached().items()}
 
     def night_rota(self):
         r = self.rota()
@@ -549,6 +575,10 @@ class Visitor:
                                 "on_duty": tonight.name(summary["on_duty"], lang)}
         notes = patterns.unusual_notes(rows, TZ, lang=lang)
         out["unusual"] = [n["text"] for n in notes[-2:]]
+        # A fever in the log leads the panel with the fixed under-3-months line (round b5 never showed it).
+        fever = self.agent.fever_line(lang)
+        if fever:
+            out["fever"] = {"text": fever}
         return out
 
     def next_feed_text(self):
@@ -700,6 +730,12 @@ class DemoApp:
         self.records = Records(settings["data_dir"])
         raw = brain or brain_mod.build(settings["brain"])
         self.brain = MeteredBrain(raw, self.records, settings)
+        # Red flags by meaning (agent/danger.py), its Muse calls counted against the same daily spend cap. A test brain
+        # passed in has no screen of its own: the conservative signs decide, as with no model.
+        screen = danger_mod.build(settings["brain"]) if brain is None else danger_mod.DangerScreen(None)
+        if screen.brain is not None:
+            screen.brain = MeteredBrain(screen.brain, self.records, settings)
+        self.danger = screen
         # Muse Spark Open plans the simulated house (tonight.py). With the fake brain there is no Muse: fixed rules only.
         self.muse = muse if muse is not None else (None if settings["brain_name"] == "fake" else tonight.hb.MuseClient())
         self.visitors = collections.OrderedDict()
@@ -726,8 +762,10 @@ class DemoApp:
             return v
 
     def new_visitor(self):
-        return Visitor(self.brain, self.s, self.clock, muse=self.muse,
-                       on_spend=lambda usd: self.records.add_spend(usd) if usd > 0 else None)
+        v = Visitor(self.brain, self.s, self.clock, muse=self.muse,
+                    on_spend=lambda usd: self.records.add_spend(usd) if usd > 0 else None)
+        v.agent.danger = self.danger
+        return v
 
     def meter_house(self, v, vid, internal):
         """Each Muse plan call counts as one message from this visitor (a session row, internal kept), and none runs
@@ -839,7 +877,7 @@ class DemoApp:
             return 400, {"error": "bad_request"}
         lang = "es" if lang == "es" else "en"
         v = self.known(vid)
-        if v is not None and action in v.house.plans:
+        if v is not None and action in v.house.cached():
             return 200, self.house_body(v, vid, internal, lang)
         if not internal and self.records.messages_from(vid) >= self.s["max_messages_per_visitor"]:
             return 429, {"error": "visitor_limit", "reply": VISITOR_LIMIT, "remaining": 0}

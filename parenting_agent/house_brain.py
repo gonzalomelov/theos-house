@@ -97,7 +97,9 @@ the words should, must, try, recommend, consider, need to, normal, worry, doctor
 summary: one sentence, the plan and why. It is about the plan only: never a note about health, a symptom or a
 medicine (a fever note is for the pediatrician, not for the plan). It never names a parent on duty other than on_duty, and never holds a code,
 a phone number or an address. why_changed: when what_happened is not empty, one sentence on what changed
-and why, else "". Answer with the JSON only."""
+and why, else "". summary_es and why_changed_es: the same two sentences in Rioplatense Spanish with voseo (Uruguay),
+naming the parents exactly as in parents, with the same rules ("" when the English one is ""). A Spanish parent reads
+only these. Answer with the JSON only."""
 
 EXPLAIN_SYSTEM = """You tell a family with a newborn, in plain words, what their house did overnight and why. You get
 the house's own event list. State facts and times only. An event's "happened" field says whether a device moved for
@@ -121,7 +123,7 @@ def plan_schema(parents):
              "floor_clean": {"type": "array", "items": window}, "bottle_prewarm": {"type": "array", "items": moment},
              "door_quiet": {"type": "array", "items": window}, "white_noise_boost": {"type": "array", "items": window},
              "messages": {"type": "array", "items": message}, "summary": {"type": "string"},
-             "why_changed": {"type": "string"}}
+             "why_changed": {"type": "string"}, "summary_es": {"type": "string"}, "why_changed_es": {"type": "string"}}
     return {"type": "object", "additionalProperties": False, "required": list(props), "properties": props}
 
 
@@ -298,7 +300,9 @@ def validate(answer, now, tz, s, windows):
             dropped.append({"to": to, "text": text, "why": "failed the no-advice guard"})
         else:
             messages.append({"to": to, "text": text})
-    texts = {"summary": clean_text(answer.get("summary"), 240), "why_changed": clean_text(answer.get("why_changed"), 240)}
+    # The why in English and in Spanish, each through the same checks: a Spanish parent or page reads the Spanish one,
+    # so a plan made for one language never shows an empty why in the other (round b5).
+    texts = {field: clean_text(answer.get(field), 240) for field in WHY_FIELDS}
     for field in texts:
         # The why is about the plan: after a fever note in the log a round b4 judge read a why about paracetamol. A
         # sentence about health, a symptom or a medicine is left out, whatever else it says.
@@ -318,18 +322,20 @@ def validate(answer, now, tz, s, windows):
         if cut:
             dropped.append({"to": field, "text": " ".join(cut)[:240], "why": "names a routine the checked plan does not run"})
             texts[field] = kept
-    other = disagrees_on_duty(texts["summary"], answer["on_duty"], parents)
-    if other:
-        dropped.append({"to": "summary", "text": texts["summary"], "why": f"names {other} on duty, the plan says {answer['on_duty']}"})
-        texts["summary"] = ""
+    for field in ("summary", "summary_es"):
+        other = disagrees_on_duty(texts[field], answer["on_duty"], parents)
+        if other:
+            dropped.append({"to": field, "text": texts[field], "why": f"names {other} on duty, the plan says {answer['on_duty']}"})
+            texts[field] = ""
     plan.update(on_duty=answer["on_duty"], messages=messages, **texts)
     return plan, [], refused, dropped
 
 
-ROUTINE_WORDS = {"floor_clean": re.compile(r"\b(floor|vacuum\w*|clean\w*|robot)\b", re.I),
-                 "bottle_prewarm": re.compile(r"\b(warm\w*|pre-?heat\w*|bottle warmer)\b", re.I),
-                 "door_quiet": re.compile(r"\b(door\w*|bell|visitor\w*)\b", re.I),
-                 "white_noise_boost": re.compile(r"\b(white noise|noise|boost\w*)\b", re.I)}
+WHY_FIELDS = ("summary", "why_changed", "summary_es", "why_changed_es")
+ROUTINE_WORDS = {"floor_clean": re.compile(r"\b(floor|vacuum\w*|clean\w*|robot|piso|aspir\w*|limpi\w*)\b", re.I),
+                 "bottle_prewarm": re.compile(r"\b(warm\w*|pre-?heat\w*|bottle warmer|precalent\w*|calent\w*)\b", re.I),
+                 "door_quiet": re.compile(r"\b(door\w*|bell|visitor\w*|puerta|timbre|visita\w*)\b", re.I),
+                 "white_noise_boost": re.compile(r"\b(white noise|noise|boost\w*|ruido)\b", re.I)}
 SENTENCE_END = re.compile(r"(?<=[.!?])\s+")
 
 
@@ -373,7 +379,8 @@ def disagrees_on_duty(summary, on_duty, parents):
     summary that says "Parent B is on" while the plan says Parent A would make the plan say two things."""
     for other in parents:
         if other != on_duty and re.search(rf"\b{re.escape(other)}\b(?:'s)?\s+(?:is\s+|takes\s+|has\s+)?(?:on\b|on duty|"
-                                           rf"the night|tonight's shift|up next|next)", summary or "", re.I):
+                                           rf"the night|tonight's shift|up next|next|queda de (?:turno|guardia)|"
+                                           rf"est[aá] de (?:turno|guardia)|toma la noche|se queda con la noche)", summary or "", re.I):
             return other
     return None
 
@@ -571,12 +578,7 @@ class HouseBrain:
 
     def system(self):
         run, margin = self.s["run_min"], self.s["margin_min"]
-        out = SYSTEM.format(run=run, margin=margin, window=run + margin)
-        if self.s.get("text_lang") == "es":
-            # The demo's Spanish page shows the why in Spanish only: an English why was cut whole and left it empty.
-            out += ("\nWrite summary and why_changed in Rioplatense Spanish with voseo (Uruguay). Name the parents "
-                    "exactly as in parents.")
-        return out
+        return SYSTEM.format(run=run, margin=margin, window=run + margin)
 
     def ask(self, seen, now, house, trigger, what):
         self.asking_at = now
@@ -648,9 +650,9 @@ class HouseBrain:
 
     def announce(self, plan, trigger, now):
         """Tonight's plan at bedtime, the one-sentence why on a re-plan, and the plan's messages to the parents. Each
-        parent reads the plan in their own language, built from the checked plan itself. Muse's own sentences (the
-        summary, the why and its messages) are English: they reach an English family only, a Spanish one keeps them
-        in the event log."""
+        parent reads the plan in their own language, built from the checked plan itself. Muse writes the why in
+        English and in Spanish (summary_es, why_changed_es), each checked the same way, so a Spanish family reads the
+        why too (round b5 found it missing). Muse's messages are English: a Spanish family keeps them in the event log."""
         tz = self.tz
         es_family = self.s.get("lang") == "es"
         duty = plan["on_duty"]
@@ -676,12 +678,14 @@ class HouseBrain:
                     es.append(f"{label_es} de {local_hm(w['start'], tz)} a {local_hm(w['end'], tz)}.")
             if plan["summary"]:
                 en.append(f"Why: {plan['summary']}")
+            if plan.get("summary_es"):
+                es.append(f"Por qué: {plan['summary_es']}")
             self.send("\n".join(en), now, "tonight", es="\n".join(es))
-            if plan["why_changed"] and not es_family:
-                self.send(f"Plan changed: {plan['why_changed']}", now, "replan")
+            if plan["why_changed"] and (not es_family or plan.get("why_changed_es")):
+                self.send(f"Plan changed: {plan['why_changed']}", now, "replan", es=self.why_es(plan))
         elif trigger == "adapt" and plan["why_changed"]:
-            if not es_family:
-                self.send(f"Plan changed: {plan['why_changed']}", now, "replan")
+            if not es_family or plan.get("why_changed_es"):
+                self.send(f"Plan changed: {plan['why_changed']}", now, "replan", es=self.why_es(plan))
             elif self.told_duty is not None and duty != self.told_duty:
                 self.send(f"Tonight's plan changed. On duty: {duty}.", now, "replan",
                           es=f"Cambió el plan de esta noche. De turno: {duty}.")
@@ -692,6 +696,11 @@ class HouseBrain:
             # nap stay in the event log: six or more a day would bury the night's message.
             self.send(f"For {m['to']}: {m['text']}" if m["to"] != "both" else m["text"], now, "plan_message", to=m["to"],
                       quiet=trigger != "bedtime" or es_family)
+
+    @staticmethod
+    def why_es(plan):
+        """Muse's own Spanish why for a re-plan, or None (then a Spanish parent reads the English one)."""
+        return f"Cambió el plan: {plan['why_changed_es']}" if plan.get("why_changed_es") else None
 
     def send(self, text, now, what, to="both", quiet=None, es=None, **fields):
         """A notify event for the parents. quiet keeps it in the event log only: by default every routine not in

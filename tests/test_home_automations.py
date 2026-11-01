@@ -458,7 +458,7 @@ class VoiceBridgeTest(unittest.TestCase):
     def test_a_fake_utterance_logs_a_feed_and_says_so(self):
         status, body = self.post({"text": "baby agent, fed 90 ml", "source": "echo", "person": "Gonza"})
         self.assertEqual(status, 200)
-        self.assertEqual(body["reply"], "Done, logged.")
+        self.assertRegex(body["reply"], r"^Logged the \d\d:\d\d bottle of 90 ml\.$")  # what the log holds
         feeds = self.agent.baby_log.entries("feeding")
         self.assertEqual(feeds[-1]["details"]["amount_ml"], 90.0)
         message = events(self.agent, "message", channel="voice")[-1]
@@ -657,7 +657,8 @@ class VoiceSkillDoorTest(unittest.TestCase):
     def test_a_parent_skill_logs_for_a_named_parent_and_reads_for_anyone_else(self):
         self.bridge("parent")
         body = self.post({"text": "fed 90 ml", "source": "echo", "person": "gonza"}, "s" * 24)
-        self.assertEqual((body["role"], body["reply"]), ("parent", "Done, logged."))
+        self.assertEqual(body["role"], "parent")
+        self.assertRegex(body["reply"], r"^Logged the \d\d:\d\d bottle of 90 ml\.$")
         self.agent.brain = ScriptedBrain(["Ayer a las 07:55."])
         self.assertEqual(self.post({"text": "¿cuándo comió?", "source": "echo"}, "s" * 24)["role"], "guest")
 

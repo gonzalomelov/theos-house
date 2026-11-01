@@ -10,7 +10,9 @@ import statistics
 from .log import ordered, parse, when
 
 NIGHT_START, NIGHT_END = 22, 6
-RECENT_GAPS = 2
+# The median of the last 5 gaps: one or two feeds logged close together (a top-up, a test log) do not move the next
+# feed by an hour (round b5 saw 154 min become 54 after two test logs, with the median of 2).
+RECENT_GAPS = 5
 PARENT_RE = re.compile(r"handled by (.+)$", re.IGNORECASE)
 ADVICE_RE = re.compile(r"\b(should|must|try|recommend|consider|doctor|pediatrician|worr\w*|normal|concern\w*|"
                        r"sick|ill|fever|medicine|medication|dose|diagnos\w*|need to|advise\w*)\b", re.IGNORECASE)

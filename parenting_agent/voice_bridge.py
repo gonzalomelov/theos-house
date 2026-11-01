@@ -139,7 +139,7 @@ class VoiceGuest:
 
     def fixed(self, words, lang):
         """The gate's own line for a red flag, a newborn sign, health or safe sleep, or None."""
-        if rules.spoken_emergency(words):
+        if rules.spoken_emergency(words) or self.agent.screened_emergency(words):
             return "emergency", rules.EMERGENCY_REPLY[lang]
         today = self.agent.now().date()
         kind = rules.newborn_red_flag(words, rules.under_3_months(self.agent.birth_date(), today))
@@ -348,6 +348,13 @@ class VoiceBridge(Plugin):
         """Dates and times in the reply as a person says them: "ayer a las 10:55", never "2026-10-31"."""
         now = self.agent.now()
         lang = lang if lang in ("es", "en") else "en"
+        fever = self.agent.fever_line(lang, spoken=True)
+        if fever and not any(rules.carries_safety_line(r) for r in [result["reply"]] + list(result.get("replies") or [])):
+            # A fever in the log leads every Echo answer with the fixed call-now line, the same words as the gate,
+            # unless the answer is already a safety line (round b5: the Echo never said it).
+            self.agent.bus.publish("guard", status="fever_first", where="voice")
+            result["reply"] = fever + " " + result["reply"]
+            result["replies"] = [fever] + list(result.get("replies") or [])
         result["reply"] = natural_dates(result["reply"], now, lang)
         result["replies"] = [natural_dates(r, now, lang) for r in result.get("replies", [])]
         return result
