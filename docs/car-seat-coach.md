@@ -136,7 +136,7 @@ Second-opinion rule: a check passes only when SAM 3.1 and Muse both say pass. Bo
 
 On the 28 test renders, scored once (`results/carseat/muse/README.md`): Muse alone got the handle right 25 of 28 times and the level line 18 of 28, with no wrong install passed, but it passed 4 checks on covered or floor views. With the rule, 12 of 12 wrong installs were not passed (SAM alone 11 of 12, Muse caught the folded handle SAM never found), no false alarm (SAM alone 1), no unseen view passed, and 5 of 12 correct installs ended with a hand check instead of a pass. A Muse step takes a median 8.1 s and $0.011, so it answers well after the 2 s target.
 
-**Privacy.** With Muse on, frames leave the Mac: one zoomed still per voting step, made in memory, sent once to inference.baseten.co, never saved by us. These calls run on the free hackathon credits, and Meta said content sent on those credits may be used to train future Meta models, so it is not promised to stay private. Each call is a `carseat_muse` event with its host. With Muse off (the default), frames stay on the Mac as before.
+**Privacy.** With Muse on, frames leave the Mac: one zoomed still per voting step, made in memory, sent to inference.baseten.co in `samples` parallel calls (3 by default, a majority vote), never saved by us. These calls run on the free hackathon credits, and Meta said content sent on those credits may be used to train future Meta models, so it is not promised to stay private. Each call is a `carseat_muse` event with its host. With Muse off (the default), frames stay on the Mac as before.
 
 ## Outgrow watch
 
