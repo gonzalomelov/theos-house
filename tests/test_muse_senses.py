@@ -157,9 +157,10 @@ class FakeMuse:
 
 def run(found, muse):
     bus = Bus()
-    coach = Coach({**SKILL, "step_timeout_s": 1.0}, bus, FakeVision(found), FrameFeed(), SEAT, CAR,
-                  answer_timeout_s=0.3, muse=muse)
-    for check, text in {"car_position": "yes", "belt_path_movement": "yes", "harness_pinch": "no"}.items():
+    coach = Coach({**SKILL, "closeup": False, "ready_timeout_s": 0.0, "step_timeout_s": 1.0}, bus, FakeVision(found),
+                  FrameFeed(), SEAT, CAR, answer_timeout_s=0.3, muse=muse)
+    for check, text in {"harness_pinch": "no", "car_position": "yes", "buckle": "yes", "tension": "yes",
+                        "belt_path_movement": "yes"}.items():
         coach.answer(check, text)
     return bus, coach.run()
 

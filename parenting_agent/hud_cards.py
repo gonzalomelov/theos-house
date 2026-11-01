@@ -49,7 +49,8 @@ WORDS = {
            "sleep_on": "Sleep mode on", "nap_since": "{kind} since {at}", "nap": "Nap", "sleep": "Sleep",
            "quiet": "House kept quiet", "awake": "He woke up, house back to normal", "dry": "Dry run, nothing moved",
            "morning": "Good morning", "supplies": "Running low", "shopping": "Shopping list", "car_seat": "Car seat",
-           "step": "Step {i} of {n}", "say_yes_no": "Say yes or no", "bath": "Bath", "bath_on": "Keep a hand on the baby",
+           "step": "Step {i} of {n}", "say_yes_no": "Say yes or no", "say_done": "Say done when you finish",
+           "come_close": "Bring the phone to the guide", "bath": "Bath", "bath_on": "Keep a hand on the baby",
            "bath_note": "The camera never replaces your hand", "dog": "Dog near the baby", "answer": "Answer",
            "reminder": "Reminder", "tonight": "Tonight's plan", "house": "House", "meals": "Meals", "sitter": "Sitter",
            "door": "Door", "note": "Parenting agent", "got_it": "Got it", "cry": "He is crying"},
@@ -63,7 +64,8 @@ WORDS = {
            "quiet": "La casa queda en silencio", "awake": "Se despertó, la casa vuelve a lo normal",
            "dry": "Prueba en seco, no se movió nada", "morning": "Buen día", "supplies": "Se está terminando",
            "shopping": "Lista de compras", "car_seat": "Silla del auto", "step": "Paso {i} de {n}",
-           "say_yes_no": "Decí sí o no", "bath": "Baño", "bath_on": "Una mano siempre en el bebé",
+           "say_yes_no": "Decí sí o no", "say_done": "Decí listo cuando termines",
+           "come_close": "Acercá el teléfono a la guía", "bath": "Baño", "bath_on": "Una mano siempre en el bebé",
            "bath_note": "La cámara nunca reemplaza tu mano", "dog": "Perro cerca del bebé", "answer": "Respuesta",
            "reminder": "Recordatorio", "tonight": "Plan de esta noche", "house": "Casa", "meals": "Comidas",
            "sitter": "Cuidadora", "door": "Puerta", "note": "Agente de crianza", "got_it": "Entendido", "cry": "Está llorando"},
@@ -71,14 +73,16 @@ WORDS = {
 
 # The car seat coach's steps (carseat/coach.py plan()), in a glance: what to do, never "safe".
 CAR_SEAT = {
+    "harness_pinch": {"en": "Pinch test: slack at the collarbone?", "es": "Pellizco: ¿sobra arnés en la clavícula?"},
     "car_position": {"en": "Carrier on a rear seat, facing back?", "es": "¿Silla atrás, mirando hacia atrás?"},
     "lap_guides": {"en": "Lap belt in both side guides", "es": "Cinturón de cadera en las dos guías"},
+    "buckle": {"en": "Buckle until it clicks", "es": "Abrochá hasta que haga clic"},
     "shoulder_guide": {"en": "Shoulder belt in the rear guide", "es": "Cinturón de hombro en la guía de atrás"},
-    "no_twist": {"en": "Belt tight and flat, no twist", "es": "Cinturón tenso y plano, sin giros"},
+    "tension": {"en": "Tighten lap belt, then shoulder belt", "es": "Tensá cadera, después hombro"},
+    "no_twist": {"en": "Belt flat, no twist", "es": "Cinturón plano, sin giros"},
     "level_line": {"en": "Show me the level line", "es": "Mostrame la línea de nivel"},
     "handle": {"en": "Handle upright, car position", "es": "Manija arriba, posición de auto"},
     "belt_path_movement": {"en": "Moves under 2.5 cm at the belt path?", "es": "¿Se mueve menos de 2,5 cm en el cinturón?"},
-    "harness_pinch": {"en": "Pinch test: slack at the collarbone?", "es": "Pellizco: ¿sobra arnés en la clavícula?"},
     "summary": {"en": "Car seat check finished", "es": "Revisión de la silla terminada"},
 }
 CAR_SEAT_RESULT = {
@@ -236,8 +240,9 @@ def nap_mode(step, lang, kind=None, since=None, live=False):
     return None
 
 
-def car_seat(step, lang, index=None, total=None, result=None, ask=False):
-    """One car seat coach step: what to do, then what the camera saw. Never "safe"."""
+def car_seat(step, lang, index=None, total=None, result=None, ask=False, view=None):
+    """One car seat coach step: what to do (say yes or no, say done, or come close to a guide), then what the camera
+    saw. Never "safe"."""
     lang = lang_of(lang)
     w = WORDS[lang]
     words = CAR_SEAT.get(step)
@@ -245,7 +250,10 @@ def car_seat(step, lang, index=None, total=None, result=None, ask=False):
         return None
     if step == "summary":
         return card("car_seat", "carFrontView", w["car_seat"], words[lang], TECHNICIAN[lang], lang=lang)
-    detail = CAR_SEAT_RESULT[result][lang] if result in CAR_SEAT_RESULT else (w["say_yes_no"] if ask else None)
+    if result in CAR_SEAT_RESULT:
+        detail = CAR_SEAT_RESULT[result][lang]
+    else:
+        detail = w["say_yes_no"] if ask else (w["come_close"] if view else w["say_done"])
     meta = w["step"].format(i=index, n=total) if index and total else None
     alert = result in ("fail", "unsure")
     return card("car_seat", "exclamationTriangle" if alert else "carFrontView", w["car_seat"], words[lang], detail, meta,

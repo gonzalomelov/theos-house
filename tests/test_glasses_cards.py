@@ -278,7 +278,8 @@ class Routing(unittest.TestCase):
         bus.publish("voice", skill="car-seat", step="lap_guides", result="pass", text="I can see the lap belt in both side guides.")
         self.assertTrue(self.gonza.wait(lambda e: e["kind"] == "card" and e["card"].get("detail") == "Visto en cámara: bien"))
         steps = [c for c in self.gonza.cards() if c["topic"] == "car_seat"]
-        self.assertEqual([c["meta"] for c in steps], ["Paso 1 de 8", "Paso 2 de 8", "Paso 2 de 8"])
+        self.assertEqual([c["meta"] for c in steps], ["Paso 2 de 10", "Paso 3 de 10", "Paso 3 de 10"])
+        self.assertEqual(steps[1]["detail"], "Decí listo cuando termines")
         self.assertEqual(steps[0]["detail"], "Decí sí o no")
         bus.publish("voice", episode=1, text="hand")  # the changing table's "hand" is not a car seat card
         time.sleep(0.2)
@@ -312,6 +313,28 @@ class CarSeatAnswers(unittest.TestCase):
                 self.assertEqual(replies, ["Anotado: sí."], "the agent says the coach took it, never that nothing waited")
                 self.assertIsNone(plugin.take_answer({"channel": "glasses"}, "sí"), "a step is answered once")
                 self.assertTrue(COACHING_NOTE)
+            finally:
+                family.close()
+
+
+    def test_listo_on_the_coach_channel_finishes_the_camera_step_it_waits_on(self):
+        from parenting_agent.carseat.coach import Coach
+        from parenting_agent.carseat.plugin import CarSeatCoach
+        with tempfile.TemporaryDirectory() as tmp:
+            family = Family(tmp, at(30, 12, 0))
+            try:
+                plugin = CarSeatCoach(family.agent, {**family.config, "car_seat": {"channel": "glasses"}}, quiet=True)
+                coach = Coach(plugin.skill_cfg, family.agent.bus, None, None, plugin.seat, plugin.car, lang="es")
+                plugin.coach = coach
+                self.assertIsNone(plugin.take_answer({"channel": "glasses"}, "listo"), "nothing waits for listo yet")
+                coach.waiting = "lap_guides"
+                self.assertIsNone(plugin.take_answer({"channel": "telegram"}, "listo"), "another channel's listo")
+                message = family.agent.bus.publish("message", channel="glasses", text="Listo.", person="gonza",
+                                                   chat_id="gonza")
+                family.agent.handle(message)
+                self.assertIn("lap_guides", coach.readies)
+                replies = [e["text"] for e in family.agent.bus.history if e["kind"] == "reply"]
+                self.assertEqual(replies, ["Dale, miro."])
             finally:
                 family.close()
 

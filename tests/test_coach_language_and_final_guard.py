@@ -13,7 +13,7 @@ from parenting_agent import hud_cards as cards
 from parenting_agent.agent import brain as brain_mod
 from parenting_agent.agent import rules
 from parenting_agent.bus import Bus
-from parenting_agent.carseat.coach import FORBIDDEN, Coach, plan
+from parenting_agent.carseat.coach import FORBIDDEN, LINES, Coach, plan
 from parenting_agent.e2e.score import english
 from tests.test_carseat import CAR, SEAT, SKILL, FakeVision, FrameFeed, scene
 from tests.test_family_push import CECI, GONZA, Family, at
@@ -21,7 +21,9 @@ from test_one_message_one_entry import ScriptedBrain
 
 PEOPLE_ES = {"gonza": {"name": "Gonza", "rota": "Parent A", "chat_ids_env": "TELEGRAM_CHAT_ID", "lang": "es"},
              "ceci": {"name": "Ceci", "rota": "Parent B", "chat_ids_env": "TELEGRAM_CECI_CHAT_ID", "lang": "es"}}
-ANSWERS_ES = {"car_position": "sí", "belt_path_movement": "sí", "harness_pinch": "no"}
+ANSWERS_ES = {"harness_pinch": "no", "car_position": "sí", "buckle": "sí", "tension": "sí", "belt_path_movement": "sí"}
+ANSWERS_EN = {"harness_pinch": "no", "car_position": "yes", "buckle": "yes", "tension": "yes", "belt_path_movement": "yes"}
+DOOR = {"closeup": False, "ready_timeout_s": 0.0}  # the rendered clips' mode: judged at once, guides from the door
 
 
 class MuseDisagrees:
@@ -33,7 +35,7 @@ class MuseDisagrees:
 
 def run_coach(lang, found, answers, timeout=1.0, muse=None):
     bus = Bus()
-    coach = Coach({**SKILL, "step_timeout_s": timeout}, bus, FakeVision(found), FrameFeed(), SEAT, CAR,
+    coach = Coach({**SKILL, **DOOR, "step_timeout_s": timeout}, bus, FakeVision(found), FrameFeed(), SEAT, CAR,
                   answer_timeout_s=0.3, muse=muse, lang=lang)
     for check, text in answers.items():
         coach.answer(check, text)
@@ -57,8 +59,10 @@ class CoachInSpanish(unittest.TestCase):
         steps = plan(SKILL, SEAT, CAR, "es")
         self.assertEqual([s["id"] for s in steps], [s["id"] for s in plan(SKILL, SEAT, CAR)])
         self.assert_spanish([s["say"] for s in steps])
-        self.assertIn("airbag", steps[0]["say"])
-        self.assertTrue(steps[0]["say"].endswith("Decí sí o no."))
+        self.assertIn("airbag", next(s["say"] for s in steps if s["id"] == "car_position"))
+        self.assertTrue(steps[0]["say"].startswith("Te guío con la Joie i-Snug 2"))
+        self.assertTrue(all(s["say"].endswith(("Decí sí o no.", "no si no podés.")) for s in steps if s["kind"] == "ask"))
+        self.assert_spanish([LINES["es"]["closeup"].format(guide=g) for g in LINES["es"]["guides"].values()])
 
     def test_a_correct_install_in_spanish_and_never_seguro(self):
         found, _ = scene()
@@ -94,7 +98,7 @@ class CoachInSpanish(unittest.TestCase):
 
     def test_english_stays_the_default(self):
         found, _ = scene()
-        _, _, spoken = run_coach("en", found, {"car_position": "yes", "belt_path_movement": "yes", "harness_pinch": "no"})
+        _, _, spoken = run_coach("en", found, ANSWERS_EN)
         self.assertIn("This is not a verdict on the install.", spoken[-1]["text"])
 
     def test_the_coach_refuses_seguro_and_safe_in_both_languages(self):
@@ -132,20 +136,21 @@ class CoachOnTelegram(unittest.TestCase):
                 family.agent.people = People(PEOPLE_ES)
                 plugin = CarSeatCoach(family.agent, {**family.config, "car_seat": {"step_timeout_s": 1.0}},
                                       vision=FakeVision(found), source=FrameFeed(), quiet=True)
-                plugin.skill_cfg = {**plugin.skill_cfg, "step_timeout_s": 1.0}
+                plugin.skill_cfg = {**plugin.skill_cfg, **DOOR, "step_timeout_s": 1.0}
                 asked = family.agent.bus.publish("message", channel="telegram", text="Ayudame con la silla del auto.",
                                                  chat_id=CECI, person="ceci")
                 family.agent.current_event = asked
                 plugin.start_coach()
                 family.agent.current_event = None
                 self.assertEqual(plugin.coach.lang, "es")
+                for check, text in ANSWERS_ES.items():
+                    if check != "car_position":
+                        plugin.coach.answer(check, text)
                 deadline = time.monotonic() + 10
                 while plugin.coach.asking != "car_position" and time.monotonic() < deadline:
                     time.sleep(0.02)
                 family.say(CECI, "Sí.")
                 self.assertIn("Anotado: sí.", family.sent_to(CECI))
-                plugin.coach.answer("belt_path_movement", "sí")
-                plugin.coach.answer("harness_pinch", "no")
                 plugin.thread.join(timeout=30)
                 self.assertFalse(plugin.thread.is_alive())
                 lines = [t for t in family.sent_to(CECI) if t != "Anotado: sí."]
