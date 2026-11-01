@@ -814,6 +814,12 @@ class Agent:
             self.bus.publish("guard", status="emergency_by_meaning", source=screened)
             self.say(channel, self.emergency(text), flag="emergency")
             return
+        if rules.asks_about_self(text):
+            # Where the agent runs, from the facts, the same every time (round b5: "Meta's servers", then "nothing ran").
+            self.memory.add_message(channel, "user", text, ts=self.now())
+            self.bus.publish("guard", status="self_facts")
+            self.say(channel, self.self_answer(self.lang(text)), card="self")
+            return
         if rules.reports_total(text) and not rules.is_health(text):
             # "Only took 20 ml since morning" is a total, never a new 20 ml feed (round b5): asked, with the log's day.
             self.memory.add_message(channel, "user", text, ts=self.now())
@@ -897,6 +903,10 @@ class Agent:
 
     def emergency(self, request):
         return rules.EMERGENCY_REPLY[self.lang(request)]
+
+    def self_answer(self, lang):
+        lang = lang if lang in rules.SELF_ANSWER else "en"
+        return rules.SELF_ANSWER[lang].format(log=rules.SELF_LOG[lang])
 
     def screened_emergency(self, text):
         """"muse" or "fallback" when a message the word list let through is a red flag by its meaning, else None. A

@@ -70,7 +70,7 @@ def call(call_id, name, arguments):
 
 def screened(safe=True):
     """The danger screen's own short call (agent/danger.py), first on every message: its verdict."""
-    return completion(tool_calls=[call("call_s", "danger", {"emergency": not safe})])
+    return completion("SAFE" if safe else "EMERGENCY")
 
 
 def muse_agent(tmp, base_url, plugins=()):
@@ -117,8 +117,8 @@ class BasetenContract(unittest.TestCase):
             agent, replies = muse_agent(tmp, fake.base_url)
             agent.handle({"kind": "message", "channel": "console", "text": "she drank 90 ml"})
             screen, first, second = fake.requests
-            # Red flags by meaning: one short call with the message alone, no history and only the verdict tool.
-            self.assertEqual([t["function"]["name"] for t in screen["body"]["tools"]], ["danger"])
+            # Red flags by meaning: one short call with the message alone, no history and no tools, one word back.
+            self.assertNotIn("tools", screen["body"])
             self.assertEqual(screen["body"]["messages"][-1]["content"], "she drank 90 ml")
             self.assertEqual(len(screen["body"]["messages"]), 2)
             self.assertEqual(screen["body"]["reasoning_effort"], "low")

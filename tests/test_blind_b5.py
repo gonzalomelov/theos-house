@@ -311,3 +311,30 @@ class NeutralPersona(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class LiveFollowUps(unittest.TestCase):
+    """What the first live try of these fixes found on Nov 1."""
+
+    def test_muse_answers_the_screen_in_one_word(self):
+        for said, found in (("EMERGENCY", True), ("SAFE", False), ("Safe.", False),
+                            ("Detected possible emergency: rag doll feeling indicates limp tone.", None)):
+            self.assertEqual(danger.verdict(brain_mod.Reply(said)), found, said)
+
+    def test_where_it_runs_is_a_fixed_answer(self):
+        agent, _ = family(ScriptedBrain(["Messages are sent to Baseten."]), tempfile.mkdtemp())
+        say(agent, "where do you run? on whose servers?")
+        self.assertIn("served by Baseten", replies(agent)[-1])
+        self.assertNotIn("nothing ran", replies(agent)[-1])
+        app = demo(ScriptedBrain(["x"]))
+        self.addCleanup(app.close)
+        self.assertIn("en los servidores de Baseten", app.message("v", False, "¿qué modelo sos?", lang="es")[1]["reply"])
+
+    def test_a_first_feed_never_reports_the_simulated_sleep_as_logged(self):
+        clock = Clock(datetime.datetime(2026, 10, 28, 15, 30, tzinfo=TZ))
+        app = demo(ScriptedBrain([[call("log_baby_event", kind="feeding", details={"amount_ml": 60, "method": "bottle"})], "Logged."]),
+                   clock=clock)
+        self.addCleanup(app.close)
+        reply = app.message("v", False, "bottle 60 ml")[1]["reply"]
+        self.assertIn("60 ml", reply)
+        self.assertNotIn("asleep", reply)
