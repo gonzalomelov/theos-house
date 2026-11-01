@@ -53,6 +53,7 @@ SAM 3.1 finds the parts by text: `strap` for the belt, `blue clip` for the belt 
 - the two side guides are the pair that lines up across the view, the rear guide is the other one
 - a twist shows as the belt narrowing to under 45% of its usual width between the guides
 - the level line passes when it is within 8 degrees of level in the image, so the phone must be held level and side on
+- a level line more than 30 degrees off is read as not seen, not as a fail: no install is that steep, and on a real install video (Nov 1) SAM 3.1 read a belt edge as the level line at 68 degrees
 - the handle passes when it stands within 40 degrees of vertical. Where SAM reads the same pixels as a strap more surely than as a handle, they count as belt
 
 A miss at the far side guide alone cannot be seen from the door side, because the belt projects onto the guide. In real use the coach needs a view from the other side for that guide. The rendered set does not include that case.
