@@ -1672,3 +1672,171 @@ def diaper_line(count, wet_only, dirty, dry, lang="en"):
         parts = [f"{wet_only} wet only" if wet_only else "", f"{dirty} dirty" if dirty else "", f"{dry} dry" if dry else ""]
     parts = [p for p in parts if p]
     return head + (": " + ", ".join(parts) if parts else "")
+
+
+# Blind round b5: red flags by meaning. The word list above misses new phrasings ("face in the pillow and now very
+# still"), so a message that is not on it is also read by Muse for what it means (agent/danger.py). When that reading
+# cannot be had (no model, an error, an unreadable answer), these signs of a baby who may not be breathing put the
+# message on the 911 line anyway: the conservative fallback.
+DANGER_FALLBACK = re.compile(
+    r"\bface\b[^.!?]{0,20}\b(in|into|against|on|under)\b[^.!?]{0,12}\b(pillows?|mattress|cushions?|blankets?|duvet|"
+    r"comforter|bumpers?|couch|sofa|bedding|sheets?|quilt)\b|"
+    r"\b(pillows?|blankets?|duvet|cushions?|quilt|comforter)\b[^.!?]{0,15}\b(over|on|covering|across)\b[^.!?]{0,8}\b"
+    r"(his|her|the baby'?s?|its|their) (face|head|mouth|nose)\b|"
+    r"\b(very|so|too|really|completely|totally|eerily|strangely|weirdly|unusually|perfectly|dead) still\b|"
+    r"\b(he|she|baby|the baby|it)('s| is| was|'s been| has been)? (not|no longer|isn'?t|stopped|hasn'?t been|won'?t|doesn'?t) "
+    r"(moving|move|responding|respond|reacting|react)\b|"
+    r"\bcan'?t (hear|see|feel) (him|her|the baby|them) breath\w*|\bno (lo |la )?(escucho|oigo|siento|veo) respirar|"
+    r"\bcara\b[^.!?]{0,20}\b(en|contra|sobre|metida en|hundida en|apretada contra|debajo de)\b[^.!?]{0,8}\b(la |el |una |un )?"
+    r"(almohad\w*|colch[oó]n|mantas?|frazadas?|acolchado|s[aá]banas?|cobijas?|sill[oó]n|sof[aá]|edred[oó]n)\b|"
+    r"\b(almohad\w*|mantas?|frazadas?|cobijas?|acolchado|edred[oó]n)\b[^.!?]{0,15}\b(sobre|encima de|tap[aá]ndole|le tapa)\b"
+    r"[^.!?]{0,8}\b(la )?(cara|boca|nariz|cabeza)\b|"
+    r"\b(muy|re|demasiado|totalmente|completamente|rar[oa]mente) quiet[oa]\b", re.I)
+
+
+def maybe_danger(text):
+    """True for a sign a baby may not be breathing that the word list misses. The fallback when Muse cannot read it."""
+    return bool(DANGER_FALLBACK.search(EVERYDAY.sub(" ", text or "")))
+
+
+# A model's answer that sends the parent to emergency services now is itself a red flag reading: on round b5 Muse
+# answered the pillow line with the 911 line and four numbered first aid steps after it. The parent gets the fixed
+# emergency text only. A refusal that says "call 911 if it is urgent" is not one.
+URGES_EMERGENCY = re.compile(
+    r"\b(call|phone|dial|ring)\s+(911|112|999|emergency services|an ambulance|emergencies)\b(?![^.!?]{0,30}\b(if|when|should)\b)"
+    r"[^.!?]{0,20}\b(now|right now|right away|immediately|at once|straight away)\b|"
+    r"\b(now|right now|immediately|right away)\b,?\s+(call|phone|dial)\s+(911|112|999|emergency services|an ambulance)\b|"
+    r"\bllam[aáe]\w*\s+(ya|ahora|ahora mismo|inmediatamente|ya mismo|urgente)\s+(al|a)\s+(911|112|emergencias?|una ambulancia)\b|"
+    r"\bllam[aáe]\w*\s+(al|a)\s+(911|112|emergencias?|una ambulancia)\s+(ya|ahora|ahora mismo|inmediatamente|ya mismo|urgente)\b",
+    re.I)
+
+
+def urges_emergency(text):
+    return bool(URGES_EMERGENCY.search(text or ""))
+
+
+# "She is napping now", "está durmiendo la siesta": the baby is asleep now, so a sleep starts and stays open until the
+# parent says he woke. Round b5: the demo logged it as a finished nap from 15:13 that overlapped two feeds.
+ASLEEP_NOW = re.compile(
+    r"\b(is|'s|are)\s+(now\s+)?(napping|sleeping|asleep|down for (a|his|her|the) nap|having (a|his|her) nap|out cold|"
+    r"fast asleep|sound asleep)\b|\b(napping|sleeping|asleep) (now|right now|at the moment)\b|"
+    r"\b(just\s+)?(fell|went|dozed off|drifted off)( back)?( to)?( sleep| asleep| off| down)?\b(?! at \d)(?=[^.!?]*$)|"
+    r"\b(est[aá]|sigue|qued[oó])\s+(ahora\s+)?(durmiendo|dormid[oa]|en (la )?siesta|haciendo (la )?siesta|frit[oa])\b|"
+    r"\bduerme (ahora|ya|la siesta)\b|\bse (acaba de )?(durmi[oó]|dormi[oó]|qued[oó] (dormid[oa]|frit[oa]))\b|"
+    r"\bse acaba de dormir\b", re.I)
+
+
+def asleep_now(text):
+    """True when the newest message says the baby is asleep now and nothing that makes it a finished sleep: no
+    wake-up, no length, no from-to."""
+    text = text or ""
+    if not ASLEEP_NOW.search(text):
+        return False
+    return not (says_woke(text) or slept_minutes(text) or RANGE_SAID.search(text))
+
+
+# "Only took 20 ml since morning", "tomó 300 en total hoy": a total over a period, never a new feed (round b5 logged
+# it as a 20 ml bottle). The agent asks instead, with what the log holds.
+TOTAL_SAID = re.compile(
+    r"\b(since (this |the )?morning|since (he|she) (woke|got up)|so far( today)?|all day( long)?|(in )?total|altogether|"
+    r"the whole day|for the day|today in all|in all today|"
+    r"en total|desde (la|esta|hoy (a|en) la) ma[ñn]ana|desde que se despert[oó]|en todo el d[ií]a|en lo que va del d[ií]a|"
+    r"hasta ahora|hasta el momento|todo el d[ií]a|en el d[ií]a|sumando todo|entre todas)\b", re.I)
+TOTAL_FEED = re.compile(r"\d\s*(ml|cc|oz|onzas?)\b|\b(took|drank|had|ate|eaten|fed|tom[oó]|comi[oó]|bebi[oó]|mam[oó])\b", re.I)
+TOTAL_REPLY = {
+    "en": ("That sounds like a total for the day, so I did not add it as a new feed. Today the log has {feeds}. "
+           "If a feed is missing, tell me when it was and how much, and I will add it."),
+    "es": ("Eso suena a un total del día, así que no lo anoté como una toma nueva. Hoy el registro tiene {feeds}. "
+           "Si falta una toma, decime a qué hora fue y cuánto, y la agrego."),
+}
+TOTAL_FEEDS = {"en": ("no feeds yet", "1 feed", "{n} feeds"), "es": ("ninguna toma todavía", "1 toma", "{n} tomas")}
+
+
+def reports_total(text):
+    """True when a message gives a feed total over a period, not one feed."""
+    text = text or ""
+    return bool(TOTAL_SAID.search(text) and TOTAL_FEED.search(text)) and not is_question(text)
+
+
+def total_reply(summary, lang):
+    lang = lang if lang in TOTAL_REPLY else "en"
+    feeds = (summary or {}).get("feedings") or {}
+    count = int(feeds.get("count") or 0)
+    words = TOTAL_FEEDS[lang]
+    said = words[0] if count == 0 else words[1] if count == 1 else words[2].format(n=count)
+    if feeds.get("total_ml"):
+        said += f", {feeds['total_ml']} ml" + (" en mamaderas" if lang == "es" else " in bottles")
+    if feeds.get("last_at") and count:
+        said += (f", la última a las {feeds['last_at']}" if lang == "es" else f", the last at {feeds['last_at']}")
+    return TOTAL_REPLY[lang].format(feeds=said)
+
+
+# A fever written in the log reaches every place that speaks first (round b5: a 38.6 in a 5 week old showed nowhere
+# but the chat that logged it): the panel, the night plan, the morning message and the Echo. The line is fixed, the
+# same under-3-months call-now guidance as the gate, never a dose and never a judgement about this baby.
+FEVER_LOGGED = {"en": "A fever was logged at {at}.", "es": "Hay una fiebre anotada a las {at}."}
+FEVER_SPOKEN = {
+    "en": ("A baby under 3 months with a temperature of 38 degrees or more needs a doctor right away. Call your "
+           "pediatrician now, or go to the emergency room. If you cannot reach them, call 911."),
+    "es": ("Un bebé de menos de 3 meses con 38 grados o más tiene que verlo un médico ya. Llamá ahora a tu pediatra o "
+           "andá a emergencia. Si no los ubicás, llamá al 911."),
+}
+FEVER_HOURS = 24
+
+
+def logged_fever(entries, now, hours=FEVER_HOURS):
+    """The newest note in the last `hours` that says the baby has a fever, or None."""
+    since = now - datetime.timedelta(hours=hours)
+    found = None
+    for entry in entries or []:
+        if entry.get("kind") != "note":
+            continue
+        text = str((entry.get("details") or {}).get("text") or "")
+        try:
+            at = datetime.datetime.fromisoformat(str(entry.get("ts")))
+        except ValueError:
+            continue
+        at = at.replace(tzinfo=now.tzinfo) if at.tzinfo is None else at.astimezone(now.tzinfo)
+        if since <= at <= now + datetime.timedelta(minutes=5) and names_fever(text):
+            if found is None or at >= found[0]:
+                found = (at, entry)
+    return found
+
+
+def fever_line(found, lang, spoken=False):
+    """The fixed line for a logged fever: when it was logged, then the call-now guidance (with its public source in
+    text, without the link when it is spoken)."""
+    lang = lang if lang in FEVER_LOGGED else "en"
+    at, _ = found
+    tz = at.tzinfo
+    head = FEVER_LOGGED[lang].format(at=at.astimezone(tz).strftime("%H:%M"))
+    return head + " " + (FEVER_SPOKEN[lang] if spoken else URGENT_REPLY["fever"][lang])
+
+
+# Where the agent runs, said right. On round b5 Muse said it runs on Meta's servers: it runs on Baseten.
+SELF_FACTS = ("About yourself, only if asked: you are Muse Spark Open, Meta's open-weights model, served by Baseten "
+              "(inference.baseten.co) on the hackathon's free credits. You do not run on Meta's servers. The baby log "
+              "stays on the family's own server (Baby Buddy). The messages, voice notes and the log lines you read are "
+              "sent to Baseten, and on the free credits Meta may use them to train future Meta models.")
+WRONG_HOST = re.compile(
+    r"[^.!?\n]*\b(?:(?:on|in|through|by|from|via|using|uses?)\s+(?:the\s+)?meta'?s?\s+(?:own\s+)?(?:servers?|infrastructure|"
+    r"cloud|data ?cent(?:er|re)s?|systems)|meta\s+(?:servers?|infrastructure|cloud|data ?cent(?:er|re)s?)|"
+    r"servidores (?:propios )?de meta|(?:la )?infraestructura de meta|la nube de meta|los sistemas de meta)\b[^.!?\n]*[.!?]?",
+    re.I)
+RIGHT_HOST = {"en": "I run on Muse Spark Open, Meta's open model, served by Baseten, not on Meta's servers.",
+              "es": "Funciono con Muse Spark Open, el modelo abierto de Meta, en los servidores de Baseten, no en los de Meta."}
+
+
+def right_host(text, lang="en"):
+    """Every sentence that says the agent runs on Meta's servers goes, and the fact is said once in its place."""
+    if not text or not any("baseten" not in m.group(0).lower() for m in WRONG_HOST.finditer(text)):
+        return text
+    lang = lang if lang in RIGHT_HOST else "en"
+    said = []
+
+    def swap(match):
+        if "baseten" in match.group(0).lower():
+            return match.group(0)  # the fact itself, "served by Baseten, not on Meta's servers"
+        first, _ = not said, said.append(True)
+        return " " + RIGHT_HOST[lang] + " " if first else " "
+    return " ".join(WRONG_HOST.sub(swap, text).split())

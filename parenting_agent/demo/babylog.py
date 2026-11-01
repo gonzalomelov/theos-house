@@ -10,7 +10,7 @@ import threading
 
 from simweek import generate as simweek
 
-from ..agent.memory import LOG_KINDS, BabyLog, parse_time
+from ..agent.memory import LOG_KINDS, BabyLog, parse_time, start_after_feeds
 
 TZ = simweek.TZ
 MAX_ADDED = 300
@@ -182,6 +182,11 @@ class DemoBabyLog(BabyLog):
             return {"kind": "sleep", "ts": iso(when), "details": {"action": "start"}}
         if end <= start:
             raise ValueError("a sleep must end after it starts")
+        # A feed logged inside it means the baby was awake then: the sleep starts after it (round b5 logged a nap from
+        # 15:13 over two feeds).
+        with self.lock:
+            feeds = [(started(r), finished(r)) for r in self.rows if r["kind"] == "feeding"]
+        start = start_after_feeds(start, end, feeds)
         return self._append({"kind": "sleep", "start": iso(start), "end": iso(end), "nap": 7 <= start.hour < 19, "notes": ""})
 
     def _row(self, entry_id):

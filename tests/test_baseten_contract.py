@@ -68,6 +68,11 @@ def call(call_id, name, arguments):
     return {"id": call_id, "type": "function", "function": {"name": name, "arguments": json.dumps(arguments)}}
 
 
+def screened(safe=True):
+    """The danger screen's own short call (agent/danger.py), first on every message: its verdict."""
+    return completion(tool_calls=[call("call_s", "danger", {"emergency": not safe})])
+
+
 def muse_agent(tmp, base_url, plugins=()):
     config = config_mod.load()
     config.update({**MUSE, "data_dir": tmp, "env_file": "/nonexistent", "baby_log": {"provider": "local"}, "plugins": []})
@@ -104,13 +109,19 @@ class MuseConfig(unittest.TestCase):
 class BasetenContract(unittest.TestCase):
     def test_a_tool_round_trip_matches_the_chat_completions_format(self):
         fake = FakeBaseten([
+            screened(),
             completion(tool_calls=[call("call_1", "log_baby_event", {"kind": "feeding", "details": {"amount_ml": 90}})]),
             completion("Logged 90 ml."),
         ])
         with tempfile.TemporaryDirectory() as tmp:
             agent, replies = muse_agent(tmp, fake.base_url)
             agent.handle({"kind": "message", "channel": "console", "text": "she drank 90 ml"})
-            first, second = fake.requests
+            screen, first, second = fake.requests
+            # Red flags by meaning: one short call with the message alone, no history and only the verdict tool.
+            self.assertEqual([t["function"]["name"] for t in screen["body"]["tools"]], ["danger"])
+            self.assertEqual(screen["body"]["messages"][-1]["content"], "she drank 90 ml")
+            self.assertEqual(len(screen["body"]["messages"]), 2)
+            self.assertEqual(screen["body"]["reasoning_effort"], "low")
             self.assertEqual(first["path"], "/v1/chat/completions")
             self.assertEqual(first["auth"], f"Bearer {KEY}")
             body = first["body"]
@@ -132,7 +143,9 @@ class BasetenContract(unittest.TestCase):
                              {"kind": "feeding", "details": {"amount_ml": 90}})
             self.assertEqual(result["role"], "tool")
             self.assertEqual(result["tool_call_id"], "call_1")
-            self.assertEqual(replies, ["Logged 90 ml."])
+            # Since round b5 a log confirmation says what the log holds, never the brain's own retelling.
+            self.assertEqual(len(replies), 1)
+            self.assertRegex(replies[0], r"^Logged the \d\d:\d\d bottle of 90 ml\.$")
             self.assertEqual(agent.baby_log.entries("feeding")[-1]["details"]["amount_ml"], 90)
             brain_calls = [e for e in agent.bus.history if e["kind"] == "brain_call"]
             self.assertEqual([e["destination"] for e in brain_calls], ["127.0.0.1", "127.0.0.1"])
@@ -141,15 +154,15 @@ class BasetenContract(unittest.TestCase):
         fake.close()
 
     def test_house_tools_reach_muse_and_stay_dry(self):
-        fake = FakeBaseten([completion(tool_calls=[call("call_2", "study_light", {"on": True, "warm": True, "brightness_pct": 10})]),
+        fake = FakeBaseten([screened(), completion(tool_calls=[call("call_2", "study_light", {"on": True, "warm": True, "brightness_pct": 10})]),
                             completion("The study light would be dimmed, the house is in dry run.")])
         with tempfile.TemporaryDirectory() as tmp:
             agent, replies = muse_agent(tmp, fake.base_url, plugins=[lambda a, c: HouseTools(a, c, client=None)])
             agent.handle({"kind": "message", "channel": "console", "text": "dim the lights for the night feed"})
-            sent = [t["function"]["name"] for t in fake.requests[0]["body"]["tools"]]
+            sent = [t["function"]["name"] for t in fake.requests[1]["body"]["tools"]]
             self.assertIn("study_light", sent)
             self.assertIn("start_vacuum", sent)  # offered, but it waits for the yes
-            tool_message = fake.requests[1]["body"]["messages"][-1]
+            tool_message = fake.requests[2]["body"]["messages"][-1]
             self.assertIn("dry run", tool_message["content"])
             self.assertEqual([e["status"] for e in agent.bus.history if e["kind"] == "house_call"], ["dry"])
             agent.close()

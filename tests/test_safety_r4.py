@@ -197,9 +197,8 @@ class GuardsKeepSafety(unittest.TestCase):
         with no_gate():
             agent, _ = family(ScriptedBrain([answer]), tempfile.mkdtemp())
             say(agent, "he is 3 weeks old and his whole body is shaking for 2 minutes")
-        reply = replies(agent)[-1]
-        self.assertTrue(reply.startswith(answer), reply)
-        self.assertIn(TEXTS["en"]["NOTHING_LOGGED"], reply)
+        # Since round b5 a brain answer that sends the parent to 911 now is the fixed emergency text alone.
+        self.assertEqual(replies(agent)[-1], rules.EMERGENCY_REPLY["en"])
 
     def test_a_false_logged_claim_on_a_plain_message_is_still_replaced(self):
         agent, _ = family(ScriptedBrain(["Logged the 120 ml bottle."]), tempfile.mkdtemp())

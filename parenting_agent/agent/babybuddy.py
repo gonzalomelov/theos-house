@@ -12,7 +12,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 
-from .memory import BabyLog, LOG_KINDS, parse_time
+from .memory import BabyLog, LOG_KINDS, parse_time, start_after_feeds
 
 ENDPOINTS = {"feeding": "feedings", "diaper": "changes", "sleep": "sleep", "note": "notes"}
 DEFAULT_FEED_MINUTES = 15
@@ -145,12 +145,23 @@ class BabyBuddyLog(BabyLog):
             if not timers:
                 raise ValueError("no sleep was started, tell me when she fell asleep")
             timer = max(timers, key=lambda t: t["start"])
-            record = self.request("POST", "/api/sleep/", dict(base, start=timer["start"], end=iso(when)))
+            start = self.after_feeds(parse_time(timer["start"]), when)
+            record = self.request("POST", "/api/sleep/", dict(base, start=iso(start), end=iso(when)))
             self.request("DELETE", f"/api/timers/{timer['id']}/")
             return record
         start = at_or_before_now(details.get("start"))
         end = at_or_before_now(details.get("end")) if details.get("end") else when
-        return self.request("POST", "/api/sleep/", dict(base, start=iso(start), end=iso(end)))
+        return self.request("POST", "/api/sleep/", dict(base, start=iso(self.after_feeds(start, end)), end=iso(end)))
+
+    def after_feeds(self, start, end):
+        """A sleep never spans a feed in the log: it starts after the last one inside it (round b5)."""
+        feeds = []
+        for e in self.entries("feeding", iso(start - datetime.timedelta(hours=3)), 50):
+            try:
+                feeds.append((parse_time((e.get("details") or {}).get("start") or e["ts"]), parse_time(e["ts"])))
+            except (KeyError, TypeError, ValueError):
+                continue
+        return start_after_feeds(start, end, feeds)
 
     def normalize(self, endpoint, record):
         tags = record.get("tags") or []

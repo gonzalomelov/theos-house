@@ -480,7 +480,7 @@ class EchoWriter:
         self.bus.subscribe(self.replies.append, ["reply"])
         tools = core_tools(self.memory, self.log, TOOLS, remember_keys=())
         echo = Agent(self.bus, self.memory, self.log, tools, agent.brain, max_steps=getattr(agent, "max_steps", 6))
-        for name in ("people", "log_mode", "health_gate", "prompt_notes", "baby_name", "birth_date"):
+        for name in ("people", "log_mode", "health_gate", "prompt_notes", "baby_name", "birth_date", "danger"):
             if hasattr(agent, name):
                 setattr(echo, name, getattr(agent, name))
         self.name = (config.get("baby") or {}).get("name")

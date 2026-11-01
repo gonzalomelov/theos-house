@@ -40,6 +40,8 @@ from ..rhythm.engine import DEFAULTS as RHYTHM_DEFAULTS
 from ..agent.people import People
 from . import morning as morning_mod
 
+# The pushes a logged fever leads with its fixed call-now line (round b5: a 38.6 in a 5 week old reached none of them).
+FEVER_FIRST = {"morning", "tonight", "morning_brief", "morning_explain"}
 SHARED = {"morning_brief", "supplies", "parents_meals", "tonight", "replan", "morning_explain"}
 ONCE_A_DAY = {"morning_brief", "morning_explain", "morning", "tonight", "parents_meals"}
 MORNING_PARTS = {"morning_brief": "day-engine", "morning_explain": "house-brain"}
@@ -159,6 +161,8 @@ class FamilyPush(Plugin):
         sent, missing = [], []
         for person in to:
             text = texts[person] if texts is not None else self.people.named(in_lang(event, self.people.lang(person)))
+            if routine in FEVER_FIRST:
+                text = self.fever_first(text, self.people.lang(person) or self.people.family_lang() or "en")
             chat = chats.get(person)
             if chat is None:
                 missing.append(person)
@@ -171,6 +175,14 @@ class FamilyPush(Plugin):
             self.agent.bind_ask(sent)
         return self.agent.bus.publish("pushed", source=event.get("source"), routine=event.get("routine"), to=sent,
                                       missing=missing, reason=reason, **({"repeats": repeats} if repeats else {}))
+
+    def fever_first(self, text, lang):
+        """The text led by the fixed fever line when a fever is in the log, never twice."""
+        line = self.agent.fever_line(lang) if hasattr(self.agent, "fever_line") else None
+        if not line or line in text:
+            return text
+        self.agent.bus.publish("guard", status="fever_first", where="push")
+        return line + "\n\n" + text
 
     # The one morning message
 

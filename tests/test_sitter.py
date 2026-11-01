@@ -42,7 +42,7 @@ def by_hand(now):
     midnight = now.replace(hour=0, minute=0)
     today = [e for e in feeds if parse(e["start"]) >= midnight]
     starts = [parse(e["start"]) for e in feeds]
-    gap = statistics.median([(b - a).total_seconds() / 60 for a, b in zip(starts, starts[1:])][-2:])
+    gap = statistics.median([(b - a).total_seconds() / 60 for a, b in zip(starts, starts[1:])][-5:])
     return {"last_feed": parse(feeds[-1]["start"]).strftime("%H:%M"), "last_amount": feeds[-1].get("amount"),
             "next_feed": (starts[-1] + datetime.timedelta(minutes=gap)).strftime("%H:%M"), "gap": round(gap),
             "feeds_today": len(today), "ml_today": round(sum(e.get("amount") or 0 for e in today)),
@@ -89,7 +89,7 @@ class BriefFromTheLog(unittest.TestCase):
         text = made["text"]
         print("\n" + text)
         self.assertIn("Last feed at 16:53, breastfed (right side), 31 min.", text)
-        self.assertIn("Next feed expected around 19:22. He has been eating about every 2 h 29 min.", text)
+        self.assertIn("Next feed expected around 19:28. He has been eating about every 2 h 35 min.", text)
         self.assertIn("Today so far: 7 feeds, 170 ml from bottles.", text)
         self.assertIn("He has been asleep since 17:50.", text)
         self.assertIn("Last diaper at 17:28, wet. Last dirty one at 12:19.", text)
@@ -283,7 +283,7 @@ class ParentDelivery(unittest.TestCase):
         drafts = [r for r in self.replies if r["kind"] == "reply" and "Draft handover for Grandma" in r["text"]]
         self.assertEqual(len(drafts), 1)
         self.assertEqual(drafts[0]["channel"], "telegram")
-        self.assertIn("Next feed expected around 19:22", drafts[0]["text"])
+        self.assertIn("Next feed expected around 19:28", drafts[0]["text"])
         self.assertEqual(self.messenger.sent, [])
 
     def test_send_to_sitter_needs_a_yes_every_time(self):
