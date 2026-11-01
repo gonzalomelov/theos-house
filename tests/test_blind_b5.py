@@ -338,3 +338,33 @@ class LiveFollowUps(unittest.TestCase):
         reply = app.message("v", False, "bottle 60 ml")[1]["reply"]
         self.assertIn("60 ml", reply)
         self.assertNotIn("asleep", reply)
+
+
+class WarmerFollowsTheNextFeed(unittest.TestCase):
+    """Live on Nov 1 after the fix: the next feed moved to 22:45 and Muse's first pre-warm was 23:10."""
+
+    S = {**hb.DEFAULTS, "parents": ["Parent A", "Parent B"]}
+    NOW = datetime.datetime(2026, 11, 1, 20, 30, tzinfo=TZ)
+
+    def plan(self, prewarms, feed):
+        answer = house.answer(bottle_prewarm=[{"start": t, "why": "night feed"} for t in prewarms], white_noise_boost=[])
+        plan, _, refused, _ = hb.validate(answer, self.NOW, TZ, self.S, [], next_feed=feed)
+        return [w["start"].strftime("%H:%M") for w in plan["bottle_prewarm"] or []], refused
+
+    def test_a_missing_pre_warm_before_the_next_feed_is_added(self):
+        feed = self.NOW.replace(hour=22, minute=45)
+        self.assertEqual(self.plan(["00:45", "02:35"], feed)[0], ["22:35", "00:45", "02:35"])
+
+    def test_one_in_the_hour_before_is_kept_as_it_is(self):
+        feed = self.NOW.replace(hour=22, minute=45)
+        self.assertEqual(self.plan(["22:00", "00:45"], feed)[0], ["22:00", "00:45"])
+
+    def test_one_too_close_to_add_next_to_makes_the_fixed_rule_run(self):
+        feed = self.NOW.replace(hour=22, minute=45)
+        warm, refused = self.plan(["23:10", "01:00"], feed)
+        self.assertEqual(warm, [])
+        self.assertIn("bottle_prewarm", refused)
+
+    def test_a_day_feed_needs_no_pre_warm(self):
+        feed = self.NOW.replace(hour=20, minute=50)
+        self.assertEqual(self.plan(["23:10"], feed)[0], ["23:10"])
