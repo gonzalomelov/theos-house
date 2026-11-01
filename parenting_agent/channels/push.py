@@ -259,12 +259,16 @@ class FamilyPush(Plugin):
                 except Exception as error:  # noqa: BLE001 no duty lines rather than no message
                     self.agent.bus.publish("push_error", error=f"night rota: {str(error)[:180]}")
             texts = {}
+            opol = find_plugin(self.agent, "opol")
             for person in self.people.keys():
                 label = self.people.label(person)
                 texts[person] = self.people.named(morning_mod.compose(
                     self.people.lang(person) or lang, self.people.name(person), label, brief, explain, lines,
                     self.people.rota_label(tonight) if tonight else None,
                     self.people.rota_label(last_night) if last_night else None))
+                line = opol.morning_line(person, self.people.lang(person) or lang, now) if opol is not None else None
+                if line:  # the OPOL helper's optional line, at most weekly or on a drift (opol.py)
+                    texts[person] += "\n" + line
             self.agent.bus.publish("morning_message", parts=sorted(parts), facts=brief, explain=(explain or {}).get("text"),
                                    explain_facts=(explain or {}).get("facts"), prep=lines, tonight=tonight,
                                    last_night=last_night, texts=texts, lang=lang)

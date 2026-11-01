@@ -538,6 +538,10 @@ class Glasses(Plugin):
                                **({"error": error} if error else {}))
         if person is not None:
             self.hub.push({"kind": "heard", **heard}, person)
+        if decision["why"] == "not for the agent":  # talk to the baby, maybe: the OPOL helper counts its language (opol.py)
+            opol = next((p for p in getattr(self.agent, "plugins", []) if getattr(p, "name", "") == "opol"), None)
+            if opol is not None:
+                opol.overheard(wav, person, text, meta)
         if decision["take"]:
             if decision["why"].startswith("answer"):
                 self.gate.wait(person, "answer", False)  # one answer per question, the next question opens it again
