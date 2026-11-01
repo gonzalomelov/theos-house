@@ -113,6 +113,10 @@ class VisibleChecks(unittest.TestCase):
         self.assertEqual(self.results(level_deg=15)["level_line"], "fail")
         self.assertEqual(self.results(handle_upright=False)["handle"], "fail")
 
+    def test_a_level_line_steeper_than_any_install_is_unseen_not_fail(self):
+        self.assertEqual(self.results(level_deg=20)["level_line"], "fail")
+        self.assertEqual(self.results(level_deg=60)["level_line"], "unseen")
+
     def test_no_guides_in_view_means_unseen_never_pass(self):
         r = self.results(guides=False)
         for check in ("lap_guides", "shoulder_guide", "no_twist", "handle"):

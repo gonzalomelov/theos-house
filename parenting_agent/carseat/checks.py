@@ -21,7 +21,7 @@ DEFAULTS = {
     "belt_min_score": 0.1, "guide_min_score": 0.15, "guide_relative_score": 0.6, "handle_min_score": 0.15, "level_min_score": 0.5,
     "guide_min_px": 60, "border_px": 4, "ring_scale": 0.6, "guide_coverage_min": 0.12,
     "twist_samples": 15, "lap_between_min": 0.6, "twist_inner": (0.2, 0.8), "twist_ratio_min": 0.45, "twist_found_min": 0.6,
-    "level_max_deg": 8.0, "handle_max_deg_from_vertical": 40.0, "handle_strap_margin": 0.05,
+    "level_max_deg": 8.0, "level_plausible_deg": 30.0, "handle_max_deg_from_vertical": 40.0, "handle_strap_margin": 0.05,
 }
 
 
@@ -180,7 +180,11 @@ def analyze(found, prompts, shape, config=None):
         out["level_line"] = {"result": "unseen"}
     else:
         angle = round(_axis_angle(levels[0][1]), 1)
-        out["level_line"] = {"result": "pass" if abs(angle) <= cfg["level_max_deg"] else "fail", "angle_deg": angle}
+        if abs(angle) > cfg["level_plausible_deg"]:
+            # a carrier is never installed that steep: SAM read some other line (a label, a belt edge) as the level line
+            out["level_line"] = {"result": "unseen", "angle_deg": angle, "why": "implausible angle"}
+        else:
+            out["level_line"] = {"result": "pass" if abs(angle) <= cfg["level_max_deg"] else "fail", "angle_deg": angle}
     handles = [(s, m) for s, m in found.get(prompts["handle"], []) if s >= cfg["handle_min_score"] and m.sum() >= 40
                and not _strap_wins(m, s, found.get(prompts["belt"], []), cfg)]
     if not handles or not guide_masks:
