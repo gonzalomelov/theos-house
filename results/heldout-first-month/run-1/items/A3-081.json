@@ -1,0 +1,220 @@
+{
+ "id": "A3-081",
+ "child": "heldout-baby-c",
+ "created": [],
+ "seed_after": [
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 596,
+    "child": 5,
+    "start": "2026-10-22T06:00:00Z",
+    "end": "2026-10-22T06:15:00Z",
+    "duration": "00:15:00",
+    "type": "breast milk",
+    "method": "left breast",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 596,
+    "child": 5,
+    "start": "2026-10-22T06:00:00Z",
+    "end": "2026-10-22T06:15:00Z",
+    "duration": "00:15:00",
+    "type": "breast milk",
+    "method": "left breast",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "changes",
+   "before": {
+    "id": 518,
+    "child": 5,
+    "time": "2026-10-22T04:00:00Z",
+    "wet": true,
+    "solid": true,
+    "color": "yellow",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "changes",
+    "id": 518,
+    "child": 5,
+    "time": "2026-10-22T04:00:00Z",
+    "wet": true,
+    "solid": true,
+    "color": "yellow",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "changes",
+   "before": {
+    "id": 519,
+    "child": 5,
+    "time": "2026-10-22T08:30:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "changes",
+    "id": 519,
+    "child": 5,
+    "time": "2026-10-22T08:30:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T07:15:00-03:00",
+   "chat": "9000002",
+   "text": "Yes, Ceci."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T07:15:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "was his last poop yellow",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0114,
+ "brain_calls": {
+  "inference.baseten.co": 2
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T07:15:00-03:00",
+   "unix": 1792664100.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 2,
+   "input_tokens": 3817,
+   "output_tokens": 148,
+   "reasoning_tokens": 26,
+   "usd": 0.00540025,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T07:15:00-03:00",
+   "unix": 1792664100.0,
+   "name": "baby_summary",
+   "status": "ran"
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T07:15:00-03:00",
+   "unix": 1792664100.0,
+   "name": "read_baby_log",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T07:15:00-03:00",
+   "unix": 1792664100.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 4360,
+   "output_tokens": 135,
+   "reasoning_tokens": 91,
+   "usd": 0.00602375,
+   "fallback": false
+  },
+  {
+   "kind": "final_guard",
+   "t": 120.0,
+   "ts": "2026-10-22T07:15:00-03:00",
+   "unix": 1792664100.0,
+   "where": "agent:telegram",
+   "lang": "es",
+   "removed": [
+    {
+     "why": "not in Spanish",
+     "text": "His last dirty diaper was at 01:00 and it was logged as yellow."
+    },
+    {
+     "why": "not in Spanish",
+     "text": "Wet only diaper after that at 05:30."
+    }
+   ],
+   "fallback": false,
+   "sent": "Yes, Ceci."
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T07:15:00-03:00",
+   "unix": 1792664100.0,
+   "channel": "telegram",
+   "text": "Yes, Ceci.",
+   "chat_id": "9000002"
+  },
+  {
+   "kind": "turn",
+   "t": -1792289450.518,
+   "ts": "2026-10-22T07:15:00-03:00",
+   "unix": 1793574000.019,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 24
+  }
+ ]
+}

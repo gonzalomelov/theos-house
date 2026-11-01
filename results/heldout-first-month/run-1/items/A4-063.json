@@ -1,0 +1,152 @@
+{
+ "id": "A4-063",
+ "child": "heldout-baby-b",
+ "created": [
+  {
+   "endpoint": "changes",
+   "id": 528,
+   "child": 4,
+   "time": "2026-10-22T10:40:00Z",
+   "wet": true,
+   "solid": false,
+   "color": "",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T07:38:00-03:00",
+   "chat": "9000001",
+   "text": "Buen día, Gonza.\nEsta noche te toca a vos.\nClima: lluvia, 16 a 18 C, 9.9 mm de lluvia.\nMenú de Cookidoo: Arroz blanco."
+  },
+  {
+   "at": "2026-10-22T07:38:00-03:00",
+   "chat": "9000002",
+   "text": "Buen día, Ceci.\nClima: lluvia, 16 a 18 C, 9.9 mm de lluvia.\nMenú de Cookidoo: Arroz blanco."
+  },
+  {
+   "at": "2026-10-22T07:40:00-03:00",
+   "chat": "9000002",
+   "text": "Registrado pañal con pis de las 07:40.\n\nSobre la irritación y si poner crema no puedo aconsejarte sobre salud, consultá con el pediatra si tenés dudas y pedí ayuda urgente si lo ves necesario."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T07:40:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "pañal con pis, tiene la cola paspada le pongo crema?",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0161,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T07:38:00-03:00",
+   "unix": 1792665480.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Buen día, Gonza.\nEsta noche te toca a vos.\nClima: lluvia, 16 a 18 C, 9.9 mm de lluvia.\nMenú de Cookidoo: Arroz blanco.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "family-push",
+   "routine": "morning",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T07:38:00-03:00",
+   "unix": 1792665480.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Buen día, Ceci.\nClima: lluvia, 16 a 18 C, 9.9 mm de lluvia.\nMenú de Cookidoo: Arroz blanco.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "family-push",
+   "routine": "morning",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T07:40:00-03:00",
+   "unix": 1792665600.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3827,
+   "output_tokens": 263,
+   "reasoning_tokens": 164,
+   "usd": 0.0059015,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T07:40:00-03:00",
+   "unix": 1792665600.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T07:40:00-03:00",
+   "unix": 1792665600.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 3979,
+   "output_tokens": 231,
+   "reasoning_tokens": 171,
+   "usd": 0.0059555,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T07:40:00-03:00",
+   "unix": 1792665600.0,
+   "channel": "telegram",
+   "text": "Registrado pañal con pis de las 07:40.\n\nSobre la irritación y si poner crema no puedo aconsejarte sobre salud, consultá con el pediatra si tenés dudas y pedí ayuda urgente si lo ves necesario.",
+   "chat_id": "9000002"
+  },
+  {
+   "kind": "turn",
+   "t": -1792290716.545,
+   "ts": "2026-10-22T07:40:00-03:00",
+   "unix": 1793574233.996,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 52
+  }
+ ]
+}

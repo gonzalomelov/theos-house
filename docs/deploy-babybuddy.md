@@ -38,6 +38,8 @@ ssh vostro 'docker exec -w /app/www/public -e DJANGO_SETTINGS_MODULE=babybuddy.s
   "import datetime; from core.models import Child; Child.objects.get_or_create(slug=\"e2e-baby\", defaults=dict(first_name=\"E2E\", last_name=\"Baby\", birth_date=datetime.date(2026, 10, 1)))"'
 ```
 
+- "Heldout Baby A", "B" and "C" (`heldout-baby-a`, `-b`, `-c`, born Oct 1 2026), made on Nov 1 2026 the same way: only the held-out eval writes to them, one per parallel shard, and it wipes each one to the item's own log before every item (`results/heldout-first-month/run.py`, which refuses any other child).
+
 ## Run command
 
 ```bash

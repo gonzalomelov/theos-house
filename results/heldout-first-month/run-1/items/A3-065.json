@@ -1,0 +1,312 @@
+{
+ "id": "A3-065",
+ "child": "heldout-baby-b",
+ "created": [],
+ "seed_after": [
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 511,
+    "child": 4,
+    "start": "2026-10-22T03:20:00Z",
+    "end": "2026-10-22T03:35:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 100.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 511,
+    "child": 4,
+    "start": "2026-10-22T03:20:00Z",
+    "end": "2026-10-22T03:35:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 100.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 512,
+    "child": 4,
+    "start": "2026-10-22T06:10:00Z",
+    "end": "2026-10-22T06:25:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 90.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 512,
+    "child": 4,
+    "start": "2026-10-22T06:10:00Z",
+    "end": "2026-10-22T06:25:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 90.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 513,
+    "child": 4,
+    "start": "2026-10-22T09:40:00Z",
+    "end": "2026-10-22T09:55:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 80.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 513,
+    "child": 4,
+    "start": "2026-10-22T09:40:00Z",
+    "end": "2026-10-22T09:55:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 80.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 514,
+    "child": 4,
+    "start": "2026-10-22T12:30:00Z",
+    "end": "2026-10-22T12:45:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 90.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 514,
+    "child": 4,
+    "start": "2026-10-22T12:30:00Z",
+    "end": "2026-10-22T12:45:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 90.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "changes",
+   "before": {
+    "id": 467,
+    "child": 4,
+    "time": "2026-10-22T06:30:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "changes",
+    "id": 467,
+    "child": 4,
+    "time": "2026-10-22T06:30:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T09:58:00-03:00",
+   "chat": "9000001",
+   "text": "Buen día, Gonza.\nAnoche: 2 tomas, no te levantaste.\nEsta noche te toca a vos.\nClima: lluvia, 16 a 18 C, 9.9 mm de lluvia.\nMenú de Cookidoo: Arroz blanco."
+  },
+  {
+   "at": "2026-10-22T09:58:00-03:00",
+   "chat": "9000002",
+   "text": "Buen día, Ceci.\nAnoche: 2 tomas, no te levantaste.\nClima: lluvia, 16 a 18 C, 9.9 mm de lluvia.\nMenú de Cookidoo: Arroz blanco."
+  },
+  {
+   "at": "2026-10-22T10:00:00-03:00",
+   "chat": "9000001",
+   "text": "No pude anotarlo, ¿me lo repetís?"
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T10:00:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "cunto tomo hoy en total",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0201,
+ "brain_calls": {
+  "inference.baseten.co": 4
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T09:58:00-03:00",
+   "unix": 1792673880.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Buen día, Gonza.\nAnoche: 2 tomas, no te levantaste.\nEsta noche te toca a vos.\nClima: lluvia, 16 a 18 C, 9.9 mm de lluvia.\nMenú de Cookidoo: Arroz blanco.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "family-push",
+   "routine": "morning",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T09:58:00-03:00",
+   "unix": 1792673880.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Buen día, Ceci.\nAnoche: 2 tomas, no te levantaste.\nClima: lluvia, 16 a 18 C, 9.9 mm de lluvia.\nMenú de Cookidoo: Arroz blanco.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "family-push",
+   "routine": "morning",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T10:00:00-03:00",
+   "unix": 1792674000.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3818,
+   "output_tokens": 74,
+   "reasoning_tokens": 17,
+   "usd": 0.005087,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T10:00:00-03:00",
+   "unix": 1792674000.0,
+   "name": "baby_summary",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T10:00:00-03:00",
+   "unix": 1792674000.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 4133,
+   "output_tokens": 80,
+   "reasoning_tokens": 42,
+   "usd": 0.00550625,
+   "fallback": false
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T10:00:00-03:00",
+   "unix": 1792674000.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 4333,
+   "output_tokens": 203,
+   "reasoning_tokens": 162,
+   "usd": 0.006279,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T10:00:00-03:00",
+   "unix": 1792674000.0,
+   "channel": "telegram",
+   "text": "No pude anotarlo, ¿me lo repetís?",
+   "chat_id": "9000001"
+  },
+  {
+   "kind": "turn",
+   "t": -1792299670.975,
+   "ts": "2026-10-22T10:00:00-03:00",
+   "unix": 1793573679.528,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 23
+  }
+ ]
+}

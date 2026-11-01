@@ -1,0 +1,218 @@
+{
+ "id": "A3-070",
+ "child": "heldout-baby-a",
+ "created": [],
+ "seed_after": [
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 587,
+    "child": 3,
+    "start": "2026-10-22T15:30:00Z",
+    "end": "2026-10-22T15:50:00Z",
+    "duration": "00:20:00",
+    "type": "breast milk",
+    "method": "right breast",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 587,
+    "child": 3,
+    "start": "2026-10-22T15:30:00Z",
+    "end": "2026-10-22T15:50:00Z",
+    "duration": "00:20:00",
+    "type": "breast milk",
+    "method": "right breast",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "changes",
+   "before": {
+    "id": 506,
+    "child": 3,
+    "time": "2026-10-22T15:55:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "changes",
+    "id": 506,
+    "child": 3,
+    "time": "2026-10-22T15:55:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "timers",
+   "before": {
+    "id": 114,
+    "child": 3,
+    "name": "sleep",
+    "start": "2026-10-22T16:05:00Z",
+    "duration": "10 06:53:09.648748",
+    "user": 2
+   },
+   "after": {
+    "endpoint": "timers",
+    "id": 114,
+    "child": 3,
+    "name": "sleep",
+    "start": "2026-10-22T16:05:00Z",
+    "duration": "10 06:53:25.902927",
+    "user": 2
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T14:50:00-03:00",
+   "chat": "9000002",
+   "text": "Perdón, no me salió bien la respuesta. ¿Me lo decís de nuevo?"
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T14:50:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "how long has he been asleep",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0117,
+ "brain_calls": {
+  "inference.baseten.co": 2
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T14:50:00-03:00",
+   "unix": 1792691400.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 3,
+   "input_tokens": 3817,
+   "output_tokens": 197,
+   "reasoning_tokens": 44,
+   "usd": 0.0056085,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T14:50:00-03:00",
+   "unix": 1792691400.0,
+   "name": "current_time",
+   "status": "ran"
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T14:50:00-03:00",
+   "unix": 1792691400.0,
+   "name": "baby_summary",
+   "status": "ran"
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T14:50:00-03:00",
+   "unix": 1792691400.0,
+   "name": "read_baby_log",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T14:50:00-03:00",
+   "unix": 1792691400.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 4281,
+   "output_tokens": 163,
+   "reasoning_tokens": 115,
+   "usd": 0.006044,
+   "fallback": false
+  },
+  {
+   "kind": "final_guard",
+   "t": 120.0,
+   "ts": "2026-10-22T14:50:00-03:00",
+   "unix": 1792691400.0,
+   "where": "agent:telegram",
+   "lang": "es",
+   "removed": [
+    {
+     "why": "not in Spanish",
+     "text": "I don't have any sleep logged for him today, so I can't tell how long he's been asleep."
+    },
+    {
+     "why": "not in Spanish",
+     "text": "If you tell me when he fell asleep I can log it and track it for you."
+    }
+   ],
+   "fallback": true,
+   "sent": "Perdón, no me salió bien la respuesta. ¿Me lo decís de nuevo?"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T14:50:00-03:00",
+   "unix": 1792691400.0,
+   "channel": "telegram",
+   "text": "Perdón, no me salió bien la respuesta. ¿Me lo decís de nuevo?",
+   "chat_id": "9000002"
+  },
+  {
+   "kind": "turn",
+   "t": -1792316850.903,
+   "ts": "2026-10-22T14:50:00-03:00",
+   "unix": 1793573899.628,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 27
+  }
+ ]
+}

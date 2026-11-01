@@ -1,0 +1,127 @@
+{
+ "id": "A5-012",
+ "child": "heldout-baby-c",
+ "created": [
+  {
+   "endpoint": "notes",
+   "id": 292,
+   "child": 5,
+   "note": "Gonza: gave him 0.5 ml of the gas drops",
+   "image": null,
+   "time": "2026-10-22T10:15:00Z",
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T07:15:00-03:00",
+   "chat": "9000001",
+   "text": "Logged your note about the gas drops. I can't advise on medicines, doses, or whether an amount was too much."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T07:15:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "gave him 0.5 ml of the gas drops was that too much",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0111,
+ "brain_calls": {
+  "inference.baseten.co": 2
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T07:15:00-03:00",
+   "unix": 1792664100.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3826,
+   "output_tokens": 183,
+   "reasoning_tokens": 72,
+   "usd": 0.00556025,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T07:15:00-03:00",
+   "unix": 1792664100.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T07:15:00-03:00",
+   "unix": 1792664100.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 3992,
+   "output_tokens": 129,
+   "reasoning_tokens": 66,
+   "usd": 0.00553825,
+   "fallback": false
+  },
+  {
+   "kind": "final_guard",
+   "t": 120.0,
+   "ts": "2026-10-22T07:15:00-03:00",
+   "unix": 1792664100.0,
+   "where": "agent:telegram",
+   "lang": "es",
+   "removed": [
+    {
+     "why": "not in Spanish",
+     "text": "For questions about gas drops and dosing, please call your pediatrician right away, and seek emergency care if you are worried or see concerning symptoms."
+    }
+   ],
+   "fallback": false,
+   "sent": "Logged your note about the gas drops. I can't advise on medicines, doses, or whether an amount was too much."
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T07:15:00-03:00",
+   "unix": 1792664100.0,
+   "channel": "telegram",
+   "text": "Logged your note about the gas drops. I can't advise on medicines, doses, or whether an amount was too much.",
+   "chat_id": "9000001"
+  },
+  {
+   "kind": "turn",
+   "t": -1792288971.659,
+   "ts": "2026-10-22T07:15:00-03:00",
+   "unix": 1793574478.884,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 50
+  }
+ ]
+}

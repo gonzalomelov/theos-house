@@ -1,0 +1,346 @@
+{
+ "id": "A3-058",
+ "child": "heldout-baby-a",
+ "created": [],
+ "seed_after": [
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 555,
+    "child": 3,
+    "start": "2026-10-22T09:20:00Z",
+    "end": "2026-10-22T09:35:00Z",
+    "duration": "00:15:00",
+    "type": "breast milk",
+    "method": "right breast",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 555,
+    "child": 3,
+    "start": "2026-10-22T09:20:00Z",
+    "end": "2026-10-22T09:35:00Z",
+    "duration": "00:15:00",
+    "type": "breast milk",
+    "method": "right breast",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "sleep",
+   "before": {
+    "id": 318,
+    "child": 3,
+    "start": "2026-10-22T03:20:00Z",
+    "end": "2026-10-22T05:50:00Z",
+    "duration": "02:30:00",
+    "nap": false,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "sleep",
+    "id": 318,
+    "child": 3,
+    "start": "2026-10-22T03:20:00Z",
+    "end": "2026-10-22T05:50:00Z",
+    "duration": "02:30:00",
+    "nap": false,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "sleep",
+   "before": {
+    "id": 319,
+    "child": 3,
+    "start": "2026-10-22T07:00:00Z",
+    "end": "2026-10-22T09:10:00Z",
+    "duration": "02:10:00",
+    "nap": true,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "sleep",
+    "id": 319,
+    "child": 3,
+    "start": "2026-10-22T07:00:00Z",
+    "end": "2026-10-22T09:10:00Z",
+    "duration": "02:10:00",
+    "nap": true,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "sleep",
+   "before": {
+    "id": 320,
+    "child": 3,
+    "start": "2026-10-22T11:30:00Z",
+    "end": "2026-10-22T13:00:00Z",
+    "duration": "01:30:00",
+    "nap": true,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "sleep",
+    "id": 320,
+    "child": 3,
+    "start": "2026-10-22T11:30:00Z",
+    "end": "2026-10-22T13:00:00Z",
+    "duration": "01:30:00",
+    "nap": true,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "sleep",
+   "before": {
+    "id": 321,
+    "child": 3,
+    "start": "2026-10-22T15:00:00Z",
+    "end": "2026-10-22T16:30:00Z",
+    "duration": "01:30:00",
+    "nap": true,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "sleep",
+    "id": 321,
+    "child": 3,
+    "start": "2026-10-22T15:00:00Z",
+    "end": "2026-10-22T16:30:00Z",
+    "duration": "01:30:00",
+    "nap": true,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "sleep",
+   "before": {
+    "id": 322,
+    "child": 3,
+    "start": "2026-10-22T19:00:00Z",
+    "end": "2026-10-22T20:15:00Z",
+    "duration": "01:15:00",
+    "nap": false,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "sleep",
+    "id": 322,
+    "child": 3,
+    "start": "2026-10-22T19:00:00Z",
+    "end": "2026-10-22T20:15:00Z",
+    "duration": "01:15:00",
+    "nap": false,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "sleep",
+   "before": {
+    "id": 323,
+    "child": 3,
+    "start": "2026-10-22T22:30:00Z",
+    "end": "2026-10-23T00:40:00Z",
+    "duration": "02:10:00",
+    "nap": false,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "sleep",
+    "id": 323,
+    "child": 3,
+    "start": "2026-10-22T22:30:00Z",
+    "end": "2026-10-23T00:40:00Z",
+    "duration": "02:10:00",
+    "nap": false,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T22:58:00-03:00",
+   "chat": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera según el ritmo de las tomas."
+  },
+  {
+   "at": "2026-10-22T22:58:00-03:00",
+   "chat": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera según el ritmo de las tomas."
+  },
+  {
+   "at": "2026-10-22T23:00:00-03:00",
+   "chat": "9000002",
+   "text": "Hoy durmió 6 veces, con un total de 11 horas y 5 minutos.\n\nLa última fue de 19:30 a 21:40."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T23:00:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "cuantas veces durmio hoy",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0202,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T22:58:00-03:00",
+   "unix": 1792720680.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera según el ritmo de las tomas.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T22:58:00-03:00",
+   "unix": 1792720680.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera según el ritmo de las tomas.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T23:00:00-03:00",
+   "unix": 1792720800.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 2,
+   "input_tokens": 3818,
+   "output_tokens": 156,
+   "reasoning_tokens": 38,
+   "usd": 0.0054355,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T23:00:00-03:00",
+   "unix": 1792720800.0,
+   "name": "baby_summary",
+   "status": "ran"
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T23:00:00-03:00",
+   "unix": 1792720800.0,
+   "name": "read_baby_log",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T23:00:00-03:00",
+   "unix": 1792720800.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 4689,
+   "output_tokens": 143,
+   "reasoning_tokens": 99,
+   "usd": 0.006469,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T23:00:00-03:00",
+   "unix": 1792720800.0,
+   "channel": "telegram",
+   "text": "Hoy durmió 6 veces, con un total de 11 horas y 5 minutos.\n\nLa última fue de 19:30 a 21:40.",
+   "chat_id": "9000002"
+  },
+  {
+   "kind": "turn",
+   "t": -1792346331.647,
+   "ts": "2026-10-22T23:00:00-03:00",
+   "unix": 1793573818.858,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 24
+  }
+ ]
+}

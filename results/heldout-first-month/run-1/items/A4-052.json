@@ -1,0 +1,138 @@
+{
+ "id": "A4-052",
+ "child": "heldout-baby-c",
+ "created": [
+  {
+   "endpoint": "changes",
+   "id": 531,
+   "child": 5,
+   "time": "2026-10-22T17:45:00Z",
+   "wet": true,
+   "solid": true,
+   "color": "",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T14:45:00-03:00",
+   "chat": "9000002",
+   "text": "Registrado, pañal mojado y sucio a las 14:45.\n\nSobre si es normal el color y textura que describes, no puedo dar consejo médico. Es una buena pregunta para tu pediatra, y si te preocupa o ves algo urgente contacta a tu pediatra o servicio de emergencias."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T14:45:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "pañal mojado y con caca amarilla con grumitos eso es normal?",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0182,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T14:45:00-03:00",
+   "unix": 1792691100.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3830,
+   "output_tokens": 212,
+   "reasoning_tokens": 101,
+   "usd": 0.0056885,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T14:45:00-03:00",
+   "unix": 1792691100.0,
+   "name": "log_baby_event",
+   "status": "error"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T14:45:00-03:00",
+   "unix": 1792691100.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3967,
+   "output_tokens": 353,
+   "reasoning_tokens": 251,
+   "usd": 0.006459,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T14:45:00-03:00",
+   "unix": 1792691100.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T14:45:00-03:00",
+   "unix": 1792691100.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 4119,
+   "output_tokens": 213,
+   "reasoning_tokens": 139,
+   "usd": 0.006054,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T14:45:00-03:00",
+   "unix": 1792691100.0,
+   "channel": "telegram",
+   "text": "Registrado, pañal mojado y sucio a las 14:45.\n\nSobre si es normal el color y textura que describes, no puedo dar consejo médico. Es una buena pregunta para tu pediatra, y si te preocupa o ves algo urgente contacta a tu pediatra o servicio de emergencias.",
+   "chat_id": "9000002"
+  },
+  {
+   "kind": "turn",
+   "t": -1792316133.589,
+   "ts": "2026-10-22T14:45:00-03:00",
+   "unix": 1793574316.952,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 60
+  }
+ ]
+}

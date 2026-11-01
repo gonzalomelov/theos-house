@@ -1,0 +1,113 @@
+{
+ "id": "A5-030",
+ "child": "heldout-baby-c",
+ "created": [],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T07:30:00-03:00",
+   "chat": "9000001",
+   "text": "Buen día, Gonza.\nEsta noche te toca a vos.\nClima: lluvia, 16 a 18 C, 9.9 mm de lluvia.\nMenú de Cookidoo: Arroz blanco."
+  },
+  {
+   "at": "2026-10-22T07:30:00-03:00",
+   "chat": "9000002",
+   "text": "Buen día, Ceci.\nClima: lluvia, 16 a 18 C, 9.9 mm de lluvia.\nMenú de Cookidoo: Arroz blanco."
+  },
+  {
+   "at": "2026-10-22T07:30:00-03:00",
+   "chat": "9000002",
+   "text": "Jaja buen día Ceci ☕ — guardado para Gonza."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T07:30:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "gonza te deje el cafe en la mesa ya se enfrio jaja",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.007,
+ "brain_calls": {
+  "inference.baseten.co": 2
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T07:30:00-03:00",
+   "unix": 1792665000.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Buen día, Gonza.\nEsta noche te toca a vos.\nClima: lluvia, 16 a 18 C, 9.9 mm de lluvia.\nMenú de Cookidoo: Arroz blanco.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "family-push",
+   "routine": "morning",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T07:30:00-03:00",
+   "unix": 1792665000.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Buen día, Ceci.\nClima: lluvia, 16 a 18 C, 9.9 mm de lluvia.\nMenú de Cookidoo: Arroz blanco.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "family-push",
+   "routine": "morning",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T07:30:00-03:00",
+   "unix": 1792665000.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 3827,
+   "output_tokens": 38,
+   "reasoning_tokens": 14,
+   "usd": 0.00494525,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T07:30:00-03:00",
+   "unix": 1792665000.0,
+   "channel": "telegram",
+   "text": "Jaja buen día Ceci ☕ — guardado para Gonza.",
+   "chat_id": "9000002"
+  },
+  {
+   "kind": "turn",
+   "t": -1792289800.453,
+   "ts": "2026-10-22T07:30:00-03:00",
+   "unix": 1793574550.092,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 50
+  }
+ ]
+}

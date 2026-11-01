@@ -1,0 +1,236 @@
+{
+ "id": "A3-086",
+ "child": "heldout-baby-b",
+ "created": [],
+ "seed_after": [
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 577,
+    "child": 4,
+    "start": "2026-10-22T10:30:00Z",
+    "end": "2026-10-22T10:45:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 90.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 577,
+    "child": 4,
+    "start": "2026-10-22T10:30:00Z",
+    "end": "2026-10-22T10:45:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 90.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 578,
+    "child": 4,
+    "start": "2026-10-22T13:00:00Z",
+    "end": "2026-10-22T13:15:00Z",
+    "duration": "00:15:00",
+    "type": "breast milk",
+    "method": "left breast",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 578,
+    "child": 4,
+    "start": "2026-10-22T13:00:00Z",
+    "end": "2026-10-22T13:15:00Z",
+    "duration": "00:15:00",
+    "type": "breast milk",
+    "method": "left breast",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 579,
+    "child": 4,
+    "start": "2026-10-22T15:20:00Z",
+    "end": "2026-10-22T15:35:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 80.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 579,
+    "child": 4,
+    "start": "2026-10-22T15:20:00Z",
+    "end": "2026-10-22T15:35:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 80.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 580,
+    "child": 4,
+    "start": "2026-10-22T16:30:00Z",
+    "end": "2026-10-22T16:40:00Z",
+    "duration": "00:10:00",
+    "type": "breast milk",
+    "method": "right breast",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 580,
+    "child": 4,
+    "start": "2026-10-22T16:30:00Z",
+    "end": "2026-10-22T16:40:00Z",
+    "duration": "00:10:00",
+    "type": "breast milk",
+    "method": "right breast",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T14:00:00-03:00",
+   "chat": "9000002",
+   "text": "La última mamadera fue a las 12:35 y tomó 80 ml de fórmula.\n\nLa última toma en general fue a las 13:40 a pecho derecho."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T14:00:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "a q hora fue la ultima mamadera y cuanto tomo",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0119,
+ "brain_calls": {
+  "inference.baseten.co": 2
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T14:00:00-03:00",
+   "unix": 1792688400.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 2,
+   "input_tokens": 3823,
+   "output_tokens": 176,
+   "reasoning_tokens": 57,
+   "usd": 0.00552675,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T14:00:00-03:00",
+   "unix": 1792688400.0,
+   "name": "baby_summary",
+   "status": "ran"
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T14:00:00-03:00",
+   "unix": 1792688400.0,
+   "name": "read_baby_log",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T14:00:00-03:00",
+   "unix": 1792688400.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 4590,
+   "output_tokens": 152,
+   "reasoning_tokens": 107,
+   "usd": 0.0063835,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T14:00:00-03:00",
+   "unix": 1792688400.0,
+   "channel": "telegram",
+   "text": "La última mamadera fue a las 12:35 y tomó 80 ml de fórmula.\n\nLa última toma en general fue a las 13:40 a pecho derecho.",
+   "chat_id": "9000002"
+  },
+  {
+   "kind": "turn",
+   "t": -1792313897.523,
+   "ts": "2026-10-22T14:00:00-03:00",
+   "unix": 1793573852.982,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 45
+  }
+ ]
+}

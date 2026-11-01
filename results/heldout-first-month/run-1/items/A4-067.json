@@ -1,0 +1,100 @@
+{
+ "id": "A4-067",
+ "child": "heldout-baby-c",
+ "created": [
+  {
+   "endpoint": "changes",
+   "id": 533,
+   "child": 5,
+   "time": "2026-10-22T19:10:00Z",
+   "wet": true,
+   "solid": false,
+   "color": "",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  },
+  {
+   "endpoint": "notes",
+   "id": 286,
+   "child": 5,
+   "note": "wet diaper. his temp is 37.3, is that a fever?",
+   "image": null,
+   "time": "2026-10-22T19:10:00Z",
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T16:10:00-03:00",
+   "chat": "9000001",
+   "text": "A baby under 3 months with a temperature of 38 °C (100.4 °F) or more needs a doctor right away. Call your pediatrician now, or go to the emergency room. If you cannot reach them, call 911 (Uruguay) or your local emergency number. This is the public guidance of the American Academy of Pediatrics, not advice about your baby: https://www.healthychildren.org/English/health-issues/conditions/fever/Pages/When-to-Call-the-Pediatrician.aspx Logged the 16:10 wet diaper and a note at 16:10: \"wet diaper. his temp is 37.3, is that a fever?\"."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T16:10:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "wet diaper. his temp is 37.3, is that a fever?",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0,
+ "brain_calls": {},
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T16:10:00-03:00",
+   "unix": 1792696200.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T16:10:00-03:00",
+   "unix": 1792696200.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T16:10:00-03:00",
+   "unix": 1792696200.0,
+   "channel": "telegram",
+   "text": "A baby under 3 months with a temperature of 38 °C (100.4 °F) or more needs a doctor right away. Call your pediatrician now, or go to the emergency room. If you cannot reach them, call 911 (Uruguay) or your local emergency number. This is the public guidance of the American Academy of Pediatrics, not advice about your baby: https://www.healthychildren.org/English/health-issues/conditions/fever/Pages/When-to-Call-the-Pediatrician.aspx Logged the 16:10 wet diaper and a note at 16:10: \"wet diaper. his temp is 37.3, is that a fever?\".",
+   "chat_id": "9000001",
+   "flag": "urgent_fever"
+  },
+  {
+   "kind": "turn",
+   "t": -1792321150.368,
+   "ts": "2026-10-22T16:10:00-03:00",
+   "unix": 1793574400.175,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 46
+  }
+ ]
+}

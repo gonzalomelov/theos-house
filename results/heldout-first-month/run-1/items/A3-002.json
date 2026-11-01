@@ -1,0 +1,227 @@
+{
+ "id": "A3-002",
+ "child": "heldout-baby-b",
+ "created": [
+  {
+   "endpoint": "feedings",
+   "id": 427,
+   "child": 4,
+   "start": "2026-10-22T06:05:00Z",
+   "end": "2026-10-22T06:20:00Z",
+   "duration": "00:15:00",
+   "type": "breast milk",
+   "method": "left breast",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T03:18:00-03:00",
+   "chat": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:30 a 08:15."
+  },
+  {
+   "at": "2026-10-22T03:18:00-03:00",
+   "chat": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:30 a 08:15."
+  },
+  {
+   "at": "2026-10-22T03:20:00-03:00",
+   "chat": "9000001",
+   "text": "Anotado, teta izquierda 15 min a las 03:20."
+  },
+  {
+   "at": "2026-10-22T03:22:00-03:00",
+   "chat": "9000001",
+   "text": "En este registro no puedo cambiar entradas, así que no cambió nada."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T03:20:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "teta izq 15 min",
+   "setup": true,
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-22T03:22:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "ah no era el derecho",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0289,
+ "brain_calls": {
+  "inference.baseten.co": 5
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T03:18:00-03:00",
+   "unix": 1792649880.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:30 a 08:15.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T03:18:00-03:00",
+   "unix": 1792649880.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:30 a 08:15.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T03:20:00-03:00",
+   "unix": 1792650000.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3818,
+   "output_tokens": 125,
+   "reasoning_tokens": 26,
+   "usd": 0.00530375,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T03:20:00-03:00",
+   "unix": 1792650000.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T03:20:00-03:00",
+   "unix": 1792650000.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 4006,
+   "output_tokens": 114,
+   "reasoning_tokens": 87,
+   "usd": 0.005492,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T03:20:00-03:00",
+   "unix": 1792650000.0,
+   "channel": "telegram",
+   "text": "Anotado, teta izquierda 15 min a las 03:20.",
+   "chat_id": "9000001"
+  },
+  {
+   "kind": "turn",
+   "t": -1792276329.992,
+   "ts": "2026-10-22T03:20:00-03:00",
+   "unix": 1793573020.507,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 15
+  },
+  {
+   "kind": "brain_call",
+   "t": 240.0,
+   "ts": "2026-10-22T03:22:00-03:00",
+   "unix": 1792650120.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3855,
+   "output_tokens": 530,
+   "reasoning_tokens": 405,
+   "usd": 0.00707125,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 240.0,
+   "ts": "2026-10-22T03:22:00-03:00",
+   "unix": 1792650120.0,
+   "name": "log_baby_event",
+   "status": "held"
+  },
+  {
+   "kind": "brain_call",
+   "t": 240.0,
+   "ts": "2026-10-22T03:22:00-03:00",
+   "unix": 1792650120.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 4007,
+   "output_tokens": 430,
+   "reasoning_tokens": 403,
+   "usd": 0.00683625,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 240.0,
+   "ts": "2026-10-22T03:22:00-03:00",
+   "unix": 1792650120.0,
+   "channel": "telegram",
+   "text": "En este registro no puedo cambiar entradas, así que no cambió nada.",
+   "chat_id": "9000001"
+  },
+  {
+   "kind": "turn",
+   "t": -1792276318.54,
+   "ts": "2026-10-22T03:22:00-03:00",
+   "unix": 1793573031.96,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 20
+  }
+ ]
+}

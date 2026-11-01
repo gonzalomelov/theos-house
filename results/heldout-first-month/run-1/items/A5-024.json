@@ -1,0 +1,107 @@
+{
+ "id": "A5-024",
+ "child": "heldout-baby-c",
+ "created": [],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T18:10:00-03:00",
+   "chat": "9000002",
+   "text": "Anotado pan y pañales para la lista de compras. Prueba en seco: solo quedó anotado, no se movió nada en la casa."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T18:10:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "amor compra pan y pañales cuando vuelvas",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0126,
+ "brain_calls": {
+  "inference.baseten.co": 2
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T18:10:00-03:00",
+   "unix": 1792703400.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 2,
+   "input_tokens": 3821,
+   "output_tokens": 403,
+   "reasoning_tokens": 268,
+   "usd": 0.006489,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T18:10:00-03:00",
+   "unix": 1792703400.0,
+   "name": "add_to_shopping_list",
+   "status": "ran"
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T18:10:00-03:00",
+   "unix": 1792703400.0,
+   "name": "add_to_shopping_list",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T18:10:00-03:00",
+   "unix": 1792703400.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 4013,
+   "output_tokens": 250,
+   "reasoning_tokens": 226,
+   "usd": 0.00607875,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T18:10:00-03:00",
+   "unix": 1792703400.0,
+   "channel": "telegram",
+   "text": "Anotado pan y pañales para la lista de compras. Prueba en seco: solo quedó anotado, no se movió nada en la casa.",
+   "chat_id": "9000002"
+  },
+  {
+   "kind": "turn",
+   "t": -1792328220.869,
+   "ts": "2026-10-22T18:10:00-03:00",
+   "unix": 1793574529.676,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 40
+  }
+ ]
+}

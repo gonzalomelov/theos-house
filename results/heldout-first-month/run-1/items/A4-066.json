@@ -1,0 +1,169 @@
+{
+ "id": "A4-066",
+ "child": "heldout-baby-b",
+ "created": [
+  {
+   "endpoint": "feedings",
+   "id": 611,
+   "child": 4,
+   "start": "2026-10-22T04:40:00Z",
+   "end": "2026-10-22T04:50:00Z",
+   "duration": "00:10:00",
+   "type": "breast milk",
+   "method": "right breast",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T01:48:00-03:00",
+   "chat": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 10:00 a 10:45."
+  },
+  {
+   "at": "2026-10-22T01:48:00-03:00",
+   "chat": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 10:00 a 10:45."
+  },
+  {
+   "at": "2026-10-22T01:50:00-03:00",
+   "chat": "9000002",
+   "text": "For hiccups I can't advise on health. If you're worried, call Theo's pediatrician, and for anything urgent get emergency help."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T01:50:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "right side 10 min, he has hiccups again, should i do something?",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0173,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T01:48:00-03:00",
+   "unix": 1792644480.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 10:00 a 10:45.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T01:48:00-03:00",
+   "unix": 1792644480.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 10:00 a 10:45.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T01:50:00-03:00",
+   "unix": 1792644600.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3829,
+   "output_tokens": 394,
+   "reasoning_tokens": 296,
+   "usd": 0.00646075,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T01:50:00-03:00",
+   "unix": 1792644600.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T01:50:00-03:00",
+   "unix": 1792644600.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 4017,
+   "output_tokens": 97,
+   "reasoning_tokens": 47,
+   "usd": 0.0054335,
+   "fallback": false
+  },
+  {
+   "kind": "final_guard",
+   "t": 120.0,
+   "ts": "2026-10-22T01:50:00-03:00",
+   "unix": 1792644600.0,
+   "where": "agent:telegram",
+   "lang": "es",
+   "removed": [
+    {
+     "why": "not in Spanish",
+     "text": "Logged right side 10 min at 01:50."
+    }
+   ],
+   "fallback": false,
+   "sent": "For hiccups I can't advise on health. If you're worried, call Theo's pediatrician, and for anything urgent get emergency help."
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T01:50:00-03:00",
+   "unix": 1792644600.0,
+   "channel": "telegram",
+   "text": "For hiccups I can't advise on health. If you're worried, call Theo's pediatrician, and for anything urgent get emergency help.",
+   "chat_id": "9000002"
+  },
+  {
+   "kind": "turn",
+   "t": -1792269691.729,
+   "ts": "2026-10-22T01:50:00-03:00",
+   "unix": 1793574258.812,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 63
+  }
+ ]
+}

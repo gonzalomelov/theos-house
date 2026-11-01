@@ -1,0 +1,115 @@
+{
+ "id": "A1-017",
+ "child": "heldout-baby-b",
+ "created": [
+  {
+   "endpoint": "feedings",
+   "id": 361,
+   "child": 4,
+   "start": "2026-10-22T15:25:00Z",
+   "end": "2026-10-22T15:40:00Z",
+   "duration": "00:15:00",
+   "type": "formula",
+   "method": "bottle",
+   "amount": 80.0,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T12:40:00-03:00",
+   "chat": "9000001",
+   "text": "Anotado, mamadera de 80 ml a las 12:40."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T12:40:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "le preparé 100 y tomó 80",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0123,
+ "brain_calls": {
+  "inference.baseten.co": 2
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T12:40:00-03:00",
+   "unix": 1792683600.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3820,
+   "output_tokens": 347,
+   "reasoning_tokens": 249,
+   "usd": 0.00624975,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T12:40:00-03:00",
+   "unix": 1792683600.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T12:40:00-03:00",
+   "unix": 1792683600.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 4010,
+   "output_tokens": 236,
+   "reasoning_tokens": 209,
+   "usd": 0.0060155,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T12:40:00-03:00",
+   "unix": 1792683600.0,
+   "channel": "telegram",
+   "text": "Anotado, mamadera de 80 ml a las 12:40.",
+   "chat_id": "9000001"
+  },
+  {
+   "kind": "turn",
+   "t": -1792310827.872,
+   "ts": "2026-10-22T12:40:00-03:00",
+   "unix": 1793572122.527,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 24
+  }
+ ]
+}

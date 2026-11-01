@@ -1,0 +1,221 @@
+{
+ "id": "A3-012",
+ "child": "heldout-baby-c",
+ "created": [
+  {
+   "endpoint": "changes",
+   "id": 436,
+   "child": 5,
+   "time": "2026-10-22T15:10:00Z",
+   "wet": false,
+   "solid": true,
+   "color": "green",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 434,
+    "child": 5,
+    "start": "2026-10-22T14:30:00Z",
+    "end": "2026-10-22T14:45:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 90.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 434,
+    "child": 5,
+    "start": "2026-10-22T14:30:00Z",
+    "end": "2026-10-22T14:45:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 90.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T12:10:00-03:00",
+   "chat": "9000001",
+   "text": "Listo, pañal con caca registrado."
+  },
+  {
+   "at": "2026-10-22T12:11:00-03:00",
+   "chat": "9000001",
+   "text": "En este registro no puedo cambiar entradas, así que no cambió nada."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T12:10:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "pañal con caca verde",
+   "setup": true,
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-22T12:11:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "no era verde era amarilla, la luz del baño jaja",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0225,
+ "brain_calls": {
+  "inference.baseten.co": 4
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T12:10:00-03:00",
+   "unix": 1792681800.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3818,
+   "output_tokens": 164,
+   "reasoning_tokens": 69,
+   "usd": 0.0054695,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T12:10:00-03:00",
+   "unix": 1792681800.0,
+   "name": "log_baby_event",
+   "status": "error"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T12:10:00-03:00",
+   "unix": 1792681800.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3948,
+   "output_tokens": 230,
+   "reasoning_tokens": 128,
+   "usd": 0.0059125,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T12:10:00-03:00",
+   "unix": 1792681800.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T12:10:00-03:00",
+   "unix": 1792681800.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 4103,
+   "output_tokens": 50,
+   "reasoning_tokens": 29,
+   "usd": 0.00534125,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T12:10:00-03:00",
+   "unix": 1792681800.0,
+   "channel": "telegram",
+   "text": "Listo, pañal con caca registrado.",
+   "chat_id": "9000001"
+  },
+  {
+   "kind": "turn",
+   "t": -1792308060.938,
+   "ts": "2026-10-22T12:10:00-03:00",
+   "unix": 1793573089.562,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 20
+  },
+  {
+   "kind": "brain_call",
+   "t": 180.0,
+   "ts": "2026-10-22T12:11:00-03:00",
+   "unix": 1792681860.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 3857,
+   "output_tokens": 234,
+   "reasoning_tokens": 211,
+   "usd": 0.00581575,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 180.0,
+   "ts": "2026-10-22T12:11:00-03:00",
+   "unix": 1792681860.0,
+   "channel": "telegram",
+   "text": "En este registro no puedo cambiar entradas, así que no cambió nada.",
+   "chat_id": "9000001"
+  },
+  {
+   "kind": "turn",
+   "t": -1792308055.801,
+   "ts": "2026-10-22T12:11:00-03:00",
+   "unix": 1793573094.699,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 47
+  }
+ ]
+}

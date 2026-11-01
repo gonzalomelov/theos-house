@@ -1,0 +1,267 @@
+{
+ "id": "A3-017",
+ "child": "heldout-baby-b",
+ "created": [
+  {
+   "endpoint": "feedings",
+   "id": 442,
+   "child": 4,
+   "start": "2026-10-22T05:06:00Z",
+   "end": "2026-10-22T05:16:00Z",
+   "duration": "00:10:00",
+   "type": "breast milk",
+   "method": "left breast",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  },
+  {
+   "endpoint": "timers",
+   "id": 109,
+   "child": 4,
+   "name": "sleep",
+   "start": "2026-10-22T05:15:00Z",
+   "duration": "10 17:31:09.553783",
+   "user": 2
+  }
+ ],
+ "seed_after": [
+  {
+   "endpoint": "changes",
+   "before": {
+    "id": 440,
+    "child": 4,
+    "time": "2026-10-22T04:50:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "changes",
+    "id": 440,
+    "child": 4,
+    "time": "2026-10-22T04:50:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T02:13:00-03:00",
+   "chat": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:00 a 07:45."
+  },
+  {
+   "at": "2026-10-22T02:13:00-03:00",
+   "chat": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:00 a 07:45."
+  },
+  {
+   "at": "2026-10-22T02:15:00-03:00",
+   "chat": "9000001",
+   "text": "Anotado, se durmió a las 02:15."
+  },
+  {
+   "at": "2026-10-22T02:16:00-03:00",
+   "chat": "9000001",
+   "text": "Anotado, pecho izquierdo 10 minutos a las 02:16."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T02:15:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "se durmio",
+   "setup": true,
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-22T02:16:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "no para, no se durmio, quise poner q tomo teta del izquierdo 10 min",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0271,
+ "brain_calls": {
+  "inference.baseten.co": 5
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T02:13:00-03:00",
+   "unix": 1792645980.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:00 a 07:45.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T02:13:00-03:00",
+   "unix": 1792645980.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:00 a 07:45.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T02:15:00-03:00",
+   "unix": 1792646100.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3815,
+   "output_tokens": 148,
+   "reasoning_tokens": 31,
+   "usd": 0.00539775,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T02:15:00-03:00",
+   "unix": 1792646100.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T02:15:00-03:00",
+   "unix": 1792646100.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 3979,
+   "output_tokens": 48,
+   "reasoning_tokens": 23,
+   "usd": 0.00517775,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T02:15:00-03:00",
+   "unix": 1792646100.0,
+   "channel": "telegram",
+   "text": "Anotado, se durmió a las 02:15.",
+   "chat_id": "9000001"
+  },
+  {
+   "kind": "turn",
+   "t": -1792272296.688,
+   "ts": "2026-10-22T02:15:00-03:00",
+   "unix": 1793573153.813,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 9
+  },
+  {
+   "kind": "brain_call",
+   "t": 180.0,
+   "ts": "2026-10-22T02:16:00-03:00",
+   "unix": 1792646160.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3867,
+   "output_tokens": 320,
+   "reasoning_tokens": 194,
+   "usd": 0.00619375,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 180.0,
+   "ts": "2026-10-22T02:16:00-03:00",
+   "unix": 1792646160.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 180.0,
+   "ts": "2026-10-22T02:16:00-03:00",
+   "unix": 1792646160.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 4080,
+   "output_tokens": 74,
+   "reasoning_tokens": 48,
+   "usd": 0.0054145,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 180.0,
+   "ts": "2026-10-22T02:16:00-03:00",
+   "unix": 1792646160.0,
+   "channel": "telegram",
+   "text": "Anotado, pecho izquierdo 10 minutos a las 02:16.",
+   "chat_id": "9000001"
+  },
+  {
+   "kind": "turn",
+   "t": -1792272288.689,
+   "ts": "2026-10-22T02:16:00-03:00",
+   "unix": 1793573161.811,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 67
+  }
+ ]
+}

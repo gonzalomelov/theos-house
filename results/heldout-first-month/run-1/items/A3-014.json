@@ -1,0 +1,302 @@
+{
+ "id": "A3-014",
+ "child": "heldout-baby-b",
+ "created": [
+  {
+   "endpoint": "timers",
+   "id": 108,
+   "child": 4,
+   "name": "sleep",
+   "start": "2026-10-22T22:30:00Z",
+   "duration": "10 00:15:34.108854",
+   "user": 2
+  }
+ ],
+ "seed_after": [
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 438,
+    "child": 4,
+    "start": "2026-10-22T22:00:00Z",
+    "end": "2026-10-22T22:15:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 100.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 438,
+    "child": 4,
+    "start": "2026-10-22T22:00:00Z",
+    "end": "2026-10-22T22:15:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 100.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T20:05:00-03:00",
+   "chat": "9000001",
+   "text": "Registrado, se durmió a las 19:30."
+  },
+  {
+   "at": "2026-10-22T20:06:00-03:00",
+   "chat": "9000001",
+   "text": "I cannot change entries in this log, so nothing changed."
+  },
+  {
+   "at": "2026-10-22T20:09:00-03:00",
+   "chat": "9000001",
+   "text": "Podría pasar la aspiradora antes de las 21:00, pero el registro no dice dónde está en las últimas 2 horas, así que queda en su base. Decime dónde está, o si salió con ustedes."
+  },
+  {
+   "at": "2026-10-22T20:09:00-03:00",
+   "chat": "9000002",
+   "text": "Podría pasar la aspiradora antes de las 21:00, pero el registro no dice dónde está en las últimas 2 horas, así que queda en su base. Decime dónde está, o si salió con ustedes."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T20:05:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "se durmio a las 19:30",
+   "setup": true,
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-22T20:06:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "perdon a las 19:45",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.043,
+ "brain_calls": {
+  "inference.baseten.co": 7
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T20:05:00-03:00",
+   "unix": 1792710300.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3821,
+   "output_tokens": 205,
+   "reasoning_tokens": 86,
+   "usd": 0.0056475,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T20:05:00-03:00",
+   "unix": 1792710300.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T20:05:00-03:00",
+   "unix": 1792710300.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 3985,
+   "output_tokens": 39,
+   "reasoning_tokens": 15,
+   "usd": 0.005147,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T20:05:00-03:00",
+   "unix": 1792710300.0,
+   "channel": "telegram",
+   "text": "Registrado, se durmió a las 19:30.",
+   "chat_id": "9000001"
+  },
+  {
+   "kind": "turn",
+   "t": -1792336532.135,
+   "ts": "2026-10-22T20:05:00-03:00",
+   "unix": 1793573118.365,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 21
+  },
+  {
+   "kind": "brain_call",
+   "t": 180.0,
+   "ts": "2026-10-22T20:06:00-03:00",
+   "unix": 1792710360.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3858,
+   "output_tokens": 205,
+   "reasoning_tokens": 110,
+   "usd": 0.00569375,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 180.0,
+   "ts": "2026-10-22T20:06:00-03:00",
+   "unix": 1792710360.0,
+   "name": "read_baby_log",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 180.0,
+   "ts": "2026-10-22T20:06:00-03:00",
+   "unix": 1792710360.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3945,
+   "output_tokens": 223,
+   "reasoning_tokens": 108,
+   "usd": 0.005879,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 180.0,
+   "ts": "2026-10-22T20:06:00-03:00",
+   "unix": 1792710360.0,
+   "name": "log_baby_event",
+   "status": "held"
+  },
+  {
+   "kind": "brain_call",
+   "t": 180.0,
+   "ts": "2026-10-22T20:06:00-03:00",
+   "unix": 1792710360.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4090,
+   "output_tokens": 203,
+   "reasoning_tokens": 78,
+   "usd": 0.00597525,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 180.0,
+   "ts": "2026-10-22T20:06:00-03:00",
+   "unix": 1792710360.0,
+   "name": "log_baby_event",
+   "status": "held"
+  },
+  {
+   "kind": "brain_call",
+   "t": 180.0,
+   "ts": "2026-10-22T20:06:00-03:00",
+   "unix": 1792710360.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 4235,
+   "output_tokens": 188,
+   "reasoning_tokens": 163,
+   "usd": 0.00609275,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 180.0,
+   "ts": "2026-10-22T20:06:00-03:00",
+   "unix": 1792710360.0,
+   "channel": "telegram",
+   "text": "I cannot change entries in this log, so nothing changed.",
+   "chat_id": "9000001"
+  },
+  {
+   "kind": "turn",
+   "t": -1792336519.432,
+   "ts": "2026-10-22T20:06:00-03:00",
+   "unix": 1793573131.069,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 18
+  },
+  {
+   "kind": "reply",
+   "t": 360.0,
+   "ts": "2026-10-22T20:09:00-03:00",
+   "unix": 1792710540.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Podría pasar la aspiradora antes de las 21:00, pero el registro no dice dónde está en las últimas 2 horas, así que queda en su base. Decime dónde está, o si salió con ustedes.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "day-engine",
+   "routine": "floor_clean",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 360.0,
+   "ts": "2026-10-22T20:09:00-03:00",
+   "unix": 1792710540.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Podría pasar la aspiradora antes de las 21:00, pero el registro no dice dónde está en las últimas 2 horas, así que queda en su base. Decime dónde está, o si salió con ustedes.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "day-engine",
+   "routine": "floor_clean",
+   "check_now": null
+  }
+ ]
+}

@@ -1,0 +1,221 @@
+{
+ "id": "A3-005",
+ "child": "heldout-baby-b",
+ "created": [
+  {
+   "endpoint": "changes",
+   "id": 432,
+   "child": 4,
+   "time": "2026-10-22T19:30:00Z",
+   "wet": true,
+   "solid": false,
+   "color": "",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 430,
+    "child": 4,
+    "start": "2026-10-22T18:10:00Z",
+    "end": "2026-10-22T18:35:00Z",
+    "duration": "00:25:00",
+    "type": "breast milk",
+    "method": "both breasts",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 430,
+    "child": 4,
+    "start": "2026-10-22T18:10:00Z",
+    "end": "2026-10-22T18:35:00Z",
+    "duration": "00:25:00",
+    "type": "breast milk",
+    "method": "both breasts",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T16:30:00-03:00",
+   "chat": "9000002",
+   "text": "Anotado, pañal con pis a las 16:30."
+  },
+  {
+   "at": "2026-10-22T16:31:00-03:00",
+   "chat": "9000002",
+   "text": "En este registro no puedo cambiar entradas, así que no cambió nada."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T16:30:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "pañal con pis",
+   "setup": true,
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-22T16:31:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "borrá eso lo mande sin querer",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.022,
+ "brain_calls": {
+  "inference.baseten.co": 4
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T16:30:00-03:00",
+   "unix": 1792697400.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3816,
+   "output_tokens": 121,
+   "reasoning_tokens": 36,
+   "usd": 0.00528425,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T16:30:00-03:00",
+   "unix": 1792697400.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T16:30:00-03:00",
+   "unix": 1792697400.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 3963,
+   "output_tokens": 31,
+   "reasoning_tokens": 5,
+   "usd": 0.0050855,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T16:30:00-03:00",
+   "unix": 1792697400.0,
+   "channel": "telegram",
+   "text": "Anotado, pañal con pis a las 16:30.",
+   "chat_id": "9000002"
+  },
+  {
+   "kind": "turn",
+   "t": -1792323704.422,
+   "ts": "2026-10-22T16:30:00-03:00",
+   "unix": 1793573046.077,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 13
+  },
+  {
+   "kind": "brain_call",
+   "t": 180.0,
+   "ts": "2026-10-22T16:31:00-03:00",
+   "unix": 1792697460.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3855,
+   "output_tokens": 116,
+   "reasoning_tokens": 42,
+   "usd": 0.00531175,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 180.0,
+   "ts": "2026-10-22T16:31:00-03:00",
+   "unix": 1792697460.0,
+   "name": "read_baby_log",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 180.0,
+   "ts": "2026-10-22T16:31:00-03:00",
+   "unix": 1792697460.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 4081,
+   "output_tokens": 291,
+   "reasoning_tokens": 265,
+   "usd": 0.006338,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 180.0,
+   "ts": "2026-10-22T16:31:00-03:00",
+   "unix": 1792697460.0,
+   "channel": "telegram",
+   "text": "En este registro no puedo cambiar entradas, así que no cambió nada.",
+   "chat_id": "9000002"
+  },
+  {
+   "kind": "turn",
+   "t": -1792323699.837,
+   "ts": "2026-10-22T16:31:00-03:00",
+   "unix": 1793573050.663,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 29
+  }
+ ]
+}

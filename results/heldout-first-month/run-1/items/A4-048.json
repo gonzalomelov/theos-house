@@ -1,0 +1,134 @@
+{
+ "id": "A4-048",
+ "child": "heldout-baby-b",
+ "created": [
+  {
+   "endpoint": "feedings",
+   "id": 606,
+   "child": 4,
+   "start": "2026-10-22T20:10:00Z",
+   "end": "2026-10-22T20:25:00Z",
+   "duration": "00:15:00",
+   "type": "formula",
+   "method": "bottle",
+   "amount": 100.0,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  },
+  {
+   "endpoint": "notes",
+   "id": 270,
+   "child": 4,
+   "note": "estornuda mucho, consulta si está resfriado",
+   "image": null,
+   "time": "2026-10-22T20:25:00Z",
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T17:25:00-03:00",
+   "chat": "9000001",
+   "text": "Registré la mamadera de 100.\n\nSobre los estornudos no puedo dar consejos de salud, te sugiero consultar con su pediatra, y si es urgente con el servicio de emergencia."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T17:25:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "tomo 100 de mamadera y estornuda mucho, esta resfriado?",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0119,
+ "brain_calls": {
+  "inference.baseten.co": 2
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T17:25:00-03:00",
+   "unix": 1792700700.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 2,
+   "input_tokens": 3829,
+   "output_tokens": 217,
+   "reasoning_tokens": 32,
+   "usd": 0.0057085,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T17:25:00-03:00",
+   "unix": 1792700700.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T17:25:00-03:00",
+   "unix": 1792700700.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T17:25:00-03:00",
+   "unix": 1792700700.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 4181,
+   "output_tokens": 234,
+   "reasoning_tokens": 184,
+   "usd": 0.00622075,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T17:25:00-03:00",
+   "unix": 1792700700.0,
+   "channel": "telegram",
+   "text": "Registré la mamadera de 100.\n\nSobre los estornudos no puedo dar consejos de salud, te sugiero consultar con su pediatra, y si es urgente con el servicio de emergencia.",
+   "chat_id": "9000001"
+  },
+  {
+   "kind": "turn",
+   "t": -1792325902.897,
+   "ts": "2026-10-22T17:25:00-03:00",
+   "unix": 1793574147.643,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 55
+  }
+ ]
+}

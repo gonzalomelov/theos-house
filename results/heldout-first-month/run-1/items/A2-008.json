@@ -1,0 +1,152 @@
+{
+ "id": "A2-008",
+ "child": "heldout-baby-c",
+ "created": [
+  {
+   "endpoint": "changes",
+   "id": 390,
+   "child": 5,
+   "time": "2026-10-22T12:00:00Z",
+   "wet": true,
+   "solid": false,
+   "color": "",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T09:28:00-03:00",
+   "chat": "9000001",
+   "text": "Buen día, Gonza.\nEsta noche te toca a vos.\nClima: lluvia, 16 a 19 C, 11.1 mm de lluvia.\nMenú de Cookidoo: Arroz blanco."
+  },
+  {
+   "at": "2026-10-22T09:28:00-03:00",
+   "chat": "9000002",
+   "text": "Buen día, Ceci.\nClima: lluvia, 16 a 19 C, 11.1 mm de lluvia.\nMenú de Cookidoo: Arroz blanco."
+  },
+  {
+   "at": "2026-10-22T09:30:00-03:00",
+   "chat": "9000001",
+   "text": "Anotado, pañal con pis a las 9."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T09:30:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "le cambie a las 9 tenia pis",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0134,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T09:28:00-03:00",
+   "unix": 1792672080.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Buen día, Gonza.\nEsta noche te toca a vos.\nClima: lluvia, 16 a 19 C, 11.1 mm de lluvia.\nMenú de Cookidoo: Arroz blanco.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "family-push",
+   "routine": "morning",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T09:28:00-03:00",
+   "unix": 1792672080.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Buen día, Ceci.\nClima: lluvia, 16 a 19 C, 11.1 mm de lluvia.\nMenú de Cookidoo: Arroz blanco.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "family-push",
+   "routine": "morning",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T09:30:00-03:00",
+   "unix": 1792672200.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3821,
+   "output_tokens": 262,
+   "reasoning_tokens": 145,
+   "usd": 0.00588975,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T09:30:00-03:00",
+   "unix": 1792672200.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T09:30:00-03:00",
+   "unix": 1792672200.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 3993,
+   "output_tokens": 44,
+   "reasoning_tokens": 20,
+   "usd": 0.00517825,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T09:30:00-03:00",
+   "unix": 1792672200.0,
+   "channel": "telegram",
+   "text": "Anotado, pañal con pis a las 9.",
+   "chat_id": "9000001"
+  },
+  {
+   "kind": "turn",
+   "t": -1792299041.662,
+   "ts": "2026-10-22T09:30:00-03:00",
+   "unix": 1793572508.834,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 27
+  }
+ ]
+}

@@ -1,0 +1,300 @@
+{
+ "id": "A3-009",
+ "child": "heldout-baby-c",
+ "created": [
+  {
+   "endpoint": "changes",
+   "id": 433,
+   "child": 5,
+   "time": "2026-10-22T08:40:00Z",
+   "wet": false,
+   "solid": true,
+   "color": "",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  },
+  {
+   "endpoint": "changes",
+   "id": 431,
+   "child": 5,
+   "time": "2026-10-22T08:10:00Z",
+   "wet": true,
+   "solid": false,
+   "color": "",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T05:10:00-03:00",
+   "chat": "9000001",
+   "text": "Registrado, pañal mojado a las 05:10."
+  },
+  {
+   "at": "2026-10-22T05:40:00-03:00",
+   "chat": "9000001",
+   "text": "Registrado a las 05:40, pañal con caca."
+  },
+  {
+   "at": "2026-10-22T05:42:00-03:00",
+   "chat": "9000001",
+   "text": "En este registro no puedo cambiar entradas, así que no cambió nada."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T05:10:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "pañal mojado",
+   "setup": true,
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-22T05:40:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "otro pañal con caca amarilla",
+   "setup": true,
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-22T05:42:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "borra el ultimo pañal, era el mismo",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0396,
+ "brain_calls": {
+  "inference.baseten.co": 7
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T05:10:00-03:00",
+   "unix": 1792656600.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3816,
+   "output_tokens": 118,
+   "reasoning_tokens": 28,
+   "usd": 0.0052715,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T05:10:00-03:00",
+   "unix": 1792656600.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T05:10:00-03:00",
+   "unix": 1792656600.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 3963,
+   "output_tokens": 37,
+   "reasoning_tokens": 12,
+   "usd": 0.005111,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T05:10:00-03:00",
+   "unix": 1792656600.0,
+   "channel": "telegram",
+   "text": "Registrado, pañal mojado a las 05:10.",
+   "chat_id": "9000001"
+  },
+  {
+   "kind": "turn",
+   "t": -1792282929.948,
+   "ts": "2026-10-22T05:10:00-03:00",
+   "unix": 1793573020.552,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 12
+  },
+  {
+   "kind": "brain_call",
+   "t": 1920.0,
+   "ts": "2026-10-22T05:40:00-03:00",
+   "unix": 1792658400.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3855,
+   "output_tokens": 191,
+   "reasoning_tokens": 64,
+   "usd": 0.0056305,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 1920.0,
+   "ts": "2026-10-22T05:40:00-03:00",
+   "unix": 1792658400.0,
+   "name": "log_baby_event",
+   "status": "error"
+  },
+  {
+   "kind": "brain_call",
+   "t": 1920.0,
+   "ts": "2026-10-22T05:40:00-03:00",
+   "unix": 1792658400.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4012,
+   "output_tokens": 169,
+   "reasoning_tokens": 51,
+   "usd": 0.00573325,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 1920.0,
+   "ts": "2026-10-22T05:40:00-03:00",
+   "unix": 1792658400.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 1920.0,
+   "ts": "2026-10-22T05:40:00-03:00",
+   "unix": 1792658400.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 4184,
+   "output_tokens": 181,
+   "reasoning_tokens": 155,
+   "usd": 0.00599925,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 1920.0,
+   "ts": "2026-10-22T05:40:00-03:00",
+   "unix": 1792658400.0,
+   "channel": "telegram",
+   "text": "Registrado a las 05:40, pañal con caca.",
+   "chat_id": "9000001"
+  },
+  {
+   "kind": "turn",
+   "t": -1792282892.631,
+   "ts": "2026-10-22T05:40:00-03:00",
+   "unix": 1793573057.869,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 28
+  },
+  {
+   "kind": "brain_call",
+   "t": 2040.0,
+   "ts": "2026-10-22T05:42:00-03:00",
+   "unix": 1792658520.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3897,
+   "output_tokens": 217,
+   "reasoning_tokens": 152,
+   "usd": 0.0057935,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 2040.0,
+   "ts": "2026-10-22T05:42:00-03:00",
+   "unix": 1792658520.0,
+   "name": "read_baby_log",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 2040.0,
+   "ts": "2026-10-22T05:42:00-03:00",
+   "unix": 1792658520.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 4073,
+   "output_tokens": 226,
+   "reasoning_tokens": 179,
+   "usd": 0.00605175,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 2040.0,
+   "ts": "2026-10-22T05:42:00-03:00",
+   "unix": 1792658520.0,
+   "channel": "telegram",
+   "text": "En este registro no puedo cambiar entradas, así que no cambió nada.",
+   "chat_id": "9000001"
+  },
+  {
+   "kind": "turn",
+   "t": -1792282883.63,
+   "ts": "2026-10-22T05:42:00-03:00",
+   "unix": 1793573066.87,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 35
+  }
+ ]
+}

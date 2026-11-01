@@ -1,0 +1,115 @@
+{
+ "id": "A1-031",
+ "child": "heldout-baby-a",
+ "created": [
+  {
+   "endpoint": "feedings",
+   "id": 374,
+   "child": 3,
+   "start": "2026-10-22T17:35:00Z",
+   "end": "2026-10-22T17:50:00Z",
+   "duration": "00:15:00",
+   "type": "formula",
+   "method": "bottle",
+   "amount": 120.0,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T14:50:00-03:00",
+   "chat": "9000001",
+   "text": "Logged 4 oz for Theo at 14:50."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T14:50:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "Theo drank 4 oz",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0113,
+ "brain_calls": {
+  "inference.baseten.co": 2
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T14:50:00-03:00",
+   "unix": 1792691400.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3816,
+   "output_tokens": 291,
+   "reasoning_tokens": 200,
+   "usd": 0.00600675,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T14:50:00-03:00",
+   "unix": 1792691400.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T14:50:00-03:00",
+   "unix": 1792691400.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 3998,
+   "output_tokens": 80,
+   "reasoning_tokens": 58,
+   "usd": 0.0053375,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T14:50:00-03:00",
+   "unix": 1792691400.0,
+   "channel": "telegram",
+   "text": "Logged 4 oz for Theo at 14:50.",
+   "chat_id": "9000001"
+  },
+  {
+   "kind": "turn",
+   "t": -1792318550.201,
+   "ts": "2026-10-22T14:50:00-03:00",
+   "unix": 1793572200.197,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 15
+  }
+ ]
+}

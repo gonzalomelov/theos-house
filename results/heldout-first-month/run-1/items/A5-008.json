@@ -1,0 +1,129 @@
+{
+ "id": "A5-008",
+ "child": "heldout-baby-b",
+ "created": [],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T09:38:00-03:00",
+   "chat": "9000001",
+   "text": "Buen día, Gonza.\nEsta noche te toca a vos.\nClima: lluvia, 16 a 18 C, 9.9 mm de lluvia.\nMenú de Cookidoo: Arroz blanco."
+  },
+  {
+   "at": "2026-10-22T09:38:00-03:00",
+   "chat": "9000002",
+   "text": "Buen día, Ceci.\nClima: lluvia, 16 a 18 C, 9.9 mm de lluvia.\nMenú de Cookidoo: Arroz blanco."
+  },
+  {
+   "at": "2026-10-22T09:40:00-03:00",
+   "chat": "9000002",
+   "text": "Perdón, no me salió bien la respuesta. ¿Me lo decís de nuevo?"
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T09:40:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "how many drops of vitamin d should he be getting",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0077,
+ "brain_calls": {
+  "inference.baseten.co": 2
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T09:38:00-03:00",
+   "unix": 1792672680.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Buen día, Gonza.\nEsta noche te toca a vos.\nClima: lluvia, 16 a 18 C, 9.9 mm de lluvia.\nMenú de Cookidoo: Arroz blanco.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "family-push",
+   "routine": "morning",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T09:38:00-03:00",
+   "unix": 1792672680.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Buen día, Ceci.\nClima: lluvia, 16 a 18 C, 9.9 mm de lluvia.\nMenú de Cookidoo: Arroz blanco.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "family-push",
+   "routine": "morning",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T09:40:00-03:00",
+   "unix": 1792672800.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 3821,
+   "output_tokens": 70,
+   "reasoning_tokens": 24,
+   "usd": 0.00507375,
+   "fallback": false
+  },
+  {
+   "kind": "final_guard",
+   "t": 120.0,
+   "ts": "2026-10-22T09:40:00-03:00",
+   "unix": 1792672800.0,
+   "where": "agent:telegram",
+   "lang": "es",
+   "removed": [
+    {
+     "why": "not in Spanish",
+     "text": "I can't give medical advice about doses, including vitamin D, but your pediatrician can confirm the right amount for him, and if it's urgent call your pediatrician or emergency services."
+    }
+   ],
+   "fallback": true,
+   "sent": "Perdón, no me salió bien la respuesta. ¿Me lo decís de nuevo?"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T09:40:00-03:00",
+   "unix": 1792672800.0,
+   "channel": "telegram",
+   "text": "Perdón, no me salió bien la respuesta. ¿Me lo decís de nuevo?",
+   "chat_id": "9000002"
+  },
+  {
+   "kind": "turn",
+   "t": -1792297828.429,
+   "ts": "2026-10-22T09:40:00-03:00",
+   "unix": 1793574322.113,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 48
+  }
+ ]
+}

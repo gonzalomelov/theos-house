@@ -1,0 +1,257 @@
+{
+ "id": "A1-064",
+ "child": "heldout-baby-a",
+ "created": [],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T01:53:00-03:00",
+   "chat": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:00 a 08:00."
+  },
+  {
+   "at": "2026-10-22T01:53:00-03:00",
+   "chat": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:00 a 08:00."
+  },
+  {
+   "at": "2026-10-22T01:55:00-03:00",
+   "chat": "9000002",
+   "text": "No pude terminar eso. Decímelo de nuevo con otras palabras."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T01:55:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "teta derexha 14 min",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0556,
+ "brain_calls": {
+  "inference.baseten.co": 8
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T01:53:00-03:00",
+   "unix": 1792644780.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:00 a 08:00.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T01:53:00-03:00",
+   "unix": 1792644780.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:00 a 08:00.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T01:55:00-03:00",
+   "unix": 1792644900.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3819,
+   "output_tokens": 140,
+   "reasoning_tokens": 42,
+   "usd": 0.00536875,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T01:55:00-03:00",
+   "unix": 1792644900.0,
+   "name": "log_baby_event",
+   "status": "error"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T01:55:00-03:00",
+   "unix": 1792644900.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3951,
+   "output_tokens": 447,
+   "reasoning_tokens": 345,
+   "usd": 0.0068385,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T01:55:00-03:00",
+   "unix": 1792644900.0,
+   "name": "log_baby_event",
+   "status": "error"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T01:55:00-03:00",
+   "unix": 1792644900.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4083,
+   "output_tokens": 431,
+   "reasoning_tokens": 335,
+   "usd": 0.0069355,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T01:55:00-03:00",
+   "unix": 1792644900.0,
+   "name": "log_baby_event",
+   "status": "error"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T01:55:00-03:00",
+   "unix": 1792644900.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 4215,
+   "output_tokens": 443,
+   "reasoning_tokens": 423,
+   "usd": 0.0071515,
+   "fallback": false
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T01:55:00-03:00",
+   "unix": 1792644900.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4398,
+   "output_tokens": 258,
+   "reasoning_tokens": 179,
+   "usd": 0.006594,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T01:55:00-03:00",
+   "unix": 1792644900.0,
+   "name": "log_baby_event",
+   "status": "error"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T01:55:00-03:00",
+   "unix": 1792644900.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4530,
+   "output_tokens": 723,
+   "reasoning_tokens": 634,
+   "usd": 0.00873525,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T01:55:00-03:00",
+   "unix": 1792644900.0,
+   "name": "log_baby_event",
+   "status": "error"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T01:55:00-03:00",
+   "unix": 1792644900.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4655,
+   "output_tokens": 509,
+   "reasoning_tokens": 409,
+   "usd": 0.007982,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T01:55:00-03:00",
+   "unix": 1792644900.0,
+   "name": "log_baby_event",
+   "status": "error"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T01:55:00-03:00",
+   "unix": 1792644900.0,
+   "channel": "telegram",
+   "text": "No pude terminar eso. Decímelo de nuevo con otras palabras.",
+   "chat_id": "9000002"
+  },
+  {
+   "kind": "turn",
+   "t": -1792271841.241,
+   "ts": "2026-10-22T01:55:00-03:00",
+   "unix": 1793572409.153,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 19
+  }
+ ]
+}

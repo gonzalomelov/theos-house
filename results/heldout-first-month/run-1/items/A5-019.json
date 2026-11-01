@@ -1,0 +1,75 @@
+{
+ "id": "A5-019",
+ "child": "heldout-baby-a",
+ "created": [],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T13:00:00-03:00",
+   "chat": "9000002",
+   "text": "Claro Ceci, te paso una fácil y rápida de milanesas al horno:\n\n**Milanesas al horno jugosas (sin fritar)**\n\nIngredientes:\n- 4 milanesas (pollo o carne)\n- 2 huevos\n- Pan rallado o rebozador c/n\n- Sal, pimienta, provenzal o ajo y perejil\n- Un chorrito de aceite o aceite en spray\n\nPasos:\n1. Precalentá el horno fuerte (200°C). Aceitá un poquito una fuente o ponele papel manteca.\n2. Batí los huevos con sal, pimienta y provenzal.\n3. Pasá las milanesas por huevo y después por pan rallado, apretando bien.\n4. Acomodalas en la fuente sin encimarlas. Rocialas con un hilo de aceite arriba para que doren.\n5. Horno 15 min de un lado, dalas vuelta y 8-10 min más hasta que estén doraditas.\n\nTip: si las querés más jugosas, no las hagas muy finitas y no te pases de horno.\n\n¿Querés que te pase también una guarnición rápida para acompañar?"
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T13:00:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "pasame una receta facil de milanesas al horno q no tengo tiempo de nada",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.006,
+ "brain_calls": {
+  "inference.baseten.co": 1
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T13:00:00-03:00",
+   "unix": 1792684800.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 3829,
+   "output_tokens": 291,
+   "reasoning_tokens": 23,
+   "usd": 0.006023,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T13:00:00-03:00",
+   "unix": 1792684800.0,
+   "channel": "telegram",
+   "text": "Claro Ceci, te paso una fácil y rápida de milanesas al horno:\n\n**Milanesas al horno jugosas (sin fritar)**\n\nIngredientes:\n- 4 milanesas (pollo o carne)\n- 2 huevos\n- Pan rallado o rebozador c/n\n- Sal, pimienta, provenzal o ajo y perejil\n- Un chorrito de aceite o aceite en spray\n\nPasos:\n1. Precalentá el horno fuerte (200°C). Aceitá un poquito una fuente o ponele papel manteca.\n2. Batí los huevos con sal, pimienta y provenzal.\n3. Pasá las milanesas por huevo y después por pan rallado, apretando bien.\n4. Acomodalas en la fuente sin encimarlas. Rocialas con un hilo de aceite arriba para que doren.\n5. Horno 15 min de un lado, dalas vuelta y 8-10 min más hasta que estén doraditas.\n\nTip: si las querés más jugosas, no las hagas muy finitas y no te pases de horno.\n\n¿Querés que te pase también una guarnición rápida para acompañar?",
+   "chat_id": "9000002"
+  },
+  {
+   "kind": "turn",
+   "t": -1792309682.079,
+   "ts": "2026-10-22T13:00:00-03:00",
+   "unix": 1793574468.464,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 71
+  }
+ ]
+}

@@ -1,0 +1,147 @@
+{
+ "id": "A4-070",
+ "child": "heldout-baby-c",
+ "created": [
+  {
+   "endpoint": "notes",
+   "id": 288,
+   "child": 5,
+   "note": "strains and goes red when he poops",
+   "image": null,
+   "time": "2026-10-22T14:20:00Z",
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T11:20:00-03:00",
+   "chat": "9000002",
+   "text": "Perdón, no me salió bien la respuesta. ¿Me lo decís de nuevo?"
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T11:20:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "both sides about 25 min total, he strains and goes red when he poops, is that normal?",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0122,
+ "brain_calls": {
+  "inference.baseten.co": 2
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T11:20:00-03:00",
+   "unix": 1792678800.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 2,
+   "input_tokens": 3833,
+   "output_tokens": 305,
+   "reasoning_tokens": 127,
+   "usd": 0.0060875,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T11:20:00-03:00",
+   "unix": 1792678800.0,
+   "name": "log_baby_event",
+   "status": "held"
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T11:20:00-03:00",
+   "unix": 1792678800.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T11:20:00-03:00",
+   "unix": 1792678800.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 4110,
+   "output_tokens": 225,
+   "reasoning_tokens": 148,
+   "usd": 0.00609375,
+   "fallback": false
+  },
+  {
+   "kind": "final_guard",
+   "t": 120.0,
+   "ts": "2026-10-22T11:20:00-03:00",
+   "unix": 1792678800.0,
+   "where": "agent:telegram",
+   "lang": "es",
+   "removed": [
+    {
+     "why": "not in Spanish",
+     "text": "Logged the note about straining when pooping."
+    },
+    {
+     "why": "not in Spanish",
+     "text": "For the feeding you mentioned, both sides about 25 minutes total, I have it noted for today."
+    },
+    {
+     "why": "not in Spanish",
+     "text": "I cannot advise on whether straining and going red is normal or not."
+    },
+    {
+     "why": "not in Spanish",
+     "text": "If you are worried, please call Theo's pediatrician, and if it seems urgent seek emergency care."
+    }
+   ],
+   "fallback": true,
+   "sent": "Perdón, no me salió bien la respuesta. ¿Me lo decís de nuevo?"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T11:20:00-03:00",
+   "unix": 1792678800.0,
+   "channel": "telegram",
+   "text": "Perdón, no me salió bien la respuesta. ¿Me lo decís de nuevo?",
+   "chat_id": "9000002"
+  },
+  {
+   "kind": "turn",
+   "t": -1792303735.114,
+   "ts": "2026-10-22T11:20:00-03:00",
+   "unix": 1793574415.429,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 85
+  }
+ ]
+}

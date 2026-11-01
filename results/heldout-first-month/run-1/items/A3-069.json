@@ -1,0 +1,260 @@
+{
+ "id": "A3-069",
+ "child": "heldout-baby-c",
+ "created": [],
+ "seed_after": [
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 588,
+    "child": 5,
+    "start": "2026-10-22T19:00:00Z",
+    "end": "2026-10-22T19:15:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 90.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 588,
+    "child": 5,
+    "start": "2026-10-22T19:00:00Z",
+    "end": "2026-10-22T19:15:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 90.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "changes",
+   "before": {
+    "id": 507,
+    "child": 5,
+    "time": "2026-10-22T11:10:00Z",
+    "wet": true,
+    "solid": true,
+    "color": "yellow",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "changes",
+    "id": 507,
+    "child": 5,
+    "time": "2026-10-22T11:10:00Z",
+    "wet": true,
+    "solid": true,
+    "color": "yellow",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "changes",
+   "before": {
+    "id": 508,
+    "child": 5,
+    "time": "2026-10-22T15:30:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "changes",
+    "id": 508,
+    "child": 5,
+    "time": "2026-10-22T15:30:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "changes",
+   "before": {
+    "id": 509,
+    "child": 5,
+    "time": "2026-10-22T18:20:00Z",
+    "wet": false,
+    "solid": true,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "changes",
+    "id": 509,
+    "child": 5,
+    "time": "2026-10-22T18:20:00Z",
+    "wet": false,
+    "solid": true,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "changes",
+   "before": {
+    "id": 510,
+    "child": 5,
+    "time": "2026-10-22T20:45:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "changes",
+    "id": 510,
+    "child": 5,
+    "time": "2026-10-22T20:45:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T19:00:00-03:00",
+   "chat": "9000002",
+   "text": "La última caca fue hoy a las 15:20.\n\nHoy van 4 pañales: 2 solo pis, 2 con caca."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T19:00:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "cuando fue la ultima caca?",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0185,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T19:00:00-03:00",
+   "unix": 1792706400.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 2,
+   "input_tokens": 3818,
+   "output_tokens": 167,
+   "reasoning_tokens": 43,
+   "usd": 0.00548225,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T19:00:00-03:00",
+   "unix": 1792706400.0,
+   "name": "baby_summary",
+   "status": "ran"
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T19:00:00-03:00",
+   "unix": 1792706400.0,
+   "name": "read_baby_log",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T19:00:00-03:00",
+   "unix": 1792706400.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 4488,
+   "output_tokens": 73,
+   "reasoning_tokens": 31,
+   "usd": 0.00592025,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T19:00:00-03:00",
+   "unix": 1792706400.0,
+   "channel": "telegram",
+   "text": "La última caca fue hoy a las 15:20.\n\nHoy van 4 pañales: 2 solo pis, 2 con caca.",
+   "chat_id": "9000002"
+  },
+  {
+   "kind": "turn",
+   "t": -1792331834.31,
+   "ts": "2026-10-22T19:00:00-03:00",
+   "unix": 1793573916.224,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 26
+  }
+ ]
+}

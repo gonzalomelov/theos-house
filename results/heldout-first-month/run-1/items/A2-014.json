@@ -1,0 +1,209 @@
+{
+ "id": "A2-014",
+ "child": "heldout-baby-b",
+ "created": [
+  {
+   "endpoint": "changes",
+   "id": 406,
+   "child": 4,
+   "time": "2026-10-22T04:50:00Z",
+   "wet": true,
+   "solid": true,
+   "color": "",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 416,
+    "child": 4,
+    "start": "2026-10-22T04:15:00Z",
+    "end": "2026-10-22T04:30:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 80.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 416,
+    "child": 4,
+    "start": "2026-10-22T04:15:00Z",
+    "end": "2026-10-22T04:30:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 80.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T01:48:00-03:00",
+   "chat": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 03:30, 05:30. La luz espera a que se despierte.\nVentana para aspirar de 08:00 a 09:00."
+  },
+  {
+   "at": "2026-10-22T01:48:00-03:00",
+   "chat": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 03:30, 05:30. La luz espera a que se despierte.\nVentana para aspirar de 08:00 a 09:00."
+  },
+  {
+   "at": "2026-10-22T01:50:00-03:00",
+   "chat": "9000001",
+   "text": "Anotado, pañal con pis y caca."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T01:50:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "pañal con pis y un poquito de caca amarillenta",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0233,
+ "brain_calls": {
+  "inference.baseten.co": 4
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T01:48:00-03:00",
+   "unix": 1792644480.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 03:30, 05:30. La luz espera a que se despierte.\nVentana para aspirar de 08:00 a 09:00.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T01:48:00-03:00",
+   "unix": 1792644480.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 03:30, 05:30. La luz espera a que se despierte.\nVentana para aspirar de 08:00 a 09:00.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T01:50:00-03:00",
+   "unix": 1792644600.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3826,
+   "output_tokens": 216,
+   "reasoning_tokens": 88,
+   "usd": 0.0057005,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T01:50:00-03:00",
+   "unix": 1792644600.0,
+   "name": "log_baby_event",
+   "status": "error"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T01:50:00-03:00",
+   "unix": 1792644600.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3990,
+   "output_tokens": 192,
+   "reasoning_tokens": 100,
+   "usd": 0.0058035,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T01:50:00-03:00",
+   "unix": 1792644600.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T01:50:00-03:00",
+   "unix": 1792644600.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 4142,
+   "output_tokens": 66,
+   "reasoning_tokens": 43,
+   "usd": 0.005458,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T01:50:00-03:00",
+   "unix": 1792644600.0,
+   "channel": "telegram",
+   "text": "Anotado, pañal con pis y caca.",
+   "chat_id": "9000001"
+  },
+  {
+   "kind": "turn",
+   "t": -1792271333.359,
+   "ts": "2026-10-22T01:50:00-03:00",
+   "unix": 1793572617.138,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 46
+  }
+ ]
+}

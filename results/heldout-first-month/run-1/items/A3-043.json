@@ -1,0 +1,338 @@
+{
+ "id": "A3-043",
+ "child": "heldout-baby-a",
+ "created": [],
+ "seed_after": [
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 498,
+    "child": 3,
+    "start": "2026-10-22T02:15:00Z",
+    "end": "2026-10-22T02:30:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 100.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 498,
+    "child": 3,
+    "start": "2026-10-22T02:15:00Z",
+    "end": "2026-10-22T02:30:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 100.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 499,
+    "child": 3,
+    "start": "2026-10-22T05:10:00Z",
+    "end": "2026-10-22T05:25:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 70.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 499,
+    "child": 3,
+    "start": "2026-10-22T05:10:00Z",
+    "end": "2026-10-22T05:25:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 70.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 501,
+    "child": 3,
+    "start": "2026-10-22T08:30:00Z",
+    "end": "2026-10-22T08:45:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 80.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 501,
+    "child": 3,
+    "start": "2026-10-22T08:30:00Z",
+    "end": "2026-10-22T08:45:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 80.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 503,
+    "child": 3,
+    "start": "2026-10-22T12:00:00Z",
+    "end": "2026-10-22T12:15:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 90.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 503,
+    "child": 3,
+    "start": "2026-10-22T12:00:00Z",
+    "end": "2026-10-22T12:15:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 90.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 505,
+    "child": 3,
+    "start": "2026-10-22T15:20:00Z",
+    "end": "2026-10-22T15:35:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 60.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 505,
+    "child": 3,
+    "start": "2026-10-22T15:20:00Z",
+    "end": "2026-10-22T15:35:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 60.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 507,
+    "child": 3,
+    "start": "2026-10-22T18:10:00Z",
+    "end": "2026-10-22T18:25:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 90.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 507,
+    "child": 3,
+    "start": "2026-10-22T18:10:00Z",
+    "end": "2026-10-22T18:25:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 90.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "changes",
+   "before": {
+    "id": 458,
+    "child": 3,
+    "time": "2026-10-22T08:45:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "changes",
+    "id": 458,
+    "child": 3,
+    "time": "2026-10-22T08:45:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T16:00:00-03:00",
+   "chat": "9000002",
+   "text": "Since midnight today: 5 feedings, 390 ml total."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T16:00:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "how much has he had since midnight",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0114,
+ "brain_calls": {
+  "inference.baseten.co": 2
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T16:00:00-03:00",
+   "unix": 1792695600.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3818,
+   "output_tokens": 123,
+   "reasoning_tokens": 43,
+   "usd": 0.00529525,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T16:00:00-03:00",
+   "unix": 1792695600.0,
+   "name": "baby_summary",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T16:00:00-03:00",
+   "unix": 1792695600.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 4154,
+   "output_tokens": 206,
+   "reasoning_tokens": 167,
+   "usd": 0.006068,
+   "fallback": false
+  },
+  {
+   "kind": "final_guard",
+   "t": 120.0,
+   "ts": "2026-10-22T16:00:00-03:00",
+   "unix": 1792695600.0,
+   "where": "agent:telegram",
+   "lang": "es",
+   "removed": [
+    {
+     "why": "not in Spanish",
+     "text": "Last feeding was at 15:25, 90 ml by bottle."
+    }
+   ],
+   "fallback": false,
+   "sent": "Since midnight today: 5 feedings, 390 ml total."
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T16:00:00-03:00",
+   "unix": 1792695600.0,
+   "channel": "telegram",
+   "text": "Since midnight today: 5 feedings, 390 ml total.",
+   "chat_id": "9000002"
+  },
+  {
+   "kind": "turn",
+   "t": -1792321301.489,
+   "ts": "2026-10-22T16:00:00-03:00",
+   "unix": 1793573649.015,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 34
+  }
+ ]
+}

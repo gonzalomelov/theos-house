@@ -1,0 +1,109 @@
+{
+ "id": "A2-038",
+ "child": "heldout-baby-b",
+ "created": [
+  {
+   "endpoint": "timers",
+   "id": 82,
+   "child": 4,
+   "name": "sleep",
+   "start": "2026-10-22T13:35:00Z",
+   "duration": "10 09:04:32.392367",
+   "user": 2
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T10:35:00-03:00",
+   "chat": "9000001",
+   "text": "Anotado, se durmió en upa."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T10:35:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "se acaba de dormir en upa",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0107,
+ "brain_calls": {
+  "inference.baseten.co": 2
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T10:35:00-03:00",
+   "unix": 1792676100.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3818,
+   "output_tokens": 190,
+   "reasoning_tokens": 97,
+   "usd": 0.00558,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T10:35:00-03:00",
+   "unix": 1792676100.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T10:35:00-03:00",
+   "unix": 1792676100.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 3957,
+   "output_tokens": 35,
+   "reasoning_tokens": 13,
+   "usd": 0.005095,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T10:35:00-03:00",
+   "unix": 1792676100.0,
+   "channel": "telegram",
+   "text": "Anotado, se durmió en upa.",
+   "chat_id": "9000001"
+  },
+  {
+   "kind": "turn",
+   "t": -1792302684.446,
+   "ts": "2026-10-22T10:35:00-03:00",
+   "unix": 1793572766.052,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 25
+  }
+ ]
+}

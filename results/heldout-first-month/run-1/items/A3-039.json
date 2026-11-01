@@ -1,0 +1,240 @@
+{
+ "id": "A3-039",
+ "child": "heldout-baby-c",
+ "created": [
+  {
+   "endpoint": "changes",
+   "id": 459,
+   "child": 5,
+   "time": "2026-10-22T12:10:00Z",
+   "wet": true,
+   "solid": false,
+   "color": "",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  },
+  {
+   "endpoint": "changes",
+   "id": 455,
+   "child": 5,
+   "time": "2026-10-22T11:00:00Z",
+   "wet": true,
+   "solid": false,
+   "color": "",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T07:58:00-03:00",
+   "chat": "9000001",
+   "text": "Buen día, Gonza.\nAnoche: 2 tomas, te levantaste una vez.\nEsta noche te toca a vos.\nClima: lluvia, 16 a 18 C, 9.9 mm de lluvia.\nMenú de Cookidoo: Arroz blanco."
+  },
+  {
+   "at": "2026-10-22T07:58:00-03:00",
+   "chat": "9000002",
+   "text": "Buen día, Ceci.\nAnoche: 2 tomas, te levantaste una vez.\nClima: lluvia, 16 a 18 C, 9.9 mm de lluvia.\nMenú de Cookidoo: Arroz blanco."
+  },
+  {
+   "at": "2026-10-22T08:00:00-03:00",
+   "chat": "9000002",
+   "text": "Anotado, pañal con pis a las 08:00."
+  },
+  {
+   "at": "2026-10-22T09:10:00-03:00",
+   "chat": "9000001",
+   "text": "Anotado, pañal con pis a las 09:10."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T08:00:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "pañal con pis",
+   "setup": true,
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-22T09:10:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "otro pañal con pis",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0234,
+ "brain_calls": {
+  "inference.baseten.co": 5
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T07:58:00-03:00",
+   "unix": 1792666680.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Buen día, Gonza.\nAnoche: 2 tomas, te levantaste una vez.\nEsta noche te toca a vos.\nClima: lluvia, 16 a 18 C, 9.9 mm de lluvia.\nMenú de Cookidoo: Arroz blanco.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "family-push",
+   "routine": "morning",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T07:58:00-03:00",
+   "unix": 1792666680.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Buen día, Ceci.\nAnoche: 2 tomas, te levantaste una vez.\nClima: lluvia, 16 a 18 C, 9.9 mm de lluvia.\nMenú de Cookidoo: Arroz blanco.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "family-push",
+   "routine": "morning",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T08:00:00-03:00",
+   "unix": 1792666800.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3816,
+   "output_tokens": 125,
+   "reasoning_tokens": 54,
+   "usd": 0.00530125,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T08:00:00-03:00",
+   "unix": 1792666800.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T08:00:00-03:00",
+   "unix": 1792666800.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 3963,
+   "output_tokens": 72,
+   "reasoning_tokens": 46,
+   "usd": 0.00525975,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T08:00:00-03:00",
+   "unix": 1792666800.0,
+   "channel": "telegram",
+   "text": "Anotado, pañal con pis a las 08:00.",
+   "chat_id": "9000002"
+  },
+  {
+   "kind": "turn",
+   "t": -1792292638.144,
+   "ts": "2026-10-22T08:00:00-03:00",
+   "unix": 1793573512.358,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 13
+  },
+  {
+   "kind": "brain_call",
+   "t": 4320.0,
+   "ts": "2026-10-22T09:10:00-03:00",
+   "unix": 1792671000.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3853,
+   "output_tokens": 124,
+   "reasoning_tokens": 28,
+   "usd": 0.00534325,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 4320.0,
+   "ts": "2026-10-22T09:10:00-03:00",
+   "unix": 1792671000.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 4320.0,
+   "ts": "2026-10-22T09:10:00-03:00",
+   "unix": 1792671000.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 4025,
+   "output_tokens": 41,
+   "reasoning_tokens": 15,
+   "usd": 0.0052055,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 4320.0,
+   "ts": "2026-10-22T09:10:00-03:00",
+   "unix": 1792671000.0,
+   "channel": "telegram",
+   "text": "Anotado, pañal con pis a las 09:10.",
+   "chat_id": "9000001"
+  },
+  {
+   "kind": "turn",
+   "t": -1792292510.354,
+   "ts": "2026-10-22T09:10:00-03:00",
+   "unix": 1793573640.15,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 18
+  }
+ ]
+}

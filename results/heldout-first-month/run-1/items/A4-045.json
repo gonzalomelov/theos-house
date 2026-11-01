@@ -1,0 +1,150 @@
+{
+ "id": "A4-045",
+ "child": "heldout-baby-b",
+ "created": [
+  {
+   "endpoint": "feedings",
+   "id": 605,
+   "child": 4,
+   "start": "2026-10-22T18:15:00Z",
+   "end": "2026-10-22T18:30:00Z",
+   "duration": "00:15:00",
+   "type": "breast milk",
+   "method": "left breast",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  },
+  {
+   "endpoint": "notes",
+   "id": 267,
+   "child": 4,
+   "note": "tiene 37.4",
+   "image": null,
+   "time": "2026-10-22T18:30:00Z",
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T15:30:00-03:00",
+   "chat": "9000002",
+   "text": "Registrado teta izquierda 15 min.\n\nSobre si darle algo por la temperatura, no puedo aconsejar sobre salud, síntomas o medicación. Te sugiero contactar a su pediatra para que te indique qué hacer, y si es urgente acudir a emergencias."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T15:30:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "le di la teta izquierda 15 min. tiene 37.4 le doy algo?",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0184,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T15:30:00-03:00",
+   "unix": 1792693800.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3831,
+   "output_tokens": 189,
+   "reasoning_tokens": 91,
+   "usd": 0.005592,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T15:30:00-03:00",
+   "unix": 1792693800.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T15:30:00-03:00",
+   "unix": 1792693800.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4019,
+   "output_tokens": 242,
+   "reasoning_tokens": 139,
+   "usd": 0.00605225,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T15:30:00-03:00",
+   "unix": 1792693800.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T15:30:00-03:00",
+   "unix": 1792693800.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 4167,
+   "output_tokens": 370,
+   "reasoning_tokens": 306,
+   "usd": 0.00678125,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T15:30:00-03:00",
+   "unix": 1792693800.0,
+   "channel": "telegram",
+   "text": "Registrado teta izquierda 15 min.\n\nSobre si darle algo por la temperatura, no puedo aconsejar sobre salud, síntomas o medicación. Te sugiero contactar a su pediatra para que te indique qué hacer, y si es urgente acudir a emergencias.",
+   "chat_id": "9000002"
+  },
+  {
+   "kind": "turn",
+   "t": -1792319020.323,
+   "ts": "2026-10-22T15:30:00-03:00",
+   "unix": 1793574130.216,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 55
+  }
+ ]
+}

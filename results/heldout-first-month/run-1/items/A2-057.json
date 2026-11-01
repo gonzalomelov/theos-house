@@ -1,0 +1,164 @@
+{
+ "id": "A2-057",
+ "child": "heldout-baby-c",
+ "created": [
+  {
+   "endpoint": "sleep",
+   "id": 290,
+   "child": 5,
+   "start": "2026-10-22T17:10:00Z",
+   "end": "2026-10-22T18:35:00Z",
+   "duration": "01:25:00",
+   "nap": true,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [
+  {
+   "endpoint": "timers",
+   "before": {
+    "id": 90,
+    "child": 5,
+    "name": "sleep",
+    "start": "2026-10-22T17:10:00Z",
+    "duration": "10 05:30:15.350804",
+    "user": 2
+   },
+   "after": null
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T15:35:00-03:00",
+   "chat": "9000002",
+   "text": "Anotado, se despertó."
+  },
+  {
+   "at": "2026-10-22T15:38:00-03:00",
+   "chat": "9000001",
+   "text": "Podría pasar la aspiradora antes de las 16:25, pero el registro no dice dónde está en las últimas 2 horas, así que queda en su base. Decime dónde está, o si salió con ustedes."
+  },
+  {
+   "at": "2026-10-22T15:38:00-03:00",
+   "chat": "9000002",
+   "text": "Podría pasar la aspiradora antes de las 16:25, pero el registro no dice dónde está en las últimas 2 horas, así que queda en su base. Decime dónde está, o si salió con ustedes."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T15:35:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "ya se desperto",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0185,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T15:35:00-03:00",
+   "unix": 1792694100.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3815,
+   "output_tokens": 262,
+   "reasoning_tokens": 169,
+   "usd": 0.00588225,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T15:35:00-03:00",
+   "unix": 1792694100.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T15:35:00-03:00",
+   "unix": 1792694100.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 3980,
+   "output_tokens": 45,
+   "reasoning_tokens": 27,
+   "usd": 0.00516625,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T15:35:00-03:00",
+   "unix": 1792694100.0,
+   "channel": "telegram",
+   "text": "Anotado, se despertó.",
+   "chat_id": "9000002"
+  },
+  {
+   "kind": "turn",
+   "t": -1792320620.492,
+   "ts": "2026-10-22T15:35:00-03:00",
+   "unix": 1793572830.006,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 14
+  },
+  {
+   "kind": "reply",
+   "t": 300.0,
+   "ts": "2026-10-22T15:38:00-03:00",
+   "unix": 1792694280.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Podría pasar la aspiradora antes de las 16:25, pero el registro no dice dónde está en las últimas 2 horas, así que queda en su base. Decime dónde está, o si salió con ustedes.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "day-engine",
+   "routine": "floor_clean",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 300.0,
+   "ts": "2026-10-22T15:38:00-03:00",
+   "unix": 1792694280.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Podría pasar la aspiradora antes de las 16:25, pero el registro no dice dónde está en las últimas 2 horas, así que queda en su base. Decime dónde está, o si salió con ustedes.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "day-engine",
+   "routine": "floor_clean",
+   "check_now": null
+  }
+ ]
+}

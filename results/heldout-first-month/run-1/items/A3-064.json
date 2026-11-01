@@ -1,0 +1,244 @@
+{
+ "id": "A3-064",
+ "child": "heldout-baby-a",
+ "created": [],
+ "seed_after": [
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 581,
+    "child": 3,
+    "start": "2026-10-22T14:40:00Z",
+    "end": "2026-10-22T14:55:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 90.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 581,
+    "child": 3,
+    "start": "2026-10-22T14:40:00Z",
+    "end": "2026-10-22T14:55:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 90.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "sleep",
+   "before": {
+    "id": 324,
+    "child": 3,
+    "start": "2026-10-22T12:00:00Z",
+    "end": "2026-10-22T14:30:00Z",
+    "duration": "02:30:00",
+    "nap": true,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "sleep",
+    "id": 324,
+    "child": 3,
+    "start": "2026-10-22T12:00:00Z",
+    "end": "2026-10-22T14:30:00Z",
+    "duration": "02:30:00",
+    "nap": true,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "sleep",
+   "before": {
+    "id": 325,
+    "child": 3,
+    "start": "2026-10-22T15:30:00Z",
+    "end": "2026-10-22T17:00:00Z",
+    "duration": "01:30:00",
+    "nap": true,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "sleep",
+    "id": 325,
+    "child": 3,
+    "start": "2026-10-22T15:30:00Z",
+    "end": "2026-10-22T17:00:00Z",
+    "duration": "01:30:00",
+    "nap": true,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "sleep",
+   "before": {
+    "id": 326,
+    "child": 3,
+    "start": "2026-10-22T18:10:00Z",
+    "end": "2026-10-22T19:40:00Z",
+    "duration": "01:30:00",
+    "nap": false,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "sleep",
+    "id": 326,
+    "child": 3,
+    "start": "2026-10-22T18:10:00Z",
+    "end": "2026-10-22T19:40:00Z",
+    "duration": "01:30:00",
+    "nap": false,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "sleep",
+   "before": {
+    "id": 327,
+    "child": 3,
+    "start": "2026-10-22T20:00:00Z",
+    "end": "2026-10-22T20:45:00Z",
+    "duration": "00:45:00",
+    "nap": false,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "sleep",
+    "id": 327,
+    "child": 3,
+    "start": "2026-10-22T20:00:00Z",
+    "end": "2026-10-22T20:45:00Z",
+    "duration": "00:45:00",
+    "nap": false,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T18:30:00-03:00",
+   "chat": "9000002",
+   "text": "Desde el mediodía durmió 225 minutos en 3 siestas."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T18:30:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "cuanto durmio desde el mediodia",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.02,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T18:30:00-03:00",
+   "unix": 1792704600.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3820,
+   "output_tokens": 145,
+   "reasoning_tokens": 60,
+   "usd": 0.00539125,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T18:30:00-03:00",
+   "unix": 1792704600.0,
+   "name": "baby_summary",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T18:30:00-03:00",
+   "unix": 1792704600.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 4155,
+   "output_tokens": 46,
+   "reasoning_tokens": 19,
+   "usd": 0.00538925,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T18:30:00-03:00",
+   "unix": 1792704600.0,
+   "channel": "telegram",
+   "text": "Desde el mediodía durmió 225 minutos en 3 siestas.",
+   "chat_id": "9000002"
+  },
+  {
+   "kind": "turn",
+   "t": -1792330082.924,
+   "ts": "2026-10-22T18:30:00-03:00",
+   "unix": 1793573867.581,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 31
+  }
+ ]
+}

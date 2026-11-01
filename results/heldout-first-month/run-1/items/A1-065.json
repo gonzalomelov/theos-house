@@ -1,0 +1,131 @@
+{
+ "id": "A1-065",
+ "child": "heldout-baby-b",
+ "created": [
+  {
+   "endpoint": "feedings",
+   "id": 400,
+   "child": 4,
+   "start": "2026-10-22T13:45:00Z",
+   "end": "2026-10-22T14:05:00Z",
+   "duration": "00:20:00",
+   "type": "breast milk",
+   "method": "left breast",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T11:40:00-03:00",
+   "chat": "9000002",
+   "text": "Perdón, no me salió bien la respuesta. ¿Me lo decís de nuevo?"
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T11:40:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "left breast 20 min at 11:05",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0112,
+ "brain_calls": {
+  "inference.baseten.co": 2
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T11:40:00-03:00",
+   "unix": 1792680000.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3821,
+   "output_tokens": 250,
+   "reasoning_tokens": 127,
+   "usd": 0.00583875,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T11:40:00-03:00",
+   "unix": 1792680000.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T11:40:00-03:00",
+   "unix": 1792680000.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 4034,
+   "output_tokens": 74,
+   "reasoning_tokens": 51,
+   "usd": 0.005357,
+   "fallback": false
+  },
+  {
+   "kind": "final_guard",
+   "t": 120.0,
+   "ts": "2026-10-22T11:40:00-03:00",
+   "unix": 1792680000.0,
+   "where": "agent:telegram",
+   "lang": "es",
+   "removed": [
+    {
+     "why": "not in Spanish",
+     "text": "Logged left breast for 20 minutes at 11:05."
+    }
+   ],
+   "fallback": true,
+   "sent": "Perdón, no me salió bien la respuesta. ¿Me lo decís de nuevo?"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T11:40:00-03:00",
+   "unix": 1792680000.0,
+   "channel": "telegram",
+   "text": "Perdón, no me salió bien la respuesta. ¿Me lo decís de nuevo?",
+   "chat_id": "9000002"
+  },
+  {
+   "kind": "turn",
+   "t": -1792306964.44,
+   "ts": "2026-10-22T11:40:00-03:00",
+   "unix": 1793572385.954,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 27
+  }
+ ]
+}

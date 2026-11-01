@@ -1,0 +1,310 @@
+{
+ "id": "A3-034",
+ "child": "heldout-baby-a",
+ "created": [
+  {
+   "endpoint": "sleep",
+   "id": 313,
+   "child": 3,
+   "start": "2026-10-22T13:00:00Z",
+   "end": "2026-10-22T15:25:00Z",
+   "duration": "02:25:00",
+   "nap": true,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 478,
+    "child": 3,
+    "start": "2026-10-22T12:35:00Z",
+    "end": "2026-10-22T12:50:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 90.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 478,
+    "child": 3,
+    "start": "2026-10-22T12:35:00Z",
+    "end": "2026-10-22T12:50:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 90.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "timers",
+   "before": {
+    "id": 112,
+    "child": 3,
+    "name": "sleep",
+    "start": "2026-10-22T13:00:00Z",
+    "duration": "10 09:51:50.460061",
+    "user": 2
+   },
+   "after": null
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T12:30:00-03:00",
+   "chat": "9000002",
+   "text": "Anotado, se despertó a las 12:25."
+  },
+  {
+   "at": "2026-10-22T12:31:00-03:00",
+   "chat": "9000002",
+   "text": "No pude anotarlo, ¿me lo repetís?"
+  },
+  {
+   "at": "2026-10-22T12:33:00-03:00",
+   "chat": "9000001",
+   "text": "Podría pasar la aspiradora antes de las 13:14, pero el registro no dice dónde está en las últimas 2 horas, así que queda en su base. Decime dónde está, o si salió con ustedes."
+  },
+  {
+   "at": "2026-10-22T12:33:00-03:00",
+   "chat": "9000002",
+   "text": "Podría pasar la aspiradora antes de las 13:14, pero el registro no dice dónde está en las últimas 2 horas, así que queda en su base. Decime dónde está, o si salió con ustedes."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T12:30:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "se desperto a las 12:25",
+   "setup": true,
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-22T12:31:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "se despertó 12:25",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0418,
+ "brain_calls": {
+  "inference.baseten.co": 7
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T12:30:00-03:00",
+   "unix": 1792683000.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3820,
+   "output_tokens": 193,
+   "reasoning_tokens": 72,
+   "usd": 0.00559525,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T12:30:00-03:00",
+   "unix": 1792683000.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T12:30:00-03:00",
+   "unix": 1792683000.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 4010,
+   "output_tokens": 46,
+   "reasoning_tokens": 22,
+   "usd": 0.005208,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T12:30:00-03:00",
+   "unix": 1792683000.0,
+   "channel": "telegram",
+   "text": "Anotado, se despertó a las 12:25.",
+   "chat_id": "9000002"
+  },
+  {
+   "kind": "turn",
+   "t": -1792308825.277,
+   "ts": "2026-10-22T12:30:00-03:00",
+   "unix": 1793573525.226,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 23
+  },
+  {
+   "kind": "brain_call",
+   "t": 180.0,
+   "ts": "2026-10-22T12:31:00-03:00",
+   "unix": 1792683060.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3856,
+   "output_tokens": 200,
+   "reasoning_tokens": 80,
+   "usd": 0.00567,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 180.0,
+   "ts": "2026-10-22T12:31:00-03:00",
+   "unix": 1792683060.0,
+   "name": "log_baby_event",
+   "status": "error"
+  },
+  {
+   "kind": "brain_call",
+   "t": 180.0,
+   "ts": "2026-10-22T12:31:00-03:00",
+   "unix": 1792683060.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 3989,
+   "output_tokens": 97,
+   "reasoning_tokens": 57,
+   "usd": 0.0053985,
+   "fallback": false
+  },
+  {
+   "kind": "brain_call",
+   "t": 180.0,
+   "ts": "2026-10-22T12:31:00-03:00",
+   "unix": 1792683060.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4191,
+   "output_tokens": 285,
+   "reasoning_tokens": 171,
+   "usd": 0.00645,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 180.0,
+   "ts": "2026-10-22T12:31:00-03:00",
+   "unix": 1792683060.0,
+   "name": "log_baby_event",
+   "status": "error"
+  },
+  {
+   "kind": "brain_call",
+   "t": 180.0,
+   "ts": "2026-10-22T12:31:00-03:00",
+   "unix": 1792683060.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 4324,
+   "output_tokens": 59,
+   "reasoning_tokens": 24,
+   "usd": 0.00565575,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 180.0,
+   "ts": "2026-10-22T12:31:00-03:00",
+   "unix": 1792683060.0,
+   "channel": "telegram",
+   "text": "No pude anotarlo, ¿me lo repetís?",
+   "chat_id": "9000002"
+  },
+  {
+   "kind": "turn",
+   "t": -1792308815.088,
+   "ts": "2026-10-22T12:31:00-03:00",
+   "unix": 1793573535.415,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 17
+  },
+  {
+   "kind": "reply",
+   "t": 300.0,
+   "ts": "2026-10-22T12:33:00-03:00",
+   "unix": 1792683180.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Podría pasar la aspiradora antes de las 13:14, pero el registro no dice dónde está en las últimas 2 horas, así que queda en su base. Decime dónde está, o si salió con ustedes.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "day-engine",
+   "routine": "floor_clean",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 300.0,
+   "ts": "2026-10-22T12:33:00-03:00",
+   "unix": 1792683180.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Podría pasar la aspiradora antes de las 13:14, pero el registro no dice dónde está en las últimas 2 horas, así que queda en su base. Decime dónde está, o si salió con ustedes.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "day-engine",
+   "routine": "floor_clean",
+   "check_now": null
+  }
+ ]
+}

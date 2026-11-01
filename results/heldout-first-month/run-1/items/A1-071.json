@@ -1,0 +1,193 @@
+{
+ "id": "A1-071",
+ "child": "heldout-baby-b",
+ "created": [
+  {
+   "endpoint": "feedings",
+   "id": 403,
+   "child": 4,
+   "start": "2026-10-22T23:40:00Z",
+   "end": "2026-10-23T00:00:00Z",
+   "duration": "00:20:00",
+   "type": "breast milk",
+   "method": "right breast",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  },
+  {
+   "endpoint": "sleep",
+   "id": 281,
+   "child": 4,
+   "start": "2026-10-22T22:40:00Z",
+   "end": "2026-10-23T00:00:00Z",
+   "duration": "01:20:00",
+   "nap": false,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  },
+  {
+   "endpoint": "notes",
+   "id": 239,
+   "child": 4,
+   "note": "Bath.",
+   "image": null,
+   "time": "2026-10-23T00:00:00Z",
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T21:43:00-03:00",
+   "chat": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual."
+  },
+  {
+   "at": "2026-10-22T21:43:00-03:00",
+   "chat": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual."
+  },
+  {
+   "at": "2026-10-22T21:45:00-03:00",
+   "chat": "9000002",
+   "text": "Registrado baño de las 21, teta derecha 20 min y sueño."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T21:45:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "lo bañamos a las 21 y despues tomo teta del derecho 20 min y ahora se quedo dormido",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0177,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T21:43:00-03:00",
+   "unix": 1792716180.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T21:43:00-03:00",
+   "unix": 1792716180.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T21:45:00-03:00",
+   "unix": 1792716300.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 3,
+   "input_tokens": 3838,
+   "output_tokens": 396,
+   "reasoning_tokens": 137,
+   "usd": 0.0064805,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T21:45:00-03:00",
+   "unix": 1792716300.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T21:45:00-03:00",
+   "unix": 1792716300.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T21:45:00-03:00",
+   "unix": 1792716300.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T21:45:00-03:00",
+   "unix": 1792716300.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 4350,
+   "output_tokens": 43,
+   "reasoning_tokens": 16,
+   "usd": 0.00562025,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T21:45:00-03:00",
+   "unix": 1792716300.0,
+   "channel": "telegram",
+   "text": "Registrado baño de las 21, teta derecha 20 min y sueño.",
+   "chat_id": "9000002"
+  },
+  {
+   "kind": "turn",
+   "t": -1792343222.621,
+   "ts": "2026-10-22T21:45:00-03:00",
+   "unix": 1793572427.772,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 83
+  }
+ ]
+}

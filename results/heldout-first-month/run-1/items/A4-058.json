@@ -1,0 +1,153 @@
+{
+ "id": "A4-058",
+ "child": "heldout-baby-c",
+ "created": [
+  {
+   "endpoint": "feedings",
+   "id": 616,
+   "child": 5,
+   "start": "2026-10-22T12:43:00Z",
+   "end": "2026-10-22T12:55:00Z",
+   "duration": "00:12:00",
+   "type": "breast milk",
+   "method": "right breast",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T09:53:00-03:00",
+   "chat": "9000001",
+   "text": "Buen día, Gonza.\nEsta noche te toca a vos.\nClima: lluvia, 16 a 18 C, 9.9 mm de lluvia.\nMenú de Cookidoo: Arroz blanco."
+  },
+  {
+   "at": "2026-10-22T09:53:00-03:00",
+   "chat": "9000002",
+   "text": "Buen día, Ceci.\nClima: lluvia, 16 a 18 C, 9.9 mm de lluvia.\nMenú de Cookidoo: Arroz blanco."
+  },
+  {
+   "at": "2026-10-22T09:55:00-03:00",
+   "chat": "9000002",
+   "text": "Registrado pecho derecho 12 min, Ceci.\n\nNo puedo aconsejar sobre salud o síntomas, si te preocupan los ruidos de la pancita contacta a su pediatra y si es urgente a emergencias."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T09:55:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "pecho derecho 12 min. le suenan mucho las tripitas normal?",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0148,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T09:53:00-03:00",
+   "unix": 1792673580.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Buen día, Gonza.\nEsta noche te toca a vos.\nClima: lluvia, 16 a 18 C, 9.9 mm de lluvia.\nMenú de Cookidoo: Arroz blanco.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "family-push",
+   "routine": "morning",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T09:53:00-03:00",
+   "unix": 1792673580.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Buen día, Ceci.\nClima: lluvia, 16 a 18 C, 9.9 mm de lluvia.\nMenú de Cookidoo: Arroz blanco.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "family-push",
+   "routine": "morning",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T09:55:00-03:00",
+   "unix": 1792673700.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3826,
+   "output_tokens": 209,
+   "reasoning_tokens": 102,
+   "usd": 0.00567075,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T09:55:00-03:00",
+   "unix": 1792673700.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T09:55:00-03:00",
+   "unix": 1792673700.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 4014,
+   "output_tokens": 123,
+   "reasoning_tokens": 69,
+   "usd": 0.00554025,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T09:55:00-03:00",
+   "unix": 1792673700.0,
+   "channel": "telegram",
+   "text": "Registrado pecho derecho 12 min, Ceci.\n\nNo puedo aconsejar sobre salud o síntomas, si te preocupan los ruidos de la pancita contacta a su pediatra y si es urgente a emergencias.",
+   "chat_id": "9000002"
+  },
+  {
+   "kind": "turn",
+   "t": -1792298688.644,
+   "ts": "2026-10-22T09:55:00-03:00",
+   "unix": 1793574361.898,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 58
+  }
+ ]
+}

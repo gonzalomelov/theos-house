@@ -1,0 +1,276 @@
+{
+ "id": "A3-038",
+ "child": "heldout-baby-b",
+ "created": [
+  {
+   "endpoint": "feedings",
+   "id": 461,
+   "child": 4,
+   "start": "2026-10-22T03:30:00Z",
+   "end": "2026-10-22T03:45:00Z",
+   "duration": "00:15:00",
+   "type": "formula",
+   "method": "bottle",
+   "amount": 60.0,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 460,
+    "child": 4,
+    "start": "2026-10-22T00:50:00Z",
+    "end": "2026-10-22T01:05:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 90.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 460,
+    "child": 4,
+    "start": "2026-10-22T00:50:00Z",
+    "end": "2026-10-22T01:05:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 90.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T00:43:00-03:00",
+   "chat": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 08:00 a 08:45."
+  },
+  {
+   "at": "2026-10-22T00:43:00-03:00",
+   "chat": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 08:00 a 08:45."
+  },
+  {
+   "at": "2026-10-22T00:45:00-03:00",
+   "chat": "9000002",
+   "text": "Perdón, no me salió bien la respuesta. ¿Me lo decís de nuevo?"
+  },
+  {
+   "at": "2026-10-22T00:46:00-03:00",
+   "chat": "9000002",
+   "text": "Perdón, no me salió bien la respuesta. ¿Me lo decís de nuevo?"
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T00:45:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "60ml bottle",
+   "setup": true,
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-22T00:46:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "60 ml bottle",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0206,
+ "brain_calls": {
+  "inference.baseten.co": 4
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T00:43:00-03:00",
+   "unix": 1792640580.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 08:00 a 08:45.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T00:43:00-03:00",
+   "unix": 1792640580.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 08:00 a 08:45.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T00:45:00-03:00",
+   "unix": 1792640700.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3815,
+   "output_tokens": 117,
+   "reasoning_tokens": 20,
+   "usd": 0.005266,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T00:45:00-03:00",
+   "unix": 1792640700.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T00:45:00-03:00",
+   "unix": 1792640700.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 4005,
+   "output_tokens": 174,
+   "reasoning_tokens": 155,
+   "usd": 0.00574575,
+   "fallback": false
+  },
+  {
+   "kind": "final_guard",
+   "t": 120.0,
+   "ts": "2026-10-22T00:45:00-03:00",
+   "unix": 1792640700.0,
+   "where": "agent:telegram",
+   "lang": "es",
+   "removed": [
+    {
+     "why": "not in Spanish",
+     "text": "Got it, 60 ml bottle logged."
+    }
+   ],
+   "fallback": true,
+   "sent": "Perdón, no me salió bien la respuesta. ¿Me lo decís de nuevo?"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T00:45:00-03:00",
+   "unix": 1792640700.0,
+   "channel": "telegram",
+   "text": "Perdón, no me salió bien la respuesta. ¿Me lo decís de nuevo?",
+   "chat_id": "9000002"
+  },
+  {
+   "kind": "turn",
+   "t": -1792266631.727,
+   "ts": "2026-10-22T00:45:00-03:00",
+   "unix": 1793573418.776,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 11
+  },
+  {
+   "kind": "brain_call",
+   "t": 180.0,
+   "ts": "2026-10-22T00:46:00-03:00",
+   "unix": 1792640760.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3853,
+   "output_tokens": 118,
+   "reasoning_tokens": 19,
+   "usd": 0.00531775,
+   "fallback": false
+  },
+  {
+   "kind": "final_guard",
+   "t": 180.0,
+   "ts": "2026-10-22T00:46:00-03:00",
+   "unix": 1792640760.0,
+   "where": "agent:telegram",
+   "lang": "es",
+   "removed": [
+    {
+     "why": "not in Spanish",
+     "text": "Did you send it twice, or were there two bottles?"
+    },
+    {
+     "why": "not in Spanish",
+     "text": "So far it is logged once:"
+    },
+    {
+     "why": "not in Spanish",
+     "text": "the 00:45 bottle of 60 ml."
+    }
+   ],
+   "fallback": true,
+   "sent": "Perdón, no me salió bien la respuesta. ¿Me lo decís de nuevo?"
+  },
+  {
+   "kind": "reply",
+   "t": 180.0,
+   "ts": "2026-10-22T00:46:00-03:00",
+   "unix": 1792640760.0,
+   "channel": "telegram",
+   "text": "Perdón, no me salió bien la respuesta. ¿Me lo decís de nuevo?",
+   "chat_id": "9000002"
+  },
+  {
+   "kind": "turn",
+   "t": -1792266626.006,
+   "ts": "2026-10-22T00:46:00-03:00",
+   "unix": 1793573424.496,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 12
+  }
+ ]
+}

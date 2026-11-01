@@ -1,0 +1,165 @@
+{
+ "id": "A3-021",
+ "child": "heldout-baby-c",
+ "created": [
+  {
+   "endpoint": "feedings",
+   "id": 443,
+   "child": 5,
+   "start": "2026-10-22T19:56:00Z",
+   "end": "2026-10-22T20:11:00Z",
+   "duration": "00:15:00",
+   "type": "formula",
+   "method": "bottle",
+   "amount": 80.0,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T17:10:00-03:00",
+   "chat": "9000002",
+   "text": "No lo anoté: 800 ml está fuera de 1 a 300 ml para una toma. ¿Cuántos ml fueron?"
+  },
+  {
+   "at": "2026-10-22T17:11:00-03:00",
+   "chat": "9000002",
+   "text": "Anotado, 80 ml."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T17:10:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "tomo 800",
+   "setup": true,
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-22T17:11:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "80 quise decir jaja",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0176,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T17:10:00-03:00",
+   "unix": 1792699800.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3815,
+   "output_tokens": 360,
+   "reasoning_tokens": 269,
+   "usd": 0.00629875,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T17:10:00-03:00",
+   "unix": 1792699800.0,
+   "channel": "telegram",
+   "text": "No lo anoté: 800 ml está fuera de 1 a 300 ml para una toma. ¿Cuántos ml fueron?",
+   "chat_id": "9000002"
+  },
+  {
+   "kind": "turn",
+   "t": -1792325995.544,
+   "ts": "2026-10-22T17:10:00-03:00",
+   "unix": 1793573154.956,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 8
+  },
+  {
+   "kind": "brain_call",
+   "t": 180.0,
+   "ts": "2026-10-22T17:11:00-03:00",
+   "unix": 1792699860.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3864,
+   "output_tokens": 167,
+   "reasoning_tokens": 78,
+   "usd": 0.00553975,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 180.0,
+   "ts": "2026-10-22T17:11:00-03:00",
+   "unix": 1792699860.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 180.0,
+   "ts": "2026-10-22T17:11:00-03:00",
+   "unix": 1792699860.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 4046,
+   "output_tokens": 176,
+   "reasoning_tokens": 158,
+   "usd": 0.0058055,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 180.0,
+   "ts": "2026-10-22T17:11:00-03:00",
+   "unix": 1792699860.0,
+   "channel": "telegram",
+   "text": "Anotado, 80 ml.",
+   "chat_id": "9000002"
+  },
+  {
+   "kind": "turn",
+   "t": -1792325987.057,
+   "ts": "2026-10-22T17:11:00-03:00",
+   "unix": 1793573163.443,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 19
+  }
+ ]
+}

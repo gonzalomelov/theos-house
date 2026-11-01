@@ -1,0 +1,123 @@
+{
+ "id": "A1-076",
+ "child": "heldout-baby-a",
+ "created": [
+  {
+   "endpoint": "feedings",
+   "id": 410,
+   "child": 3,
+   "start": "2026-10-22T20:45:00Z",
+   "end": "2026-10-22T21:00:00Z",
+   "duration": "00:15:00",
+   "type": "breast milk",
+   "method": "bottle",
+   "amount": 50.0,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T18:00:00-03:00",
+   "chat": "9000002",
+   "text": "Anotado, 50 ml de leche materna en mamadera.\n\nLa segunda mamadera de 30 ml de fórmula quedó muy pegada a la anterior y el sistema la marca como superpuesta. ¿Querés que la registre unos minutos después para que queden las dos?"
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T18:00:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "le di 50 de leche materna y como quedo con hambre despues otra mamadera de 30 de formula",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0127,
+ "brain_calls": {
+  "inference.baseten.co": 2
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T18:00:00-03:00",
+   "unix": 1792702800.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 2,
+   "input_tokens": 3834,
+   "output_tokens": 386,
+   "reasoning_tokens": 192,
+   "usd": 0.006433,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T18:00:00-03:00",
+   "unix": 1792702800.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T18:00:00-03:00",
+   "unix": 1792702800.0,
+   "name": "log_baby_event",
+   "status": "error"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T18:00:00-03:00",
+   "unix": 1792702800.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 4222,
+   "output_tokens": 240,
+   "reasoning_tokens": 174,
+   "usd": 0.0062975,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T18:00:00-03:00",
+   "unix": 1792702800.0,
+   "channel": "telegram",
+   "text": "Anotado, 50 ml de leche materna en mamadera.\n\nLa segunda mamadera de 30 ml de fórmula quedó muy pegada a la anterior y el sistema la marca como superpuesta. ¿Querés que la registre unos minutos después para que queden las dos?",
+   "chat_id": "9000002"
+  },
+  {
+   "kind": "turn",
+   "t": -1792329662.486,
+   "ts": "2026-10-22T18:00:00-03:00",
+   "unix": 1793572488.01,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 88
+  }
+ ]
+}

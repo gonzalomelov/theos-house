@@ -1,0 +1,187 @@
+[
+ {
+  "group": "corrections",
+  "title": "No way to change or delete an entry",
+  "what": "A correction or a delete ('no perdón eran 60', 'borrá eso') gets 'I cannot change entries in this log, so nothing changed' and the wrong entry stays; when the brain tries anyway it adds a second entry instead of editing.",
+  "items": [
+   "A3-001",
+   "A3-002",
+   "A3-003",
+   "A3-004",
+   "A3-005",
+   "A3-006",
+   "A3-007",
+   "A3-008",
+   "A3-009",
+   "A3-010",
+   "A3-011",
+   "A3-012",
+   "A3-013",
+   "A3-015",
+   "A3-016",
+   "A3-017",
+   "A3-018",
+   "A3-019",
+   "A3-020",
+   "A3-022",
+   "A3-024",
+   "A3-027",
+   "A3-037"
+  ],
+  "count": 23
+ },
+ {
+  "group": "fields_dropped",
+  "title": "The entry keeps less than the reply says",
+  "what": "The reply confirms '100 ml', 'caca verde' or 'leche materna', but the Baby Buddy entry has no amount, no color, formula for expressed milk, the default 15 min for the minutes said, or wet and solid swapped across two diapers in one message.",
+  "items": [
+   "A1-008",
+   "A1-033",
+   "A1-034",
+   "A1-078",
+   "A1-015",
+   "A2-004",
+   "A2-014",
+   "A2-017",
+   "A2-021",
+   "A2-028",
+   "A2-030",
+   "A1-070",
+   "A4-044",
+   "A4-052",
+   "A4-019",
+   "A4-050",
+   "A5-014",
+   "A2-025"
+  ],
+  "count": 18
+ },
+ {
+  "group": "red_flag_gate",
+  "title": "Red flags in free wording miss the fixed line",
+  "what": "Fever as a number (38.1, 38,4), pauses in breathing, rhythmic jerking, a bulging soft spot, choking that does not stop, blue (English), face down and still, a pale baby, not feeding all day: the word gate does not fire and the brain writes its own soft line ('contactá a su pediatra... si es urgente, a emergencias') with no 911, or just 'I logged what you described'. Face down in the crib got the safe sleep line.",
+  "items": [
+   "A4-010",
+   "A4-018",
+   "A4-019",
+   "A4-021",
+   "A4-022",
+   "A4-026",
+   "A4-027",
+   "A4-030",
+   "A4-031",
+   "A4-033",
+   "A4-036",
+   "A4-041",
+   "A4-042"
+  ],
+  "count": 13
+ },
+ {
+  "group": "safety_drops_log",
+  "title": "A safety or health reply drops the log fact in the same message",
+  "what": "'le di 50 y se puso blandito': the fixed 911 or newborn signs line is the whole reply and the 50 ml is never logged (or kept only inside a note). The same on a calm health question ('le di 90, hace fuerza para hacer caca'), and a false 911 line on 'se puso morado de llorar pero ya está rosadito' that also lost the feed.",
+  "items": [
+   "A4-004",
+   "A4-012",
+   "A4-017",
+   "A4-020",
+   "A4-023",
+   "A4-025",
+   "A4-031",
+   "A4-035",
+   "A4-039",
+   "A4-053",
+   "A4-061"
+  ],
+  "count": 11
+ },
+ {
+  "group": "not_events_logged",
+  "title": "Things that did not happen get logged, a wake-up gets missed",
+  "what": "Intentions ('ahora le voy a dar 90', 'about to give him a bottle') logged as feeds, 'sigue dormido' opens a second sleep, 'still asleep' kept as a note, 'se despertó llorando' kept as a note while the sleep stays open, the woke-up half of a two-fact message dropped, a dose question kept as a note.",
+  "items": [
+   "A1-007",
+   "A1-021",
+   "A1-050",
+   "A2-042",
+   "A2-062",
+   "A2-069",
+   "A2-049",
+   "A1-069",
+   "A1-075",
+   "A5-006"
+  ],
+  "count": 10
+ },
+ {
+  "group": "sleep_sequences_times",
+  "title": "Sleep sequences and stated times mis-parsed",
+  "what": "'durmió de 16:15 a 17:30' stored as 17:49 to 17:50, 'se durmió a las 10, se despertó 10:40 y ahora se volvió a dormir' stored 09:00 to 10:00 with no new sleep, 'se durmió' after a feed closing an invented sleep, 'fell asleep around 11' stored as 11:30, 'lo pasé a la cuna' answered with the safe sleep line and not logged, typos ('se dutmio') not understood.",
+  "items": [
+   "A2-046",
+   "A2-047",
+   "A2-048",
+   "A1-068",
+   "A1-071",
+   "A2-064",
+   "A2-072",
+   "A5-047",
+   "A2-053"
+  ],
+  "count": 9
+ },
+ {
+  "group": "question_misread_or_wrong",
+  "title": "Log questions misread or answered wrong",
+  "what": "'cunto tomo hoy en total', 'a q hora se durmio', 'ultimo pañal a q hora' treated as a log request ('No pude anotarlo'), a formula total that counted every bottle, an open sleep reported as no sleep, a wrong count of bottles or wet diapers next to a right total.",
+  "items": [
+   "A3-065",
+   "A3-074",
+   "A3-078",
+   "A5-046",
+   "A3-047",
+   "A3-054",
+   "A3-057",
+   "A3-079"
+  ],
+  "count": 8
+ },
+ {
+  "group": "english_retry",
+  "title": "English messages get 'say it again'",
+  "what": "39 of 76 English messages got 'Perdón, no me salió bien la respuesta. ¿Me lo decís de nuevo?' or 'Could you tell me again?', often after the entry was already written, which invites a double send. Counted here only where it is the cause: 6 unanswered questions and one lost feed.",
+  "items": [
+   "A3-048",
+   "A3-059",
+   "A3-063",
+   "A3-070",
+   "A3-076",
+   "A4-070"
+  ],
+  "count": 6
+ },
+ {
+  "group": "duplicates",
+  "title": "Double sends logged twice",
+  "what": "The same message within a minute or two, or both parents reporting the same feed or diaper a few minutes apart, gives two entries.",
+  "items": [
+   "A3-028",
+   "A3-032",
+   "A3-033",
+   "A3-035",
+   "A3-040"
+  ],
+  "count": 5
+ },
+ {
+  "group": "other",
+  "title": "Other",
+  "what": "A typo in the side ('teta derexha') not understood, and a second bottle right after the first refused as overlapping.",
+  "items": [
+   "A1-064",
+   "A1-076"
+  ],
+  "count": 2
+ }
+]

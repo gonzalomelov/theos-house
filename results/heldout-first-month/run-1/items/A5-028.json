@@ -1,0 +1,95 @@
+{
+ "id": "A5-028",
+ "child": "heldout-baby-a",
+ "created": [],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T11:05:00-03:00",
+   "chat": "9000002",
+   "text": "Here are a few quick ideas, all under ~20 min:\n\n* **Quesadillas + salad** - Tortillas, cheese, canned beans or leftover chicken, side of bagged salad\n* **Eggs on toast** - Scrambled or fried eggs, avocado, toast\n* **Stir-fry** - Frozen stir-fry veg + quick protein (tofu/chicken/shrimp) + soy sauce over rice or noodles\n\nJust tell me 2-3 ingredients you want to use."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T11:05:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "what should I make for dinner tonight something quick",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0055,
+ "brain_calls": {
+  "inference.baseten.co": 1
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T11:05:00-03:00",
+   "unix": 1792677900.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 3820,
+   "output_tokens": 179,
+   "reasoning_tokens": 23,
+   "usd": 0.00553575,
+   "fallback": false
+  },
+  {
+   "kind": "final_guard",
+   "t": 120.0,
+   "ts": "2026-10-22T11:05:00-03:00",
+   "unix": 1792677900.0,
+   "where": "agent:telegram",
+   "lang": "es",
+   "removed": [
+    {
+     "why": "not in Spanish",
+     "text": "* **Pasta with garlic oil + peas** - Boil pasta, toss with olive oil, garlic, frozen peas, parmesan"
+    },
+    {
+     "why": "not in Spanish",
+     "text": "Want a 10-minute version based on what you have at home?"
+    }
+   ],
+   "fallback": false,
+   "sent": "Here are a few quick ideas, all under ~20 min:\n\n* **Quesadillas + salad** - Tortillas, cheese, canned beans or leftover chicken, side of bagged salad\n* **Eggs on toast** - Scrambled or fried eggs, avocado, toast\n* **Stir-fry** - Frozen stir-fry veg + quick protein (tofu/chicken/shrimp) + soy sauce over rice or noodles\n\nJust tell me 2-3 ingredients you want to use."
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T11:05:00-03:00",
+   "unix": 1792677900.0,
+   "channel": "telegram",
+   "text": "Here are a few quick ideas, all under ~20 min:\n\n* **Quesadillas + salad** - Tortillas, cheese, canned beans or leftover chicken, side of bagged salad\n* **Eggs on toast** - Scrambled or fried eggs, avocado, toast\n* **Stir-fry** - Frozen stir-fry veg + quick protein (tofu/chicken/shrimp) + soy sauce over rice or noodles\n\nJust tell me 2-3 ingredients you want to use.",
+   "chat_id": "9000002"
+  },
+  {
+   "kind": "turn",
+   "t": -1792302745.029,
+   "ts": "2026-10-22T11:05:00-03:00",
+   "unix": 1793574505.515,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 53
+  }
+ ]
+}

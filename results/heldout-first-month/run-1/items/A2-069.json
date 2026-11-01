@@ -1,0 +1,170 @@
+{
+ "id": "A2-069",
+ "child": "heldout-baby-c",
+ "created": [
+  {
+   "endpoint": "notes",
+   "id": 245,
+   "child": 5,
+   "note": "still asleep",
+   "image": null,
+   "time": "2026-10-22T05:25:00Z",
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [
+  {
+   "endpoint": "timers",
+   "before": {
+    "id": 97,
+    "child": 5,
+    "name": "sleep",
+    "start": "2026-10-22T02:50:00Z",
+    "duration": "10 19:51:39.729115",
+    "user": 2
+   },
+   "after": {
+    "endpoint": "timers",
+    "id": 97,
+    "child": 5,
+    "name": "sleep",
+    "start": "2026-10-22T02:50:00Z",
+    "duration": "10 19:52:07.293133",
+    "user": 2
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T02:23:00-03:00",
+   "chat": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 13:00 a 14:00."
+  },
+  {
+   "at": "2026-10-22T02:23:00-03:00",
+   "chat": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 13:00 a 14:00."
+  },
+  {
+   "at": "2026-10-22T02:25:00-03:00",
+   "chat": "9000002",
+   "text": "Noted, still asleep."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T02:25:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "still asleep",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0278,
+ "brain_calls": {
+  "inference.baseten.co": 4
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T02:23:00-03:00",
+   "unix": 1792646580.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 13:00 a 14:00.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T02:23:00-03:00",
+   "unix": 1792646580.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 13:00 a 14:00.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T02:25:00-03:00",
+   "unix": 1792646700.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3813,
+   "output_tokens": 391,
+   "reasoning_tokens": 298,
+   "usd": 0.006428,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T02:25:00-03:00",
+   "unix": 1792646700.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T02:25:00-03:00",
+   "unix": 1792646700.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 3953,
+   "output_tokens": 28,
+   "reasoning_tokens": 12,
+   "usd": 0.00506025,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T02:25:00-03:00",
+   "unix": 1792646700.0,
+   "channel": "telegram",
+   "text": "Noted, still asleep.",
+   "chat_id": "9000002"
+  },
+  {
+   "kind": "turn",
+   "t": -1792273136.633,
+   "ts": "2026-10-22T02:25:00-03:00",
+   "unix": 1793572913.866,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 12
+  }
+ ]
+}

@@ -1,0 +1,214 @@
+{
+ "id": "A3-084",
+ "child": "heldout-baby-c",
+ "created": [],
+ "seed_after": [
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 599,
+    "child": 5,
+    "start": "2026-10-22T20:40:00Z",
+    "end": "2026-10-22T20:55:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 100.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 599,
+    "child": 5,
+    "start": "2026-10-22T20:40:00Z",
+    "end": "2026-10-22T20:55:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 100.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "sleep",
+   "before": {
+    "id": 330,
+    "child": 5,
+    "start": "2026-10-22T21:10:00Z",
+    "end": "2026-10-22T23:05:00Z",
+    "duration": "01:55:00",
+    "nap": false,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "sleep",
+    "id": 330,
+    "child": 5,
+    "start": "2026-10-22T21:10:00Z",
+    "end": "2026-10-22T23:05:00Z",
+    "duration": "01:55:00",
+    "nap": false,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T20:48:00-03:00",
+   "chat": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 22:40, 01:10, 03:40, 06:10. La luz espera a que se despierte."
+  },
+  {
+   "at": "2026-10-22T20:48:00-03:00",
+   "chat": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 22:40, 01:10, 03:40, 06:10. La luz espera a que se despierte."
+  },
+  {
+   "at": "2026-10-22T20:50:00-03:00",
+   "chat": "9000001",
+   "text": "Se despertó a las 20:05. Durmió desde las 18:10, 115 minutos en total."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T20:50:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "se desperto a q hora?",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0184,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T20:48:00-03:00",
+   "unix": 1792712880.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 22:40, 01:10, 03:40, 06:10. La luz espera a que se despierte.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T20:48:00-03:00",
+   "unix": 1792712880.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 22:40, 01:10, 03:40, 06:10. La luz espera a que se despierte.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T20:50:00-03:00",
+   "unix": 1792713000.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 3,
+   "input_tokens": 3818,
+   "output_tokens": 252,
+   "reasoning_tokens": 99,
+   "usd": 0.0058435,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T20:50:00-03:00",
+   "unix": 1792713000.0,
+   "name": "read_baby_log",
+   "status": "ran"
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T20:50:00-03:00",
+   "unix": 1792713000.0,
+   "name": "baby_summary",
+   "status": "ran"
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T20:50:00-03:00",
+   "unix": 1792713000.0,
+   "name": "current_time",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T20:50:00-03:00",
+   "unix": 1792713000.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 4362,
+   "output_tokens": 84,
+   "reasoning_tokens": 48,
+   "usd": 0.0058095,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T20:50:00-03:00",
+   "unix": 1792713000.0,
+   "channel": "telegram",
+   "text": "Se despertó a las 20:05. Durmió desde las 18:10, 115 minutos en total.",
+   "chat_id": "9000001"
+  },
+  {
+   "kind": "turn",
+   "t": -1792338326.082,
+   "ts": "2026-10-22T20:50:00-03:00",
+   "unix": 1793574024.456,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 21
+  }
+ ]
+}
