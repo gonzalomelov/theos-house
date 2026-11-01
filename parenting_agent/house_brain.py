@@ -244,7 +244,11 @@ def check_item(name, item, now, tz, s, windows):
     return window, None
 
 
-def validate(answer, now, tz, s, windows):
+PREWARM_LEAD = datetime.timedelta(minutes=10)
+PREWARM_BEFORE = datetime.timedelta(minutes=60)
+
+
+def validate(answer, now, tz, s, windows, next_feed=None):
     """(plan, errors, refused, dropped).
 
     errors: the answer is not a plan (wrong shape, unknown parent). The whole plan is refused and every routine runs
@@ -281,6 +285,21 @@ def validate(answer, now, tz, s, windows):
     warm = sorted(w["start"] for w in plan["bottle_prewarm"])
     if any(b - a < datetime.timedelta(minutes=60) for a, b in zip(warm, warm[1:])):
         refused.setdefault("bottle_prewarm", []).append("bottle pre-warms less than 60 min apart")
+    elif next_feed is not None and "bottle_prewarm" not in refused:
+        # The warmer and the next feed on the panel come from the same log: a predicted night feed in the plan always has
+        # a pre-warm in the hour before it (round b5: the next feed moved to 22:45, the first pre-warm stayed at 23:10).
+        lead = next_feed - PREWARM_LEAD
+        horizon = now + datetime.timedelta(hours=s["horizon_h"])
+        if (now < lead <= horizon and is_night_hour(lead, tz)
+                and not any(next_feed - PREWARM_BEFORE <= w <= next_feed for w in warm)):
+            if len(warm) < MAX_WINDOWS["bottle_prewarm"] and all(abs(w - lead) >= PREWARM_BEFORE for w in warm):
+                plan["bottle_prewarm"].append({"start": lead, "end": None, "why": "before the next predicted feed"})
+                plan["bottle_prewarm"].sort(key=lambda w: w["start"])
+                dropped.append({"to": "bottle_prewarm", "text": local_hm(lead, tz),
+                                "why": f"added: no pre-warm before the predicted feed at {local_hm(next_feed, tz)}"})
+            else:
+                refused.setdefault("bottle_prewarm", []).append(
+                    f"no pre-warm before the predicted feed at {local_hm(next_feed, tz)}")
     for name, most in MAX_WINDOWS.items():
         if len(plan[name]) > most:
             refused.setdefault(name, []).append(f"more than {most} {name} windows")
@@ -597,7 +616,9 @@ class HouseBrain:
             self.stats["calls"] += 1
             return self.fallback(trigger, what, now, f"Muse error: {str(error)[:200]}", None)
         self.count(meta)
-        plan, errors, refused, dropped = validate(answer, now, self.tz, self.s, windows)
+        predicted = predict_feed(seen, now)
+        plan, errors, refused, dropped = validate(answer, now, self.tz, self.s, windows,
+                                                  next_feed=predicted["at"] if predicted else None)
         if plan is None:
             self.bus.publish("house_plan", trigger=trigger, what=what, at=now.isoformat(), accepted=False, errors=errors,
                              answer=answer, muse=meta)
