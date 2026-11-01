@@ -167,7 +167,14 @@ class DemoBabyLog(BabyLog):
         return self._append({"kind": "note", "time": iso(when), "note": text or "Note"})
 
     def open_sleep(self):
-        return iso(self.sleep_started) if self.sleep_started is not None else None
+        """The visitor's open sleep, or the simulated one going on now that a first log keeps open (take_over). Read
+        the same before and after that first log, so "bottle 60 ml" never reads as "and he fell asleep at 19:51"."""
+        if self.sleep_started is not None:
+            return iso(self.sleep_started)
+        current = self.now()
+        with self.lock:
+            asleep = [r for r in self.upcoming if r["kind"] == "sleep" and started(r) < current < finished(r)]
+        return iso(started(asleep[0])) if asleep else None
 
     def _sleep(self, details, when):
         action = details.get("action")

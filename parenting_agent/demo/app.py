@@ -310,6 +310,12 @@ class DemoAgent(Agent):
     def refusal(self, request):
         return TEXTS[self.lang(request)]["REFUSAL"]
 
+    def self_answer(self, lang):
+        lang = lang if lang in rules.SELF_ANSWER else "en"
+        log = {"en": "This demo's simulated log stays in this server's memory for at most 6 hours.",
+               "es": "El registro simulado de esta demo queda en la memoria de este servidor por 6 horas como máximo."}
+        return rules.SELF_ANSWER[lang].format(log=log[lang])
+
 
 class PrepAgent(DemoAgent):
     note = PREP_NOTE

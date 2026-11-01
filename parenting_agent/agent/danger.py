@@ -13,6 +13,7 @@ reading is a "danger_screen" event with its source, so the share answered by the
 
 Only the message itself is sent, to the same brain host as the chat (Muse Spark Open on Baseten).
 """
+import re
 import time
 
 from . import brain as brain_mod
@@ -25,11 +26,12 @@ or not moving in a way that worries the parent, a face pressed into a pillow, a 
 over the face, choking, a fall, under water, a burn, something swallowed (a battery, a magnet, medicine, poison), a
 seizure, heavy bleeding, a dog bite, labour signs that cannot wait. False for everyday logs (feeds, diapers, sleep,
 baths), a baby sleeping peacefully, questions about the log, jokes and everyday worries with no danger now.
-When you are unsure, answer true. Call danger exactly once."""
+When you are unsure, it is an emergency. Answer with one word only: EMERGENCY or SAFE."""
 
-TOOL = {"name": "danger", "description": "The verdict for the parent's message.",
-        "parameters": {"type": "object", "properties": {"emergency": {"type": "boolean"}}, "required": ["emergency"]}}
+# A model that still calls a verdict tool is read too.
+TOOL_NAME = "danger"
 
+WORD = re.compile(r"\b(EMERGENCY|SAFE)\b")
 # A short call: the verdict is one boolean. Muse reasons before it answers, and the reasoning counts in max_tokens.
 SCREEN_BRAIN = {"max_tokens": 1024, "reasoning_effort": "low", "timeout_s": 12}
 
@@ -37,12 +39,15 @@ SCREEN_BRAIN = {"max_tokens": 1024, "reasoning_effort": "low", "timeout_s": 12}
 def verdict(reply):
     """True or False from the model's answer, or None when it holds no verdict."""
     for call in reply.tool_calls or []:
-        if call.get("name") == "danger" and isinstance((call.get("arguments") or {}).get("emergency"), bool):
+        if call.get("name") == TOOL_NAME and isinstance((call.get("arguments") or {}).get("emergency"), bool):
             return call["arguments"]["emergency"]
-    text = (reply.text or "").strip().lower()
-    if text in ("true", "emergency", "yes", '{"emergency": true}'):
+    # Live on Nov 1 Muse answered the verdict tool in words 2 times out of 4, so the answer is one word in text.
+    text = reply.text or ""
+    bare = text.strip(" .!*`\"'\n").upper()
+    said = {bare} if bare in ("EMERGENCY", "SAFE") else set(WORD.findall(text))
+    if said == {"EMERGENCY"} or re.search(r'"emergency"\s*:\s*true', text, re.I):
         return True
-    if text in ("false", "no", '{"emergency": false}'):
+    if said == {"SAFE"} or re.search(r'"emergency"\s*:\s*false', text, re.I):
         return False
     return None
 
@@ -58,7 +63,7 @@ class DangerScreen:
         found, source, error = None, "fallback", None
         if self.brain is not None:
             try:
-                found = verdict(self.brain.step(SYSTEM, [{"role": "user", "text": str(text)[:1000]}], [TOOL]))
+                found = verdict(self.brain.step(SYSTEM, [{"role": "user", "text": str(text)[:1000]}], []))
                 source = "muse" if found is not None else "fallback"
                 error = None if found is not None else "no verdict"
             except brain_mod.BrainError as failure:

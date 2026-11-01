@@ -66,8 +66,11 @@ class DemoLog(unittest.TestCase):
         record = log.add("sleep", {"action": "end"})
         self.assertEqual(record["details"]["duration_min"], 45)
         self.assertEqual(len(log.entries("sleep", None, 1000)), before + 1)
+        # Between two simulated sleeps (16:46 and 17:50 on Oct 28), so no simulated sleep is open: a fixed clock, as
+        # the real clock made this pass or fail by the time of day.
+        between = datetime.datetime(2026, 10, 28, 17, 0, tzinfo=datetime.timezone(datetime.timedelta(hours=-3)))
         with self.assertRaises(ValueError):
-            DemoBabyLog().add("sleep", {"action": "end"})
+            DemoBabyLog(clock=lambda: between).add("sleep", {"action": "end"})
 
 
 class Isolation(unittest.TestCase):

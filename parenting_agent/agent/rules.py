@@ -1840,3 +1840,27 @@ def right_host(text, lang="en"):
         first, _ = not said, said.append(True)
         return " " + RIGHT_HOST[lang] + " " if first else " "
     return " ".join(WRONG_HOST.sub(swap, text).split())
+
+
+# "Where do you run?", "¿qué modelo sos?": a fixed answer with the facts, no brain call. Live on Nov 1 Muse's own answer
+# ("messages are sent to Baseten") read as a claimed action to the log honesty guard and the parent got "nothing ran".
+ASKS_SELF = re.compile(
+    r"\b(where|on what|on which|on whose|whose)\b[^.!?]{0,30}\b(do you|are you|you)\b[^.!?]{0,20}\b(run\w*|hosted|live|servers?)\b|"
+    r"\bwhat (ai|model|llm)\b[^.!?]{0,20}\b(are you|do you use|is this|runs? you|powers? you)\b|\bwho (made|built|runs) you\b|"
+    r"\bare you (chatgpt|gpt|claude|gemini|meta ai|llama)\b|\byour servers?\b|"
+    r"\bd[oó]nde (corr[eé]s|funcion[aá]s|est[aá]s alojad\w*|te ejecut\w*)\b|\ben (qu[eé]|cu[aá]les|los) servidores\b|"
+    r"\bqu[eé] (modelo|ia|inteligencia artificial)\b[^.!?]{0,20}\b(sos|us[aá]s|es|te mueve)\b|\bqui[eé]n te (hizo|cre[oó]|program[oó])\b|"
+    r"\btus servidores\b", re.I)
+SELF_ANSWER = {
+    "en": ("I run on Muse Spark Open, Meta's open model, served by Baseten on the hackathon's free credits, not on Meta's "
+           "servers. {log} What you send me goes to Baseten, and on those free credits Meta may use it to train future "
+           "Meta models."),
+    "es": ("Funciono con Muse Spark Open, el modelo abierto de Meta, en los servidores de Baseten con créditos gratis de "
+           "la hackathon, no en los de Meta. {log} Lo que me mandás va a Baseten, y con esos créditos Meta lo puede usar "
+           "para entrenar futuros modelos de Meta."),
+}
+SELF_LOG = {"en": "The baby log stays on the family's own server.", "es": "El registro del bebé queda en el servidor de la familia."}
+
+
+def asks_about_self(text):
+    return bool(ASKS_SELF.search(text or "")) and not is_health(text)
