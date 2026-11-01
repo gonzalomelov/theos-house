@@ -423,6 +423,9 @@ def entry_key(arguments):
     return (arguments.get("kind"), when, *values)
 
 
+LAST_FEED_CHECK = ("[check from the agent, not the parent] The newest feed in the log, read by plain code: {fact} Answer the "
+                   "parent's question from it in one or two short sentences in {language}, with its clock time. Log "
+                   "nothing and ask nothing.")
 LAST_FEED = {"was": {"es": "La última toma fue {what}.", "en": "The last feed was {what}."},
              "none": {"es": "Todavía no hay ninguna toma en el registro.", "en": "There is no feed in the log yet."}}
 
@@ -802,7 +805,7 @@ class Agent:
             # How a baby sleeps safely: the AAP's public line with its source, the same every time, no brain call.
             self.memory.add_message(channel, "user", text, ts=self.now())
             self.bus.publish("guard", status="safe_sleep_fact")
-            self.say(channel, self.safe_sleep(text))
+            self.say(channel, self.with_reported(self.safe_sleep(text), text))
             return
         rota = getattr(self, "rota", None)
         if rota is not None and rules.asks_on_duty(text):
@@ -813,11 +816,11 @@ class Agent:
             self.say(channel, rota.answer(self.lang(text)), topic="on_duty")
             return
         if rules.asks_last_feed(text) and not rules.is_health(text):
-            # "¿Cuándo comió por última vez?": the newest feed in the log, in one line, the same every time, with no
-            # brain call (blind round 1, Oct 31: Muse said it would check the log and asked something else instead).
+            # "¿Cuándo comió por última vez?": Muse answers from the newest feed in the log, given to it as a fact. The
+            # fixed line answers only as the labelled fallback: with no brain, when Muse errors, or when its answer
+            # misses the feed's time (blind round 1: "Voy a revisar el registro"; round b4: a rule answered while Muse ran).
             self.memory.add_message(channel, "user", text, ts=self.now())
-            self.bus.publish("guard", status="last_feed")
-            self.say(channel, self.last_feed_text(self.lang(text)))
+            self.say(channel, self.last_feed_answer(text))
             return
         if rules.is_courtesy(text) and rules.THANKS.search(text) and self.double is None:
             # "ok thanks": a short fixed reply in the turn's language, no brain call, nothing said about the baby.
@@ -830,7 +833,9 @@ class Agent:
             # Health advice with nothing to log: the kind refusal, with no brain call.
             self.memory.add_message(channel, "user", text, ts=self.now())
             self.bus.publish("guard", status="health_refused")
-            self.say(channel, self.refusal(text))
+            entries = self.log_reported(text)
+            # "hizo caca verde, ¿es normal?": the diaper is logged first, then the fixed line (round b4 lost the diaper).
+            self.say(channel, (logged_text(entries, self.lang(text)) + " " if entries else "") + self.refusal(text))
             return
         if route == "note":
             # A symptom the parent saw, with no question: kept as a note in their words, and the advice refused.
@@ -890,13 +895,32 @@ class Agent:
         """The feed a symptom message reports, then the note in the parent's words. Returns the entries stored."""
         stored = []
         feed = rules.symptom_feed(request)
-        calls = ([{"kind": "feeding", "details": feed}] if feed else []) + [{"kind": "note", "details": {"text": request}}]
+        diaper = rules.reported_diaper(request)
+        calls = ([{"kind": "feeding", "details": feed}] if feed else []) + (
+            [{"kind": "diaper", "details": diaper}] if diaper else []) + [{"kind": "note", "details": {"text": request}}]
         for arguments in calls:
             status, entry = self.tools.run("log_baby_event", arguments)
             self.bus.publish("tool", name="log_baby_event", status=status)
             if status == "ran" and isinstance(entry, dict):
                 stored.append(entry)
         return stored
+
+    def log_reported(self, request):
+        """Log the feed or diaper a message reports besides its question, for a fixed line that answers with no brain
+        call. Returns the entries stored."""
+        stored = []
+        for kind, details in rules.reported_entries(request):
+            status, entry = self.tools.run("log_baby_event", {"kind": kind, "details": details})
+            self.bus.publish("tool", name="log_baby_event", status=status)
+            if status == "ran" and isinstance(entry, dict):
+                stored.append(entry)
+        return stored
+
+    def with_reported(self, line, request):
+        """The fixed safety line first, then what the same message reported, logged: "le di 60 ml, ¿puede dormir boca
+        abajo?" gets the safe sleep line and the 60 ml bottle (round b4 lost the feed)."""
+        entries = self.log_reported(request)
+        return line + (" " + logged_text(entries, self.lang(request)) if entries else "")
 
     def note_observation(self, request):
         """Log what the parent saw as a note, with their words, and a feed told with it. The no-advice line follows only
@@ -1131,6 +1155,45 @@ class Agent:
         if day and day != today:
             what += (" del " if lang == "es" else " on ") + f"{int(day[8:10])}/{int(day[5:7])}"
         return LAST_FEED["was"][lang].format(what=what)
+
+    def last_feed_answer(self, request):
+        """Muse's answer to "when did he last eat?", checked against the log, or the fixed line, labelled by its guard
+        event: last_feed (no brain), last_feed_busy (Muse errored) or last_feed_fixed (Muse missed the time)."""
+        lang = self.lang(request) if self.lang(request) in ("es", "en") else "en"
+        fixed = self.last_feed_text(lang)
+        if not brain_mod.thinks(self.brain):
+            self.bus.publish("guard", status="last_feed")
+            return fixed
+        entry = self.latest_of("feeding")
+        transcript = self.transcript(f"[{self.now():%H:%M}] {request}\n"
+                                     + LAST_FEED_CHECK.format(fact=fixed, language=LANG_NAMES[lang]))
+        try:
+            reply, seconds = brain_mod.timed(self.brain, self.system_prompt(), transcript, [])
+        except brain_mod.BrainError as error:
+            self.bus.publish("agent_error", error=str(error)[:300])
+            self.bus.publish("guard", status="last_feed_busy")
+            self.brain_busy = True
+            return self.busy_line(fixed, request)
+        usage = reply.usage or {}
+        self.bus.publish("brain_call", provider=self.brain.name, model=self.brain.model,
+                         destination=self.brain.destination, seconds=seconds, tool_calls=len(reply.tool_calls),
+                         input_tokens=usage.get("input_tokens"), output_tokens=usage.get("output_tokens"),
+                         reasoning_tokens=usage.get("reasoning_tokens"), usd=reply.usd, fallback=bool(reply.fallback))
+        if reply.fallback:
+            self.bus.publish("brain_fallback", **reply.fallback)
+            self.bus.publish("guard", status="last_feed_busy")
+            self.brain_busy = True
+            return self.busy_line(fixed, request)
+        text = strip_codes(BRAIN_ASK_LINE.sub("", reply.text or "").strip())
+        hhmm = str((entry or {}).get("ts") or "")[11:16]
+        said_time = bool(hhmm) and (hhmm in text or hhmm.lstrip("0") in text)
+        if (not text or reply.tool_calls or rules.claims_done(text) or rules.claims_change(text)
+                or rules.message_lang(text) not in (None, lang)
+                or ((not said_time) if entry is not None else bool(re.search(r"\b\d{1,2}:\d{2}\b", text)))):
+            self.bus.publish("guard", status="last_feed_fixed")
+            return fixed
+        self.bus.publish("guard", status="last_feed_muse")
+        return text
 
     def latest_of(self, kind):
         """The newest entry of one kind in the log, or None."""

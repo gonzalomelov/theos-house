@@ -155,8 +155,11 @@ footer button { font: inherit; background: none; border: 0; color: var(--muted);
 <footer><span id="left" data-es="Anota, recuerda y avisa. Hecho para no dar consejos médicos. Ante una señal de alarma: llamá al 911 ya.">Logs, reminds and alerts. Built to refuse medical advice. Red flags get: call 911 now.</span><button id="reset" type="button" data-es="Semana simulada nueva">Fresh simulated week</button></footer>
 <script>
 const $ = (id) => document.getElementById(id);
-const NAMES = { dim_lights: "Dim lights", hold_notifications: "Hold notifications", pause_vacuum: "Pause vacuum",
-                announce: "Speaker", call_partner: "Call partner" };
+const NAMES = /^es\b/i.test(navigator.language || "")
+  ? { dim_lights: "Bajar la luz", hold_notifications: "Silenciar avisos", pause_vacuum: "Pausar la aspiradora",
+      announce: "Parlante", call_partner: "Llamar a la pareja", set_on_duty: "De turno", white_noise: "Ruido blanco" }
+  : { dim_lights: "Dim lights", hold_notifications: "Hold notifications", pause_vacuum: "Pause vacuum",
+      announce: "Speaker", call_partner: "Call partner", set_on_duty: "On duty", white_noise: "White noise" };
 let busy = false;
 let mode = "baby";
 const LANG = /^es\b/i.test(navigator.language || "") ? "es" : "en";

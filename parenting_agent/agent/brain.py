@@ -171,8 +171,9 @@ class OpenAICompatibleBrain:
                       "reasoning_tokens": reasoning})
 
     def step(self, system, transcript, tools):
-        body = {"model": self.model, "max_tokens": self.max_tokens, "messages": self.messages(system, transcript),
-                "tools": [{"type": "function", "function": t} for t in tools]}
+        body = {"model": self.model, "max_tokens": self.max_tokens, "messages": self.messages(system, transcript)}
+        if tools:
+            body["tools"] = [{"type": "function", "function": t} for t in tools]
         if self.reasoning_effort:
             body["reasoning_effort"] = self.reasoning_effort
         return priced(self.parse(post_json(self.url, self.headers, body, self.timeout)), self.prices)
@@ -204,6 +205,14 @@ class FallbackBrain:
             self.use(self.backup)
             reply.fallback = note
             return reply
+
+
+def thinks(brain):
+    """True when a model answers through this brain: not the offline fake brain or the fixed rules. A metered or fallback
+    brain counts by the brain it calls first."""
+    inner = getattr(brain, "brain", brain)
+    inner = getattr(inner, "primary", inner)
+    return getattr(inner, "name", "fake") not in ("fake", "rules")
 
 
 # Providers of models that are not Meta's. They never run inside the agent, the demo or the families bot.

@@ -1257,10 +1257,8 @@ def answer(question, summary):
         if "how many" in q:
             return f"{diapers['dirty']} dirty diapers today."
         return f"The last dirty diaper was at {diapers['last_dirty_at']}." if diapers["last_dirty_at"] else "No dirty diaper in the log yet."
-    if "wet" in q:
-        return f"{diapers['wet']} wet diapers today."
-    if "diaper" in q:
-        return f"{diapers['count']} diapers today, {diapers['wet']} wet and {diapers['dirty']} dirty."
+    if "diaper" in q or "wet" in q:
+        return f"Today: {diapers['said']['en']}."
     if "bath" in q:
         return f"The last bath was at {baths['last_at']} on {baths['last_date']}." if baths["last_at"] else "No bath in the log yet."
     if "sleep" in q or "nap" in q or "slept" in q:
@@ -1608,3 +1606,69 @@ def chat_only(text):
         return False
     return not (is_health(text) or MEDICINE.search(text) or SYMPTOM.search(text) or MILESTONE.search(text)
                 or LOG_ASK.search(text) or GAVE.search(text))
+
+
+# What a message reports besides its question, for the fixed lines that answer it with no brain call (round b4: "le di
+# 60 ml ... ¿puede dormir boca abajo?" got the safe sleep line and lost the 60 ml, "caca verde" lost the diaper).
+QUESTION_PART = re.compile(r"¿[^?]*\?|[^.!?¿,;]*\?")
+DIAPER_COLOR = (("green", re.compile(r"verde|green", re.I)), ("yellow", re.compile(r"amarill|yellow", re.I)),
+                ("brown", re.compile(r"marr[oó]n|brown", re.I)), ("black", re.compile(r"negr|black", re.I)))
+
+
+def reported_part(text):
+    """The message without its questions: "le di 60 ml, ¿puede dormir boca abajo?" is "le di 60 ml"."""
+    return QUESTION_PART.sub(" ", text or "")
+
+
+def reported_diaper(text):
+    """The diaper a message reports outside its questions, as log_baby_event details, or None. "hizo caca verde, ¿es
+    normal?" is a dirty green diaper, "¿es normal la caca verde?" and "no hizo caca" are none."""
+    said = reported_part(text)
+    if is_stock_talk(said) or not KIND_WORDS["diaper"].search(said):
+        return None
+    out = {}
+    for name, pattern in (("wet", WET_ADD), ("solid", SOLID_ADD)):
+        m = pattern.search(said)
+        out[name] = bool(m) and not NOT_BEFORE.search(said[max(0, m.start() - 20):m.start()])
+    if not (out["wet"] or out["solid"]):
+        if not re.search(r"\b(cambi\w*|changed)\b", said, re.I):
+            return None
+        out["wet"] = True
+    color = next((name for name, pattern in DIAPER_COLOR if pattern.search(said)), None) if out["solid"] else None
+    return {**out, "color": color} if color else out
+
+
+def reported_entries(text):
+    """[(kind, details)] a message reports outside its questions: a feed with its amount or minutes, a diaper."""
+    said = reported_part(text)
+    out = []
+    feed = symptom_feed(said) if FEED_WORDS.search(said) or re.search(r"\d\s*(ml|cc)\b", said, re.I) else None
+    if feed:
+        out.append(("feeding", feed))
+    diaper = reported_diaper(text)
+    if diaper:
+        out.append(("diaper", diaper))
+    return out
+
+
+def diaper_counts(diapers):
+    """Today's diapers as numbers that add up: wet only, dirty (with or without pee) and dry, plus the line to say."""
+    details = [d.get("details") or {} for d in diapers]
+    dirty = sum(1 for d in details if d.get("solid"))
+    wet_only = sum(1 for d in details if d.get("wet") and not d.get("solid"))
+    dry = len(details) - dirty - wet_only
+    return {"count": len(details), "wet_only": wet_only, "dirty": dirty, "dry": dry,
+            "said": {lang: diaper_line(len(details), wet_only, dirty, dry, lang) for lang in ("en", "es")}}
+
+
+def diaper_line(count, wet_only, dirty, dry, lang="en"):
+    """"4 pañales: 3 solo pis, 1 con caca": the parts always add up to the count, with no diaper counted twice."""
+    if lang == "es":
+        head = f"{count} pañal" if count == 1 else f"{count} pañales"
+        parts = [f"{wet_only} solo pis" if wet_only else "", f"{dirty} con caca" if dirty else "",
+                 (f"{dry} seco" if dry == 1 else f"{dry} secos") if dry else ""]
+    else:
+        head = f"{count} diaper" if count == 1 else f"{count} diapers"
+        parts = [f"{wet_only} wet only" if wet_only else "", f"{dirty} dirty" if dirty else "", f"{dry} dry" if dry else ""]
+    parts = [p for p in parts if p]
+    return head + (": " + ", ".join(parts) if parts else "")

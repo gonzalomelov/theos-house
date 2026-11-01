@@ -72,7 +72,8 @@ def core_tools(memory, baby_log, allowed, remember_keys=None):
         schema({"kind": {"type": "string", "enum": list(LOG_KINDS)}, "since": {"type": "string"}, "limit": {"type": "integer"}}),
         lambda kind=None, since=None, limit=50: baby_log.entries(kind, since, limit)))
     tools.add(Tool(
-        "baby_summary", "Totals and last times from the baby log: feed count and total ml, diaper counts and the last dirty one, "
+        "baby_summary", "Totals and last times from the baby log: feed count and total ml, diaper counts and the last dirty one "
+        "(diapers.said is today's count in words that add up, in en and es: say it as it is), "
         "sleep minutes, the last bath. Counts cover since (ISO) or today from midnight, until (ISO) or now. For yesterday give "
         "both since and until. Use it for how much, how many, when was the last.",
         schema({"since": {"type": "string", "description": "ISO start of the period, omit for today"},

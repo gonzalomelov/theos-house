@@ -339,7 +339,7 @@ class ParentDelivery(unittest.TestCase):
         text = self.plugin.tick(self.clock["now"])
         print("\n" + text)
         self.assertIn("Grandma looked after Theo from 19:00 to 23:00.", text)
-        self.assertIn("Logged: 1 feed (100 ml), 1 diaper (1 wet, 0 dirty).", text)
+        self.assertIn("Logged: 1 feed (100 ml), 1 diaper: 1 wet only.", text)
         self.assertIn("Grandma asked 4 questions.", text)
         self.assertIn("I told Grandma to call you", text)
         summaries = [r for r in self.replies if r["kind"] == "reply" and r["text"] == text]

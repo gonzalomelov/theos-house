@@ -1,7 +1,8 @@
 """Blind judging round 1 (Oct 31) and PR #163: what a parent reads, in one line and one language.
 
-1. "¿Cuándo comió por última vez?" is answered from the log in one line every time, with no brain call: on the demo
-   Muse said "Voy a revisar el registro de Theo para vos." and then asked something else.
+1. "¿Cuándo comió por última vez?" is answered from the log in one line: on the demo Muse said "Voy a revisar el
+   registro de Theo para vos." and then asked something else. Since round b4 Muse answers it from the newest feed, and
+   an answer that misses the feed's time is replaced by the fixed line, as here.
 2. "el sueño más largo 0.0 h" never shows: a night slept in one stretch from 19:40 counts, no sleep means no line.
 3. The Spanish demo never mixes Parent B, Persona B and English "why" lines, and the cry message is bilingual.
 """
@@ -48,7 +49,7 @@ class LastFeedInOneLine(unittest.TestCase):
                      "¿Cuándo le toca bañarse?"):
             self.assertFalse(rules.asks_last_feed(text), text)
 
-    def test_family_agent_answers_from_the_log_with_no_brain_call(self):
+    def test_family_agent_replaces_an_answer_without_the_time_by_the_log_line(self):
         with tempfile.TemporaryDirectory() as tmp:
             brain = NoBrain()
             family = Family(tmp, at(30, 11, 0), brain=brain, extra={"people": PEOPLE_ES}, plugins=())
@@ -64,7 +65,7 @@ class LastFeedInOneLine(unittest.TestCase):
                 self.assertEqual(len(set(answers)), 1, "the same one line every time")
                 self.assertTrue(answers[0].startswith(f"La última toma fue la mamadera de 90 ml de fórmula de las {fed:%H:%M}"),
                                 answers[0])
-                self.assertEqual(brain.calls, 0)
+                self.assertEqual(brain.calls, 3)
             finally:
                 family.close()
 
@@ -87,13 +88,14 @@ class LastFeedInOneLine(unittest.TestCase):
         calls = brain.calls
         answer = text(app.handle("111", "111", "when did she last eat?"))
         self.assertRegex(answer, r"^The last feed was the \d\d:\d\d bottle of 120 ml")
-        self.assertEqual(brain.calls, calls)
+        self.assertEqual(brain.calls, calls + 1)
         from tests.test_redteam_r1 import demo
         app = demo(NoBrain())
         self.addCleanup(app.close)
         _, body = app.message("v", False, "¿cuándo comió por última vez?")
         self.assertTrue(body["reply"].startswith("La última toma fue"), body["reply"])
         self.assertNotIn("Voy a revisar", body["reply"])
+        self.assertEqual(body["answered_by"], {"kind": "rule"})
 
 
 class NoZeroLongestSleep(unittest.TestCase):

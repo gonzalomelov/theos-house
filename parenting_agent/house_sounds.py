@@ -29,6 +29,7 @@ import os
 import threading
 
 from . import cry_muse, cry_reason, cry_sound, hearing
+from .agent import rules
 from .agent.plugins import Plugin
 from .agent.tools import Tool, schema
 from .rhythm import patterns
@@ -153,7 +154,9 @@ class HouseSounds(Plugin):
         return tuple(out)
 
     def reason(self, features, now=None):
-        return cry_reason.explain(self.log.entries(), now or self.clock(), self.tz, features, self.cfg["pronoun"])
+        now = now or self.clock()
+        young = rules.under_3_months(self.agent.birth_date(), now.astimezone(self.tz).date())
+        return cry_reason.explain(self.log.entries(), now, self.tz, features, self.cfg["pronoun"], young=young)
 
     def notify(self, text, **fields):
         return self.agent.bus.publish("notify", text=text, **fields)

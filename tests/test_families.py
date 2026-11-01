@@ -499,7 +499,7 @@ class Reminders(unittest.TestCase):
         clock[0] = datetime.datetime(2026, 10, 28, 20, 1, tzinfo=TZ)
         due = app.tick()
         self.assertEqual(len(due), 1)
-        self.assertIn("Today for Mia: 1 feed, 120 ml in total, the last at 08:30. 1 diaper, 1 wet and 1 dirty.", due[0][1])
+        self.assertIn("Today for Mia: 1 feed, 120 ml in total, the last at 08:30. 1 diaper: 1 dirty.", due[0][1])
         self.assertEqual(app.tick(), [])
 
     def test_no_summary_on_an_empty_day(self):

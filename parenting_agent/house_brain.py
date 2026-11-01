@@ -94,7 +94,8 @@ reason in the log, for example a parent asking to sleep.
 messages: what to tell each parent, short, plain facts and times. Never give advice or a health opinion: do not use
 the words should, must, try, recommend, consider, need to, normal, worry, doctor, sick, fever, medicine.
 
-summary: one sentence, the plan and why. It never names a parent on duty other than on_duty, and never holds a code,
+summary: one sentence, the plan and why. It is about the plan only: never a note about health, a symptom or a
+medicine (a fever note is for the pediatrician, not for the plan). It never names a parent on duty other than on_duty, and never holds a code,
 a phone number or an address. why_changed: when what_happened is not empty, one sentence on what changed
 and why, else "". Answer with the JSON only."""
 
@@ -298,6 +299,13 @@ def validate(answer, now, tz, s, windows):
         else:
             messages.append({"to": to, "text": text})
     texts = {"summary": clean_text(answer.get("summary"), 240), "why_changed": clean_text(answer.get("why_changed"), 240)}
+    for field in texts:
+        # The why is about the plan: after a fever note in the log a round b4 judge read a why about paracetamol. A
+        # sentence about health, a symptom or a medicine is left out, whatever else it says.
+        kept, cut = off_plan_sentences(texts[field])
+        if cut:
+            dropped.append({"to": field, "text": " ".join(cut)[:240], "why": "talks about health, not the plan"})
+            texts[field] = kept
     for field, text in list(texts.items()):
         if text and not text_ok(text):
             # The same check as every other outgoing text: no advice, no code, no contact detail.
@@ -323,6 +331,17 @@ ROUTINE_WORDS = {"floor_clean": re.compile(r"\b(floor|vacuum\w*|clean\w*|robot)\
                  "door_quiet": re.compile(r"\b(door\w*|bell|visitor\w*)\b", re.I),
                  "white_noise_boost": re.compile(r"\b(white noise|noise|boost\w*)\b", re.I)}
 SENTENCE_END = re.compile(r"(?<=[.!?])\s+")
+
+
+def off_plan_sentences(text):
+    """(text kept, sentences cut): a sentence about health, a symptom or a medicine is never the plan's why."""
+    if not text:
+        return text, []
+    kept, cut = [], []
+    for sentence in SENTENCE_END.split(text):
+        health = rules.is_medical(sentence) or rules.is_medical_es(sentence) or rules.mentions_medicine(sentence)
+        (cut if health else kept).append(sentence)
+    return " ".join(kept).strip(), cut
 
 
 def matching_sentences(text, plan):
@@ -552,7 +571,12 @@ class HouseBrain:
 
     def system(self):
         run, margin = self.s["run_min"], self.s["margin_min"]
-        return SYSTEM.format(run=run, margin=margin, window=run + margin)
+        out = SYSTEM.format(run=run, margin=margin, window=run + margin)
+        if self.s.get("text_lang") == "es":
+            # The demo's Spanish page shows the why in Spanish only: an English why was cut whole and left it empty.
+            out += ("\nWrite summary and why_changed in Rioplatense Spanish with voseo (Uruguay). Name the parents "
+                    "exactly as in parents.")
+        return out
 
     def ask(self, seen, now, house, trigger, what):
         self.asking_at = now
