@@ -59,6 +59,7 @@ from .agent import brain as brain_mod
 from .agent import rules
 from .agent.people import People
 from .agent.plugins import Plugin
+from .channels.push import find_plugin
 from .echo_log import EchoWriter
 from .glasses import check_host, write_token
 from .spoken_time import natural_dates
@@ -300,6 +301,13 @@ class VoiceBridge(Plugin):
             raise TimeoutError("the agent is still answering the last question")
         try:
             self.asked += 1
+            pediatrician = find_plugin(self.agent, "pediatrician")
+            if pediatrician is not None and not (confirm or cancel) and pediatrician.asks_summary(words):
+                # "resumen para la pediatra": read only, the numbers and how many questions, never their text (anyone
+                # in the kitchen hears it), for a guest, a parent and the skill alike (pediatrician.py).
+                lang = lang or self.agent.lang(words)
+                reply = spoken(pediatrician.spoken(lang))
+                return self.said({"reply": reply, "replies": [reply], "role": "read"}, lang)
             if writing:
                 lang = lang or self.agent.lang(words)
                 return self.said(self.write(words, lang, confirm, cancel), lang)

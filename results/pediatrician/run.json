@@ -1,0 +1,156 @@
+{
+ "history": "parenting_agent/e2e/history.json",
+ "born": "2026-10-01",
+ "start": "2026-10-29T06:00:00-03:00",
+ "history_entries": 296,
+ "said_note": {
+  "ts": "2026-11-01T19:31:14-03:00",
+  "kind": "note",
+  "details": {
+   "text": "La pediatra dijo que las uñas se pueden limar desde ya"
+  }
+ },
+ "house_live": false,
+ "steps": [
+  {
+   "at": "2026-10-29T06:00:00-03:00",
+   "who": "gonza",
+   "said": "Turno con la pediatra el viernes 10:00",
+   "answer": [
+    "Anotado: Control con la pediatra, viernes 30/10 a las 10:00. Les mando a los dos el resumen para la pediatra el día antes a las 19:00 y el mismo día a las 08:00."
+   ]
+  },
+  {
+   "at": "2026-10-29T06:05:00-03:00",
+   "who": "ceci",
+   "said": "preguntarle a la pediatra si es normal que haga tanta fuerza cuando hace caca",
+   "answer": [
+    "Anotado para la pediatra: ¿Es normal que haga tanta fuerza cuando hace caca? Es la primera pregunta."
+   ]
+  },
+  {
+   "at": "2026-10-29T06:09:00-03:00",
+   "who": "gonza",
+   "said": "preguntarle a la pediatra cuándo le podemos cortar las uñas",
+   "answer": [
+    "Anotado para la pediatra: ¿Cuándo le podemos cortar las uñas? Ya son 2 preguntas."
+   ]
+  },
+  {
+   "at": "2026-10-29T06:14:00-03:00",
+   "who": "ceci",
+   "said": "resumen para la pediatra",
+   "answer": [
+    "Resumen para la pediatra. Próximo control: viernes 30/10 a las 10:00.\nPor día: 9 tomas, 8 pañales, 14 h 42 min de sueño.\n\nDesde el nacimiento (1/10).\nLos números por día son de 8 días completos, del 21/10 al 28/10.\nTomas: por lo general 9 por día (entre 1 y 12).\nPecho en esos días: izquierdo 15, derecho 13, los dos 8.\nMamadera en esos días: 27 (leche materna 11, fórmula 16), por lo general 100 ml (entre 60 y 120 ml).\nPañales: por lo general 8 por día (entre 3 y 10): 8 mojados y 2 sucios por día.\nUn pañal puede estar mojado y sucio a la vez.\nColores anotados: amarillo 15, verde 7, marrón 1.\nSueño: por lo general 14 h 42 min por día (entre 12 h 11 min y 15 h 27 min), en 6 días con sueño anotado.\nPeso: no hay un peso anotado.\nNotas que anotaron:\n- 23/10 21:00: «[simulated] Unusual day: evening cluster feeding»\n- 25/10 23:00: «[simulated] Unusual night: short, fussy sleep»\nPreguntas para la pediatra (2):\n1. ¿Es normal que haga tanta fuerza cuando hace caca?\n2. ¿Cuándo le podemos cortar las uñas?\nEs solo lo que anotaron, sin interpretar: la pediatra es quien evalúa y decide."
+   ]
+  },
+  {
+   "at": "2026-10-30T11:20:00-03:00",
+   "who": "ceci",
+   "said": "La pediatra dijo que las uñas se pueden limar desde ya",
+   "answer": [
+    "Anotado en el registro: «La pediatra dijo que las uñas se pueden limar desde ya». Siguen abiertas: 1. ¿Es normal que haga tanta fuerza cuando hace caca? 2. ¿Cuándo le podemos cortar las uñas? Para cerrar una, decime «cerrar pregunta 1»."
+   ]
+  },
+  {
+   "at": "2026-10-30T11:22:00-03:00",
+   "who": "ceci",
+   "said": "cerrar pregunta 2",
+   "answer": [
+    "Listo, cerré la pregunta 2: ¿Cuándo le podemos cortar las uñas?"
+   ]
+  }
+ ],
+ "pushes": [
+  {
+   "at": "2026-10-29T19:00:00-03:00",
+   "to": [
+    "gonza",
+    "ceci"
+   ],
+   "sent": [
+    {
+     "at": "2026-10-29T19:00:00-03:00",
+     "chat": "9000001",
+     "text": "Control con la pediatra mañana, viernes 30/10, a las 10:00.\nPor día: 9 tomas, 8 pañales, 14 h 42 min de sueño.\n\nDesde el nacimiento (1/10).\nLos números por día son de 8 días completos, del 21/10 al 28/10.\nTomas: por lo general 9 por día (entre 1 y 12).\nPecho en esos días: izquierdo 15, derecho 13, los dos 8.\nMamadera en esos días: 27 (leche materna 11, fórmula 16), por lo general 100 ml (entre 60 y 120 ml).\nPañales: por lo general 8 por día (entre 3 y 10): 8 mojados y 2 sucios por día.\nUn pañal puede estar mojado y sucio a la vez.\nColores anotados: amarillo 15, verde 7, marrón 1.\nSueño: por lo general 14 h 42 min por día (entre 12 h 11 min y 15 h 27 min), en 6 días con sueño anotado.\nPeso: no hay un peso anotado.\nNotas que anotaron:\n- 23/10 21:00: «[simulated] Unusual day: evening cluster feeding»\n- 25/10 23:00: «[simulated] Unusual night: short, fussy sleep»\nPreguntas para la pediatra (2):\n1. ¿Es normal que haga tanta fuerza cuando hace caca?\n2. ¿Cuándo le podemos cortar las uñas?\nEs solo lo que anotaron, sin interpretar: la pediatra es quien evalúa y decide."
+    },
+    {
+     "at": "2026-10-29T19:00:00-03:00",
+     "chat": "9000002",
+     "text": "Control con la pediatra mañana, viernes 30/10, a las 10:00.\nPor día: 9 tomas, 8 pañales, 14 h 42 min de sueño.\n\nDesde el nacimiento (1/10).\nLos números por día son de 8 días completos, del 21/10 al 28/10.\nTomas: por lo general 9 por día (entre 1 y 12).\nPecho en esos días: izquierdo 15, derecho 13, los dos 8.\nMamadera en esos días: 27 (leche materna 11, fórmula 16), por lo general 100 ml (entre 60 y 120 ml).\nPañales: por lo general 8 por día (entre 3 y 10): 8 mojados y 2 sucios por día.\nUn pañal puede estar mojado y sucio a la vez.\nColores anotados: amarillo 15, verde 7, marrón 1.\nSueño: por lo general 14 h 42 min por día (entre 12 h 11 min y 15 h 27 min), en 6 días con sueño anotado.\nPeso: no hay un peso anotado.\nNotas que anotaron:\n- 23/10 21:00: «[simulated] Unusual day: evening cluster feeding»\n- 25/10 23:00: «[simulated] Unusual night: short, fussy sleep»\nPreguntas para la pediatra (2):\n1. ¿Es normal que haga tanta fuerza cuando hace caca?\n2. ¿Cuándo le podemos cortar las uñas?\nEs solo lo que anotaron, sin interpretar: la pediatra es quien evalúa y decide."
+    }
+   ]
+  },
+  {
+   "at": "2026-10-30T08:00:00-03:00",
+   "to": [
+    "gonza",
+    "ceci"
+   ],
+   "sent": [
+    {
+     "at": "2026-10-30T08:00:00-03:00",
+     "chat": "9000001",
+     "text": "Control con la pediatra hoy a las 10:00.\nPor día: 9 tomas, 8 pañales, 14 h 42 min de sueño.\n\nDesde el nacimiento (1/10).\nLos números por día son de 8 días completos, del 21/10 al 28/10.\nTomas: por lo general 9 por día (entre 1 y 12).\nPecho en esos días: izquierdo 15, derecho 13, los dos 8.\nMamadera en esos días: 27 (leche materna 11, fórmula 16), por lo general 100 ml (entre 60 y 120 ml).\nPañales: por lo general 8 por día (entre 3 y 10): 8 mojados y 2 sucios por día.\nUn pañal puede estar mojado y sucio a la vez.\nColores anotados: amarillo 15, verde 7, marrón 1.\nSueño: por lo general 14 h 42 min por día (entre 12 h 11 min y 15 h 27 min), en 6 días con sueño anotado.\nPeso: no hay un peso anotado.\nNotas que anotaron:\n- 23/10 21:00: «[simulated] Unusual day: evening cluster feeding»\n- 25/10 23:00: «[simulated] Unusual night: short, fussy sleep»\nPreguntas para la pediatra (2):\n1. ¿Es normal que haga tanta fuerza cuando hace caca?\n2. ¿Cuándo le podemos cortar las uñas?\nEs solo lo que anotaron, sin interpretar: la pediatra es quien evalúa y decide."
+    },
+    {
+     "at": "2026-10-30T08:00:00-03:00",
+     "chat": "9000002",
+     "text": "Control con la pediatra hoy a las 10:00.\nPor día: 9 tomas, 8 pañales, 14 h 42 min de sueño.\n\nDesde el nacimiento (1/10).\nLos números por día son de 8 días completos, del 21/10 al 28/10.\nTomas: por lo general 9 por día (entre 1 y 12).\nPecho en esos días: izquierdo 15, derecho 13, los dos 8.\nMamadera en esos días: 27 (leche materna 11, fórmula 16), por lo general 100 ml (entre 60 y 120 ml).\nPañales: por lo general 8 por día (entre 3 y 10): 8 mojados y 2 sucios por día.\nUn pañal puede estar mojado y sucio a la vez.\nColores anotados: amarillo 15, verde 7, marrón 1.\nSueño: por lo general 14 h 42 min por día (entre 12 h 11 min y 15 h 27 min), en 6 días con sueño anotado.\nPeso: no hay un peso anotado.\nNotas que anotaron:\n- 23/10 21:00: «[simulated] Unusual day: evening cluster feeding»\n- 25/10 23:00: «[simulated] Unusual night: short, fussy sleep»\nPreguntas para la pediatra (2):\n1. ¿Es normal que haga tanta fuerza cuando hace caca?\n2. ¿Cuándo le podemos cortar las uñas?\nEs solo lo que anotaron, sin interpretar: la pediatra es quien evalúa y decide."
+    }
+   ]
+  }
+ ],
+ "glasses_card": {
+  "topic": "pediatrician",
+  "icon": "calendar",
+  "title": "Pediatra",
+  "status": "Control con la pediatra hoy a las 10:00.",
+  "alert": false,
+  "sticky": false,
+  "lang": "es",
+  "detail": "Por día: 9 tomas, 8 pañales, 14 h 42 min de sueño."
+ },
+ "glasses_on_demand": "Por día: 9 tomas, 8 pañales, 14 h 42 min de sueño.\n2 preguntas anotadas.",
+ "echo": "Para la pediatra, desde el nacimiento: por día, unas 9 tomas, 8 pañales, 8 mojados y 2 sucios, y 14 horas 42 de sueño. Hay 2 preguntas anotadas. Es lo que anotaron, la pediatra es quien decide.",
+ "muse_calls": [
+  {
+   "kind": "brain_call",
+   "t": 3.286,
+   "ts": "2026-11-01T19:31:12-03:00",
+   "unix": 1793572272.154,
+   "provider": "pediatrician",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 3.22,
+   "input_tokens": 265,
+   "output_tokens": 805,
+   "usd": 0.003753
+  },
+  {
+   "kind": "brain_call",
+   "t": 5.288,
+   "ts": "2026-11-01T19:31:14-03:00",
+   "unix": 1793572274.155,
+   "provider": "pediatrician",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 1.993,
+   "input_tokens": 262,
+   "output_tokens": 345,
+   "usd": 0.001794
+  }
+ ],
+ "muse_events": [],
+ "refused": [],
+ "telegram_api_calls": 0,
+ "questions_left": [
+  {
+   "id": 1,
+   "text": "si es normal que haga tanta fuerza cuando hace caca",
+   "es": "¿Es normal que haga tanta fuerza cuando hace caca?",
+   "en": "Is it normal for my baby to push so hard when pooping?"
+  }
+ ],
+ "real_s": 5
+}

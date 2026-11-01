@@ -46,6 +46,7 @@
     "parenting_agent.night_feed:NightFeed",
     "parenting_agent.house_brain:HouseBrainPlugin",
     "parenting_agent.reminders:Reminders",
+    "parenting_agent.pediatrician:Pediatrician",
     "parenting_agent.rhythm.engine:RhythmPlugin",
     "parenting_agent.sitter:SitterHandover",
     "parenting_agent.channels.push:FamilyPush",
