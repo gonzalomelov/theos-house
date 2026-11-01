@@ -37,6 +37,14 @@
         {
           "name": "AMAZON.FallbackIntent",
           "samples": []
+        },
+        {
+          "name": "AMAZON.YesIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.NoIntent",
+          "samples": []
         }
       ],
       "types": [
@@ -81,6 +89,31 @@
             {
               "name": {
                 "value": "summary of today"
+              }
+            },
+            {
+              "name": {
+                "value": "fed ninety milliliters"
+              }
+            },
+            {
+              "name": {
+                "value": "changed a dirty diaper"
+              }
+            },
+            {
+              "name": {
+                "value": "he fell asleep"
+              }
+            },
+            {
+              "name": {
+                "value": "he woke up"
+              }
+            },
+            {
+              "name": {
+                "value": "sorry it was one hundred not ninety"
               }
             }
           ]

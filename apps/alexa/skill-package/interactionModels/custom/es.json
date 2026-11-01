@@ -37,6 +37,14 @@
         {
           "name": "AMAZON.FallbackIntent",
           "samples": []
+        },
+        {
+          "name": "AMAZON.YesIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.NoIntent",
+          "samples": []
         }
       ],
       "types": [
@@ -81,6 +89,36 @@
             {
               "name": {
                 "value": "resumen del día"
+              }
+            },
+            {
+              "name": {
+                "value": "le di noventa mililitros de mamadera"
+              }
+            },
+            {
+              "name": {
+                "value": "cambié un pañal sucio"
+              }
+            },
+            {
+              "name": {
+                "value": "cambié un pañal mojado"
+              }
+            },
+            {
+              "name": {
+                "value": "se durmió"
+              }
+            },
+            {
+              "name": {
+                "value": "se despertó"
+              }
+            },
+            {
+              "name": {
+                "value": "perdón eran cien no noventa"
               }
             }
           ]
