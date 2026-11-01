@@ -1524,6 +1524,23 @@ def asks_on_duty(text):
     return bool(ON_DUTY.search(text)) and is_question(text) and not NOT_ROTA.search(text)
 
 
+# "¿Qué temperatura hay en el cuarto?" asks about the room, not the baby: the nursery sensor answers it with a reading
+# and the guide (nursery_climate.py). Before Nov 1 it hit MEDICAL_ES ("temperatura") and got the health refusal.
+ROOM_WORD = re.compile(r"\b(cuarto|habitaci[oó]n|pieza|dormitorio|nursery|room|bedroom)\b", re.I)
+CLIMATE_WORD = re.compile(r"\b(temperatura|temperature|temp|humedad|humidity|h[uú]medo|humid|seco|dry|grados|degrees|"
+                          r"calor|fr[ií]o|caliente|templado|warm|hot|cold|chilly)\b", re.I)
+# Anything about the baby's body, clothes or bedding stays with the health gate and the brain, never this reading.
+BABY_BODY = re.compile(r"\b(fiebre|fever\w*|febr\w*|frente|forehead|pecho|chest|nuca|neck|cuerpo|body|piel|skin|"
+                       r"sud\w*|sweat\w*|manos|hands|pies|feet|abrig\w*|ropa|clothes|dress\w*|layers?|capas|vest\w*|"
+                       r"manta|blanket|saco|sleep ?bag|term[oó]metro rectal|axila|armpit)\b|\b(3[5-9]|4[0-2])([.,]\d)?\b", re.I)
+
+
+def asks_room_climate(text):
+    text = text or ""
+    return (bool(ROOM_WORD.search(text)) and bool(CLIMATE_WORD.search(text)) and is_question(text)
+            and not BABY_BODY.search(text) and not is_emergency(text))
+
+
 def parent_text(text):
     """A parent's message as the transcript may carry it: no square brackets, so it can never pose as an observation
     from a skill or a check from the agent."""

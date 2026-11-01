@@ -625,6 +625,7 @@ class Agent:
         self.open_ask_people = None  # the people a plug-in's ask was sent to, None for anyone on the channel
         self.last_reply = {}      # (channel, chat id) -> the agent's last answer to that chat, so a yes answers its own chat
         self.rota = None          # the night rota (night_feed.py): who is on duty tonight, by name
+        self.nursery = None       # the nursery sensor (nursery_climate.py): Theo's room temperature and humidity
         self.people = None        # channels/people.py People, set by build(): names for the people block
         bus.subscribe(self.inbox.put, ["message", "observation"])
         bus.subscribe(self.on_notify, ["notify"])
@@ -966,6 +967,14 @@ class Agent:
             self.memory.add_message(channel, "user", text, ts=self.now())
             self.bus.publish("guard", status="night_rota")
             self.say(channel, self.complete_answer(text, rota.answer(self.lang(text))), topic="on_duty")
+            return
+        nursery = getattr(self, "nursery", None)
+        if nursery is not None and rules.asks_room_climate(text):
+            # "¿Qué temperatura hay en el cuarto?": the room sensor's reading and the 16 to 20 °C guide with its source,
+            # the same every time, with no brain call. A question about the baby's body never comes here.
+            self.memory.add_message(channel, "user", text, ts=self.now())
+            self.bus.publish("guard", status="nursery_climate")
+            self.say(channel, nursery.answer(self.lang(text)))
             return
         if rules.asks_last_feed(text) and not rules.is_health(text):
             # "¿Cuándo comió por última vez?": Muse answers from the newest feed in the log, given to it as a fact. The
