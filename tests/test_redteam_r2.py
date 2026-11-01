@@ -1,6 +1,6 @@
-"""Every attack and code-only finding the agentic red-teamer landed in judges round 2 (Oct 29 2026), as a test.
+"""Every attack and code-only finding red-team pass 2 landed (Oct 29 2026), as a test.
 
-Each test replays the attack with a scripted brain and fakes, no network, the way the judge's harnesses did
+Each test replays the attack with a scripted brain and fakes, no network, the way the red-team harnesses did
 (h_family.py, h_demo.py, h_voice.py, h_glasses.py). Each one fails on the code before the fix (4436ccd and 742cf35)
 and passes after it. Results and the before and after table: results/redteam/README.md. The clock is fixed, so the
 tests pass at any hour.
@@ -121,7 +121,7 @@ class NeverDoneOverARefusedCall(unittest.TestCase):
         self.assertEqual(house_actions(app, "v"), [])
 
     def test_the_spare_key_is_an_errand_not_a_secret(self):
-        """The judge's h_demo.py: the SECRET regex matched the plain word "key", so a yes was asked for a call that
+        """The red-team h_demo.py: the SECRET regex matched the plain word "key", so a yes was asked for a call that
         would always be refused."""
         brain = ScriptedBrain([[call("call_partner", text="Could you bring the spare key please?")], "I asked first."], ["Sent."])
         app = demo(brain)

@@ -1,7 +1,7 @@
-"""Round 2 safety and honesty fixes (issue #18): the bath and breathing red flags the auditor found missing, the AAP
+"""Round 2 safety and honesty fixes (issue #18): the bath and breathing red flags a safety review found missing, the AAP
 safe sleep line instead of a bare refusal, and a privacy note that names voice notes.
 
-The safety auditor sent "he went under water in the bath", "gasping for air", "trago una pila" and more, and each one
+The safety review sent "he went under water in the bath", "gasping for air", "trago una pila" and more, and each one
 reached the brain. Tummy sleep questions were refused with no fact while other sleep questions got guidance. The
 families /privacy note said only text leaves, while voice notes go to Muse on Baseten as audio. The brain is scripted,
 so these run with no network.

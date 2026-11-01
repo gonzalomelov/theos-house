@@ -1,4 +1,4 @@
-"""Blind judges, round b5 (Nov 1), on baby.bygmv.com and the family agent. Each test fails on the code before the fix.
+"""Blind review round B5 (Nov 1), on baby.bygmv.com and the family agent. Each test fails on the code before the fix.
 
 1. "face in the pillow and now very still" was not caught, and Muse added four first aid steps after the 911 line.
 2. "She is napping now" became a finished nap from 15:13 over two feeds, and the reply named other times than the log.

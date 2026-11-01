@@ -1,7 +1,7 @@
-"""Every confirmation comes from the log diff of the turn (issue #77, round 3 judges).
+"""Every confirmation comes from the log diff of the turn (issue #77, review round 3).
 
-The round 3 real-new-parent judge ran 37 new phrasings and the log ended wrong in 7 of 9 nights, 3 of them under
-"Anoté", "Corregí" or "ya anoté el sueño, no hace falta que lo mandes de nuevo". The round 3 red-teamer found the claim
+Review round 3 ran 37 new phrasings and the log ended wrong in 7 of 9 nights, 3 of them under
+"Anoté", "Corregí" or "ya anoté el sueño, no hace falta que lo mandes de nuevo". Red-team pass 3 found the claim
 guards switched off by any acting tool, a brain-written approval line, a right diaper deleted on "Actualicé el
 registro", a gate code in a reply and replies in the wrong language. Each test scripts the brain the way Muse answered
 in those runs, so they run with no network.

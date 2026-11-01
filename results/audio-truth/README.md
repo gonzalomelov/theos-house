@@ -86,7 +86,7 @@ Read `scripts/voice_notes_run.py`, `parenting_agent/families/bot.py`, `parenting
 - The ear sends only its fixed prompt and the WAV. The scripted line (`notes.json`) and the expected values (`CHECKS`) are used only to score after the run.
 - The brain gets the words the ear heard, not the script.
 - The OGG notes carry no text tags (`ffprobe`: only `encoder`), and the WAV made from them has none.
-- One weak spot, found by a round 2 judge: the ear prompt's example "(90 ml, a las 3)" matched note es01 word for word. It is now "(35 ml, a las 11)", which matches no note, and the 20 notes were rerun.
+- One weak spot, found in review round 2: the ear prompt's example "(90 ml, a las 3)" matched note es01 word for word. It is now "(35 ml, a las 11)", which matches no note, and the 20 notes were rerun.
 - The heard text has real mishearings that a leak would not make: "Change the wet diaper" for "Changed a wet diaper", "Sorry" dropped from en09 in an earlier run.
 
 **Rerun on Oct 29, 01:10, new ear prompt: 20 of 20 again** (10 Spanish, 10 English), 21 ear calls (one refusal retried on en09), prompt tokens 243 to 284 per call, audio_tokens 0 on every call, $0.20 in all. Per call tokens are in `results/voice/run.json`.

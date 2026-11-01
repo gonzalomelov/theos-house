@@ -1,4 +1,4 @@
-"""Round 2 judge fixes on the public demo (issue #76): the cry reason from the log, the night rota tool that agrees with
+"""Review round 2 fixes on the public demo (issue #76): the cry reason from the log, the night rota tool that agrees with
 the panel, a night summary that is always current, no invented bottle details, Theo as a boy everywhere, the link
 preview tags, prep mode, and replies in the visitor's language. Fake or counting brains, no network.
 """

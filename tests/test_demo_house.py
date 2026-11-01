@@ -261,11 +261,11 @@ class LetMeSleep(unittest.TestCase):
         self.assertEqual(card["on_duty"], other)
         self.assertIn("Muse handed over the night", card["rows"][0]["text"])
         self.assertIn(f"On duty tonight: {asker} → {other}", card["changes"])
-        # Since round b5 the plain code adds a pre-warm before the next predicted feed (23:46 here) to both plans.
+        # Since review round B5 the plain code adds a pre-warm before the next predicted feed (23:46 here) to both plans.
         self.assertTrue(any(c.startswith("Bottle warmer pre-heats: 23:46, 02:40 → 23:46, 02:30") for c in card["changes"]),
                         card["changes"])
         self.assertEqual(card["why_changed"], "Parent B asked to sleep, Parent A takes the night.")
-        # The panel's rota follows the plan, and the button wrote no parent's words into the log (round b4).
+        # The panel's rota follows the plan, and the button wrote no parent's words into the log (review round B4).
         self.assertEqual(v.rota()["on_duty"], other)
         self.assertFalse(any(e["kind"] == "note" and "sleep" in (e["details"].get("text") or "") for e in v.recent(10)))
 
@@ -302,7 +302,7 @@ class ChatTool(unittest.TestCase):
         self.assertIn("tonight_house", v.agent.tools.items)
         text = v.tonight_text()
         self.assertIn("Simulated house, nothing moves", text)
-        self.assertIn("Bottle warmer pre-heats: 23:46, 02:40", text)  # 23:46: before the next predicted feed (round b5)
+        self.assertIn("Bottle warmer pre-heats: 23:46, 02:40", text)  # 23:46: before the next predicted feed (review round B5)
         self.assertEqual(len(muse.asked), 1)
 
 

@@ -1,4 +1,4 @@
-"""Blind judges, round b4 (Nov 1), on baby.bygmv.com and the agent. Each test fails on the code before the fix.
+"""Blind review round B4 (Nov 1), on baby.bygmv.com and the agent. Each test fails on the code before the fix.
 
 1. "When did he last eat?" was answered by a fixed rule while Muse was up: Muse answers from the newest feed now.
 2. Muse's why on the house card came back empty, and after a fever note it talked about paracetamol.

@@ -1,8 +1,8 @@
 """The families log can be corrected, and the bot never makes up details or talks about its own bookkeeping (issue #40).
 
-The real-new-parent judge found that "perdón eran 100 no 120" kept the 120, that a bottle sent twice by mistake stayed
+A new-parent review found that "perdón eran 100 no 120" kept the 120, that a bottle sent twice by mistake stayed
 twice, that "teta 10 min" became "both breasts", that "a qué hora le toca?" had no answer, that the evening summary said
-a feed "se esperaba" 7 hours ago, and that the Spanish refusal and summaries read wrong. The safety auditor found no hard
+a feed "se esperaba" 7 hours ago, and that the Spanish refusal and summaries read wrong. A safety review found no hard
 emergency line, a "send it again" answer to health messages and a bottle refused as medical. These tests script the
 brain, so they run with no network.
 """

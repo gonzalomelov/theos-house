@@ -1,6 +1,6 @@
-"""Round 4 real-new-parent findings, from the judge's exact messages (issue #126).
+"""Review round 4 findings, from the review's exact messages (issue #126).
 
-meta-hackathon-2026 judges/rounds/r4/real-new-parent.json: "tomo 70 y vomito un poco" lost the 70 ml from the day total
+"tomo 70 y vomito un poco" lost the 70 ml from the day total
 in 3 of 3 runs, "sii lo mande dos veces sorry" got "No worries" in English, "a las 2 le di pecho 15 min" said at 15:00 was
 logged at 02:00, "la última registrada de ayer fue a la 01:05" named a feed from today, and the demo's unusual lines and
 one correction reply were wrong.
@@ -37,7 +37,7 @@ class Talker:
 
 
 class SymptomWithFeed(LogOps):
-    JUDGE = "tomo 70 y vomito un poco"
+    VOMIT = "tomo 70 y vomito un poco"
 
     def feeds(self):
         return [(e["ts"][11:16], e["details"].get("amount_ml")) for e in self.log() if e["kind"] == "feeding"]
@@ -46,23 +46,23 @@ class SymptomWithFeed(LogOps):
         return [e["details"]["text"] for e in self.log() if e["kind"] == "note"]
 
     def test_the_feed_and_the_note_are_both_logged_when_muse_proposes_only_the_note(self):
-        reply = self.say("12:20", self.JUDGE, self.ops({"op": "add", "kind": "note", "text": self.JUDGE}))
+        reply = self.say("12:20", self.VOMIT, self.ops({"op": "add", "kind": "note", "text": self.VOMIT}))
         self.assertEqual(self.feeds(), [("12:20", 70.0)])
-        self.assertEqual(self.notes(), [self.JUDGE])
+        self.assertEqual(self.notes(), [self.VOMIT])
         self.assertIn("70 ml", reply)
         self.assertNotIn(rules.NO_ADVICE["es"], reply)
         self.assertEqual(self.fam.log.summary(None, None)["feedings"]["total_ml"], 70)
 
     def test_muse_proposing_both_logs_each_once(self):
-        self.say("12:20", self.JUDGE, self.ops({"op": "add", "kind": "feeding", "method": "bottle", "amount_ml": 70},
+        self.say("12:20", self.VOMIT, self.ops({"op": "add", "kind": "feeding", "method": "bottle", "amount_ml": 70},
                                                {"op": "add", "kind": "note", "text": "vomitó un poco"}))
         self.assertEqual(self.feeds(), [("12:20", 70.0)])
         self.assertEqual(len(self.notes()), 1)
 
     def test_muse_proposing_nothing_still_keeps_both(self):
-        self.say("12:20", self.JUDGE, self.ops())
+        self.say("12:20", self.VOMIT, self.ops())
         self.assertEqual(self.feeds(), [("12:20", 70.0)])
-        self.assertEqual(self.notes(), [self.JUDGE])
+        self.assertEqual(self.notes(), [self.VOMIT])
 
     def test_a_feed_already_logged_minutes_ago_is_not_added_twice(self):
         self.say("12:10", "tomo 70", self.ops({"op": "add", "kind": "feeding", "method": "bottle", "amount_ml": 70}))
@@ -70,9 +70,9 @@ class SymptomWithFeed(LogOps):
         self.assertEqual(self.feeds(), [("12:10", 70.0)])
 
     def test_without_log_ops_plain_code_logs_the_feed_and_the_note(self):
-        self.say("12:20", self.JUDGE, ("other", {}), ("other", {}))
+        self.say("12:20", self.VOMIT, ("other", {}), ("other", {}))
         self.assertEqual(self.feeds(), [("12:20", 70.0)])
-        self.assertEqual(self.notes(), [self.JUDGE])
+        self.assertEqual(self.notes(), [self.VOMIT])
 
     def test_a_red_flag_keeps_its_line_and_still_logs_the_feed(self):
         reply = self.say("12:45", "tomo 40 y vomito todo")
@@ -85,7 +85,7 @@ class SymptomWithFeed(LogOps):
         self.assertIn("pediatra", reply)
 
     def test_symptom_feed_reads_only_real_amounts(self):
-        self.assertEqual(rules.symptom_feed(self.JUDGE), {"method": "bottle", "amount_ml": 70.0})
+        self.assertEqual(rules.symptom_feed(self.VOMIT), {"method": "bottle", "amount_ml": 70.0})
         self.assertEqual(rules.symptom_feed("le dio pecho 15 min y vomito"), {"method": "breast", "duration_min": 15})
         for text in ("vomitó dos veces", "vomito un poquito dsp de la toma", "tiene 38 de fiebre", "tiene tos hace 3 dias"):
             self.assertIsNone(rules.symptom_feed(text), text)

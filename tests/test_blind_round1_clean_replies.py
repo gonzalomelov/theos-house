@@ -1,7 +1,7 @@
-"""Blind judging round 1 (Oct 31) and PR #163: what a parent reads, in one line and one language.
+"""Blind review round 1 (Oct 31) and PR #163: what a parent reads, in one line and one language.
 
 1. "¿Cuándo comió por última vez?" is answered from the log in one line: on the demo Muse said "Voy a revisar el
-   registro de Theo para vos." and then asked something else. Since round b4 Muse answers it from the newest feed, and
+   registro de Theo para vos." and then asked something else. Since review round B4 Muse answers it from the newest feed, and
    an answer that misses the feed's time is replaced by the fixed line, as here.
 2. "el sueño más largo 0.0 h" never shows: a night slept in one stretch from 19:40 counts, no sleep means no line.
 3. The Spanish demo never mixes Parent B, Persona B and English "why" lines, and the cry message is bilingual.

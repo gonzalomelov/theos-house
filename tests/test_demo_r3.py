@@ -1,4 +1,4 @@
-"""Round 3 judge fixes on the public demo (issue #18): no diaper guess right after a feed, a plain "nothing likely"
+"""Review round 3 fixes on the public demo (issue #18): no diaper guess right after a feed, a plain "nothing likely"
 answer with what to check, a next feed that agrees between the panel and the night summary, a simulated day that keeps
 going, and every answer saying whether the AI model or a rule wrote it. Fake or counting brains, no network.
 """

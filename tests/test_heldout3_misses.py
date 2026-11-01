@@ -10,7 +10,7 @@ the second. Each test replays a step with the brain doing what Muse did, and nam
 - denied: a message that says something did not happen ("esta seco, no la cambie") was pushed to the brain as a log.
 - same start: a sleep start sent twice at the open start's time was answered "Anoté".
 - budget: the agent's own one-time checks used up the brain's tool rounds and the parent got "No pude terminar eso".
-- empty: an answer with no text and no tool call went out as "OK." and logged nothing (the tuned judge set, after these
+- empty: an answer with no text and no tool call went out as "OK." and logged nothing (the tuned review set, after these
   fixes, on "tiene la nariz tapada y le cuesta tomar").
 - language: an English message with none of the known English words ("took 75ml of formula") was answered in Spanish.
 """

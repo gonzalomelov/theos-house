@@ -2,7 +2,7 @@
 
 Recorded on Oct 29 2026 between 04:56 and 05:06 Montevideo, during the Meta hackathon, for issues #57 and #6. Everything in it is synthetic: generated clips of a generated baby, rendered car seat clips of a doll, no real child, no real parent.
 
-Round 3 judges read Meta's models as optional in the first hero run (`results/hero/`): "changing time" armed the watch by an exact phrase before Muse picked a tool, so Muse only said "already watching", the diaper went into Baby Buddy empty (wet false, solid false), the chime was a 0.02 s Tink, and SAM 3.1's essential job (the car seat coach) was not in the recording. This run changes all four.
+Review round 3 read Meta's models as optional in the first hero run (`results/hero/`): "changing time" armed the watch by an exact phrase before Muse picked a tool, so Muse only said "already watching", the diaper went into Baby Buddy empty (wet false, solid false), the chime was a 0.02 s Tink, and SAM 3.1's essential job (the car seat coach) was not in the recording. This run changes all four.
 
 **`hero2.mp4`** (127 s, 588 x 1280, 2.6 MB) is take 2 of 3, one unedited run of the Ray-Ban Meta companion app in the iOS 27.0 simulator with its sounds muxed on, followed by the car seat segment (`carseat.mp4`). **`run.json`** is that take: every agent event, brain call and SAM 3.1 call with timings. `takes/` has all three takes, `regions/` the MediaPipe regions run, `carseat.json` the car seat segment.
 
