@@ -112,9 +112,27 @@ built like his "our house" skill, without Claude: the Lambda posts the words to 
 ```
 
 - Source: `apps/alexa/`.
-- Role: `voice_bridge.skill.role` in `config/agent.vostro.json` caps what a skill caller can be. It is `parent`, so a
-  skill request that names a parent can log. The Lambda names nobody unless its `PA_PERSON` env var is set, so today
-  every Echo question is a guest's: read only, answered from the log.
+- Role: `voice_bridge.skill.role` in `config/agent.vostro.json` caps what a skill caller can be: `guest`, `parent` or
+  `echo_log`. Since Nov 1 it is `echo_log`, the write mode below. The Home Assistant Echo path (grandma) is unchanged:
+  read only.
+
+### Write mode, `echo_log` (Nov 1)
+
+A parent logs by voice: "le di 90 ml de mamadera", "cambié un pañal sucio", "se durmió", "se despertó", and "perdón,
+eran 100" for the last entry the Echo wrote.
+
+- The Echo cannot tell who speaks, so nothing is written on that turn. The words go through the family agent's loop
+  and guards (the duplicate question, the correction rules, the final guard, the red flag lines) in an agent of its
+  own with the baby log tools only (`parenting_agent/echo_log.py`): no house tool, no message to anyone, no remember.
+  Its writes are staged. The reply asks once, "¿Anoto 90 ml de mamadera a las 7:50? Decí sí", and carries a confirm id.
+- Only the skill's next "sí" (or "yes") writes exactly that, tagged `echo` in Baby Buddy. "No", a new utterance or two
+  minutes drop it, and the conversation memory then says nothing was logged.
+- A correction from the Echo changes or removes only the last entry tagged `echo` in the last 12 hours, never one a
+  parent logged on Telegram.
+- A question ("¿cuándo comió?") is answered as before, read only, with no confirmation. A red flag gets its fixed line
+  first.
+- The answer is in the request's locale, and dates are said as people say them ("ayer a las 10:55", never
+  "2026-10-31", `parenting_agent/spoken_time.py`).
 - Alexa allows 8 seconds. The Lambda waits 6, then says a holding line and keeps the question's id. "Again" or "de
   nuevo" asks the bridge for the same id, which returns the first answer and never runs the question twice.
 - The bridge token lives in the agent's `data/voice-skill-token` and the Lambda's env vars only, never in git.

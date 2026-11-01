@@ -108,6 +108,19 @@ class FakeBabyBuddy:
                 code, record = fake.create(name, body)
                 self.reply(code, record)
 
+            def do_PATCH(self):
+                name, record_id, _ = self.route()
+                if name is None:
+                    return
+                record = fake.records[name].get(record_id)
+                if record is None:
+                    self.reply(404, {"detail": "Not found."})
+                    return
+                record.update(json.loads(self.rfile.read(int(self.headers.get("Content-Length", 0))) or b"{}"))
+                if name in ("feedings", "sleep"):
+                    record["duration"] = duration(record["start"], record["end"])
+                self.reply(200, record)
+
             def do_DELETE(self):
                 name, record_id, _ = self.route()
                 if name is None:

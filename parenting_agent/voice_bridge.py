@@ -35,6 +35,14 @@ token, then deploy/door, then the relay on 8767. It carries its own token, "skil
 "role": "guest" | "parent"}. "guest" keeps every skill caller a guest whatever person it names. A skill request may
 carry a "request_id": the same id asked again waits for the first answer and never runs the question twice, so the
 skill can say a holding line within Alexa's 8 seconds and fetch the answer on the next turn.
+
+Role "echo_log" is the skill's write mode (echo_log.py): a question is answered as a guest's, read only, and anything
+else goes through the family agent's loop and guards with the baby log tools alone. A write is never made on that turn:
+the reply asks once ("¿Anoto 90 ml de mamadera a las 7:50? Decí sí") and carries {"confirm": {"id": ...}}. Only a
+request {"confirm": id} from the skill writes it, tagged "echo". {"cancel": id} drops it. No house action and no
+message to anyone can come from this role.
+
+Every spoken reply says dates the way people do ("ayer a las 10:55", spoken_time.py), never "2026-10-31".
 """
 import hmac
 import json
@@ -51,11 +59,14 @@ from .agent import brain as brain_mod
 from .agent import rules
 from .agent.people import People
 from .agent.plugins import Plugin
+from .echo_log import EchoWriter
 from .glasses import check_host, write_token
+from .spoken_time import natural_dates
 
 DEFAULT_PORT = 8767
 CHANNEL = "voice"
 SOURCES = ("echo", "assist")
+SKILL_ROLES = ("guest", "parent", "echo_log")
 MAX_TEXT = 500
 MAX_SPOKEN = 400
 WAKE = re.compile(r"^\s*(?:alexa[,\s]+)?(?:(?:ask|tell)\s+)?(?:the\s+)?baby\s+agent[,\s]*(?:that\s+)?", re.IGNORECASE)
@@ -100,7 +111,7 @@ GUEST_SYSTEM = """You answer {who}, a family member who asks out loud at the kit
 read: you have the baby log, read only.
 - Answer in one or two short spoken sentences in {language}. No lists, no markdown, no links.
 - Read the log with read_baby_log or baby_summary before you say any time or amount, and never guess one. Say times as \
-HH:MM, and say the day when it is not today (today is {today}).
+H:MM, and say the day when it is not today as yesterday or the day and month, never a date in digits (today is {today}).
 - Never give medical advice, a diagnosis, a dose or a treatment.
 - You cannot log anything, change anything, act on the house or read anything beyond the baby log. If {who} asks you \
 to, say that only the parents can, from their phones.
@@ -185,8 +196,8 @@ class VoiceGuest:
                 return "last_feed_time", self.agent.last_feed_text(lang)
         return None, text
 
-    def ask(self, words, who):
-        lang = self.agent.lang(words)
+    def ask(self, words, who, lang=None):
+        lang = lang if lang in ("es", "en") else self.agent.lang(words)
         fixed = self.fixed(words, lang)
         used, guard = [], None
         if fixed:
@@ -221,8 +232,8 @@ class VoiceBridge(Plugin):
         self.skill = None
         if self.s.get("skill"):
             skill = self.s["skill"]
-            if skill.get("role", "guest") not in ("guest", "parent"):
-                raise ValueError("voice_bridge.skill.role must be guest or parent")
+            if skill.get("role", "guest") not in SKILL_ROLES:
+                raise ValueError("voice_bridge.skill.role must be guest, parent or echo_log")
             path = skill.get("token_file") or os.path.join(config.get("data_dir", "data"), "voice-skill-token")
             kept = None if skill_token else kept_token(path)
             self.skill = {"token": skill_token or kept or secrets.token_urlsafe(24), "file": path, "kept": bool(kept),
@@ -231,6 +242,7 @@ class VoiceBridge(Plugin):
         self.people = getattr(agent, "people", None) or People(config.get("people"))
         self.guests = {str(g).lower() for g in self.s["guests"]}
         self.guest = VoiceGuest(agent, (config.get("baby") or {}).get("name") or "the baby")
+        self.writer = EchoWriter(agent, config) if self.skill and self.skill["role"] == "echo_log" else None
         self.one_at_a_time = threading.Lock()
         self.waiting = None
         self.asked = 0
@@ -273,34 +285,64 @@ class VoiceBridge(Plugin):
             return "guest"
         return "guest" if self.s["unknown_speaker"] == "guest" else "parent"
 
-    def ask(self, text, source="assist", person=None, via="home-assistant"):
+    def ask(self, text, source="assist", person=None, via="home-assistant", lang=None, confirm=None, cancel=None):
         """One utterance in, the agent's answer out. Raises TimeoutError when the agent did not finish in time."""
         if source not in SOURCES:
             raise ValueError(f"source must be one of {SOURCES}")
+        lang = lang if lang in ("es", "en") else None
+        writing = via == "skill" and self.writer is not None
+        if (confirm or cancel) and not writing:
+            raise ValueError("only the Alexa skill in echo_log mode confirms a write")
         words = strip_wake(text)[:MAX_TEXT]
-        if not words:
+        if not words and not (confirm or cancel):
             return {"reply": "Say baby agent, then what to log or ask.", "replies": []}
         if not self.one_at_a_time.acquire(timeout=self.s["timeout_s"]):
             raise TimeoutError("the agent is still answering the last question")
         try:
             self.asked += 1
+            if writing:
+                lang = lang or self.agent.lang(words)
+                return self.said(self.write(words, lang, confirm, cancel), lang)
             who = re.sub(r"[^a-z0-9_-]", "", str(person or "house").lower())[:32] or "house"
             role = self.role(person)
             if via == "skill" and self.skill["role"] == "guest":
                 role = "guest"
             if role == "guest":
-                reply = spoken(self.guest.ask(words, who if person else "guest"))
-                return {"reply": reply, "replies": [reply], "role": "guest"}
+                reply = spoken(self.guest.ask(words, who if person else "guest", lang))
+                return self.said({"reply": reply, "replies": [reply], "role": "guest"}, lang or self.agent.lang(words))
             self.waiting = {"replies": [], "done": threading.Event()}
             self.agent.bus.publish("message", channel=CHANNEL, text=words, person=f"{source}:{who}",
                                    chat_id=f"{source}:{who}", source=source)
             if not self.waiting["done"].wait(self.s["timeout_s"]):
                 raise TimeoutError("the agent did not answer in time")
             replies = [spoken(r) for r in self.waiting["replies"]]
-            return {"reply": " ".join(replies) or "Done.", "replies": replies, "role": "parent"}
+            return self.said({"reply": " ".join(replies) or "Done.", "replies": replies, "role": "parent"},
+                             lang or self.agent.lang(words))
         finally:
             self.waiting = None
             self.one_at_a_time.release()
+
+    def write(self, words, lang, confirm=None, cancel=None):
+        """The skill's write mode: a question read as a guest's, anything else asked first and written after the yes."""
+        if confirm:
+            result = self.writer.confirm(confirm, lang)
+        elif cancel:
+            result = self.writer.cancel(lang)
+        elif rules.is_question(words) and not rules.is_log_request(words) and not rules.is_edit_request(words):
+            self.writer.drop()
+            result = {"reply": self.guest.ask(words, "echo", lang)}
+        else:
+            result = self.writer.turn(words, lang)
+        reply = spoken(result["reply"])
+        return {**result, "reply": reply, "replies": [reply], "role": "echo_log"}
+
+    def said(self, result, lang):
+        """Dates and times in the reply as a person says them: "ayer a las 10:55", never "2026-10-31"."""
+        now = self.agent.now()
+        lang = lang if lang in ("es", "en") else "en"
+        result["reply"] = natural_dates(result["reply"], now, lang)
+        result["replies"] = [natural_dates(r, now, lang) for r in result.get("replies", [])]
+        return result
 
     def once(self, key, work):
         """The first request with this key does the work. The same key again waits for that answer, never a second run."""
@@ -379,7 +421,8 @@ class VoiceBridge(Plugin):
                     request_id = str(body.get("request_id") or "")[:80]
 
                     def work():
-                        return bridge.ask(body.get("text", ""), body.get("source") or "assist", body.get("person"), via)
+                        return bridge.ask(body.get("text", ""), body.get("source") or "assist", body.get("person"), via,
+                                          body.get("lang"), body.get("confirm"), body.get("cancel"))
 
                     if request_id:
                         result, repeat = bridge.once((via, request_id), work)
