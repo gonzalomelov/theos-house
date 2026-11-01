@@ -96,8 +96,9 @@ class WhyMatchesThePlan(unittest.TestCase):
         self.assertEqual(plan["summary"], "White noise goes up for the 10:00 nap.")
 
     def test_the_demo_card_hides_a_why_about_a_refused_window(self):
-        app = house.make(house.FakeMuse(house.answer(floor_clean=[{"start": "23:00", "end": "23:50", "why": "night"}],
-                                                     summary="The vacuum cleans the floor at 23:00.")))
+        refused = house.answer(floor_clean=[{"start": "23:00", "end": "23:50", "why": "night"}],
+                               summary="The vacuum cleans the floor at 23:00.")
+        app = house.make(house.FakeMuse(refused, dict(refused)))
         self.addCleanup(app.close)
         card = app.house("v", False, "tonight")[1]["house"]["tonight"]
         self.assertEqual(card["why"], "")

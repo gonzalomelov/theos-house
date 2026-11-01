@@ -25,6 +25,8 @@ COMFORT_SCORE = 0.3
 # and the last change is at least DIAPER_MIN_SINCE_CHANGE old. Right after a bottle the log says nothing about it.
 DIAPER_AFTER_FEED_MIN = 10
 DIAPER_MIN_SINCE_CHANGE = 45
+# Awake longer than this under 3 months is not said as a fact: the log is more likely missing a sleep (round b4).
+MAX_AWAKE_YOUNG_MIN = 180
 # Below this score no reason is likely: the agent says so and lists what to check instead of guessing.
 LIKELY = 0.4
 CHECKS = "a wet or dirty diaper, too warm or too cold, a burp after the feed, or he may just want to be held"
@@ -73,13 +75,19 @@ def is_likely(ranked):
     return bool(ranked) and ranked[0][1] != "comfort" and ranked[0][0] >= LIKELY
 
 
-def context(entries, now, tz):
-    """What the log says at the moment of the cry. Only entries that already happened count."""
+def context(entries, now, tz, young=True):
+    """What the log says at the moment of the cry. Only entries that already happened count. young is a baby under 3
+    months (or of unknown age): awake longer than MAX_AWAKE_YOUNG_MIN is not stated, the log is more likely missing a
+    sleep than he is up that long."""
     past = ordered(entries, now)
     feeds = [e for e in past if e["kind"] == "feeding"]
     changes = [e for e in past if e["kind"] == "change"]
     sleeps = [e for e in past if e["kind"] == "sleep" and e.get("end")]
     done = [s for s in sleeps if parse(s["end"]) <= now]
+    # A sleep a parent started and never ended ("se durmió" with no "se despertó"): he slept after the last sleep that
+    # ended, so the time since that one is no awake time. Round b4 read "awake 4 h 1 min" for a 6 week old this way.
+    opened = [e for e in past if e["kind"] == "sleep" and not e.get("end") and e.get("start")
+              and parse(e["start"]) <= now and (not done or parse(e["start"]) >= parse(done[-1]["end"]))]
     ctx = {"now": now, "tz": tz, "asleep": any(parse(s["start"]) <= now < parse(s["end"]) for s in sleeps), "refs": []}
     if feeds:
         last = feeds[-1]
@@ -98,6 +106,8 @@ def context(entries, now, tz):
         woke = parse(last_sleep["end"])
         ctx.update(woke_at=woke, awake_min=0.0 if ctx["asleep"] else _minutes(woke, now))
         ctx["refs"].append(last_sleep["ref"])
+        if opened or (young and not ctx["asleep"] and ctx["awake_min"] > MAX_AWAKE_YOUNG_MIN):
+            ctx["awake_unknown"] = ctx.pop("awake_min")
         night = patterns.is_night(woke.astimezone(tz))
         windows = [_minutes(parse(a["end"]), parse(b["start"])) for a, b in zip(done, done[1:])
                    if patterns.is_night(parse(a["end"]).astimezone(tz)) == night
@@ -177,9 +187,9 @@ def spanish(ctx, ranked, likely, now, tz):
     return text
 
 
-def explain(entries, now, tz, features=None, pronoun="he"):
+def explain(entries, now, tz, features=None, pronoun="he", young=True):
     """The ranked reasons and the sentence the agent says, for a cry heard at now."""
-    ctx = context(entries, now, tz)
+    ctx = context(entries, now, tz, young)
     ranked = sorted(((round(s, 3), reason, text) for reason, (s, text) in scores(ctx, features).items()),
                     key=lambda r: (-r[0], REASONS.index(r[1])))
     top_score, top, evidence = ranked[0]

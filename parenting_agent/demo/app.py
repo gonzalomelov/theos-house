@@ -158,6 +158,11 @@ def message_lang(text, fallback="en"):
 def answered_by(events, from_log=False):
     """Who wrote the answer, so the page can say it: the AI model when a brain call ran in this turn, else the log
     (why he may be crying, read from his log by a rule) or a fixed rule (the emergency line, a refusal, a logged entry)."""
+    guards = {e.get("status") for e in events if e["kind"] == "guard"}
+    if "last_feed_busy" in guards:
+        return {"kind": "busy"}
+    if "last_feed_fixed" in guards:
+        return {"kind": "rule"}  # Muse answered without the feed's time, so the fixed line from the log went out
     calls = [e for e in events if e["kind"] == "brain_call"]
     if calls:
         model = str(calls[-1].get("model") or "")
@@ -195,6 +200,7 @@ ANNOUNCEMENTS = rules.ANNOUNCEMENTS
 ROOMS = ["nursery", "kitchen", "living room", "bedroom", "every room"]
 PARENTS = ["Parent A", "Parent B"]
 SIMULATED = "Simulated in the demo, nothing ran in a real house"
+SIMULATED_ES = "Simulado en la demo, nada corrió en una casa real"
 DEMO_NOTE = """
 This is a public demo. The baby is a simulated baby boy called Theo, a few weeks old, and the log is a simulated week.
 Always say he and him for Theo. The parents are Parent A and Parent B, simulated too.
@@ -364,6 +370,8 @@ class Visitor:
                 raise ValueError(f"on duty is one of: {', '.join(PARENTS)}")
             self.duty = parent
             self.bus.publish("house_dry", action="set_on_duty", arguments={"parent": parent})
+            if self.turn_lang == "es":
+                return f"{SIMULATED_ES}. {tonight.name(parent, 'es')} queda de turno esta noche y recibe los avisos de la noche."
             return f"{SIMULATED}. {parent} is on duty tonight and gets the night pushes."
         tools.add(Tool("set_on_duty", "Put one parent on duty tonight, for example when the other asks to sleep. The panel's "
                        "rota shows it. Simulated in the demo.", schema({"parent": {"type": "string", "enum": PARENTS}},
@@ -382,10 +390,15 @@ class Visitor:
         out = []
         for e in events:
             if e["kind"] == "house_dry":
-                out.append({"action": e["action"], "arguments": e.get("arguments") or {}, "status": "simulated"})
+                out.append({"action": e["action"], "arguments": self.local_names(e.get("arguments")), "status": "simulated"})
             elif e["kind"] == "ask_parent":
-                out.append({"action": e.get("name"), "arguments": e.get("arguments") or {}, "status": "waits for your yes"})
+                out.append({"action": e.get("name"), "arguments": self.local_names(e.get("arguments")),
+                            "status": "waits for your yes"})
         return out
+
+    def local_names(self, arguments):
+        """A simulated parent named in the page's language: Persona B on the Spanish page, never Parent B (round b4)."""
+        return {k: tonight.name(v, self.turn_lang) if isinstance(v, str) else v for k, v in (arguments or {}).items()}
 
     def prep(self):
         """Prep mode, made on first use: its own agent, bus and memory, the before-he-arrives lists simulated and the due
@@ -411,7 +424,7 @@ class Visitor:
         house = None if from_log else house_question(text)
         if house:
             self.memory.add_message("demo", "user", text, ts=self.baby_log.now())
-            card, _ = self.house_plan(house)
+            card, _ = self.house_plan(house, said=text if house == "sleep" else None)
             self.agent.say("demo", tonight.text(card, self.turn_lang), card="tonight")
             reply = " ".join(e["text"] for e in self.replies)
             self.answered_by = {"kind": "house", "muse": card["source"] == "muse"}
@@ -475,10 +488,10 @@ class Visitor:
         return {"on_duty": self.duty or patterns.next_on_duty(handled, PARENTS), "counts": counts,
                 "last": handled[-1] if handled else None, "asked": self.duty is not None}
 
-    def house_plan(self, action):
+    def house_plan(self, action, said=None):
         """(card, muse calls) for "tonight" or "sleep". A Muse plan that moves the night puts that parent on duty,
-        so the panel's rota and the card agree."""
-        card, calls = self.house.plan(action, self.turn_lang)
+        so the panel's rota and the card agree. said is the parent's own words asking to sleep, from the chat."""
+        card, calls = self.house.plan(action, self.turn_lang, said=said)
         if action == "sleep" and card["on_duty_by"] == "muse":
             self.duty = card["on_duty"]
         return card, calls
@@ -492,6 +505,14 @@ class Visitor:
 
     def night_rota(self):
         r = self.rota()
+        if self.turn_lang == "es":
+            counts = ", ".join(f"{tonight.name(p, 'es')} {n}" for p, n in r["counts"].items())
+            last = f" {tonight.name(r['last'], 'es')} hizo el último." if r["last"] else ""
+            who = tonight.name(r["on_duty"], "es")
+            if r["asked"]:
+                return f"Esta noche está de turno {who}, porque alguien lo pidió. Despertares en el registro de la semana: {counts}.{last} Padres simulados."
+            return (f"Próximo despertar de noche: {who}. Despertares en el registro de la semana: {counts}.{last} El turno es el "
+                    "reparto justo: va quien tiene menos despertares, y en un empate quien no hizo el último. Padres simulados.")
         counts = ", ".join(f"{p} {n}" for p, n in r["counts"].items())
         last = f" {r['last']} took the last one." if r["last"] else ""
         if r["asked"]:

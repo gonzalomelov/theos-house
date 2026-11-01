@@ -80,8 +80,9 @@ class Endpoint(unittest.TestCase):
         self.assertIn("from the night rota", text["On duty tonight"])
 
     def test_the_safety_gate_refuses_a_bad_window_and_that_routine_shows_the_fixed_rule(self):
-        app = make(FakeMuse(answer(bottle_prewarm=[{"start": "02:00", "why": "a"}, {"start": "02:30", "why": "b"}],
-                                   floor_clean=[{"start": "23:00", "end": "23:50", "why": "night clean"}])))
+        bad = answer(bottle_prewarm=[{"start": "02:00", "why": "a"}, {"start": "02:30", "why": "b"}],
+                     floor_clean=[{"start": "23:00", "end": "23:50", "why": "night clean"}])
+        app = make(FakeMuse(bad, dict(bad)))  # the why names the refused warmer, so it is cut and Muse is asked once more
         self.addCleanup(app.close)
         card = app.house("v", False, "tonight")[1]["house"]["tonight"]
         text = {r["label"]: r["text"] for r in card["rows"]}
@@ -241,7 +242,7 @@ class Fallback(unittest.TestCase):
 
 
 class LetMeSleep(unittest.TestCase):
-    def test_let_me_sleep_writes_the_note_re_plans_and_lists_what_changed(self):
+    def test_let_me_sleep_re_plans_and_lists_what_changed_with_no_note_in_the_log(self):
         muse = FakeMuse(answer(on_duty="Parent A"),
                         answer(on_duty="Parent A", bottle_prewarm=[{"start": "02:30", "why": "earlier"}],
                                why_changed="Parent B asked to sleep, Parent A takes the night."))
@@ -255,24 +256,27 @@ class LetMeSleep(unittest.TestCase):
         card = app.house("v", False, "sleep")[1]["house"]["sleep"]
         context = muse.asked[1]["context"]
         self.assertEqual(context["trigger"], "adapt")
-        self.assertIn("let me sleep tonight", context["what_happened"])
-        self.assertTrue(any("let me sleep" in r for r in context["log_last_24h"]))
+        self.assertIn(f"{asker} asked to sleep tonight", context["what_happened"])
+        self.assertFalse(any("sleep tonight" in r for r in context["log_last_24h"]))
         self.assertEqual(card["on_duty"], other)
         self.assertIn("Muse handed over the night", card["rows"][0]["text"])
         self.assertIn(f"On duty tonight: {asker} → {other}", card["changes"])
         self.assertTrue(any(c.startswith("Bottle warmer pre-heats: 02:40 → 02:30") for c in card["changes"]))
         self.assertEqual(card["why_changed"], "Parent B asked to sleep, Parent A takes the night.")
-        # The panel's rota follows the plan, and the note is in the visitor's log.
+        # The panel's rota follows the plan, and the button wrote no parent's words into the log (round b4).
         self.assertEqual(v.rota()["on_duty"], other)
-        self.assertTrue(any("let me sleep" in (e["details"].get("text") or "") for e in v.recent(10)))
+        self.assertFalse(any(e["kind"] == "note" and "sleep" in (e["details"].get("text") or "") for e in v.recent(10)))
 
     def test_a_secret_in_muses_why_is_dropped_by_the_same_guard(self):
-        app = make(FakeMuse(answer(summary="Parent B is on, the gate code is 4471.")))
+        muse = FakeMuse(answer(summary="Parent B is on, the gate code is 4471."), answer(summary="The gate code is 4471."))
+        app = make(muse)
         self.addCleanup(app.close)
         self.assertEqual(app.house("v", False, "tonight")[1]["house"]["tonight"]["why"], "")
+        self.assertEqual(len(muse.asked), 2)  # an empty why is asked for once more, then the field is hidden
 
     def test_spanish_card_and_note(self):
-        muse = FakeMuse(answer(), answer(on_duty="Parent A"))
+        muse = FakeMuse(answer(summary="El agua se calienta a las 02:40, antes de la toma de las 02:50."),
+                        answer(on_duty="Parent A", why_changed="Persona B pidió dormir, Persona A toma la noche."))
         app = make(muse)
         self.addCleanup(app.close)
         app.house("v", False, "tonight", lang="es")
@@ -281,7 +285,9 @@ class LetMeSleep(unittest.TestCase):
         self.assertEqual(card["badge"], "Casa simulada, nada se mueve")
         self.assertEqual(card["rows"][0]["label"], "De turno esta noche")
         self.assertTrue(any("Persona" in c for c in card["changes"]) or card["changes"] == ["No cambió nada en el plan"])
-        self.assertIn("dejame dormir", muse.asked[1]["context"]["what_happened"])
+        self.assertIn("asked to sleep tonight", muse.asked[1]["context"]["what_happened"])
+        self.assertIn("Rioplatense Spanish", muse.asked[1]["system"])
+        self.assertFalse(any(e["kind"] == "note" for e in body["recent"] if "dormir" in (e["details"].get("text") or "")))
 
 
 class ChatTool(unittest.TestCase):
@@ -317,7 +323,7 @@ class AfterSleep(unittest.TestCase):
 
 class ChatRoute(unittest.TestCase):
     def test_house_questions_get_the_plan_with_no_chat_brain_call(self):
-        muse = FakeMuse(answer(), answer(on_duty="Parent A"))
+        muse = FakeMuse(answer(), answer(on_duty="Parent A", summary="Persona A toma la noche, el agua se calienta a las 02:40."))
         app = make(muse)
         self.addCleanup(app.close)
         calls = []

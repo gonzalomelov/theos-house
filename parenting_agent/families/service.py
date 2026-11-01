@@ -243,8 +243,7 @@ def day_summary(lang, name, s):
         total = t(lang, "FEEDS_TOTAL", ml=feeds["total_ml"]) if feeds["total_ml"] else ""
         parts.append(t(lang, "FEEDS", feeds=texts.plural(lang, feeds["count"], "FEED"), total=total, last=feeds["last_at"]))
     if diapers["count"]:
-        parts.append(t(lang, "DIAPERS", diapers=texts.plural(lang, diapers["count"], "DIAPER"),
-                              wet=texts.plural(lang, diapers["wet"], "WET"), dirty=texts.plural(lang, diapers["dirty"], "DIRTY")))
+        parts.append(diapers["said"]["es" if lang == "es" else "en"] + ".")
     if sleep["count"]:
         parts.append(t(lang, "SLEEP", time=_hm(sleep["total_min"]), sleeps=texts.plural(lang, sleep["count"], "SLEEP_ONE")))
     if baths["count"]:

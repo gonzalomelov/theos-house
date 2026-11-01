@@ -106,7 +106,13 @@ class DemoBabyLog(BabyLog):
                     if r["kind"] in ("feeding", "sleep") and started(r) <= current < finished(r)]
 
     def take_over(self):
+        """The visitor's day from now on. A simulated sleep going on right now stays open, as if a parent had said he
+        fell asleep: dropping it left the last sleep hours back, and a cry then read "awake 4 h" (round b4)."""
+        current = self.now()
         with self.lock:
+            asleep = [r for r in self.upcoming if r["kind"] == "sleep" and started(r) < current < finished(r)]
+            if asleep and self.sleep_started is None:
+                self.sleep_started = started(asleep[0])
             self.upcoming = []
 
     def at_or_before_now(self, ts):
@@ -267,4 +273,6 @@ class DemoBabyLog(BabyLog):
         self.advance()
         with self.lock:
             rows = [dict(r) for r in self.rows]
-        return rows + self.in_progress()
+        opened = ([{"kind": "sleep", "start": iso(self.sleep_started), "end": None, "ref": "sleep#open", "id": 0}]
+                  if self.sleep_started is not None else [])  # "he just fell asleep" with no wake-up yet, as Baby Buddy's timer
+        return rows + self.in_progress() + opened

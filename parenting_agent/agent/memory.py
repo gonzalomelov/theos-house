@@ -141,6 +141,7 @@ class BabyLog:
             found = [e for e in (window if until is not None else recent) if e["kind"] == kind and test(e)]
             return found[-1] if found else None
 
+        from . import rules  # rules imports nothing from here, the late import only keeps the module order simple
         feeds = [e for e in window if e["kind"] == "feeding"]
         diapers = [e for e in window if e["kind"] == "diaper"]
         sleeps = [e for e in window if e["kind"] == "sleep"]
@@ -158,8 +159,8 @@ class BabyLog:
                          "last_date": last_feed["ts"][:10] if last_feed else None,
                          "last_amount_ml": last_feed["details"].get("amount_ml") if last_feed else None,
                          "last_method": last_feed["details"].get("method") if last_feed else None},
-            "diapers": {"count": len(diapers), "wet": sum(1 for e in diapers if e["details"].get("wet")),
-                        "dirty": sum(1 for e in diapers if e["details"].get("solid")),
+            # Counts that add up: "4 diapers, 4 wet and 1 dirty" read as five to a round b4 judge. said is the line to use.
+            "diapers": {**rules.diaper_counts(diapers),
                         "last_dirty_at": at(last_dirty["ts"]) if last_dirty else None,
                         "last_dirty_date": last_dirty["ts"][:10] if last_dirty else None,
                         "last_wet_at": at(last_wet["ts"]) if last_wet else None},

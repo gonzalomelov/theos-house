@@ -375,13 +375,10 @@ class GuestSession:
         feeds = [e for e in self.logged if e["kind"] == "feeding"]
         diapers = [e for e in self.logged if e["kind"] == "diaper"]
         ml = round(sum(e["details"].get("amount_ml") or 0 for e in feeds))
-        wet = sum(1 for d in diapers if d["details"]["wet"] and not d["details"]["solid"])
-        dirty = sum(1 for d in diapers if d["details"]["solid"])
         span = f"{patterns.hhmm(self.start)} to {patterns.hhmm(self.end)}"
         parts = [f"{self.sitter} looked after {self.baby} from {span}."]
         feed_text = f"{len(feeds)} feed{'s' if len(feeds) != 1 else ''}" + (f" ({ml} ml)" if ml else "")
-        parts.append(f"Logged: {feed_text}, {len(diapers)} diaper{'s' if len(diapers) != 1 else ''}"
-                     + (f" ({wet} wet, {dirty} dirty)" if diapers else "") + ".")
+        parts.append(f"Logged: {feed_text}, {rules.diaper_counts(diapers)['said']['en']}.")
         seen = self.window_log()
         if seen is not None and (seen["feeds"] > len(feeds) or seen["diapers"] > len(diapers)):
             parts.append(f"The log for those hours, whoever wrote it: {seen['feeds']} feed{'s' if seen['feeds'] != 1 else ''}"

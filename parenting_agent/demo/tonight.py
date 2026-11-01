@@ -6,8 +6,9 @@ clock and safety checks, the same text guards and the same fallback. Nothing is 
 engine, no night feed and no white noise device, so apply() moves nothing, and the demo image has no device client at
 all. When Muse errors, is slow, or its plan is refused, the card shows what the fixed rules do instead and says so.
 
-"Let me sleep tonight" writes the parent's note into the visitor's log and re-plans through the same trigger the family
-server uses (HouseBrain.triggers sees the note and asks Muse with trigger "adapt"), then lists what changed.
+"Let me sleep tonight" re-plans through the same trigger the family server uses (Muse is asked with trigger "adapt" and
+HouseBrain.asked_to_sleep set), then lists what changed. Nothing is written into the visitor's log: the button is no
+parent's words (round b4 found a ready-made "I'm exhausted" note in the log after a tap).
 
 One plan per visitor for each of the two buttons: a second tap returns the same plan with no new Muse call.
 """
@@ -25,7 +26,8 @@ from .babylog import TZ, finished, started
 FIXED_LEAD_MIN = 10
 CRIB_CAP_DB = 50.0
 NIGHT_FROM = 19  # a visit before this hour (from 05:00) sees tonight's plan from 19:00, planned ahead
-SLEEP_NOTE = {"en": "{who}: I'm exhausted, let me sleep tonight", "es": "{who}: estoy muerto de sueño, dejame dormir esta noche"}
+# What Muse reads as what_happened when a parent asks to sleep: never written into the log.
+ASKED_TO_SLEEP = "{who} asked to sleep tonight, at {at}"
 NAMES_ES = {"Parent A": "Persona A", "Parent B": "Persona B"}
 
 TEXT = {
@@ -124,7 +126,8 @@ class TonightHouse:
     def cached(self):
         return dict(self.plans)
 
-    def plan(self, action, lang="en"):
+    def plan(self, action, lang="en", said=None):
+        """said is what the parent typed to ask for sleep in the chat, given to Muse as what happened, never logged."""
         if action == "tonight" and "sleep" in self.plans:
             return self.plans["sleep"], 0  # after "let me sleep" the night is the re-planned one
         if action in self.plans:
@@ -142,14 +145,9 @@ class TonightHouse:
                           if started(r) < self.at] if self.at > real_now else []
             trigger, what = "bedtime", None
         else:
-            before = self.plans["tonight"]
-            who = before["on_duty"]
-            note = SLEEP_NOTE["es" if lang == "es" else "en"].format(who=who)
-            self.baby_log.add("note", {"text": note})
-            real_now = self.baby_log.now()
-            seen = as_of(self.baby_log.rhythm_rows(), real_now)
-            adapts = [t for t in self.brain.triggers(seen, real_now) if t[0] == "adapt"]
-            trigger, what = "adapt", "; ".join(t[1] for t in adapts) or f'a parent wrote at {hm(real_now)}: "{note}"'
+            who = self.plans["tonight"]["on_duty"]
+            trigger = "adapt"
+            what = ASKED_TO_SLEEP.format(who=who, at=hm(real_now)) + (f': "{hb.clean_text(said, 160)}"' if said else "")
             # The request is about tonight, so it counts from the start of the planned night.
             self.brain.asked_to_sleep = max(self.brain.asked_to_sleep or real_now, self.at)
         now = max(self.at, real_now)
@@ -159,25 +157,39 @@ class TonightHouse:
                  and (r["kind"], r.get("start") or r.get("time")) not in have]
         seen = as_of(rows, now)
         reason = None
+        self.brain.s["text_lang"] = "es" if lang == "es" else "en"
         if not self.allow_muse():
             reason = "resting"
             self.brain.plan = None
         else:
-            self.on_call()
-            spent = self.brain.stats["usd"]
-            event = self.brain.ask(seen, now, None, trigger, what)
+            reason = self.ask(seen, now, trigger, what)
             calls += 1
-            self.on_spend(round(self.brain.stats["usd"] - spent, 6))
-            if event["kind"] == "house_brain_fallback":
-                refused = str(event.get("reason", "")).startswith("plan refused")
-                off = isinstance(self.brain.muse, NoMuse)
-                reason = "off" if off else ("refused" if refused else "error")
+            if reason is None and not told(self.brain.plan, trigger, lang) and self.allow_muse():
+                # Muse's why came back empty, or nothing of it was about the plan once the checks cut it (round b4): asked
+                # once more. A second empty why hides the field, and a second call that fails keeps the first plan.
+                first = self.brain.plan
+                self.bus.publish("guard", status="house_why_retry", trigger=trigger)
+                if self.ask(seen, now, trigger, what) is not None:
+                    self.brain.plan = first
+                calls += 1
         card = self.card(seen, now, trigger, what, reason)
+        card["lang"] = "es" if lang == "es" else "en"
         card["planned_at"] = hm(real_now) if now > real_now else ""
         if action == "sleep":
             card["before"] = self.plans["tonight"]
         self.plans[action] = card
         return card, calls
+
+    def ask(self, seen, now, trigger, what):
+        """One Muse plan call, counted and charged. None when Muse's plan stands, else why the fixed rules run."""
+        self.on_call()
+        spent = self.brain.stats["usd"]
+        event = self.brain.ask(seen, now, None, trigger, what)
+        self.on_spend(round(self.brain.stats["usd"] - spent, 6))
+        if event["kind"] != "house_brain_fallback":
+            return None
+        refused = str(event.get("reason", "")).startswith("plan refused")
+        return "off" if isinstance(self.brain.muse, NoMuse) else ("refused" if refused else "error")
 
     def card(self, seen, now, trigger, what, reason):
         """The plan as data: local HH:MM times, who is on duty and why, each routine's windows or "fixed"."""
@@ -214,6 +226,13 @@ class TonightHouse:
         out["sleeps"] = [{"start": hm(w["start"]), "end": hm(w["end"]), "kind": w["kind"]}
                          for w in sleep_windows(seen, now, TZ, horizon_h=self.brain.s["horizon_h"])]
         return out
+
+
+def told(plan, trigger, lang):
+    """True when a Muse plan has a why the card can show in the visitor's language."""
+    if not plan:
+        return False
+    return bool((trigger == "adapt" and why_line(plan.get("why_changed"), lang)) or why_line(plan.get("summary"), lang))
 
 
 def name(parent, lang):
@@ -313,7 +332,7 @@ def view(card, lang="en"):
                      if card.get("planned_at") else t["plan_until"].format(now=card["now"], until=card["until"])),
             "rows": [{"label": a, "text": b} for a, b in rows(card, lang)],
             "why": why_line(card["summary"], lang), "why_label": t["why"], "why_changed": why_line(card["why_changed"], lang),
-            "changes": changes(card, lang), "changes_label": t["changed"], "on_duty": card["on_duty"],
+            "changes": changes(card, lang), "changes_label": t["changed"], "on_duty": name(card["on_duty"], lang),
             "seconds": (card.get("muse") or {}).get("seconds")}
 
 

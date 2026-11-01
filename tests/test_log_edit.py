@@ -284,9 +284,11 @@ class SpanishTexts(Base):
         app, f, clock = self.family(CountingBrain())
         f.log.add("diaper", {"wet": True, "solid": True})
         f.log.add("diaper", {"wet": True})
-        self.assertIn("2 pañales, 2 mojados y 1 sucio.", app.summary_text(f))
+        self.assertIn("2 pañales: 1 solo pis, 1 con caca.", app.summary_text(f))
         f.log.add("diaper", {"solid": True, "wet": False})
-        self.assertIn("3 pañales, 2 mojados y 2 sucios.", app.summary_text(f))
+        self.assertIn("3 pañales: 1 solo pis, 2 con caca.", app.summary_text(f))
+        f.log.add("diaper", {"wet": True})
+        self.assertIn("4 pañales: 2 solo pis, 2 con caca.", app.summary_text(f))
 
 
 class Safety(Base):
