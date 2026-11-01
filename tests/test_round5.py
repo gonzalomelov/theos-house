@@ -1,4 +1,4 @@
-"""Round 5 judge findings (meta-hackathon-2026 judges/rounds/r5), each as a test that fails on the code before the fix.
+"""Review round 5 findings, each as a test that fails on the code before the fix.
 
 Tonight's house planned the day when opened in the morning, Muse's why named a floor window the checks refused, a brain
 reply with "for real" skipped the dry-run guard, a bottle corrected to a breast feed kept its ml, "ok thanks" flipped a

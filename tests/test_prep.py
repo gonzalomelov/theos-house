@@ -396,7 +396,7 @@ if __name__ == "__main__":
 
 
 class SpanishNudge(unittest.TestCase):
-    """A Spanish family gets the morning nudge in Uruguayan Spanish (round 2 real-new-parent judge, issue #77)."""
+    """A Spanish family gets the morning nudge in Uruguayan Spanish (review round 2, issue #77)."""
 
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()

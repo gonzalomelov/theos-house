@@ -1,6 +1,6 @@
 # Red team, round 4: the house findings closed
 
-On Oct 29 2026 the agentic red-teamer judge (meta-hackathon-2026 `judges/rounds/r4/agentic-red-teamer.json`, score 6.4) landed seven attacks. The honesty guard that erased safety answers was closed in PR #123. This change closes the other six, the house ones. Each is now a test in `tests/test_redteam_r4.py` that replays the judge's harness input (live.py, h_demo.py, h_floor2.py, h_brain.py) with a scripted brain or a fake Muse, no network.
+On Oct 29 2026 red-team pass 4 landed seven attacks. The honesty guard that erased safety answers was closed in PR #123. This change closes the other six, the house ones. Each is now a test in `tests/test_redteam_r4.py` that replays the red-team harness input (live.py, h_demo.py, h_floor2.py, h_brain.py) with a scripted brain or a fake Muse, no network.
 
 **Before** is the test file run on origin/main at 8fccb95. **After** is this branch. Run on Oct 29 2026: 14 of 16 tests fail before and pass after. The other 2 are controls that pass on both (a plugin's "Reply yes" still reaches the brain, and a plan with two boosts and one quiet door window still stands). The full suite, 983 tests, passes.
 
@@ -17,4 +17,4 @@ python -m unittest discover -s tests -p test_redteam_r4.py -v
 | 5 | Twelve white noise boosts and a doorbell silent for 12 hours were accepted | At most 4 boosts and 120 min in all, at most 2 quiet door windows and 240 min in all (`house_brain.MAX_WINDOWS`, `MAX_TOTAL_MIN`) | `WindowCaps` (2) |
 | 6 | "white noise" on the demo baby tab went to prep mode and dropped "put Parent B on duty" | On the baby tab, duty words and a white noise level stay with the baby agent unless the message names a list. The demo has two new simulated tools: `set_on_duty`, which the rota panel shows, and `white_noise`, capped at 50 dB at the crib | `BabyTabHouseWords` (1) |
 
-Not in this change: the judge's note that a parent note can reach Muse's plan prompt and so the morning text (house_brain.py:438 and :704). Real Muse refused it once in the judge's run. The speaker check stays the last line there.
+Not in this change: the red-team finding that a parent note can reach Muse's plan prompt and so the morning text (house_brain.py:438 and :704). Real Muse refused it once in the red-team run. The speaker check stays the last line there.

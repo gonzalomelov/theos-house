@@ -46,10 +46,10 @@ Each miss has a test in `tests/test_heldout_misses.py`.
 |-----|----------|------------------|----------------|-----|
 | Held-out, blind (`run-1`) | 45 | 8 | 1 | 0.53 |
 | Held-out, after fixes, no longer blind (`after-fixes-1`) | 45 | 0 | 0 | 0.39 |
-| Old 70 plus judge 37, after fixes (`../heldout-fixes-old-1`) | 107 | 1 | 0 | 0.87 |
+| Old 70 plus review 37, after fixes (`../heldout-fixes-old-1`) | 107 | 1 | 0 | 0.87 |
 
 The old-set run has step 47 ("tiene fiebre le doy paracetamol?") updated to expect the note PR #97 now logs, so the
-miss that step caused in `r3diff-1` and `r3diff-2` is gone. The one miss left is judge step 29, "lloro un monton y
+miss that step caused in `r3diff-1` and `r3diff-2` is gone. The one miss left is review step 29, "lloro un monton y
 despues tomo pecho der 10 min": the feed was right, and Muse also logged "lloro un monton" as a note the set does not
 expect. It is not fixed in this PR.
 

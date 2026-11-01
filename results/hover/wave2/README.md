@@ -4,7 +4,7 @@ Measured Oct 29 2026 between 01:05 and 02:35 Montevideo, during the Meta hackath
 
 ## The question
 
-Round 2 judges: the hover win (24 of 26) came from a SIFT and MediaPipe lift check, the same code with no SAM 3.1 got 22 of 26, and the lift alarm skipped SAM 3.1. So is SAM 3.1 essential, or only present?
+Review round 2: the hover win (24 of 26) came from a SIFT and MediaPipe lift check, the same code with no SAM 3.1 got 22 of 26, and the lift alarm skipped SAM 3.1. So is SAM 3.1 essential, or only present?
 
 ## Rules I kept
 

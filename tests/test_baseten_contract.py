@@ -143,7 +143,7 @@ class BasetenContract(unittest.TestCase):
                              {"kind": "feeding", "details": {"amount_ml": 90}})
             self.assertEqual(result["role"], "tool")
             self.assertEqual(result["tool_call_id"], "call_1")
-            # Since round b5 a log confirmation says what the log holds, never the brain's own retelling.
+            # Since review round B5 a log confirmation says what the log holds, never the brain's own retelling.
             self.assertEqual(len(replies), 1)
             self.assertRegex(replies[0], r"^Logged the \d\d:\d\d bottle of 90 ml\.$")
             self.assertEqual(agent.baby_log.entries("feeding")[-1]["details"]["amount_ml"], 90)

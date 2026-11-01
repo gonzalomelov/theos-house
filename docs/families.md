@@ -95,7 +95,7 @@ On the same 150 notes after the fix: 0 false "logged" and every note logged once
 
 ## Corrections, double sends and nothing made up
 
-The real-new-parent judge ran 3 Spanish days with the real brain on Oct 28 and found that the log could not be corrected: "perdón eran 100 no 120" kept the 120 and the bot said "Listo", a bottle sent twice by mistake stayed twice, and the totals were wrong from then on. Now:
+A new-parent review ran 3 Spanish days with the real brain on Oct 28 and found that the log could not be corrected: "perdón eran 100 no 120" kept the 120 and the bot said "Listo", a bottle sent twice by mistake stayed twice, and the totals were wrong from then on. Now:
 
 - `edit_baby_event` and `delete_baby_event` change or remove an entry, named by id, by kind and local time ("01:30") or as the last one. They are in the shared tools for any baby log that can change entries (the family log). Totals, `/resumen` and the evening summary read the log, so they follow.
 - The reply for a change is built from the log, not from the brain: "Corregí la mamadera de las 01:30: 120 ml → 100 ml." or "Borré el pañal de las 03:30."
@@ -110,7 +110,7 @@ Measured on Oct 28 with `scripts/families_3day_run.py`: 34 Spanish messages over
 
 ## Keeping the log right (round 2)
 
-The round 2 real-new-parent judge saw "nono eran 70" log a second bottle with the reply "corregido", and "se mando doble perdon" delete the only breast feed. The fix does not depend on clean words (issue #77):
+Review round 2 saw "nono eran 70" log a second bottle with the reply "corregido", and "se mando doble perdon" delete the only breast feed. The fix does not depend on clean words (issue #77):
 
 - A reply that claims a change ("corregido", "borré", "fixed", "deleted") goes out only when an edit or delete really ran in that turn. Otherwise what the turn logged is taken back, the brain is asked once to edit, and if it still does not, the parent gets the honest "No pude cambiar el registro".
 - A delete runs when the parent asks for one ("borrá", "no le di nada"), or for "sent twice" only when the log really holds the entry twice. "se mando doble" with one entry gets "No borré nada: en el registro la toma de pecho de las 05:20 está una sola vez."
@@ -121,7 +121,7 @@ The round 2 real-new-parent judge saw "nono eran 70" log a second bottle with th
 
 ## Every confirmation from the log diff (round 3)
 
-The round 3 real-new-parent judge ran 37 phrasings the team had never seen. The log ended wrong in 7 of 9 nights, and 3 of those replies said "Anoté", "Corregí" or "ya anoté el sueño, no hace falta que lo mandes de nuevo" over a lost or corrupted entry. Phrase lists do not fix that, so the structure changed (issue #77):
+Review round 3 ran 37 phrasings the team had never seen. The log ended wrong in 7 of 9 nights, and 3 of those replies said "Anoté", "Corregí" or "ya anoté el sueño, no hace falta que lo mandes de nuevo" over a lost or corrupted entry. Phrase lists do not fix that, so the structure changed (issue #77):
 
 - The agent takes a snapshot of the log before the turn and one after it. Every confirmation and every "already saved" line is built from that diff, never from the tool calls that ran. A reply that says "anoté", "corregí", "borré", "moví" or "logged" with an empty diff is replaced with "No cambió nada en el registro, así que no quedó anotado. ¿Me lo decís de nuevo?". When the brain fails after a log call, the parent hears exactly what the diff holds, or that nothing was kept. This is shared agent code, so the demo and the family agent have it too.
 - A sleep is "anotado" only when a finished sleep with a start and an end is in the log. A wake-up ("ya se levanto", "recién se despertó", "woke") closes the open sleep. A sleep with its length ("durmio 2 horas recien se desperto", "hizo una siestita de 40 min") is one finished sleep ending now, never a new start and never a negative length.
@@ -130,9 +130,9 @@ The round 3 real-new-parent judge ran 37 phrasings the team had never seen. The 
 - "q comio ayer en total" is yesterday only: the summary gets an end time.
 - A reply that claims an action needs the tool for that action to have run in the turn: "le avisé" or "told" needs call_partner, "announced" needs announce, "saved" needs remember or a log call, "added" needs prep_add, "ticked" needs prep_check. Another acting tool does not cover it. A brain-written "Espero tu sí" line is removed, a sentence with a code word and digits never goes out, and a brain answer in the wrong language is asked for once more in the right one. A turn that only added entries is never undone because Muse said "actualicé el registro".
 
-Measured with `scripts/families_never_wrong_run.py`, which now runs the 70 team messages and the judge's 37 each in a new family. The numbers are in `results/families-never-wrong/README.md`. Tests: `tests/test_log_diff_r3.py`.
+Measured with `scripts/families_never_wrong_run.py`, which now runs the 70 team messages and the review's 37 each in a new family. The numbers are in `results/families-never-wrong/README.md`. Tests: `tests/test_log_diff_r3.py`.
 
-Round 2 measurement, before the judge's set: `scripts/families_never_wrong_run.py`, 70 new messages over 3 simulated nights on Muse Spark Open: 0 wrong log states in each of 3 runs. The misses of the earlier rounds and their diffs are in `results/families-never-wrong/README.md`. Tests: `tests/test_never_wrong_log.py`.
+Round 2 measurement, before the review set: `scripts/families_never_wrong_run.py`, 70 new messages over 3 simulated nights on Muse Spark Open: 0 wrong log states in each of 3 runs. The misses of the earlier rounds and their diffs are in `results/families-never-wrong/README.md`. Tests: `tests/test_never_wrong_log.py`.
 
 ## Muse decides the log (log ops, issue #77)
 

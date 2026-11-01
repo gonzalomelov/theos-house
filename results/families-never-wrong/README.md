@@ -29,7 +29,7 @@ brain's rounds) plus an English message not seen as English. Each has a test in 
 every English reply.
 
 `heldout3-fixes-old-1`: one run of `--sets old,judge` on that code, Muse Spark Open, 0 fallbacks, 0.81 USD. Old set 0 of
-70 wrong, judge set 1 of 37 wrong, 0 reply problems. The one miss, judge step 26, "tiene la nariz tapada y le cuesta
+70 wrong, review set 1 of 37 wrong, 0 reply problems. The one miss, review step 26, "tiene la nariz tapada y le cuesta
 tomar": Muse answered with no text and no tool call, so the parent got "OK." and no note. The same message was noted in
 the three earlier runs of this set. Fix after the run: an empty answer is asked again once, as one more brain call
 (`test_empty_an_empty_answer_is_asked_again`). It was not rerun, the brief allowed one run.
@@ -38,7 +38,7 @@ the three earlier runs of this set. Fix after the run: an empty answer is asked 
 
 All runs on Oct 29 2026, Muse Spark Open (`meta-models/muse-spark-open-1026` on Baseten), 0 fallbacks to Claude.
 
-The round 2 real-new-parent judge found that in 1 of 3 nights the bot logged 90 plus 70 ml for one bottle while saying "corregido", and that "se mando doble perdon" deleted the only breast feed. This run asks the same question on new phrasings: after each message, is the log what a careful parent would have written?
+Review round 2 found that in 1 of 3 nights the bot logged 90 plus 70 ml for one bottle while saying "corregido", and that "se mando doble perdon" deleted the only breast feed. This run asks the same question on new phrasings: after each message, is the log what a careful parent would have written?
 
 ## The run
 
@@ -64,9 +64,9 @@ Every miss, with its log diff (files `first-*.json`, `second-*.json`):
 
 The final change after these runs only adds the no-advice line to a note the brain logged when the brain's answer spoke of the pediatrician or 911. It changes no log state.
 
-## The judge's own harness
+## The review's own harness
 
-`judge-harness-rerun.txt`: his `martin.py` (35 messages) run once on this branch, 0.25 USD. The final log is right: one 70 ml bottle at 02:10 after "nono eran 70" (no added bottle, the day says 170 ml, not 260), the 05:20 breast feed kept as the right breast after "se mando doble perdon", the double-send question says "dos tomas de pecho", "teta izq y der" is both breasts, "vomito un poquito dsp de la toma" is noted with the no-advice line in one turn, "a q hr le toca" gets how long since the last feed, and "/proxima" on his sparse log no longer says "cada 12 h 40 min". In that run "respira raro hace un ruido como silbido" was noted without the no-advice line, which is the change above. On main after #80 that message hits the emergency gate (911 at once), so the families bot no longer sends it to the brain.
+`judge-harness-rerun.txt`: the review harness (35 messages) run once on this branch, 0.25 USD. The final log is right: one 70 ml bottle at 02:10 after "nono eran 70" (no added bottle, the day says 170 ml, not 260), the 05:20 breast feed kept as the right breast after "se mando doble perdon", the double-send question says "dos tomas de pecho", "teta izq y der" is both breasts, "vomito un poquito dsp de la toma" is noted with the no-advice line in one turn, "a q hr le toca" gets how long since the last feed, and "/proxima" on its sparse log no longer says "cada 12 h 40 min". In that run "respira raro hace un ruido como silbido" was noted without the no-advice line, which is the change above. On main after #80 that message hits the emergency gate (911 at once), so the families bot no longer sends it to the brain.
 
 ## Rerun on main after PRs #78 to #86 (Oct 29)
 
@@ -106,21 +106,21 @@ Every brain call in the three runs was answered by Muse. The bar, 0 wrong log st
 
 The English "I stopped after too many steps" from `main-1` is gone: every fixed agent text is now in English and Spanish and follows the reply language (out of steps, and the Done, Not done and Nothing was waiting lines after a yes). When the brain runs out of steps after something was logged, the reply says what was saved, so the parent does not send it again (`tests/test_log_edit.py`, `FixedTextsInTheReplyLanguage`, fails without the fix). The rule brain that answers after the spend cap already answered in Spanish.
 
-## Round 3: confirmations from the log diff, plus the judge's 37 messages (Oct 29)
+## Round 3: confirmations from the log diff, plus the review's 37 messages (Oct 29)
 
-The round 3 real-new-parent judge ran 37 new phrasings (his `martin3.py`) and the log ended wrong in 7 of 9 nights, 3 of them under a confident "Anoté", "Corregí" or "ya anoté el sueño, no hace falta que lo mandes de nuevo". The fix is structural: every confirmation is built from the diff of the log before and after the turn (`docs/families.md`, "Every confirmation from the log diff"). His 37 messages are now `JUDGE_STEPS` in the eval, with the log a careful parent keeps, and the default run plays the team's 70 and his 37, each in a new family. These 37 were the dev set for this fix, so the judge set is not a held-out number.
+Review round 3 ran 37 new phrasings and the log ended wrong in 7 of 9 nights, 3 of them under a confident "Anoté", "Corregí" or "ya anoté el sueño, no hace falta que lo mandes de nuevo". The fix is structural: every confirmation is built from the diff of the log before and after the turn (`docs/families.md`, "Every confirmation from the log diff"). Its 37 messages are now `JUDGE_STEPS` in the eval, with the log a careful parent keeps, and the default run plays the team's 70 and its 37, each in a new family. These 37 were the dev set for this fix, so the review set is not a held-out number.
 
-| Run | Code | Team 70: wrong states | Judge 37: wrong states | Reply problems | Fallbacks | Spend |
+| Run | Code | Team 70: wrong states | Review 37: wrong states | Reply problems | Fallbacks | Spend |
 |---|---|---|---|---|---|---|
 | `r3diff-1` | diff-based confirmations, before the breast minutes fix | 1 | 1 | 0 | 0 | 0.887 USD |
 | `r3diff-2` | final branch | 1 | **0** | 0 | 0 | 0.885 USD |
 
 Both runs ran one at a time, Muse Spark Open, 1.77 USD in all.
 
-- `r3diff-1`, judge step 4, "pecho izquierdo 15": Muse logged the left breast with no duration. Fix: a single bare number after a breast side, with no bottle word and no time, is minutes. In `r3diff-2` it kept 15 min.
+- `r3diff-1`, review step 4, "pecho izquierdo 15": Muse logged the left breast with no duration. Fix: a single bare number after a breast side, with no bottle word and no time, is minutes. In `r3diff-2` it kept 15 min.
 - Both runs, team step 47, "tiene fiebre le doy paracetamol?": the newborn fever red flag from PR #97 now logs a note before the call-now line. The eval still expects no entry for that message. The log is not wrong, the expected op is out of date, and that path belongs to the safety work, so it was left as it is.
 
-In `r3diff-2` the judge's misses all ended right: "ya se levanto" closed the 09:10 sleep ("Anoté el sueño de 09:10 a 10:20"), "no espera, fue a las 12" moved the bottle to 12:00, "en realidad tomo 3, dejo una" after "mamadera 4 onzas" became 90 ml, "hizo una siestita de 40 min" was one 40 min sleep, the half bottle was 60 ml, "de mamadera digo" changed nothing and said so, "q comio ayer en total" said 3 feeds and 150 ml for Oct 30 only, and "durmio 2 horas recien se desperto" was one sleep from 13:00 to 15:00.
+In `r3diff-2` the review's misses all ended right: "ya se levanto" closed the 09:10 sleep ("Anoté el sueño de 09:10 a 10:20"), "no espera, fue a las 12" moved the bottle to 12:00, "en realidad tomo 3, dejo una" after "mamadera 4 onzas" became 90 ml, "hizo una siestita de 40 min" was one 40 min sleep, the half bottle was 60 ml, "de mamadera digo" changed nothing and said so, "q comio ayer en total" said 3 feeds and 150 ml for Oct 30 only, and "durmio 2 horas recien se desperto" was one sleep from 13:00 to 15:00.
 
 To score another message file through the same harness, write it as JSON in the STEPS shape (see the script's docstring) and run:
 

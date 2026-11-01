@@ -1,6 +1,6 @@
-"""The families log is never wrong, whatever the brain says (issue #77, round 2 real-new-parent judge).
+"""The families log is never wrong, whatever the brain says (issue #77, review round 2).
 
-In 1 of 3 judge nights Muse logged a new 70 ml bottle for "nono eran 70" and said "corregido", and "se mando doble
+In 1 of 3 review nights Muse logged a new 70 ml bottle for "nono eran 70" and said "corregido", and "se mando doble
 perdon" deleted the only breast feed. These tests script the brain the way it failed, so they run with no network.
 """
 import datetime
@@ -84,7 +84,7 @@ class Corrections(Base):
         brain = Recording([[log("feeding", {"amount_ml": 90, "method": "bottle", "type": "formula"})], "Anotado."],
                           [[log("feeding", {"amount_ml": 70, "method": "bottle"})], "Perfecto, corregido a 70 ml."],
                           [[edit({"amount_ml": 70}, kind="feeding", last=True)], "Listo."])
-        # The judge's words do match EDIT now, so the claim guard is tested with a message EDIT does not know.
+        # The review's words do match EDIT now, so the claim guard is tested with a message EDIT does not know.
         app, f, clock = self.family(brain)
         self.send(app, clock, "02:10", "le di 90 de formula")
         reply = self.send(app, clock, "02:12", "70 dejo 20")

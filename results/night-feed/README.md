@@ -8,7 +8,7 @@ Code: `parenting_agent/night_feed.py`, `parenting_agent/virtual_devices.py`. Tes
 
 ## What it does
 
-Changed on Oct 29 2026 after the round 4 judges (issue #128): the house acts only when the baby is awake, never on a guess.
+Changed on Oct 29 2026 after review round 4 (issue #128): the house acts only when the baby is awake, never on a guess.
 
 1. Predicts the next feed from the log rhythm, the way the families bot does: a top-up within 30 minutes folds into the feed before it, then the median of the last gaps. Only feeds that fall between 22:00 and 06:00 count. The guess can be more than an hour early (see below), so it never touches the nursery or the parent.
 2. A guess may only pre-warm, silently: 10 minutes before the guessed feed, or at a Muse plan moment, the bottle warmer plug goes on. No light, no white noise change, no push, no reminder. If no awake signal follows, the pre-warm closes quietly.
@@ -60,7 +60,7 @@ Rerun on Oct 29 2026 after the change. "Asleep" means outside the simulated awak
 | Voice feed logs answered "Done, logged." | 20 of 20 | 20 of 20 | 20 of 20 | 20 of 20 |
 | Live house calls | 0 | 0 | 0 | 0 |
 
-What it costs: without the cry on the microphone the study light is no longer on when the feed starts (0 of 20, was 10 of 20). It comes on one minute in, when the parent logs the feed, because only then is the baby known awake. That is the trade the judges asked for: a dark study at the start of a feed beats a push and a quieter white noise while he still sleeps. The warmer, which is silent, is unchanged with the cry (8 of 8 bottles warm) and the same without it (2 of 8).
+What it costs: without the cry on the microphone the study light is no longer on when the feed starts (0 of 20, was 10 of 20). It comes on one minute in, when the parent logs the feed, because only then is the baby known awake. That is the trade the review asked for: a dark study at the start of a feed beats a push and a quieter white noise while he still sleeps. The warmer, which is silent, is unchanged with the cry (8 of 8 bottles warm) and the same without it (2 of 8).
 
 The one miss with the cry: Oct 25 at 01:37, a cluster feed 87 minutes after the last one. The rhythm said 02:49, the cry was 76 minutes before that, so it was skipped as not a feed. The house got ready one minute in, when the feed was logged. The second-cry rule would catch it earlier if the baby cried again within 15 minutes, which the simulation does not model.
 

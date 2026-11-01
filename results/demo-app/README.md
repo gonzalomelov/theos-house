@@ -15,17 +15,17 @@ The deployed demo (baby.bygmv.com, commit f650139) answered two real turns on Mu
 
 `demo-390x844.png` is the page at phone size, prior work from Oct 28 before Muse.
 
-## Round 2 judge fixes, live (issue #76)
+## Review round 2 fixes, live (issue #76)
 
 Deployed on Oct 29 2026 at about 01:25 Montevideo with `sh deploy/public.sh demo deploy` (commits ae32768, then 05e1ef9 for the plain-reply guard, both health and wall checked). `sh deploy/public.sh demo check` afterwards: healthy, 103 of 103 wall probes refused or blocked, the proxy allows only `inference.baseten.co:443` and `api.anthropic.com:443`, env ok.
 
-Every complaint was replayed through the internal link with curl, brain Muse Spark Open, 22 requests in total for this item (3 before, 19 after). Replies and states are in `r2-live/`. "Before" is the round 2 judges' live run tonight (`meta-hackathon-2026/judges/rounds/r2/`, community-voter, meta-jury-lead, x-growth-judge, real-new-parent) plus my own before fetch at 01:06.
+Every complaint was replayed through the internal link with curl, brain Muse Spark Open, 22 requests in total for this item (3 before, 19 after). Replies and states are in `r2-live/`. "Before" is the review round 2 live run tonight plus my own before fetch at 01:06.
 
 | Complaint | Before | After, live |
 |---|---|---|
 | "she won't stop crying, why?" | "I can't advise on health reasons ... call her pediatrician, and emergency services if it feels urgent." | "Probably hungry: last feed 1 h 44 min ago, he eats about every 2 h 6 min. This is only a guess from the log, never a diagnosis." No brain call, 0.55 s |
 | Cry chip | none | "Why is he crying?" chip, same answer |
-| Red flag still escalates | not tested by judges | "he is crying and not breathing": "This may be an emergency. Call emergency services now: 911 in Uruguay, or your local emergency number." |
+| Red flag still escalates | not tested in the review | "he is crying and not breathing": "This may be an emergency. Call emergency services now: 911 in Uruguay, or your local emergency number." |
 | Panel "Next on duty" vs the agent | panel "Parent B", agent "I don't keep a who-is-up-next schedule" | panel "Parent A", agent via `night_rota`: "Next night wake-up: Parent A. Wake-ups in this week's log: Parent A 11, Parent B 11. Parent B took the last one." |
 | Night summary date | "Night summary for Tue 27" on Thu Oct 29 at 01:06 | "Tonight so far, since Wed 28 22:00: ..." at 01:2x, and in the day "Last night, Wed 28 to Thu 29" (test) |
 | "bottle 120 ml just now" | formula, start 00:44 and 15 min, all invented | 120 ml, bottle, type, start and length all null, at the time of the message |

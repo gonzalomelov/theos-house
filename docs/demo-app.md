@@ -106,4 +106,4 @@ A deploy fails, stops the demo and starts the previous commit again when the hea
 
 ## Red team, round 1 (issue #60)
 
-The agentic red-teamer judge landed 8 attacks on Oct 28. Each is now a test in `tests/test_redteam_r1.py` that replays it, failed on main before the fix and passes after. See `results/redteam/README.md`.
+Red-team pass 1 landed 8 attacks on Oct 28. Each is now a test in `tests/test_redteam_r1.py` that replays it, failed on main before the fix and passes after. See `results/redteam/README.md`.

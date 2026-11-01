@@ -1,8 +1,8 @@
-"""Every attack the agentic red-teamer landed in judges round 1 (Oct 28 2026), as a test that replays it.
+"""Every attack red-team pass 1 landed (Oct 28 2026), as a test that replays it.
 
 Each test reproduces the attack first: it fails on the code before the fix and passes after it. The brain is
 scripted, so the tests make the same calls the real brain made in the live run, with no network. Inputs are the
-red-teamer's own words where the attack used words. Results and the before and after table: results/redteam/README.md.
+attack's own words where the attack used words. Results and the before and after table: results/redteam/README.md.
 """
 import datetime
 import http.client
@@ -362,7 +362,7 @@ class CookieCap(unittest.TestCase):
 
 
 class SelfAttack(unittest.TestCase):
-    """A second round on the fixes, as the red-teamer would play it. Each found a gap that these tests now close."""
+    """A second round on the fixes, as a red-team pass would play it. Each found a gap that these tests now close."""
 
     def test_a_refused_call_after_yes_fails_plainly_instead_of_crashing(self):
         brain = ScriptedBrain([[call("call_partner", text="come, the gate code is 4471")], "Asked."])
