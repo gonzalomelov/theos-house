@@ -577,9 +577,13 @@ class Glasses(Plugin):
         kind = event["kind"]
         person = self.hub.camera_person
         if kind == "carseat_step":
+            # an ask step waits for "sí" or "no", a camera step for "listo" or "ya" when the parent is done
             self.gate.wait(person, "answer", event.get("step_kind") == "ask")
-        elif kind == "skill_closed":
+            self.gate.wait(person, "finish", event.get("step_kind") == "camera")
+        elif kind in ("skill_closed", "carseat_summary"):
             self.gate.wait(person, "finish", False)
+            if kind == "carseat_summary":
+                self.gate.wait(person, "answer", False)
         elif kind == "ask_parent" and event.get("channel") != self.name:
             return
         elif kind in self.WAITS:
@@ -679,7 +683,7 @@ class Glasses(Plugin):
         if event.get("skill") != "car-seat" or event.get("step") in (None, "summary"):
             return None
         card = cards.car_seat(event["step"], self.lang(person), state["index"], len(state["steps"]), event.get("result"),
-                              ask=state.get("kind") == "ask")
+                              ask=state.get("kind") == "ask", view=event.get("view"))
         return self.send_card(card, person, f"car seat {event['step']}", "camera")
 
     def start(self):
@@ -692,12 +696,12 @@ class Glasses(Plugin):
 
 def car_seat_steps(skill="skills/car-seat.json"):
     """The coach's step ids in order, from the same plan the coach runs."""
-    from .carseat.coach import CAMERA_STEPS
+    from .carseat.coach import step_ids
     try:
-        hand = [h["id"] for h in json.loads(Path(skill).read_text())["hand_checks"]]
-    except (OSError, ValueError, KeyError):
-        hand = []
-    return ["car_position", *CAMERA_STEPS, *hand]
+        cfg = json.loads(Path(skill).read_text())
+    except (OSError, ValueError):
+        cfg = {}
+    return step_ids(cfg)
 
 
 def find_plugin(agent, name):

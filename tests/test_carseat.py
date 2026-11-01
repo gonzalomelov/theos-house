@@ -10,7 +10,7 @@ import numpy as np
 
 from parenting_agent.bus import Bus
 from parenting_agent.carseat import checks, manual, outgrow
-from parenting_agent.carseat.coach import Coach, load_profiles, plan
+from parenting_agent.carseat.coach import Coach, is_ready, load_profiles, plan, step_ids
 from parenting_agent.sources import Latest
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -18,6 +18,9 @@ MANUAL_PDF = Path.home() / "Engineering/gonza/meta-hackathon-2026-synthetic/cars
 SKILL = json.loads((ROOT / "skills/car-seat.json").read_text())
 SEAT, CAR = load_profiles(SKILL, ROOT)
 PROMPTS = SKILL["prompts"]
+# The rendered clips' mode: the whole install filmed from the door, judged at once, guides judged from the door
+DOOR = {"closeup": False, "ready_timeout_s": 0.0}
+ANSWERS = {"harness_pinch": "no", "car_position": "yes", "buckle": "yes", "tension": "yes", "belt_path_movement": "yes"}
 
 # The English belt-install part of the Joie i-Snug 2 manual as pdftotext -raw gives it, short excerpt for the parser.
 EXCERPT = """To use this infant carrier module with vehicle belt, your child must meet the following requirements.
@@ -76,7 +79,7 @@ def rect(shape, x0, y0, x1, y1):
     return m
 
 
-def scene(belt_through=True, twist=False, level_deg=0.0, handle_upright=True, guides=True):
+def scene(belt_through=True, twist=False, level_deg=0.0, handle_upright=True, guides=True, seat=True):
     """Masks for a simple view: near guide low, far guide high on the same column, rear guide to the left."""
     shape = (400, 600)
     near, far, rear = rect(shape, 290, 300, 320, 330), rect(shape, 290, 100, 320, 130), rect(shape, 100, 80, 130, 110)
@@ -95,8 +98,17 @@ def scene(belt_through=True, twist=False, level_deg=0.0, handle_upright=True, gu
         level[y - 2:y + 2, x] = True
     handle = rect(shape, 220, 40, 235, 250) if handle_upright else rect(shape, 150, 240, 360, 255)
     found = {PROMPTS["belt"]: [(0.5, belt)], PROMPTS["level"]: [(0.9, level)], PROMPTS["handle"]: [(0.4, handle)],
-             PROMPTS["guide"]: [(0.7, near), (0.7, far), (0.7, rear)] if guides else []}
+             PROMPTS["guide"]: [(0.7, near), (0.7, far), (0.7, rear)] if guides else [],
+             PROMPTS["seat"]: [(0.8, rect(shape, 80, 60, 360, 380))] if seat else []}
     return found, shape
+
+
+def closeup_scene(belt_through=True):
+    """One guide filling the view, as with the phone 30 to 50 cm from it: the belt through it, or running beside it."""
+    shape = (400, 600)
+    guide = rect(shape, 260, 160, 340, 240)
+    belt = rect(shape, 0, 180, 600, 220) if belt_through else rect(shape, 0, 330, 600, 370)
+    return {PROMPTS["guide"]: [(0.9, guide)], PROMPTS["belt"]: [(0.8, belt)]}, shape
 
 
 class VisibleChecks(unittest.TestCase):
@@ -119,8 +131,23 @@ class VisibleChecks(unittest.TestCase):
 
     def test_no_guides_in_view_means_unseen_never_pass(self):
         r = self.results(guides=False)
-        for check in ("lap_guides", "shoulder_guide", "no_twist", "handle"):
+        for check in ("lap_guides", "shoulder_guide", "no_twist"):
             self.assertEqual(r[check], "unseen")
+
+    def test_the_handle_needs_only_the_car_seat_in_view_not_the_guides(self):
+        self.assertEqual(self.results(guides=False)["handle"], "pass")
+        self.assertEqual(self.results(guides=False, handle_upright=False)["handle"], "fail")
+        self.assertEqual(self.results(guides=False, seat=False)["handle"], "unseen", "a handle with no car seat in view")
+
+    def test_a_guide_up_close_is_judged_and_one_from_the_door_is_not(self):
+        found, shape = closeup_scene()
+        self.assertEqual(checks.closeup(found, PROMPTS, shape)["result"], "pass")
+        found, shape = closeup_scene(belt_through=False)
+        self.assertEqual(checks.closeup(found, PROMPTS, shape)["result"], "fail")
+        found, shape = scene()  # guides 30 px wide from the door: too small to judge
+        self.assertEqual(checks.closeup(found, PROMPTS, shape)["result"], "unseen")
+        found, shape = scene(belt_through=False)
+        self.assertEqual(checks.closeup(found, PROMPTS, shape)["result"], "unseen", "never a fail from the door")
 
     def test_nothing_found_is_all_unseen(self):
         r = checks.analyze({}, PROMPTS, (400, 600))
@@ -133,6 +160,17 @@ class FakeVision:
 
     def masks(self, frame, prompts):
         return {p: self.found.get(p, []) for p in prompts}, 0.01
+
+
+class SequenceVision:
+    """Each SAM call returns the next view in order, then `then` for every later call."""
+
+    def __init__(self, views, then=None):
+        self.views, self.then = list(views), then
+
+    def masks(self, frame, prompts):
+        found = self.views.pop(0) if self.views else (self.then if self.then is not None else {})
+        return {p: found.get(p, []) for p in prompts}, 0.01
 
 
 class FrameFeed(Latest):
@@ -153,7 +191,7 @@ class FrameFeed(Latest):
 
 def run_coach(found, answers, timeout=1.0):
     bus = Bus()
-    cfg = {**SKILL, "step_timeout_s": timeout}
+    cfg = {**SKILL, **DOOR, "step_timeout_s": timeout}
     coach = Coach(cfg, bus, FakeVision(found), FrameFeed(), SEAT, CAR, answer_timeout_s=0.3)
     for check, text in answers.items():
         coach.answer(check, text)
@@ -164,13 +202,16 @@ def run_coach(found, answers, timeout=1.0):
 class CoachRun(unittest.TestCase):
     def test_steps_follow_the_manual_and_the_car(self):
         ids = [s["id"] for s in plan(SKILL, SEAT, CAR)]
-        self.assertEqual(ids, ["car_position", "lap_guides", "shoulder_guide", "no_twist", "level_line", "handle",
-                               "belt_path_movement", "harness_pinch"])
-        self.assertIn("airbag", plan(SKILL, SEAT, CAR)[0]["say"])
+        self.assertEqual(ids, ["harness_pinch", "car_position", "lap_guides", "buckle", "shoulder_guide", "tension",
+                               "no_twist", "level_line", "handle", "belt_path_movement"])
+        self.assertEqual(ids, step_ids(SKILL))
+        steps = {s["id"]: s for s in plan(SKILL, SEAT, CAR)}
+        self.assertIn("airbag", steps["car_position"]["say"])
+        self.assertTrue(plan(SKILL, SEAT, CAR)[0]["say"].startswith("Coaching the Joie i-Snug 2"))
 
     def test_correct_view_passes_and_the_summary_never_says_safe(self):
         found, _ = scene()
-        bus, results = run_coach(found, {"car_position": "yes", "belt_path_movement": "yes", "harness_pinch": "no"})
+        bus, results = run_coach(found, ANSWERS)
         self.assertTrue(all(r["result"] == "pass" for r in results.values()))
         spoken = [e["text"] for e in bus.history if e["kind"] == "voice"]
         self.assertTrue(all(" safe " not in f" {t.lower()} " for t in spoken))
@@ -191,15 +232,15 @@ class CoachRun(unittest.TestCase):
 
     def test_a_pinchable_harness_is_a_failed_hand_check(self):
         found, _ = scene()
-        _, results = run_coach(found, {"car_position": "yes", "belt_path_movement": "yes", "harness_pinch": "yes"})
+        _, results = run_coach(found, {**ANSWERS, "harness_pinch": "yes"})
         self.assertEqual(results["harness_pinch"]["result"], "fail")
 
     def test_a_mistake_is_spoken_and_nothing_seen_is_listed_as_not_checked(self):
         found, _ = scene(belt_through=False)
-        bus, results = run_coach(found, {"car_position": "yes", "belt_path_movement": "yes", "harness_pinch": "no"})
+        bus, results = run_coach(found, ANSWERS)
         self.assertEqual(results["lap_guides"]["result"], "fail")
         self.assertTrue(any("The lap belt is not in the near and far side guides." == e["text"] for e in bus.history if e["kind"] == "voice"))
-        bus, results = run_coach({}, {"car_position": "yes", "belt_path_movement": "yes", "harness_pinch": "no"}, timeout=0.3)
+        bus, results = run_coach({}, ANSWERS, timeout=0.3)
         self.assertEqual({results[c]["result"] for c in ("lap_guides", "level_line", "handle")}, {"unseen"})
         summary = next(e["text"] for e in bus.history if e["kind"] == "carseat_summary")
         self.assertIn("Visible checks I could not see", summary)
@@ -208,6 +249,130 @@ class CoachRun(unittest.TestCase):
         coach = Coach(SKILL, Bus(), FakeVision({}), FrameFeed(frames=1), SEAT, CAR)
         with self.assertRaises(ValueError):
             coach.say("The seat is safe.")
+
+
+def start_live(found, order, ready=(), vision=None, **cfg):
+    """The live coach (waits for "listo", close-ups for the guides) on some steps, in a thread. `ready` steps had their
+    "listo" said before they start."""
+    bus = Bus()
+    coach = Coach({**SKILL, "order": order, "ready_timeout_s": 30.0, "step_timeout_s": 1.0, "closeup_timeout_s": 0.5, **cfg},
+                  bus, vision or FakeVision(found), FrameFeed(frames=5000, step=0.01), SEAT, CAR, answer_timeout_s=0.3,
+                  lang="es")
+    for step in ready:
+        coach.ready(step)
+    thread = threading.Thread(target=coach.run, daemon=True)
+    thread.start()
+    return bus, coach, thread
+
+
+def voices(bus, step=None):
+    return [e for e in bus.history if e["kind"] == "voice" and (step is None or e.get("step") == step)]
+
+
+def wait_for(condition, timeout=5.0):
+    deadline = time.monotonic() + timeout
+    while not condition() and time.monotonic() < deadline:
+        time.sleep(0.01)
+    return condition()
+
+
+class LiveFlow(unittest.TestCase):
+    """Nov 1, a real install video: every step timed out after 8 s while the parent was still working, the guides were
+    never seen from the door, the handle waited on the guides, two steps were missing and the harness came last."""
+
+    def test_a_step_waits_for_listo_and_never_says_a_fail_before_it(self):
+        found, _ = scene(handle_upright=False)
+        bus, coach, thread = start_live(found, ["handle"])
+        self.assertTrue(wait_for(lambda: coach.waiting == "handle"))
+        time.sleep(1.5)  # longer than the old fixed window, the parent is still working
+        self.assertEqual([e.get("result") for e in voices(bus, "handle")], [None], "only the step itself was said")
+        self.assertTrue(any(e["kind"] == "carseat_frame" and e["phase"] == "act" for e in bus.history), "it was watching")
+        self.assertEqual(coach.ready(), "ready for handle")
+        thread.join(timeout=5)
+        self.assertEqual(coach.results["handle"]["result"], "fail")
+        self.assertIn("La manija no está hacia arriba. Movela a la posición 1.", [e["text"] for e in voices(bus)])
+
+    def test_a_check_that_passes_on_its_own_moves_on_without_listo(self):
+        found, _ = scene()
+        bus, coach, thread = start_live(found, ["no_twist", "level_line", "handle"])
+        thread.join(timeout=5)
+        self.assertFalse(thread.is_alive())
+        self.assertEqual({k: v["result"] for k, v in coach.results.items()},
+                         {"no_twist": "pass", "level_line": "pass", "handle": "pass"})
+
+    def test_without_listo_a_long_fallback_then_judges(self):
+        found, _ = scene(handle_upright=False)
+        bus, coach, thread = start_live(found, ["handle"], ready_timeout_s=0.4)
+        thread.join(timeout=5)
+        self.assertEqual(coach.results["handle"]["result"], "fail")
+        self.assertEqual(Coach.__init__.__defaults__[-1], "en")
+        self.assertEqual(SKILL["ready_timeout_s"], 180.0, "the live fallback is minutes, never a fixed 8 s")
+
+    def test_each_side_guide_is_asked_up_close_and_judged_there(self):
+        found, _ = closeup_scene()
+        bus, coach, thread = start_live(found, ["lap_guides"], ready=["lap_guides"])
+        thread.join(timeout=5)
+        texts = [e["text"] for e in voices(bus, "lap_guides")]
+        self.assertIn("Veo el cinturón en la guía azul del lado de la puerta.", texts)
+        self.assertIn("Veo el cinturón en la guía azul del otro lado.", texts)
+        self.assertEqual(coach.results["lap_guides"]["result"], "pass")
+        self.assertEqual(set(coach.results["lap_guides"]["views"]), {"near", "far"})
+
+    def test_close_up_asks_when_the_parent_is_done_and_fails_a_guide_the_belt_misses(self):
+        found, _ = closeup_scene(belt_through=False)
+        bus, coach, thread = start_live(found, ["shoulder_guide"])
+        self.assertTrue(wait_for(lambda: coach.waiting == "shoulder_guide"))
+        time.sleep(0.3)
+        self.assertEqual(len(voices(bus)), 1, "the step only: no fail said while the parent works")
+        coach.ready()
+        thread.join(timeout=5)
+        texts = [e["text"] for e in voices(bus, "shoulder_guide")]
+        self.assertIn("Acercá el teléfono a la guía azul de atrás.", texts)
+        self.assertIn("El cinturón no está en la guía azul de atrás.", texts)
+        self.assertEqual(coach.results["shoulder_guide"]["result"], "fail")
+
+    def test_a_guide_needs_two_close_frames_that_agree(self):
+        through, _ = closeup_scene()
+        apart, _ = closeup_scene(belt_through=False)
+        bus, coach, thread = start_live({}, ["shoulder_guide"], ready=["shoulder_guide"],
+                                        vision=SequenceVision([apart, through, through]))
+        thread.join(timeout=5)
+        self.assertEqual(coach.results["shoulder_guide"]["result"], "pass", "one noisy close frame is not a verdict")
+        bus, coach, thread = start_live({}, ["shoulder_guide"], ready=["shoulder_guide"], closeup_timeout_s=0.3,
+                                        vision=SequenceVision([apart, through], then={}))
+        thread.join(timeout=5)
+        self.assertEqual(coach.results["shoulder_guide"]["result"], "unsure")
+        self.assertTrue(any(e["text"].startswith("Mis dos chequeos no coinciden") for e in voices(bus)))
+
+    def test_guides_seen_only_from_the_door_stay_unseen(self):
+        found, _ = scene(belt_through=False)
+        bus, coach, thread = start_live(found, ["lap_guides"], ready=["lap_guides"])
+        thread.join(timeout=5)
+        self.assertEqual(coach.results["lap_guides"]["result"], "unseen")
+        texts = [e["text"] for e in voices(bus, "lap_guides")]
+        self.assertIn("No pude ver de cerca la guía azul del lado de la puerta. Lo dejo como no revisado.", texts)
+        self.assertFalse([t for t in texts if t.startswith("El cinturón")], "never a fail from a door view")
+
+    def test_harness_first_then_buckle_and_tension_in_the_real_order(self):
+        steps = plan(SKILL, SEAT, CAR, "es")
+        ids = [s["id"] for s in steps]
+        self.assertEqual(ids[0], "harness_pinch")
+        self.assertIn("mirando hacia vos", steps[0]["say"])
+        self.assertLess(ids.index("lap_guides"), ids.index("buckle"))
+        self.assertLess(ids.index("buckle"), ids.index("shoulder_guide"))
+        self.assertLess(ids.index("shoulder_guide"), ids.index("tension"))
+        self.assertLess(ids.index("tension"), ids.index("no_twist"))
+        say = {s["id"]: s["say"] for s in steps}
+        self.assertIn("hasta que haga clic", say["buckle"])
+        self.assertIn("Tensá primero el cinturón de cadera y después el de hombro", say["tension"])
+        for camera in ("lap_guides", "shoulder_guide", "no_twist", "level_line", "handle"):
+            self.assertIn("Decime listo", say[camera])
+
+    def test_listo_and_ya_are_ready_words_and_other_words_are_not(self):
+        for text in ("Listo", "ya", "¡Ya!", "listo.", "done", "Ya está"):
+            self.assertTrue(is_ready(text), text)
+        for text in ("sí", "no", "ya comió el bebé hace un rato", "", "espera"):
+            self.assertFalse(is_ready(text), text)
 
 
 class OutgrowWatch(unittest.TestCase):

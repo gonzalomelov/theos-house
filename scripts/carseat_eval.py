@@ -28,7 +28,10 @@ from parenting_agent.carseat.sam3_masks import Sam3Masks  # noqa: E402
 from parenting_agent.sources import VideoSource  # noqa: E402
 
 BELT_CHECKS = ("lap_guides", "shoulder_guide", "no_twist")
-ANSWERS = {"car_position": "yes", "belt_path_movement": "yes", "harness_pinch": "no"}
+ANSWERS = {"harness_pinch": "no", "car_position": "yes", "buckle": "yes", "tension": "yes", "belt_path_movement": "yes"}
+# The rendered clips are filmed from the door, the whole install already done: every step is judged at once (no wait
+# for "listo"), the guides from the door (no close-ups), with the 8 s window the clips were scored with on Oct 28.
+RENDERED = {"closeup": False, "ready_timeout_s": 0.0, "step_timeout_s": 8.0}
 
 
 def run_clip(path, label, cfg, seat, car, vision):
@@ -109,7 +112,7 @@ def main():
     args = parser.parse_args()
     clips = Path(args.clips).expanduser()
     labels = json.loads((clips / "labels.json").read_text())
-    cfg = json.loads(Path(args.skill).read_text())
+    cfg = {**json.loads(Path(args.skill).read_text()), **RENDERED}
     seat, car = load_profiles(cfg, ROOT)
     vision = Sam3Masks(cfg.get("sam3"))
     rows = []

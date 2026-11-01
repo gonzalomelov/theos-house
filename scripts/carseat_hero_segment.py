@@ -33,7 +33,7 @@ sys.path.insert(0, str(ROOT))
 
 from parenting_agent.bus import Bus  # noqa: E402
 from parenting_agent.carseat.coach import CAMERA_STEPS, Coach, load_profiles  # noqa: E402
-from scripts.carseat_eval import ANSWERS  # noqa: E402
+from scripts.carseat_eval import ANSWERS, RENDERED  # noqa: E402
 
 W, H, FPS = 588, 1280, 30
 COLORS = [(255, 170, 40), (60, 200, 255), (200, 90, 255), (90, 255, 140)]  # BGR, one per prompt
@@ -183,7 +183,7 @@ def main():
     clips = Path(args.clips).expanduser()
     names = args.clip or ["test-02-correct.mp4", "test-16-twisted.mp4"]
     labels = {l["clip"]: l for l in json.loads((clips / "labels.json").read_text())}
-    cfg = json.loads(Path(args.skill).read_text())
+    cfg = {**json.loads(Path(args.skill).read_text()), **RENDERED}
     seat, car = load_profiles(cfg, ROOT)
     from parenting_agent.carseat.sam3_masks import Sam3Masks
     sam = Sam3Masks(cfg.get("sam3"))

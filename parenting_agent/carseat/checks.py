@@ -10,7 +10,11 @@ Checks:
   shoulder_guide  the shoulder belt runs through the rear guide
   no_twist        the lap belt keeps its width across the carrier
   level_line      the level line on the carrier is level (the recline is right)
-  handle          the handle stands upright, the car position
+  handle          the handle stands upright, the car position, with the car seat in view
+
+closeup() judges one guide seen up close (the phone 30 to 50 cm from it). On a real install video (Nov 1) SAM 3.1 never
+found the belt guides from the door, only in close-ups, so the coach asks the parent to come close to each guide and
+judges only frames where a guide fills enough of the view.
 """
 import math
 
@@ -22,6 +26,7 @@ DEFAULTS = {
     "guide_min_px": 60, "border_px": 4, "ring_scale": 0.6, "guide_coverage_min": 0.12,
     "twist_samples": 15, "lap_between_min": 0.6, "twist_inner": (0.2, 0.8), "twist_ratio_min": 0.45, "twist_found_min": 0.6,
     "level_max_deg": 8.0, "level_plausible_deg": 30.0, "handle_max_deg_from_vertical": 40.0, "handle_strap_margin": 0.05,
+    "seat_min_score": 0.3, "closeup_min_score": 0.2, "closeup_min_share": 0.008, "closeup_coverage_min": 0.1,
 }
 
 
@@ -142,6 +147,28 @@ def _strap_wins(mask, score, straps, cfg):
     return False
 
 
+def seat_in_view(found, prompts, cfg, guide_masks=()):
+    """The car seat is in the view: SAM finds it by name, or finds one of its belt guides."""
+    seat = prompts.get("seat")
+    return bool(guide_masks) or any(score >= cfg["seat_min_score"] for score, _ in found.get(seat, []) if seat)
+
+
+def closeup(found, prompts, shape, config=None):
+    """One belt guide seen up close: pass when the belt runs through it, fail when it does not. A view where no guide
+    fills at least closeup_min_share of the frame is a door-distance view and stays unseen, never judged."""
+    cfg = {**DEFAULTS, **(config or {})}
+    area = float(shape[0] * shape[1])
+    items = [(s, m) for s, m in found.get(prompts["guide"], []) if s >= cfg["closeup_min_score"]]
+    share = max((m.sum() / area for _, m in items), default=0.0)
+    if share < cfg["closeup_min_share"]:
+        return {"result": "unseen", "why": "no guide up close", "guide_share": round(float(share), 4)}
+    score, guide = max(items, key=lambda item: item[1].sum())  # the biggest guide is the one the parent came close to
+    belt = belt_union(found, prompts["belt"], cfg, shape)
+    c = coverage(guide, belt, cfg)
+    return {"result": "pass" if c >= cfg["closeup_coverage_min"] else "fail", "coverage": round(c, 3),
+            "guide_share": round(float(share), 4), "score": round(float(score), 3)}
+
+
 def analyze(found, prompts, shape, config=None):
     """{check: {"result": pass|fail|unseen, ...numbers}} for one frame's masks."""
     cfg = {**DEFAULTS, **(config or {})}
@@ -187,7 +214,7 @@ def analyze(found, prompts, shape, config=None):
             out["level_line"] = {"result": "pass" if abs(angle) <= cfg["level_max_deg"] else "fail", "angle_deg": angle}
     handles = [(s, m) for s, m in found.get(prompts["handle"], []) if s >= cfg["handle_min_score"] and m.sum() >= 40
                and not _strap_wins(m, s, found.get(prompts["belt"], []), cfg)]
-    if not handles or not guide_masks:
+    if not handles or not seat_in_view(found, prompts, cfg, guide_masks):
         out["handle"] = {"result": "unseen"}
     else:
         angle = _axis_angle(handles[0][1])

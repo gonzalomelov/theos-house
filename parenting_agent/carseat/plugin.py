@@ -8,7 +8,7 @@ The parent says "help me install the car seat": the brain calls start_car_seat_c
 the parent who asked (the people block "lang", else the words of the request), and every line it says also goes to that
 parent's chat when the request came on a chat channel such as Telegram: the glasses show it as a card and speak it. Its
 summary is the last line, said by the coach itself, never rewritten by the brain. Each spoken answer ("yes", "no",
-"sí") reaches the coach through answer_car_seat_check. car_seat_outgrow reads weight and height
+"sí") reaches the coach through answer_car_seat_check, and a spoken "listo" or "ya" tells it a camera step is done. car_seat_outgrow reads weight and height
 from Baby Buddy and compares them with the seat's limits. Frames stay on this Mac, the brain gets text only, except
 with "muse" enabled: then one zoomed still per camera step goes to Muse Spark Open on Baseten for a second opinion
 (parenting_agent/carseat/muse_check.py).
@@ -24,7 +24,7 @@ from ..agent.tools import Tool, schema
 from ..sources import PhoneSource, open_source
 from ..speaker import Speaker
 from . import outgrow
-from .coach import Coach, _yes_no, load_profiles
+from .coach import LINES, Coach, _yes_no, is_ready, load_profiles
 
 # While the coach runs, it says the steps itself: the brain must not write its own install steps (Oct 30 rehearsal: Muse
 # told the parent to place a base the Joie i-Snug does not have, over the coach's own step).
@@ -69,7 +69,7 @@ class CarSeatCoach(Plugin):
             speaker = Speaker(self.source, quiet=self.quiet)
             self.agent.bus.subscribe(speaker.on_event, ["voice"])
             self.asked = self.who_asked()
-            self.coach = Coach(self.skill_cfg, self.agent.bus, vision, self.source, self.seat, self.car, recheck=True,
+            self.coach = Coach(self.skill_cfg, self.agent.bus, vision, self.source, self.seat, self.car,
                                muse=self.muse_check(), lang=self.asked["lang"])
             notes = getattr(self.agent, "prompt_notes", None)
             if notes is not None and COACHING_NOTE not in notes:
@@ -115,8 +115,15 @@ class CarSeatCoach(Plugin):
         brain choosing the tool (Oct 30 rehearsal: Muse answered "sí" in its own words and the step stayed open, then
         the agent said nothing was waiting for a yes). Returns the short reply, or None for a message not for the coach."""
         coach = self.coach
+        if coach is None or event.get("channel") not in (self.cfg["channel"], self.asked.get("channel")):
+            return None
+        waiting = getattr(coach, "waiting", None)
+        if waiting is not None and is_ready(text):
+            coach.ready(waiting)
+            self.agent.bus.publish("carseat_heard", check=waiting, answer="ready")
+            return LINES[getattr(coach, "lang", "en")]["ready"]
         said = _yes_no(text)
-        if coach is None or event.get("channel") not in (self.cfg["channel"], self.asked.get("channel")) or said is None:
+        if said is None:
             return None
         asking = getattr(coach, "asking", None)
         if asking is None or asking in coach.answers:

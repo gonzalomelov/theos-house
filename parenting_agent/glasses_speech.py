@@ -8,8 +8,8 @@ post the text instead, and it takes the same path from here.
 The microphone is always on near a baby, so most of what it hears is not for the agent: talk to the baby, to the other
 parent, to the dog. The gate passes only:
   - a start phrase ("changing time", "hora del cambio"), any time,
-  - a short answer the agent is waiting for: "done" or "listo" while the changing table watches, "sí" or "no" while
-    the car seat coach or the agent asked, "ya llamé" or "entendido" while a red flag card is up,
+  - a short answer the agent is waiting for: "done" or "listo" while the changing table watches or a car seat camera
+    step waits for the parent ("ya" too), "sí" or "no" while the car seat coach or the agent asked, "ya llamé" or "entendido" while a red flag card is up,
   - anything after the wake word ("agente", "agent"), or the next utterance after the wake word alone.
 Everything else is dropped here: it never becomes a message, never reaches the brain, and is not kept.
 """
@@ -40,7 +40,7 @@ WAIT_TTL_S = 30 * 60  # an answer the agent waits for stops counting after this 
 
 START = re.compile(r"^(changing time|diaper time|time to change|hora del cambio|hora de cambiar(lo|la)?|"
                    r"cambio de panal|vamos a cambiar(lo|la)?)\b")
-FINISH = re.compile(r"^(done|all done|finished|listo|lista|termine|terminamos|ya esta|ya termine)\b")
+FINISH = re.compile(r"^(done|all done|finished|listo|lista|termine|terminamos|ya esta|ya termine)\b|^ya$")
 ANSWER = re.compile(r"^(si|yes|yeah|yep|no|nope|dale|ok|okay|claro)\b")
 ACK = re.compile(r"^(ya llame|llame|i called|called|entendido|entendi|got it|understood|listo|ok|okay|dale)\b")
 # (what the agent waits for, its pattern, the most words such an answer has)

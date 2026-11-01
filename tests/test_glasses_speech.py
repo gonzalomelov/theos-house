@@ -295,6 +295,18 @@ class HeardByTheAgent(unittest.TestCase):
         self.channel.hear(wav(), "gonza")
         self.assertEqual(self.messages, ["Sí."])
 
+    def test_a_car_seat_camera_step_hears_listo_and_ya_until_the_summary(self):
+        self.channel.hub.camera_person = "gonza"
+        self.use_ear(["Listo.", "Ya.", "Ya comió hace un rato.", "Listo."])
+        self.agent.bus.publish("carseat_step", step="lap_guides", step_kind="camera")
+        self.channel.hear(wav(), "gonza")
+        self.channel.hear(wav(), "gonza")
+        self.channel.hear(wav(), "gonza")
+        self.assertEqual(self.messages, ["Listo.", "Ya."], "only the short done words while a camera step waits")
+        self.agent.bus.publish("carseat_summary", text="fin", results={})
+        self.channel.hear(wav(), "gonza")
+        self.assertEqual(self.messages, ["Listo.", "Ya."], "after the summary nothing waits")
+
 
 if __name__ == "__main__":
     unittest.main()
