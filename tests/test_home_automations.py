@@ -542,7 +542,7 @@ class VoiceGuestTest(unittest.TestCase):
         before = len(self.agent.baby_log.entries())
         result = self.bridge.ask("agente del bebé, ¿cuándo comió Theo por última vez?", "echo", "abuela")
         self.assertEqual(result["role"], "guest")
-        self.assertIn("07:55", result["reply"])
+        self.assertIn("a las 7:55", result["reply"])  # said as a person says it, never "07:55"
         self.assertEqual(sorted(brain.seen[0]["tools"]), ["baby_summary", "current_time", "read_baby_log"])
         self.assertIn("abuela", brain.seen[0]["system"])
         self.assertEqual(len(self.agent.baby_log.entries()), before)
@@ -554,7 +554,8 @@ class VoiceGuestTest(unittest.TestCase):
     def test_a_wrong_time_from_the_brain_is_replaced_by_the_log(self):
         self.guest_brain("Comió hace una hora.")
         reply = self.bridge.ask("¿cuándo comió Theo por última vez?", "echo", "abuela")["reply"]
-        self.assertIn("07:55", reply)
+        self.assertIn("de las 7:55", reply)
+        self.assertNotRegex(reply, r"\d+/\d+|\d{4}-\d{2}")
         self.assertEqual(events(self.agent, "voice_guest")[-1]["guard"], "last_feed_time")
 
     def test_a_guest_cannot_log_and_a_write_tool_is_refused(self):

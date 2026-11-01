@@ -102,7 +102,7 @@
     "timeout_s": 40,
     "unknown_speaker": "guest",
     "guests": ["abuela", "abuelo", "grandma", "grandpa", "guest", "invitado", "invitada"],
-    "skill": {"role": "parent"}
+    "skill": {"role": "echo_log"}
   },
   "voice": {
     "service": "http://pa-voice-family:8800",
