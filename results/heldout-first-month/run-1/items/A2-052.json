@@ -1,0 +1,112 @@
+{
+ "id": "A2-052",
+ "child": "heldout-baby-a",
+ "created": [],
+ "seed_after": [
+  {
+   "endpoint": "timers",
+   "before": {
+    "id": 94,
+    "child": 3,
+    "name": "sleep",
+    "start": "2026-10-22T14:30:00Z",
+    "duration": "10 08:11:14.516860",
+    "user": 2
+   },
+   "after": {
+    "endpoint": "timers",
+    "id": 94,
+    "child": 3,
+    "name": "sleep",
+    "start": "2026-10-22T14:30:00Z",
+    "duration": "10 08:11:27.779291",
+    "user": 2
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T13:15:00-03:00",
+   "chat": "9000001",
+   "text": "Haha let Theo sleep peacefully. I'm here if you need anything."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T13:15:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "sigue frito jaja",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0101,
+ "brain_calls": {
+  "inference.baseten.co": 2
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T13:15:00-03:00",
+   "unix": 1792685700.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 3816,
+   "output_tokens": 41,
+   "reasoning_tokens": 16,
+   "usd": 0.00494425,
+   "fallback": false
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T13:15:00-03:00",
+   "unix": 1792685700.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 3934,
+   "output_tokens": 65,
+   "reasoning_tokens": 40,
+   "usd": 0.00519375,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T13:15:00-03:00",
+   "unix": 1792685700.0,
+   "channel": "telegram",
+   "text": "Haha let Theo sleep peacefully. I'm here if you need anything.",
+   "chat_id": "9000001"
+  },
+  {
+   "kind": "turn",
+   "t": -1792312167.586,
+   "ts": "2026-10-22T13:15:00-03:00",
+   "unix": 1793572882.913,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 16
+  }
+ ]
+}

@@ -1,0 +1,348 @@
+{
+ "id": "A3-061",
+ "child": "heldout-baby-a",
+ "created": [],
+ "seed_after": [
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 566,
+    "child": 3,
+    "start": "2026-10-22T04:00:00Z",
+    "end": "2026-10-22T04:15:00Z",
+    "duration": "00:15:00",
+    "type": "breast milk",
+    "method": "left breast",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 566,
+    "child": 3,
+    "start": "2026-10-22T04:00:00Z",
+    "end": "2026-10-22T04:15:00Z",
+    "duration": "00:15:00",
+    "type": "breast milk",
+    "method": "left breast",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 567,
+    "child": 3,
+    "start": "2026-10-22T06:30:00Z",
+    "end": "2026-10-22T06:45:00Z",
+    "duration": "00:15:00",
+    "type": "breast milk",
+    "method": "bottle",
+    "amount": 80.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 567,
+    "child": 3,
+    "start": "2026-10-22T06:30:00Z",
+    "end": "2026-10-22T06:45:00Z",
+    "duration": "00:15:00",
+    "type": "breast milk",
+    "method": "bottle",
+    "amount": 80.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 568,
+    "child": 3,
+    "start": "2026-10-22T09:00:00Z",
+    "end": "2026-10-22T09:12:00Z",
+    "duration": "00:12:00",
+    "type": "breast milk",
+    "method": "right breast",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 568,
+    "child": 3,
+    "start": "2026-10-22T09:00:00Z",
+    "end": "2026-10-22T09:12:00Z",
+    "duration": "00:12:00",
+    "type": "breast milk",
+    "method": "right breast",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 569,
+    "child": 3,
+    "start": "2026-10-22T12:00:00Z",
+    "end": "2026-10-22T12:15:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 90.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 569,
+    "child": 3,
+    "start": "2026-10-22T12:00:00Z",
+    "end": "2026-10-22T12:15:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 90.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 570,
+    "child": 3,
+    "start": "2026-10-22T15:00:00Z",
+    "end": "2026-10-22T15:20:00Z",
+    "duration": "00:20:00",
+    "type": "breast milk",
+    "method": "both breasts",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 570,
+    "child": 3,
+    "start": "2026-10-22T15:00:00Z",
+    "end": "2026-10-22T15:20:00Z",
+    "duration": "00:20:00",
+    "type": "breast milk",
+    "method": "both breasts",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 571,
+    "child": 3,
+    "start": "2026-10-22T18:00:00Z",
+    "end": "2026-10-22T18:15:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 100.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 571,
+    "child": 3,
+    "start": "2026-10-22T18:00:00Z",
+    "end": "2026-10-22T18:15:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 100.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 572,
+    "child": 3,
+    "start": "2026-10-22T21:00:00Z",
+    "end": "2026-10-22T21:15:00Z",
+    "duration": "00:15:00",
+    "type": "breast milk",
+    "method": "left breast",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 572,
+    "child": 3,
+    "start": "2026-10-22T21:00:00Z",
+    "end": "2026-10-22T21:15:00Z",
+    "duration": "00:15:00",
+    "type": "breast milk",
+    "method": "left breast",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T20:00:00-03:00",
+   "chat": "9000002",
+   "text": "Hoy van 7 tomas en total hasta las 20:00.\n\nMamaderas: 3 — 80 ml a las 03:45, 90 ml a las 09:15 y 100 ml a las 15:15. Total 270 ml.\n\nTetas: 4 — a las 01:15 (izquierda), 06:12 (derecha), 12:20 (ambas) y 18:15 (izquierda)."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T20:00:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "cuantas mamaderas y cuantas tetas van hoy",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0179,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T20:00:00-03:00",
+   "unix": 1792710000.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3822,
+   "output_tokens": 71,
+   "reasoning_tokens": 14,
+   "usd": 0.00507925,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T20:00:00-03:00",
+   "unix": 1792710000.0,
+   "name": "baby_summary",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T20:00:00-03:00",
+   "unix": 1792710000.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4121,
+   "output_tokens": 162,
+   "reasoning_tokens": 51,
+   "usd": 0.00583975,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T20:00:00-03:00",
+   "unix": 1792710000.0,
+   "name": "read_baby_log",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T20:00:00-03:00",
+   "unix": 1792710000.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 4892,
+   "output_tokens": 194,
+   "reasoning_tokens": 86,
+   "usd": 0.0069395,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T20:00:00-03:00",
+   "unix": 1792710000.0,
+   "channel": "telegram",
+   "text": "Hoy van 7 tomas en total hasta las 20:00.\n\nMamaderas: 3 — 80 ml a las 03:45, 90 ml a las 09:15 y 100 ml a las 15:15. Total 270 ml.\n\nTetas: 4 — a las 01:15 (izquierda), 06:12 (derecha), 12:20 (ambas) y 18:15 (izquierda).",
+   "chat_id": "9000002"
+  },
+  {
+   "kind": "turn",
+   "t": -1792335509.585,
+   "ts": "2026-10-22T20:00:00-03:00",
+   "unix": 1793573840.92,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 41
+  }
+ ]
+}

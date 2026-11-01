@@ -1,0 +1,260 @@
+{
+ "id": "A3-059",
+ "child": "heldout-baby-b",
+ "created": [],
+ "seed_after": [
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 495,
+    "child": 4,
+    "start": "2026-10-22T06:05:00Z",
+    "end": "2026-10-22T06:25:00Z",
+    "duration": "00:20:00",
+    "type": "breast milk",
+    "method": "left breast",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 495,
+    "child": 4,
+    "start": "2026-10-22T06:05:00Z",
+    "end": "2026-10-22T06:25:00Z",
+    "duration": "00:20:00",
+    "type": "breast milk",
+    "method": "left breast",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "sleep",
+   "before": {
+    "id": 314,
+    "child": 4,
+    "start": "2026-10-22T03:15:00Z",
+    "end": "2026-10-22T06:00:00Z",
+    "duration": "02:45:00",
+    "nap": false,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "sleep",
+    "id": 314,
+    "child": 4,
+    "start": "2026-10-22T03:15:00Z",
+    "end": "2026-10-22T06:00:00Z",
+    "duration": "02:45:00",
+    "nap": false,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "sleep",
+   "before": {
+    "id": 315,
+    "child": 4,
+    "start": "2026-10-22T07:10:00Z",
+    "end": "2026-10-22T09:40:00Z",
+    "duration": "02:30:00",
+    "nap": true,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "sleep",
+    "id": 315,
+    "child": 4,
+    "start": "2026-10-22T07:10:00Z",
+    "end": "2026-10-22T09:40:00Z",
+    "duration": "02:30:00",
+    "nap": true,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "sleep",
+   "before": {
+    "id": 316,
+    "child": 4,
+    "start": "2026-10-22T11:00:00Z",
+    "end": "2026-10-22T12:20:00Z",
+    "duration": "01:20:00",
+    "nap": true,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "sleep",
+    "id": 316,
+    "child": 4,
+    "start": "2026-10-22T11:00:00Z",
+    "end": "2026-10-22T12:20:00Z",
+    "duration": "01:20:00",
+    "nap": true,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "sleep",
+   "before": {
+    "id": 317,
+    "child": 4,
+    "start": "2026-10-22T13:30:00Z",
+    "end": "2026-10-22T15:00:00Z",
+    "duration": "01:30:00",
+    "nap": true,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "sleep",
+    "id": 317,
+    "child": 4,
+    "start": "2026-10-22T13:30:00Z",
+    "end": "2026-10-22T15:00:00Z",
+    "duration": "01:30:00",
+    "nap": true,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T12:30:00-03:00",
+   "chat": "9000002",
+   "text": "Perdón, no me salió bien la respuesta. ¿Me lo decís de nuevo?"
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T12:30:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "total sleep since midnight?",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0109,
+ "brain_calls": {
+  "inference.baseten.co": 2
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T12:30:00-03:00",
+   "unix": 1792683000.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3816,
+   "output_tokens": 89,
+   "reasoning_tokens": 35,
+   "usd": 0.00514825,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T12:30:00-03:00",
+   "unix": 1792683000.0,
+   "name": "baby_summary",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T12:30:00-03:00",
+   "unix": 1792683000.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 4127,
+   "output_tokens": 151,
+   "reasoning_tokens": 116,
+   "usd": 0.0058005,
+   "fallback": false
+  },
+  {
+   "kind": "final_guard",
+   "t": 120.0,
+   "ts": "2026-10-22T12:30:00-03:00",
+   "unix": 1792683000.0,
+   "where": "agent:telegram",
+   "lang": "es",
+   "removed": [
+    {
+     "why": "not in Spanish",
+     "text": "Total sleep since midnight is 8 hours 5 minutes across 4 sleep periods, last woke at 12:00."
+    }
+   ],
+   "fallback": true,
+   "sent": "Perdón, no me salió bien la respuesta. ¿Me lo decís de nuevo?"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T12:30:00-03:00",
+   "unix": 1792683000.0,
+   "channel": "telegram",
+   "text": "Perdón, no me salió bien la respuesta. ¿Me lo decís de nuevo?",
+   "chat_id": "9000002"
+  },
+  {
+   "kind": "turn",
+   "t": -1792308739.319,
+   "ts": "2026-10-22T12:30:00-03:00",
+   "unix": 1793573611.184,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 27
+  }
+ ]
+}

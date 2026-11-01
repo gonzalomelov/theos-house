@@ -1,0 +1,143 @@
+{
+ "id": "A4-053",
+ "child": "heldout-baby-a",
+ "created": [
+  {
+   "endpoint": "notes",
+   "id": 280,
+   "child": 3,
+   "note": "hace mucha fuerza y se pone colorado para hacer caca",
+   "image": null,
+   "time": "2026-10-22T22:35:00Z",
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T19:35:00-03:00",
+   "chat": "9000001",
+   "text": "Anotado lo de que hace fuerza y se pone colorado para hacer caca.\n\nNo puedo decirte si está estreñido ni darte consejos de salud. Para eso lo mejor es que consulten con su pediatra, y si notan algo urgente, con el servicio de emergencias."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T19:35:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "le di 90, hace mucha fuerza y se pone colorado para hacer caca, esta estreñido?",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0227,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T19:35:00-03:00",
+   "unix": 1792708500.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 2,
+   "input_tokens": 3834,
+   "output_tokens": 650,
+   "reasoning_tokens": 473,
+   "usd": 0.007555,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T19:35:00-03:00",
+   "unix": 1792708500.0,
+   "name": "log_baby_event",
+   "status": "held"
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T19:35:00-03:00",
+   "unix": 1792708500.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T19:35:00-03:00",
+   "unix": 1792708500.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4112,
+   "output_tokens": 564,
+   "reasoning_tokens": 460,
+   "usd": 0.007537,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T19:35:00-03:00",
+   "unix": 1792708500.0,
+   "name": "log_baby_event",
+   "status": "held"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T19:35:00-03:00",
+   "unix": 1792708500.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 4236,
+   "output_tokens": 541,
+   "reasoning_tokens": 470,
+   "usd": 0.00759425,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T19:35:00-03:00",
+   "unix": 1792708500.0,
+   "channel": "telegram",
+   "text": "Anotado lo de que hace fuerza y se pone colorado para hacer caca.\n\nNo puedo decirte si está estreñido ni darte consejos de salud. Para eso lo mejor es que consulten con su pediatra, y si notan algo urgente, con el servicio de emergencias.",
+   "chat_id": "9000001"
+  },
+  {
+   "kind": "turn",
+   "t": -1792333570.867,
+   "ts": "2026-10-22T19:35:00-03:00",
+   "unix": 1793574279.674,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 79
+  }
+ ]
+}

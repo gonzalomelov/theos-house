@@ -1,0 +1,160 @@
+{
+ "id": "A3-079",
+ "child": "heldout-baby-a",
+ "created": [],
+ "seed_after": [
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 598,
+    "child": 3,
+    "start": "2026-10-22T18:50:00Z",
+    "end": "2026-10-22T19:10:00Z",
+    "duration": "00:20:00",
+    "type": "breast milk",
+    "method": "both breasts",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 598,
+    "child": 3,
+    "start": "2026-10-22T18:50:00Z",
+    "end": "2026-10-22T19:10:00Z",
+    "duration": "00:20:00",
+    "type": "breast milk",
+    "method": "both breasts",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "timers",
+   "before": {
+    "id": 115,
+    "child": 3,
+    "name": "sleep",
+    "start": "2026-10-22T19:20:00Z",
+    "duration": "10 03:39:57.706885",
+    "user": 2
+   },
+   "after": {
+    "endpoint": "timers",
+    "id": 115,
+    "child": 3,
+    "name": "sleep",
+    "start": "2026-10-22T19:20:00Z",
+    "duration": "10 03:40:14.228293",
+    "user": 2
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T17:30:00-03:00",
+   "chat": "9000002",
+   "text": "No tengo ninguna siesta registrada hoy para Theo, así que no puedo calcular cuánto lleva durmiendo.\n\nSi se durmió ahora, decime y lo anoto."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T17:30:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "hace cuanto q duerme",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0113,
+ "brain_calls": {
+  "inference.baseten.co": 2
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T17:30:00-03:00",
+   "unix": 1792701000.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 2,
+   "input_tokens": 3816,
+   "output_tokens": 208,
+   "reasoning_tokens": 84,
+   "usd": 0.005654,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T17:30:00-03:00",
+   "unix": 1792701000.0,
+   "name": "baby_summary",
+   "status": "ran"
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T17:30:00-03:00",
+   "unix": 1792701000.0,
+   "name": "read_baby_log",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T17:30:00-03:00",
+   "unix": 1792701000.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 4202,
+   "output_tokens": 94,
+   "reasoning_tokens": 49,
+   "usd": 0.005652,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T17:30:00-03:00",
+   "unix": 1792701000.0,
+   "channel": "telegram",
+   "text": "No tengo ninguna siesta registrada hoy para Theo, así que no puedo calcular cuánto lleva durmiendo.\n\nSi se durmió ahora, decime y lo anoto.",
+   "chat_id": "9000002"
+  },
+  {
+   "kind": "turn",
+   "t": -1792326344.396,
+   "ts": "2026-10-22T17:30:00-03:00",
+   "unix": 1793574006.141,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 20
+  }
+ ]
+}

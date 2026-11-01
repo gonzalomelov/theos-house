@@ -1,0 +1,162 @@
+{
+ "id": "A2-032",
+ "child": "heldout-baby-b",
+ "created": [
+  {
+   "endpoint": "changes",
+   "id": 425,
+   "child": 4,
+   "time": "2026-10-22T19:30:00Z",
+   "wet": false,
+   "solid": true,
+   "color": "green",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T16:45:00-03:00",
+   "chat": "9000002",
+   "text": "Logged greenish poopy diaper around 4:30 pm."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T16:45:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "changed a poopy diaper about 15 min ago, kind of greenish",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.023,
+ "brain_calls": {
+  "inference.baseten.co": 4
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T16:45:00-03:00",
+   "unix": 1792698300.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3827,
+   "output_tokens": 181,
+   "reasoning_tokens": 123,
+   "usd": 0.005553,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T16:45:00-03:00",
+   "unix": 1792698300.0,
+   "name": "current_time",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T16:45:00-03:00",
+   "unix": 1792698300.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3892,
+   "output_tokens": 202,
+   "reasoning_tokens": 66,
+   "usd": 0.0057235,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T16:45:00-03:00",
+   "unix": 1792698300.0,
+   "name": "log_baby_event",
+   "status": "error"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T16:45:00-03:00",
+   "unix": 1792698300.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4053,
+   "output_tokens": 283,
+   "reasoning_tokens": 155,
+   "usd": 0.006269,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T16:45:00-03:00",
+   "unix": 1792698300.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T16:45:00-03:00",
+   "unix": 1792698300.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 4237,
+   "output_tokens": 39,
+   "reasoning_tokens": 15,
+   "usd": 0.005462,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T16:45:00-03:00",
+   "unix": 1792698300.0,
+   "channel": "telegram",
+   "text": "Logged greenish poopy diaper around 4:30 pm.",
+   "chat_id": "9000002"
+  },
+  {
+   "kind": "turn",
+   "t": -1792324917.061,
+   "ts": "2026-10-22T16:45:00-03:00",
+   "unix": 1793572733.437,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 57
+  }
+ ]
+}

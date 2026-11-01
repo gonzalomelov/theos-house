@@ -1,0 +1,111 @@
+{
+ "id": "A4-060",
+ "child": "heldout-baby-b",
+ "created": [
+  {
+   "endpoint": "notes",
+   "id": 277,
+   "child": 4,
+   "note": "Bath. quedo coloradito",
+   "image": null,
+   "time": "2026-10-22T22:15:00Z",
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T19:15:00-03:00",
+   "chat": "9000002",
+   "text": "Anoté el baño de las 19:15.\n\nSobre si es normal que quede coloradito no puedo aconsejarte sobre salud, te sugiero consultar con su pediatra y si te preocupa mucho o ves otros síntomas contactá con urgencias."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T19:15:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "lo bañe y quedo coloradito, es normal?",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0118,
+ "brain_calls": {
+  "inference.baseten.co": 2
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T19:15:00-03:00",
+   "unix": 1792707300.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3825,
+   "output_tokens": 267,
+   "reasoning_tokens": 163,
+   "usd": 0.005916,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T19:15:00-03:00",
+   "unix": 1792707300.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T19:15:00-03:00",
+   "unix": 1792707300.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 3974,
+   "output_tokens": 220,
+   "reasoning_tokens": 158,
+   "usd": 0.0059025,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T19:15:00-03:00",
+   "unix": 1792707300.0,
+   "channel": "telegram",
+   "text": "Anoté el baño de las 19:15.\n\nSobre si es normal que quede coloradito no puedo aconsejarte sobre salud, te sugiero consultar con su pediatra y si te preocupa mucho o ves otros síntomas contactá con urgencias.",
+   "chat_id": "9000002"
+  },
+  {
+   "kind": "turn",
+   "t": -1792332433.155,
+   "ts": "2026-10-22T19:15:00-03:00",
+   "unix": 1793574217.385,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 38
+  }
+ ]
+}

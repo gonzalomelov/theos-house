@@ -1,0 +1,240 @@
+{
+ "id": "A3-068",
+ "child": "heldout-baby-b",
+ "created": [],
+ "seed_after": [
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 525,
+    "child": 4,
+    "start": "2026-10-22T02:50:00Z",
+    "end": "2026-10-22T03:05:00Z",
+    "duration": "00:15:00",
+    "type": "breast milk",
+    "method": "left breast",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 525,
+    "child": 4,
+    "start": "2026-10-22T02:50:00Z",
+    "end": "2026-10-22T03:05:00Z",
+    "duration": "00:15:00",
+    "type": "breast milk",
+    "method": "left breast",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 528,
+    "child": 4,
+    "start": "2026-10-22T04:40:00Z",
+    "end": "2026-10-22T04:52:00Z",
+    "duration": "00:12:00",
+    "type": "breast milk",
+    "method": "right breast",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 528,
+    "child": 4,
+    "start": "2026-10-22T04:40:00Z",
+    "end": "2026-10-22T04:52:00Z",
+    "duration": "00:12:00",
+    "type": "breast milk",
+    "method": "right breast",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "changes",
+   "before": {
+    "id": 476,
+    "child": 4,
+    "time": "2026-10-22T04:55:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "changes",
+    "id": 476,
+    "child": 4,
+    "time": "2026-10-22T04:55:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T03:28:00-03:00",
+   "chat": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 04:30, 05:50. La luz espera a que se despierte.\nVentana para aspirar de 09:00 a 09:45."
+  },
+  {
+   "at": "2026-10-22T03:28:00-03:00",
+   "chat": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 04:30, 05:50. La luz espera a que se despierte.\nVentana para aspirar de 09:00 a 09:45."
+  },
+  {
+   "at": "2026-10-22T03:30:00-03:00",
+   "chat": "9000002",
+   "text": "Ceci, la última toma fue del pecho derecho a las 01:40 (12 min). La anterior fue del izquierdo a las 23:50. Le toca el izquierdo."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T03:30:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "de q lado le toca",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0183,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T03:28:00-03:00",
+   "unix": 1792650480.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 04:30, 05:50. La luz espera a que se despierte.\nVentana para aspirar de 09:00 a 09:45.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T03:28:00-03:00",
+   "unix": 1792650480.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 04:30, 05:50. La luz espera a que se despierte.\nVentana para aspirar de 09:00 a 09:45.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T03:30:00-03:00",
+   "unix": 1792650600.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 2,
+   "input_tokens": 3816,
+   "output_tokens": 191,
+   "reasoning_tokens": 64,
+   "usd": 0.00558175,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T03:30:00-03:00",
+   "unix": 1792650600.0,
+   "name": "read_baby_log",
+   "status": "ran"
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T03:30:00-03:00",
+   "unix": 1792650600.0,
+   "name": "baby_summary",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T03:30:00-03:00",
+   "unix": 1792650600.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 4404,
+   "output_tokens": 100,
+   "reasoning_tokens": 53,
+   "usd": 0.00593,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T03:30:00-03:00",
+   "unix": 1792650600.0,
+   "channel": "telegram",
+   "text": "Ceci, la última toma fue del pecho derecho a las 01:40 (12 min). La anterior fue del izquierdo a las 23:50. Le toca el izquierdo.",
+   "chat_id": "9000002"
+  },
+  {
+   "kind": "turn",
+   "t": -1792276221.81,
+   "ts": "2026-10-22T03:30:00-03:00",
+   "unix": 1793573728.694,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 17
+  }
+ ]
+}

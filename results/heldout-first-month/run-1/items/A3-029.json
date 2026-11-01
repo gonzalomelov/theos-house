@@ -1,0 +1,258 @@
+{
+ "id": "A3-029",
+ "child": "heldout-baby-b",
+ "created": [
+  {
+   "endpoint": "feedings",
+   "id": 454,
+   "child": 4,
+   "start": "2026-10-22T23:20:00Z",
+   "end": "2026-10-22T23:40:00Z",
+   "duration": "00:20:00",
+   "type": "breast milk",
+   "method": "both breasts",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [
+  {
+   "endpoint": "changes",
+   "before": {
+    "id": 446,
+    "child": 4,
+    "time": "2026-10-22T22:30:00Z",
+    "wet": true,
+    "solid": true,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "changes",
+    "id": 446,
+    "child": 4,
+    "time": "2026-10-22T22:30:00Z",
+    "wet": true,
+    "solid": true,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T20:38:00-03:00",
+   "chat": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:00 a 08:00."
+  },
+  {
+   "at": "2026-10-22T20:38:00-03:00",
+   "chat": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:00 a 08:00."
+  },
+  {
+   "at": "2026-10-22T20:40:00-03:00",
+   "chat": "9000001",
+   "text": "Anotado, 20 min de ambos lados."
+  },
+  {
+   "at": "2026-10-22T20:43:00-03:00",
+   "chat": "9000002",
+   "text": "Perdón, no me salió bien la respuesta. ¿Me lo decís de nuevo?"
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T20:40:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "ceci le dio los dos lados 20 min",
+   "setup": true,
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-22T20:43:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "fed him both sides, 20 min",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0229,
+ "brain_calls": {
+  "inference.baseten.co": 4
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T20:38:00-03:00",
+   "unix": 1792712280.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:00 a 08:00.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T20:38:00-03:00",
+   "unix": 1792712280.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:00 a 08:00.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T20:40:00-03:00",
+   "unix": 1792712400.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3820,
+   "output_tokens": 385,
+   "reasoning_tokens": 287,
+   "usd": 0.00641125,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T20:40:00-03:00",
+   "unix": 1792712400.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T20:40:00-03:00",
+   "unix": 1792712400.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 4008,
+   "output_tokens": 156,
+   "reasoning_tokens": 135,
+   "usd": 0.005673,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T20:40:00-03:00",
+   "unix": 1792712400.0,
+   "channel": "telegram",
+   "text": "Anotado, 20 min de ambos lados.",
+   "chat_id": "9000001"
+  },
+  {
+   "kind": "turn",
+   "t": -1792338446.185,
+   "ts": "2026-10-22T20:40:00-03:00",
+   "unix": 1793573304.317,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 32
+  },
+  {
+   "kind": "brain_call",
+   "t": 300.0,
+   "ts": "2026-10-22T20:43:00-03:00",
+   "unix": 1792712580.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3854,
+   "output_tokens": 139,
+   "reasoning_tokens": 41,
+   "usd": 0.00540825,
+   "fallback": false
+  },
+  {
+   "kind": "final_guard",
+   "t": 300.0,
+   "ts": "2026-10-22T20:43:00-03:00",
+   "unix": 1792712580.0,
+   "where": "agent:telegram",
+   "lang": "es",
+   "removed": [
+    {
+     "why": "not in Spanish",
+     "text": "Did you send it twice, or were there two breast feeds?"
+    },
+    {
+     "why": "not in Spanish",
+     "text": "So far it is logged once:"
+    },
+    {
+     "why": "not in Spanish",
+     "text": "the 20:40 breast feed."
+    }
+   ],
+   "fallback": true,
+   "sent": "Perdón, no me salió bien la respuesta. ¿Me lo decís de nuevo?"
+  },
+  {
+   "kind": "reply",
+   "t": 300.0,
+   "ts": "2026-10-22T20:43:00-03:00",
+   "unix": 1792712580.0,
+   "channel": "telegram",
+   "text": "Perdón, no me salió bien la respuesta. ¿Me lo decís de nuevo?",
+   "chat_id": "9000002"
+  },
+  {
+   "kind": "turn",
+   "t": -1792338436.095,
+   "ts": "2026-10-22T20:43:00-03:00",
+   "unix": 1793573314.406,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 26
+  }
+ ]
+}

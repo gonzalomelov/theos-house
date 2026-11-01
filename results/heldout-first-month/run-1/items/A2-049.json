@@ -1,0 +1,200 @@
+{
+ "id": "A2-049",
+ "child": "heldout-baby-a",
+ "created": [
+  {
+   "endpoint": "notes",
+   "id": 242,
+   "child": 3,
+   "note": "Night wake-up handled by Ceci",
+   "image": null,
+   "time": "2026-10-22T06:15:00Z",
+   "tags": [
+    "agent"
+   ]
+  },
+  {
+   "endpoint": "notes",
+   "id": 243,
+   "child": 3,
+   "note": "se despertó llorando",
+   "image": null,
+   "time": "2026-10-22T06:15:00Z",
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [
+  {
+   "endpoint": "timers",
+   "before": {
+    "id": 93,
+    "child": 3,
+    "name": "sleep",
+    "start": "2026-10-22T02:40:00Z",
+    "duration": "10 20:00:50.948562",
+    "user": 2
+   },
+   "after": {
+    "endpoint": "timers",
+    "id": 93,
+    "child": 3,
+    "name": "sleep",
+    "start": "2026-10-22T02:40:00Z",
+    "duration": "10 20:01:10.629857",
+    "user": 2
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T03:13:00-03:00",
+   "chat": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 03:33, 05:33. La luz espera a que se despierte.\nVentana para aspirar de 07:33 a 08:14."
+  },
+  {
+   "at": "2026-10-22T03:13:00-03:00",
+   "chat": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 03:33, 05:33. La luz espera a que se despierte.\nVentana para aspirar de 07:33 a 08:14."
+  },
+  {
+   "at": "2026-10-22T03:15:00-03:00",
+   "chat": "9000001",
+   "text": "Se despertó, lo avisó un padre. Está en el colecho, en el cuarto de ustedes. Estás de turno, Gonza."
+  },
+  {
+   "at": "2026-10-22T03:15:00-03:00",
+   "chat": "9000002",
+   "text": "Registrado, Ceci."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T03:15:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "se desperto llorando",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0201,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T03:13:00-03:00",
+   "unix": 1792649580.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 03:33, 05:33. La luz espera a que se despierte.\nVentana para aspirar de 07:33 a 08:14.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T03:13:00-03:00",
+   "unix": 1792649580.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 03:33, 05:33. La luz espera a que se despierte.\nVentana para aspirar de 07:33 a 08:14.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T03:15:00-03:00",
+   "unix": 1792649700.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Se despertó, lo avisó un padre. Está en el colecho, en el cuarto de ustedes. Estás de turno, Gonza.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "night_feed",
+   "routine": null,
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T03:15:00-03:00",
+   "unix": 1792649700.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3817,
+   "output_tokens": 305,
+   "reasoning_tokens": 185,
+   "usd": 0.0060675,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T03:15:00-03:00",
+   "unix": 1792649700.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T03:15:00-03:00",
+   "unix": 1792649700.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 3993,
+   "output_tokens": 37,
+   "reasoning_tokens": 22,
+   "usd": 0.0051485,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T03:15:00-03:00",
+   "unix": 1792649700.0,
+   "channel": "telegram",
+   "text": "Registrado, Ceci.",
+   "chat_id": "9000002"
+  },
+  {
+   "kind": "turn",
+   "t": -1792276184.801,
+   "ts": "2026-10-22T03:15:00-03:00",
+   "unix": 1793572865.698,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 20
+  }
+ ]
+}

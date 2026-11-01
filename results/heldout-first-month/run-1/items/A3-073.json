@@ -1,0 +1,224 @@
+{
+ "id": "A3-073",
+ "child": "heldout-baby-a",
+ "created": [],
+ "seed_after": [
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 589,
+    "child": 3,
+    "start": "2026-10-22T21:40:00Z",
+    "end": "2026-10-22T21:55:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 100.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 589,
+    "child": 3,
+    "start": "2026-10-22T21:40:00Z",
+    "end": "2026-10-22T21:55:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 100.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "changes",
+   "before": {
+    "id": 511,
+    "child": 3,
+    "time": "2026-10-22T23:15:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "changes",
+    "id": 511,
+    "child": 3,
+    "time": "2026-10-22T23:15:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "notes",
+   "before": {
+    "id": 254,
+    "child": 3,
+    "note": "Bath",
+    "image": null,
+    "time": "2026-10-21T22:00:00Z",
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "notes",
+    "id": 254,
+    "child": 3,
+    "note": "Bath",
+    "image": null,
+    "time": "2026-10-21T22:00:00Z",
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T21:28:00-03:00",
+   "chat": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera según el ritmo de las tomas."
+  },
+  {
+   "at": "2026-10-22T21:28:00-03:00",
+   "chat": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera según el ritmo de las tomas."
+  },
+  {
+   "at": "2026-10-22T21:30:00-03:00",
+   "chat": "9000001",
+   "text": "Hoy todavía no, Gonza. El último baño fue ayer a las 19:00."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T21:30:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "lo bañamos hoy?",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0181,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T21:28:00-03:00",
+   "unix": 1792715280.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera según el ritmo de las tomas.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T21:28:00-03:00",
+   "unix": 1792715280.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera según el ritmo de las tomas.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T21:30:00-03:00",
+   "unix": 1792715400.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3817,
+   "output_tokens": 228,
+   "reasoning_tokens": 169,
+   "usd": 0.00574025,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T21:30:00-03:00",
+   "unix": 1792715400.0,
+   "name": "baby_summary",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T21:30:00-03:00",
+   "unix": 1792715400.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 4142,
+   "output_tokens": 108,
+   "reasoning_tokens": 80,
+   "usd": 0.0056365,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T21:30:00-03:00",
+   "unix": 1792715400.0,
+   "channel": "telegram",
+   "text": "Hoy todavía no, Gonza. El último baño fue ayer a las 19:00.",
+   "chat_id": "9000001"
+  },
+  {
+   "kind": "turn",
+   "t": -1792340827.458,
+   "ts": "2026-10-22T21:30:00-03:00",
+   "unix": 1793573923.077,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 15
+  }
+ ]
+}

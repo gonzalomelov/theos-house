@@ -1,0 +1,132 @@
+{
+ "id": "A2-043",
+ "child": "heldout-baby-a",
+ "created": [],
+ "seed_after": [
+  {
+   "endpoint": "timers",
+   "before": {
+    "id": 88,
+    "child": 3,
+    "name": "sleep",
+    "start": "2026-10-22T12:45:00Z",
+    "duration": "10 09:55:07.339739",
+    "user": 2
+   },
+   "after": {
+    "endpoint": "timers",
+    "id": 88,
+    "child": 3,
+    "name": "sleep",
+    "start": "2026-10-22T12:45:00Z",
+    "duration": "10 09:55:25.277017",
+    "user": 2
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T11:50:00-03:00",
+   "chat": "9000002",
+   "text": "Got it, Ceci."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T11:50:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "todavia duerme, lleva como dos horas",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0184,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T11:50:00-03:00",
+   "unix": 1792680600.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 3820,
+   "output_tokens": 99,
+   "reasoning_tokens": 62,
+   "usd": 0.00519575,
+   "fallback": false
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T11:50:00-03:00",
+   "unix": 1792680600.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 3950,
+   "output_tokens": 169,
+   "reasoning_tokens": 132,
+   "usd": 0.00565575,
+   "fallback": false
+  },
+  {
+   "kind": "final_guard",
+   "t": 120.0,
+   "ts": "2026-10-22T11:50:00-03:00",
+   "unix": 1792680600.0,
+   "where": "agent:telegram",
+   "lang": "es",
+   "removed": [
+    {
+     "why": "not in Spanish",
+     "text": "Two hours of nap time, that's great."
+    },
+    {
+     "why": "not in Spanish",
+     "text": "Let me know when he wakes up and we can log it."
+    }
+   ],
+   "fallback": false,
+   "sent": "Got it, Ceci."
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T11:50:00-03:00",
+   "unix": 1792680600.0,
+   "channel": "telegram",
+   "text": "Got it, Ceci.",
+   "chat_id": "9000002"
+  },
+  {
+   "kind": "turn",
+   "t": -1792307129.547,
+   "ts": "2026-10-22T11:50:00-03:00",
+   "unix": 1793572820.951,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 36
+  }
+ ]
+}

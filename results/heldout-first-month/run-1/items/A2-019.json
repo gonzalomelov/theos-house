@@ -1,0 +1,201 @@
+{
+ "id": "A2-019",
+ "child": "heldout-baby-a",
+ "created": [
+  {
+   "endpoint": "changes",
+   "id": 415,
+   "child": 3,
+   "time": "2026-10-23T01:00:00Z",
+   "wet": true,
+   "solid": true,
+   "color": "brown",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [
+  {
+   "endpoint": "notes",
+   "before": {
+    "id": 241,
+    "child": 3,
+    "note": "Bath",
+    "image": null,
+    "time": "2026-10-22T23:30:00Z",
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "notes",
+    "id": 241,
+    "child": 3,
+    "note": "Bath",
+    "image": null,
+    "time": "2026-10-22T23:30:00Z",
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T22:28:00-03:00",
+   "chat": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:00 a 08:00."
+  },
+  {
+   "at": "2026-10-22T22:28:00-03:00",
+   "chat": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:00 a 08:00."
+  },
+  {
+   "at": "2026-10-22T22:30:00-03:00",
+   "chat": "9000002",
+   "text": "Anotado, pañal de las 22 con pis y caca marrón."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T22:30:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "a las 22 le cambie, pis y caca marron",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0222,
+ "brain_calls": {
+  "inference.baseten.co": 4
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T22:28:00-03:00",
+   "unix": 1792718880.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:00 a 08:00.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T22:28:00-03:00",
+   "unix": 1792718880.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:00 a 08:00.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T22:30:00-03:00",
+   "unix": 1792719000.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3825,
+   "output_tokens": 240,
+   "reasoning_tokens": 109,
+   "usd": 0.00580125,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T22:30:00-03:00",
+   "unix": 1792719000.0,
+   "name": "log_baby_event",
+   "status": "error"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T22:30:00-03:00",
+   "unix": 1792719000.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3987,
+   "output_tokens": 176,
+   "reasoning_tokens": 47,
+   "usd": 0.00573175,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T22:30:00-03:00",
+   "unix": 1792719000.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T22:30:00-03:00",
+   "unix": 1792719000.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 4172,
+   "output_tokens": 61,
+   "reasoning_tokens": 32,
+   "usd": 0.00547425,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T22:30:00-03:00",
+   "unix": 1792719000.0,
+   "channel": "telegram",
+   "text": "Anotado, pañal de las 22 con pis y caca marrón.",
+   "chat_id": "9000002"
+  },
+  {
+   "kind": "turn",
+   "t": -1792345685.699,
+   "ts": "2026-10-22T22:30:00-03:00",
+   "unix": 1793572664.798,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 37
+  }
+ ]
+}

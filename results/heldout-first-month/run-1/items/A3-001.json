@@ -1,0 +1,290 @@
+{
+ "id": "A3-001",
+ "child": "heldout-baby-a",
+ "created": [
+  {
+   "endpoint": "feedings",
+   "id": 426,
+   "child": 3,
+   "start": "2026-10-22T12:55:00Z",
+   "end": "2026-10-22T13:10:00Z",
+   "duration": "00:15:00",
+   "type": "formula",
+   "method": "bottle",
+   "amount": 90.0,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 424,
+    "child": 3,
+    "start": "2026-10-22T10:05:00Z",
+    "end": "2026-10-22T10:20:00Z",
+    "duration": "00:15:00",
+    "type": "breast milk",
+    "method": "left breast",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 424,
+    "child": 3,
+    "start": "2026-10-22T10:05:00Z",
+    "end": "2026-10-22T10:20:00Z",
+    "duration": "00:15:00",
+    "type": "breast milk",
+    "method": "left breast",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "changes",
+   "before": {
+    "id": 430,
+    "child": 3,
+    "time": "2026-10-22T10:30:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "changes",
+    "id": 430,
+    "child": 3,
+    "time": "2026-10-22T10:30:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T10:08:00-03:00",
+   "chat": "9000001",
+   "text": "Buen día, Gonza.\nEsta noche te toca a vos.\nClima: lluvia, 16 a 19 C, 11.1 mm de lluvia.\nMenú de Cookidoo: Arroz blanco."
+  },
+  {
+   "at": "2026-10-22T10:08:00-03:00",
+   "chat": "9000002",
+   "text": "Buen día, Ceci.\nClima: lluvia, 16 a 19 C, 11.1 mm de lluvia.\nMenú de Cookidoo: Arroz blanco."
+  },
+  {
+   "at": "2026-10-22T10:10:00-03:00",
+   "chat": "9000002",
+   "text": "Anotado, 90 ml en mamadera."
+  },
+  {
+   "at": "2026-10-22T10:12:00-03:00",
+   "chat": "9000002",
+   "text": "I cannot change entries in this log, so nothing changed."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T10:10:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "le di 90 de mamadera",
+   "setup": true,
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-22T10:12:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "no perdon eran 60",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0263,
+ "brain_calls": {
+  "inference.baseten.co": 5
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T10:08:00-03:00",
+   "unix": 1792674480.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Buen día, Gonza.\nEsta noche te toca a vos.\nClima: lluvia, 16 a 19 C, 11.1 mm de lluvia.\nMenú de Cookidoo: Arroz blanco.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "family-push",
+   "routine": "morning",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T10:08:00-03:00",
+   "unix": 1792674480.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Buen día, Ceci.\nClima: lluvia, 16 a 19 C, 11.1 mm de lluvia.\nMenú de Cookidoo: Arroz blanco.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "family-push",
+   "routine": "morning",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T10:10:00-03:00",
+   "unix": 1792674600.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3818,
+   "output_tokens": 154,
+   "reasoning_tokens": 53,
+   "usd": 0.005427,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T10:10:00-03:00",
+   "unix": 1792674600.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T10:10:00-03:00",
+   "unix": 1792674600.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 4008,
+   "output_tokens": 50,
+   "reasoning_tokens": 29,
+   "usd": 0.0052225,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T10:10:00-03:00",
+   "unix": 1792674600.0,
+   "channel": "telegram",
+   "text": "Anotado, 90 ml en mamadera.",
+   "chat_id": "9000002"
+  },
+  {
+   "kind": "turn",
+   "t": -1792300944.727,
+   "ts": "2026-10-22T10:10:00-03:00",
+   "unix": 1793573005.773,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 20
+  },
+  {
+   "kind": "brain_call",
+   "t": 240.0,
+   "ts": "2026-10-22T10:12:00-03:00",
+   "unix": 1792674720.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3850,
+   "output_tokens": 234,
+   "reasoning_tokens": 169,
+   "usd": 0.005807,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 240.0,
+   "ts": "2026-10-22T10:12:00-03:00",
+   "unix": 1792674720.0,
+   "name": "read_baby_log",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 240.0,
+   "ts": "2026-10-22T10:12:00-03:00",
+   "unix": 1792674720.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 4158,
+   "output_tokens": 365,
+   "reasoning_tokens": 344,
+   "usd": 0.00674875,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 240.0,
+   "ts": "2026-10-22T10:12:00-03:00",
+   "unix": 1792674720.0,
+   "channel": "telegram",
+   "text": "I cannot change entries in this log, so nothing changed.",
+   "chat_id": "9000002"
+  },
+  {
+   "kind": "turn",
+   "t": -1792300930.504,
+   "ts": "2026-10-22T10:12:00-03:00",
+   "unix": 1793573019.995,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 17
+  }
+ ]
+}

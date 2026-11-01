@@ -1,0 +1,109 @@
+{
+ "id": "A2-039",
+ "child": "heldout-baby-c",
+ "created": [
+  {
+   "endpoint": "timers",
+   "id": 78,
+   "child": 5,
+   "name": "sleep",
+   "start": "2026-10-22T18:20:00Z",
+   "duration": "10 04:18:30.101154",
+   "user": 2
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T16:00:00-03:00",
+   "chat": "9000002",
+   "text": "Registrado, se durmió a las 15:20."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T16:00:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "se durmio a las 15:20",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0107,
+ "brain_calls": {
+  "inference.baseten.co": 2
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T16:00:00-03:00",
+   "unix": 1792695600.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3821,
+   "output_tokens": 176,
+   "reasoning_tokens": 56,
+   "usd": 0.00552425,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T16:00:00-03:00",
+   "unix": 1792695600.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T16:00:00-03:00",
+   "unix": 1792695600.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 3985,
+   "output_tokens": 52,
+   "reasoning_tokens": 28,
+   "usd": 0.00520225,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T16:00:00-03:00",
+   "unix": 1792695600.0,
+   "channel": "telegram",
+   "text": "Registrado, se durmió a las 15:20.",
+   "chat_id": "9000002"
+  },
+  {
+   "kind": "turn",
+   "t": -1792322245.883,
+   "ts": "2026-10-22T16:00:00-03:00",
+   "unix": 1793572704.615,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 21
+  }
+ ]
+}

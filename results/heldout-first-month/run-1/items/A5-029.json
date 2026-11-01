@@ -1,0 +1,91 @@
+{
+ "id": "A5-029",
+ "child": "heldout-baby-b",
+ "created": [],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T14:40:00-03:00",
+   "chat": "9000002",
+   "text": "Basic / umbrella strollers: ~$150 - $250 USD\nMid-range with better wheels, recline, storage: ~$300 - $450 USD\nPremium / travel system (with car seat): ~$500 - $800+ USD\n\nIn Mercado Libre UY you’ll see a lot in the $12.000 - $25.000 UYU range for something good for daily use.\n\nDo you want me to look for what type you need for Theo (light for city, big wheels, etc)?"
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T14:40:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "how much is a decent stroller in uruguay more or less",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0055,
+ "brain_calls": {
+  "inference.baseten.co": 1
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T14:40:00-03:00",
+   "unix": 1792690800.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 3825,
+   "output_tokens": 169,
+   "reasoning_tokens": 24,
+   "usd": 0.0054995,
+   "fallback": false
+  },
+  {
+   "kind": "final_guard",
+   "t": 120.0,
+   "ts": "2026-10-22T14:40:00-03:00",
+   "unix": 1792690800.0,
+   "where": "agent:telegram",
+   "lang": "es",
+   "removed": [
+    {
+     "why": "not in Spanish",
+     "text": "A decent stroller in Uruguay is usually around USD $200 - $500 more or less, depending on the brand and if it's a travel system."
+    }
+   ],
+   "fallback": false,
+   "sent": "Basic / umbrella strollers: ~$150 - $250 USD\nMid-range with better wheels, recline, storage: ~$300 - $450 USD\nPremium / travel system (with car seat): ~$500 - $800+ USD\n\nIn Mercado Libre UY you’ll see a lot in the $12.000 - $25.000 UYU range for something good for daily use.\n\nDo you want me to look for what type you need for Theo (light for city, big wheels, etc)?"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T14:40:00-03:00",
+   "unix": 1792690800.0,
+   "channel": "telegram",
+   "text": "Basic / umbrella strollers: ~$150 - $250 USD\nMid-range with better wheels, recline, storage: ~$300 - $450 USD\nPremium / travel system (with car seat): ~$500 - $800+ USD\n\nIn Mercado Libre UY you’ll see a lot in the $12.000 - $25.000 UYU range for something good for daily use.\n\nDo you want me to look for what type you need for Theo (light for city, big wheels, etc)?",
+   "chat_id": "9000002"
+  },
+  {
+   "kind": "turn",
+   "t": -1792315728.405,
+   "ts": "2026-10-22T14:40:00-03:00",
+   "unix": 1793574422.138,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 53
+  }
+ ]
+}

@@ -1,0 +1,176 @@
+{
+ "id": "A2-026",
+ "child": "heldout-baby-b",
+ "created": [
+  {
+   "endpoint": "changes",
+   "id": 420,
+   "child": 4,
+   "time": "2026-10-23T02:40:00Z",
+   "wet": true,
+   "solid": true,
+   "color": "yellow",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T23:38:00-03:00",
+   "chat": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual."
+  },
+  {
+   "at": "2026-10-22T23:38:00-03:00",
+   "chat": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual."
+  },
+  {
+   "at": "2026-10-22T23:40:00-03:00",
+   "chat": "9000001",
+   "text": "Anotado, pañal con pis y caca registrado."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T23:40:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "eh le cambié el pañal tenía pis y bastante caca como amarilla con grumitos",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0233,
+ "brain_calls": {
+  "inference.baseten.co": 4
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T23:38:00-03:00",
+   "unix": 1792723080.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T23:38:00-03:00",
+   "unix": 1792723080.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T23:40:00-03:00",
+   "unix": 1792723200.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3832,
+   "output_tokens": 165,
+   "reasoning_tokens": 59,
+   "usd": 0.00549125,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T23:40:00-03:00",
+   "unix": 1792723200.0,
+   "name": "log_baby_event",
+   "status": "error"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T23:40:00-03:00",
+   "unix": 1792723200.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3977,
+   "output_tokens": 146,
+   "reasoning_tokens": 35,
+   "usd": 0.00559175,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T23:40:00-03:00",
+   "unix": 1792723200.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T23:40:00-03:00",
+   "unix": 1792723200.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 4137,
+   "output_tokens": 56,
+   "reasoning_tokens": 32,
+   "usd": 0.00540925,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T23:40:00-03:00",
+   "unix": 1792723200.0,
+   "channel": "telegram",
+   "text": "Anotado, pañal con pis y caca registrado.",
+   "chat_id": "9000001"
+  },
+  {
+   "kind": "turn",
+   "t": -1792349855.677,
+   "ts": "2026-10-22T23:40:00-03:00",
+   "unix": 1793572694.821,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 74
+  }
+ ]
+}

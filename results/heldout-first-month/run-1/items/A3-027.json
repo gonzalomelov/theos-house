@@ -1,0 +1,300 @@
+{
+ "id": "A3-027",
+ "child": "heldout-baby-c",
+ "created": [
+  {
+   "endpoint": "changes",
+   "id": 443,
+   "child": 5,
+   "time": "2026-10-22T14:20:00Z",
+   "wet": false,
+   "solid": true,
+   "color": "",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  },
+  {
+   "endpoint": "changes",
+   "id": 444,
+   "child": 5,
+   "time": "2026-10-22T14:20:00Z",
+   "wet": false,
+   "solid": true,
+   "color": "",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T11:20:00-03:00",
+   "chat": "9000002",
+   "text": "Anotado, pañal con caca a las 11:20."
+  },
+  {
+   "at": "2026-10-22T11:20:00-03:00",
+   "chat": "9000002",
+   "text": "Anotado, pañal con caca a las 11:20."
+  },
+  {
+   "at": "2026-10-22T11:21:00-03:00",
+   "chat": "9000002",
+   "text": "I cannot change entries in this log, so nothing changed."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T11:20:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "pañal con caca",
+   "setup": true,
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-22T11:20:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "pañal con caca",
+   "setup": true,
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-22T11:21:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "uh lo mande dos veces, es uno solo",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0408,
+ "brain_calls": {
+  "inference.baseten.co": 7
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T11:20:00-03:00",
+   "unix": 1792678800.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3817,
+   "output_tokens": 141,
+   "reasoning_tokens": 47,
+   "usd": 0.0053705,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T11:20:00-03:00",
+   "unix": 1792678800.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T11:20:00-03:00",
+   "unix": 1792678800.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 3964,
+   "output_tokens": 51,
+   "reasoning_tokens": 24,
+   "usd": 0.00517175,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T11:20:00-03:00",
+   "unix": 1792678800.0,
+   "channel": "telegram",
+   "text": "Anotado, pañal con caca a las 11:20.",
+   "chat_id": "9000002"
+  },
+  {
+   "kind": "turn",
+   "t": -1792304918.94,
+   "ts": "2026-10-22T11:20:00-03:00",
+   "unix": 1793573231.561,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 14
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T11:20:00-03:00",
+   "unix": 1792678800.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3855,
+   "output_tokens": 476,
+   "reasoning_tokens": 363,
+   "usd": 0.00684175,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T11:20:00-03:00",
+   "unix": 1792678800.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T11:20:00-03:00",
+   "unix": 1792678800.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 4027,
+   "output_tokens": 59,
+   "reasoning_tokens": 32,
+   "usd": 0.0052845,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T11:20:00-03:00",
+   "unix": 1792678800.0,
+   "channel": "telegram",
+   "text": "Anotado, pañal con caca a las 11:20.",
+   "chat_id": "9000002"
+  },
+  {
+   "kind": "turn",
+   "t": -1792304912.392,
+   "ts": "2026-10-22T11:20:00-03:00",
+   "unix": 1793573238.109,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 14
+  },
+  {
+   "kind": "brain_call",
+   "t": 180.0,
+   "ts": "2026-10-22T11:21:00-03:00",
+   "unix": 1792678860.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3897,
+   "output_tokens": 170,
+   "reasoning_tokens": 106,
+   "usd": 0.00559375,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 180.0,
+   "ts": "2026-10-22T11:21:00-03:00",
+   "unix": 1792678860.0,
+   "name": "read_baby_log",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 180.0,
+   "ts": "2026-10-22T11:21:00-03:00",
+   "unix": 1792678860.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4073,
+   "output_tokens": 280,
+   "reasoning_tokens": 181,
+   "usd": 0.00628125,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 180.0,
+   "ts": "2026-10-22T11:21:00-03:00",
+   "unix": 1792678860.0,
+   "name": "log_baby_event",
+   "status": "held"
+  },
+  {
+   "kind": "brain_call",
+   "t": 180.0,
+   "ts": "2026-10-22T11:21:00-03:00",
+   "unix": 1792678860.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 4194,
+   "output_tokens": 244,
+   "reasoning_tokens": 208,
+   "usd": 0.0062795,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 180.0,
+   "ts": "2026-10-22T11:21:00-03:00",
+   "unix": 1792678860.0,
+   "channel": "telegram",
+   "text": "I cannot change entries in this log, so nothing changed.",
+   "chat_id": "9000002"
+  },
+  {
+   "kind": "turn",
+   "t": -1792304899.667,
+   "ts": "2026-10-22T11:21:00-03:00",
+   "unix": 1793573250.834,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 34
+  }
+ ]
+}

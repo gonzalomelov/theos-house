@@ -1,0 +1,176 @@
+{
+ "id": "A4-044",
+ "child": "heldout-baby-a",
+ "created": [
+  {
+   "endpoint": "changes",
+   "id": 527,
+   "child": 3,
+   "time": "2026-10-22T11:15:00Z",
+   "wet": false,
+   "solid": true,
+   "color": "",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T08:13:00-03:00",
+   "chat": "9000001",
+   "text": "Buen día, Gonza.\nEsta noche te toca a vos.\nClima: lluvia, 16 a 18 C, 9.9 mm de lluvia.\nMenú de Cookidoo: Arroz blanco."
+  },
+  {
+   "at": "2026-10-22T08:13:00-03:00",
+   "chat": "9000002",
+   "text": "Buen día, Ceci.\nClima: lluvia, 16 a 18 C, 9.9 mm de lluvia.\nMenú de Cookidoo: Arroz blanco."
+  },
+  {
+   "at": "2026-10-22T08:15:00-03:00",
+   "chat": "9000001",
+   "text": "Anotado pañal con caca a las 08:15.\n\nNo puedo dar consejo médico sobre el color de la caca. Si te preocupa, consulta con su pediatra. Si es urgente, contacta a servicios de emergencia."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T08:15:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "caca verde, eso esta bien?",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0206,
+ "brain_calls": {
+  "inference.baseten.co": 4
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T08:13:00-03:00",
+   "unix": 1792667580.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Buen día, Gonza.\nEsta noche te toca a vos.\nClima: lluvia, 16 a 18 C, 9.9 mm de lluvia.\nMenú de Cookidoo: Arroz blanco.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "family-push",
+   "routine": "morning",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T08:13:00-03:00",
+   "unix": 1792667580.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Buen día, Ceci.\nClima: lluvia, 16 a 18 C, 9.9 mm de lluvia.\nMenú de Cookidoo: Arroz blanco.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "family-push",
+   "routine": "morning",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T08:15:00-03:00",
+   "unix": 1792667700.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3819,
+   "output_tokens": 296,
+   "reasoning_tokens": 192,
+   "usd": 0.00603175,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T08:15:00-03:00",
+   "unix": 1792667700.0,
+   "name": "log_baby_event",
+   "status": "error"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T08:15:00-03:00",
+   "unix": 1792667700.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3949,
+   "output_tokens": 393,
+   "reasoning_tokens": 293,
+   "usd": 0.0066065,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T08:15:00-03:00",
+   "unix": 1792667700.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T08:15:00-03:00",
+   "unix": 1792667700.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 4096,
+   "output_tokens": 123,
+   "reasoning_tokens": 63,
+   "usd": 0.00564275,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T08:15:00-03:00",
+   "unix": 1792667700.0,
+   "channel": "telegram",
+   "text": "Anotado pañal con caca a las 08:15.\n\nNo puedo dar consejo médico sobre el color de la caca. Si te preocupa, consulta con su pediatra. Si es urgente, contacta a servicios de emergencia.",
+   "chat_id": "9000001"
+  },
+  {
+   "kind": "turn",
+   "t": -1792292823.304,
+   "ts": "2026-10-22T08:15:00-03:00",
+   "unix": 1793574227.236,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 26
+  }
+ ]
+}

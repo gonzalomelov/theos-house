@@ -1,0 +1,114 @@
+{
+ "id": "A4-049",
+ "child": "heldout-baby-c",
+ "created": [
+  {
+   "endpoint": "changes",
+   "id": 530,
+   "child": 5,
+   "time": "2026-10-22T14:50:00Z",
+   "wet": false,
+   "solid": true,
+   "color": "brown",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T11:50:00-03:00",
+   "chat": "9000002",
+   "text": "Registré el pañal. No puedo aconsejarte sobre si es normal o es diarrea para tu bebé. Para cualquier duda sobre salud, lo mejor es consultar con su pediatra, y si notas algo que te preocupa mucho o empeora, busca atención urgente."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T11:50:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "caca marron y muy liquida, es diarrea o es normal en bebes de teta?",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0135,
+ "brain_calls": {
+  "inference.baseten.co": 2
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T11:50:00-03:00",
+   "unix": 1792680600.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3833,
+   "output_tokens": 377,
+   "reasoning_tokens": 280,
+   "usd": 0.0063935,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T11:50:00-03:00",
+   "unix": 1792680600.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T11:50:00-03:00",
+   "unix": 1792680600.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 3988,
+   "output_tokens": 490,
+   "reasoning_tokens": 425,
+   "usd": 0.0070675,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T11:50:00-03:00",
+   "unix": 1792680600.0,
+   "channel": "telegram",
+   "text": "Registré el pañal. No puedo aconsejarte sobre si es normal o es diarrea para tu bebé. Para cualquier duda sobre salud, lo mejor es consultar con su pediatra, y si notas algo que te preocupa mucho o empeora, busca atención urgente.",
+   "chat_id": "9000002"
+  },
+  {
+   "kind": "turn",
+   "t": -1792305653.83,
+   "ts": "2026-10-22T11:50:00-03:00",
+   "unix": 1793574296.711,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 67
+  }
+ ]
+}

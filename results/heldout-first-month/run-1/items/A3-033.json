@@ -1,0 +1,257 @@
+{
+ "id": "A3-033",
+ "child": "heldout-baby-c",
+ "created": [
+  {
+   "endpoint": "timers",
+   "id": 110,
+   "child": 5,
+   "name": "sleep",
+   "start": "2026-10-22T19:15:00Z",
+   "duration": "10 03:36:05.704373",
+   "user": 2
+  },
+  {
+   "endpoint": "timers",
+   "id": 111,
+   "child": 5,
+   "name": "sleep",
+   "start": "2026-10-22T19:15:00Z",
+   "duration": "10 03:36:05.706612",
+   "user": 2
+  }
+ ],
+ "seed_after": [
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 463,
+    "child": 5,
+    "start": "2026-10-22T18:30:00Z",
+    "end": "2026-10-22T18:50:00Z",
+    "duration": "00:20:00",
+    "type": "breast milk",
+    "method": "left breast",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 463,
+    "child": 5,
+    "start": "2026-10-22T18:30:00Z",
+    "end": "2026-10-22T18:50:00Z",
+    "duration": "00:20:00",
+    "type": "breast milk",
+    "method": "left breast",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T16:20:00-03:00",
+   "chat": "9000002",
+   "text": "Could you tell me again?"
+  },
+  {
+   "at": "2026-10-22T16:21:00-03:00",
+   "chat": "9000002",
+   "text": "Could you tell me again?"
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T16:20:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "asleep since 4:15",
+   "setup": true,
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-22T16:21:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "asleep since 4:15",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0218,
+ "brain_calls": {
+  "inference.baseten.co": 4
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T16:20:00-03:00",
+   "unix": 1792696800.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3817,
+   "output_tokens": 240,
+   "reasoning_tokens": 121,
+   "usd": 0.00579125,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T16:20:00-03:00",
+   "unix": 1792696800.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T16:20:00-03:00",
+   "unix": 1792696800.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 3981,
+   "output_tokens": 48,
+   "reasoning_tokens": 28,
+   "usd": 0.00518025,
+   "fallback": false
+  },
+  {
+   "kind": "final_guard",
+   "t": 120.0,
+   "ts": "2026-10-22T16:20:00-03:00",
+   "unix": 1792696800.0,
+   "where": "agent:telegram",
+   "lang": "es",
+   "removed": [
+    {
+     "why": "not in Spanish",
+     "text": "Nothing changed in the log, so it is not logged."
+    }
+   ],
+   "fallback": false,
+   "sent": "Could you tell me again?"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T16:20:00-03:00",
+   "unix": 1792696800.0,
+   "channel": "telegram",
+   "text": "Could you tell me again?",
+   "chat_id": "9000002"
+  },
+  {
+   "kind": "turn",
+   "t": -1792322701.328,
+   "ts": "2026-10-22T16:20:00-03:00",
+   "unix": 1793573449.174,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 17
+  },
+  {
+   "kind": "brain_call",
+   "t": 180.0,
+   "ts": "2026-10-22T16:21:00-03:00",
+   "unix": 1792696860.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3844,
+   "output_tokens": 204,
+   "reasoning_tokens": 83,
+   "usd": 0.005672,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 180.0,
+   "ts": "2026-10-22T16:21:00-03:00",
+   "unix": 1792696860.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 180.0,
+   "ts": "2026-10-22T16:21:00-03:00",
+   "unix": 1792696860.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 4008,
+   "output_tokens": 44,
+   "reasoning_tokens": 24,
+   "usd": 0.005197,
+   "fallback": false
+  },
+  {
+   "kind": "final_guard",
+   "t": 180.0,
+   "ts": "2026-10-22T16:21:00-03:00",
+   "unix": 1792696860.0,
+   "where": "agent:telegram",
+   "lang": "es",
+   "removed": [
+    {
+     "why": "not in Spanish",
+     "text": "Nothing changed in the log, so it is not logged."
+    }
+   ],
+   "fallback": false,
+   "sent": "Could you tell me again?"
+  },
+  {
+   "kind": "reply",
+   "t": 180.0,
+   "ts": "2026-10-22T16:21:00-03:00",
+   "unix": 1792696860.0,
+   "channel": "telegram",
+   "text": "Could you tell me again?",
+   "chat_id": "9000002"
+  },
+  {
+   "kind": "turn",
+   "t": -1792322694.522,
+   "ts": "2026-10-22T16:21:00-03:00",
+   "unix": 1793573455.981,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 17
+  }
+ ]
+}

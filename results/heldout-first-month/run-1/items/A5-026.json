@@ -1,0 +1,113 @@
+{
+ "id": "A5-026",
+ "child": "heldout-baby-b",
+ "created": [],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T00:38:00-03:00",
+   "chat": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual."
+  },
+  {
+   "at": "2026-10-22T00:38:00-03:00",
+   "chat": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual."
+  },
+  {
+   "at": "2026-10-22T00:40:00-03:00",
+   "chat": "9000001",
+   "text": "Jaja el clásico eterno. Los dos son gigantes de Uruguay y con historia afuera también, Peñarol con las Libertadores del 60 y Nacional siempre ahí peleando.\n\nPara mí no hay respuesta neutra que no haga enojar a uno jaja. Vos de cuál sos, Gonza?"
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T00:40:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "che nacional o peñarol quien es mas grande jaja",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0111,
+ "brain_calls": {
+  "inference.baseten.co": 2
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T00:38:00-03:00",
+   "unix": 1792640280.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T00:38:00-03:00",
+   "unix": 1792640280.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T00:40:00-03:00",
+   "unix": 1792640400.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 3823,
+   "output_tokens": 425,
+   "reasoning_tokens": 354,
+   "usd": 0.006585,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T00:40:00-03:00",
+   "unix": 1792640400.0,
+   "channel": "telegram",
+   "text": "Jaja el clásico eterno. Los dos son gigantes de Uruguay y con historia afuera también, Peñarol con las Libertadores del 60 y Nacional siempre ahí peleando.\n\nPara mí no hay respuesta neutra que no haga enojar a uno jaja. Vos de cuál sos, Gonza?",
+   "chat_id": "9000001"
+  },
+  {
+   "kind": "turn",
+   "t": -1792265337.517,
+   "ts": "2026-10-22T00:40:00-03:00",
+   "unix": 1793574413.026,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 47
+  }
+ ]
+}

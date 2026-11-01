@@ -1,0 +1,91 @@
+{
+ "id": "A5-022",
+ "child": "heldout-baby-a",
+ "created": [],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T12:20:00-03:00",
+   "chat": "9000001",
+   "text": "Ya te dejé la traducción arriba: \"Thank you so much for the baby gift, we loved it.\" Si querés otra versión más formal o informal, decime y te la armo."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T12:20:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "traducime al ingles: muchas gracias por el regalo para el bebe nos encanto",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0137,
+ "brain_calls": {
+  "inference.baseten.co": 2
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T12:20:00-03:00",
+   "unix": 1792682400.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 3828,
+   "output_tokens": 83,
+   "reasoning_tokens": 60,
+   "usd": 0.00513775,
+   "fallback": false
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T12:20:00-03:00",
+   "unix": 1792682400.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 3952,
+   "output_tokens": 863,
+   "reasoning_tokens": 813,
+   "usd": 0.00860775,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T12:20:00-03:00",
+   "unix": 1792682400.0,
+   "channel": "telegram",
+   "text": "Ya te dejé la traducción arriba: \"Thank you so much for the baby gift, we loved it.\" Si querés otra versión más formal o informal, decime y te la armo.",
+   "chat_id": "9000001"
+  },
+  {
+   "kind": "turn",
+   "t": -1792307265.907,
+   "ts": "2026-10-22T12:20:00-03:00",
+   "unix": 1793574484.636,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 74
+  }
+ ]
+}

@@ -1,0 +1,142 @@
+{
+ "id": "A2-068",
+ "child": "heldout-baby-b",
+ "created": [
+  {
+   "endpoint": "sleep",
+   "id": 299,
+   "child": 4,
+   "start": "2026-10-22T16:40:00Z",
+   "end": "2026-10-22T18:10:00Z",
+   "duration": "01:30:00",
+   "nap": true,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [
+  {
+   "endpoint": "timers",
+   "before": {
+    "id": 104,
+    "child": 4,
+    "name": "sleep",
+    "start": "2026-10-22T16:40:00Z",
+    "duration": "10 06:02:47.908509",
+    "user": 2
+   },
+   "after": null
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T15:10:00-03:00",
+   "chat": "9000002",
+   "text": "Perdón, no me salió bien la respuesta. ¿Me lo decís de nuevo?"
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T15:10:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "he's awake",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0112,
+ "brain_calls": {
+  "inference.baseten.co": 2
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T15:10:00-03:00",
+   "unix": 1792692600.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3813,
+   "output_tokens": 167,
+   "reasoning_tokens": 80,
+   "usd": 0.005476,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T15:10:00-03:00",
+   "unix": 1792692600.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T15:10:00-03:00",
+   "unix": 1792692600.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 3978,
+   "output_tokens": 167,
+   "reasoning_tokens": 142,
+   "usd": 0.00568225,
+   "fallback": false
+  },
+  {
+   "kind": "final_guard",
+   "t": 120.0,
+   "ts": "2026-10-22T15:10:00-03:00",
+   "unix": 1792692600.0,
+   "where": "agent:telegram",
+   "lang": "es",
+   "removed": [
+    {
+     "why": "not in Spanish",
+     "text": "Got it, logged that Theo woke up at 3:10 pm."
+    }
+   ],
+   "fallback": true,
+   "sent": "Perdón, no me salió bien la respuesta. ¿Me lo decís de nuevo?"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T15:10:00-03:00",
+   "unix": 1792692600.0,
+   "channel": "telegram",
+   "text": "Perdón, no me salió bien la respuesta. ¿Me lo decís de nuevo?",
+   "chat_id": "9000002"
+  },
+  {
+   "kind": "turn",
+   "t": -1792318969.436,
+   "ts": "2026-10-22T15:10:00-03:00",
+   "unix": 1793572981.064,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 10
+  }
+ ]
+}

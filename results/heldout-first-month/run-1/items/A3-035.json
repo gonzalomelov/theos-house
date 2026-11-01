@@ -1,0 +1,226 @@
+{
+ "id": "A3-035",
+ "child": "heldout-baby-b",
+ "created": [
+  {
+   "endpoint": "changes",
+   "id": 450,
+   "child": 4,
+   "time": "2026-10-22T21:43:00Z",
+   "wet": true,
+   "solid": true,
+   "color": "",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  },
+  {
+   "endpoint": "changes",
+   "id": 449,
+   "child": 4,
+   "time": "2026-10-22T21:40:00Z",
+   "wet": true,
+   "solid": true,
+   "color": "",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T18:40:00-03:00",
+   "chat": "9000001",
+   "text": "Anotado, pañal con pis y caca a las 18:40."
+  },
+  {
+   "at": "2026-10-22T18:43:00-03:00",
+   "chat": "9000002",
+   "text": "Anotado, pañal con pis y caca."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T18:40:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "le cambie el pañal, tenia pis y caca",
+   "setup": true,
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-22T18:43:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "gonza le cambio el pañal, pis y caca",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0279,
+ "brain_calls": {
+  "inference.baseten.co": 5
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T18:40:00-03:00",
+   "unix": 1792705200.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3825,
+   "output_tokens": 119,
+   "reasoning_tokens": 23,
+   "usd": 0.005287,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T18:40:00-03:00",
+   "unix": 1792705200.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T18:40:00-03:00",
+   "unix": 1792705200.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 3977,
+   "output_tokens": 42,
+   "reasoning_tokens": 13,
+   "usd": 0.00514975,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T18:40:00-03:00",
+   "unix": 1792705200.0,
+   "channel": "telegram",
+   "text": "Anotado, pañal con pis y caca a las 18:40.",
+   "chat_id": "9000001"
+  },
+  {
+   "kind": "turn",
+   "t": -1792331176.88,
+   "ts": "2026-10-22T18:40:00-03:00",
+   "unix": 1793573373.621,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 36
+  },
+  {
+   "kind": "brain_call",
+   "t": 300.0,
+   "ts": "2026-10-22T18:43:00-03:00",
+   "unix": 1792705380.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3872,
+   "output_tokens": 160,
+   "reasoning_tokens": 33,
+   "usd": 0.00552,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 300.0,
+   "ts": "2026-10-22T18:43:00-03:00",
+   "unix": 1792705380.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 300.0,
+   "ts": "2026-10-22T18:43:00-03:00",
+   "unix": 1792705380.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4049,
+   "output_tokens": 157,
+   "reasoning_tokens": 35,
+   "usd": 0.0057285,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 300.0,
+   "ts": "2026-10-22T18:43:00-03:00",
+   "unix": 1792705380.0,
+   "name": "log_baby_event",
+   "status": "duplicate"
+  },
+  {
+   "kind": "brain_call",
+   "t": 300.0,
+   "ts": "2026-10-22T18:43:00-03:00",
+   "unix": 1792705380.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 4245,
+   "output_tokens": 225,
+   "reasoning_tokens": 202,
+   "usd": 0.0062625,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 300.0,
+   "ts": "2026-10-22T18:43:00-03:00",
+   "unix": 1792705380.0,
+   "channel": "telegram",
+   "text": "Anotado, pañal con pis y caca.",
+   "chat_id": "9000002"
+  },
+  {
+   "kind": "turn",
+   "t": -1792331161.848,
+   "ts": "2026-10-22T18:43:00-03:00",
+   "unix": 1793573388.654,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 36
+  }
+ ]
+}

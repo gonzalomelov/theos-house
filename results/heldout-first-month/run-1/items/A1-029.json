@@ -1,0 +1,115 @@
+{
+ "id": "A1-029",
+ "child": "heldout-baby-b",
+ "created": [
+  {
+   "endpoint": "feedings",
+   "id": 372,
+   "child": 4,
+   "start": "2026-10-22T08:00:00Z",
+   "end": "2026-10-22T08:15:00Z",
+   "duration": "00:15:00",
+   "type": "formula",
+   "method": "bottle",
+   "amount": 100.0,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T05:15:00-03:00",
+   "chat": "9000001",
+   "text": "Anotado, 100 ml."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T05:15:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "ya tomó, 100 ml",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0108,
+ "brain_calls": {
+  "inference.baseten.co": 2
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T05:15:00-03:00",
+   "unix": 1792656900.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3817,
+   "output_tokens": 116,
+   "reasoning_tokens": 27,
+   "usd": 0.00526425,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T05:15:00-03:00",
+   "unix": 1792656900.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T05:15:00-03:00",
+   "unix": 1792656900.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 3999,
+   "output_tokens": 127,
+   "reasoning_tokens": 109,
+   "usd": 0.0055385,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T05:15:00-03:00",
+   "unix": 1792656900.0,
+   "channel": "telegram",
+   "text": "Anotado, 100 ml.",
+   "chat_id": "9000001"
+  },
+  {
+   "kind": "turn",
+   "t": -1792284052.827,
+   "ts": "2026-10-22T05:15:00-03:00",
+   "unix": 1793572197.571,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 15
+  }
+ ]
+}
