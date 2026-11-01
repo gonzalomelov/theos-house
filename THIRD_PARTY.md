@@ -25,6 +25,7 @@ Checked against origin/main on Oct 28 2026. Licenses were read from the linked p
 | MediaPipe EfficientDet-Lite0 object detector | Object boxes for the reflex | The Mac, fetched by `scripts/fetch-models.sh` | Apache 2.0 | https://ai.google.dev/edge/mediapipe/solutions/vision/object_detector |
 | Muse Spark Open, audio input | Hears Telegram voice notes (`parenting_agent/voice/ear.py`). Speech only: it does not hear beeps or house sounds well enough to use (`results/audio-truth/README.md`) | Baseten's API | Same as above | Same as above |
 | MMS-TTS (`facebook/mms-tts-spa` at `833b96c`, `facebook/mms-tts-eng` at `c71de0f`) | The agent's spoken answers | The Mac, or the voice container on the Vostro where `deploy/voice/Dockerfile` bakes the weights in at build | **CC BY-NC 4.0, non-commercial only** (Meta, Massively Multilingual Speech) | https://huggingface.co/facebook/mms-tts-spa and https://huggingface.co/facebook/mms-tts-eng |
+| MMS language ID (`facebook/mms-lid-126` at `53da6e3`) | The OPOL helper: English or Spanish from the glasses audio (`parenting_agent/opol_worker.py`) | The Mac, in the hearing venv, fetched by `scripts/opol_setup.sh`, never in git | **CC BY-NC 4.0, non-commercial only** (Meta, Massively Multilingual Speech) | https://huggingface.co/facebook/mms-lid-126 |
 
 ## SDKs and libraries
 

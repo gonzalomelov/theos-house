@@ -1,0 +1,253 @@
+{
+ "run": "2026-11-01T20:00:55-03:00",
+ "clips": "MMS-TTS stand-ins (facebook/mms-tts-eng, facebook/mms-tts-spa), labelled in LINES",
+ "ear": "meta-models/muse-spark-open-1026 on inference.baseten.co, the glasses /hear race (existing path)",
+ "language_id": "facebook/mms-lid-126 rev 53da6e3, in opol_worker.py on this Mac, {'ready': True, 'model': 'facebook/mms-lid-126', 'device': 'mps', 'keep': ['eng', 'spa']}",
+ "mocked": "Theo (not born): the run's agent has baby.born true. Telegram: a fake messenger, nothing sent",
+ "right": 10,
+ "lines": 10,
+ "rows": [
+  {
+   "id": "g-en-1",
+   "wearer": "gonza",
+   "lang": "en",
+   "to": "baby",
+   "text": "Good morning Theo, look at the little yellow duck in the water.",
+   "clip_s": 4.26,
+   "heard": "Good morning deal, look at the little yellow duck in the water",
+   "gate": "not for the agent",
+   "opol": [
+    {
+     "action": "counted",
+     "lang": "en",
+     "seconds": 4.26,
+     "by": "mms-lid",
+     "share": 0.999
+    }
+   ],
+   "replies": [],
+   "right": true
+  },
+  {
+   "id": "g-en-2",
+   "wearer": "gonza",
+   "lang": "en",
+   "to": "baby",
+   "text": "Who is my favorite boy? Let's put on your soft blue socks now.",
+   "clip_s": 5.8,
+   "heard": "Who is my favorite boy let's put on your soft blue socks now",
+   "gate": "not for the agent",
+   "opol": [
+    {
+     "action": "counted",
+     "lang": "en",
+     "seconds": 5.8,
+     "by": "mms-lid",
+     "share": 1.0
+    }
+   ],
+   "replies": [],
+   "right": true
+  },
+  {
+   "id": "g-en-3",
+   "wearer": "gonza",
+   "lang": "en",
+   "to": "baby",
+   "text": "Can you see the tree outside the window? The leaves are moving in the wind.",
+   "clip_s": 4.94,
+   "heard": "Can you see the tree outside the window, the leaves are moving in the wind",
+   "gate": "not for the agent",
+   "opol": [
+    {
+     "action": "counted",
+     "lang": "en",
+     "seconds": 4.94,
+     "by": "mms-lid",
+     "share": 0.999
+    }
+   ],
+   "replies": [],
+   "right": true
+  },
+  {
+   "id": "g-es-1",
+   "wearer": "gonza",
+   "lang": "es",
+   "to": "baby",
+   "text": "Mirá Theo, el perro está durmiendo en la alfombra del living.",
+   "clip_s": 5.29,
+   "heard": "Mira Teo, el perro está durmiendo en la alfombra del living.",
+   "gate": "not for the agent",
+   "opol": [
+    {
+     "action": "counted",
+     "lang": "es",
+     "seconds": 5.29,
+     "by": "mms-lid",
+     "share": 1.0
+    }
+   ],
+   "replies": [],
+   "right": true
+  },
+  {
+   "id": "c-es-1",
+   "wearer": "ceci",
+   "lang": "es",
+   "to": "baby",
+   "text": "Hola mi amor, ¿tenés hambre? Vamos a comer un poquito.",
+   "clip_s": 4.94,
+   "heard": "Hola mi amor, tenés hambre vamos a comer un poquito",
+   "gate": "not for the agent",
+   "opol": [
+    {
+     "action": "counted",
+     "lang": "es",
+     "seconds": 4.94,
+     "by": "mms-lid",
+     "share": 1.0
+    }
+   ],
+   "replies": [],
+   "right": true
+  },
+  {
+   "id": "c-es-2",
+   "wearer": "ceci",
+   "lang": "es",
+   "to": "baby",
+   "text": "Qué lindo que estás hoy, Theo, mirá la luz que entra por la ventana.",
+   "clip_s": 5.05,
+   "heard": "Qué lindo que estás hoy, Teo, mira la luz que entra por la ventana",
+   "gate": "not for the agent",
+   "opol": [
+    {
+     "action": "counted",
+     "lang": "es",
+     "seconds": 5.05,
+     "by": "mms-lid",
+     "share": 1.0
+    }
+   ],
+   "replies": [],
+   "right": true
+  },
+  {
+   "id": "c-es-3",
+   "wearer": "ceci",
+   "lang": "es",
+   "to": "baby",
+   "text": "Ahora te cambio el pañal y después dormimos la siesta juntos.",
+   "clip_s": 7.37,
+   "heard": "Ahora te cambio el pañal y después dormimos la siesta juntos.",
+   "gate": "not for the agent",
+   "opol": [
+    {
+     "action": "counted",
+     "lang": "es",
+     "seconds": 7.37,
+     "by": "mms-lid",
+     "share": 1.0
+    }
+   ],
+   "replies": [],
+   "right": true
+  },
+  {
+   "id": "c-en-1",
+   "wearer": "ceci",
+   "lang": "en",
+   "to": "baby",
+   "text": "Look Theo, a big red ball. Can you catch it?",
+   "clip_s": 3.82,
+   "heard": "Look, there's a big red ball. Can you catch it?",
+   "gate": "not for the agent",
+   "opol": [
+    {
+     "action": "counted",
+     "lang": "en",
+     "seconds": 3.82,
+     "by": "mms-lid",
+     "share": 1.0
+    }
+   ],
+   "replies": [],
+   "right": true
+  },
+  {
+   "id": "c-es-4",
+   "wearer": "ceci",
+   "lang": "es",
+   "to": "gonza",
+   "text": "Gonza, ¿me alcanzás un pañal limpio, por favor?",
+   "clip_s": 5.34,
+   "heard": "Gonza me alcanzás un pañal limpio por favor",
+   "gate": "not for the agent",
+   "opol": [
+    {
+     "action": "skipped",
+     "reason": "to someone else"
+    }
+   ],
+   "replies": [],
+   "right": true
+  },
+  {
+   "id": "g-ask",
+   "wearer": "gonza",
+   "lang": "es",
+   "to": "agent",
+   "text": "Agente, ¿cuánto inglés escuchó Theo hoy?",
+   "clip_s": 5.35,
+   "heard": "Agente cuánto inglés escuchó Teo hoy?",
+   "gate": "wake word",
+   "opol": [],
+   "replies": [
+    "Hoy Theo escuchó 19 s en inglés (Gonza 15 s, Ceci 4 s) y 23 s en español (Ceci 17 s, Gonza 5 s). Cuento lo que oyen los anteojos de cada uno cuando no le hablan al agente. Solo guardo idioma y minutos, nunca lo que dicen."
+   ],
+   "right": true
+  }
+ ],
+ "stored_opol_seconds": [
+  [
+   "2026-11-08",
+   "ceci",
+   "en",
+   3.82,
+   1
+  ],
+  [
+   "2026-11-08",
+   "ceci",
+   "es",
+   17.35,
+   3
+  ],
+  [
+   "2026-11-08",
+   "gonza",
+   "en",
+   15.0,
+   3
+  ],
+  [
+   "2026-11-08",
+   "gonza",
+   "es",
+   5.29,
+   1
+  ]
+ ],
+ "words_found_in_opol_tables": [],
+ "wav_files_in_the_agent_data_dir": [],
+ "asked": {
+  "¿cuánto español escuchó Theo hoy?": "Hoy Theo escuchó 23 s en español (Ceci 17 s, Gonza 5 s) y 19 s en inglés (Gonza 15 s, Ceci 4 s). Cuento lo que oyen los anteojos de cada uno cuando no le hablan al agente. Solo guardo idioma y minutos, nunca lo que dicen."
+ },
+ "morning_monday": {
+  "Gonza": "Buen día, Gonza.\nIdiomas: la semana pasada Theo te escuchó 15 s en inglés (tu idioma con él) y 5 s en español.",
+  "Ceci": "Buen día, Ceci.\nIdiomas: la semana pasada Theo te escuchó 17 s en español (tu idioma con él) y 4 s en inglés."
+ },
+ "telegram_sent": 3,
+ "seconds": 75.0
+}
