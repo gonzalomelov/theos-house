@@ -243,6 +243,12 @@ class LongCry(unittest.TestCase):
         self.assertTrue(reply.startswith("Anoté la mamadera de 60 ml"), reply)
         self.assertIn("Para revisar:", reply)
 
+    def test_a_feed_this_minute_is_recien(self):
+        # Live on Nov 2 after the fix: "última toma hace 0 min, a las 02:57".
+        rows = [{"kind": "feeding", "start": NIGHT.isoformat(), "end": NIGHT.isoformat(), "ref": "f#1"}]
+        self.assertIn("última toma recién, a las 01:40", cry_reason.long_cry(rows, NIGHT, TZ, "es"))
+        self.assertIn("last feed just now, at 01:40", cry_reason.long_cry(rows, NIGHT, TZ, "en"))
+
     def test_what_is_not_a_long_cry(self):
         for text in ("why is he crying?", "llora y tiene fiebre", "she is crying, put the white noise on",
                      "se desperto 4 y 55 llorando"):

@@ -218,13 +218,15 @@ def explain(entries, now, tz, features=None, pronoun="he", young=True):
 # swap, white noise, doorbell and floor clean times, and nothing about the crying).
 LONG_CRY = {
     "en": {"facts": "From the log: {facts}.", "none": "The log has no feed or diaper yet to go by.",
-           "feed": "last feed {ago} ago, at {at}", "change": "last diaper change {ago} ago, at {at}",
+           "feed": "last feed {ago}, at {at}", "change": "last diaper change {ago}, at {at}",
+           "ago": "{t} ago", "just": "just now",
            "awake": "awake {ago}, since {at}",
            "checks": "Things to check: " + CHECKS + ".",
            "red": ("If {who} also has a temperature of 38 °C (100.4 °F) or more, will not feed, is very sleepy or hard "
                    "to wake, or breathes with effort, call your pediatrician now, or 911.")},
     "es": {"facts": "Lo que dice el registro: {facts}.", "none": "Todavía no hay tomas ni pañales en el registro para guiarse.",
-           "feed": "última toma hace {ago}, a las {at}", "change": "último cambio de pañal hace {ago}, a las {at}",
+           "feed": "última toma {ago}, a las {at}", "change": "último cambio de pañal {ago}, a las {at}",
+           "ago": "hace {t}", "just": "recién",
            "awake": "despierto hace {ago}, desde las {at}",
            "checks": ("Para revisar: el pañal mojado o sucio, si tiene calor o frío, un provechito después de la toma, o "
                       "capaz que solo quiere brazos."),
@@ -240,11 +242,13 @@ def long_cry(entries, now, tz, lang="en", who="he", young=True):
     t = LONG_CRY["es" if lang == "es" else "en"]
     ctx = context(entries, now, tz, young)
     at = lambda moment: patterns.hhmm(moment.astimezone(tz))  # noqa: E731
+    # "hace 0 min" read odd live on Nov 2: under a minute is "recién".
+    ago = lambda minutes: t["just"] if minutes < 1 else t["ago"].format(t=_hm(minutes))  # noqa: E731
     said = []
     if "last_feed" in ctx:
-        said.append(t["feed"].format(ago=_hm(ctx["since_feed_min"]), at=at(ctx["last_feed"])))
+        said.append(t["feed"].format(ago=ago(ctx["since_feed_min"]), at=at(ctx["last_feed"])))
     if "last_change" in ctx:
-        said.append(t["change"].format(ago=_hm(ctx["since_change_min"]), at=at(ctx["last_change"])))
+        said.append(t["change"].format(ago=ago(ctx["since_change_min"]), at=at(ctx["last_change"])))
     if "awake_min" in ctx and not ctx["asleep"]:
         said.append(t["awake"].format(ago=_hm(ctx["awake_min"]), at=at(ctx["woke_at"])))
     head = t["facts"].format(facts=", ".join(said)) if said else t["none"]
