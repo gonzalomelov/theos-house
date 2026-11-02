@@ -94,6 +94,12 @@ CAR_SEAT_RESULT = {
     "unsure": {"en": "My two checks disagree: check by hand", "es": "Mis dos chequeos no coinciden: revisalo a mano"},
     "open": {"en": "Kept open in the summary", "es": "Queda abierto en el resumen"},
 }
+# The close-up the coach asks for (coach.py LINES "closeup"), named on the lens so the parent knows which guide.
+CLOSEUP = {
+    "near": {"en": "Bring the phone to the door side guide", "es": "Acercá el teléfono a la guía de la puerta"},
+    "far": {"en": "Bring the phone to the far side guide", "es": "Acercá el teléfono a la guía del otro lado"},
+    "rear": {"en": "Bring the phone to the rear guide", "es": "Acercá el teléfono a la guía de atrás"},
+}
 TECHNICIAN = {"en": "Not a verdict, see a technician", "es": "No es un veredicto: consultá a un técnico"}
 
 # The routines that reach a parent on Telegram (channels/push.py), by (source, routine): the card's topic.
@@ -256,7 +262,8 @@ def car_seat(step, lang, index=None, total=None, result=None, ask=False, view=No
     if result in CAR_SEAT_RESULT:
         detail = CAR_SEAT_RESULT[result][lang]
     else:
-        detail = w["say_yes_no"] if ask else (w["come_close"] if view else w["say_done"])
+        closeup = CLOSEUP.get(view, {}).get(lang) or w["come_close"]
+        detail = w["say_yes_no"] if ask else (closeup if view else w["say_done"])
     meta = w["step"].format(i=index, n=total) if index and total else None
     alert = result in ("fail", "unsure")
     return card("car_seat", "exclamationTriangle" if alert else "carFrontView", w["car_seat"], words[lang], detail, meta,
