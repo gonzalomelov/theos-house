@@ -87,8 +87,14 @@ class Endpoint(unittest.TestCase):
         card = app.house("v", False, "tonight")[1]["house"]["tonight"]
         text = {r["label"]: r["text"] for r in card["rows"]}
         self.assertEqual(card["source"], "muse")
-        self.assertIn("did not pass the checks", text["Bottle warmer pre-heats"])
-        self.assertIn("did not pass the checks", text["Floor clean"])
+        self.assertRegex(text["Bottle warmer pre-heats"], r"^Muse's times did not pass the checks, the fixed rule runs: "
+                         r"(\d\d:\d\d, 10 min before the guessed night feed around \d\d:\d\d|nothing guessed)")
+        self.assertIn("did not pass the checks, the fixed rule runs: only before tummy time", text["Floor clean"])
+        es = {r["label"]: r["text"] for r in app.house("v", False, "tonight", lang="es")[1]["house"]["tonight"]["rows"]}
+        warm_es = next(v for k, v in es.items() if "mamadera" in k.lower() or "calentador" in k.lower())
+        self.assertRegex(warm_es, r"^Los horarios de Muse no pasaron los controles, corre la regla fija: "
+                         r"(\d\d:\d\d, 10 min antes de la toma de noche estimada|no hay toma de noche estimada)")
+        self.assertTrue(any("corre la regla fija: solo antes del rato boca abajo" in v for v in es.values()), es)
 
     def test_http_route_and_state_carry_the_card(self):
         app = make(FakeMuse())
