@@ -961,6 +961,12 @@ class Agent:
             self.memory.add_message(channel, "user", text, ts=self.now())
             self.say(channel, self.complete_answer(text, self.last_feed_answer(text)))
             return
+        if rules.asks_heard_cry(text):
+            # "Did the microphone hear him cry?": what the ear put on the event log and when, never the checklist.
+            self.memory.add_message(channel, "user", text, ts=self.now())
+            self.bus.publish("guard", status="heard_cry")
+            self.say(channel, self.heard_cry_answer(text))
+            return
         if rules.is_long_cry(text):
             said = self.long_cry_answer(text)
             if said:
@@ -1102,6 +1108,47 @@ class Agent:
             if getattr(plugin, "name", "") == "rhythm" and getattr(plugin, "log", None) is not None:
                 return plugin.log.entries()
         return None
+
+    def heard_cry_answer(self, request, hours=12):
+        """What the microphone heard in the last hours, read from the bus's event log: each cry episode with its time
+        and length, the last microphone error, or that no microphone is connected."""
+        es = self.lang(request) == "es"
+        now = self.now()
+        since = now - datetime.timedelta(hours=hours)
+        tz = now.tzinfo
+
+        def at(event):
+            try:
+                return datetime.datetime.fromisoformat(event["ts"]).astimezone(tz)
+            except (KeyError, TypeError, ValueError):
+                return None
+
+        events = [(at(e), e) for e in list(self.bus.history) if e["kind"] in ("sound", "hearing_error")]
+        events = [(t, e) for t, e in events if t is not None and since <= t <= now + datetime.timedelta(minutes=1)]
+        cries = {}
+        for t, e in events:
+            if e["kind"] == "sound" and e.get("label") == "cry":
+                cries[e.get("episode")] = (t, e.get("seconds"))  # an ongoing cry and its end are one episode
+        errors = [t for t, e in events if e["kind"] == "hearing_error"]
+        ear = any(getattr(p, "name", "") == "house-sounds" for p in getattr(self, "plugins", []) or []) \
+            or any(e["kind"] == "sound" for _, e in events)
+        hm = lambda t: t.strftime("%H:%M")
+        if cries:
+            parts = [f"{hm(t)} ({s} s)" if s else hm(t) for t, s in sorted(cries.values(), key=lambda c: c[0])]
+            text = (f"Sí. En las últimas {hours} h el micrófono oyó llanto {len(parts)} "
+                    f"{'vez' if len(parts) == 1 else 'veces'}: {', '.join(parts)}." if es else
+                    f"Yes. In the last {hours} h the microphone heard crying {len(parts)} "
+                    f"{'time' if len(parts) == 1 else 'times'}: {', '.join(parts)}.")
+        elif ear:
+            text = (f"No. En las últimas {hours} h el micrófono no registró llanto." if es else
+                    f"No. In the last {hours} h the microphone logged no crying.")
+        else:
+            text = ("No hay un micrófono conectado a este agente, así que no oyó nada. Lo que sé es lo que me contás." if es
+                    else "No microphone is connected to this agent, so it heard nothing. I only know what you tell me.")
+        if errors:
+            text += (f" El micrófono falló por última vez a las {hm(errors[-1])}, y en ese rato no pudo oír." if es else
+                     f" The microphone last failed at {hm(errors[-1])}, and it could not hear while it was down.")
+        return text
 
     def long_cry_answer(self, request):
         """The reply to a long cry (rules.is_long_cry), or None when the log cannot be read as rhythm rows."""

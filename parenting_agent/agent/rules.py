@@ -722,6 +722,21 @@ CRY_ORDER = re.compile(r"\b(white noise|ruido blanco|announce|anunci\w*|llam[aá
                        r"pon[eé]|prend[eé]|apag[aá]|put|set|turn|start|stop|pause|remind|record[aá]\w*|anot[aá]|log)\b", re.I)
 
 
+# "Did the microphone hear him cry?": a question about what the ear heard, answered from the event log (blind round b7
+# got the generic cry checklist).
+EAR = re.compile(r"\b(micro(phone)?s?|mic|micr[oó]fono\w*|ear|o[ií]do|hear\w*|heard|o[ií]\w*|oy[oó]|escuch\w*|"
+                 r"detect\w*)\b", re.I)
+ASKS = re.compile(r"\?|\b(did|does|has|have|was|any|alg[uú]n\w*|hubo)\b", re.I)
+
+
+def asks_heard_cry(text):
+    """True for a question about whether the microphone heard a cry, with no symptom, red flag or order in it."""
+    text = text or ""
+    if not (CRY.search(text) and EAR.search(text) and ASKS.search(text)):
+        return False
+    return not (is_health(text) or names_red_flag(text) or is_emergency(text) or CRY_ORDER.search(text))
+
+
 def is_long_cry(text):
     """True for a crying message that is more than a bare "why is he crying?" and holds no symptom, red flag or order:
     "no para de llorar hace media hora y ya comió, estoy reventado". It gets the log's facts, the fixed checklist and the

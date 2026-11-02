@@ -378,6 +378,12 @@ def validate(answer, now, tz, s, windows, next_feed=None):
         if cut:
             dropped.append({"to": field, "text": " ".join(cut)[:240], "why": "names a routine the checked plan does not run"})
             texts[field] = kept
+    stale = stale_times(answer, plan, tz)
+    for field in texts:
+        kept, cut = off_time_sentences(texts[field], stale)
+        if cut:
+            dropped.append({"to": field, "text": " ".join(cut)[:240], "why": "quotes a time the checked plan does not hold"})
+            texts[field] = kept
     for field in ("summary", "summary_es"):
         other = disagrees_on_duty(texts[field], answer["on_duty"], parents)
         if other:
@@ -415,6 +421,34 @@ def matching_sentences(text, plan):
     kept, cut = [], []
     for sentence in SENTENCE_END.split(text):
         (cut if any(ROUTINE_WORDS[name].search(sentence) for name in off) else kept).append(sentence)
+    return " ".join(kept).strip(), cut
+
+
+CLOCK = re.compile(r"\b([01]?\d|2[0-3])[:.h]([0-5]\d)\b")
+
+
+def stale_times(answer, plan, tz):
+    """The HH:MM times Muse gave its routines that the checked plan no longer holds: a window the checks moved, refused
+    or left out."""
+    def hm(text):
+        found = CLOCK.search(str(text or ""))
+        return f"{int(found.group(1)):02d}:{found.group(2)}" if found else None
+    asked = {hm(item.get(k)) for name in ROUTINES for item in (answer.get(name) or []) if isinstance(item, dict)
+             for k in ("start", "end")} - {None}
+    kept = {local_hm(t, tz) for name in ROUTINES for w in (plan.get(name) or [])
+            for t in (w["start"], w.get("end")) if t}
+    return asked - kept
+
+
+def off_time_sentences(text, stale):
+    """(text kept, sentences cut): a sentence quoting a routine time the checked plan no longer holds is cut. Blind round b7 read a
+    why saying 05:32 while the plan's pre-warm row said 05:52, after the checks moved it to follow the predicted feed."""
+    if not text:
+        return text, []
+    kept, cut = [], []
+    for sentence in SENTENCE_END.split(text):
+        quoted = {f"{int(h):02d}:{m}" for h, m in CLOCK.findall(sentence)}
+        (cut if quoted & stale else kept).append(sentence)
     return " ".join(kept).strip(), cut
 
 

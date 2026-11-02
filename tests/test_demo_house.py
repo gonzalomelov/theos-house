@@ -244,7 +244,7 @@ class Fallback(unittest.TestCase):
         self.addCleanup(app.close)
         card = app.house("v", False, "sleep")[1]["house"]["sleep"]
         self.assertEqual(card["source"], "fixed")
-        self.assertIn("do not re-plan", card["changes"][0])
+        self.assertTrue(card["changes"][0].startswith("On duty tonight:"), card["changes"])  # blind round b7: the code hands over the night
 
 
 class LetMeSleep(unittest.TestCase):
