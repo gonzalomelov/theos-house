@@ -387,9 +387,10 @@ class Coach:
         return seq, None
 
     def _closeup(self, check_id, view, seq, seen=None):
-        """A guide's verdict from close frames: two that agree, within closeup_timeout_s. One close frame alone counts
-        when no other comes, a pass and a fail with no third frame are "unsure". On a real video one close frame of a
-        belt in its guide read 0.07 of the ring as belt and the next ones 0.12 and 0.19."""
+        """A guide's verdict from close frames: two that agree, within closeup_timeout_s. One close frame alone is not
+        a verdict, the guide is listed as not seen (Nov 1 proof run: one door-distance frame of a red guide at 0.86% of
+        the view read as a fail, the belt was in it). A pass and a fail with no third frame are "unsure". On a real
+        video one close frame of a belt in its guide read 0.07 of the ring as belt and the next ones 0.12 and 0.19."""
         deadline = self.clock() + self.cfg.get("closeup_timeout_s", 30.0)
         seen = list(seen or [])
         while True:
@@ -402,6 +403,9 @@ class Coach:
                 return seq, got
         if not seen:
             return seq, None
+        if len(seen) == 1:
+            verdict, frame_s, frame = seen[0]
+            return seq, ({**verdict, "result": "unseen", "frames": [verdict["result"]]}, frame_s, frame)
         if len({v["result"] for v, _, _ in seen}) == 1:
             return seq, seen[-1]
         verdict, frame_s, frame = seen[-1]
@@ -436,8 +440,10 @@ class Coach:
         else:
             verdict = self.second_opinion(check_id, frame, verdict)
             if view is not None:
-                key = {"pass": "closeup_pass", "fail": "closeup_fail"}.get(verdict["result"])
+                key = {"pass": "closeup_pass", "fail": "closeup_fail", "unseen": "closeup_unseen"}.get(verdict["result"])
                 text = self.lines[key].format(guide=self.lines["guides"][view]) if key else self.lines["unsure"]
+                if verdict["result"] == "unseen":
+                    text += self.lines["not_checked"]
             else:
                 text = (spec[verdict["result"]] if verdict["result"] in spec else self.lines["unsure"]).format(
                     missed=self.missed(verdict.get("missed") or []), angle=round(abs(verdict.get("angle_deg", 0))),

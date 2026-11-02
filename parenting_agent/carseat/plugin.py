@@ -15,6 +15,7 @@ with "muse" enabled: then one zoomed still per camera step goes to Muse Spark Op
 """
 import datetime
 import json
+import re
 import threading
 from pathlib import Path
 
@@ -31,6 +32,20 @@ from .coach import LINES, Coach, _yes_no, is_ready, load_profiles
 COACHING_NOTE = ("The car seat coach is running and speaks each install step itself from the seat's manual. Do not give "
                  "car seat install steps or advice of your own. Answer in one short sentence, and pass a yes or no to "
                  "the coach's question with answer_car_seat_check.")
+# "Agente, ayudame a instalar la silla del auto" starts the coach without the brain choosing the tool: in 2 of 4 glasses
+# speech runs (Oct 30) Muse answered in its own words ("Vamos paso a paso...") and the coach never started.
+INSTALL = re.compile(r"\b(instal\w*|coloc\w*|poner|pone|pongo|install\w*|put in|set up|fit)\b")
+SEAT = re.compile(r"\b(car ?seat|infant seat|(silla|sillita|butaca|huevito)( \w+){0,2} (auto|coche|carro))\b")
+STARTED = {"es": "Dale, arrancamos con la silla.", "en": "OK, let's start with the car seat."}
+ALREADY = {"es": "Ya estamos con la silla, sigo con el paso de ahora.", "en": "We are on the car seat already, on to the current step."}
+
+
+def wants_install(text):
+    """True for a request to install the car seat, in Spanish or English: an install word and the car seat. A red flag
+    is never one, it goes to the 911 line."""
+    from ..glasses_speech import plain
+    said = plain(text)
+    return bool(INSTALL.search(said) and SEAT.search(said)) and not rules.is_emergency(text)
 
 
 class CarSeatCoach(Plugin):
@@ -46,7 +61,9 @@ class CarSeatCoach(Plugin):
         self.coach, self.thread, self.source = None, None, None
         self.asked = {}  # the channel, chat and person that started the coach, and the language it speaks
         self.lock = threading.Lock()
+        self.after_reply = None  # what an answer taken by the coach does once its short reply went out
         agent.bus.subscribe(self.relay, ["voice"])
+        agent.bus.subscribe(self.replied, ["reply"])
         if hasattr(agent, "answer_takers"):
             agent.answer_takers.append(self.take_answer)
         agent.tools.add(Tool("start_car_seat_coach", "Coach the parent through installing the infant car seat with the car's seat belt, step by step, with the head camera.",
@@ -57,7 +74,9 @@ class CarSeatCoach(Plugin):
         agent.tools.add(Tool("car_seat_outgrow", "Compare the baby's latest weight and height in Baby Buddy with the car seat's limits.",
                              schema({}), self.outgrow))
 
-    def start_coach(self):
+    def start_coach(self, defer=False):
+        """defer: the coach's first line waits for the agent's short reply to the request, so the lens shows step 1
+        last, not the reply over it."""
         with self.lock:
             if self.coach is not None and self.thread.is_alive():
                 return "the car seat coach is already running"
@@ -66,7 +85,7 @@ class CarSeatCoach(Plugin):
             self.source = self._source or open_source(self.cfg["source"])
             if isinstance(self.source, PhoneSource):
                 self.agent.bus.publish("head_camera", url=self.source.url)
-            speaker = Speaker(self.source, quiet=self.quiet)
+            speaker = Speaker(self.source, quiet=self.quiet or bool(self.cfg.get("quiet")))
             self.agent.bus.subscribe(speaker.on_event, ["voice"])
             self.asked = self.who_asked()
             self.coach = Coach(self.skill_cfg, self.agent.bus, vision, self.source, self.seat, self.car,
@@ -75,7 +94,10 @@ class CarSeatCoach(Plugin):
             if notes is not None and COACHING_NOTE not in notes:
                 notes.append(COACHING_NOTE)
             self.thread = threading.Thread(target=self._run, name="car-seat", daemon=True)
-            self.thread.start()
+            if defer:
+                self.after_reply = self.thread.start
+            else:
+                self.thread.start()
             return f"coaching the {self.seat['seat']} install, one step at a time"
 
     def who_asked(self):
@@ -110,17 +132,35 @@ class CarSeatCoach(Plugin):
         from .muse_check import MuseSeatCheck
         return MuseSeatCheck(MuseSenses(muse.get("senses")), samples=muse.get("samples", 3))
 
+    def running(self):
+        return self.coach is not None and (self.thread is None or self.thread.is_alive() or self.after_reply is not None)
+
+    def replied(self, event):
+        """The agent said the coach's short reply ("Anotado: sí."): only now the coach moves on, so its next step comes
+        after that reply on the lens and in the voice (Nov 1 proof run: the reply card covered the next step's card)."""
+        then, self.after_reply = self.after_reply, None
+        if then is not None:
+            then()
+
     def take_answer(self, event, text):
         """A plain yes or no on the coach's channel answers the step it is asking, so the answer never depends on the
         brain choosing the tool (Oct 30 rehearsal: Muse answered "sí" in its own words and the step stayed open, then
-        the agent said nothing was waiting for a yes). Returns the short reply, or None for a message not for the coach."""
+        the agent said nothing was waiting for a yes). A request to install the car seat starts the coach the same way.
+        Returns the short reply, or None for a message not for the coach."""
+        if not self.running():
+            if "start_car_seat_coach" not in self.agent.tools.allowed or not wants_install(text):
+                return None
+            self.start_coach(defer=True)
+            return STARTED[self.asked.get("lang") if self.asked.get("lang") in STARTED else "en"]
         coach = self.coach
-        if coach is None or event.get("channel") not in (self.cfg["channel"], self.asked.get("channel")):
+        if wants_install(text):
+            return ALREADY[getattr(coach, "lang", "en")]
+        if event.get("channel") not in (self.cfg["channel"], self.asked.get("channel")):
             return None
         waiting = getattr(coach, "waiting", None)
         if waiting is not None and is_ready(text):
-            coach.ready(waiting)
-            self.agent.bus.publish("carseat_heard", check=waiting, answer="ready")
+            self.after_reply = lambda: (coach.ready(waiting),
+                                        self.agent.bus.publish("carseat_heard", check=waiting, answer="ready"))
             return LINES[getattr(coach, "lang", "en")]["ready"]
         said = _yes_no(text)
         if said is None:
@@ -128,8 +168,8 @@ class CarSeatCoach(Plugin):
         asking = getattr(coach, "asking", None)
         if asking is None or asking in coach.answers:
             return None
-        coach.answer(asking, text)
-        self.agent.bus.publish("carseat_heard", check=asking, answer=said)
+        self.after_reply = lambda: (coach.answer(asking, text),
+                                    self.agent.bus.publish("carseat_heard", check=asking, answer=said))
         if getattr(coach, "lang", "en") == "es" or rules.looks_spanish(text) or text.strip().lower().startswith(("sí", "si")):
             return "Anotado: sí." if said == "yes" else "Anotado: no."
         return f"Noted: {said}."

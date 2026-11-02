@@ -39,7 +39,7 @@ Hand checks are never skipped. An unanswered one stays open in the summary.
 
 **The coach waits for the parent.** A camera step is said, then the coach watches while the parent works and never says a fail in that time. It moves on when the parent says "listo" or "ya" (glasses microphone through the speech gate, or the chat), when the step's check passes on its own, or after a long fallback (`ready_timeout_s`, 180 s), then it judges (`step_timeout_s`, 20 s). Until Nov 1 every step judged within a fixed 8 s, and on a real install video every step timed out before the parent had acted.
 
-**The guides are judged up close.** After "listo" on a guide step the coach says "Acercá el teléfono a la guía azul del lado de la puerta" (then "del otro lado", or "de atrás") and judges only frames where a guide fills at least 0.8% of the view (`closeup_min_share`), for up to 30 s (`closeup_timeout_s`). A guide needs two close frames that agree, a pass and a fail with no third frame is unsure. From the door SAM 3.1 never found the guides on the real video, so a door view of a guide is never judged.
+**The guides are judged up close.** After "listo" on a guide step the coach says "Acercá el teléfono a la guía azul del lado de la puerta" (then "del otro lado", or "de atrás") and judges only frames where a guide fills at least 0.8% of the view (`closeup_min_share`), for up to 30 s (`closeup_timeout_s`). A guide needs two close frames that agree, a pass and a fail with no third frame is unsure, and one close frame alone is listed as not seen (a single door-distance frame read a false fail in the Nov 1 proof run). From the door SAM 3.1 never found the guides on the real video, so a door view of a guide is never judged.
 
 Every line is in the language of the parent who started the coach: their "lang" in the people block, else Spanish for a request in Spanish, else the family's language (`LINES`, `CAMERA_STEPS`, `SUMMARY` and `NAMES` in `coach.py`, `ask_es` and `technician_es` in `skills/car-seat.json`, `text_es` for the car rule). The same words are spoken (each voice event carries its `lang`, and `say` on the Mac uses a Spanish voice for Spanish), shown on the glasses card and, when the coach was started from Telegram, sent to that parent's chat. The summary is the coach's last line and is kept in the conversation, it is never handed to the brain to say again. The coach refuses "safe", "safely", "seguro" and "segura" in either language. "Cinturón de seguridad" is the seat belt's name and is allowed.
 
@@ -127,6 +127,32 @@ For Gonza's take with the phone strapped to his head. The coach speaks each step
 10. He shakes the carrier at the belt path and says **"sí"**. The coach ends with the summary and the technician line.
 
 Good light, no hand covering the guide in the close-ups, one step at a time. A step he does not finish ends on its own after 3 minutes.
+
+### The phone on the head as the glasses
+
+The companion app reads only the glasses camera (DAT), it has no iPhone camera mode. So for the take the iPhone is the head camera and microphone through Continuity Camera, and `scripts/carseat_glasses_take.py` on the Mac plays the glasses app's part: frames to the glasses endpoint's `/frame`, his utterances cut on the Mac (the app's cutter) to `/hear`, the coach's lines spoken in MMS-TTS on the Mac, the lens card drawn on the recorded clip. Behind the endpoint it is the agent as it runs: Muse's ear and the speech gate, the coach with SAM 3.1 (one process, `/tmp/pa-gpu.lock`), house dry, Telegram and Home Assistant blanked. "Agente, ayudame a instalar la silla del auto" starts the coach without the brain choosing the tool (it did not in 2 of 4 speech runs on Oct 30), and while the coach runs "listo", "ya", "sí" and "no" need no "agente".
+
+Checklist for the take:
+
+1. Mac on the front seat or the car roof, on power, volume up (or AirPods paired to the Mac), Wi-Fi and Bluetooth on, same Apple ID as the iPhone. No other SAM 3.1 run on the Mac (`ls /tmp/pa-gpu.lock` says no such file).
+2. iPhone locked, strapped to the forehead, back camera facing forward, landscape. Check the Mac sees it: `ffmpeg -f avfoundation -list_devices true -i ""` lists "iPhone Camera" and "iPhone Microphone". The first run asks to give the terminal camera and microphone access, allow both (System Settings, Privacy and Security).
+3. In the repo: `.venv/bin/python scripts/carseat_glasses_take.py --camera "iPhone Camera" --mic "iPhone Microphone" --out ~/Engineering/gonza/meta-hackathon-2026-synthetic/carseat-take/take1.mp4`. Wait for the line "live: say ...", about 20 s.
+4. Doll buckled in, carrier facing him, say **"Agente, ayudame a instalar la silla del auto"**. About 15 s later (SAM 3.1 loads) the coach opens. Then follow the ten steps above, waiting for each line to end before answering. Say two or three words, not one: "listo, ya está", "sí, hizo clic", "no, no sobra nada". Muse's ear misses single words more often (in the proof run's MMS voice "Sí." came back as "The" and "Listo." as "Y esto"). If the coach does not answer within about 10 s, say it again.
+5. After the summary ("Esto no es un veredicto...") press Ctrl-C. The clip and a `.json` report land next to `--out`, never in the repo.
+
+### Proof run on the install video (Nov 1)
+
+`scripts/carseat_glasses_take.py --video` on the public Joie i-Gemm install (8:00 to 9:02, kept outside the repo, never committed): the feed plays the part of the video that matches the coach's step, and an MMS-TTS voice says the parent's words through `/hear` when she finishes, after the coach's line ends. Muse's ear, the speech gate, the coach, SAM 3.1 and the cards ran for real, the brain was not needed (0 calls). The clip with the lens card and both voices is local: `meta-hackathon-2026-synthetic/carseat-yt-test/coach-glasses-take.mp4`, 7 min 42 s, with its `.json` report.
+
+| What | Result |
+|---|---|
+| "Agente, ayudame a instalar la silla del auto" | heard in 3.5 s, coach started without the brain, first card "Paso 1 de 10" |
+| Spoken answers and done words, no "agente" | 9 of 9 heard on the first try, ear 3.5 to 4.7 s each |
+| Cards | one per step in order, the short reply ("Anotado: sí.") before the next step's card, close-up cards name the guide |
+| Camera checks | handle passed on its own before "listo". Both side guides and the rear guide: no close frames, not seen. No twist and level line: not seen. Nothing passed or failed wrongly |
+| End card | "Revisión de la silla terminada / No es un veredicto: consultá a un técnico", summary spoken with the technician line |
+
+Two fixes came from rehearsals of this run: a bare "Sí.", "Listo." or "Ya." in MMS-TTS's voice was misheard by Muse's ear ("The", "Y esto", nothing), two to four words were heard right, so the mocked parent says "Sí, hizo clic" or "Listo, ya está" and the checklist asks for the same. And one door-distance frame of her red guide filling 0.86% of the view read as a fail on the rear guide while the belt was in it, so one close frame alone is now not seen. Her guides are red and the run used the i-Snug 2's `blue clip`.
 
 ## Muse Spark Open as a second pair of eyes
 

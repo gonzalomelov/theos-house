@@ -344,6 +344,15 @@ class LiveFlow(unittest.TestCase):
         self.assertEqual(coach.results["shoulder_guide"]["result"], "unsure")
         self.assertTrue(any(e["text"].startswith("Mis dos chequeos no coinciden") for e in voices(bus)))
 
+    def test_one_close_frame_alone_is_not_a_verdict(self):
+        apart, _ = closeup_scene(belt_through=False)
+        bus, coach, thread = start_live({}, ["shoulder_guide"], ready=["shoulder_guide"], closeup_timeout_s=0.3,
+                                        vision=SequenceVision([apart], then={}))
+        thread.join(timeout=5)
+        self.assertEqual(coach.results["shoulder_guide"]["result"], "unseen")
+        self.assertIn("No pude ver de cerca la guía azul de atrás. Lo dejo como no revisado.",
+                      [e["text"] for e in voices(bus, "shoulder_guide")])
+
     def test_guides_seen_only_from_the_door_stay_unseen(self):
         found, _ = scene(belt_through=False)
         bus, coach, thread = start_live(found, ["lap_guides"], ready=["lap_guides"])
