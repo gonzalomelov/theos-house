@@ -291,7 +291,7 @@ class GuardOnEveryPath(unittest.TestCase):
         agent.page_lang, agent.turn_lang = "en", "en"
         self.assertEqual(final_guard.guard("Parent B is up next.", "en", agent.guard_names()).text, "Parent B is up next.")
         agent.turn_lang = "es"
-        self.assertEqual(final_guard.guard("Le toca a Parent B.", "es", agent.guard_names()).text, "Le toca a Persona B.")
+        self.assertEqual(final_guard.guard("Le toca a Parent B.", "es", agent.guard_names()).text, "Le toca a Mamá.")
         self.assertTrue(DemoAgent.guard_models_ok, "the demo names Muse Spark Open on purpose")
         self.assertEqual(final_guard.guard("Muse kept the night rota.", "en", models_ok=True).text, "Muse kept the night rota.")
         self.assertEqual(final_guard.guard("Hola. Muse kept the night rota.", "es").text, "Hola.")

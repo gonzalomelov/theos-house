@@ -76,10 +76,10 @@ class AwakeOnTheNightFeedTest(unittest.TestCase):
 
 
 class SideBedAtNightTest(unittest.TestCase):
-    """Theo sleeps in the side bed in the parents' room from 22:00 to 06:00. Before Oct 31 the night push said
-    "Luz del estudio tenue" and the study light was switched while he was in the side bed."""
+    """Theo sleeps in his bassinet next to the parents' bed from 22:00 to 06:00. Before Oct 31 the night push said
+    "Luz del estudio tenue" and the study light was switched while he was in his bassinet."""
 
-    BED = {"from": "22:00", "to": "06:00", "en": "the side bed in your room", "es": "el colecho, en el cuarto de ustedes"}
+    BED = {"from": "22:00", "to": "06:00", "en": "his bassinet, next to your bed", "es": "su cunita, al lado de la cama de ustedes"}
 
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
@@ -107,8 +107,9 @@ class SideBedAtNightTest(unittest.TestCase):
         notify = events(self.agent, "notify", source="night_feed")
         self.assertEqual(len(notify), 1)
         texts = notify[0]["texts"]
-        self.assertIn("colecho", texts["es"])
-        self.assertIn("side bed", texts["en"])
+        self.assertIn("Está en su cunita, al lado de la cama de ustedes.", texts["es"])
+        self.assertIn("He is in his bassinet, next to your bed.", texts["en"])
+        self.assertNotIn("colecho", texts["es"])
         for text in texts.values():
             self.assertNotRegex(text.lower(), "estudio|study")
         self.assertEqual(self.study_light_calls(), [])

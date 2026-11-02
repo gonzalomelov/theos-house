@@ -94,7 +94,7 @@ def context(entries, now, tz, young=True):
         ctx.update(last_feed=when(last), since_feed_min=_minutes(when(last), now), feed_ended=not last.get("end")
                    or parse(last["end"]) <= now)
         ctx["refs"].append(last["ref"])
-    nxt = patterns.next_feed(past, now)
+    nxt = patterns.predict(past, now)
     if nxt:
         ctx.update(feed_gap_min=nxt["gap_min"], next_feed_at=nxt["at"], next_feed=nxt)
         ctx["refs"] += nxt["computed_from"]
@@ -211,3 +211,41 @@ def explain(entries, now, tz, features=None, pronoun="he", young=True):
     return {"top": top, "likely": likely, "text": text, "text_es": spanish(ctx, ranked, likely, now, tz), "ranked": [{"reason": r, "score": s, "evidence": t} for s, r, t in ranked],
             "computed_from": ctx["refs"], "asleep": ctx["asleep"],
             "next_sleep_at": ctx["next_sleep_at"].isoformat() if ctx.get("next_sleep_at") else None}
+
+
+# "No para de llorar hace media hora y ya comió": a parent at the end of their rope gets what the log says, the short
+# fixed list of what to check and the line on when to call, never a re-plan of the house (blind round b6 got the on duty
+# swap, white noise, doorbell and floor clean times, and nothing about the crying).
+LONG_CRY = {
+    "en": {"facts": "From the log: {facts}.", "none": "The log has no feed or diaper yet to go by.",
+           "feed": "last feed {ago} ago, at {at}", "change": "last diaper change {ago} ago, at {at}",
+           "awake": "awake {ago}, since {at}",
+           "checks": "Things to check: " + CHECKS + ".",
+           "red": ("If {who} also has a temperature of 38 °C (100.4 °F) or more, will not feed, is very sleepy or hard "
+                   "to wake, or breathes with effort, call your pediatrician now, or 911.")},
+    "es": {"facts": "Lo que dice el registro: {facts}.", "none": "Todavía no hay tomas ni pañales en el registro para guiarse.",
+           "feed": "última toma hace {ago}, a las {at}", "change": "último cambio de pañal hace {ago}, a las {at}",
+           "awake": "despierto hace {ago}, desde las {at}",
+           "checks": ("Para revisar: el pañal mojado o sucio, si tiene calor o frío, un provechito después de la toma, o "
+                      "capaz que solo quiere brazos."),
+           "red": ("Si además tiene 38 °C o más, no quiere comer, está muy dormido o le cuesta despertarse, o respira con "
+                   "esfuerzo, llamá ya a su pediatra o al 911.")},
+}
+
+
+def long_cry(entries, now, tz, lang="en", who="he", young=True):
+    """The answer to a long cry told with more words than "why is he crying?": the log's last feed, last diaper and
+    time awake with their clock times, the fixed list of what to check and the fixed line on when to call. It guesses
+    no reason and gives no advice beyond that line."""
+    t = LONG_CRY["es" if lang == "es" else "en"]
+    ctx = context(entries, now, tz, young)
+    at = lambda moment: patterns.hhmm(moment.astimezone(tz))  # noqa: E731
+    said = []
+    if "last_feed" in ctx:
+        said.append(t["feed"].format(ago=_hm(ctx["since_feed_min"]), at=at(ctx["last_feed"])))
+    if "last_change" in ctx:
+        said.append(t["change"].format(ago=_hm(ctx["since_change_min"]), at=at(ctx["last_change"])))
+    if "awake_min" in ctx and not ctx["asleep"]:
+        said.append(t["awake"].format(ago=_hm(ctx["awake_min"]), at=at(ctx["woke_at"])))
+    head = t["facts"].format(facts=", ".join(said)) if said else t["none"]
+    return " ".join([head, t["checks"], t["red"].format(who=who)])

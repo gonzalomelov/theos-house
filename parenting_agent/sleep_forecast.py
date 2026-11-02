@@ -71,26 +71,11 @@ def sleep_windows(entries, now, tz, horizon_h=20):
     return windows
 
 
-SESSION_GAP = datetime.timedelta(minutes=30)
-
-
-def sessions(rows):
-    """The log rows with feeds that start within 30 minutes of the previous feed folded into it, for the rhythm."""
-    out, last = [], None
-    for row in sorted(rows, key=lambda r: patterns.when(r)):
-        if row["kind"] == "feeding":
-            start = patterns.when(row)
-            if last is not None and start - last < SESSION_GAP:
-                continue
-            last = start
-        out.append(row)
-    return out
+SESSION_GAP = patterns.SESSION_GAP
+sessions = patterns.sessions
 
 
 def predict_feed(rows, now, max_gap_h=6):
-    """The next feed from the log, or None before two feeds or when the last feed is too old to guess from."""
-    rows = sessions(rows)
-    feeds = patterns.feeds(rows, now)
-    if not feeds or now - patterns.when(feeds[-1]) > datetime.timedelta(hours=max_gap_h):
-        return None
-    return patterns.next_feed(rows, now)
+    """The next feed from the log, or None before two feeds or when the last feed is too old to guess from: the one
+    prediction every surface shows (patterns.predict)."""
+    return patterns.predict(rows, now, max_gap_h)

@@ -4,7 +4,7 @@
    registro de Theo para vos." and then asked something else. Since review round B4 Muse answers it from the newest feed, and
    an answer that misses the feed's time is replaced by the fixed line, as here.
 2. "el sueño más largo 0.0 h" never shows: a night slept in one stretch from 19:40 counts, no sleep means no line.
-3. The Spanish demo never mixes Parent B, Persona B and English "why" lines, and the cry message is bilingual.
+3. The Spanish demo never mixes Parent B, Mamá and English "why" lines, and the cry message is bilingual.
 """
 import datetime
 import tempfile
@@ -126,8 +126,8 @@ class SpanishDemoNeverMixes(unittest.TestCase):
         text = night_es("Last night, Thu 29 to Fri 30: 2 feeds at 23:10, 03:00, longest sleep 3.1 h. "
                         "Wake-ups: Parent A 1, Parent B 1. Next on duty: Parent B.")
         self.assertNotIn("Parent", text)
-        self.assertIn("Le toca: Persona B.", text)
-        self.assertEqual(tonight.name("Parent B", "es"), "Persona B")
+        self.assertIn("Le toca: Mamá.", text)
+        self.assertEqual(tonight.name("Parent B", "es"), "Mamá")
 
     def test_the_house_cards_why_is_spanish_or_absent(self):
         card = {"source": "muse", "fixed_reason": None, "now": "19:00", "until": "07:00", "on_duty": "Parent B",
@@ -139,8 +139,8 @@ class SpanishDemoNeverMixes(unittest.TestCase):
         self.assertNotIn("Parent", " ".join(r["text"] for r in es["rows"]))
         self.assertNotIn("inglés", es["why_label"])
         self.assertEqual(tonight.view(card, "en")["why"], "Parent B takes the night. The warmer runs at 02:20.")
-        card["summary"] = "Persona B se queda con la noche. Parent A duerme."
-        self.assertEqual(tonight.view(card, "es")["why"], "Persona B se queda con la noche. Persona A duerme.")
+        card["summary"] = "Mamá se queda con la noche. Parent A duerme."
+        self.assertEqual(tonight.view(card, "es")["why"], "Mamá se queda con la noche. Papá duerme.")
 
 
 class CryInBothLanguages(unittest.TestCase):

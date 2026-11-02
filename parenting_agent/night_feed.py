@@ -41,9 +41,9 @@ pre-warm with no awake signal closes quietly. The warmer runs when a bottle was 
 actions only, never advice (patterns.no_advice).
 
 "night_bed" says where he sleeps at night when it is not near the study: {"from": "22:00", "to": "06:00", "en": "...",
-"es": "..."}. Theo sleeps in the side bed, the co-sleeper in the parents' room, from 22:00 to 06:00. In that window the
+"es": "..."}. Theo sleeps in his bassinet, next to the parents' bed, from 22:00 to 06:00. In that window the
 night feed never turns the study light on or off, not even as a dry run, and the push says where he is instead. Before
-Oct 31 the 02:50 push named the study light while he was in the side bed.
+Oct 31 the 02:50 push named the study light while he was in his bassinet. A place that reads as bed sharing ("colecho") is refused.
 
 Add "parenting_agent.night_feed:NightFeed" to the agent plugins, after "parenting_agent.house_tools:HouseTools" and
 "parenting_agent.house_sounds:HouseSounds" when they are used. Settings live under "night_feed", see DEFAULTS. "push"
@@ -130,12 +130,22 @@ def awake_message(text, others=()):
     return None
 
 
+# Words that read as the baby sharing the parents' bed: the night push never says them.
+BED_SHARING = re.compile(r"colecho|co-?sleep\w*|bed[ -]?shar\w*|side bed|en (la|nuestra|su) cama|in (our|your|the) bed",
+                         re.I)
+
+
 class NightFeed(Plugin):
     name = "night-feed"
 
     def __init__(self, agent, config, log=None, clock=None, warmer=None, client=None):
         super().__init__(agent, config)
         self.s = {**DEFAULTS, **(config.get("night_feed") or {})}
+        bed = self.s["night_bed"] or {}
+        if any(BED_SHARING.search(str(bed.get(lang) or "")) for lang in ("en", "es")):
+            # "Está en el colecho" read as bed sharing in the night push (blind round b6), which the AAP line says no to.
+            raise ValueError("night_bed must name where he sleeps on his own, for example \"su cunita, al lado de la cama "
+                             "de ustedes\", never a shared bed")
         self.rhythm = {**RHYTHM_DEFAULTS, **config.get("rhythm", {})}
         self.tz = datetime.timezone(datetime.timedelta(hours=self.rhythm["utc_offset_h"]))
         self.clock = clock or (lambda: datetime.datetime.now(self.tz))

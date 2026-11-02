@@ -7,7 +7,7 @@
 5. The Spanish plan's why came back empty: a plan made in English had no Spanish why, and the family's had none.
 6. A logged fever never reached the panel, the night plan, the morning message or the Echo.
 7. The next feed swung from 154 to 54 min after two test logs, while the warmer kept its times.
-8. "él recibe los avisos" for Persona B.
+8. "él recibe los avisos" for Mamá.
 """
 import datetime
 import json
@@ -296,14 +296,15 @@ class StableForecast(unittest.TestCase):
 
 
 class NeutralPersona(unittest.TestCase):
-    def test_persona_b_gets_no_pronoun(self):
+    def test_mama_gets_her_own_pronoun(self):  # since blind round b6 Persona B is Mamá
         brain = ScriptedBrain([[call("set_on_duty", parent="Parent B")],
-                               "Listo, Persona B queda de turno esta noche y él recibe los avisos de la noche."])
+                               "Listo, Mamá queda de turno esta noche y él recibe los avisos de la noche."])
         app = demo(brain)
         self.addCleanup(app.close)
-        reply = app.message("v", False, "poné a Persona B de turno esta noche", lang="es")[1]["reply"]
-        self.assertIn("Persona B queda de turno", reply)
+        reply = app.message("v", False, "poné a Mamá de turno esta noche", lang="es")[1]["reply"]
+        self.assertIn("Mamá queda de turno", reply)
         self.assertNotIn("él recibe", reply)
+        self.assertIn("ella recibe", reply)
 
     def test_theo_keeps_his_el(self):
         self.assertEqual(neutral_persona("Theo duerme y él está bien."), "Theo duerme y él está bien.")
@@ -355,13 +356,24 @@ class WarmerFollowsTheNextFeed(unittest.TestCase):
         feed = self.NOW.replace(hour=22, minute=45)
         self.assertEqual(self.plan(["00:45", "02:35"], feed)[0], ["22:35", "00:45", "02:35"])
 
-    def test_one_in_the_hour_before_is_kept_as_it_is(self):
+    def test_one_in_the_hour_before_moves_to_the_feed(self):
+        # Blind round b6: a pre-warm in the hour before the feed now follows it, 10 min before (it used to stay as it was).
         feed = self.NOW.replace(hour=22, minute=45)
-        self.assertEqual(self.plan(["22:00", "00:45"], feed)[0], ["22:00", "00:45"])
+        self.assertEqual(self.plan(["22:00", "00:45"], feed)[0], ["22:35", "00:45"])
 
-    def test_one_too_close_to_add_next_to_makes_the_fixed_rule_run(self):
+    def test_one_just_after_the_feed_moves_to_it(self):
         feed = self.NOW.replace(hour=22, minute=45)
         warm, refused = self.plan(["23:10", "01:00"], feed)
+        self.assertEqual(warm, ["22:35", "01:00"])
+        self.assertNotIn("bottle_prewarm", refused)
+
+    def test_one_for_no_feed_is_left_out(self):
+        feed = self.NOW.replace(hour=22, minute=45)
+        self.assertEqual(self.plan(["21:40", "23:40"], feed)[0], ["22:35"])
+
+    def test_no_room_for_one_more_makes_the_fixed_rule_run(self):
+        feed = self.NOW.replace(hour=22, minute=45)
+        warm, refused = self.plan(["23:50", "01:00", "02:10", "03:20"], feed)
         self.assertEqual(warm, [])
         self.assertIn("bottle_prewarm", refused)
 

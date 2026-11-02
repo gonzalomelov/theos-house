@@ -65,7 +65,10 @@ class SpanAcrossMidnight(unittest.TestCase):
     def test_a_nap_the_brain_gave_as_start_and_end_keeps_its_order_inside_its_own_hours(self):
         at = lambda h, m: datetime.datetime(2026, 10, 29, h, m, tzinfo=FAMILY)  # noqa: E731
         nap = {"start": "2026-10-29T13:00:00-03:00", "end": "2026-10-29T14:00:00-03:00", "nap": True}
+        # At 13:20 the 14:00 end has not come yet: it stays ahead of now and the parent is asked (blind round b6).
         self.assertEqual(rules.latest_start_end(nap, at(13, 20)),
+                         {"start": "2026-10-29T13:00:00-03:00", "end": "2026-10-29T14:00:00-03:00", "nap": True})
+        self.assertEqual(rules.latest_start_end(nap, at(10, 0)),
                          {"start": "2026-10-28T13:00:00-03:00", "end": "2026-10-28T14:00:00-03:00", "nap": True})
         self.assertEqual(rules.latest_start_end(nap, at(15, 0))["start"], "2026-10-29T13:00:00-03:00")
         night = {"start": "2026-10-29T22:30:00-03:00", "end": "2026-10-29T06:00:00-03:00"}

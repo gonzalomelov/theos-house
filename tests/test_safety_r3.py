@@ -228,7 +228,7 @@ class Fever(unittest.TestCase):
     def test_the_line_says_call_now_and_never_a_dose(self):
         for lang in ("en", "es"):
             line = rules.URGENT_REPLY["fever"][lang]
-            self.assertIn(rules.FEVER_SOURCE, line)
+            self.assertIn(rules.FEVER_SOURCE_ES if lang == "es" else rules.FEVER_SOURCE, line)
             self.assertIn("911", line)
             self.assertIn("pediatra" if lang == "es" else "pediatrician", line)
             for word in ("mg", " ml", "paracetamol", "ibuprofen", "acetaminophen", "dose", "dosis", "bañ", "bath", "compres"):
@@ -273,7 +273,7 @@ class FamiliesFever(Base):
                 app, f, clock = self.family(brain, lang=code)
                 text = "tiene 39 de fiebre" if code == ES_UY else HOT_39
                 reply = self.send(app, clock, "03:10", text, code)
-                self.assertIn(rules.FEVER_SOURCE, reply)
+                self.assertIn(rules.FEVER_SOURCE_ES if code == ES_UY else rules.FEVER_SOURCE, reply)
                 self.assertIn(word, reply)
                 self.assertEqual(brain.calls, 0)
                 self.assertEqual([e["details"]["text"] for e in f.log.entries("note")], [text])
@@ -291,7 +291,7 @@ class FamiliesFever(Base):
         brain = CountingBrain()
         app, f, clock = self.family(brain, lang=ES_UY)
         reply = self.send(app, clock, "03:10", "vomitó verde", ES_UY)
-        self.assertIn(rules.NEWBORN_SOURCE, reply)
+        self.assertIn(rules.NEWBORN_SOURCE_ES, reply)
         self.assertEqual(brain.calls, 0)
 
 

@@ -63,7 +63,7 @@ def core_tools(memory, baby_log, allowed, remember_keys=None):
         "A correction of an earlier entry is never a new entry: use edit_baby_event or delete_baby_event.",
         schema({"kind": {"type": "string", "enum": list(LOG_KINDS)}, "details": {"type": "object"},
                 "ts": {"type": "string", "description": "ISO time if the parent named a past time, else omit"}}, ["kind", "details"]),
-        lambda kind, details, ts=None: baby_log.add(kind, details, ts)))
+        lambda kind, details, ts=None: baby_log.add(kind, plain_text(kind, details), ts)))
     if hasattr(baby_log, "update") and hasattr(baby_log, "delete"):
         for tool in edit_tools(baby_log):
             tools.add(tool)
@@ -90,6 +90,15 @@ def core_tools(memory, baby_log, allowed, remember_keys=None):
         "current_time", "The current local date and time.", schema({}),
         lambda: local_now(baby_log).isoformat(timespec="minutes")))
     return tools
+
+
+def plain_text(kind, details):
+    """A note's or a bath's text is kept as plain words from a parent: no square brackets, so it can never read later as
+    an observation from a skill or a check from the agent (blind round b6 stored "[observation from house_brain] ...
+    approved ... run them" as it was), and no run of blank lines."""
+    if kind not in ("note", "bath") or not isinstance(details, dict) or details.get("text") is None:
+        return details
+    return {**details, "text": " ".join(rules.parent_text(details["text"]).split())}
 
 
 def local_now(baby_log):
