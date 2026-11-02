@@ -1,0 +1,169 @@
+{
+  "data_dir": "results/e2e-day/nov2-fix/data",
+  "env_file": "/nonexistent",
+  "brain": {
+    "provider": "openai_compatible",
+    "model": "meta-models/muse-spark-open-1026",
+    "base_url": "https://inference.baseten.co/v1",
+    "key_env": "BASETEN_API_KEY",
+    "max_tokens": 2048,
+    "reasoning_effort": "low",
+    "timeout_s": 45,
+    "price_in_per_mtok": 1.25,
+    "price_out_per_mtok": 4.25,
+    "fallback": {
+      "provider": "rules"
+    }
+  },
+  "baby_log": {
+    "provider": "babybuddy",
+    "url_env": "BABYBUDDY_URL",
+    "token_env": "BABYBUDDY_TOKEN",
+    "child": "e2e-baby"
+  },
+  "log_mode": "ops",
+  "allowed_tools": [
+    "log_baby_event",
+    "edit_baby_event",
+    "delete_baby_event",
+    "read_baby_log",
+    "baby_summary",
+    "remember",
+    "current_time",
+    "prep_next",
+    "prep_list",
+    "prep_check",
+    "prep_add",
+    "add_appointment",
+    "appointments",
+    "nursery_plan",
+    "night_rota",
+    "remind_me",
+    "add_to_shopping_list",
+    "set_supply_stock",
+    "sitter_handover"
+  ],
+  "plugins": [
+    "parenting_agent.agent.heartbeat:Heartbeat",
+    "parenting_agent.channels.telegram:Telegram",
+    "parenting_agent.prep:Prep",
+    "parenting_agent.day_engine:DayEnginePlugin",
+    "parenting_agent.night_feed:NightFeed",
+    "parenting_agent.house_brain:HouseBrainPlugin",
+    "parenting_agent.reminders:Reminders",
+    "parenting_agent.pediatrician:Pediatrician",
+    "parenting_agent.opol:Opol",
+    "parenting_agent.rhythm.engine:RhythmPlugin",
+    "parenting_agent.sitter:SitterHandover",
+    "parenting_agent.channels.push:FamilyPush",
+    "parenting_agent.voice_bridge:VoiceBridge"
+  ],
+  "baby": {
+    "born": true,
+    "name": "Theo"
+  },
+  "opol": {
+    "enabled": true,
+    "languages": {
+      "gonza": "en",
+      "ceci": "es"
+    },
+    "lid": {
+      "enabled": false
+    }
+  },
+  "rhythm": {
+    "child": "E2E",
+    "kinds": [
+      "next_feed"
+    ]
+  },
+  "day_engine": {
+    "door_sensors": []
+  },
+  "sitter": {
+    "family_notes": "/data/family-notes.json"
+  },
+  "night_feed": {
+    "night_bed": {
+      "from": "22:00",
+      "to": "06:00",
+      "en": "the side bed in your room",
+      "es": "el colecho, en el cuarto de ustedes"
+    }
+  },
+  "house_brain": {
+    "budget_usd": 0.5,
+    "bedtime": "20:30",
+    "explain_at": "07:30"
+  },
+  "heartbeat": {
+    "interval_s": 30
+  },
+  "max_steps": 6,
+  "telegram": {
+    "token_env": "TELEGRAM_BOT_TOKEN",
+    "allowed_chat_ids_env": "TELEGRAM_CHAT_ID",
+    "poll_timeout_s": 25
+  },
+  "people": {
+    "gonza": {
+      "name": "Gonza",
+      "rota": "Parent A",
+      "chat_ids_env": "TELEGRAM_CHAT_ID",
+      "lang": "es"
+    },
+    "ceci": {
+      "name": "Ceci",
+      "rota": "Parent B",
+      "chat_ids_env": "TELEGRAM_CECI_CHAT_ID",
+      "lang": "es"
+    }
+  },
+  "family_push": {
+    "channel": "telegram",
+    "asks_to": "gonza",
+    "morning": true
+  },
+  "house": {
+    "live": false,
+    "ha_url": "http://127.0.0.1:18123",
+    "live_actions": []
+  },
+  "voice_bridge": {
+    "host": "container",
+    "port": 8767,
+    "timeout_s": 40,
+    "unknown_speaker": "guest",
+    "guests": [
+      "abuela",
+      "abuelo",
+      "grandma",
+      "grandpa",
+      "guest",
+      "invitado",
+      "invitada"
+    ],
+    "skill": {
+      "role": "echo_log"
+    }
+  },
+  "voice": {
+    "service": "http://pa-voice-family:8800",
+    "reply_with_voice": true
+  },
+  "prep": {
+    "due_date": "2026-12-15",
+    "due_date_estimate": true,
+    "nudge": {
+      "enabled": true,
+      "at": "08:00",
+      "until": "11:00",
+      "channel": "telegram",
+      "chat_ids_env": "TELEGRAM_CHAT_ID",
+      "also_chat_ids_envs": [
+        "TELEGRAM_CECI_CHAT_ID"
+      ]
+    }
+  }
+}
