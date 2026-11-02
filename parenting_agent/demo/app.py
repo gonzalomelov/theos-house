@@ -360,6 +360,7 @@ class Visitor:
         self.agent = DemoAgent(self.bus, self.memory, self.baby_log, tools, brain,
                                max_steps=settings["max_steps"], history=settings["history"])
         self.agent.reply_guards += [plain_reply, neutral_persona]
+        self.agent.duty_line = lambda lang: self.night_rota().split(". ")[0] + "."
         self.memory.remember("baby_name", "Theo (simulated)")
         self.memory.remember("baby", "a simulated baby boy, a few weeks old: he and him")
         self.memory.remember("parents", "Parent A and Parent B")

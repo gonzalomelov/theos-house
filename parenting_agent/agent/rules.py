@@ -1117,7 +1117,9 @@ LOG_QUESTIONS = (
         r"\bnext (?:feed|feeding|bottle)\b|\bwhen (?:is|will|should|do|does|would|can)\b[^?.!]{0,40}\b(?:feed|eat|bottle|hungry)\b"
         r"(?! (?:last|earlier))|\bwhen (?:is )?(?:he|she|the baby|theo) due\b", re.I)),
     ("last_feed", re.compile(LAST_FEED.pattern + r"|\blast (?:feed|feeding|bottle)\b|\b[uú]ltima (?:toma|mamadera)\b", re.I)),
-    ("diapers", re.compile(r"\b(?:cu[aá]ntos|how many|cantidad de|n[uú]mero de)\s+(?:pa[nñ]ales|diapers|cambios)\b|"
+    ("diapers", re.compile(r"\b(?:cu[aá]ntos|how many|cantidad de|n[uú]mero de)\s+(?:(?:dirty|wet|poopy|sucios|mojados)\s+)?"
+                           r"(?:pa[nñ]ales|diapers|cambios)\b|\b(?:dirty|wet|poopy) diapers?\b(?! (?:at|was|were|is)\b)|"
+                           r"\bpa[nñ]ales (?:sucios|con caca|mojados)\b|"
                            r"\bdiaper (?:count|total)s?\b|\bpa[nñ]ales (?:lleva|van|hay|hizo|hoy)\b", re.I)),
 )
 
@@ -1132,6 +1134,8 @@ def log_questions(text):
         found = ["last_feed", "diapers"]  # "last feed and diaper count", with no question mark
     if found and (is_medical(text) or is_medical_es(text) or names_red_flag(text)):
         return []
+    if found and ON_DUTY.search(text) and not NOT_ROTA.search(text):
+        found.append("on_duty")  # "last feed, dirty diapers tonight and who is on duty": the rota answers its part (b7)
     return found
 
 
@@ -1470,6 +1474,32 @@ ON_DUTY = re.compile(r"\b(de turno|on duty|le toca (levantarse|esta noche|hoy)|t
 # "¿Cuál es la farmacia de turno?" asks about a pharmacy or a doctor on duty, never the night rota.
 NOT_ROTA = re.compile(r"\b(farmacia|pharmacy|m[eé]dic[oa]|doctor|pediatra|pediatrician|emergencia|emergency|"
                       r"sanatorio|hospital|mutualista|enfermer[oa]|nurse)\b", re.I)
+
+
+# An order to run a noisy device on or near the sleeping baby: "vacuum over the sleeping baby", "pasá la aspiradora
+# en el cuarto mientras duerme". Refused in code with the reason in one line, never "send it again" (red team b7).
+NOISY_DEVICE = re.compile(r"\b(vacuum\w*|roomba|robot|aspir\w*|blender|licuadora|mixer|batidora|leaf blower|"
+                          r"drill|taladro)\b", re.I)
+RUN_ORDER = re.compile(r"\b(run|start|turn on|switch on|send|use|do|vacuum|clean|pas[aáe]|prend[eé]|encend[eé]|arranc[aá]|"
+                       r"limpi[aá]|aspir[aá]|us[aá]|mand[aá])\b|^\s*(vacuum|aspiradora)\b", re.I)
+NEAR_SLEEP = re.compile(r"\b(asleep|sleep\w*|nap\w*|dozing|over (the |him|her)|on (top of )?(the baby|him|her)|"
+                        r"next to (the baby|him|her)|near (the baby|him|her)|crib|cuna|cunita|dorm\w*|duerme|siesta|"
+                        r"encima (del beb[eé]|de [eé]l|de ella)|al lado del beb[eé]|cerca del beb[eé])\b", re.I)
+UNSAFE_ORDER_REPLY = {
+    "en": "I will not start that: nothing noisy runs near the baby or while he sleeps, so nothing was started.",
+    "es": "Eso no lo arranco: nada ruidoso anda cerca del bebé ni mientras duerme, así que no se prendió nada.",
+}
+
+
+def unsafe_house_order(text):
+    """True for an order to run a noisy device over, near or while the baby sleeps. A question about it ("can the vacuum
+    run while he naps?"), a report ("the vacuum woke him") and a pause or stop are no order."""
+    text = text or ""
+    if not (NOISY_DEVICE.search(text) and NEAR_SLEEP.search(text) and RUN_ORDER.search(text)):
+        return False
+    if re.search(r"\b(pause|stop|dock|off|paus[aá]|par[aá]|apag[aá]|fren[aá])\b", text, re.I):
+        return False
+    return not ("?" in text or re.search(r"\b(woke|despert\w*|was|estaba)\b", text, re.I))
 
 
 def asks_on_duty(text):
@@ -2011,6 +2041,26 @@ def logged_fever(entries, now, hours=FEVER_HOURS):
             if found is None or at >= found[0]:
                 found = (at, entry)
     return found
+
+
+FEVER_HOLD = "a fever was logged today, so noisy chores that can wait are off"
+FEVER_HOLD_ES = "hoy se anotó fiebre, así que las tareas ruidosas que pueden esperar quedan afuera"
+
+
+def fever_today(entries, now):
+    """True when a note in the last 24 h holds a fever reading (logged_temperature_fever). That day the house
+    drops what can wait and makes noise, the floor clean first (red team b7: the plan kept the vacuum after 38.2)."""
+    since = now - datetime.timedelta(hours=FEVER_HOURS)
+    for e in entries or []:
+        if e.get("kind") != "note" or not logged_temperature_fever(str(e.get("note") or "")):
+            continue
+        try:
+            at = datetime.datetime.fromisoformat(str(e.get("start") or e.get("time")).replace("Z", "+00:00"))
+        except ValueError:
+            continue
+        if since <= at <= now + datetime.timedelta(minutes=5):
+            return True
+    return False
 
 
 def fever_line(found, lang, spoken=False):

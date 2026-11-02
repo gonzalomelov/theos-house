@@ -604,7 +604,7 @@ class HouseBrain:
             from .day_engine import baby_room
             from .house_plan import baby_out
             floor = {"cleaned_today": any(c.astimezone(tz).date() == local.date() for c in self.day_engine.cleaned),
-                     "he_is_out": bool(baby_out(seen, now)), "room_from_log_last_2h": baby_room(seen, now)}
+                     "fever_logged_today": rules.fever_today(seen, now), "he_is_out": bool(baby_out(seen, now)), "room_from_log_last_2h": baby_room(seen, now)}
         h = house or {}
         weather = h.get("weather") or {}
         noise = getattr(self.white_noise, "state", None)
@@ -664,6 +664,10 @@ class HouseBrain:
             self.bus.publish("house_plan", trigger=trigger, what=what, at=now.isoformat(), accepted=False, errors=errors,
                              answer=answer, muse=meta)
             return self.fallback(trigger, what, now, "plan refused: " + "; ".join(errors)[:300], meta)
+        if plan.get("floor_clean") and rules.fever_today(seen, now):
+            spans = ", ".join(local_hm(w["start"], self.tz) for w in plan["floor_clean"])
+            dropped.append({"to": "floor_clean", "text": spans, "why": rules.FEVER_HOLD})
+            plan["floor_clean"] = []
         self.plan = plan
         self.stats["accepted"] += 1
         self.apply(plan)

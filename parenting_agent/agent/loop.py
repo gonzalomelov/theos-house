@@ -930,6 +930,12 @@ class Agent:
             self.bus.publish("guard", status="privacy_facts")
             self.say(channel, self.privacy_answer(self.lang(text)), card="self")
             return
+        if rules.unsafe_house_order(text) and not rules.names_red_flag(text):
+            # "Vacuum over the sleeping baby" is refused with its reason in one line, never "send it again" (red team b7).
+            self.memory.add_message(channel, "user", text, ts=self.now())
+            self.bus.publish("guard", status="unsafe_order_refused")
+            self.say(channel, rules.UNSAFE_ORDER_REPLY["es" if rules.looks_spanish(text) else "en"])
+            return
         if rules.reports_total(text) and not rules.is_health(text):
             # "Only took 20 ml since morning" is a total, never a new 20 ml feed (round b5): asked, with the log's day.
             self.memory.add_message(channel, "user", text, ts=self.now())
@@ -952,7 +958,7 @@ class Agent:
             # On Oct 30 Muse said it had nothing on who was on duty, while the rota held it.
             self.memory.add_message(channel, "user", text, ts=self.now())
             self.bus.publish("guard", status="night_rota")
-            self.say(channel, rota.answer(self.lang(text)), topic="on_duty")
+            self.say(channel, self.complete_answer(text, rota.answer(self.lang(text))), topic="on_duty")
             return
         if rules.asks_last_feed(text) and not rules.is_health(text):
             # "¿Cuándo comió por última vez?": Muse answers from the newest feed in the log, given to it as a fact. The
@@ -1071,6 +1077,11 @@ class Agent:
                 line = self.next_feed_line(lang)
             elif topic == "last_feed":
                 line = self.last_feed_text(lang)
+            elif topic == "on_duty":
+                line = self.on_duty_line(lang)
+                if line and line not in text:
+                    lines.append(line)
+                continue
             else:
                 line = self.count_line(topic, lang)
             if not line:
@@ -1079,6 +1090,20 @@ class Agent:
             if not answers(text, topic, line):
                 lines.append(line)
         return text, lines
+
+    duty_line = None  # the demo's own rota line, lang -> text, when it has no night rota plug-in
+
+    def on_duty_line(self, lang):
+        """Who is on duty tonight in one sentence, from the night rota, or None when there is no rota."""
+        if callable(self.duty_line):
+            return self.duty_line(lang)
+        rota = getattr(self, "rota", None)
+        if rota is None:
+            return None
+        try:
+            return SENTENCE.split(rota.answer(lang))[0]
+        except Exception:  # noqa: BLE001 a rota that cannot be read leaves that part to the brain
+            return None
 
     def complete_answer(self, request, text):
         """text with every log question of the parent's message answered from the log (log_answer_lines). A reply that

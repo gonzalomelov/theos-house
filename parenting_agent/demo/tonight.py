@@ -17,6 +17,7 @@ import datetime
 from .. import house_brain as hb
 from ..agent.brain import BrainError
 from ..bus import Bus
+from ..agent.rules import FEVER_HOLD, FEVER_HOLD_ES, fever_today
 from ..rhythm import patterns
 from ..sleep_forecast import as_of, sessions, sleep_windows
 from .babylog import TZ, finished, started
@@ -48,6 +49,7 @@ TEXT = {
         "door_win": "also {a} to {b}",
         "floor_win": "May run {a} to {b}, never in a predicted sleep, a parent says yes first",
         "floor_none": "No window, nothing runs",
+        "floor_fever": "Off today: " + FEVER_HOLD,
         "floor_fixed": "Fixed rule: only before tummy time, out of any predicted sleep, after a parent's yes",
         "routine_fixed": "Muse's times did not pass the checks, the fixed rule runs",
         "routine_fixed_as": "Muse's times did not pass the checks, the fixed rule runs: {rule}",
@@ -79,6 +81,7 @@ TEXT = {
         "door_win": "y también de {a} a {b}",
         "floor_win": "Puede limpiar de {a} a {b}, nunca en un sueño previsto, y antes alguien dice que sí",
         "floor_none": "Sin ventana, no limpia",
+        "floor_fever": "Hoy no: " + FEVER_HOLD_ES,
         "floor_fixed": "Regla fija: solo antes del rato boca abajo, fuera de cualquier sueño previsto, con el sí de alguien",
         "routine_fixed": "Los horarios de Muse no pasaron los controles, corre la regla fija",
         "routine_fixed_as": "Los horarios de Muse no pasaron los controles, corre la regla fija: {rule}",
@@ -242,6 +245,8 @@ class TonightHouse:
             fixed = hb.fixed_prewarm(seen, now, TZ, self.brain.s["horizon_h"], FIXED_LEAD_MIN)
             if fixed:
                 out["fixed_prewarm"] = {"at": hm(fixed["at"]), "feed": hm(fixed["feed"])}
+        if fever_today(seen, now):
+            out["floor_clean"], out["floor_fever"] = [], True
         out["sleeps"] = [{"start": hm(w["start"]), "end": hm(w["end"]), "kind": w["kind"]}
                          for w in sleep_windows(seen, now, TZ, horizon_h=self.brain.s["horizon_h"])]
         return out
@@ -302,7 +307,9 @@ def rows(card, lang="en"):
         door += ", " + spans(quiet, t, "door_win")
     out.append((t["door"], door))
     floor = card["floor_clean"]
-    if floor == "fixed":
+    if card.get("floor_fever"):
+        out.append((t["floor"], t["floor_fever"]))
+    elif floor == "fixed":
         out.append((t["floor"], t["floor_fixed"] if card["source"] == "fixed"
                     else t["routine_fixed_as"].format(rule=t["floor_rule"])))
     else:
