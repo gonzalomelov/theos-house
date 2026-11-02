@@ -531,7 +531,7 @@ class Visitor:
         """(card, muse calls) for "tonight" or "sleep". A Muse plan that moves the night puts that parent on duty,
         so the panel's rota and the card agree. said is the parent's own words asking to sleep, from the chat."""
         card, calls = self.house.plan(action, self.turn_lang, said=said)
-        if action == "sleep" and card["on_duty_by"] == "muse":
+        if action == "sleep" and card["on_duty_by"] in ("muse", "request"):
             self.duty = card["on_duty"]
         return card, calls
 
