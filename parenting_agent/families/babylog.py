@@ -12,6 +12,7 @@ from pathlib import Path
 from ..agent.memory import LOG_KINDS, BabyLog, Memory, parse_time
 
 FEEDING_FIELDS = ("amount_ml", "method", "type", "duration_min")
+OPEN_SLEEP_ID = "open-sleep"
 FAMILY_ID = re.compile(r"^[0-9a-f]{16}$")
 
 
@@ -97,7 +98,13 @@ class FamilyBabyLog(BabyLog):
             out["amount_ml"] = float(details["amount_ml"])
         return out
 
+    def open_sleep_entry(self):
+        started = self.open_sleep()
+        return {"id": OPEN_SLEEP_ID, "kind": "sleep", "ts": started, "details": {"action": "start"}} if started else None
+
     def get(self, entry_id):
+        if str(entry_id) == OPEN_SLEEP_ID:
+            return self.open_sleep_entry()
         with self.memory.lock:
             row = self.memory.db.execute("select id, ts, kind, details from baby_log where id = ?", (int(entry_id),)).fetchone()
         return {"id": row[0], "ts": row[1], "kind": row[2], "details": json.loads(row[3])} if row else None
@@ -108,6 +115,13 @@ class FamilyBabyLog(BabyLog):
         if before is None:
             raise ValueError(f"no entry with id {entry_id}")
         new = dict(details or {})
+        if before["id"] == OPEN_SLEEP_ID:
+            # "En realidad se durmió a las 10": the open sleep's start moves.
+            start = new.get("start") or ts
+            if not start:
+                raise ValueError("an open sleep can only move its start")
+            self.memory.remember("_sleep_started", self.at_or_before_now(start).isoformat(timespec="seconds"))
+            return {"before": before, "after": self.open_sleep_entry()}
         self.check_bounds(before["kind"], {k: v for k, v in new.items() if k in ("amount_ml", "duration_min", "start", "end")}, ts)
         when = self.at_or_before_now(ts) if ts else self.time(before["ts"])
         d = dict(before["details"])
@@ -149,6 +163,9 @@ class FamilyBabyLog(BabyLog):
         before = self.get(entry_id)
         if before is None:
             raise ValueError(f"no entry with id {entry_id}")
+        if before["id"] == OPEN_SLEEP_ID:
+            self.memory.remember("_sleep_started", "")
+            return {"deleted": before}
         with self.memory.lock:
             self.memory.db.execute("delete from baby_log where id = ?", (before["id"],))
             self.memory.db.commit()

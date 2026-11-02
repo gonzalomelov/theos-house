@@ -30,10 +30,10 @@ when it is the same feed; "2 h 15 min" for 135 min is fine). False when a number
 """
 
 
-def main(run_dir):
+def main(run_dir, set_name="heldout.json"):
     run_dir = HERE / run_dir
     rows = json.loads((run_dir / "score.json").read_text())
-    items = {i["id"]: i for i in json.loads((HERE / "heldout.json").read_text())}
+    items = {i["id"]: i for i in json.loads((HERE / set_name).read_text())}
     out = []
     for r in rows:
         item = items[r["id"]]
@@ -46,4 +46,4 @@ def main(run_dir):
 
 
 if __name__ == "__main__":
-    main(sys.argv[1] if len(sys.argv) > 1 else "run-1")
+    main(sys.argv[1] if len(sys.argv) > 1 else "run-1", sys.argv[2] if len(sys.argv) > 2 else "heldout.json")

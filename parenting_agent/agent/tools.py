@@ -135,10 +135,17 @@ def edit_tools(baby_log):
              "that change, with the same names as log_baby_event. ts moves the entry to another time.",
              schema({**WHICH, "details": {"type": "object"}, "ts": {"type": "string", "description": "new ISO time, only if the parent named one"}}),
              lambda id=None, kind=None, at=None, last=None, details=None, ts=None:
-             baby_log.update(baby_log.find(id, kind, at, last)["id"], details, ts)),
+             baby_log.update(details=details, ts=ts, **which(baby_log, id, kind, at, last))),
         Tool("delete_baby_event",
              "Remove an entry from the baby log when the parent sent it twice by mistake or asks to delete it, for example "
              "'la mandé 2 veces sin querer' or 'borrá la última'. Name the entry by id, by kind and at, or by last.",
              schema(WHICH),
-             lambda id=None, kind=None, at=None, last=None: baby_log.delete(baby_log.find(id, kind, at, last)["id"])),
+             lambda id=None, kind=None, at=None, last=None: baby_log.delete(**which(baby_log, id, kind, at, last))),
     ]
+
+
+def which(baby_log, entry_id, kind, at, last):
+    """The arguments that name one entry to update or delete: its id, and its kind for a log whose ids repeat across
+    kinds (Baby Buddy numbers feeds and diapers apart)."""
+    entry = baby_log.find(entry_id, kind, at, last)
+    return {"entry_id": entry["id"], **({"kind": entry["kind"]} if getattr(baby_log, "kind_ids", False) else {})}

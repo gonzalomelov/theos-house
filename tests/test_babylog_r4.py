@@ -75,10 +75,16 @@ class SymptomWithFeed(LogOps):
         self.assertEqual(self.notes(), [self.JUDGE])
 
     def test_a_red_flag_keeps_its_line_and_still_logs_the_feed(self):
-        reply = self.say("12:45", "tomo 40 y vomito todo")
+        # The fixed line goes out first, with no brain call before it. Muse then reads what the message reported, and
+        # the feed is confirmed from the log in its own message (held-out run-1 lost 11 such feeds and diapers).
+        reply = self.say("12:45", "tomo 40 y vomito todo",
+                         self.ops({"op": "add", "kind": "feeding", "method": "bottle", "amount_ml": 40},
+                                  {"op": "add", "kind": "note", "text": "vomito todo"}))
         self.assertTrue(reply.startswith(rules.URGENT_REPLY["red_flag"]["es"]), reply)
+        self.assertIn("40 ml", reply[len(rules.URGENT_REPLY["red_flag"]["es"]):])
         self.assertEqual(self.feeds(), [("12:45", 40.0)])
-        self.assertEqual(self.brain.seen, [])
+        self.assertEqual(len(self.brain.seen), 1)
+        self.assertIn("The fixed emergency line was already sent", self.brain.seen[0]["text"])
 
     def test_a_question_still_gets_the_no_advice_line(self):
         reply = self.say("12:20", "tomo 70 y vomito un poco, es normal?")

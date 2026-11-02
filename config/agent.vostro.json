@@ -19,8 +19,11 @@
     "token_env": "BABYBUDDY_TOKEN",
     "child": "test-baby"
   },
+  "log_mode": "ops",
   "allowed_tools": [
     "log_baby_event",
+    "edit_baby_event",
+    "delete_baby_event",
     "read_baby_log",
     "baby_summary",
     "remember",

@@ -8,6 +8,7 @@ future times. Baths and free-form notes are Baby Buddy notes, a bath note starts
 import datetime
 import json
 import os
+import re
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -16,6 +17,14 @@ from .memory import BabyLog, LOG_KINDS, parse_time, start_after_feeds
 
 ENDPOINTS = {"feeding": "feedings", "diaper": "changes", "sleep": "sleep", "note": "notes"}
 DEFAULT_FEED_MINUTES = 15
+# The stool colours a Baby Buddy change can hold.
+COLORS = ("black", "brown", "green", "yellow")
+OPEN_SLEEP_ID = "open-sleep"
+# A feed whose length nobody said is stored with the default length, and says so in its notes, so no reply ever states
+# "15 min" the parent did not say (held-out run-1: "Logged the 13:15 bottle of 60 ml, formula of 15 min").
+LENGTH_NOT_SAID = "length not said"
+# Baby Buddy needs a milk type: a bottle with none said is stored as formula and says so, so no reply claims formula.
+TYPE_NOT_SAID = "milk type not said"
 
 
 class BabyBuddyError(RuntimeError):
@@ -94,6 +103,11 @@ class BabyBuddyLog(BabyLog):
             length = details.get("duration_min") or DEFAULT_FEED_MINUTES
             start = at_or_before_now(details.get("start")) if details.get("start") else when - datetime.timedelta(minutes=float(length))
             body = dict(base, start=iso(start), end=iso(when), type=milk, method=method)
+            unsaid = [LENGTH_NOT_SAID] if not details.get("duration_min") and not details.get("start") else []
+            if not details.get("type") and "breast" not in method:
+                unsaid.append(TYPE_NOT_SAID)
+            if unsaid:
+                body["notes"] = ", ".join(unsaid)
             if details.get("amount_ml") is not None:
                 body["amount"] = float(details["amount_ml"])
             record = self.post_without_overlap("feedings", body)
@@ -101,7 +115,7 @@ class BabyBuddyLog(BabyLog):
             body = dict(base, time=iso(when), wet=bool(details.get("wet")), solid=bool(details.get("solid")))
             if not body["wet"] and not body["solid"]:
                 body["wet"] = True
-            if details.get("color"):
+            if details.get("color") in COLORS:
                 body["color"] = details["color"]
             record = self.request("POST", "/api/changes/", body)
         elif kind == "sleep":
@@ -168,6 +182,11 @@ class BabyBuddyLog(BabyLog):
         if endpoint == "feedings":
             details = {"amount_ml": record.get("amount"), "type": record.get("type"), "method": record.get("method"),
                        "start": iso(parse_time(record["start"])), "duration_min": minutes(record.get("duration"))}
+            unsaid = str(record.get("notes") or "")
+            if LENGTH_NOT_SAID in unsaid:
+                details["duration_min"] = None
+            if TYPE_NOT_SAID in unsaid and "breast" not in str(record.get("method")):
+                details["type"] = "unknown"
             return {"id": record["id"], "kind": "feeding", "ts": iso(parse_time(record["end"])), "details": details, "tags": tags}
         if endpoint == "changes":
             details = {"wet": record.get("wet"), "solid": record.get("solid"), "color": record.get("color") or None}
@@ -183,6 +202,154 @@ class BabyBuddyLog(BabyLog):
         """Read one record back from Baby Buddy, as the KR evidence needs."""
         endpoint = "notes" if kind in ("bath", "note") else ENDPOINTS[kind]
         return self.normalize(endpoint, self.request("GET", f"/api/{endpoint}/{record_id}/"))
+
+    # Baby Buddy numbers each endpoint on its own, so feed 12 and diaper 12 are two entries: an edit or a delete names
+    # the kind with the id (tools.edit_tools passes it).
+    kind_ids = True
+
+    def sleep_timer(self):
+        """The newest running sleep timer, or None: a sleep the parent started and has not ended."""
+        timers = [t for t in self.request("GET", f"/api/timers/?child={self.child()}&limit=50")["results"]
+                  if t.get("name") == "sleep"]
+        return max(timers, key=lambda t: t["start"]) if timers else None
+
+    def open_sleep(self):
+        """The start of the open sleep as an ISO time, or None. Held-out run-1: with no open sleep read, "sigue dormido"
+        started a second sleep and "se despertó llorando" was kept as a note with the sleep left open."""
+        timer = self.sleep_timer()
+        return iso(parse_time(timer["start"])) if timer else None
+
+    def open_sleep_entry(self):
+        timer = self.sleep_timer()
+        if timer is None:
+            return None
+        return {"id": OPEN_SLEEP_ID, "kind": "sleep", "ts": iso(parse_time(timer["start"])),
+                "details": {"action": "start"}, "timer": timer["id"]}
+
+    def find(self, entry_id=None, kind=None, at=None, last=None):
+        """One entry, by id (with its kind, ids repeat across kinds), by kind and local time HH:MM, or the last one."""
+        if str(entry_id) == OPEN_SLEEP_ID:
+            entry = self.open_sleep_entry()
+            if entry is None:
+                raise ValueError("no sleep is open")
+            return entry
+        if entry_id is not None:
+            if kind in LOG_KINDS:
+                try:
+                    entry = self.get(kind, int(entry_id))
+                except (BabyBuddyError, TypeError, ValueError) as error:
+                    raise ValueError(f"no {kind} with id {entry_id}") from error
+                if entry["kind"] != kind and {entry["kind"], kind} != {"bath", "note"}:
+                    raise ValueError(f"entry {entry_id} is a {entry['kind']}, not a {kind}")
+                return entry
+            found = [e for e in self.entries(None, None, 200) if str(e["id"]) == str(entry_id)]
+            if len(found) != 1:
+                raise ValueError(f"name the kind of entry {entry_id}" if found else f"no entry with id {entry_id}")
+            return found[0]
+        items = self.entries(kind, None, 200)
+        if at:
+            match = re.match(r"^\s*(\d{1,2})[:.h](\d{2})\s*$", str(at))
+            if not match:
+                raise ValueError("at must be a local time like 01:30")
+            wanted = f"{int(match.group(1)):02d}:{match.group(2)}"
+            items = [e for e in items if wanted in (e["ts"][11:16], str(e["details"].get("start") or "")[11:16])]
+        elif not last:
+            raise ValueError("name the entry by id, by kind and at, or by last")
+        if not items:
+            raise ValueError("no such entry in the log")
+        return items[-1]
+
+    def update(self, entry_id, details=None, ts=None, kind=None):
+        """Change an entry in place, as the parent corrected it (held-out run-1: 21 of 24 corrections were left wrong,
+        the log could not change an entry). Returns the entry before and after, so the reply says exactly what changed.
+        ts moves the entry (a feed keeps its length), details holds only the fields that change."""
+        before = self.find(entry_id, kind)
+        new = dict(details or {})
+        self.check_bounds(before["kind"], {k: v for k, v in new.items()
+                                           if k in ("amount_ml", "duration_min") and v is not None}, ts)
+        if before["id"] == OPEN_SLEEP_ID:
+            start = new.get("start") or ts
+            if not start:
+                raise ValueError("an open sleep can only move its start")
+            self.request("PATCH", f"/api/timers/{before['timer']}/", {"start": iso(at_or_before_now(start))})
+            return {"before": self.public(before), "after": self.public(self.open_sleep_entry())}
+        endpoint = "notes" if before["kind"] in ("bath", "note") else ENDPOINTS[before["kind"]]
+        record = self.request("GET", f"/api/{endpoint}/{before['id']}/")
+        body = {}
+        if before["kind"] == "feeding":
+            start, end = parse_time(record["start"]), parse_time(record["end"])
+            length = end - start
+            if new.get("duration_min"):
+                length = datetime.timedelta(minutes=float(new["duration_min"]))
+            if ts:
+                end = at_or_before_now(ts)
+            if new.get("duration_min") or ts:
+                body.update(start=iso(end - length), end=iso(end))
+            unsaid = [n for n in str(record.get("notes") or "").split(", ") if n in (LENGTH_NOT_SAID, TYPE_NOT_SAID)]
+            if new.get("duration_min") and LENGTH_NOT_SAID in unsaid:
+                unsaid.remove(LENGTH_NOT_SAID)
+            old_method = str(record.get("method") or "bottle")
+            method = str(new.get("method") or old_method)
+            if new.get("method"):
+                body["method"] = method
+            milk = new.get("type")
+            if "breast" in method and "breast" not in old_method:
+                # A bottle that was a breast feed keeps no ml, and its milk is the breast's (round 5).
+                milk = milk or "breast milk"
+                if new.get("amount_ml") is None:
+                    body["amount"] = None
+            elif "breast" not in method and "breast" in old_method:
+                milk = milk or "formula"
+            if milk in ("formula", "breast milk", "fortified breast milk"):
+                body["type"] = milk
+                if TYPE_NOT_SAID in unsaid:
+                    unsaid.remove(TYPE_NOT_SAID)
+                if not new.get("type") and "breast" not in method:
+                    unsaid.append(TYPE_NOT_SAID)  # a breast feed that was a bottle: Baby Buddy needs a type, none said
+            if new.get("duration_min") or "type" in body:
+                body["notes"] = ", ".join(unsaid)
+            if new.get("amount_ml") is not None:
+                body["amount"] = float(new["amount_ml"])
+        elif before["kind"] == "diaper":
+            wet = bool(new["wet"]) if new.get("wet") is not None else bool(record.get("wet"))
+            solid = bool(new["solid"]) if new.get("solid") is not None else bool(record.get("solid"))
+            body.update(wet=wet or not solid, solid=solid)
+            if "color" in new:
+                body["color"] = new["color"] if new["color"] in COLORS else ""
+            if ts:
+                body["time"] = iso(at_or_before_now(ts))
+        elif before["kind"] == "sleep":
+            start = at_or_before_now(new["start"]) if new.get("start") else parse_time(record["start"])
+            moved = new.get("end") or ts
+            end = at_or_before_now(moved) if moved else parse_time(record["end"])
+            if end <= start:
+                raise ValueError("a sleep must end after it starts")
+            body.update(start=iso(start), end=iso(end))
+        else:
+            text = str(new.get("text") or new.get("note") or "").strip()
+            if text:
+                body["note"] = f"Bath. {text}" if before["kind"] == "bath" and not text.lower().startswith("bath") else text
+            if ts:
+                body["time"] = iso(at_or_before_now(ts))
+        if not body:
+            return {"before": before, "after": before}
+        after = self.normalize(endpoint, self.request("PATCH", f"/api/{endpoint}/{before['id']}/", body))
+        return {"before": before, "after": after}
+
+    def delete(self, entry_id, kind=None):
+        """Remove an entry the parent asked to delete, or an open sleep that never happened. Returns what was removed."""
+        before = self.find(entry_id, kind)
+        if before["id"] == OPEN_SLEEP_ID:
+            self.request("DELETE", f"/api/timers/{before['timer']}/")
+        else:
+            endpoint = "notes" if before["kind"] in ("bath", "note") else ENDPOINTS[before["kind"]]
+            self.request("DELETE", f"/api/{endpoint}/{before['id']}/")
+        return {"deleted": self.public(before)}
+
+    @staticmethod
+    def public(entry):
+        """An entry as the agent reads it, without the timer id the log keeps for itself."""
+        return {k: v for k, v in entry.items() if k != "timer"} if entry else entry
 
     def entries(self, kind=None, since=None, limit=50):
         kinds = [kind] if kind else list(LOG_KINDS)
