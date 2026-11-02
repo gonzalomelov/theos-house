@@ -8,6 +8,7 @@ write tool that home-agents keeps locked, and widening that allowlist is a separ
 
 The Thermomix itself is never controlled. Vorwerk allows no remote start, a person presses the dial.
 """
+from .rhythm.patterns import hours_words
 import datetime
 import json
 import os
@@ -84,7 +85,7 @@ def draft(night, recipes, day, count=2):
     if not picks:
         return None
     lines = [f"{r['name']}, {round(r['total_time_seconds'] / 60)} min, {r['url']}" for r in picks]
-    longest = f", longest sleep {night['longest_h']:.1f} h" if night["longest_h"] is not None else ""
+    longest = f", longest sleep {hours_words(night['longest_h'])}" if night["longest_h"] is not None else ""
     text = (f"Rough night: {night['wakeups']} wake-ups{longest}. Fast Thermomix dinners for tonight: "
             + ". ".join(lines) + ". This is a draft, nothing was added to Cookidoo.")
     if not patterns.no_advice(text):

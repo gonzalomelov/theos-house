@@ -133,6 +133,16 @@ def _odd(value, others, ratio):
     return None
 
 
+def duration_words(minutes):
+    """A length as a parent reads it: "1 h 6 min", "45 min", "2 h". Never "1.1 h" or "12,3 h" (blind round b7)."""
+    h, m = divmod(int(round(minutes)), 60)
+    return (f"{h} h {m} min" if m else f"{h} h") if h else f"{m} min"
+
+
+def hours_words(hours):
+    return duration_words(hours * 60)
+
+
 def _hm(minutes):
     h, m = divmod(round(minutes), 60)
     return f"{h} h {m:02d} min" if h else f"{m} min"
@@ -161,11 +171,11 @@ def unusual_notes(entries, tz, gap_ratio=0.3, sleep_ratio=0.15, lang="en"):
         if usual is not None:
             if lang == "es":
                 word = "menos" if row["sleep_h"] < usual else "más"
-                hours, normal = (f"{v:.1f}".replace(".", ",") for v in (row["sleep_h"], usual))
-                text = f"{label}: {hours} h de sueño en total, {word} que las {normal} h de siempre."
+                hours, normal = (hours_words(v) for v in (row["sleep_h"], usual))
+                text = f"{label}: {hours} de sueño en total, {word} que {normal} de siempre."
             else:
                 word = "less" if row["sleep_h"] < usual else "more"
-                text = f"{label}: {row['sleep_h']:.1f} h of sleep in total, {word} than the usual {usual:.1f} h."
+                text = f"{label}: {hours_words(row['sleep_h'])} of sleep in total, {word} than the usual {hours_words(usual)}."
             notes.append({"day": day, "text": text, "computed_from": row["refs"]})
     return notes
 
@@ -229,8 +239,10 @@ def night_summary(entries, now, tz, parents, current=False, aliases=None):
     # only sleeps that started after 22:00 counted, and a night slept in one stretch said "longest sleep 0.0 h".
     sleeps = [e for e in ordered(entries, now) if e["kind"] == "sleep" and e.get("end")
               and when(e) < end and parse(e["end"]) > start]
-    longest = max(((parse(e["end"]) - parse(e["start"])).total_seconds() / 3600 for e in sleeps), default=None)
-    longest = round(longest, 1) if longest and longest >= 0.05 else None  # no sleep in the log is no line, never 0.0 h
+    # Whole minutes, the same on every read: a rounded 1.1 h read 1 h 6 min one time and 1 h 4 min the next.
+    longest_min = max((round((parse(e["end"]) - parse(e["start"])).total_seconds() / 60) for e in sleeps), default=None)
+    longest_min = longest_min if longest_min and longest_min >= 3 else None  # no sleep in the log is no line, never 0 min
+    longest = round(longest_min / 60, 1) if longest_min else None
     handled_all = [label(w["parent"]) for w in night_wakeups(entries, tz) if w["at"] < now.astimezone(tz)]
     on_duty = next_on_duty(handled_all, parents)
     per_parent = ", ".join(f"{p} {sum(1 for w in wakes if w['parent'] == p)}" for p in parents)
@@ -240,10 +252,10 @@ def night_summary(entries, now, tz, parents, current=False, aliases=None):
              else f"Night summary for {start:%a %d}")
     text = (f"{label}: {len(night_feeds)} feeds"
             + (f" at {', '.join(hhmm(when(e).astimezone(tz)) for e in night_feeds)}" if night_feeds else "")
-            + (f", longest sleep {longest:.1f} h" if longest else "") + f". Wake-ups: {per_parent}. Next on duty: {on_duty}.")
+            + (f", longest sleep {duration_words(longest_min)}" if longest_min else "") + f". Wake-ups: {per_parent}. Next on duty: {on_duty}.")
     if nxt:
         text += " " + next_feed_sentence(nxt, now, tz)
     refs = [e["ref"] for e in in_night] + [w["ref"] for w in wakes]
     return {"text": text, "on_duty": on_duty, "computed_from": refs or (nxt or {}).get("computed_from", []),
-            "feeds": len(night_feeds), "longest_h": longest,
+            "feeds": len(night_feeds), "longest_h": longest, "longest_min": longest_min,
             "wakeups": {p: sum(1 for w in wakes if w["parent"] == p) for p in parents}}

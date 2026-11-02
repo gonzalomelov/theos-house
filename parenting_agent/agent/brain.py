@@ -155,6 +155,13 @@ class OpenAICompatibleBrain:
         if choice.get("finish_reason") == "length" and not message.get("content") and not message.get("tool_calls"):
             raise BrainError("openai_compatible: max_tokens ran out before an answer, raise brain.max_tokens "
                              "or lower brain.reasoning_effort")
+        content = message.get("content")
+        if choice.get("finish_reason") == "length" and content:
+            # An answer cut by max_tokens ends mid-sentence (blind round b7): only its whole sentences are kept.
+            whole = re.match(r"(?s)(.*[.!?])(?=\s|$)", content.strip())
+            if not whole and not message.get("tool_calls"):
+                raise BrainError("openai_compatible: max_tokens cut the answer before one whole sentence")
+            content = whole.group(1) if whole else None
         calls = []
         for call in message.get("tool_calls") or []:
             function = call.get("function", {})
@@ -166,7 +173,7 @@ class OpenAICompatibleBrain:
         usage = reply.get("usage") or {}
         reasoning = (usage.get("completion_tokens_details") or {}).get("reasoning_tokens", 0)
         # The reasoning comes back apart, in message.reasoning_content, and is never read here.
-        return Reply(without_thinking(message.get("content")), calls,
+        return Reply(without_thinking(content), calls,
                      {"input_tokens": usage.get("prompt_tokens", 0), "output_tokens": usage.get("completion_tokens", 0),
                       "reasoning_tokens": reasoning})
 

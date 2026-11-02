@@ -13,7 +13,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 
-from .memory import BabyLog, LOG_KINDS, parse_time, start_after_feeds
+from .memory import BabyLog, LOG_KINDS, parse_time, place_sleep, start_after_feeds
 
 ENDPOINTS = {"feeding": "feedings", "diaper": "changes", "sleep": "sleep", "note": "notes"}
 DEFAULT_FEED_MINUTES = 15
@@ -154,6 +154,13 @@ class BabyBuddyLog(BabyLog):
         if action == "start" or (details.get("start") is None and details.get("end") is None and action != "end"):
             timer = self.request("POST", "/api/timers/", {"child": base["child"], "name": "sleep", "start": iso(when)})
             return {"timer": timer["id"], "kind": "sleep", "ts": iso(when), "details": {"action": "start", "timer_id": timer["id"]}}
+        if action == "end" and details.get("start"):
+            # The open sleep closed with the length the parent said: the record starts at end minus that length.
+            for timer in self.request("GET", f"/api/timers/?child={base['child']}&limit=50")["results"]:
+                if timer.get("name") == "sleep":
+                    self.request("DELETE", f"/api/timers/{timer['id']}/")
+            start, end = self.placed(at_or_before_now(details["start"]), when)
+            return self.request("POST", "/api/sleep/", dict(base, start=iso(start), end=iso(end)))
         if action == "end" and details.get("start") is None:
             timers = [t for t in self.request("GET", f"/api/timers/?child={base['child']}&limit=50")["results"] if t.get("name") == "sleep"]
             if not timers:
@@ -165,17 +172,25 @@ class BabyBuddyLog(BabyLog):
             return record
         start = at_or_before_now(details.get("start"))
         end = at_or_before_now(details.get("end")) if details.get("end") else when
-        return self.request("POST", "/api/sleep/", dict(base, start=iso(self.after_feeds(start, end)), end=iso(end)))
+        start, end = self.placed(start, end)
+        return self.request("POST", "/api/sleep/", dict(base, start=iso(start), end=iso(end)))
+
+    def placed(self, start, end):
+        """A sleep told with its start and end (or its length) keeps that length and never spans a feed."""
+        return place_sleep(start, end, self.feed_spans(start))
 
     def after_feeds(self, start, end):
         """A sleep never spans a feed in the log: it starts after the last one inside it (round b5)."""
+        return start_after_feeds(start, end, self.feed_spans(start))
+
+    def feed_spans(self, start):
         feeds = []
         for e in self.entries("feeding", iso(start - datetime.timedelta(hours=3)), 50):
             try:
                 feeds.append((parse_time((e.get("details") or {}).get("start") or e["ts"]), parse_time(e["ts"])))
             except (KeyError, TypeError, ValueError):
                 continue
-        return start_after_feeds(start, end, feeds)
+        return feeds
 
     def normalize(self, endpoint, record):
         tags = record.get("tags") or []

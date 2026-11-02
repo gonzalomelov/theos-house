@@ -120,9 +120,43 @@ def guard(text, lang=None, names=None, models_ok=False):
     return Guarded(out, removed)
 
 
+DECIMAL_HOURS = re.compile(r"\b(\d{1,2})[.,](\d{1,2})\s*(?:h|hs|hrs?|hours?|horas?)\b", re.I)
+
+
+def plain_hours(text):
+    """"1.1 h" or "12,3 horas" in any reply reads "1 h 6 min" or "12 h 18 min" (blind round b7)."""
+    def words(match):
+        minutes = round(float(f"{match.group(1)}.{match.group(2)}") * 60)
+        h, m = divmod(minutes, 60)
+        return (f"{h} h {m} min" if m else f"{h} h") if h else f"{m} min"
+    return DECIMAL_HOURS.sub(words, text) if isinstance(text, str) else text
+
+
+SENTENCE_END = re.compile(r"(?<=[.!?])\s+")
+
+
+def no_repeats(text):
+    """A sentence said twice, or a cut one said again in full, is said once (blind round b7: a reply cut off mid-sentence
+    and then repeated)."""
+    if not isinstance(text, str) or not text:
+        return text
+    parts = SENTENCE_END.split(text.strip())
+    cut = False
+    for i, part in enumerate(parts):
+        again = part.find(part[:24], 1) if len(part) >= 48 and "\n" not in part else -1
+        if again > 0:
+            parts[i], cut = part[again:], True  # "se dur Le di la teta... se durmió.": the cut start, then the whole one
+    key = [re.sub(r"\W+", " ", p).strip().lower() for p in parts]
+    kept = [p for i, p in enumerate(parts)
+            if key[i] and key[i] not in key[:i] and not any(k != key[i] and k.startswith(key[i]) and len(key[i]) >= 20
+                                                             for k in key[i + 1:])]
+    return " ".join(kept) if cut or len(kept) < len(parts) else text
+
+
 def apply(text, lang=None, bus=None, where="", names=None, log_text=True, models_ok=False, **about):
     """guard() and, when it changed anything, one "final_guard" event on the bus saying what it removed and why.
     log_text=False keeps only the reasons and sizes (the families bot never logs a family's words)."""
+    text = no_repeats(plain_hours(text))
     result = guard(text, lang, names, models_ok)
     if result.changed and bus is not None:
         removed = result.removed if log_text else [{"why": r["why"], "chars": len(r["text"])} for r in result.removed]
