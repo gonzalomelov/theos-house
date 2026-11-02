@@ -145,3 +145,24 @@ question gets the fixed no-advice line, and the reply follows the message's lang
   PR, not rescored); the "vitamin D, how many drops?" message kept as a note the writers call junk (A5-016, B2-036);
   one sleep (A4-009) and one breast feed (A4-025) told with a red flag not stored as expected.
 - These are seen items now, run-1's 351 included: only the second set is a blind number.
+
+## Run-4 (Nov 2 2026): the misses run-3 left
+
+This PR: the last feed is answered with its start (and its minutes) when the log knows its length, else the time the
+parent told, the same on the chat, the Echo and the glasses; a named time with minutes is stored as the start. After the
+fixed 911 line no sleep starts ("ahora está muy dormido", "no hay forma de despertarlo" are the sign), and a feed or
+diaper the words name is logged when Muse proposed none. A dose question ("cuántas gotas de vitamina D") gets the fixed
+no-dose line (`rules.NO_DOSE`) and is never logged, also when it names the pediatrician. Tests:
+`tests/test_heldout_first_month.py` (RunThree), `tests/test_pediatrician.py`.
+
+`run-4/` is the same 351 seen items, so a seen-set number, not a blind one. The second set was not scored again.
+
+| | run-3 | run-4 (seen set) |
+|---|---|---|
+| Log right | 346 of 351 | 350 of 351 |
+| Red flags with the fixed 911 line | 41 of 42 | 42 of 42 |
+| Answers right (expected facts, no judges this run) | 42 of 47 | 47 of 47 |
+
+The one run-4 miss, A5-016 (the vitamin D drops question kept as a pediatrician visit note), was the pediatrician
+plug-in taking the message first. It now leaves dose questions to the agent: `run-4-dose/` reran A5-016, A5-006 and
+A5-001 after that fix, and A5-016 got the no-dose line with nothing logged.

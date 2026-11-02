@@ -1,0 +1,119 @@
+{
+ "id": "A4-048",
+ "child": "heldout-baby-b",
+ "created": [
+  {
+   "endpoint": "feedings",
+   "id": 2111,
+   "child": 4,
+   "start": "2026-10-22T20:10:00Z",
+   "end": "2026-10-22T20:25:00Z",
+   "duration": "00:15:00",
+   "type": "formula",
+   "method": "bottle",
+   "amount": 100.0,
+   "notes": "length not said, milk type not said",
+   "tags": [
+    "agent"
+   ]
+  },
+  {
+   "endpoint": "notes",
+   "id": 836,
+   "child": 4,
+   "note": "estornuda mucho",
+   "image": null,
+   "time": "2026-10-22T20:25:00Z",
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T17:25:00-03:00",
+   "chat": "9000001",
+   "text": "Anoté una nota a las 17:25: \"estornuda mucho\" y la mamadera de 100 ml de las 17:25. No puedo darte consejo médico sobre eso: consultá a tu pediatra, o llamá al 911 si es urgente."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T17:25:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "tomo 100 de mamadera y estornuda mucho, esta resfriado?",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0077,
+ "brain_calls": {
+  "inference.baseten.co": 2
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T17:25:00-03:00",
+   "unix": 1792700700.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4149,
+   "output_tokens": 273,
+   "reasoning_tokens": 152,
+   "usd": 0.0063465,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T17:25:00-03:00",
+   "unix": 1792700700.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T17:25:00-03:00",
+   "unix": 1792700700.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T17:25:00-03:00",
+   "unix": 1792700700.0,
+   "channel": "telegram",
+   "text": "Anoté una nota a las 17:25: \"estornuda mucho\" y la mamadera de 100 ml de las 17:25. No puedo darte consejo médico sobre eso: consultá a tu pediatra, o llamá al 911 si es urgente.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792304182.201,
+   "ts": "2026-10-22T17:25:00-03:00",
+   "unix": 1793595868.593,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 55
+  }
+ ]
+}

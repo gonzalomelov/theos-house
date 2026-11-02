@@ -1,0 +1,155 @@
+{
+ "id": "A1-068",
+ "child": "heldout-baby-b",
+ "created": [
+  {
+   "endpoint": "feedings",
+   "id": 1896,
+   "child": 4,
+   "start": "2026-10-22T06:15:00Z",
+   "end": "2026-10-22T06:30:00Z",
+   "duration": "00:15:00",
+   "type": "formula",
+   "method": "bottle",
+   "amount": 60.0,
+   "notes": "length not said, milk type not said",
+   "tags": [
+    "agent"
+   ]
+  },
+  {
+   "endpoint": "timers",
+   "id": 301,
+   "child": 4,
+   "name": "sleep",
+   "start": "2026-10-22T06:30:00Z",
+   "duration": "10 22:04:07.524616",
+   "user": 2
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T03:28:00-03:00",
+   "chat": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:00 a 08:00.\nPor qué: Ventana de limpieza del piso armada de 07:00 a 08:00 de día y sin cruce con sueño previsto, sin otras ventanas armadas."
+  },
+  {
+   "at": "2026-10-22T03:28:00-03:00",
+   "chat": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:00 a 08:00.\nPor qué: Ventana de limpieza del piso armada de 07:00 a 08:00 de día y sin cruce con sueño previsto, sin otras ventanas armadas."
+  },
+  {
+   "at": "2026-10-22T03:30:00-03:00",
+   "chat": "9000001",
+   "text": "Anoté la mamadera de 60 ml de las 03:30 y que el bebé se durmió a las 03:30."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T03:30:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "le di 60 y ahora se durmio",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0134,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T03:28:00-03:00",
+   "unix": 1792650480.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:00 a 08:00.\nPor qué: Ventana de limpieza del piso armada de 07:00 a 08:00 de día y sin cruce con sueño previsto, sin otras ventanas armadas.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T03:28:00-03:00",
+   "unix": 1792650480.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:00 a 08:00.\nPor qué: Ventana de limpieza del piso armada de 07:00 a 08:00 de día y sin cruce con sueño previsto, sin otras ventanas armadas.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T03:30:00-03:00",
+   "unix": 1792650600.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4141,
+   "output_tokens": 341,
+   "reasoning_tokens": 232,
+   "usd": 0.0066255,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T03:30:00-03:00",
+   "unix": 1792650600.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T03:30:00-03:00",
+   "unix": 1792650600.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T03:30:00-03:00",
+   "unix": 1792650600.0,
+   "channel": "telegram",
+   "text": "Anoté la mamadera de 60 ml de las 03:30 y que el bebé se durmió a las 03:30.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792255909.279,
+   "ts": "2026-10-22T03:30:00-03:00",
+   "unix": 1793594041.478,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 26
+  }
+ ]
+}

@@ -1,0 +1,137 @@
+{
+ "id": "A2-035",
+ "child": "heldout-baby-b",
+ "created": [
+  {
+   "endpoint": "changes",
+   "id": 1539,
+   "child": 4,
+   "time": "2026-10-22T20:55:00Z",
+   "wet": false,
+   "solid": true,
+   "color": "",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T17:53:00-03:00",
+   "chat": "9000001",
+   "text": "Cambió el plan: Se actualizó el plan para reflejar el sueño en curso desde las 23:40 con una ventana de limpieza vespertina y precalentamientos nocturnos."
+  },
+  {
+   "at": "2026-10-22T17:53:00-03:00",
+   "chat": "9000002",
+   "text": "Cambió el plan: Se actualizó el plan para reflejar el sueño en curso desde las 23:40 con una ventana de limpieza vespertina y precalentamientos nocturnos."
+  },
+  {
+   "at": "2026-10-22T17:55:00-03:00",
+   "chat": "9000002",
+   "text": "Logged the 17:55 dirty diaper."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T17:55:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "omg huge blowout, poop everywhere, changed him and the onesie",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0162,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T17:53:00-03:00",
+   "unix": 1792702380.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Cambió el plan: Se actualizó el plan para reflejar el sueño en curso desde las 23:40 con una ventana de limpieza vespertina y precalentamientos nocturnos.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "replan",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T17:53:00-03:00",
+   "unix": 1792702380.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Cambió el plan: Se actualizó el plan para reflejar el sueño en curso desde las 23:40 con una ventana de limpieza vespertina y precalentamientos nocturnos.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "replan",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T17:55:00-03:00",
+   "unix": 1792702500.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4128,
+   "output_tokens": 249,
+   "reasoning_tokens": 155,
+   "usd": 0.00621825,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T17:55:00-03:00",
+   "unix": 1792702500.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T17:55:00-03:00",
+   "unix": 1792702500.0,
+   "channel": "telegram",
+   "text": "Logged the 17:55 dirty diaper.",
+   "chat_id": "9000002",
+   "guard_lang": null
+  },
+  {
+   "kind": "turn",
+   "t": -1792307406.097,
+   "ts": "2026-10-22T17:55:00-03:00",
+   "unix": 1793594444.663,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 61
+  }
+ ]
+}

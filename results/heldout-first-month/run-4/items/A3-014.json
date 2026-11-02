@@ -1,0 +1,186 @@
+{
+ "id": "A3-014",
+ "child": "heldout-baby-b",
+ "created": [
+  {
+   "endpoint": "timers",
+   "id": 340,
+   "child": 4,
+   "name": "sleep",
+   "start": "2026-10-22T22:45:00Z",
+   "duration": "10 06:03:49.932500",
+   "user": 2
+  }
+ ],
+ "seed_after": [
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 1937,
+    "child": 4,
+    "start": "2026-10-22T22:00:00Z",
+    "end": "2026-10-22T22:15:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 100.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 1937,
+    "child": 4,
+    "start": "2026-10-22T22:00:00Z",
+    "end": "2026-10-22T22:15:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 100.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T20:05:00-03:00",
+   "chat": "9000001",
+   "text": "Anoté que el bebé se durmió a las 19:30."
+  },
+  {
+   "at": "2026-10-22T20:06:00-03:00",
+   "chat": "9000001",
+   "text": "Anoté que el bebé se durmió a las 19:45."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T20:05:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "se durmio a las 19:30",
+   "setup": true,
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-22T20:06:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "perdon a las 19:45",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0138,
+ "brain_calls": {
+  "inference.baseten.co": 4
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T20:05:00-03:00",
+   "unix": 1792710300.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4179,
+   "output_tokens": 106,
+   "reasoning_tokens": 31,
+   "usd": 0.00567425,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T20:05:00-03:00",
+   "unix": 1792710300.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T20:05:00-03:00",
+   "unix": 1792710300.0,
+   "channel": "telegram",
+   "text": "Anoté que el bebé se durmió a las 19:30.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792314734.475,
+   "ts": "2026-10-22T20:05:00-03:00",
+   "unix": 1793594916.305,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 21
+  },
+  {
+   "kind": "brain_call",
+   "t": 180.0,
+   "ts": "2026-10-22T20:06:00-03:00",
+   "unix": 1792710360.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4245,
+   "output_tokens": 212,
+   "reasoning_tokens": 114,
+   "usd": 0.00620725,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 180.0,
+   "ts": "2026-10-22T20:06:00-03:00",
+   "unix": 1792710360.0,
+   "name": "edit_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 180.0,
+   "ts": "2026-10-22T20:06:00-03:00",
+   "unix": 1792710360.0,
+   "channel": "telegram",
+   "text": "Anoté que el bebé se durmió a las 19:45.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792314727.685,
+   "ts": "2026-10-22T20:06:00-03:00",
+   "unix": 1793594923.095,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 18
+  }
+ ]
+}

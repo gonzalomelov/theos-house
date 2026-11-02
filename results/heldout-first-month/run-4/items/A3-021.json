@@ -1,0 +1,189 @@
+{
+ "id": "A3-021",
+ "child": "heldout-baby-c",
+ "created": [
+  {
+   "endpoint": "feedings",
+   "id": 1943,
+   "child": 5,
+   "start": "2026-10-22T19:56:00Z",
+   "end": "2026-10-22T20:11:00Z",
+   "duration": "00:15:00",
+   "type": "formula",
+   "method": "bottle",
+   "amount": 80.0,
+   "notes": "length not said, milk type not said",
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T17:10:00-03:00",
+   "chat": "9000001",
+   "text": "Próxima toma en unos 20 min, cerca de las 17:30. Las tomas vienen cada 3 h 15 min más o menos."
+  },
+  {
+   "at": "2026-10-22T17:10:00-03:00",
+   "chat": "9000002",
+   "text": "Próxima toma en unos 20 min, cerca de las 17:30. Las tomas vienen cada 3 h 15 min más o menos."
+  },
+  {
+   "at": "2026-10-22T17:10:00-03:00",
+   "chat": "9000002",
+   "text": "Puede ser una emergencia. Llamá ya al 911 (emergencias en Uruguay) y contales lo que ves."
+  },
+  {
+   "at": "2026-10-22T17:11:00-03:00",
+   "chat": "9000002",
+   "text": "Anoté la mamadera de 80 ml de las 17:11."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T17:10:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "tomo 800",
+   "setup": true,
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-22T17:11:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "80 quise decir jaja",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0184,
+ "brain_calls": {
+  "inference.baseten.co": 4
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T17:10:00-03:00",
+   "unix": 1792699800.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Próxima toma en unos 20 min, cerca de las 17:30. Las tomas vienen cada 3 h 15 min más o menos.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "rhythm",
+   "routine": "next_feed",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T17:10:00-03:00",
+   "unix": 1792699800.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Próxima toma en unos 20 min, cerca de las 17:30. Las tomas vienen cada 3 h 15 min más o menos.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "rhythm",
+   "routine": "next_feed",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T17:10:00-03:00",
+   "unix": 1792699800.0,
+   "channel": "telegram",
+   "text": "Puede ser una emergencia. Llamá ya al 911 (emergencias en Uruguay) y contales lo que ves.",
+   "chat_id": "9000002",
+   "guard_lang": "es",
+   "flag": "emergency"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T17:10:00-03:00",
+   "unix": 1792699800.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3760,
+   "output_tokens": 574,
+   "reasoning_tokens": 458,
+   "usd": 0.0071395,
+   "fallback": false
+  },
+  {
+   "kind": "turn",
+   "t": -1792304194.792,
+   "ts": "2026-10-22T17:10:00-03:00",
+   "unix": 1793594955.989,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 8
+  },
+  {
+   "kind": "brain_call",
+   "t": 180.0,
+   "ts": "2026-10-22T17:11:00-03:00",
+   "unix": 1792699860.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4189,
+   "output_tokens": 574,
+   "reasoning_tokens": 475,
+   "usd": 0.00767575,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 180.0,
+   "ts": "2026-10-22T17:11:00-03:00",
+   "unix": 1792699860.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 180.0,
+   "ts": "2026-10-22T17:11:00-03:00",
+   "unix": 1792699860.0,
+   "channel": "telegram",
+   "text": "Anoté la mamadera de 80 ml de las 17:11.",
+   "chat_id": "9000002"
+  },
+  {
+   "kind": "turn",
+   "t": -1792304187.367,
+   "ts": "2026-10-22T17:11:00-03:00",
+   "unix": 1793594963.414,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 19
+  }
+ ]
+}

@@ -1,0 +1,82 @@
+{
+ "id": "A5-023",
+ "child": "heldout-baby-b",
+ "created": [],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T10:50:00-03:00",
+   "chat": "9000002",
+   "text": "El registro del bebé queda en el servidor de la familia."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T10:50:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "quien te hizo? sos chatgpt?",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0008,
+ "brain_calls": {
+  "inference.baseten.co": 1
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T10:50:00-03:00",
+   "unix": 1792677000.0,
+   "channel": "telegram",
+   "text": "Funciono con Muse Spark Open, el modelo abierto de Meta, en los servidores de Baseten con créditos gratis de la hackathon, no en los de Meta. El registro del bebé queda en el servidor de la familia. Lo que me mandás va a Baseten, y con esos créditos Meta lo puede usar para entrenar futuros modelos de Meta.",
+   "chat_id": "9000002",
+   "card": "self"
+  },
+  {
+   "kind": "final_guard",
+   "t": 120.0,
+   "ts": "2026-10-22T10:50:00-03:00",
+   "unix": 1792677000.0,
+   "where": "channel:telegram",
+   "lang": "es",
+   "removed": [
+    {
+     "why": "internal: Muse Spark Open",
+     "text": "Funciono con Muse Spark Open, el modelo abierto de Meta, en los servidores de Baseten con créditos gratis de la hackathon, no en los de Meta."
+    },
+    {
+     "why": "internal: Baseten",
+     "text": "Lo que me mandás va a Baseten, y con esos créditos Meta lo puede usar para entrenar futuros modelos de Meta."
+    }
+   ],
+   "fallback": false,
+   "sent": "El registro del bebé queda en el servidor de la familia.",
+   "person": "ceci",
+   "source": null
+  },
+  {
+   "kind": "turn",
+   "t": -1792280236.375,
+   "ts": "2026-10-22T10:50:00-03:00",
+   "unix": 1793596114.422,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 27
+  }
+ ]
+}

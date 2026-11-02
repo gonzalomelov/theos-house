@@ -1,0 +1,135 @@
+{
+ "id": "A2-042",
+ "child": "heldout-baby-c",
+ "created": [],
+ "seed_after": [
+  {
+   "endpoint": "timers",
+   "before": {
+    "id": 309,
+    "child": 5,
+    "name": "sleep",
+    "start": "2026-10-22T16:30:00Z",
+    "duration": "10 12:09:53.718429",
+    "user": 2
+   },
+   "after": {
+    "endpoint": "timers",
+    "id": 309,
+    "child": 5,
+    "name": "sleep",
+    "start": "2026-10-22T16:30:00Z",
+    "duration": "10 12:10:19.725785",
+    "user": 2
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T14:58:00-03:00",
+   "chat": "9000001",
+   "text": "Cambió el plan: El plan se ajustó por el sueño extendido de 313 minutos desde las 09:45 con los sueños previstos recorridos, Gonza y Ceci."
+  },
+  {
+   "at": "2026-10-22T14:58:00-03:00",
+   "chat": "9000002",
+   "text": "Cambió el plan: El plan se ajustó por el sueño extendido de 313 minutos desde las 09:45 con los sueños previstos recorridos, Gonza y Ceci."
+  },
+  {
+   "at": "2026-10-22T15:00:00-03:00",
+   "chat": "9000001",
+   "text": "Sí, sigue registrado dormido desde las 13:30. Que siga descansando tranquilo."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T15:00:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "sigue dormido",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0171,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T14:58:00-03:00",
+   "unix": 1792691880.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Cambió el plan: El plan se ajustó por el sueño extendido de 313 minutos desde las 09:45 con los sueños previstos recorridos, Gonza y Ceci.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "replan",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T14:58:00-03:00",
+   "unix": 1792691880.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Cambió el plan: El plan se ajustó por el sueño extendido de 313 minutos desde las 09:45 con los sueños previstos recorridos, Gonza y Ceci.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "replan",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T15:00:00-03:00",
+   "unix": 1792692000.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4154,
+   "output_tokens": 173,
+   "reasoning_tokens": 93,
+   "usd": 0.00592775,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T15:00:00-03:00",
+   "unix": 1792692000.0,
+   "channel": "telegram",
+   "text": "Sí, sigue registrado dormido desde las 13:30. Que siga descansando tranquilo.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792296935.702,
+   "ts": "2026-10-22T15:00:00-03:00",
+   "unix": 1793594415.059,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 13
+  }
+ ]
+}

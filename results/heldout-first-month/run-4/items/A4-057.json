@@ -1,0 +1,119 @@
+{
+ "id": "A4-057",
+ "child": "heldout-baby-b",
+ "created": [
+  {
+   "endpoint": "feedings",
+   "id": 2116,
+   "child": 4,
+   "start": "2026-10-22T20:50:00Z",
+   "end": "2026-10-22T21:05:00Z",
+   "duration": "00:15:00",
+   "type": "formula",
+   "method": "bottle",
+   "amount": 70.0,
+   "notes": "length not said, milk type not said",
+   "tags": [
+    "agent"
+   ]
+  },
+  {
+   "endpoint": "notes",
+   "id": 842,
+   "child": 4,
+   "note": "tomo 70 y llora mucho a la tardecita, seran colicos?",
+   "image": null,
+   "time": "2026-10-22T21:05:00Z",
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T18:05:00-03:00",
+   "chat": "9000001",
+   "text": "Anoté una nota a las 18:05: \"tomo 70 y llora mucho a la tardecita, seran colicos?\" y la mamadera de 70 ml de las 18:05. No puedo darte consejo médico sobre eso: consultá a tu pediatra, o llamá al 911 si es urgente."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T18:05:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "tomo 70 y llora mucho a la tardecita, seran colicos?",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0079,
+ "brain_calls": {
+  "inference.baseten.co": 2
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T18:05:00-03:00",
+   "unix": 1792703100.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4150,
+   "output_tokens": 296,
+   "reasoning_tokens": 160,
+   "usd": 0.0064455,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T18:05:00-03:00",
+   "unix": 1792703100.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T18:05:00-03:00",
+   "unix": 1792703100.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T18:05:00-03:00",
+   "unix": 1792703100.0,
+   "channel": "telegram",
+   "text": "Anoté una nota a las 18:05: \"tomo 70 y llora mucho a la tardecita, seran colicos?\" y la mamadera de 70 ml de las 18:05. No puedo darte consejo médico sobre eso: consultá a tu pediatra, o llamá al 911 si es urgente.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792306526.156,
+   "ts": "2026-10-22T18:05:00-03:00",
+   "unix": 1793595924.638,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 52
+  }
+ ]
+}

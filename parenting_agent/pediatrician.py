@@ -522,11 +522,12 @@ class Pediatrician(Plugin):
 
     def take(self, event, text):
         """The agent's answer taker: the reply, or None to leave the message to the agent. Red flags and newborn
-        call-now signs are always left to the agent's fixed lines."""
+        call-now signs are always left to the agent's fixed lines, and so is a dose question ("la pediatra dijo vitamina D
+        pero no me acuerdo cuántas gotas eran" is no visit note: held-out run-4 kept it as one)."""
         words, where = aligned(text)
         if "pediatr" not in words and "doctor" not in words and not CLOSE.search(words) and not CLOSE_ALL.search(words):
             return None
-        if rules.is_emergency(text) or rules.newborn_red_flag(text):
+        if rules.is_emergency(text) or rules.newborn_red_flag(text) or rules.asks_dose(text):
             return None
         person = event.get("person")
         lang = self.person_lang(person, text)

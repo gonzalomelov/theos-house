@@ -1,0 +1,220 @@
+{
+ "id": "A3-026",
+ "child": "heldout-baby-b",
+ "created": [
+  {
+   "endpoint": "feedings",
+   "id": 1949,
+   "child": 4,
+   "start": "2026-10-22T11:59:00Z",
+   "end": "2026-10-22T12:14:00Z",
+   "duration": "00:15:00",
+   "type": "formula",
+   "method": "bottle",
+   "amount": 90.0,
+   "notes": "length not said, milk type not said",
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [
+  {
+   "endpoint": "changes",
+   "before": {
+    "id": 1557,
+    "child": 4,
+    "time": "2026-10-22T11:40:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "changes",
+    "id": 1557,
+    "child": 4,
+    "time": "2026-10-22T11:40:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T09:12:00-03:00",
+   "chat": "9000001",
+   "text": "Buen día, Gonza.\nAnoche: 1 toma, te levantaste una vez.\nClima: soleado, 15 a 23 C.\nMenú de Cookidoo: Arroz blanco."
+  },
+  {
+   "at": "2026-10-22T09:12:00-03:00",
+   "chat": "9000002",
+   "text": "Buen día, Ceci.\nAnoche: 1 toma, no te levantaste.\nEsta noche te toca a vos.\nClima: soleado, 15 a 23 C.\nMenú de Cookidoo: Arroz blanco."
+  },
+  {
+   "at": "2026-10-22T09:14:00-03:00",
+   "chat": "9000001",
+   "text": "Anoté la mamadera de 90 ml de las 09:14."
+  },
+  {
+   "at": "2026-10-22T09:15:00-03:00",
+   "chat": "9000001",
+   "text": "¿Lo mandaste dos veces o fueron dos mamaderas de 90 ml? Por ahora dejé una sola a las 09:14."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T09:14:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "tomo 90 de mamadera",
+   "setup": true,
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-22T09:15:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "tomó 90 de mamadera",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0162,
+ "brain_calls": {
+  "inference.baseten.co": 5
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T09:12:00-03:00",
+   "unix": 1792671120.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Buen día, Gonza.\nAnoche: 1 toma, te levantaste una vez.\nClima: soleado, 15 a 23 C.\nMenú de Cookidoo: Arroz blanco.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "family-push",
+   "routine": "morning",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T09:12:00-03:00",
+   "unix": 1792671120.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Buen día, Ceci.\nAnoche: 1 toma, no te levantaste.\nEsta noche te toca a vos.\nClima: soleado, 15 a 23 C.\nMenú de Cookidoo: Arroz blanco.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "family-push",
+   "routine": "morning",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T09:14:00-03:00",
+   "unix": 1792671240.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4160,
+   "output_tokens": 138,
+   "reasoning_tokens": 52,
+   "usd": 0.0057865,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T09:14:00-03:00",
+   "unix": 1792671240.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T09:14:00-03:00",
+   "unix": 1792671240.0,
+   "channel": "telegram",
+   "text": "Anoté la mamadera de 90 ml de las 09:14.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792275558.094,
+   "ts": "2026-10-22T09:14:00-03:00",
+   "unix": 1793595032.688,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 19
+  },
+  {
+   "kind": "brain_call",
+   "t": 180.0,
+   "ts": "2026-10-22T09:15:00-03:00",
+   "unix": 1792671300.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4242,
+   "output_tokens": 249,
+   "reasoning_tokens": 159,
+   "usd": 0.00636075,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 180.0,
+   "ts": "2026-10-22T09:15:00-03:00",
+   "unix": 1792671300.0,
+   "channel": "telegram",
+   "text": "¿Lo mandaste dos veces o fueron dos mamaderas de 90 ml? Por ahora dejé una sola a las 09:14.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792275549.831,
+   "ts": "2026-10-22T09:15:00-03:00",
+   "unix": 1793595040.951,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 19
+  }
+ ]
+}

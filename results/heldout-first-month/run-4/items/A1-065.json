@@ -1,0 +1,100 @@
+{
+ "id": "A1-065",
+ "child": "heldout-baby-b",
+ "created": [
+  {
+   "endpoint": "feedings",
+   "id": 1893,
+   "child": 4,
+   "start": "2026-10-22T14:05:00Z",
+   "end": "2026-10-22T14:25:00Z",
+   "duration": "00:20:00",
+   "type": "breast milk",
+   "method": "left breast",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T11:40:00-03:00",
+   "chat": "9000002",
+   "text": "Logged the 11:25 left breast feed of 20 min."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T11:40:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "left breast 20 min at 11:05",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0071,
+ "brain_calls": {
+  "inference.baseten.co": 2
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T11:40:00-03:00",
+   "unix": 1792680000.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4122,
+   "output_tokens": 193,
+   "reasoning_tokens": 99,
+   "usd": 0.00597275,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T11:40:00-03:00",
+   "unix": 1792680000.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T11:40:00-03:00",
+   "unix": 1792680000.0,
+   "channel": "telegram",
+   "text": "Logged the 11:25 left breast feed of 20 min.",
+   "chat_id": "9000002",
+   "guard_lang": null
+  },
+  {
+   "kind": "turn",
+   "t": -1792285335.783,
+   "ts": "2026-10-22T11:40:00-03:00",
+   "unix": 1793594014.974,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 27
+  }
+ ]
+}

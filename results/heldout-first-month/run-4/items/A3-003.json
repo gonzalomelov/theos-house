@@ -1,0 +1,192 @@
+{
+ "id": "A3-003",
+ "child": "heldout-baby-c",
+ "created": [
+  {
+   "endpoint": "feedings",
+   "id": 1921,
+   "child": 5,
+   "start": "2026-10-22T16:45:00Z",
+   "end": "2026-10-22T17:05:00Z",
+   "duration": "00:20:00",
+   "type": "breast milk",
+   "method": "left breast",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 1919,
+    "child": 5,
+    "start": "2026-10-22T14:20:00Z",
+    "end": "2026-10-22T14:35:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 80.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 1919,
+    "child": 5,
+    "start": "2026-10-22T14:20:00Z",
+    "end": "2026-10-22T14:35:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 80.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T14:05:00-03:00",
+   "chat": "9000001",
+   "text": "Anoté la toma de pecho derecho de 20 min de las 14:05."
+  },
+  {
+   "at": "2026-10-22T14:09:00-03:00",
+   "chat": "9000002",
+   "text": "Corregí la toma de pecho de las 14:05: pecho derecho → pecho izquierdo."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T14:05:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "tomo teta del derecho como 20 min",
+   "setup": true,
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-22T14:09:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "no gonza fue el izquierdo",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0149,
+ "brain_calls": {
+  "inference.baseten.co": 4
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T14:05:00-03:00",
+   "unix": 1792688700.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4179,
+   "output_tokens": 188,
+   "reasoning_tokens": 102,
+   "usd": 0.00602275,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T14:05:00-03:00",
+   "unix": 1792688700.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T14:05:00-03:00",
+   "unix": 1792688700.0,
+   "channel": "telegram",
+   "text": "Anoté la toma de pecho derecho de 20 min de las 14:05.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792293360.284,
+   "ts": "2026-10-22T14:05:00-03:00",
+   "unix": 1793594690.48,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 33
+  },
+  {
+   "kind": "brain_call",
+   "t": 360.0,
+   "ts": "2026-10-22T14:09:00-03:00",
+   "unix": 1792688940.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4244,
+   "output_tokens": 260,
+   "reasoning_tokens": 152,
+   "usd": 0.00641,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 360.0,
+   "ts": "2026-10-22T14:09:00-03:00",
+   "unix": 1792688940.0,
+   "name": "edit_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 360.0,
+   "ts": "2026-10-22T14:09:00-03:00",
+   "unix": 1792688940.0,
+   "channel": "telegram",
+   "text": "Corregí la toma de pecho de las 14:05: pecho derecho → pecho izquierdo.",
+   "chat_id": "9000002",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792293347.231,
+   "ts": "2026-10-22T14:09:00-03:00",
+   "unix": 1793594703.532,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 25
+  }
+ ]
+}

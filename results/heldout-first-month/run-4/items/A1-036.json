@@ -1,0 +1,100 @@
+{
+ "id": "A1-036",
+ "child": "heldout-baby-c",
+ "created": [
+  {
+   "endpoint": "feedings",
+   "id": 1864,
+   "child": 5,
+   "start": "2026-10-22T14:55:00Z",
+   "end": "2026-10-22T15:10:00Z",
+   "duration": "00:15:00",
+   "type": "breast milk",
+   "method": "bottle",
+   "amount": 70.0,
+   "notes": "length not said",
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T12:10:00-03:00",
+   "chat": "9000002",
+   "text": "Logged the 12:10 bottle of 70 ml, breast milk."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T12:10:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "bottle of pumped milk, 70ml",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0069,
+ "brain_calls": {
+  "inference.baseten.co": 2
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T12:10:00-03:00",
+   "unix": 1792681800.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4120,
+   "output_tokens": 186,
+   "reasoning_tokens": 92,
+   "usd": 0.0059405,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T12:10:00-03:00",
+   "unix": 1792681800.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T12:10:00-03:00",
+   "unix": 1792681800.0,
+   "channel": "telegram",
+   "text": "Logged the 12:10 bottle of 70 ml, breast milk.",
+   "chat_id": "9000002",
+   "guard_lang": null
+  },
+  {
+   "kind": "turn",
+   "t": -1792287403.16,
+   "ts": "2026-10-22T12:10:00-03:00",
+   "unix": 1793593747.594,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 27
+  }
+ ]
+}

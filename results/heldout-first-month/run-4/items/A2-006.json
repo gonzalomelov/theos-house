@@ -1,0 +1,130 @@
+{
+ "id": "A2-006",
+ "child": "heldout-baby-a",
+ "created": [
+  {
+   "endpoint": "changes",
+   "id": 1499,
+   "child": 3,
+   "time": "2026-10-22T21:50:00Z",
+   "wet": false,
+   "solid": true,
+   "color": "brown",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [
+  {
+   "endpoint": "changes",
+   "before": {
+    "id": 1497,
+    "child": 3,
+    "time": "2026-10-22T17:20:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "changes",
+    "id": 1497,
+    "child": 3,
+    "time": "2026-10-22T17:20:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T18:50:00-03:00",
+   "chat": "9000001",
+   "text": "Anoté el pañal sucio con caca marrón de las 18:50."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T18:50:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "pañal con caca marroncita",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0076,
+ "brain_calls": {
+  "inference.baseten.co": 2
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T18:50:00-03:00",
+   "unix": 1792705800.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4162,
+   "output_tokens": 361,
+   "reasoning_tokens": 263,
+   "usd": 0.00673675,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T18:50:00-03:00",
+   "unix": 1792705800.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T18:50:00-03:00",
+   "unix": 1792705800.0,
+   "channel": "telegram",
+   "text": "Anoté el pañal sucio con caca marrón de las 18:50.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792311050.284,
+   "ts": "2026-10-22T18:50:00-03:00",
+   "unix": 1793594100.474,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 25
+  }
+ ]
+}

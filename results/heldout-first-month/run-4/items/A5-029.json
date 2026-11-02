@@ -1,0 +1,92 @@
+{
+ "id": "A5-029",
+ "child": "heldout-baby-b",
+ "created": [],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T14:40:00-03:00",
+   "chat": "9000002",
+   "text": "A decent new stroller in Uruguay is usually around **$U 15,000 to $U 35,000** more or less, depending on brand and if it's travel system.\n\nCheaper basic ones start around $U 10k, mid-range good brands like Baby Innovation, Cosco, Chicco around $U 18k-25k, and premium imported ones can go $U 40k+.\n\nSecond hand you can often find good ones for $U 8k-15k on Marketplace / Mercado Libre."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T14:40:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "how much is a decent stroller in uruguay more or less",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0129,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T14:40:00-03:00",
+   "unix": 1792690800.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4126,
+   "output_tokens": 91,
+   "reasoning_tokens": 24,
+   "usd": 0.00554425,
+   "fallback": false
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T14:40:00-03:00",
+   "unix": 1792690800.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 4393,
+   "output_tokens": 215,
+   "reasoning_tokens": 96,
+   "usd": 0.006405,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T14:40:00-03:00",
+   "unix": 1792690800.0,
+   "channel": "telegram",
+   "text": "A decent new stroller in Uruguay is usually around **$U 15,000 to $U 35,000** more or less, depending on brand and if it's travel system.\n\nCheaper basic ones start around $U 10k, mid-range good brands like Baby Innovation, Cosco, Chicco around $U 18k-25k, and premium imported ones can go $U 40k+.\n\nSecond hand you can often find good ones for $U 8k-15k on Marketplace / Mercado Libre.",
+   "chat_id": "9000002",
+   "guard_lang": null
+  },
+  {
+   "kind": "turn",
+   "t": -1792294007.933,
+   "ts": "2026-10-22T14:40:00-03:00",
+   "unix": 1793596142.864,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 53
+  }
+ ]
+}

@@ -1,0 +1,114 @@
+{
+ "id": "A5-018",
+ "child": "heldout-baby-c",
+ "created": [],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T21:28:00-03:00",
+   "chat": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:00 a 07:50."
+  },
+  {
+   "at": "2026-10-22T21:28:00-03:00",
+   "chat": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:00 a 07:50."
+  },
+  {
+   "at": "2026-10-22T21:30:00-03:00",
+   "chat": "9000001",
+   "text": "No tengo el dato en vivo de a qué hora juega Peñarol hoy, fijate en la app de ESPN o en Google que ahí lo ves al toque."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T21:30:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "a q hora juega peñarol hoy",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0125,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T21:28:00-03:00",
+   "unix": 1792715280.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:00 a 07:50.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T21:28:00-03:00",
+   "unix": 1792715280.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:00 a 07:50.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T21:30:00-03:00",
+   "unix": 1792715400.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4139,
+   "output_tokens": 184,
+   "reasoning_tokens": 90,
+   "usd": 0.00595575,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T21:30:00-03:00",
+   "unix": 1792715400.0,
+   "channel": "telegram",
+   "text": "No tengo el dato en vivo de a qué hora juega Peñarol hoy, fijate en la app de ESPN o en Google que ahí lo ves al toque.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792318575.369,
+   "ts": "2026-10-22T21:30:00-03:00",
+   "unix": 1793596175.429,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 26
+  }
+ ]
+}

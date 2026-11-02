@@ -1,0 +1,149 @@
+{
+ "id": "A4-059",
+ "child": "heldout-baby-a",
+ "created": [
+  {
+   "endpoint": "feedings",
+   "id": 2112,
+   "child": 3,
+   "start": "2026-10-23T01:05:00Z",
+   "end": "2026-10-23T01:20:00Z",
+   "duration": "00:15:00",
+   "type": "formula",
+   "method": "bottle",
+   "amount": 90.0,
+   "notes": "length not said, milk type not said",
+   "tags": [
+    "agent"
+   ]
+  },
+  {
+   "endpoint": "notes",
+   "id": 839,
+   "child": 3,
+   "note": "Night wake-up handled by Gonza",
+   "image": null,
+   "time": "2026-10-23T01:21:00Z",
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T22:18:00-03:00",
+   "chat": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:30 a 08:15."
+  },
+  {
+   "at": "2026-10-22T22:18:00-03:00",
+   "chat": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:30 a 08:15."
+  },
+  {
+   "at": "2026-10-22T22:20:00-03:00",
+   "chat": "9000001",
+   "text": "Anoté la mamadera de 90 ml de las 22:20."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T22:20:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "tomo 90 y esta re flojo de sueño, ya se le cierran los ojitos",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0146,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T22:18:00-03:00",
+   "unix": 1792718280.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:30 a 08:15.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T22:18:00-03:00",
+   "unix": 1792718280.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:30 a 08:15.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T22:20:00-03:00",
+   "unix": 1792718400.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4151,
+   "output_tokens": 496,
+   "reasoning_tokens": 402,
+   "usd": 0.00729675,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T22:20:00-03:00",
+   "unix": 1792718400.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T22:20:00-03:00",
+   "unix": 1792718400.0,
+   "channel": "telegram",
+   "text": "Anoté la mamadera de 90 ml de las 22:20.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792321864.365,
+   "ts": "2026-10-22T22:20:00-03:00",
+   "unix": 1793595886.429,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 61
+  }
+ ]
+}

@@ -1,0 +1,170 @@
+{
+ "id": "A2-045",
+ "child": "heldout-baby-c",
+ "created": [
+  {
+   "endpoint": "timers",
+   "id": 311,
+   "child": 5,
+   "name": "sleep",
+   "start": "2026-10-22T21:30:00Z",
+   "duration": "10 07:10:50.419775",
+   "user": 2
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T18:30:00-03:00",
+   "chat": "9000002",
+   "text": "Anoté que el bebé se durmió a las 18:30."
+  },
+  {
+   "at": "2026-10-22T18:31:00-03:00",
+   "chat": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 18:36 a 19:36.\nPor qué: Plan hasta vie 06:31 con descanso en curso hasta las 18:36 y ventana de limpieza de piso de 18:36 a 19:36 en el hueco antes del próximo descanso previsto."
+  },
+  {
+   "at": "2026-10-22T18:31:00-03:00",
+   "chat": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 18:36 a 19:36.\nPor qué: Plan hasta vie 06:31 con descanso en curso hasta las 18:36 y ventana de limpieza de piso de 18:36 a 19:36 en el hueco antes del próximo descanso previsto."
+  },
+  {
+   "at": "2026-10-22T18:31:00-03:00",
+   "chat": "9000001",
+   "text": "Cambió el plan: La ventana anterior de limpieza se superponía con el descanso previsto de 19:36 a 20:51, por eso la moviste al hueco disponible de 18:36 a 19:36."
+  },
+  {
+   "at": "2026-10-22T18:31:00-03:00",
+   "chat": "9000002",
+   "text": "Cambió el plan: La ventana anterior de limpieza se superponía con el descanso previsto de 19:36 a 20:51, por eso la moviste al hueco disponible de 18:36 a 19:36."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T18:30:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "se durmio en el cochecito",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0213,
+ "brain_calls": {
+  "inference.baseten.co": 4
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T18:30:00-03:00",
+   "unix": 1792704600.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4140,
+   "output_tokens": 209,
+   "reasoning_tokens": 134,
+   "usd": 0.00606325,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T18:30:00-03:00",
+   "unix": 1792704600.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T18:30:00-03:00",
+   "unix": 1792704600.0,
+   "channel": "telegram",
+   "text": "Anoté que el bebé se durmió a las 18:30.",
+   "chat_id": "9000002",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792309510.681,
+   "ts": "2026-10-22T18:30:00-03:00",
+   "unix": 1793594440.079,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 25
+  },
+  {
+   "kind": "reply",
+   "t": 180.0,
+   "ts": "2026-10-22T18:31:00-03:00",
+   "unix": 1792704660.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 18:36 a 19:36.\nPor qué: Plan hasta vie 06:31 con descanso en curso hasta las 18:36 y ventana de limpieza de piso de 18:36 a 19:36 en el hueco antes del próximo descanso previsto.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 180.0,
+   "ts": "2026-10-22T18:31:00-03:00",
+   "unix": 1792704660.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 18:36 a 19:36.\nPor qué: Plan hasta vie 06:31 con descanso en curso hasta las 18:36 y ventana de limpieza de piso de 18:36 a 19:36 en el hueco antes del próximo descanso previsto.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 180.0,
+   "ts": "2026-10-22T18:31:00-03:00",
+   "unix": 1792704660.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Cambió el plan: La ventana anterior de limpieza se superponía con el descanso previsto de 19:36 a 20:51, por eso la moviste al hueco disponible de 18:36 a 19:36.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "replan",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 180.0,
+   "ts": "2026-10-22T18:31:00-03:00",
+   "unix": 1792704660.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Cambió el plan: La ventana anterior de limpieza se superponía con el descanso previsto de 19:36 a 20:51, por eso la moviste al hueco disponible de 18:36 a 19:36.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "replan",
+   "check_now": null
+  }
+ ]
+}

@@ -1,0 +1,137 @@
+{
+ "id": "A2-036",
+ "child": "heldout-baby-c",
+ "created": [
+  {
+   "endpoint": "changes",
+   "id": 1534,
+   "child": 5,
+   "time": "2026-10-22T03:30:00Z",
+   "wet": true,
+   "solid": true,
+   "color": "black",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T00:28:00-03:00",
+   "chat": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nPor qué: No hay ventanas programadas hasta las 12:28 porque no hay siestas previstas en ese intervalo y sigue la rotación."
+  },
+  {
+   "at": "2026-10-22T00:28:00-03:00",
+   "chat": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nPor qué: No hay ventanas programadas hasta las 12:28 porque no hay siestas previstas en ese intervalo y sigue la rotación."
+  },
+  {
+   "at": "2026-10-22T00:30:00-03:00",
+   "chat": "9000002",
+   "text": "Logged the 00:30 wet and dirty diaper, black stool."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T00:30:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "diaper: wet + dirty, black sticky poop",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0136,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T00:28:00-03:00",
+   "unix": 1792639680.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nPor qué: No hay ventanas programadas hasta las 12:28 porque no hay siestas previstas en ese intervalo y sigue la rotación.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T00:28:00-03:00",
+   "unix": 1792639680.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nPor qué: No hay ventanas programadas hasta las 12:28 porque no hay siestas previstas en ese intervalo y sigue la rotación.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T00:30:00-03:00",
+   "unix": 1792639800.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4123,
+   "output_tokens": 140,
+   "reasoning_tokens": 51,
+   "usd": 0.00574875,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T00:30:00-03:00",
+   "unix": 1792639800.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T00:30:00-03:00",
+   "unix": 1792639800.0,
+   "channel": "telegram",
+   "text": "Logged the 00:30 wet and dirty diaper, black stool.",
+   "chat_id": "9000002",
+   "guard_lang": null
+  },
+  {
+   "kind": "turn",
+   "t": -1792244799.377,
+   "ts": "2026-10-22T00:30:00-03:00",
+   "unix": 1793594351.383,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 38
+  }
+ ]
+}

@@ -1,0 +1,137 @@
+{
+ "id": "A1-018",
+ "child": "heldout-baby-c",
+ "created": [
+  {
+   "endpoint": "feedings",
+   "id": 1848,
+   "child": 5,
+   "start": "2026-10-22T05:05:00Z",
+   "end": "2026-10-22T05:20:00Z",
+   "duration": "00:15:00",
+   "type": "formula",
+   "method": "bottle",
+   "amount": 60.0,
+   "notes": "length not said, milk type not said",
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T02:18:00-03:00",
+   "chat": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:30 a 08:30.\nPor qué: Limpieza de piso armada para una ventana diurna sin superposición con sueño y el resto de las rutinas apagadas hasta las 14:18."
+  },
+  {
+   "at": "2026-10-22T02:18:00-03:00",
+   "chat": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:30 a 08:30.\nPor qué: Limpieza de piso armada para una ventana diurna sin superposición con sueño y el resto de las rutinas apagadas hasta las 14:18."
+  },
+  {
+   "at": "2026-10-22T02:20:00-03:00",
+   "chat": "9000002",
+   "text": "Anoté la mamadera de 60 ml de las 02:20."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T02:20:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "mamaderaa 60",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0128,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T02:18:00-03:00",
+   "unix": 1792646280.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:30 a 08:30.\nPor qué: Limpieza de piso armada para una ventana diurna sin superposición con sueño y el resto de las rutinas apagadas hasta las 14:18.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T02:18:00-03:00",
+   "unix": 1792646280.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:30 a 08:30.\nPor qué: Limpieza de piso armada para una ventana diurna sin superposición con sueño y el resto de las rutinas apagadas hasta las 14:18.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T02:20:00-03:00",
+   "unix": 1792646400.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4136,
+   "output_tokens": 358,
+   "reasoning_tokens": 272,
+   "usd": 0.0066915,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T02:20:00-03:00",
+   "unix": 1792646400.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T02:20:00-03:00",
+   "unix": 1792646400.0,
+   "channel": "telegram",
+   "text": "Anoté la mamadera de 60 ml de las 02:20.",
+   "chat_id": "9000002"
+  },
+  {
+   "kind": "turn",
+   "t": -1792252165.262,
+   "ts": "2026-10-22T02:20:00-03:00",
+   "unix": 1793593585.49,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 12
+  }
+ ]
+}
