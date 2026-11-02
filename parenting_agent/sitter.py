@@ -43,7 +43,9 @@ PRONOUNS = {"he": ("he", "his", "him"), "she": ("she", "her", "her"), "they": ("
 WAKE_NOTE = re.compile(r"wake-up handled by", re.IGNORECASE)
 # Stricter than the rhythm's guard for what a sitter reads: no medicine, no doses, no treatment, ever.
 DOSAGE_RE = re.compile(r"\b(dose\w*|dosage|mg|medicine\w*|medication\w*|drops|syrup|paracetamol|ibuprofen|acetaminophen|"
-                       r"tylenol|antibiotic\w*|treat\w*|cream|ointment|vitamin\w*)\b", re.IGNORECASE)
+                       r"tylenol|antibiotic\w*|treat\w*|cream|ointment|vitamin\w*|"
+                       r"dosis|medicament\w*|medicina\w*|gotas|jarabe\w*|ibuprofeno|paracetamol|antibi[oó]tic\w*|"
+                       r"tratamiento\w*|crema\w*|pomada\w*|vitamina\w*)\b", re.IGNORECASE)
 HEALTH_LINE = ("For anything about {his} health, call us first. If you cannot reach us, call {pediatrician}. "
                "In an emergency call {emergency}.")
 GUEST_HEALTH_REPLY = ("I can't help with health questions. Please call the parents now. If you cannot reach them, "

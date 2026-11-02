@@ -19,7 +19,10 @@ RECENT_GAPS = 5
 LOG_HOLE = datetime.timedelta(hours=6)
 PARENT_RE = re.compile(r"handled by (.+)$", re.IGNORECASE)
 ADVICE_RE = re.compile(r"\b(should|must|try|recommend|consider|doctor|pediatrician|worr\w*|normal|concern\w*|"
-                       r"sick|ill|fever|medicine|medication|dose|diagnos\w*|need to|advise\w*)\b", re.IGNORECASE)
+                       r"sick|ill|fever|medicine|medication|dose|diagnos\w*|need to|advise\w*|"
+                       # Spanish, with or without accents
+                       r"deber[ií]\w*|deb[eé]s|recomend\w*|recomiend\w*|consult[aá]\w*|m[eé]dic\w*|pediatra\w*|preocup\w*|"
+                       r"enferm\w*|fiebre|medicament\w*|dosis|diagn[oó]stic\w*|aconsej\w*|ten[eé]s que)\b", re.IGNORECASE)
 
 
 def no_advice(text):

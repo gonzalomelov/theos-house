@@ -236,12 +236,12 @@ class PrepMode(unittest.TestCase):
         self.assertEqual(status, "ran")
         self.assertEqual(bag["title"], "Hospital bag")
         self.assertGreaterEqual(len(bag["items"]), 10)
-        state = app.state("v", True)["prep"]
+        state = app.state("v", True, view="prep")["prep"]
         self.assertIn(f"{app_mod.PREP_DUE_IN_DAYS} days to the due date", state["countdown"])
         later, _ = demo(now=at(15, day=29) + datetime.timedelta(days=30))
         self.addCleanup(later.close)
-        self.assertIn(f"{app_mod.PREP_DUE_IN_DAYS} days", later.state("v", True)["prep"]["countdown"])
-        self.assertFalse(any(i["late"] for i in later.state("v", True)["prep"]["items"]))
+        self.assertIn(f"{app_mod.PREP_DUE_IN_DAYS} days", later.state("v", True, view="prep")["prep"]["countdown"])
+        self.assertFalse(any(i["late"] for i in later.state("v", True, view="prep")["prep"]["items"]))
 
     def test_prep_mode_shows_no_real_name_or_house_device(self):
         app, _ = demo()
@@ -333,17 +333,17 @@ class VisitorLanguage(unittest.TestCase):
         state = app.state("v", True, lang="es")
         self.assertTrue(state["proactive"]["night_summary"]["text"].startswith("Esta noche hasta ahora, desde mié 28"))
         self.assertIn("Le toca:", state["proactive"]["night_summary"]["text"])
-        self.assertIn("días para la fecha de parto", state["prep"]["countdown"])
+        self.assertIn("días para la fecha de parto", app.state("v", True, lang="es", view="prep")["prep"]["countdown"])
 
     def test_the_spanish_prep_tab_shows_the_lists_in_spanish(self):
         app, _ = demo()
         self.addCleanup(app.close)
-        state = app.state("v", True, lang="es")["prep"]
+        state = app.state("v", True, lang="es", view="prep")["prep"]
         self.assertEqual(state["lists"]["hospital_bag"]["title"], "Bolso para el sanatorio")
         self.assertTrue(all(item["text"] == app_mod.prep_text_es(item["list"], item["id"], item["text"])
                             and item["text"] != app_mod.PREP_ITEMS_ES[(item["list"], item["id"])][0]
                             for item in state["items"]))
-        english = app.state("v", True, lang="en")["prep"]
+        english = app.state("v", True, lang="en", view="prep")["prep"]
         self.assertEqual(english["lists"]["hospital_bag"]["title"], "Hospital bag")
         self.assertEqual([i["id"] for i in english["items"]], [i["id"] for i in state["items"]])
 
