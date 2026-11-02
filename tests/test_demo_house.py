@@ -284,7 +284,7 @@ class LetMeSleep(unittest.TestCase):
 
     def test_spanish_card_and_note(self):
         muse = FakeMuse(answer(summary="El agua se calienta a las 02:40, antes de la toma de las 02:50."),
-                        answer(on_duty="Parent A", why_changed="Persona B pidió dormir, Persona A toma la noche."))
+                        answer(on_duty="Parent A", why_changed="Mamá pidió dormir, Papá toma la noche."))
         app = make(muse)
         self.addCleanup(app.close)
         app.house("v", False, "tonight", lang="es")
@@ -292,7 +292,7 @@ class LetMeSleep(unittest.TestCase):
         card = body["house"]["sleep"]
         self.assertEqual(card["badge"], "Casa simulada, nada se mueve")
         self.assertEqual(card["rows"][0]["label"], "De turno esta noche")
-        self.assertTrue(any("Persona" in c for c in card["changes"]) or card["changes"] == ["No cambió nada en el plan"])
+        self.assertTrue(any("Papá" in c or "Mamá" in c for c in card["changes"]) or card["changes"] == ["No cambió nada en el plan"])
         self.assertIn("asked to sleep tonight", muse.asked[1]["context"]["what_happened"])
         self.assertIn("Rioplatense Spanish", muse.asked[1]["system"])
         self.assertFalse(any(e["kind"] == "note" for e in body["recent"] if "dormir" in (e["details"].get("text") or "")))
@@ -331,7 +331,7 @@ class AfterSleep(unittest.TestCase):
 
 class ChatRoute(unittest.TestCase):
     def test_house_questions_get_the_plan_with_no_chat_brain_call(self):
-        muse = FakeMuse(answer(), answer(on_duty="Parent A", summary="Persona A toma la noche, el agua se calienta a las 02:40."))
+        muse = FakeMuse(answer(), answer(on_duty="Parent A", summary="Papá toma la noche, el agua se calienta a las 02:40."))
         app = make(muse)
         self.addCleanup(app.close)
         calls = []

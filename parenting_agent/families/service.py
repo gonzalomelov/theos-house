@@ -264,7 +264,7 @@ class Family:
         tools = core_tools(self.memory, self.log, ALLOWED, remember_keys=REMEMBER_KEYS)
         tools.add(Tool("next_feed", "When the next feed is expected, from the rhythm of this family's own log, the same as "
                        "/proxima. Use it for 'a qué hora le toca?' or 'when is the next feed?' and answer with its text.",
-                       schema({}), lambda: service.next_feed(self)["text"]))
+                       schema({}), lambda lang=None: service.next_feed(self)["text"]))
         self.service = service
         self.agent = FamilyAgent(self.bus, self.memory, self.log, tools, FamilyBrain(service, family_id, lambda: self.lang),
                                  max_steps=service.s["max_steps"], history=service.s["history"])
@@ -583,7 +583,8 @@ class Families:
         if now - last > datetime.timedelta(hours=self.s["reminder_max_gap_h"]):
             return {**out, "kind": "old", "text": f.t("LAST_FEED_AT", name=f.name, since=since, ago=ago)}
         day = [e for e in feeds if patterns.when(e) > patterns.when(feeds[-1]) - datetime.timedelta(hours=24)]
-        nxt = patterns.next_feed(rows, now)
+        # The one prediction (patterns.predict); how old a last feed may be is this bot's own reminder_max_gap_h above.
+        nxt = patterns.predict(rows, now, max_gap_h=24)
         few = len(day) < MIN_FEEDS_DAY
         if not nxt or (few and nxt["gap_min"] > FEW_FEEDS_MAX_GAP_MIN):
             return {**out, "kind": "few", "text": f.t("FEW_FEEDS", name=f.name, since=since, ago=ago)}

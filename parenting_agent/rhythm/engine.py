@@ -91,6 +91,33 @@ class RhythmPlugin(Plugin):
         self.rhythm = None
         self.sent = set()
         self.stopped = threading.Event()
+        tools = getattr(agent, "tools", None)
+        if self.born and tools is not None and "next_feed" not in tools.items:
+            # The chat answers "¿cuándo le toca?" with the same next feed the reminders push (blind round b6).
+            from ..agent.tools import Tool, schema
+            tools.add(Tool("next_feed", "When the next feed is expected, from the rhythm of the baby's own log, the same "
+                           "as the reminders. Use it for 'when is the next feed?' and answer with its text.",
+                           schema({}), self.next_feed_text))
+            tools.allowed.add("next_feed")
+
+    def next_feed_text(self, lang=None):
+        """The next feed as a sentence in lang, from sleep_forecast.predict_feed, or how the log stands."""
+        from ..sleep_forecast import predict_feed
+        now = self.clock()
+        try:
+            nxt = predict_feed(self.log.entries(), now)
+        except Exception as error:  # noqa: BLE001 the tool answers that it failed, the chat goes on
+            raise RuntimeError(f"the log could not be read: {str(error)[:120]}") from error
+        lang = "es" if lang == "es" else "en"
+        if not nxt:
+            return ("Todavía no hay tomas recientes en el registro para estimar la próxima." if lang == "es"
+                    else "There are no recent feeds in the log to estimate the next one from.")
+        if nxt["at"] < now:
+            late = round((now - nxt["at"]).total_seconds() / 60)
+            at = patterns.hhmm(nxt["at"].astimezone(self.tz))
+            return (f"Se esperaba una toma cerca de las {at}, hace {late} min." if lang == "es"
+                    else f"A feed was expected around {at}, {late} min ago.")
+        return next_feed_texts(nxt, now, self.tz)[lang]
 
     @property
     def log(self):

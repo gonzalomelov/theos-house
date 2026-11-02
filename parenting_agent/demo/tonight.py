@@ -28,7 +28,8 @@ CRIB_CAP_DB = 50.0
 NIGHT_FROM = 19  # a visit before this hour (from 05:00) sees tonight's plan from 19:00, planned ahead
 # What Muse reads as what_happened when a parent asks to sleep: never written into the log.
 ASKED_TO_SLEEP = "{who} asked to sleep tonight, at {at}"
-NAMES_ES = {"Parent A": "Persona A", "Parent B": "Persona B"}
+# The simulated parents in Spanish: Papá and Mamá, never "Persona A/B" (blind round b6).
+NAMES_ES = {"Parent A": "Papá", "Parent B": "Mamá"}
 
 TEXT = {
     "en": {
@@ -332,7 +333,7 @@ def changes(card, lang="en"):
 
 def why_line(text, lang):
     """Muse's own words about the plan, through the final guard (final_guard.py) in the visitor's language: on the
-    Spanish page an English sentence goes and Parent B reads Persona B, so the card never mixes the two (blind round 1).
+    Spanish page an English sentence goes and Parent B reads Mamá, so the card never mixes the two (blind round 1).
     An empty line when nothing is left: the card then shows no "why" line at all."""
     if not text:
         return ""
@@ -343,7 +344,7 @@ def why_line(text, lang):
         return ""
     if lang != "es":
         return result.text
-    # A short English sentence ("Persona B takes the night.") is below the guard's two English words: the Spanish card
+    # A short English sentence ("Mamá takes the night.") is below the guard's two English words: the Spanish card
     # drops every sentence with an English word that does not read Spanish.
     from ..agent import rules
     return " ".join(p for p in final_guard.SENTENCE.split(result.text)

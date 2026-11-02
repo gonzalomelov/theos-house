@@ -103,7 +103,7 @@ def is_prep(text):
 # The prep lists come from the real family plan. In the demo the parents are Parent A and Parent B, and no house device
 # id or address is ever shown.
 DEMO_NAMES = (("Gonza", "Parent A"), ("Ceci", "Parent B"))
-DEMO_NAMES_ES = (("Gonza", "Persona A"), ("Ceci", "Persona B"))
+DEMO_NAMES_ES = (("Gonza", "Papá"), ("Ceci", "Mamá"))
 DEVICE_ID = re.compile(r"\s*\(?\b(light|switch|sensor|todo|media_player)\.[A-Za-z0-9_]+\)?")
 # Replies the demo builds itself, in the visitor's language. Spanish is es-UY: voseo, "mamadera", "pañal".
 TEXTS = {
@@ -135,18 +135,25 @@ MONTHS_ES = {"Jan": "ene", "Feb": "feb", "Mar": "mar", "Apr": "abr", "May": "may
              "Aug": "ago", "Sep": "set", "Oct": "oct", "Nov": "nov", "Dec": "dic"}
 
 
-# "Persona B queda de turno y él recibe los avisos" (round b5): Persona A and B have no gender, so a pronoun next to
-# them goes. Only in a sentence that names a Persona and not Theo, whose él is right.
-PERSONA = re.compile(r"\bPersona [AB]\b")
+# "Persona B queda de turno y él recibe los avisos" (round b5). Since blind round b6 the Spanish parents are Papá and
+# Mamá, so a pronoun next to one of them follows them: "Mamá queda de turno y ella recibe los avisos". A sentence that
+# names Theo keeps his él, and one that names both parents loses the pronoun.
+PARENT_ES = re.compile(r"\b(Papá|Mamá)\b")
+PRONOUN = re.compile(r"\b([ÉéEe]l|[Ee]lla)\s+(?=(recibe|queda|est[aá]|va|se encarga|tiene|hace|duerme|descansa|atiende|"
+                     r"le toca|toma|sigue|puede|cubre|se levanta|lleva)\b)")
 
 
 def neutral_persona(text):
-    """A Spanish reply never gives Persona A or B a gender."""
+    """A Spanish reply gives Papá him and Mamá her, and a sentence naming both parents no pronoun."""
     out = []
     for sentence in re.split(r"((?<=[.!?])\s+)", text or ""):  # the spaces and line breaks between are kept
-        if PERSONA.search(sentence) and not re.search(r"\bTheo\b", sentence):
-            sentence = re.sub(r"\b([ÉéEe]l|[Ee]lla)\s+(?=(recibe|queda|est[aá]|va|se encarga|tiene|hace|duerme|descansa|atiende|"
-                              r"le toca|toma|sigue|puede|cubre|se levanta|lleva)\b)", "", sentence)
+        named = set(PARENT_ES.findall(sentence))
+        if named and not re.search(r"\bTheo\b", sentence):
+            if len(named) == 1:
+                word = "él" if named == {"Papá"} else "ella"
+                sentence = PRONOUN.sub(lambda m: (word.capitalize() if m.group(1)[0].isupper() else word) + " ", sentence)
+            else:
+                sentence = PRONOUN.sub("", sentence)
             sentence = sentence[:1].upper() + sentence[1:]
         out.append(sentence)
     return "".join(out)
@@ -201,7 +208,7 @@ def night_es(text):
                    (" feeds,", " tomas,"), ("longest sleep", "sueño más largo"), ("Wake-ups:", "Despertares:"),
                    ("Next on duty:", "Le toca:"), (", a parent asked.", ", porque alguien lo pidió."), ("Next feed expected around", "Próxima toma cerca de las")):
         out = out.replace(en, es)
-    for label, persona in tonight.NAMES_ES.items():  # the Spanish page says Persona A, never Parent A (blind round 1)
+    for label, persona in tonight.NAMES_ES.items():  # the Spanish page says Papá, never Parent A (blind rounds 1 and b6)
         out = re.sub(rf"\b{label}\b", persona, out)
     return out
 
@@ -221,8 +228,9 @@ SIMULATED = "Simulated in the demo, nothing ran in a real house"
 SIMULATED_ES = "Simulado en la demo, nada corrió en una casa real"
 DEMO_NOTE = """
 This is a public demo. The baby is a simulated baby boy called Theo, a few weeks old, and the log is a simulated week.
-Always say he and him for Theo. The parents are Parent A and Parent B, simulated too. They have no gender: never say he,
-she, him or her for a parent, and in Spanish never write él or ella for Persona A or Persona B, say the label again.
+Always say he and him for Theo. The parents are Parent A and Parent B, simulated too. In English they have no gender:
+never say he, she, him or her for a parent. In Spanish they are Papá (Parent A) and Mamá (Parent B), never Parent A,
+Parent B, Persona A or Persona B.
 For who is up next at night, call night_rota and answer with its text: the night rota is the fair split of wake-ups.
 For what the house will do tonight, call tonight_house and answer from its text: Muse's checked plan for the simulated
 house. When a parent is exhausted or asks to sleep tonight, call tonight_house with asked_to_sleep true: it re-plans the
@@ -304,11 +312,14 @@ class DemoAgent(Agent):
         return self.turn_lang or self.page_lang
 
     def guard_names(self):
-        """The simulated parents are Parent A and Parent B on the English page, Persona A and B on the Spanish one."""
+        """The simulated parents are Parent A and Parent B on the English page, Papá and Mamá on the Spanish one."""
         return tonight.NAMES_ES if self.reply_lang() == "es" else {label: label for label in PARENTS}
 
     def refusal(self, request):
         return TEXTS[self.lang(request)]["REFUSAL"]
+
+    privacy_who = {"en": "Only you see this demo chat, no other visitor reads it.",
+                   "es": "Solo vos ves este chat de la demo, ningún otro visitante lo lee."}
 
     def self_answer(self, lang):
         lang = lang if lang in rules.SELF_ANSWER else "en"
@@ -422,7 +433,7 @@ class Visitor:
         return out
 
     def local_names(self, arguments):
-        """A simulated parent named in the page's language: Persona B on the Spanish page, never Parent B (round b4)."""
+        """A simulated parent named in the page's language: Mamá on the Spanish page, never Parent B (rounds b4 and b6)."""
         return {k: tonight.name(v, self.turn_lang) if isinstance(v, str) else v for k, v in (arguments or {}).items()}
 
     def prep(self):
@@ -447,7 +458,9 @@ class Visitor:
         start = len(self.bus.history)
         self.replies.clear()
         from_log = rules.is_cry_question(text) and not rules.is_health(text) and not rules.is_log_request(text)
-        house = None if from_log else house_question(text)
+        # A long cry ("no para de llorar hace media hora, estoy reventado") is the agent's long cry answer from the log,
+        # never the house plan its "reventado" would ask for (blind round b6).
+        house = None if from_log or rules.is_long_cry(text) else house_question(text)
         if house:
             self.memory.add_message("demo", "user", text, ts=self.baby_log.now())
             card, _ = self.house_plan(house, said=text if house == "sleep" else None)
@@ -559,7 +572,7 @@ class Visitor:
         out = {}
         # Feeds within 30 minutes of the one before are one feed for the rhythm, as on the families bot: a bottle stored
         # twice made the round 5 demo say feeds come every 8 minutes.
-        nxt = patterns.next_feed(sessions(rows), now)
+        nxt = patterns.predict(rows, now)
         if nxt:
             minutes = round((nxt["at"] - now).total_seconds() / 60)
             when = patterns.hhmm(nxt["at"].astimezone(TZ))
@@ -587,18 +600,43 @@ class Visitor:
             out["fever"] = {"text": fever}
         return out
 
-    def next_feed_text(self):
-        nxt = self.proactive().get("next_feed")
-        return nxt["text"] if nxt else "Not enough feeds in the log yet to tell when the next one is."
+    def next_feed_text(self, lang=None):
+        """The panel's next feed line, in the language of the message being answered."""
+        lang = lang or self.turn_lang
+        nxt = self.proactive(lang).get("next_feed")
+        if nxt:
+            return nxt["text"]
+        return ("Todavía no hay suficientes tomas en el registro para saber cuándo es la próxima." if lang == "es"
+                else "Not enough feeds in the log yet to tell when the next one is.")
 
     def close(self):
         self.memory.close()
         if self._prep is not None:
             self._prep.memory.close()
 
-    def recent(self, limit=6):
-        return [{"kind": e["kind"], "at": e["ts"][11:16], "day": e["ts"][:10], "details": e["details"]}
+    def recent(self, limit=6, lang="en"):
+        return [{"kind": e["kind"], "at": e["ts"][11:16], "day": e["ts"][:10], "details": note_view(e, lang)}
                 for e in self.baby_log.entries(None, None, limit)][::-1]
+
+
+# The simulated week's own notes are English: the Spanish page reads them in Spanish (blind round b6 saw "Night wake-up
+# handled by Parent B" there).
+NOTES_ES = ((re.compile(r"^Night wake-up handled by (.+)$"), lambda m: f"Despertar de noche, lo atendió {tonight.name(m.group(1), 'es')}"),
+            (re.compile(r"^Unusual day: evening cluster feeding$"), lambda m: "Día distinto: tomas seguidas a la tarde"),
+            (re.compile(r"^Unusual night: short, fussy sleep$"), lambda m: "Noche distinta: sueño corto e inquieto"),
+            (re.compile(r"^Bath$"), lambda m: "Baño"))
+
+
+def note_view(entry, lang):
+    """An entry's details for the page: a note of the simulated week in the page's language."""
+    details = entry["details"]
+    if lang != "es" or entry["kind"] not in ("note", "bath") or not isinstance(details.get("text"), str):
+        return details
+    for pattern, spanish in NOTES_ES:
+        match = pattern.match(details["text"].strip())
+        if match:
+            return {**details, "text": spanish(match)}
+    return details
 
 
 def scrub(text, names=DEMO_NAMES):
@@ -824,7 +862,7 @@ class DemoApp:
         lang = self.visitor_lang(vid, lang)
         known = self.known(vid)
         v = known or self.fresh_state()
-        return {"proactive": v.proactive(lang), "recent": v.recent(), "prep": v.prep().state(lang),
+        return {"proactive": v.proactive(lang), "recent": v.recent(lang=lang), "prep": v.prep().state(lang),
                 "house": known.house_cards(lang) if known else {},
                 "remaining": self.remaining(vid, internal), "resting": self.brain.resting(), "max_input": self.s["max_input_chars"]}
 
@@ -870,7 +908,7 @@ class DemoApp:
                     v.bus.publish("agent_error", error=str(error)[:300])
                     v.memory.add_message("demo", "assistant", THINK_FAIL)
                     return 502, {"error": "brain", "reply": safety or THINK_FAIL, "remaining": self.remaining(vid, internal)}
-            return 200, {"reply": reply, "actions": actions, "mode": mode, "answered_by": v.answered_by, "proactive": v.proactive(lang), "recent": v.recent(),
+            return 200, {"reply": reply, "actions": actions, "mode": mode, "answered_by": v.answered_by, "proactive": v.proactive(lang), "recent": v.recent(lang=lang),
                          "prep": v.prep().state(lang), "house": v.house_cards(lang), "remaining": self.remaining(vid, internal)}
         finally:
             self.thinking.release()
@@ -909,7 +947,7 @@ class DemoApp:
             self.thinking.release()
 
     def house_body(self, v, vid, internal, lang):
-        return {"house": v.house_cards(lang), "proactive": v.proactive(lang), "recent": v.recent(),
+        return {"house": v.house_cards(lang), "proactive": v.proactive(lang), "recent": v.recent(lang=lang),
                 "remaining": self.remaining(vid, internal)}
 
     def reset(self, vid, internal, client=None, lang=None):

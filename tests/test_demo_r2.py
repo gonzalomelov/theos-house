@@ -367,7 +367,7 @@ class VisitorLanguage(unittest.TestCase):
         status, bag = prep.agent.tools.run("prep_list", {"list": "hospital_bag"})
         self.assertEqual(bag["title"], "Bolso para el sanatorio")
         self.assertIn("Cargadores del celular y un cable largo", [i["text"] for i in bag["items"]])
-        self.assertIn("Ropa para Persona B", json.dumps(bag, ensure_ascii=False))
+        self.assertIn("Ropa para Mamá", json.dumps(bag, ensure_ascii=False))
         status, done = prep.agent.tools.run("prep_check", {"item": "cargadores"})
         self.assertEqual(status, "ran")
         self.assertTrue(done.startswith("done: Phone chargers"))

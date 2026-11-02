@@ -163,6 +163,8 @@ SAFE_SLEEP_ASK = re.compile(r"\?|\b(can|could|should|is it|is that|ok|okay|safe\
                             r"deber[ií]a|est[aá] bien|es seguro|segur\w*|cómo|qué|cuál|dónde|conviene|hay que)\b|"
                             r"(^|[.,;:!¡¿]\s*)(como|que|cual|donde)\b", re.I)
 SAFE_SLEEP_SOURCE = "https://www.healthychildren.org/English/ages-stages/baby/sleep/Pages/a-parents-guide-to-safe-sleep.aspx"
+# The same AAP pages in Spanish, for a Spanish reader (blind round b6 read the English link in a Spanish reply).
+SAFE_SLEEP_SOURCE_ES = "https://www.healthychildren.org/Spanish/ages-stages/baby/sleep/Paginas/a-parents-guide-to-safe-sleep.aspx"
 SAFE_SLEEP_FACT = {
     "en": ("This is the public safe sleep guidance of the American Academy of Pediatrics, for every baby, not advice about "
            "yours: on the back for every nap and at night, on a firm, flat surface, with nothing else in the crib (no pillows, "
@@ -177,7 +179,7 @@ SAFE_SLEEP_FACT = {
            "misma cama no. Si se duerme en la sillita del auto, la hamaca o el fular, se pasa a una superficie firme y plana, "
            "boca arriba, y también si se duerme en tus brazos. Nada inclinado y nada con peso (ni saco de dormir, ni manta, "
            "ni envoltura con peso). Un bebé envuelto siempre duerme boca arriba, y se deja de envolver cuando empieza a "
-           f"querer darse vuelta. Fuente: {SAFE_SLEEP_SOURCE} Para cualquier cosa de la salud de tu bebé, consultá a tu pediatra."),
+           f"querer darse vuelta. Fuente: {SAFE_SLEEP_SOURCE_ES} Para cualquier cosa de la salud de tu bebé, consultá a tu pediatra."),
 }
 # Health and feeding-safety talk. Never a log request, so the not-logged check never answers it with "send it again".
 HEALTH = re.compile(r"\b(fell(?! (back )?asleep)|fall(s|en)?(?! asleep)|rol+ed off|tumbled|se (me )?cay[oó](?! (dormid|rendid|el chupete|la mamadera|el biber|el tete|el juguete))|ca[ií]da|"
@@ -323,6 +325,9 @@ EMERGENCY_REPLY = {
 FEVER_SOURCE = "https://www.healthychildren.org/English/health-issues/conditions/fever/Pages/When-to-Call-the-Pediatrician.aspx"
 NEWBORN_SOURCE = ("https://www.healthychildren.org/English/tips-tools/symptom-checker/Pages/symptomviewer.aspx"
                   "?symptom=Newborn+Illness+-+How+to+Recognize")
+FEVER_SOURCE_ES = "https://www.healthychildren.org/Spanish/health-issues/conditions/fever/Paginas/When-to-Call-the-Pediatrician.aspx"
+NEWBORN_SOURCE_ES = ("https://www.healthychildren.org/Spanish/tips-tools/symptom-checker/Paginas/symptomviewer.aspx"
+                     "?symptom=Newborn+Illness+-+How+to+Recognize")
 FEVER_WORD = re.compile(r"\b(fever\w*|febrile|high temp\w*|fiebre|febril|calentura|afiebrad\w*|(temperatura|temp) (alta|elevada))\b",
                         re.I)
 # Hot to the touch, with no number: a fever word for a newborn, unless the message is about the water or the room.
@@ -386,7 +391,7 @@ URGENT_REPLY = {
                f"the American Academy of Pediatrics, not advice about your baby: {FEVER_SOURCE}"),
         "es": (EMERGENCY_REPLY["es"] + " O andá a emergencia, y avisale a su pediatra. Un bebé de menos de 3 meses con "
                "38 °C (100,4 °F) o más de temperatura tiene que verlo un médico ya. Es la guía pública de la Academia "
-               f"Estadounidense de Pediatría (AAP), no un consejo sobre tu bebé: {FEVER_SOURCE}"),
+               f"Estadounidense de Pediatría (AAP), no un consejo sobre tu bebé: {FEVER_SOURCE_ES}"),
     },
     "red_flag": {
         "en": (EMERGENCY_REPLY["en"] + " Or go to the emergency room, and tell your pediatrician. That is on the list of "
@@ -394,7 +399,7 @@ URGENT_REPLY = {
                f"not advice about your baby: {NEWBORN_SOURCE}"),
         "es": (EMERGENCY_REPLY["es"] + " O andá a emergencia, y avisale a su pediatra. Eso está en la lista de señales en "
                "un recién nacido para actuar ya. Es la guía pública de la Academia Estadounidense de Pediatría (AAP), no "
-               f"un consejo sobre tu bebé: {NEWBORN_SOURCE}"),
+               f"un consejo sobre tu bebé: {NEWBORN_SOURCE_ES}"),
     },
     # Yellow skin or eyes asked about calmly: on the newborn list, to call the pediatrician about today, not 911.
     "jaundice": {
@@ -404,7 +409,7 @@ URGENT_REPLY = {
         "es": ("La piel o los ojos amarillos en un recién nacido están en la lista de señales para consultar hoy con su "
                "pediatra. Si además está muy dormido, no quiere comer o lo amarillo avanza, llamá ahora a su pediatra o al "
                "911. Es la guía pública de la Academia Estadounidense de Pediatría (AAP), no un consejo sobre tu bebé: "
-               f"{NEWBORN_SOURCE}"),
+               f"{NEWBORN_SOURCE_ES}"),
     },
 }
 # What the logged fever line says when it speaks first later (the panel, tonight's plan, the morning message): the
@@ -416,7 +421,7 @@ FEVER_LOGGED_LINE = {
            f"baby: {FEVER_SOURCE}"),
     "es": ("Un bebé de menos de 3 meses con 38 °C (100,4 °F) o más de temperatura tiene que verlo un médico ya. Llamá "
            "ahora a tu pediatra o andá a emergencia. Si no los ubicás, llamá al 911. Es la guía pública de la Academia "
-           f"Estadounidense de Pediatría (AAP), no un consejo sobre tu bebé: {FEVER_SOURCE}"),
+           f"Estadounidense de Pediatría (AAP), no un consejo sobre tu bebé: {FEVER_SOURCE_ES}"),
 }
 JAUNDICE = re.compile(
     r"\b(jaundic\w*|(skin|eyes?|face|body|chest|whites of (his|her|the) eyes)( is| are| looks?| turned| turning| seems?| got)?"
@@ -712,6 +717,23 @@ def is_cry_question(text):
     return is_bare_cry_question(text)
 
 
+# A crying message that asks the agent to do something in the house is the agent's: "she's crying, put the white noise on".
+CRY_ORDER = re.compile(r"\b(white noise|ruido blanco|announce|anunci\w*|llam[aá]|call|avis[aá]|tell|dec[ií]le|luz|light|dim|"
+                       r"pon[eé]|prend[eé]|apag[aá]|put|set|turn|start|stop|pause|remind|record[aá]\w*|anot[aá]|log)\b", re.I)
+
+
+def is_long_cry(text):
+    """True for a crying message that is more than a bare "why is he crying?" and holds no symptom, red flag or order:
+    "no para de llorar hace media hora y ya comió, estoy reventado". It gets the log's facts, the fixed checklist and the
+    fixed when-to-call line (cry_reason.long_cry), never a house plan."""
+    text = text or ""
+    if not CRY.search(text) or is_bare_cry_question(text) or is_health(text) or names_red_flag(text) \
+            or newborn_red_flag(text) is not None or is_emergency(text) or CRY_ORDER.search(text):
+        return False
+    # "se despertó 4 y 55 llorando" reports a wake-up: the log path keeps its time.
+    return not (SYMPTOM.search(text) or says_woke(text) or says_sleep(text))
+
+
 WET_SAID = re.compile(r"wet|pee|wee|pis|pich|mojad|orin|me[oó]\b|meado|both|ambos|los dos|y (con )?ca(c|qu)|and dirty|and poo", re.I)
 # Stems, not whole words: "caquita", "cacona", "popó" and "sucito" are all a dirty diaper (round 4 blind, step 13).
 SOLID_SAID = re.compile(r"dirty|poo|solid|caca|caqu|cacon|suci|pop[oó]|deposici|both|ambos|los dos", re.I)
@@ -858,9 +880,11 @@ def side_said(text):
     return None
 
 
-def latest_time(ts, now, request=""):
+def latest_time(ts, now, request="", nearest=False):
     """A clock time the parent named, "a las 4 y media", is the latest such time not after now. The brain sometimes
-    puts it on the wrong day, so its date is kept only when the parent named a day."""
+    puts it on the wrong day, so its date is kept only when the parent named a day. With nearest, a new entry's time is
+    the moment with that clock time nearest to now (nearest_clock), so a time that has not come yet stays in the future
+    and is asked about, never moved a day back."""
     if not ts or DAY_SAID.search(request or ""):
         return ts
     try:
@@ -870,6 +894,8 @@ def latest_time(ts, now, request=""):
     if moment.tzinfo is None:
         moment = moment.replace(tzinfo=now.tzinfo)
     moment = moment.astimezone(now.tzinfo)
+    if nearest:
+        return nearest_clock(moment.hour, moment.minute, True, now).isoformat(timespec="seconds")
     latest = now.replace(hour=moment.hour, minute=moment.minute, second=moment.second, microsecond=0)
     if latest > now:
         latest -= datetime.timedelta(days=1)
@@ -877,12 +903,13 @@ def latest_time(ts, now, request=""):
 
 
 def latest_start_end(details, now, request=""):
-    """A start and an end the parent named as clock times: the end is the latest such time not after now and the start
-    the latest such time not after the end, so the pair keeps its order whatever the hour the message came."""
+    """A start and an end the parent named as clock times: the end is the moment with that clock time nearest to now
+    (in the future it is asked about) and the start the latest such time not after the end, so the pair keeps its
+    order whatever the hour the message came."""
     details = dict(details)
     anchor = now
     if details.get("end"):
-        details["end"] = latest_time(details["end"], now, request)
+        details["end"] = latest_time(details["end"], now, request, nearest=True)
         try:
             anchor = datetime.datetime.fromisoformat(str(details["end"]))
         except ValueError:
@@ -1002,13 +1029,36 @@ def latest_clock(hour, minute, fixed, now):
     return max(moments)
 
 
+# Within this of now a time is now: a parent's clock and the server's can be a minute or two apart.
+CLOCK_SLACK = datetime.timedelta(minutes=5)
+# A reading of the time this close ahead, and nearer than the latest past one, is what the parent most likely meant.
+FUTURE_NEAR = datetime.timedelta(hours=3)
+
+
+def nearest_clock(hour, minute, fixed, now):
+    """The moment a clock time the parent named means, over both readings of an hour said with no half of the day: the
+    latest such moment not after now, unless a reading still ahead of now is nearer and within 3 hours. That one comes
+    back in the future, so the caller asks and never logs it. Blind round b6 sent "a las 3" at 01:37 and "at 2:40" at
+    01:42, and both were logged at 15:00 and 14:40 the day before, with a false "feeds came 36 min apart" note after
+    them, and "it's 2am, 90 ml bottle" at 01:32 was logged at 02:00. "a las 2" at 15:00 stays 14:00, "a las 12 y 40" at
+    00:50 stays 00:40, "at 4" at 11:00 stays 04:00 and "a las 2 de la mañana" at 15:00 stays 02:00 today."""
+    hours = [hour] if fixed or hour >= 12 else [hour, hour + 12]
+    moments = [now.replace(hour=h % 24, minute=minute, second=0, microsecond=0) + datetime.timedelta(days=d)
+               for h in hours for d in (-1, 0, 1)]
+    past = max(t for t in moments if t <= now + CLOCK_SLACK)
+    ahead = min(t for t in moments if t > now + CLOCK_SLACK)
+    if ahead - now <= FUTURE_NEAR and ahead - now < now - past:
+        return ahead
+    return past
+
+
 def named_time(request, now):
-    """The clock time a note names, "a las 3", "4 y 55", "at 3:15", "at noon", as the latest such moment not after now,
-    or None when it names none or more than one, names a day, or gives a range."""
+    """The clock time a note names, "a las 3", "4 y 55", "at 3:15", "at noon", as the moment with that clock time
+    nearest to now (nearest_clock), or None when it names none or more than one, names a day, or gives a range."""
     found = clock_times(request)
     if len(found) != 1 or DAY_SAID.search(request or "") or RANGE_SAID.search(request or ""):
         return None
-    return latest_clock(*found[0], now).isoformat(timespec="seconds")
+    return nearest_clock(*found[0], now).isoformat(timespec="seconds")
 
 
 # A breast feed that ended as the message was sent: "arranque 2:15 y largo recien", "from 2:15 until now".
@@ -1056,14 +1106,50 @@ LAST_FEED = re.compile(
     r"\b(?:time of |what time was )(?:the |his |her )?last (?:feed|feeding|bottle)\b", re.I)
 
 
+# The parts of a message that ask about the log, each answered by code from the log when the reply leaves it out:
+# "le di 90 ml, ¿cuándo le toca?" logs the bottle and says the next feed, and "¿cuándo fue la última toma y cuántos
+# pañales lleva hoy?" gets both (blind round b6 answered only the first part of each, the next feed sat in the panel).
+LOG_QUESTIONS = (
+    ("next_feed", re.compile(
+        r"\b(?:cu[aá]ndo|a qu[eé] hora|para cu[aá]ndo)\b[^?.!]{0,25}\b(?:le toca|toca (?:la )?(?:otra|la pr[oó]xima)|"
+        r"(?:la )?pr[oó]xima(?: toma| mamadera)?|vuelve a (?:comer|tomar)|va a (?:pedir|comer|tomar)|deber[ií]a (?:comer|tomar))|"
+        r"\bpr[oó]xima toma\b|\ble toca\b[^?.!]{0,10}\?|"
+        r"\bnext (?:feed|feeding|bottle)\b|\bwhen (?:is|will|should|do|does|would|can)\b[^?.!]{0,40}\b(?:feed|eat|bottle|hungry)\b"
+        r"(?! (?:last|earlier))|\bwhen (?:is )?(?:he|she|the baby|theo) due\b", re.I)),
+    ("last_feed", re.compile(LAST_FEED.pattern + r"|\blast (?:feed|feeding|bottle)\b|\b[uú]ltima (?:toma|mamadera)\b", re.I)),
+    ("diapers", re.compile(r"\b(?:cu[aá]ntos|how many|cantidad de|n[uú]mero de)\s+(?:pa[nñ]ales|diapers|cambios)\b|"
+                           r"\bdiaper (?:count|total)s?\b|\bpa[nñ]ales (?:lleva|van|hay|hizo|hoy)\b", re.I)),
+)
+
+
+def log_questions(text):
+    """The log questions a message asks, in the order of LOG_QUESTIONS: next_feed, last_feed, diapers. A message
+    with no question in it asks none, and neither does a health or red flag message."""
+    text = text or ""
+    found = [name for name, pattern in LOG_QUESTIONS if pattern.search(text)] if is_question(text) else []
+    if not found and re.search(r"\b(?:last feed|[uú]ltima toma)\b", text, re.I) and re.search(
+            r"\b(?:diaper|pa[nñ]al)\w*\s+(?:count|total)|\bcu[aá]ntos pa[nñ]ales\b", text, re.I):
+        found = ["last_feed", "diapers"]  # "last feed and diaper count", with no question mark
+    if found and (is_medical(text) or is_medical_es(text) or names_red_flag(text)):
+        return []
+    return found
+
+
 def asks_last_feed(text):
     """True for a question about when the baby last ate, never for a message that logs a feed."""
     text = text or ""
     return bool(LAST_FEED.search(text)) and is_question(text) and not re.search(r"\b\d+\s*(?:ml|cc|oz)\b", text, re.I)
 
 
+# A question typed as a list, with no question mark: "last feed and diaper count" (blind round b6 got "I could not log
+# that"). A number in it ("last feed was 90 ml") makes it a report.
+LIST_ASK = re.compile(r"^(?!.*\d).*\b(diaper|pa[nñ]al(es)?|feed|feeding|toma|tomas)\s+(count|total|totals|cuenta)\b|"
+                      r"^\s*(last feed|[uú]ltima toma|next feed|pr[oó]xima toma)\s*(and|y|,|$)(?!.*\d)", re.I)
+
+
 def is_question(text):
-    return "?" in text or bool(QUESTION_START.search(text.strip())) or bool(RELAYED_QUESTION.search(text))
+    return ("?" in text or bool(QUESTION_START.search(text.strip())) or bool(RELAYED_QUESTION.search(text))
+            or bool(LIST_ASK.search(text)))
 
 
 def latest_span(h1, m1, h2, m2, now=None):
@@ -1221,6 +1307,18 @@ def unmet_claims(text, ran):
             if not (tools & set(ran)):
                 out.add(m.group(0).lower())
     return out
+
+
+def without_claims(text, ran=()):
+    """text without the sentences that say the agent logged, changed, sent or did something in the house, for an answer
+    to a question on which no write was tried. "" when every sentence was such a claim."""
+    kept = []
+    for sentence in re.split(r"(?<=[.!?])\s+", (text or "").strip()):
+        if claims_done(sentence) or claims_change(sentence) or claims_acted(sentence) or describes_house(sentence) \
+                or unmet_claims(sentence, ran):
+            continue
+        kept.append(sentence)
+    return " ".join(kept).strip()
 
 
 def claims_done(text):
@@ -1888,8 +1986,16 @@ FEVER_SPOKEN = {
 FEVER_HOURS = 24
 
 
+def logged_temperature_fever(text):
+    """True when a log note holds a fever reading: a body temperature of 38.0 °C (100.4 °F) or more said of the baby.
+    "He feels warm", "tiene fiebre" or a note Muse wrote as "possible fever" hold no reading: blind round b6 read "A
+    fever was logged at 01:33" on the house plan after "he feels warm and won't eat"."""
+    text = text or ""
+    return bool(TEMP_NUMBER.search(text) and names_fever(text) and not NO_FEVER.search(text))
+
+
 def logged_fever(entries, now, hours=FEVER_HOURS):
-    """The newest note in the last `hours` that says the baby has a fever, or None."""
+    """The newest note in the last `hours` with a fever reading of 38.0 °C or more (logged_temperature_fever), or None."""
     since = now - datetime.timedelta(hours=hours)
     found = None
     for entry in entries or []:
@@ -1901,7 +2007,7 @@ def logged_fever(entries, now, hours=FEVER_HOURS):
         except ValueError:
             continue
         at = at.replace(tzinfo=now.tzinfo) if at.tzinfo is None else at.astimezone(now.tzinfo)
-        if since <= at <= now + datetime.timedelta(minutes=5) and names_fever(text):
+        if since <= at <= now + datetime.timedelta(minutes=5) and logged_temperature_fever(text):
             if found is None or at >= found[0]:
                 found = (at, entry)
     return found
@@ -1968,3 +2074,22 @@ SELF_LOG = {"en": "The baby log stays on the family's own server.", "es": "El re
 
 def asks_about_self(text):
     return bool(ASKS_SELF.search(text or "")) and not is_health(text)
+
+
+# "Who can see these messages? Do they stay private?": who reads the chat and where what is sent goes, from the facts,
+# the same every time (blind round b6 got "I did not send anything, nothing ran").
+ASKS_PRIVACY = re.compile(
+    r"\bwho (can|could|else|gets to)?\s*(see|sees|read|reads|access|has access to)\b[^.!?]{0,30}\b(messages?|chats?|this|log|data)\b|"
+    r"\b(are|is|do|does|will) (these|my|our|the|this) (messages?|chats?|data|conversation|log)\b[^.!?]{0,25}\b(private|"
+    r"stay private|kept private|safe|secure|shared|stored|saved|kept)\b|\bprivacy\b|\bwhere (is|are|do|does) (my|our|the) "
+    r"(data|messages?)\b|"
+    r"\bqui[eé]n(es)? (puede|pueden|m[aá]s)?\s*(ve|ver|lee|leer|ven|leen|tiene acceso)\b[^.!?]{0,30}\b(mensajes?|chats?|esto|registro|datos)\b|"
+    r"\b(mis|los|estos|nuestros) (mensajes|datos|chats?)\b[^.!?]{0,25}\b(son|quedan|est[aá]n)\s+(privad|guardad|segur)\w*|"
+    r"\b(son|quedan|est[aá]n) (privad[oa]s|guardad[oa]s|segur[oa]s)\b[^.!?]{0,20}\b(mensajes|datos|chats?)\b|\bprivacidad\b|\bd[oó]nde (quedan|van|se guardan) "
+    r"(mis|los|nuestros) (datos|mensajes)\b", re.I)
+PRIVACY_WHO = {"en": "Only the parents in this chat read these messages.",
+               "es": "Solo los padres en este chat leen estos mensajes."}
+
+
+def asks_privacy(text):
+    return bool(ASKS_PRIVACY.search(text or "")) and not is_health(text)

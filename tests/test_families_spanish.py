@@ -18,7 +18,8 @@ from test_families import TZ, CountingBrain, FakeTelegram, family_of, make, text
 # Words that only English text has. The Spanish texts name English twice on purpose, as the way to switch.
 ENGLISH = re.compile(r"\b(the|you|your|please|send|done|feed|feeds|diaper|diapers|logged|today|welcome|nothing|"
                      r"could|not|is|are|and|of|at|here|bath|sleep|deleted|limit|reminders are)\b", re.I)
-ALLOWED_ENGLISH = ("For English send /language.", "/language English", rules.FEVER_SOURCE, rules.NEWBORN_SOURCE)
+ALLOWED_ENGLISH = ("For English send /language.", "/language English", rules.FEVER_SOURCE, rules.NEWBORN_SOURCE,
+                   rules.FEVER_SOURCE_ES, rules.NEWBORN_SOURCE_ES)
 
 
 class SpanishBrain(CountingBrain):

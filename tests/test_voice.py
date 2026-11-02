@@ -354,7 +354,11 @@ class Guards(unittest.TestCase):
         calls = [{"id": "1", "name": "log_baby_event", "arguments": {"kind": "feeding", "details": {"amount_ml": 90}}}]
         agent = self.agent([Reply(tool_calls=calls), Reply("Logged.")])
         agent.handle({"kind": "message", "channel": "console", "text": "le di 90 ml de mamadera a las 3"})
-        self.assertIn(agent.baby_log.entries("feeding")[0]["ts"][11:16], ("03:00", "15:00"))
+        feeds = agent.baby_log.entries("feeding")
+        if feeds:
+            self.assertIn(feeds[0]["ts"][11:16], ("03:00", "15:00"))
+        else:  # sent within 3 hours before 03:00 or 15:00, that time has not come yet and is asked (blind round b6)
+            self.assertIn("en el futuro", [e["text"] for e in agent.bus.history if e["kind"] == "reply"][-1])
 
 
 class Image(unittest.TestCase):

@@ -54,6 +54,34 @@ def next_feed(entries, now):
             "computed_from": [e["ref"] for e in rows[-(RECENT_GAPS + 1):]]}
 
 
+SESSION_GAP = datetime.timedelta(minutes=30)
+
+
+def sessions(rows):
+    """The log rows with feeds that start within 30 minutes of the previous feed folded into it, for the rhythm."""
+    out, last = [], None
+    for row in sorted(rows, key=when):
+        if row["kind"] == "feeding":
+            start = when(row)
+            if last is not None and start - last < SESSION_GAP:
+                continue
+            last = start
+        out.append(row)
+    return out
+
+
+def predict(entries, now, max_gap_h=6):
+    """The one next feed every surface shows: the panel, the night summary, the chat reply, the reminders and the house
+    plan's bottle warmer. A top-up within 30 minutes is the same feed, and there is no guess from a feed older than 6 h.
+    Blind round b6 read 03:17 on the panel and 03:26 in the night summary of the same page, and a warmer at 03:15 for a
+    feed the panel had moved to 03:48: each computed its own."""
+    rows = sessions(entries)
+    past = feeds(rows, now)
+    if not past or now - when(past[-1]) > datetime.timedelta(hours=max_gap_h):
+        return None
+    return next_feed(rows, now)
+
+
 def next_feed_sentence(nxt, now, tz):
     """The next feed as one sentence, the same wherever it is shown: ahead of now, or how long ago it was expected."""
     at = hhmm(nxt["at"].astimezone(tz))
@@ -192,7 +220,9 @@ def night_summary(entries, now, tz, parents, current=False, aliases=None):
         end = local
     # "handled by Gonza" counts for his rota label: aliases maps a lowercase name to its label (the people block).
     label = (lambda who: (aliases or {}).get(str(who).strip().lower(), who))
-    in_night = [e for e in ordered(entries, now) if start <= when(e) < end]
+    # A night in progress ends now, and a feed logged at this very minute is in it (blind round b6 still read "2 tomas"
+    # right after a third was logged).
+    in_night = [e for e in ordered(entries, now) if start <= when(e) < end or (in_progress and when(e) == end)]
     night_feeds = [e for e in in_night if e["kind"] == "feeding"]
     wakes = [{**w, "parent": label(w["parent"])} for w in night_wakeups(entries, tz) if start <= w["at"] < end]
     # Every finished sleep that overlaps the night counts, also the one that started at 19:40 "para la noche": before,
@@ -204,7 +234,7 @@ def night_summary(entries, now, tz, parents, current=False, aliases=None):
     handled_all = [label(w["parent"]) for w in night_wakeups(entries, tz) if w["at"] < now.astimezone(tz)]
     on_duty = next_on_duty(handled_all, parents)
     per_parent = ", ".join(f"{p} {sum(1 for w in wakes if w['parent'] == p)}" for p in parents)
-    nxt = next_feed(entries, now)
+    nxt = predict(entries, now)
     label = (f"Tonight so far, since {start:%a %d} {start:%H:%M}" if in_progress
              else f"Last night, {start:%a %d} to {(start + datetime.timedelta(days=1)):%a %d}" if current
              else f"Night summary for {start:%a %d}")

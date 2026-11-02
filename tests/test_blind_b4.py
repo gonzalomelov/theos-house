@@ -120,17 +120,17 @@ class SpanishLabels(unittest.TestCase):
         app = house.make(house.FakeMuse(house.answer()))
         self.addCleanup(app.close)
         card = app.house("v", False, "tonight", lang="es")[1]["house"]["tonight"]
-        self.assertTrue(card["on_duty"].startswith("Persona "), card["on_duty"])
+        self.assertIn(card["on_duty"], ("Papá", "Mamá"))
 
     def test_set_on_duty_and_the_rota_read_spanish(self):
-        brain = ScriptedBrain([[call("set_on_duty", parent="Parent B")], "Listo, Persona B queda de turno esta noche."],
-                              [[call("night_rota")], "Le toca a Persona B."])
+        brain = ScriptedBrain([[call("set_on_duty", parent="Parent B")], "Listo, Mamá queda de turno esta noche."],
+                              [[call("night_rota")], "Le toca a Mamá."])
         app = demo(brain)
         self.addCleanup(app.close)
-        _, body = app.message("v", False, "poné a Persona B de turno esta noche", lang="es")
-        self.assertEqual(body["actions"][0]["arguments"], {"parent": "Persona B"})
+        _, body = app.message("v", False, "poné a Mamá de turno esta noche", lang="es")
+        self.assertEqual(body["actions"][0]["arguments"], {"parent": "Mamá"})
         v = app.visitor("v")
-        self.assertIn("Persona B queda de turno", v.agent.tools.items["set_on_duty"].handler(parent="Parent B"))
+        self.assertIn("Mamá queda de turno", v.agent.tools.items["set_on_duty"].handler(parent="Parent B"))
         self.assertNotIn("Parent", v.night_rota())
 
 

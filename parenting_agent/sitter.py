@@ -148,7 +148,7 @@ def facts(entries, now, start, end, tz):
                             "method": last.get("method")}
         out["refs"].append(last["ref"])
     out["today"] = {"feeds": len(today_feeds), "bottle_ml": round(sum(float(e.get("amount") or 0) for e in today_feeds))}
-    nxt = patterns.next_feed(past, now)
+    nxt = patterns.predict(past, now)
     if nxt:
         out["next_feed"] = {"at": nxt["at"].astimezone(tz), "gap_min": nxt["gap_min"]}
         out["refs"] += nxt["computed_from"]

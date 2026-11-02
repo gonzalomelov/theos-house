@@ -168,8 +168,24 @@ class SharedLoop(unittest.TestCase):
                 self.assertEqual(len(baby_log.entries(kind)), 1)
 
     def test_plain_agent_logs_a_nap_named_while_its_hours_come_round_again(self):
-        """"She napped from 13 to 14" sent at 13:20 is yesterday's nap: the end rolls back and the start follows it."""
-        for hour, minute in ((13, 0), (13, 20), (13, 59), (14, 0), (0, 30), (12, 0)):
+        """"She napped from 13 to 14" sent at 14:00 or later is that nap, at 00:30 or 10:00 it is yesterday's: the end rolls
+        back and the start follows it. Sent at 12:00 to 13:50 the 14:00 end has not come yet, so it is asked, never
+        logged a day back (blind round b6)."""
+        for hour, minute in ((12, 0), (13, 0), (13, 20), (13, 50)):
+            with self.subTest(asked_at=f"{hour:02d}:{minute:02d}"):
+                at = datetime.datetime(2026, 10, 29, hour, minute, tzinfo=TZ)
+                memory = Memory(":memory:")
+                self.addCleanup(memory.close)
+                baby_log = LocalBabyLog(memory)
+                baby_log.now = lambda at=at: at
+                bus = Bus(None)
+                agent = Agent(bus, memory, baby_log, core_tools(memory, baby_log, ["log_baby_event"]),
+                              ScriptedBrain(REPEATS["sleep"]))
+                agent.now = lambda at=at: at
+                agent.handle({"kind": "message", "channel": "test", "text": NOTES["en"]["sleep"]})
+                self.assertEqual(baby_log.entries("sleep"), [])
+                self.assertIn("in the future", [e["text"] for e in bus.history if e["kind"] == "reply"][-1])
+        for hour, minute in ((14, 0), (15, 30), (0, 30), (10, 0)):
             with self.subTest(at=f"{hour:02d}:{minute:02d}"):
                 at = datetime.datetime(2026, 10, 29, hour, minute, tzinfo=TZ)
                 memory = Memory(":memory:")

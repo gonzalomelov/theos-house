@@ -62,7 +62,7 @@
   "day_engine": {"door_sensors": []},
   "sitter": {"family_notes": "/data/family-notes.json"},
   "night_feed": {
-    "night_bed": {"from": "22:00", "to": "06:00", "en": "the side bed in your room", "es": "el colecho, en el cuarto de ustedes"}
+    "night_bed": {"from": "22:00", "to": "06:00", "en": "his bassinet, next to your bed", "es": "su cunita, al lado de la cama de ustedes"}
   },
   "house_brain": {
     "budget_usd": 0.5,

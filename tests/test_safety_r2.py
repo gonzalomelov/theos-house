@@ -101,7 +101,8 @@ class RedFlags(Base):
 class SafeSleep(Base):
     def test_the_fact_is_sourced_and_never_personal(self):
         for lang, fact in rules.SAFE_SLEEP_FACT.items():
-            self.assertIn(rules.SAFE_SLEEP_SOURCE, fact)
+            # The AAP's own Spanish page for a Spanish reader (blind round b6).
+            self.assertIn(rules.SAFE_SLEEP_SOURCE_ES if lang == "es" else rules.SAFE_SLEEP_SOURCE, fact)
             self.assertIn("healthychildren.org", fact)
             self.assertIn("AAP" if lang == "es" else "American Academy of Pediatrics", fact)
             self.assertIn("boca arriba" if lang == "es" else "on the back", fact)
