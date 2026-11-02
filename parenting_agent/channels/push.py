@@ -7,7 +7,8 @@ Telegram to the people it is for, in their own chat, with rota labels replaced b
 |---|---|
 | has a person (a reminder or a follow-up someone asked for) | that person |
 | has a parent or a to that names one parent (the night feed push, a parent's line in tonight's plan) | that parent |
-| is a shared routine: morning brief, supplies, meals, tonight's plan, a re-plan, the morning explanation | both |
+| is a shared routine: morning brief, supplies, meals, tonight's plan, a re-plan by day, the morning explanation | both |
+| is a re-plan at night (22:00 to 06:00) | the parent on duty: the other one, who may have asked to sleep, reads it in the morning |
 | waits for a yes ("Reply yes to start it") | one parent: the one on duty at night, else settings "asks_to" |
 | anything else at night (22:00 to 06:00) | the parent on duty, from the night rota (night_feed.py) |
 | anything else | both |
@@ -43,6 +44,7 @@ from . import morning as morning_mod
 # The pushes a logged fever leads with its fixed call-now line (round b5: a 38.6 in a 5 week old reached none of them).
 FEVER_FIRST = {"morning", "tonight", "morning_brief", "morning_explain"}
 SHARED = {"morning_brief", "supplies", "parents_meals", "tonight", "replan", "morning_explain"}
+NIGHT_ON_DUTY = {"replan"}
 ONCE_A_DAY = {"morning_brief", "morning_explain", "morning", "tonight", "parents_meals"}
 MORNING_PARTS = {"morning_brief": "day-engine", "morning_explain": "house-brain"}
 DEFAULTS = {"channel": "telegram", "asks_to": None, "night": ["22:00", "06:00"], "morning": False, "hold_s": 300}
@@ -77,9 +79,11 @@ def recipients(event, people, on_duty=None, night=False, asks_to=None):
         who = event.get(field)
         if who and who != "both" and people.person(who):
             return [people.person(who)], f"for {people.display(who)}"
+    duty = people.person(on_duty) if night and on_duty else None
+    if duty and event.get("routine") in NIGHT_ON_DUTY:
+        return [duty], "a night re-plan, the parent on duty tonight"
     if event.get("routine") in SHARED:
         return keys, "shared"
-    duty = people.person(on_duty) if night and on_duty else None
     if event.get("ask"):
         if duty:
             return [duty], "a question for one yes, the parent on duty tonight"

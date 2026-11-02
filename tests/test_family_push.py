@@ -219,6 +219,14 @@ class Recipients(unittest.TestCase):
         self.assertEqual(self.to({"source": "day-engine", "routine": "floor_clean", "ask": "x"}, night=True), ["ceci"])
         self.assertEqual(self.to({"source": "reminders", "person": "ceci"}, night=True, on_duty="Parent A"), ["ceci"])
 
+    def test_a_night_replan_reaches_only_the_parent_on_duty(self):
+        # e2e day Nov 1: Muse's Spanish why let "Cambió el plan" out at 22:05 and 01:46, to Ceci too after she asked to sleep
+        event = {"source": "house-brain", "routine": "replan", "to": "both"}
+        self.assertEqual(self.to(event, night=True, on_duty="Parent A"), ["gonza"])
+        self.assertEqual(self.to(event), ["gonza", "ceci"])
+        self.assertEqual(self.to({"source": "house-brain", "routine": "tonight", "to": "both"}, night=True,
+                                 on_duty="Parent A"), ["gonza", "ceci"])
+
     def test_names_replace_rota_labels(self):
         self.assertEqual(self.people.named("For Parent A: On duty tonight. Parent B sleeps."),
                          "For Gonza: On duty tonight. Ceci sleeps.")
