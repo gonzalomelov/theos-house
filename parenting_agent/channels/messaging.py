@@ -222,10 +222,11 @@ class MessagingChannel(Plugin):
                                seconds=round(time.monotonic() - started, 3))
 
     def final_guard(self, text, event, chat):
-        """The text as it may reach the parent of this chat: no machinery, in the language of the people block."""
+        """The text as it may reach the parent of this chat: no machinery, in the language the agent's reply carries
+        (guard_lang, None when either is fine), else the language of the people block."""
         people = getattr(self.agent, "people", None)
         person = event.get("person") or self.person_of(chat)
-        lang = people.lang(person) if people and person else None
+        lang = event["guard_lang"] if "guard_lang" in event else (people.lang(person) if people and person else None)
         return final_guard.apply(text, lang, self.agent.bus, where=f"channel:{self.name}",
                                  names=people.rota_names() if people else None, person=person,
                                  source=event.get("source"))

@@ -186,7 +186,7 @@ TEXTS = {
         "NOT_DELETED": "I did not delete anything: the log holds {entry} only once.",
         "LOGGED": "Logged {entries}.", "AND": " and ",
         "SLEEP_START": "that {name} fell asleep at {at}", "SLEEP_SPAN": "the sleep from {start} to {at}, {length}",
-        "OF_MIN": " of {min} min", "DIAPER_OF": "the {at} {what} diaper", "NOTE_OF": "a note at {at}: \"{text}\"",
+        "OF_MIN": " of {min} min", "DIAPER_OF": "the {at} {what} diaper{stool}", "NOTE_OF": "a note at {at}: \"{text}\"",
         "BATH_AT": "the bath at {at}", "THE_BABY": "the baby",
         "DOUBLE_ONCE": "OK, it stays as one: {entry}.",
         "DOUBLE_TWO": "Logged the second one: {entry}.",
@@ -209,6 +209,8 @@ TEXTS = {
         "left breast": "left breast", "right breast": "right breast", "both breasts": "both breasts", "breast": "breast",
         "bottle": "bottle", "formula": "formula", "breast milk": "breast milk", "unknown": "milk type not said",
         "wet": "wet", "dirty": "dirty", "wet and dirty": "wet and dirty",
+        "STOOL": ", {color} stool", "yellow": "yellow", "green": "green", "brown": "brown", "black": "black",
+        "NO_COLOR": "no colour",
     },
     "es": {
         "NOT_CHANGED": "No pude cambiar el registro. Decime cuál y qué cambio, por ejemplo: la mamadera de la 1 y media fue de 100 ml.",
@@ -221,7 +223,7 @@ TEXTS = {
         "NOT_DELETED": "No borré nada: en el registro {entry} está una sola vez.",
         "LOGGED": "Anoté {entries}.", "AND": " y ",
         "SLEEP_START": "que {name} se durmió a las {at}", "SLEEP_SPAN": "el sueño de {start} a {at}, {length}",
-        "OF_MIN": " de {min} min", "DIAPER_OF": "el pañal {what} de las {at}", "NOTE_OF": "una nota a las {at}: \"{text}\"",
+        "OF_MIN": " de {min} min", "DIAPER_OF": "el pañal {what}{stool} de las {at}", "NOTE_OF": "una nota a las {at}: \"{text}\"",
         "BATH_AT": "el baño de las {at}", "THE_BABY": "el bebé",
         "DOUBLE_ONCE": "Dale, queda una sola: {entry}.",
         "DOUBLE_TWO": "Anoté la segunda: {entry}.",
@@ -244,6 +246,8 @@ TEXTS = {
         "left breast": "pecho izquierdo", "right breast": "pecho derecho", "both breasts": "los dos pechos", "breast": "pecho",
         "bottle": "mamadera", "formula": "fórmula", "breast milk": "leche materna", "unknown": "sin tipo de leche",
         "wet": "mojado", "dirty": "sucio", "wet and dirty": "mojado y sucio",
+        "STOOL": " con caca {color}", "yellow": "amarilla", "green": "verde", "brown": "marrón", "black": "negra",
+        "NO_COLOR": "sin color",
     },
 }
 
@@ -304,7 +308,8 @@ def describe_stored(entry, lang, name=None):
             return f"{noun}{extra} de las {at}"
         return f"the {at} {noun}{extra}"
     if kind == "diaper":
-        return words["DIAPER_OF"].format(at=at, what=words[_diaper_word(d)])
+        stool = words["STOOL"].format(color=words[d["color"]]) if d.get("color") in COLOR_KEYS else ""
+        return words["DIAPER_OF"].format(at=at, what=words[_diaper_word(d)], stool=stool)
     if kind == "sleep":
         if d.get("action") == "start":
             return words["SLEEP_START"].format(name=name or words["THE_BABY"], at=at)
@@ -329,6 +334,9 @@ def logged_text(entries, lang, name=None):
     return words["LOGGED"].format(entries=words["AND"].join(describe_stored(e, lang, name) for e in entries))
 
 
+COLOR_KEYS = ("yellow", "green", "brown", "black")
+
+
 def _diaper_word(d):
     return "wet and dirty" if d.get("wet") and d.get("solid") else ("dirty" if d.get("solid") else "wet")
 
@@ -351,6 +359,10 @@ def changes(before, after, lang):
         out.append(f"{a.get('duration_min')} min → {b.get('duration_min')} min")
     if before.get("kind") == "diaper" and _diaper_word(a) != _diaper_word(b):
         out.append(f"{words[_diaper_word(a)]} → {words[_diaper_word(b)]}")
+    if before.get("kind") == "diaper" and (a.get("color") or None) != (b.get("color") or None):
+        out.append(f"{words.get(a.get('color') or 'NO_COLOR')} → {words.get(b.get('color') or 'NO_COLOR')}")
+    if before.get("kind") == "sleep" and str(a.get("start"))[11:16] != str(b.get("start"))[11:16]:
+        out.append(f"{str(a.get('start'))[11:16]} → {str(b.get('start'))[11:16]}")
     if before.get("kind") in ("note", "bath") and a.get("text") != b.get("text"):
         out.append(f"\"{a.get('text')}\" → \"{b.get('text')}\"")
     return ", ".join(out)
@@ -491,7 +503,8 @@ def diff_text(diff, lang, name=None):
     """The confirmation for a turn, from the log diff and nothing else, or "" when the log did not change."""
     words = TEXTS.get(lang, TEXTS["en"])
     out = changes_text(diff["changed"], lang) if diff["changed"] else []
-    out += [words["DELETED"].format(entry=describe(e, lang)) for e in diff["removed"] if e.get("id") != OPEN_SLEEP_ID]
+    # An open sleep still in the removed list did not end in a sleep: the parent deleted it ("false alarm, he's awake").
+    out += [words["DELETED"].format(entry=describe(e, lang)) for e in diff["removed"]]
     if diff["added"]:
         out.append(logged_text(diff["added"], lang, name))
     return " ".join(out)
@@ -604,7 +617,16 @@ class Agent:
             return datetime.datetime.now().astimezone()
 
     def lang(self, request):
-        return "es" if request and rules.looks_spanish(request) else "en"
+        """The language to answer a message in: the message's own, else the language of the person writing it, else
+        English. Held-out run-1: 39 of 76 English messages got "say it again", their English answer dropped because
+        the people block reads Spanish."""
+        said = rules.message_lang(request) if request else None
+        return said or self.person_lang() or "en"
+
+    def person_lang(self):
+        event = self.current_event or {}
+        people = getattr(self, "people", None)
+        return people.lang(event["person"]) if people and event.get("person") else None
 
     def text(self, key, request, **values):
         return TEXTS[self.lang(request)][key].format(**values)
@@ -627,17 +649,27 @@ class Agent:
         to = {"chat_id": event["chat_id"]} if event.get("channel") == channel and event.get("chat_id") else {}
         if to:
             self.last_reply[(channel, str(to["chat_id"]))] = text
-        self.bus.publish("reply", channel=channel, text=text, **to, **about)
+        # The chat channel's own guard checks the same language: none when the message was in the other one.
+        guard_lang = {"guard_lang": self.reply_lang()} if self.message_lang_now() else {}
+        self.bus.publish("reply", channel=channel, text=text, **to, **guard_lang, **about)
 
     guard_logs_text = True  # the final guard's event says what it removed (False: only why, for other families)
     guard_models_ok = False  # True only in the public demo, which names Muse Spark Open on purpose
 
     def reply_lang(self):
-        """The language the answer must be in, for the final guard: the person's "lang" in the people block, or None
-        when it is not known for sure (the chat channel's own guard enforces it on the way out)."""
+        """The language the answer must be in, for the final guard: the person's "lang" in the people block when the
+        message is in it or says neither, None (either language) when the message is in the other one, so an English
+        question in a Spanish family keeps its English answer (held-out run-1: 39 of 76 got "say it again") and a fixed
+        answer in the person's language stays too."""
+        said = self.message_lang_now()
+        person = self.person_lang()
+        if said and person and said != person:
+            return None
+        return said or person
+
+    def message_lang_now(self):
         event = self.current_event or {}
-        people = getattr(self, "people", None)
-        return people.lang(event["person"]) if people and event.get("person") else None
+        return rules.message_lang(event.get("text")) if event.get("kind") == "message" and event.get("text") else None
 
     def guard_names(self):
         """Rota labels and the names a parent reads, for the final guard: {"Parent A": "Gonza"}."""
@@ -797,6 +829,7 @@ class Agent:
             self.memory.add_message(channel, "user", text, ts=self.now())
             self.bus.publish("guard", status="emergency")
             self.say(channel, self.emergency(text), flag="emergency")
+            self.log_after_alert(channel, text)
             return
         urgent = rules.newborn_red_flag(text, rules.under_3_months(self.birth_date(), self.now().date()))
         if urgent:
@@ -805,6 +838,8 @@ class Agent:
             self.memory.add_message(channel, "user", text, ts=self.now())
             self.bus.publish("guard", status=f"urgent_{urgent}")
             self.say(channel, self.urgent(text, urgent), flag=f"urgent_{urgent}")
+            if self.ops_logs_alerts():
+                self.log_after_alert(channel, text)
             return
         screened = self.screened_emergency(text)
         if screened:
@@ -813,6 +848,7 @@ class Agent:
             self.memory.add_message(channel, "user", text, ts=self.now())
             self.bus.publish("guard", status="emergency_by_meaning", source=screened)
             self.say(channel, self.emergency(text), flag="emergency")
+            self.log_after_alert(channel, text)
             return
         if rules.asks_about_self(text):
             # Where the agent runs, from the facts, the same every time (round b5: "Meta's servers", then "nothing ran").
@@ -946,11 +982,36 @@ class Agent:
 
     def urgent(self, request, kind):
         """The call-now line first, then the note that keeps the parent's words, and a feed told in the same message
-        ("tomo 40 y vomito todo"). A failed note never holds the line back."""
+        ("tomo 40 y vomito todo"). A failed note never holds the line back. With the ops brain the line goes alone and
+        the log follows in its own message (log_after_alert)."""
         lang = self.lang(request) if self.lang(request) in ("en", "es") else "en"
         line = rules.URGENT_REPLY[kind][lang]
+        if self.ops_logs_alerts():
+            return line
         entries = self.log_observation(request)
         return line + " " + logged_text(entries, lang) if entries else line
+
+    def ops_logs_alerts(self):
+        return self.log_mode in ("ops", "ops-verify") and brain_mod.thinks(self.brain)
+
+    def log_after_alert(self, channel, text):
+        """After a fixed safety line, what the same message reported happened is logged and confirmed in a second
+        message, built from the log: held-out run-1 lost the feed or the diaper of 11 red flag messages ("le di 50 de
+        mamadera y se puso todo blandito"). The line never waits for this: it was sent first."""
+        try:
+            if self.ops_logs_alerts():
+                said = log_ops.decide(self, channel, text, after_alert=True)
+                if said is not None:
+                    if said:
+                        self.say(channel, said)
+                    return
+            # With no model, the feed or diaper the words name, and nothing else: the line stays the whole answer.
+            entries = self.log_reported(text)
+        except Exception as error:  # noqa: BLE001 the line is out, a failed log never takes it back
+            self.bus.publish("agent_error", error=f"log after alert: {str(error)[:200]}")
+            return
+        if entries:
+            self.say(channel, logged_text(entries, self.lang(text)))
 
     def log_observation(self, request):
         """The feed a symptom message reports, then the note in the parent's words. Returns the entries stored."""
@@ -1531,7 +1592,8 @@ class Agent:
                     self.bus.publish("guard", status="claimed_change", logged=len(stored))
                     for entry in stored:
                         if isinstance(entry, dict) and entry.get("id") is not None:
-                            self.baby_log.delete(entry["id"])
+                            self.baby_log.delete(entry["id"], **({"kind": entry.get("kind")}
+                                                                 if getattr(self.baby_log, "kind_ids", False) else {}))
                     logged.clear()
                     kept.clear()
                     stored.clear()

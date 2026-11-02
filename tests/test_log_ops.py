@@ -114,10 +114,13 @@ class OpsMode(LogOps):
         self.assertIn("asleep since Thu 00:50", seen)
         self.assertIn("Newest message from the parent, at 00:55: cuanto tomo?", seen)
 
-    def test_an_emergency_never_reaches_the_brain(self):
-        reply = self.say("01:00", "no respira, esta azul")
-        self.assertEqual(self.brain.seen, [])
+    def test_an_emergency_line_never_waits_for_the_brain(self):
+        # The line is sent before any brain call. Muse reads the message only after it, to log what it reported.
+        self.fam.bus.subscribe(lambda e: self.brain.seen.append({"reply": e["text"]}), ["reply"])
+        reply = self.say("01:00", "no respira, esta azul", self.ops())
         self.assertIn("911", reply)
+        self.assertIn("911", self.brain.seen[0]["reply"])
+        self.assertEqual(self.log(), [])
 
     def test_without_a_log_ops_answer_the_guarded_path_logs(self):
         # A brain that never answers log_ops, even when asked once more: the message still goes through the guarded loop.

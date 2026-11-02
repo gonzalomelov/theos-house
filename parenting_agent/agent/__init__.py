@@ -29,5 +29,8 @@ def build(config):
     # Red flags by meaning (danger.py): one short Muse call per message the word list lets through.
     agent.danger = danger_mod.build(config["brain"])
     agent.people = People(config.get("people"))
+    # "ops": Muse reads the log with ids and returns the log operations as data (log_ops.py), so a correction edits the
+    # entry it names and every confirmation comes from what the log stored. "guards" is the older tool loop.
+    agent.log_mode = config.get("log_mode", agent.log_mode)
     agent.plugins = [plugins_mod.load(spec, agent, config) for spec in config["plugins"]]
     return agent

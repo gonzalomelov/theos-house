@@ -25,7 +25,8 @@ True for: not breathing or breathing strangely, blue, grey or very pale colour, 
 or not moving in a way that worries the parent, a face pressed into a pillow, a mattress or soft bedding, something
 over the face, choking, a fall, under water, a burn, something swallowed (a battery, a magnet, medicine, poison), a
 seizure, heavy bleeding, a dog bite, labour signs that cannot wait. False for everyday logs (feeds, diapers, sleep,
-baths), a baby sleeping peacefully, questions about the log, jokes and everyday worries with no danger now.
+baths), a baby sleeping peacefully, questions about the log, jokes and everyday worries with no danger now, and a face
+that went red or purple from crying hard and is pink and calm again.
 When you are unsure, it is an emergency. Answer with one word only: EMERGENCY or SAFE."""
 
 # A model that still calls a verdict tool is read too.

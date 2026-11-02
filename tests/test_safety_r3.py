@@ -311,12 +311,16 @@ class RedFlags(unittest.TestCase):
         for lang, phrases in RED_FLAG.items():
             for text in phrases:
                 with self.subTest(lang=lang, text=text):
-                    self.assertEqual(rules.newborn_red_flag(text), "red_flag")
+                    # Yellow skin or eyes is its own line, the pediatrician today (held-out run-1: a calm jaundice
+                    # question is not an emergency). Every other sign leads with the 911 line.
+                    want = "jaundice" if rules.JAUNDICE.search(text) else "red_flag"
+                    self.assertEqual(rules.newborn_red_flag(text), want)
 
     def test_the_loop_answers_one_with_the_line_and_a_note(self):
         agent, brain, said, log_ = loop()
-        send(agent, "her skin looks yellow")
+        send(agent, "he threw up green")
         self.assertTrue(said[0].startswith(rules.URGENT_REPLY["red_flag"]["en"]), said[0])
+        self.assertTrue(said[0].startswith(rules.EMERGENCY_REPLY["en"]), said[0])
         self.assertIn(rules.NEWBORN_SOURCE, said[0])
         self.assertEqual(len(log_.entries("note")), 1)
         self.assertEqual(brain.calls, 0)

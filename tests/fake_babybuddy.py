@@ -21,12 +21,15 @@ def duration(start, end):
 
 
 class FakeBabyBuddy:
-    def __init__(self, refuse_overlaps=False):
+    def __init__(self, refuse_overlaps=False, per_endpoint_ids=False):
         """refuse_overlaps mirrors the real server's refusal of feeds or sleeps whose times intersect. Tests that
-        log many notes in the same second turn it off, since real notes arrive minutes apart."""
+        log many notes in the same second turn it off, since real notes arrive minutes apart. per_endpoint_ids numbers
+        each endpoint from 1, as the real server does, so feed 1 and diaper 1 are two entries."""
         self.refuse_overlaps = refuse_overlaps
+        self.per_endpoint_ids = per_endpoint_ids
         self.records = {name: {} for name in TIME_FIELDS}
         self.next_id = 1
+        self.next_ids = {name: 1 for name in TIME_FIELDS}
         self.server = ThreadingHTTPServer(("127.0.0.1", 0), self.handler())
         self.url = f"http://127.0.0.1:{self.server.server_address[1]}"
         threading.Thread(target=self.server.serve_forever, daemon=True).start()
@@ -51,10 +54,12 @@ class FakeBabyBuddy:
             for other in self.all(name):
                 if parse(body["start"]) < parse(other["end"]) and parse(other["start"]) < parse(body["end"]):
                     return 400, {"start": ["Another entry intersects the specified time period."]}
-        record = dict(body, id=self.next_id)
+        new_id = self.next_ids[name] if self.per_endpoint_ids else self.next_id
+        record = dict(body, id=new_id)
         if name in ("feedings", "sleep"):
             record["duration"] = duration(body["start"], body["end"])
-        self.records[name][self.next_id] = record
+        self.records[name][new_id] = record
+        self.next_ids[name] += 1
         self.next_id += 1
         return 201, record
 
@@ -116,7 +121,14 @@ class FakeBabyBuddy:
                 if record is None:
                     self.reply(404, {"detail": "Not found."})
                     return
-                record.update(json.loads(self.rfile.read(int(self.headers.get("Content-Length", 0))) or b"{}"))
+                patch = json.loads(self.rfile.read(int(self.headers.get("Content-Length", 0))) or b"{}")
+                if fake.refuse_overlaps and name in ("feedings", "sleep"):
+                    start, end = patch.get("start", record["start"]), patch.get("end", record["end"])
+                    for other in fake.all(name):
+                        if other is not record and parse(start) < parse(other["end"]) and parse(other["start"]) < parse(end):
+                            self.reply(400, {"start": ["Another entry intersects the specified time period."]})
+                            return
+                record.update(patch)
                 if name in ("feedings", "sleep"):
                     record["duration"] = duration(record["start"], record["end"])
                 self.reply(200, record)

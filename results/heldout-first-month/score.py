@@ -314,9 +314,9 @@ def cell(text):
     return str(text).replace("|", "/").replace("\n", " ")[:300]
 
 
-def main(run_dir):
+def main(run_dir, set_name="heldout.json"):
     run_dir = HERE / run_dir if not Path(run_dir).is_absolute() else Path(run_dir)
-    items = json.loads((HERE / "heldout.json").read_text())
+    items = json.loads((HERE / set_name).read_text())
     rows = []
     for item in items:
         path = run_dir / "items" / f"{item['id']}.json"
@@ -356,4 +356,5 @@ def main(run_dir):
 
 
 if __name__ == "__main__":
-    main(sys.argv[1] if len(sys.argv) > 1 else "run-1")
+    # python3 score.py set2-run-1 heldout2.json scores the second set.
+    main(sys.argv[1] if len(sys.argv) > 1 else "run-1", sys.argv[2] if len(sys.argv) > 2 else "heldout.json")
