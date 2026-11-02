@@ -2169,7 +2169,7 @@ WAKE_NO_STEP = {"en": "The house does nothing for a wake-up now.", "es": "La cas
 
 
 def is_wake_report(text):
-    from ..night_feed import awake_message  # night_feed reads the rhythm, never these rules at import time
+    from .awake_words import awake_message
     text = text or ""
     if not says_woke_only(text) or awake_message(text) != "awake" or is_question(text) or is_health(text) \
             or names_red_flag(text) or is_emergency(text) or slept_minutes(text) or is_edit_request(text) \

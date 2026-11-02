@@ -58,6 +58,8 @@ from . import baby_phase
 from .agent.plugins import Plugin
 from .agent.tools import Tool, schema
 from .agent.people import People
+from .agent.awake_words import (BABY_EN, BABY_WORD, EN_AWAKE, ES_AWAKE, FEED_RE, I_EN, NOT_RE,  # noqa: F401
+                                OTHER_RE, QUESTION_RE, awake_message)
 from .house import HomeAssistant
 from .house_live import STUDY_LIGHT, gate_for, live_actions
 from .house_plan import add_dry_guard
@@ -74,31 +76,13 @@ DEFAULTS = {"lead_min": 10, "cry_window_min": 45, "late_window_min": 30, "warmer
 WARMER_CAP_MIN = 45  # no setting keeps the warmer on longer than this in one go
 WARMER_NIGHT_CAP_MIN = 120  # no setting lets the warmer run longer than this in one night, all switch-ons together
 
-# The awake signal is about the baby, in English and Spanish: his name, he or él, the baby or el bebé. A parent who woke
-# up ("I woke up to pee", "me desperté") or the dog ("the dog is up", "el perro se despertó") is never a signal.
-BABY_EN = r"(?:theo|he|the baby|baby|the little one)"
-EN_AWAKE = re.compile(r"\b" + BABY_EN + r"(?:'s|’s| is| has| just| now| already)*\s*(?:up|awake|woken|woke|waking|crying|cries|cried|"
-                      r"fussing|fussy|stirring|hungry)\b", re.I)
-# Spanish leaves the subject out: "se despertó" is him (or a named someone), "me desperté" is the speaker. Only third
-# person forms count.
-ES_AWAKE = re.compile(r"\b(?:se\s+(?:est[áa]\s+)?(?:despert[óo]|despierta|despertando|levant[óo]|levanta|levantando)|"
-                      r"est[áa]\s+(?:despierto|despertando|llorando|inquieto|molesto)|llor(?:a|ó|ando)|"
-                      r"despert[óo]|tiene hambre)\b", re.I)
-FEED_RE = re.compile(r"\b(feeding|starting (a |the )?(bottle|feed)|making (a |the )?bottle|nursing)\b|"
-                     r"\b(?:d[áa]ndo(?:le)?|le doy|preparando|calentando)\s+(?:la |el |una )?(?:mamadera|biber[óo]n|teta|"
-                     r"pecho|leche)\b|\bdando de mamar\b|\bempezando (?:la |una )?toma\b", re.I)
-NOT_RE = re.compile(r"\b(not|n't|still asleep|sleeping|no|todav[íi]a duerme|sigue durmiendo|dormido|durmiendo)\b", re.I)
-BABY_WORD = re.compile(r"\b(theo|baby|bebé|bebe|nene)\b", re.I)
-# Someone else as the subject: the dog, the cat, the speaker in English, or a person named in the config.
-OTHER_RE = re.compile(r"\b(dog|dogs|puppy|perro|perra|perrito|cat|gato|gata)\b", re.I)
-I_EN = re.compile(r"\b(I|I'm|I’m|we|we're)\b")
+# The awake signal words (the baby, never a parent or the dog) are in agent/awake_words.py, which the demo shares.
 # A parent asking to sleep tonight: the other parent takes the night (Oct 30, Ceci: "necesito dormir esta noche").
 SLEEP_ASK = re.compile(r"\b(?:necesito|quiero|preciso|dejame|déjame|d[ée]jenme)\s+dormir\b|\bme dejan dormir\b|"
                        r"\b(?:I )?need (?:to|some) sleep\b|\blet me sleep\b|\bI want to sleep\b", re.I)
 SIGNAL = {"cry": "a cry was heard", "parent": "a parent said so", "button": "he's up was tapped", "log": "it is in the log"}
 SIGNAL_ES = {"cry": "se oyó un llanto", "parent": "lo avisó un padre", "button": "tocaron se despertó",
              "log": "está en el registro"}
-QUESTION_RE = re.compile(r"[?¿]|^\s*(when|what|how|is|was|did|does|should|can|will|cu[áa]ndo|qu[ée]|c[óo]mo)\b", re.I)
 
 
 def find_plugin(agent, name):
@@ -109,25 +93,6 @@ def predict(rows, now, max_gap_h=6):
     """The next feed from the log, or None before two feeds or when the last feed is too old to guess from. The
     families rhythm: a top-up within 30 min is the same feed (sleep_forecast.sessions)."""
     return predict_feed(rows, now, max_gap_h)
-
-
-def awake_message(text, others=()):
-    """What a parent's message says about the baby: "awake", "feed" (a feed is starting) or None (a question, a
-    "not up yet", the speaker or the dog waking, anything else). others are names that are not the baby, the parents
-    from the people block: "Ceci se levantó" is not him."""
-    text = (text or "").strip()
-    if not text or QUESTION_RE.search(text) or NOT_RE.search(text):
-        return None
-    named = any(re.search(rf"\b{re.escape(name)}\b", text, re.I) for name in others if name)
-    if (OTHER_RE.search(text) or named) and not BABY_WORD.search(text):
-        return None
-    if FEED_RE.search(text):
-        return "feed"
-    if EN_AWAKE.search(text):
-        return "awake"
-    if ES_AWAKE.search(text) and not I_EN.search(text):
-        return "awake"
-    return None
 
 
 # Words that read as the baby sharing the parents' bed: the night push never says them.

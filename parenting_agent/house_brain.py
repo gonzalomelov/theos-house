@@ -1046,7 +1046,7 @@ class HouseBrainPlugin(Plugin):
         return self._log
 
     def wire(self):
-        from .night_feed import find_plugin
+        from .agent.plugins import find_plugin
         self.day = find_plugin(self.agent, "day-engine")
         feed = find_plugin(self.agent, "night-feed")
         engine = getattr(self.day, "engine", None)
@@ -1060,7 +1060,7 @@ class HouseBrainPlugin(Plugin):
         return self.brain
 
     def tell(self, text, now):
-        from .night_feed import find_plugin
+        from .agent.plugins import find_plugin
         if find_plugin(self.agent, "family-push") is not None:
             return  # the family push delivers the notify event itself, to the right parent (channels/push.py)
         if self.chat:

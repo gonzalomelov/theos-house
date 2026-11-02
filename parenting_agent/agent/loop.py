@@ -1256,8 +1256,8 @@ class Agent:
 
     def wake_step(self, event, lang):
         """What the house did for a wake-up: the night feed's step on the family agent, else None."""
-        from ..night_feed import find_plugin  # night_feed imports the agent's plug-in base, never the loop
-        plugin = find_plugin(self, "night-feed")
+        # By name, not through night_feed.py: the demo and families images carry no night feed (blind round b7).
+        plugin = next((p for p in getattr(self, "plugins", []) or [] if getattr(p, "name", "") == "night-feed"), None)
         return plugin.wake_step(event or {}, lang) if plugin is not None else None
 
     def emergency(self, request):
