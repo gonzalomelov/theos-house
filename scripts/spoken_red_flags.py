@@ -128,6 +128,7 @@ def run(name, noise=False):
     from parenting_agent.agent import build
     from parenting_agent.agent import config as config_mod
     from parenting_agent.agent import rules
+    from parenting_agent.glasses import with_dropped_words
     from parenting_agent.glasses_speech import Gate
     token = secrets.token_urlsafe(12)
     DATA.mkdir(exist_ok=True)
@@ -143,7 +144,8 @@ def run(name, noise=False):
     agent = build(config)
     glasses = agent.plugins[0]
     ears = Ears(glasses)
-    seen = []
+    seen, dropped = [], []
+    glasses.on_dropped_words = dropped.append
     agent.bus.subscribe(seen.append, None)
     agent.start()
     glasses.start()
@@ -172,7 +174,7 @@ def run(name, noise=False):
                     break
                 time.sleep(0.1)
             time.sleep(1.5)
-            events = seen[since:]
+            events = with_dropped_words(seen[since:], dropped)
             speech = [e for e in events if e["kind"] == "speech"]
             guards = [e.get("status") for e in events if e["kind"] == "guard"]
             replies = [e.get("text") for e in events if e["kind"] == "reply"]
@@ -264,6 +266,7 @@ def live(udid):
     from parenting_agent.agent import config as config_mod
     from parenting_agent.channels.telegram import Telegram
     from parenting_agent.dog_watch import CapturedMessages
+    from parenting_agent.glasses import with_dropped_words
     token = secrets.token_urlsafe(12)
     data_dir = DATA / "agent-live"
     data_dir.mkdir(parents=True, exist_ok=True)
@@ -281,7 +284,8 @@ def live(udid):
     captured = data_dir / "telegram-captured.jsonl"
     agent.plugins.insert(0, Telegram(agent, config, messenger=CapturedMessages(captured)))
     ears = Ears(glasses)
-    seen = []
+    seen, dropped = [], []
+    glasses.on_dropped_words = dropped.append
     agent.bus.subscribe(seen.append, None)
     agent.start()
     glasses.start()
@@ -331,7 +335,7 @@ def live(udid):
                 time.sleep(6)
                 card = None
             time.sleep(2)
-            events = seen[since:]
+            events = with_dropped_words(seen[since:], dropped)
             speech = next((e for e in events if e["kind"] == "speech"), {})
             emergency = any(e["kind"] == "guard" and e.get("status") == "emergency" for e in events)
             end = done and done["start_unix"] + done["seconds"]

@@ -476,6 +476,8 @@ class Take:
         for plugin in self.agent.plugins:
             plugin.start()
         self.coach_plugin = next(p for p in self.agent.plugins if p.name == "car-seat")
+        self.dropped = []
+        next(p for p in self.agent.plugins if p.name == "glasses").on_dropped_words = self.dropped.append
         self.agent.bus.subscribe(self.on_frame, ["carseat_frame"])
 
     def on_frame(self, event):
@@ -672,7 +674,8 @@ class Take:
         command += ["-c:v", "libx264", "-preset", "medium", "-crf", "23", "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a",
                     "128k", "-t", f"{length_s:.2f}", str(self.out)]
         subprocess.run(command, check=True)
-        history = self.agent.bus.history
+        from parenting_agent.glasses import with_dropped_words
+        history = with_dropped_words(self.agent.bus.history, self.dropped)
         keep = ("speech", "carseat_step", "carseat_check", "carseat_heard", "carseat_summary", "glasses_card", "voice",
                 "reply", "message", "brain_call", "skill_armed")
         run = {

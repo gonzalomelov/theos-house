@@ -288,7 +288,9 @@ class Run:
         return bool(rows_ and rows_[-1]["on"])
 
     def speech_after(self, unix):
-        return [e for e in self.agent.bus.history if e["kind"] == "speech" and e.get("received_unix", 0) >= unix]
+        from parenting_agent.glasses import with_dropped_words
+        return [e for e in with_dropped_words(self.agent.bus.history, self.dropped)
+                if e["kind"] == "speech" and e.get("received_unix", 0) >= unix]
 
     def sent_after(self, unix):
         return [r for r in self.app_log() if r["kind"] == "sent" and r["unix"] >= unix]
@@ -364,6 +366,8 @@ class Run:
         self.agent = agent = build(self.config())
         glasses = next(p for p in agent.plugins if p.name == "glasses")
         self.hub = glasses.hub
+        self.dropped = []
+        glasses.on_dropped_words = self.dropped.append
         agent.start()
         for plugin in agent.plugins:
             plugin.start()
@@ -426,6 +430,7 @@ class Run:
 
     def report(self, results, raw, video_start):
         import glasses_hero_run as hero
+        from parenting_agent.glasses import with_dropped_words
         events = rows(DATA / "events.jsonl")
         app = self.app_log()
         out = Path(self.args.out_dir)
@@ -440,7 +445,7 @@ class Run:
                "speech_end_to_card_s": lat,
                "brain_models": sorted({f"{b.get('model')} on {b.get('destination')}" for b in brains}),
                "brain_calls": len(brains),
-               "speech_events": [e for e in events if e["kind"] == "speech"],
+               "speech_events": [e for e in with_dropped_words(events, self.dropped) if e["kind"] == "speech"],
                "conversation": [{"unix": e.get("unix"), "who": "parent" if e["kind"] == "message" else "agent", "text": e["text"]}
                                 for e in events if e["kind"] in ("message", "reply")],
                "glasses_cards": [e for e in events if e["kind"] == "glasses_card"],

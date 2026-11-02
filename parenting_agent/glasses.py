@@ -377,6 +377,14 @@ class GlassesView:
         self.closed = True
 
 
+def with_dropped_words(events, dropped):
+    """Tests and evals only: the events with the words of each dropped utterance put back from what on_dropped_words
+    kept in memory, matched by wearer and heard_unix. The agent's own log never holds them."""
+    words = {(w.get("person"), w.get("heard_unix")): w for w in dropped}
+    return [{**e, **{k: words[(e.get("person"), e.get("heard_unix"))][k] for k in ("text", "ear_answers")}}
+            if e.get("kind") == "speech" and (e.get("person"), e.get("heard_unix")) in words else e for e in events]
+
+
 def _hhmm(stamp):
     from .changing_table import local_hhmm
     return local_hhmm(stamp)
@@ -473,6 +481,7 @@ class Glasses(Plugin):
         self.ear_cfg = speech.get("ear") or {}
         self.race_cfg = {k: speech[k] for k in ("calls", "rounds") if k in speech}
         self._make_ear = None
+        self.on_dropped_words = None  # tests and evals only: callable(fields), the words of a dropped utterance, never logged
         self.ear_pool = concurrent.futures.ThreadPoolExecutor(max_workers=12, thread_name_prefix="glasses-ear")
         self.hub.on_hear = self.hear
         agent.bus.subscribe(self.track_waits, list(self.WAITS) + ["carseat_step", "skill_closed"])
@@ -533,9 +542,13 @@ class Glasses(Plugin):
                 utterance["fired"] = True
         heard = {"text": text, "took": decision["take"], "why": decision["why"], "ear": "muse" if wav is not None else
                  meta.get("source"), "ear_s": ear_s, "heard_unix": round(self.clock(), 3), **meta}
-        self.agent.bus.publish("speech", person=person, **heard, ear_calls=ear_info.get("calls"),
-                               ear_answers=ear_info.get("answers"), **({"red_flag": flag[1]} if flag else {}),
-                               **({"error": error} if error else {}))
+        logged = {**heard, "ear_calls": ear_info.get("calls"), "ear_answers": ear_info.get("answers"),
+                  **({"red_flag": flag[1]} if flag else {}), **({"error": error} if error else {})}
+        if not decision["take"]:  # words not for the agent are never kept: time, length, speaker and why only
+            words = {key: logged.pop(key) for key in ("text", "ear_answers")}
+            if self.on_dropped_words is not None:
+                self.on_dropped_words({"person": person, **logged, **words})
+        self.agent.bus.publish("speech", person=person, **logged)
         if person is not None:
             self.hub.push({"kind": "heard", **heard}, person)
         if decision["why"] == "not for the agent":  # talk to the baby, maybe: the OPOL helper counts its language (opol.py)

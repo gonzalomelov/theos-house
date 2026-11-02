@@ -11,7 +11,7 @@ import wave
 from parenting_agent.agent import build
 from parenting_agent.agent import config as config_mod
 from parenting_agent.agent import rules
-from parenting_agent.glasses import GlassesHub
+from parenting_agent.glasses import GlassesHub, with_dropped_words
 from parenting_agent.glasses_speech import Gate, plain, race, transcript, word_errors
 from tests.test_glasses import Events, call
 
@@ -218,12 +218,33 @@ class HeardByTheAgent(unittest.TestCase):
         for _ in range(4):
             self.channel.hear(wav(), "gonza", {"speech_end_unix": 1.0})
         self.assertEqual(self.messages, ["Changing time", "¿cuándo comió?"])
-        took = [(e["text"], e["took"], e["why"]) for e in self.speech()]
-        self.assertEqual(took[:3], [("Hola Theo, qué lindo", False, "not for the agent"), ("Changing time", True, "start phrase"),
+        took = [(e.get("text"), e["took"], e["why"]) for e in self.speech()]
+        self.assertEqual(took[:3], [(None, False, "not for the agent"), ("Changing time", True, "start phrase"),
                                     ("Agente, ¿cuándo comió?", True, "wake word")])
         self.assertEqual((took[3][1], took[3][2]), (False, "ear failed"))
         self.assertIn("down", self.speech()[3]["error"])
         self.assertEqual(self.speech()[1]["speech_end_unix"], 1.0)
+
+    def test_a_dropped_utterance_keeps_no_words_in_the_log(self):
+        self.use_ear(["Hola Theo, qué lindo", "agente", "Agente, ¿cuándo comió?"])
+        words = []
+        self.channel.on_dropped_words = words.append
+        for _ in range(3):
+            self.channel.hear(wav(), "gonza", {"speech_end_unix": 1.0, "speech_s": 2.5})
+        dropped, wake, kept = self.speech()
+        for event in (dropped, wake):
+            self.assertFalse(event["took"])
+            self.assertNotIn("text", event)
+            self.assertNotIn("ear_answers", event)
+            self.assertEqual((event["person"], event["speech_s"], event["speech_end_unix"]), ("gonza", 2.5, 1.0))
+            self.assertIn("heard_unix", event)
+        self.assertEqual((dropped["why"], wake["why"]), ("not for the agent", "wake word, listening"))
+        self.assertNotIn("Theo", json.dumps(self.speech(), ensure_ascii=False))
+        self.assertEqual((kept["text"], kept["ear_answers"]), ("Agente, ¿cuándo comió?", ["Agente, ¿cuándo comió?"]))
+        self.assertEqual([(w["text"], w["why"]) for w in words],
+                         [("Hola Theo, qué lindo", "not for the agent"), ("agente", "wake word, listening")])
+        restored = [e.get("text") for e in with_dropped_words(self.speech(), words)]
+        self.assertEqual(restored, ["Hola Theo, qué lindo", "agente", "Agente, ¿cuándo comió?"])
 
     def test_the_changing_table_and_a_red_flag_open_their_short_answers(self):
         events = Events(self.channel.hub)
