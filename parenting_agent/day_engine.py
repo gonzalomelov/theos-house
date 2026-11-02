@@ -25,6 +25,7 @@ import urllib.error
 
 from . import baby_phase, meals
 from .agent import rules
+from .agent.rules import FEVER_HOLD, fever_today
 from .agent.plugins import Plugin
 from .agent.tools import Tool, schema
 from .house import HomeAssistant, never_reason
@@ -431,6 +432,8 @@ class DayEngine:
         return out
 
     def floor_ok(self, entries, now, house):
+        if fever_today(entries, now):
+            return False, FEVER_HOLD
         windows = sleep_windows(entries, now, self.tz)
         if windows and windows[0].get("ongoing"):
             return False, "he is asleep"
