@@ -319,6 +319,34 @@ class MorningExplanation(unittest.TestCase):
         self.assertNotIn("replan", [e.get("routine") for e in sent])
         self.assertTrue(next(e for e in sent if e.get("routine") == "plan_message")["quiet"])
 
+    def test_tonights_plan_names_the_fixed_rule_pre_warm_time_when_muse_times_fail(self):
+        sent = []
+
+        class Bus:
+            def publish(self, kind, **fields):
+                sent.append({"kind": kind, **fields})
+                return fields
+
+            def subscribe(self, *a, **k):
+                pass
+
+        brain = HouseBrain(Bus(), None, {"lang": "es"})
+        now = at(29, 20, 30)
+        seen = feeds(at(29, 14, 0), at(29, 17, 0), at(29, 20, 0))
+        plan = {"on_duty": "Parent B", "bottle_prewarm": None, "door_quiet": [], "floor_clean": [],
+                "white_noise_boost": [], "summary": "", "why_changed": "", "messages": []}
+        brain.announce(plan, "bedtime", now, seen)
+        tonight = next(e for e in sent if e.get("routine") == "tonight")
+        self.assertIn("the fixed rhythm rule warms the bottle at 22:50, 10 min before the night feed guessed around "
+                      "23:00", tonight["texts"]["en"])
+        self.assertIn("La regla fija calienta la mamadera (solo agua) a las 22:50, 10 min antes de la toma de noche "
+                      "estimada cerca de las 23:00", tonight["texts"]["es"])
+        sent.clear()
+        brain.announce(plan, "bedtime", now, ())
+        tonight = next(e for e in sent if e.get("routine") == "tonight")
+        self.assertIn("no night feed is guessed yet", tonight["texts"]["en"])
+        self.assertIn("todavía no hay toma de noche estimada", tonight["texts"]["es"])
+
 
 class Doorbell(unittest.TestCase):
     def test_no_door_sensor_means_no_doorbell(self):

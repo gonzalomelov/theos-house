@@ -18,7 +18,7 @@ from .. import house_brain as hb
 from ..agent.brain import BrainError
 from ..bus import Bus
 from ..rhythm import patterns
-from ..sleep_forecast import as_of, predict_feed, sessions, sleep_windows
+from ..sleep_forecast import as_of, sessions, sleep_windows
 from .babylog import TZ, finished, started
 
 # The night feed's rhythm lead and the white noise cap at the crib. night_feed.py and white_noise.py are not in the
@@ -49,6 +49,8 @@ TEXT = {
         "floor_none": "No window, nothing runs",
         "floor_fixed": "Fixed rule: only before tummy time, out of any predicted sleep, after a parent's yes",
         "routine_fixed": "Muse's times did not pass the checks, the fixed rule runs",
+        "routine_fixed_as": "Muse's times did not pass the checks, the fixed rule runs: {rule}",
+        "floor_rule": "only before tummy time, out of any predicted sleep, after a parent's yes",
         "badge": "Simulated house, nothing moves",
         "src_muse": "Muse Spark Open's plan, checked by plain code",
         "src_fixed": "Fixed rules, Muse was not used: {reason}",
@@ -78,6 +80,8 @@ TEXT = {
         "floor_none": "Sin ventana, no limpia",
         "floor_fixed": "Regla fija: solo antes del rato boca abajo, fuera de cualquier sueño previsto, con el sí de alguien",
         "routine_fixed": "Los horarios de Muse no pasaron los controles, corre la regla fija",
+        "routine_fixed_as": "Los horarios de Muse no pasaron los controles, corre la regla fija: {rule}",
+        "floor_rule": "solo antes del rato boca abajo, fuera de cualquier sueño previsto, con el sí de alguien",
         "badge": "Casa simulada, nada se mueve",
         "src_muse": "El plan de Muse Spark Open, revisado por código simple",
         "src_fixed": "Reglas fijas, no se usó Muse: {reason}",
@@ -233,14 +237,10 @@ class TonightHouse:
                 out[name] = "fixed"
             for field in hb.WHY_FIELDS:
                 out[field] = ""
-            nxt = predict_feed(seen, now)
-            horizon = now + datetime.timedelta(hours=self.brain.s["horizon_h"])
-            at = nxt["at"] if nxt else None
-            # The first guessed feed at night: from 19:00 the next one is in the evening, the one after it at night.
-            while at is not None and nxt["gap_min"] > 0 and not patterns.is_night(at.astimezone(TZ)) and at <= horizon:
-                at += datetime.timedelta(minutes=nxt["gap_min"])
-            if at is not None and patterns.is_night(at.astimezone(TZ)) and at <= horizon:
-                out["fixed_prewarm"] = {"at": hm(at - datetime.timedelta(minutes=FIXED_LEAD_MIN)), "feed": hm(at)}
+        if out["bottle_prewarm"] == "fixed":
+            fixed = hb.fixed_prewarm(seen, now, TZ, self.brain.s["horizon_h"], FIXED_LEAD_MIN)
+            if fixed:
+                out["fixed_prewarm"] = {"at": hm(fixed["at"]), "feed": hm(fixed["feed"])}
         out["sleeps"] = [{"start": hm(w["start"]), "end": hm(w["end"]), "kind": w["kind"]}
                          for w in sleep_windows(seen, now, TZ, horizon_h=self.brain.s["horizon_h"])]
         return out
@@ -283,7 +283,7 @@ def rows(card, lang="en"):
     if warm == "fixed":
         fixed = card.get("fixed_prewarm")
         text = t["warm_fixed"].format(t=fixed["at"], lead=FIXED_LEAD_MIN, feed=fixed["feed"]) if fixed else t["warm_fixed_none"]
-        out.append((t["warm"], text if card["source"] == "fixed" else t["routine_fixed"]))
+        out.append((t["warm"], text if card["source"] == "fixed" else t["routine_fixed_as"].format(rule=text[:1].lower() + text[1:])))
     else:
         out.append((t["warm"], t["warm_at"].format(t=", ".join(w["start"] for w in warm)) if warm else t["warm_none"]))
     noise = t["noise_base"].format(cap=CRIB_CAP_DB)
@@ -302,7 +302,8 @@ def rows(card, lang="en"):
     out.append((t["door"], door))
     floor = card["floor_clean"]
     if floor == "fixed":
-        out.append((t["floor"], t["floor_fixed"] if card["source"] == "fixed" else t["routine_fixed"]))
+        out.append((t["floor"], t["floor_fixed"] if card["source"] == "fixed"
+                    else t["routine_fixed_as"].format(rule=t["floor_rule"])))
     else:
         out.append((t["floor"], spans(floor, t, "floor_win", "; ") if floor else t["floor_none"]))
     return out

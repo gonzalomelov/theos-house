@@ -184,6 +184,20 @@ def local_hm(t, tz):
     return patterns.hhmm(t.astimezone(tz))
 
 
+def fixed_prewarm(seen, now, tz, horizon_h, lead_min=10):
+    """When the fixed rhythm rule warms the bottle tonight: lead_min before the first guessed feed at night within the
+    horizon, as {"at", "feed"} moments, or None. From the evening the next feed is in the evening, the one after it at
+    night (night_feed.py warms lead_min before each guessed night feed)."""
+    nxt = predict_feed(seen, now)
+    at = nxt["at"] if nxt else None
+    horizon = now + datetime.timedelta(hours=horizon_h)
+    while at is not None and nxt["gap_min"] > 0 and not patterns.is_night(at.astimezone(tz)) and at <= horizon:
+        at += datetime.timedelta(minutes=nxt["gap_min"])
+    if at is None or not patterns.is_night(at.astimezone(tz)) or at > horizon:
+        return None
+    return {"at": at - datetime.timedelta(minutes=lead_min), "feed": at}
+
+
 def absolute(hhmm, now, tz, horizon_h):
     """The moment at HH:MM nearest to now, today, yesterday or tomorrow. ValueError when it is not HH:MM or more than
     the horizon ahead."""
@@ -635,7 +649,7 @@ class HouseBrain:
             self.bus.publish("house_brain_fallback", trigger=trigger, what=what, at=now.isoformat(),
                              reason="; ".join(r for rs in refused.values() for r in rs)[:300], muse=meta,
                              routines=sorted(refused), scope="routine")
-        self.announce(plan, trigger, now)
+        self.announce(plan, trigger, now, seen)
         return event
 
     def count(self, meta):
@@ -669,7 +683,7 @@ class HouseBrain:
                 "prewarm": take("bottle_prewarm", None if warm is None else [w["start"] for w in warm]),
                 "on_duty": take("on_duty", plan["on_duty"])}
 
-    def announce(self, plan, trigger, now):
+    def announce(self, plan, trigger, now, seen=()):
         """Tonight's plan at bedtime, the one-sentence why on a re-plan, and the plan's messages to the parents. Each
         parent reads the plan in their own language, built from the checked plan itself. Muse writes the why in
         English and in Spanish (summary_es, why_changed_es), each checked the same way, so a Spanish family reads the
@@ -686,8 +700,19 @@ class HouseBrain:
                 en.append(f"Bottle warmer and dim light at {times}.")
                 es.append(f"Calentador de mamadera (solo agua) a las {times}. La luz espera a que se despierte.")
             elif plan["bottle_prewarm"] is None:
-                en.append("Bottle warmer on the fixed rhythm rule, Muse's times did not pass the checks.")
-                es.append("Calentador de mamadera según el ritmo de las tomas.")
+                lead = getattr(self.night_feed, "s", {}).get("lead_min", 10)
+                fixed = fixed_prewarm(seen, now, tz, self.s["horizon_h"], lead)
+                if fixed:
+                    at, feed = local_hm(fixed["at"], tz), local_hm(fixed["feed"], tz)
+                    en.append(f"Muse's times did not pass the checks, the fixed rhythm rule warms the bottle at {at}, "
+                              f"{lead} min before the night feed guessed around {feed}.")
+                    es.append(f"Los horarios de Muse no pasaron los controles. La regla fija calienta la mamadera (solo "
+                              f"agua) a las {at}, {lead} min antes de la toma de noche estimada cerca de las {feed}.")
+                else:
+                    en.append("Muse's times did not pass the checks and no night feed is guessed yet, a cry on the "
+                              "microphone still gets the bottle warmer ready.")
+                    es.append("Los horarios de Muse no pasaron los controles y todavía no hay toma de noche estimada. "
+                              "Si llora, el calentador se prepara igual.")
             else:
                 en.append("No bottle pre-warm armed, a cry on the microphone still gets the house ready.")
                 es.append("Sin precalentado: si llora, la casa se prepara igual.")
