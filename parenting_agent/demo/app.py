@@ -318,6 +318,17 @@ class DemoAgent(Agent):
     def refusal(self, request):
         return TEXTS[self.lang(request)]["REFUSAL"]
 
+    def wake_step(self, event, lang):
+        """The simulated house for a wake-up: at night the nursery lights go dim for the feed, by day nothing moves."""
+        if not patterns.is_night(self.now().astimezone(TZ)):
+            return rules.WAKE_NO_STEP[lang]
+        status, _ = self.tools.run("dim_lights", {"room": "nursery", "level": 20})
+        if status != "ran":
+            return rules.WAKE_NO_STEP[lang]
+        if lang == "es":
+            return f"Luces del cuarto al 20 % para la toma de la noche. {SIMULATED_ES}."
+        return f"Nursery lights dimmed to 20% for the night feed. {SIMULATED}."
+
     privacy_who = {"en": "Only you see this demo chat, no other visitor reads it.",
                    "es": "Solo vos ves este chat de la demo, ningún otro visitante lo lee."}
 
@@ -473,7 +484,9 @@ class Visitor:
             # bot. A cry with anything else in it (bluish, lethargic, hot, swallowed a coin) is not bare, so the agent's
             # gates answer it: the emergency line, the newborn call-now line or the refusal.
             self.memory.add_message("demo", "user", text, ts=self.baby_log.now())
-            self.agent.say("demo", self.cry_text(self.agent.lang(text)))
+            # A fever in the log leads with its fixed line, the same as tonight's plan (blind round b7).
+            fever = self.agent.fever_line(self.agent.lang(text))
+            self.agent.say("demo", (fever + " " if fever else "") + self.cry_text(self.agent.lang(text)))
         else:
             # Health advice is refused inside the agent before any brain call, and a dose given or a milestone is logged.
             self.agent.handle({"kind": "message", "channel": "demo", "text": text})

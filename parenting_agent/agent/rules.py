@@ -2093,3 +2093,19 @@ PRIVACY_WHO = {"en": "Only the parents in this chat read these messages.",
 
 def asks_privacy(text):
     return bool(ASKS_PRIVACY.search(text or "")) and not is_health(text)
+
+
+# "He just woke up crying" / "se despertó llorando": a bare wake-up report about the baby, with no time, length, feed,
+# diaper, symptom or question in it. The agent logs it by code and says what the house did (blind round b7 got nothing).
+WAKE_NOT_LOGGED = {"en": "I could not write the wake-up in the log.", "es": "No pude anotar que se despertó."}
+WAKE_NO_STEP = {"en": "The house does nothing for a wake-up now.", "es": "La casa no hace nada por un despertar ahora."}
+
+
+def is_wake_report(text):
+    from ..night_feed import awake_message  # night_feed reads the rhythm, never these rules at import time
+    text = text or ""
+    if not says_woke_only(text) or awake_message(text) != "awake" or is_question(text) or is_health(text) \
+            or names_red_flag(text) or is_emergency(text) or slept_minutes(text) or is_edit_request(text) \
+            or DELETE_SAID.search(text):
+        return False
+    return not (TIME_SAID.search(text) or clock_times(text) or reported_entries(text))

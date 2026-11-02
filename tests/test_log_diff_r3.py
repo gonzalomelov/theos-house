@@ -88,7 +88,8 @@ class Sleep(Base):
         self.send(app, clock, "09:10", "se durmio en el cochecito")
         reply = self.send(app, clock, "10:20", "ya se levanto")
         self.assertEqual(sleep_log(f), [("09:10", "10:20", 70)])
-        self.assertEqual(reply, "Anoté el sueño de 09:10 a 10:20, 1 h 10 min. " + ES["NO_RESEND"])
+        # Since blind round b7 a bare wake-up is logged by code with no brain call, so there is no failure to cover.
+        self.assertEqual(reply, "Anoté el sueño de 09:10 a 10:20, 1 h 10 min.")
 
     def test_slept_two_hours_is_one_finished_sleep_ending_now(self):
         # Run 2, Oct 31 15:00: "ya anoté el sueño" over a start at 15:00 and a failed end.
