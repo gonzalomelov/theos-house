@@ -102,7 +102,7 @@ How to read the parent:
   the rhythm line given.
 - Never give medical advice, a diagnosis or a dose. Set "health": true when the newest message asks anything about
   the baby's health or body: whether a symptom, a colour, a poop, a sneeze or a behaviour is normal or ok, what it
-  could be, what to do about it, a medicine, a dose, a tea or a remedy. The agent then answers that part with its own
+  could be, what to do about it, how much milk to give or how often, a medicine, a dose, a tea or a remedy. The agent then answers that part with its own
   fixed line, so leave the reply empty. What the message reports is still logged.
 
 The reply: one or two short plain sentences in {language}, with commas and periods, never an em dash. When there are operations, the agent itself confirms what
@@ -423,7 +423,8 @@ def observation_ops(agent, request, ops, now):
 
 # Whether something about the baby is normal, ok or what to give: health questions in any words around them.
 NORMAL_ASK = re.compile(r"\b(es normal|is (that|this|it) (normal|ok|okay|bad|fine)|normal\s*\?|(eso )?est[aá] bien\s*\?|"
-                        r"qu[eé] le (doy|puedo dar)|le puedo dar|is (he|she) sick|est[aá] enfermit?[oa]|is it (ok|okay|safe) "
+                        r"qu[eé] le (doy|puedo dar)|le puedo dar|cu[aá]nto le (doy|tengo que dar|deber[ií]a dar)|le doy \d+ o \d+|"
+                        r"how much (should|do) i (give|feed)|is (he|she) sick|est[aá] enfermit?[oa]|is it (ok|okay|safe) "
                         r"to (give|put)|should i (give|worry)|me preocupo|tengo que preocuparme|es grave|is it serious)(?!\w)",
                         re.I)
 
@@ -449,15 +450,23 @@ def other_tools(agent):
 
 
 def stagger(ops, now):
-    """Two or more feeds told in one message with no time ("le di 50 de leche materna y después otra de 30 de fórmula")
-    end one after the other, the last one now: held-out run-1 had the second refused as overlapping the first."""
-    feeds = [op for op in ops if op.get("op") == "add" and op.get("kind") == "feeding" and not op.get("at")]
-    if len(feeds) < 2:
-        return ops
-    cursor = now
-    for op in reversed(feeds):
-        op["at"] = cursor.strftime("%H:%M")
-        cursor -= datetime.timedelta(minutes=float(op.get("duration_min") or 15) + 1)
+    """Two or more feeds told in one message at one moment ("le di 50 de leche materna y después otra de 30 de
+    fórmula", with no time or the same time on both) end one after the other, the last one at that moment: held-out
+    run-1 had the second refused by Baby Buddy as overlapping the first."""
+    groups = {}
+    for op in ops:
+        if op.get("op") == "add" and op.get("kind") == "feeding":
+            at = HHMM.match(str(op.get("at") or ""))
+            key = f"{int(at.group(1)):02d}:{at.group(2)}" if at else (op.get("at") or now.strftime("%H:%M"))
+            groups.setdefault(key, []).append(op)
+    for key, feeds in groups.items():
+        if len(feeds) < 2 or not HHMM.match(key):
+            continue
+        hour, minute = (int(x) for x in re.split(r"[:.h]", key))
+        cursor = now.replace(hour=hour, minute=minute, second=0, microsecond=0)
+        for op in reversed(feeds):
+            op["at"] = cursor.strftime("%H:%M")
+            cursor -= datetime.timedelta(minutes=float(op.get("duration_min") or 15) + 1)
     return ops
 
 
@@ -536,7 +545,10 @@ def decide(agent, channel, request, verify=False, health=False, after_alert=Fals
     before = agent.log_state()
     for name, arguments in calls:
         status, result = agent.tools.run(name, arguments)
-        agent.bus.publish("tool", name=name, status=status)
+        agent.bus.publish("tool", name=name, status=status,
+                          **({"error": str(result)[:200], "op": {k: v for k, v in arguments.items() if k != "details"}
+                                                               | {"details": arguments.get("details")}}
+                             if status == "error" else {}))
     diff = log_diff(before, agent.log_state())
     if after_alert:
         return "" if diff_empty(diff) else diff_text(diff, lang, agent.baby_name())
