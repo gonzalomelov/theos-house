@@ -10,7 +10,7 @@ import threading
 
 from simweek import generate as simweek
 
-from ..agent.memory import LOG_KINDS, BabyLog, parse_time, start_after_feeds
+from ..agent.memory import LOG_KINDS, BabyLog, parse_time, place_sleep, start_after_feeds
 
 TZ = simweek.TZ
 MAX_ADDED = 300
@@ -180,6 +180,9 @@ class DemoBabyLog(BabyLog):
         action = details.get("action")
         if details.get("start") and details.get("end"):
             start, end = self.at_or_before_now(details["start"]), self.at_or_before_now(details["end"])
+        elif action == "end" and details.get("start"):
+            # The open sleep closed with the length the parent said: its start is end minus that length.
+            start, end, self.sleep_started = self.at_or_before_now(details["start"]), when, None
         elif action == "end" or (details.get("end") and not details.get("start")):
             if self.sleep_started is None:
                 raise ValueError("no sleep was started, tell me when he fell asleep")
@@ -193,7 +196,7 @@ class DemoBabyLog(BabyLog):
         # 15:13 over two feeds).
         with self.lock:
             feeds = [(started(r), finished(r)) for r in self.rows if r["kind"] == "feeding"]
-        start = start_after_feeds(start, end, feeds)
+        start, end = place_sleep(start, end, feeds) if details.get("start") else (start_after_feeds(start, end, feeds), end)
         return self._append({"kind": "sleep", "start": iso(start), "end": iso(end), "nap": 7 <= start.hour < 19, "notes": ""})
 
     def _row(self, entry_id):

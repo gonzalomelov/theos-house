@@ -530,11 +530,14 @@ def diff_text(diff, lang, name=None):
 
 NIGHT_START, NIGHT_END = 22, 6
 COUNT_WORDS = {
-    "en": {"today": "Today, since 00:00", "day24": "In the last 24 hours", "since_night": " ({n} since 22:00)"},
-    "es": {"today": "Hoy, desde las 00:00", "day24": "En las últimas 24 horas", "since_night": " ({n} desde las 22:00)"},
+    "en": {"today": "Today, since 00:00", "day24": "In the last 24 hours", "night": "Since 22:00",
+           "feeds": "{n} feed{s}", "bottles": ", {b} bottle{bs} with {ml} ml in all", "breast": ", {k} at the breast"},
+    "es": {"today": "Hoy, desde las 00:00", "day24": "En las últimas 24 horas", "night": "Desde las 22:00",
+           "feeds": "{n} toma{s}", "bottles": ", {b} mamadera{bs} con {ml} ml en total", "breast": ", {k} de pecho"},
 }
 TOPIC_WORDS = {"next_feed": re.compile(r"next feed|pr[oó]xima toma|le toca|toca (la )?(otra|pr[oó]xima)|expected|esperamos", re.I),
-               "diapers": re.compile(r"\b(\d+|un|one)\s+(pa[nñ]al|diaper)", re.I)}
+               "diapers": re.compile(r"\b(\d+|un|one)\s+(pa[nñ]al|diaper)", re.I),
+               "feeds": re.compile(r"\b(\d+)\s+(?:feeds?|feedings?|tomas?|bottles?|mamaderas?)\b|\b(\d+)\s*ml\b", re.I)}
 HHMM_IN = re.compile(r"\b(\d{1,2}):(\d{2})\b")
 SENTENCE = re.compile(r"(?<=[.!?])\s+")
 
@@ -544,7 +547,9 @@ def _times(text):
 
 
 def _counts(text, topic):
-    return {m.group(1).lower() for m in TOPIC_WORDS[topic].finditer(text or "")} if topic == "diapers" else set()
+    if topic not in ("diapers", "feeds"):
+        return set()
+    return {(m.group(1) or m.group(m.lastindex)).lower() for m in TOPIC_WORDS[topic].finditer(text or "")}
 
 
 def drop_other(text, topic, line):
@@ -556,7 +561,9 @@ def drop_other(text, topic, line):
     for sentence in SENTENCE.split(text):
         if topic == "next_feed" and TOPIC_WORDS[topic].search(sentence) and _times(sentence) and not _times(sentence) & _times(line):
             continue
-        if topic == "diapers" and _counts(sentence, topic) and not _counts(sentence, topic) & _counts(line, topic):
+        if topic in ("diapers", "feeds") and _counts(sentence, topic) and not _counts(sentence, topic) <= _counts(line, topic):
+            # A count or a total the log's line does not hold is never said next to it ("4 feeds totaling 120 ml"
+            # beside a summary of 3, blind round b7): counts come from code, Muse only words them.
             continue
         kept.append(sentence)
     return " ".join(kept)
@@ -967,6 +974,12 @@ class Agent:
             self.memory.add_message(channel, "user", text, ts=self.now())
             self.say(channel, self.complete_answer(text, self.last_feed_answer(text)))
             return
+        if rules.asks_heard_cry(text):
+            # "Did the microphone hear him cry?": what the ear put on the event log and when, never the checklist.
+            self.memory.add_message(channel, "user", text, ts=self.now())
+            self.bus.publish("guard", status="heard_cry")
+            self.say(channel, self.heard_cry_answer(text))
+            return
         if rules.is_long_cry(text):
             said = self.long_cry_answer(text)
             if said:
@@ -976,6 +989,13 @@ class Agent:
                 self.bus.publish("guard", status="long_cry")
                 self.say(channel, said)
                 return
+        if rules.is_wake_report(text):
+            # "He just woke up crying": the wake-up logged by code and the house step taken, labelled where it is only
+            # simulated or written down (blind round b7 got nothing back). No brain call.
+            self.memory.add_message(channel, "user", text, ts=self.now())
+            self.bus.publish("guard", status="wake_report")
+            self.say(channel, self.wake_answer(event, text))
+            return
         if rules.is_courtesy(text) and rules.THANKS.search(text) and self.double is None:
             # "ok thanks": a short fixed reply in the turn's language, no brain call, nothing said about the baby.
             self.memory.add_message(channel, "user", text, ts=self.now())
@@ -1060,8 +1080,40 @@ class Agent:
         except Exception:  # noqa: BLE001 no count rather than a wrong one
             return None
         said = rules.diaper_line(d["count"], d.get("wet_only", 0), d.get("dirty", 0), d.get("dry", 0), lang)
-        extra = COUNT_WORDS[lang]["since_night"].format(n=tonight["count"]) if tonight else ""
-        return f"{label}: {said}{extra}."
+        # The night so far is its own sentence with its unit: "5 con caca (4 desde las 22:00)" read as 4 dirty ones.
+        extra = (f" {COUNT_WORDS[lang]['night']}: " + rules.diaper_line(
+            tonight["count"], tonight.get("wet_only", 0), tonight.get("dirty", 0), tonight.get("dry", 0), lang) + "."
+                 ) if tonight else ""
+        return f"{label}: {said}.{extra}"
+
+    def feeds_count(self, since, lang):
+        """"3 feeds, 2 bottles with 180 ml in all, 1 at the breast": feeds that started since an instant, counted in
+        code from the log, as the night summary counts them (by their start)."""
+        entries = self.baby_log.entries("feeding", (since - datetime.timedelta(hours=3)).isoformat(timespec="seconds"), 300)
+        feeds = [e for e in entries if parse_time(feed_start(e)) >= since]
+        ml = [float((e.get("details") or {}).get("amount_ml") or 0) for e in feeds]
+        bottles = sum(1 for v in ml if v > 0)
+        breast = sum(1 for e in feeds if "breast" in str((e.get("details") or {}).get("method") or ""))
+        w = COUNT_WORDS[lang]
+        if not feeds:
+            return None
+        text = w["feeds"].format(n=len(feeds), s="" if len(feeds) == 1 else "s")
+        if bottles:
+            text += w["bottles"].format(b=bottles, bs="" if bottles == 1 else "s", ml=round(sum(ml)))
+        if breast:
+            text += w["breast"].format(k=breast)
+        return text
+
+    def feeds_line(self, lang):
+        """The feeds and their total from the log, for the window count_window gives, with the night so far."""
+        since, night, label = self.count_window(lang)
+        try:
+            day, tonight = self.feeds_count(since, lang), self.feeds_count(night, lang) if night else None
+        except Exception:  # noqa: BLE001 no count rather than a wrong one
+            return None
+        if not day:
+            return None
+        return f"{label}: {day}." + (f" {COUNT_WORDS[lang]['night']}: {tonight}." if tonight else "")
 
     def log_answer_lines(self, request, text):
         """The fixed line from the log for each log question in the parent's message (rules.log_questions) that text
@@ -1077,6 +1129,8 @@ class Agent:
                 line = self.next_feed_line(lang)
             elif topic == "last_feed":
                 line = self.last_feed_text(lang)
+            elif topic == "feeds":
+                line = self.feeds_line(lang)
             elif topic == "on_duty":
                 line = self.on_duty_line(lang)
                 if line and line not in text:
@@ -1128,6 +1182,47 @@ class Agent:
                 return plugin.log.entries()
         return None
 
+    def heard_cry_answer(self, request, hours=12):
+        """What the microphone heard in the last hours, read from the bus's event log: each cry episode with its time
+        and length, the last microphone error, or that no microphone is connected."""
+        es = self.lang(request) == "es"
+        now = self.now()
+        since = now - datetime.timedelta(hours=hours)
+        tz = now.tzinfo
+
+        def at(event):
+            try:
+                return datetime.datetime.fromisoformat(event["ts"]).astimezone(tz)
+            except (KeyError, TypeError, ValueError):
+                return None
+
+        events = [(at(e), e) for e in list(self.bus.history) if e["kind"] in ("sound", "hearing_error")]
+        events = [(t, e) for t, e in events if t is not None and since <= t <= now + datetime.timedelta(minutes=1)]
+        cries = {}
+        for t, e in events:
+            if e["kind"] == "sound" and e.get("label") == "cry":
+                cries[e.get("episode")] = (t, e.get("seconds"))  # an ongoing cry and its end are one episode
+        errors = [t for t, e in events if e["kind"] == "hearing_error"]
+        ear = any(getattr(p, "name", "") == "house-sounds" for p in getattr(self, "plugins", []) or []) \
+            or any(e["kind"] == "sound" for _, e in events)
+        hm = lambda t: t.strftime("%H:%M")
+        if cries:
+            parts = [f"{hm(t)} ({s} s)" if s else hm(t) for t, s in sorted(cries.values(), key=lambda c: c[0])]
+            text = (f"Sí. En las últimas {hours} h el micrófono oyó llanto {len(parts)} "
+                    f"{'vez' if len(parts) == 1 else 'veces'}: {', '.join(parts)}." if es else
+                    f"Yes. In the last {hours} h the microphone heard crying {len(parts)} "
+                    f"{'time' if len(parts) == 1 else 'times'}: {', '.join(parts)}.")
+        elif ear:
+            text = (f"No. En las últimas {hours} h el micrófono no registró llanto." if es else
+                    f"No. In the last {hours} h the microphone logged no crying.")
+        else:
+            text = ("No hay un micrófono conectado a este agente, así que no oyó nada. Lo que sé es lo que me contás." if es
+                    else "No microphone is connected to this agent, so it heard nothing. I only know what you tell me.")
+        if errors:
+            text += (f" El micrófono falló por última vez a las {hm(errors[-1])}, y en ese rato no pudo oír." if es else
+                     f" The microphone last failed at {hm(errors[-1])}, and it could not hear while it was down.")
+        return text
+
     def long_cry_answer(self, request):
         """The reply to a long cry (rules.is_long_cry), or None when the log cannot be read as rhythm rows."""
         from .. import cry_reason  # cry_reason reads the rhythm, which imports nothing from the agent
@@ -1141,8 +1236,29 @@ class Agent:
         entries = self.log_reported(request)
         if entries:
             rows = self.rhythm_rows()
-        said = cry_reason.long_cry(rows, self.now(), self.now().tzinfo, lang, who=self.baby_name() or "the baby")
+        said = cry_reason.long_cry(rows, self.now(), self.now().tzinfo, lang, who=self.baby_name() or "the baby",
+                                   fever=self.fever_line(lang))
         return (logged_text(entries, lang, self.baby_name()) + " " if entries else "") + said
+
+    def wake_answer(self, event, request):
+        """The reply to a bare wake-up report: the open sleep ended, or a note in the parent's words when no sleep was
+        open, then what the house did (wake_step)."""
+        lang = self.lang(request) if self.lang(request) in ("es", "en") else "en"
+        if self.open_sleep():
+            status, entry = self.tools.run("log_baby_event", {"kind": "sleep", "details": {"action": "end"}})
+        else:
+            status, entry = self.tools.run("log_baby_event", {"kind": "note", "details": {"text": request.strip()}})
+        self.bus.publish("tool", name="log_baby_event", status=status)
+        said = logged_text([entry], lang, self.baby_name()) if status == "ran" and isinstance(entry, dict) else \
+            rules.WAKE_NOT_LOGGED[lang]
+        step = self.wake_step(event, lang)
+        return said + (" " + step if step else "")
+
+    def wake_step(self, event, lang):
+        """What the house did for a wake-up: the night feed's step on the family agent, else None."""
+        from ..night_feed import find_plugin  # night_feed imports the agent's plug-in base, never the loop
+        plugin = find_plugin(self, "night-feed")
+        return plugin.wake_step(event or {}, lang) if plugin is not None else None
 
     def emergency(self, request):
         return rules.EMERGENCY_REPLY[self.lang(request)]
@@ -1422,6 +1538,16 @@ class Agent:
         if not (minutes or woke):
             return arguments
         timed = {"ts": arguments["ts"]} if arguments.get("ts") else {}
+        details = arguments.get("details") if isinstance(arguments.get("details"), dict) else {}
+        named_end = details.get("end") or arguments.get("ts")
+        if minutes:
+            # The length the parent said wins: "napped about 40 minutes" is 40 minutes, never the minute since a
+            # simulated sleep or a timer opened, nor what is left after a bottle (round b7 logged a 1 minute sleep).
+            end = parse_time(named_end) if named_end else self.now()
+            start = (end - datetime.timedelta(minutes=minutes)).isoformat(timespec="seconds")
+            if self.open_sleep():
+                return {"kind": "sleep", "details": {"action": "end", "start": start}, **timed}
+            return {"kind": "sleep", "details": {"start": start, "end": end.isoformat(timespec="seconds")}}
         if self.open_sleep():
             return {"kind": "sleep", "details": {"action": "end"}, **timed}
         if minutes:
@@ -1430,6 +1556,23 @@ class Agent:
             return {"kind": "sleep", "details": {"start": start.isoformat(timespec="seconds"),
                                                  "end": end.isoformat(timespec="seconds")}}
         return arguments
+
+    def told_sleep(self, request):
+        """The sleep a message tells, logged in code when the brain logged nothing: "quedó dormido" starts one (round b7
+        never logged it), "napped about 40 minutes" is a 40 minute sleep. Returns the confirmation, or None."""
+        if rules.asleep_now(request) and not self.open_sleep():
+            named = rules.named_time(request, self.now())
+            arguments = {"kind": "sleep", "details": {"action": "start"}, **({"ts": named} if named else {})}
+        elif rules.slept_minutes(request):
+            arguments = self.sleep_call({"kind": "sleep", "details": {}}, request)
+        else:
+            return None
+        status, entry = self.tools.run("log_baby_event", arguments)
+        self.bus.publish("tool", name="log_baby_event", status=status)
+        if status != "ran" or not isinstance(entry, dict):
+            return None
+        self.bus.publish("guard", status="told_sleep")
+        return logged_text([entry], self.lang(request))
 
     def addendum(self, request):
         """A short follow-up that adds one detail to the entry just logged ("como 14 min" after "teta izq", "y pis tmb"
@@ -1845,6 +1988,9 @@ class Agent:
                         text = diff_text(log_diff(before, self.log_state()), lang, self.baby_name())
                         return finish(text or " ".join(said), fixed=True)
                     return finish(" ".join(said + ([reply.text] if kept and reply.text else [])), fixed=True)
+                told = self.told_sleep(request) if not kept and not editing else None
+                if told:
+                    return finish(told, fixed=True)
                 if not kept and self.needs_log(request, reply.text, failed, acted, read=bool(read)):
                     if not checked:
                         checked = True

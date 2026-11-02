@@ -276,15 +276,35 @@ class NightFeed(Plugin):
         if SLEEP_ASK.search(str(event.get("text") or "")):
             self.asked_to_sleep(event.get("person"), now)
             return
+        self.message_awake(event, now)
+
+    def message_awake(self, event, now=None):
+        """The night feed for a parent's "he just woke up": the episode, once, whether the bus or the agent's reply asks
+        first. None when the message is no awake signal, by day, or before the birth."""
+        now = now or self.clock()
         what = awake_message(event.get("text"), self.others)
-        if what is None or not self.is_night(now):
-            return
+        if not self.born or what is None or not self.is_night(now):
+            return None
         with self.lock:
             # The parent who says he is up already knows: the house gets ready, the push goes only to someone else.
             duty = self.people.person(self.on_duty(now))
             push = what == "awake" and not (event.get("person") and event.get("person") == duty)
-            self.awake(now, "parent", f"a parent said \"{str(event.get('text'))[:80]}\"", push=push,
-                       by=event.get("person"))
+            return self.awake(now, "parent", f"a parent said \"{str(event.get('text'))[:80]}\"", push=push,
+                              by=event.get("person"))
+
+    def wake_step(self, event, lang="en"):
+        """What the house did for a parent's "he just woke up", for the reply to that parent, or None. It says what
+        moved for real and what was only written down (dry run)."""
+        ep = self.message_awake(event)
+        house = (ep or {}).get("house")
+        if not house:
+            return None
+        light, warm, noise = house
+        name = self.people.display(ep["parent"])
+        if lang == "es":
+            return self.awake_text_es("parent", light, warm, noise, name).split(". ", 1)[1].replace(
+                f"Estás de turno, {name}.", f"De turno: {name}.")
+        return self.awake_text("parent", light, warm, noise, name).split(". ", 1)[1]
 
     @staticmethod
     def night_of(now, tz):
@@ -496,6 +516,7 @@ class NightFeed(Plugin):
                        else "warmer set to never")
         light = self.in_night_bed(now) or self.light(now, True, trigger, why)
         noise = self.noise_down(now)
+        ep["house"] = (light, warm, noise)
         if push:
             name = self.people.display(ep["parent"])
             self.push(ep["parent"], self.awake_text(trigger, light, warm, noise, ep["parent"]), now,

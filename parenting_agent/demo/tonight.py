@@ -62,6 +62,10 @@ TEXT = {
         "no_change": "Nothing changed in the plan", "fixed_word": "fixed rule",
         "fixed_sleep": "The fixed rules do not re-plan when a parent asks to sleep, so {p} stays on duty",
         "plan_until": "Plan from {now} to {until}",
+        "why_plain": "Why", "handed": "{p}, because {a} asked to sleep",
+        "fixed_routines": "The routines keep their fixed rules",
+        "why_handed": "{a} asked to sleep at {at}, so {p} takes the night and gets the night pushes.",
+        "why_kept": "{a} asked to sleep at {at}. Nobody else can take the night, so {a} stays on duty.",
         "plan_ahead": "Tonight from {now} to {until}, planned at {at} from the simulated day ahead",
     },
     "es": {
@@ -94,6 +98,10 @@ TEXT = {
         "no_change": "No cambió nada en el plan", "fixed_word": "regla fija",
         "fixed_sleep": "Las reglas fijas no cambian el plan cuando alguien pide dormir, así que {p} sigue de turno",
         "plan_until": "Plan de {now} a {until}",
+        "why_plain": "Por qué", "handed": "{p}, porque {a} pidió dormir",
+        "fixed_routines": "Las rutinas siguen con sus reglas fijas",
+        "why_handed": "{a} pidió dormir a las {at}, así que {p} toma la noche y recibe los avisos de la noche.",
+        "why_kept": "{a} pidió dormir a las {at}. Nadie más puede tomar la noche, así que {a} sigue de turno.",
         "plan_ahead": "Esta noche de {now} a {until}, planeado a las {at} con el resto del día simulado",
     },
 }
@@ -130,6 +138,7 @@ class TonightHouse:
         self.on_call = lambda: None  # counts one Muse plan call against the visitor's limits, set per request
         self.plans = {}
         self.at, self.ahead = None, []
+        self.asker = None  # the parent on duty who asked to sleep
 
     def cached(self):
         self.drop_stale()
@@ -170,6 +179,7 @@ class TonightHouse:
             trigger, what = "bedtime", None
         else:
             who = self.plans["tonight"]["on_duty"]
+            self.asker = who
             trigger = "adapt"
             what = ASKED_TO_SLEEP.format(who=who, at=hm(real_now)) + (f': "{hb.clean_text(said, 160)}"' if said else "")
             # The request is about tonight, so it counts from the start of the planned night.
@@ -222,21 +232,33 @@ class TonightHouse:
         request = self.brain.asked_to_sleep is not None and now - self.brain.asked_to_sleep < datetime.timedelta(hours=12)
         out = {"source": "muse" if plan else "fixed", "fixed_reason": reason, "trigger": trigger, "what": what or "",
                "now": hm(now), "until": hm(now + datetime.timedelta(hours=self.brain.s["horizon_h"])),
-               "asked_to_sleep": request}
+               "asked_to_sleep": request, "asker": self.asker if trigger == "adapt" else None,
+               "asked_at": hm(self.brain.asked_to_sleep) if trigger == "adapt" and self.brain.asked_to_sleep else ""}
         windows = lambda items: "fixed" if items is None else [{"start": hm(w["start"]), "end": hm(w["end"]) if w["end"] else ""}
                                                              for w in items]
         if plan:
             # on_duty_on_request: Muse's parent counts only after a parent asked to sleep, else the rota stays (house_brain).
             out["on_duty"], out["on_duty_by"] = (plan["on_duty"], "muse") if request else (rota, "rota")
             out["muse_on_duty"] = plan["on_duty"]
+            asker = self.asker if trigger == "adapt" else None
+            if asker and out["on_duty"] == asker:
+                # The parent who asked to sleep is never left on duty (blind round b7: the re-plan came back the same as
+                # tonight's): the other parent takes the night, and a why that keeps the asker on is not shown.
+                out["on_duty"] = next(p for p in self.parents if p != asker)
+                out["handed_over_by_code"] = True
             for name in hb.ROUTINES:
                 out[name] = windows(plan[name])
             for field in hb.WHY_FIELDS:
-                out[field] = plan.get(field) or ""
+                text = plan.get(field) or ""
+                out[field] = "" if out.get("handed_over_by_code") and hb.disagrees_on_duty(
+                    text, out["on_duty"], self.parents) else text
             meta = next((e.get("muse") for e in reversed(self.bus.history) if e["kind"] == "house_plan"), None) or {}
             out["muse"] = {"seconds": meta.get("seconds"), "model": meta.get("model")}
         else:
             out["on_duty"], out["on_duty_by"] = rota, "rota"
+            if trigger == "adapt" and self.asker and rota == self.asker:
+                # With no Muse plan the plain code still hands the night to the other parent.
+                out["on_duty"], out["on_duty_by"] = next(p for p in self.parents if p != self.asker), "request"
             for name in hb.ROUTINES:
                 out[name] = "fixed"
             for field in hb.WHY_FIELDS:
@@ -280,7 +302,9 @@ def rows(card, lang="en"):
     """[(label, text)] in the visitor's language, the order the card shows them."""
     t = TEXT["es" if lang == "es" else "en"]
     p = name(card["on_duty"], lang)
-    if card["on_duty_by"] == "muse":
+    if card["on_duty_by"] == "request":
+        duty = t["handed"].format(p=p, a=name(card.get("asker") or "", lang))
+    elif card["on_duty_by"] == "muse":
         duty = t["moved"].format(p=p) if card.get("before") and card["before"]["on_duty"] != card["on_duty"] else t["kept"].format(p=p)
     else:
         duty = t["rota"].format(p=p)
@@ -323,19 +347,33 @@ def changes(card, lang="en"):
     if not before:
         return []
     t = TEXT["es" if lang == "es" else "en"]
-    if card["source"] == "fixed":
-        return [t["fixed_sleep"].format(p=name(card["on_duty"], lang))]
     labels = dict(zip(("duty", "bottle_prewarm", "white_noise_boost", "door_quiet", "floor_clean"),
                       (t["duty"], t["warm"], t["noise"], t["door"], t["floor"])))
     fmt = lambda items: t["fixed_word"] if items == "fixed" else (", ".join(
         f"{w['start']}-{w['end']}" if w["end"] else w["start"] for w in items) or "-")
     out = []
+    if card["source"] == "fixed" and before["on_duty"] == card["on_duty"]:
+        return [t["fixed_sleep"].format(p=name(card["on_duty"], lang))]
     if before["on_duty"] != card["on_duty"]:
         out.append(f"{labels['duty']}: {name(before['on_duty'], lang)} → {name(card['on_duty'], lang)}")
     for key in hb.ROUTINES:
         if before[key] != card[key]:
             out.append(f"{labels[key]}: {fmt(before[key])} → {fmt(card[key])}")
+    if card["source"] == "fixed":
+        out.append(t["fixed_routines"])
     return out or [t["no_change"]]
+
+
+def code_why(card, lang="en"):
+    """The re-plan's why from the plain code when Muse gave none that passed the checks: who asked, when, and who
+    takes the night, so "let me sleep" never shows an empty why (blind round b7)."""
+    if not card.get("before"):
+        return ""
+    t = TEXT["es" if lang == "es" else "en"]
+    asker = card.get("asker") or card["before"]["on_duty"]
+    if asker == card["on_duty"]:
+        return t["why_kept"].format(a=name(asker, lang), at=card.get("asked_at") or card["now"])
+    return t["why_handed"].format(a=name(asker, lang), at=card.get("asked_at") or card["now"], p=name(card["on_duty"], lang))
 
 
 def why_line(text, lang):
@@ -363,12 +401,19 @@ def view(card, lang="en"):
     t = TEXT["es" if lang == "es" else "en"]
     source = t["src_muse"] if card["source"] == "muse" else t["src_fixed"].format(
         reason=t["fixed_reason"].get(card["fixed_reason"], t["fixed_reason"]["error"]))
+    why = why_line(why_in(card, "summary", lang), lang)
+    why_changed = why_line(why_in(card, "why_changed", lang), lang)
+    why_label = t["why"]
+    if card.get("before") and not why_changed:
+        why_changed = code_why(card, lang)
+        why_label = t["why_plain"]
+    elif not why_changed and not why:
+        why_label = t["why_plain"]
     return {"source": card["source"], "label": source, "badge": t["badge"],
             "span": (t["plan_ahead"].format(now=card["now"], until=card["until"], at=card["planned_at"])
                      if card.get("planned_at") else t["plan_until"].format(now=card["now"], until=card["until"])),
             "rows": [{"label": a, "text": b} for a, b in rows(card, lang)],
-            "why": why_line(why_in(card, "summary", lang), lang), "why_label": t["why"],
-            "why_changed": why_line(why_in(card, "why_changed", lang), lang),
+            "why": why, "why_label": why_label, "summary_label": t["why"], "why_changed": why_changed,
             "changes": changes(card, lang), "changes_label": t["changed"], "on_duty": name(card["on_duty"], lang),
             "seconds": (card.get("muse") or {}).get("seconds")}
 
@@ -384,7 +429,7 @@ def text(card, lang="en"):
     v = view(card, lang)
     lines = [f"{v['badge']}. {v['label']}. {v['span']}."] + [f"{r['label']}: {r['text']}." for r in v["rows"]]
     if v["why"]:
-        lines.append(f"{v['why_label']}: {v['why']}")
+        lines.append(f"{v['summary_label']}: {v['why']}")
     if v["changes"]:
         lines.append(f"{v['changes_label']}: " + "; ".join(v["changes"]) + ".")
     if v["why_changed"]:

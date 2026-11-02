@@ -318,6 +318,17 @@ class DemoAgent(Agent):
     def refusal(self, request):
         return TEXTS[self.lang(request)]["REFUSAL"]
 
+    def wake_step(self, event, lang):
+        """The simulated house for a wake-up: at night the nursery lights go dim for the feed, by day nothing moves."""
+        if not patterns.is_night(self.now().astimezone(TZ)):
+            return rules.WAKE_NO_STEP[lang]
+        status, _ = self.tools.run("dim_lights", {"room": "nursery", "level": 20})
+        if status != "ran":
+            return rules.WAKE_NO_STEP[lang]
+        if lang == "es":
+            return f"Luces del cuarto al 20 % para la toma de la noche. {SIMULATED_ES}."
+        return f"Nursery lights dimmed to 20% for the night feed. {SIMULATED}."
+
     privacy_who = {"en": "Only you see this demo chat, no other visitor reads it.",
                    "es": "Solo vos ves este chat de la demo, ningún otro visitante lo lee."}
 
@@ -474,7 +485,9 @@ class Visitor:
             # bot. A cry with anything else in it (bluish, lethargic, hot, swallowed a coin) is not bare, so the agent's
             # gates answer it: the emergency line, the newborn call-now line or the refusal.
             self.memory.add_message("demo", "user", text, ts=self.baby_log.now())
-            self.agent.say("demo", self.cry_text(self.agent.lang(text)))
+            # A fever in the log leads with its fixed line, the same as tonight's plan (blind round b7).
+            fever = self.agent.fever_line(self.agent.lang(text))
+            self.agent.say("demo", (fever + " " if fever else "") + self.cry_text(self.agent.lang(text)))
         else:
             # Health advice is refused inside the agent before any brain call, and a dose given or a milestone is logged.
             self.agent.handle({"kind": "message", "channel": "demo", "text": text})
@@ -532,7 +545,7 @@ class Visitor:
         """(card, muse calls) for "tonight" or "sleep". A Muse plan that moves the night puts that parent on duty,
         so the panel's rota and the card agree. said is the parent's own words asking to sleep, from the chat."""
         card, calls = self.house.plan(action, self.turn_lang, said=said)
-        if action == "sleep" and card["on_duty_by"] == "muse":
+        if action == "sleep" and card["on_duty_by"] in ("muse", "request"):
             self.duty = card["on_duty"]
         return card, calls
 
@@ -859,13 +872,18 @@ class DemoApp:
             return lang
         return self.langs.get(vid, "en")
 
-    def state(self, vid, internal, lang=None):
+    def state(self, vid, internal, lang=None, view="baby"):
+        """The page's cards. The prep lists and the due date countdown go out only for the prep tab (view "prep"):
+        Theo is a newborn on the first tab, and a countdown to his birth there contradicts him (blind round b7)."""
         lang = self.visitor_lang(vid, lang)
         known = self.known(vid)
         v = known or self.fresh_state()
-        return {"proactive": v.proactive(lang), "recent": v.recent(lang=lang), "prep": v.prep().state(lang),
-                "house": known.house_cards(lang) if known else {},
-                "remaining": self.remaining(vid, internal), "resting": self.brain.resting(), "max_input": self.s["max_input_chars"]}
+        out = {"proactive": v.proactive(lang), "recent": v.recent(lang=lang),
+               "house": known.house_cards(lang) if known else {},
+               "remaining": self.remaining(vid, internal), "resting": self.brain.resting(), "max_input": self.s["max_input_chars"]}
+        if view == "prep":
+            out["prep"] = v.prep().state(lang)
+        return out
 
     def message(self, vid, internal, text, client=None, mode="baby", lang="en"):
         """Returns (http status, body). Records one session row for each message the demo takes in. client is the
@@ -909,8 +927,11 @@ class DemoApp:
                     v.bus.publish("agent_error", error=str(error)[:300])
                     v.memory.add_message("demo", "assistant", THINK_FAIL)
                     return 502, {"error": "brain", "reply": safety or THINK_FAIL, "remaining": self.remaining(vid, internal)}
-            return 200, {"reply": reply, "actions": actions, "mode": mode, "answered_by": v.answered_by, "proactive": v.proactive(lang), "recent": v.recent(lang=lang),
-                         "prep": v.prep().state(lang), "house": v.house_cards(lang), "remaining": self.remaining(vid, internal)}
+            body = {"reply": reply, "actions": actions, "mode": mode, "answered_by": v.answered_by, "proactive": v.proactive(lang), "recent": v.recent(lang=lang),
+                    "house": v.house_cards(lang), "remaining": self.remaining(vid, internal)}
+            if mode == "prep":
+                body["prep"] = v.prep().state(lang)
+            return 200, body
         finally:
             self.thinking.release()
 

@@ -533,6 +533,22 @@ def stale_sleep_ops(agent, request, ops):
     return [{"op": "sleep_end", "at": woke}] + rest + [new]
 
 
+def sleep_calls(agent, request, calls):
+    """The sleep a message tells is logged in code from its words, whatever Muse proposed: a length said ("napped about
+    40 minutes") is that length, and "quedó dormido" with no sleep proposed starts one (round b7: a 1 minute sleep and
+    a sleep never logged)."""
+    sleeps = [c for c in calls if c[0] == "log_baby_event" and c[1].get("kind") == "sleep"]
+    if rules.slept_minutes(request) and len(sleeps) <= 1:
+        arguments = sleeps[0][1] if sleeps else {"kind": "sleep", "details": {}}
+        sized = ("log_baby_event", agent.sleep_call(arguments, request))
+        return [c for c in calls if c not in sleeps] + [sized]
+    if not sleeps and rules.asleep_now(request) and not agent.open_sleep():
+        named = rules.named_time(request, agent.now())
+        return calls + [("log_baby_event", {"kind": "sleep", "details": {"action": "start"},
+                                            **({"ts": named} if named else {})})]
+    return calls
+
+
 def decide(agent, channel, request, verify=False, health=False, after_alert=False):
     """One parent message through the ops brain. Returns the reply text, which the caller says, or None when the brain
     answered no log operations at all, so the caller can take the guarded path. after_alert: the fixed safety line went
@@ -592,6 +608,7 @@ def decide(agent, channel, request, verify=False, health=False, after_alert=Fals
     ops = stagger(ops, now)
     hours = bare_hours(request)
     calls = [c for c in (to_call(op, now, hours) for op in ops) if c is not None]
+    calls = calls if after_alert or health else sleep_calls(agent, request, calls)
     for name, arguments in calls:
         kind = arguments.get("kind")
         if name == "edit_baby_event" and kind is None:

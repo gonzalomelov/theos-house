@@ -17,7 +17,12 @@ from .rhythm.log import ordered, parse, when
 
 REASONS = ("hungry", "tired", "diaper", "comfort")
 MEDICAL_RE = re.compile(r"\b(pain\w*|hurt\w*|ill|illness|sick\w*|colic\w*|reflux|fever\w*|gas|gassy|teeth|teething|"
-                        r"infection|ear|medical|medicine|doctor|pediatrician|allerg\w*|disease|symptom\w*|injur\w*)\b",
+                        r"infection|ear|medical|medicine|doctor|pediatrician|allerg\w*|disease|symptom\w*|injur\w*|"
+                        # Spanish, with or without accents: the Spanish reply passes the same guard as the English one.
+                        r"dolor\w*|duele\w*|doli\w*|c[oó]lic\w*|reflujo|fiebre\w*|febr\w*|gases|enferm\w*|m[eé]dic\w*|"
+                        r"pediatra\w*|v[oó]mit\w*|diarrea\w*|dientes|dentici[oó]n|infecci[oó]n\w*|alergi\w*|al[eé]rgic\w*|"
+                        r"s[ií]ntoma\w*|lesi[oó]n\w*|lastim\w*|herid\w*|otitis|remedio\w*|"
+                        r"broncoespasmo|bronquio\w*|gripe|resfr[ií]\w*|mocos?)\b",
                         re.IGNORECASE)
 SOUND_WEIGHT = 0.05
 COMFORT_SCORE = 0.3
@@ -206,9 +211,10 @@ def explain(entries, now, tz, features=None, pronoun="he", young=True):
         text += " " + patterns.next_feed_sentence(ctx["next_feed"], now, tz)
     if pronoun != "he":
         text = re.sub(r"\bhe\b", pronoun, text)
-    if not (no_medical(text) and patterns.no_advice(text)):
+    text_es = spanish(ctx, ranked, likely, now, tz)
+    if not all(no_medical(t) and patterns.no_advice(t) for t in (text, text_es)):
         raise ValueError("cry reason text failed the no-medical guard")
-    return {"top": top, "likely": likely, "text": text, "text_es": spanish(ctx, ranked, likely, now, tz), "ranked": [{"reason": r, "score": s, "evidence": t} for s, r, t in ranked],
+    return {"top": top, "likely": likely, "text": text, "text_es": text_es, "ranked": [{"reason": r, "score": s, "evidence": t} for s, r, t in ranked],
             "computed_from": ctx["refs"], "asleep": ctx["asleep"],
             "next_sleep_at": ctx["next_sleep_at"].isoformat() if ctx.get("next_sleep_at") else None}
 
@@ -235,7 +241,7 @@ LONG_CRY = {
 }
 
 
-def long_cry(entries, now, tz, lang="en", who="he", young=True):
+def long_cry(entries, now, tz, lang="en", who="he", young=True, fever=None):
     """The answer to a long cry told with more words than "why is he crying?": the log's last feed, last diaper and
     time awake with their clock times, the fixed list of what to check and the fixed line on when to call. It guesses
     no reason and gives no advice beyond that line."""
@@ -252,4 +258,5 @@ def long_cry(entries, now, tz, lang="en", who="he", young=True):
     if "awake_min" in ctx and not ctx["asleep"]:
         said.append(t["awake"].format(ago=_hm(ctx["awake_min"]), at=at(ctx["woke_at"])))
     head = t["facts"].format(facts=", ".join(said)) if said else t["none"]
-    return " ".join([head, t["checks"], t["red"].format(who=who)])
+    # A fever already in the log is said as logged, with its fixed line, never "if he also has 38 °C" (blind round b7).
+    return " ".join([fever, head, t["checks"]] if fever else [head, t["checks"], t["red"].format(who=who)])

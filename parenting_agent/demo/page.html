@@ -394,7 +394,10 @@ for (const id of ["chips-baby", "chips-prep"]) {
 $("house-plan").addEventListener("click", () => housePlan("tonight"));
 $("house-sleep").addEventListener("click", () => housePlan("sleep"));
 $("tab-baby").addEventListener("click", () => setMode("baby"));
-$("tab-prep").addEventListener("click", () => setMode("prep"));
+$("tab-prep").addEventListener("click", () => {
+  setMode("prep");
+  api("/api/state?view=prep&lang=" + LANG).then(({ data }) => render(data));
+});
 $("reset").addEventListener("click", async () => {
   const { ok, data } = await api("/api/reset", { lang: LANG });
   if (!ok) { bubble("note", data.reply || T.wrong); return; }

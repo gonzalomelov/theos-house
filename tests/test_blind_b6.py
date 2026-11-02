@@ -79,7 +79,7 @@ class AnswerEveryPart(unittest.TestCase):
         reply = app.message("v", False, "¿cuándo fue la última toma y cuántos pañales lleva hoy?", lang="es")[1]["reply"]
         self.assertIn("La última toma", reply)
         self.assertIn(f"En las últimas 24 horas: {count} pañales", reply)
-        self.assertIn("desde las 22:00", reply)
+        self.assertIn("Desde las 22:00", reply)
 
     def test_a_wrong_count_from_the_brain_is_replaced(self):
         app, _ = night_demo(ScriptedBrain(["Hoy lleva 1 pañal."]))

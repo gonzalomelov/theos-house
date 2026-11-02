@@ -722,6 +722,21 @@ CRY_ORDER = re.compile(r"\b(white noise|ruido blanco|announce|anunci\w*|llam[aá
                        r"pon[eé]|prend[eé]|apag[aá]|put|set|turn|start|stop|pause|remind|record[aá]\w*|anot[aá]|log)\b", re.I)
 
 
+# "Did the microphone hear him cry?": a question about what the ear heard, answered from the event log (blind round b7
+# got the generic cry checklist).
+EAR = re.compile(r"\b(micro(phone)?s?|mic|micr[oó]fono\w*|ear|o[ií]do|hear\w*|heard|o[ií]\w*|oy[oó]|escuch\w*|"
+                 r"detect\w*)\b", re.I)
+ASKS = re.compile(r"\?|\b(did|does|has|have|was|any|alg[uú]n\w*|hubo)\b", re.I)
+
+
+def asks_heard_cry(text):
+    """True for a question about whether the microphone heard a cry, with no symptom, red flag or order in it."""
+    text = text or ""
+    if not (CRY.search(text) and EAR.search(text) and ASKS.search(text)):
+        return False
+    return not (is_health(text) or names_red_flag(text) or is_emergency(text) or CRY_ORDER.search(text))
+
+
 def is_long_cry(text):
     """True for a crying message that is more than a bare "why is he crying?" and holds no symptom, red flag or order:
     "no para de llorar hace media hora y ya comió, estoy reventado". It gets the log's facts, the fixed checklist and the
@@ -1117,6 +1132,8 @@ LOG_QUESTIONS = (
         r"\bnext (?:feed|feeding|bottle)\b|\bwhen (?:is|will|should|do|does|would|can)\b[^?.!]{0,40}\b(?:feed|eat|bottle|hungry)\b"
         r"(?! (?:last|earlier))|\bwhen (?:is )?(?:he|she|the baby|theo) due\b", re.I)),
     ("last_feed", re.compile(LAST_FEED.pattern + r"|\blast (?:feed|feeding|bottle)\b|\b[uú]ltima (?:toma|mamadera)\b", re.I)),
+    ("feeds", re.compile(r"\b(?:cu[aá]ntas|how many|cantidad de|n[uú]mero de)\s+(?:tomas|feeds|feedings|bottles|mamaderas)\b|"
+                         r"\b(?:feed|feeding|toma)s? (?:count|total)s?\b", re.I)),
     ("diapers", re.compile(r"\b(?:cu[aá]ntos|how many|cantidad de|n[uú]mero de)\s+(?:(?:dirty|wet|poopy|sucios|mojados)\s+)?"
                            r"(?:pa[nñ]ales|diapers|cambios)\b|\b(?:dirty|wet|poopy) diapers?\b(?! (?:at|was|were|is)\b)|"
                            r"\bpa[nñ]ales (?:sucios|con caca|mojados)\b|"
@@ -2143,3 +2160,19 @@ PRIVACY_WHO = {"en": "Only the parents in this chat read these messages.",
 
 def asks_privacy(text):
     return bool(ASKS_PRIVACY.search(text or "")) and not is_health(text)
+
+
+# "He just woke up crying" / "se despertó llorando": a bare wake-up report about the baby, with no time, length, feed,
+# diaper, symptom or question in it. The agent logs it by code and says what the house did (blind round b7 got nothing).
+WAKE_NOT_LOGGED = {"en": "I could not write the wake-up in the log.", "es": "No pude anotar que se despertó."}
+WAKE_NO_STEP = {"en": "The house does nothing for a wake-up now.", "es": "La casa no hace nada por un despertar ahora."}
+
+
+def is_wake_report(text):
+    from ..night_feed import awake_message  # night_feed reads the rhythm, never these rules at import time
+    text = text or ""
+    if not says_woke_only(text) or awake_message(text) != "awake" or is_question(text) or is_health(text) \
+            or names_red_flag(text) or is_emergency(text) or slept_minutes(text) or is_edit_request(text) \
+            or DELETE_SAID.search(text):
+        return False
+    return not (TIME_SAID.search(text) or clock_times(text) or reported_entries(text))

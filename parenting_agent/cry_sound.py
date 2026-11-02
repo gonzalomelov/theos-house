@@ -136,8 +136,10 @@ def combine(result, guess, entries, now, pronoun="he"):
         text = result["text"] + " The sound agrees."
     else:
         text = result["text"] + f" From the sound alone, a guess: {WORDS[label]}."
-    if no_medical(text):
+    text_es = result["text_es"] + " " + (AGREES_ES if agrees else GUESS_ES.format(word=WORDS_ES[label])) \
+        if result.get("text_es") else None
+    if no_medical(text) and (text_es is None or no_medical(text_es)):
         out["text"] = text
-        if result.get("text_es"):
-            out["text_es"] = result["text_es"] + " " + (AGREES_ES if agrees else GUESS_ES.format(word=WORDS_ES[label]))
+        if text_es is not None:
+            out["text_es"] = text_es
     return out
