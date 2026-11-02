@@ -200,6 +200,18 @@ class WhatIsStored(FamilyAgent):
         self.assertIn("50 ml", reply[0])
         self.assertIn("30 ml", reply[0])
 
+    def test_two_feeds_named_at_one_time_are_both_kept(self):
+        self.say("a las 2 le di 50 de leche materna y otra de 30 de fórmula",
+                 ops({"op": "add", "kind": "feeding", "method": "bottle", "amount_ml": 50, "at": self.at(20)},
+                     {"op": "add", "kind": "feeding", "method": "bottle", "amount_ml": 30, "at": self.at(20)}))
+        self.assertEqual(sorted(r["amount"] for r in self.records("feedings")), [30.0, 50.0])
+        self.assertEqual(max(r["end"] for r in self.records("feedings"))[11:16], self.at(20))
+
+    def test_how_much_to_give_is_a_health_question(self):
+        self.assertTrue(log_ops.asks_health("le doy 90 o 120?"))
+        self.assertTrue(log_ops.asks_health("cuanto le tengo que dar a esta edad"))
+        self.assertFalse(log_ops.asks_health("cuanto tomo hoy"))
+
     def test_the_brain_sees_the_open_sleep_and_the_milk_totals(self):
         self.say("se durmió", ops({"op": "sleep_start", "at": self.at(70)}))
         self.say("tomó 90 de fórmula", ops({"op": "add", "kind": "feeding", "method": "bottle", "amount_ml": 90,
