@@ -98,4 +98,6 @@ def blend(result, guess, min_confidence=DEFAULTS["min_confidence"]):
     if result.get("text_es"):
         word_es = {"hungry": "hambre", "tired": "sueño", "diaper": "el pañal"}.get(guess["reason"], guess["reason"])
         out["text_es"] = result["text_es"] + f" Solo por el sonido, una pista: {word_es}."
+        if not no_medical(out["text_es"]):
+            return result
     return out

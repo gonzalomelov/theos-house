@@ -858,13 +858,18 @@ class DemoApp:
             return lang
         return self.langs.get(vid, "en")
 
-    def state(self, vid, internal, lang=None):
+    def state(self, vid, internal, lang=None, view="baby"):
+        """The page's cards. The prep lists and the due date countdown go out only for the prep tab (view "prep"):
+        Theo is a newborn on the first tab, and a countdown to his birth there contradicts him (blind round b7)."""
         lang = self.visitor_lang(vid, lang)
         known = self.known(vid)
         v = known or self.fresh_state()
-        return {"proactive": v.proactive(lang), "recent": v.recent(lang=lang), "prep": v.prep().state(lang),
-                "house": known.house_cards(lang) if known else {},
-                "remaining": self.remaining(vid, internal), "resting": self.brain.resting(), "max_input": self.s["max_input_chars"]}
+        out = {"proactive": v.proactive(lang), "recent": v.recent(lang=lang),
+               "house": known.house_cards(lang) if known else {},
+               "remaining": self.remaining(vid, internal), "resting": self.brain.resting(), "max_input": self.s["max_input_chars"]}
+        if view == "prep":
+            out["prep"] = v.prep().state(lang)
+        return out
 
     def message(self, vid, internal, text, client=None, mode="baby", lang="en"):
         """Returns (http status, body). Records one session row for each message the demo takes in. client is the
@@ -908,8 +913,11 @@ class DemoApp:
                     v.bus.publish("agent_error", error=str(error)[:300])
                     v.memory.add_message("demo", "assistant", THINK_FAIL)
                     return 502, {"error": "brain", "reply": safety or THINK_FAIL, "remaining": self.remaining(vid, internal)}
-            return 200, {"reply": reply, "actions": actions, "mode": mode, "answered_by": v.answered_by, "proactive": v.proactive(lang), "recent": v.recent(lang=lang),
-                         "prep": v.prep().state(lang), "house": v.house_cards(lang), "remaining": self.remaining(vid, internal)}
+            body = {"reply": reply, "actions": actions, "mode": mode, "answered_by": v.answered_by, "proactive": v.proactive(lang), "recent": v.recent(lang=lang),
+                    "house": v.house_cards(lang), "remaining": self.remaining(vid, internal)}
+            if mode == "prep":
+                body["prep"] = v.prep().state(lang)
+            return 200, body
         finally:
             self.thinking.release()
 

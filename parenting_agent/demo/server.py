@@ -117,7 +117,8 @@ def make_handler(app, settings):
             if path == "/api/state":
                 query = self.path.partition("?")[2].split("&")
                 lang = "es" if "lang=es" in query else ("en" if "lang=en" in query else None)
-                return self.send(200, app.state(vid, internal, lang), cookies=cookies)
+                view = "prep" if "view=prep" in query else "baby"
+                return self.send(200, app.state(vid, internal, lang, view), cookies=cookies)
             return self.send(404, {"error": "not_found"})
 
         def read_json(self):
