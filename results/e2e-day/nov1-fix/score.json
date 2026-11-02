@@ -1,0 +1,952 @@
+{
+ "label": "nov1-fix",
+ "numbers": {
+  "messages_out": 60,
+  "proactive": 21,
+  "replies": 39,
+  "noise": 0,
+  "noise_by_kind": {},
+  "expected_found": 30,
+  "expected": 34,
+  "log_ok": 25,
+  "log_expected": 25,
+  "log_extra": 0,
+  "log_bookkeeping": [
+   [
+    "Night wake-up handled by Gonza",
+    2
+   ],
+   [
+    "Stock: diapers 26",
+    1
+   ]
+  ],
+  "brain_usd": 0.6039,
+  "brain_calls": {
+   "inference.baseten.co": 112
+  },
+  "real_seconds": 1782,
+  "house_writes_refused": 0,
+  "telegram_refused": 0
+ },
+ "messages": [
+  {
+   "at": "2026-10-29T06:10:00-03:00",
+   "to": "gonza",
+   "text": "Anoté la mamadera de 80 ml de las 06:10.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T06:12:00-03:00",
+   "to": "gonza",
+   "text": "Anoté el pañal mojado de las 06:12.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T06:20:00-03:00",
+   "to": "gonza",
+   "text": "Stock de pañales: 26. Te aviso a los dos y lo agrego a la lista de compras dos días antes de que se acabe.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T06:35:00-03:00",
+   "to": "gonza",
+   "text": "Anoté que el bebé se durmió a las 06:35.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T07:30:00-03:00",
+   "to": "gonza",
+   "text": "Buen día, Gonza.\nAnoche: 5 tomas, el sueño más largo 2.2 h, no te levantaste.\nEsta noche te toca a vos.\nClima: nublado, 16 a 16 C.",
+   "proactive": true,
+   "source": "family-push",
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T07:30:00-03:00",
+   "to": "ceci",
+   "text": "Buen día, Ceci.\nAnoche: 5 tomas, el sueño más largo 2.2 h, te levantaste una vez.\nClima: nublado, 16 a 16 C.",
+   "proactive": true,
+   "source": "family-push",
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T08:05:00-03:00",
+   "to": "ceci",
+   "text": "Anoté el sueño de 06:35 a 08:05, 1 h 30 min.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T08:10:00-03:00",
+   "to": "gonza",
+   "text": "Podría pasar la aspiradora antes de las 09:00, pero el registro no dice dónde está en las últimas 2 horas, así que queda en su base. Decime dónde está, o si salió con ustedes.",
+   "proactive": true,
+   "source": "day-engine",
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T08:10:00-03:00",
+   "to": "ceci",
+   "text": "Podría pasar la aspiradora antes de las 09:00, pero el registro no dice dónde está en las últimas 2 horas, así que queda en su base. Decime dónde está, o si salió con ustedes.",
+   "proactive": true,
+   "source": "day-engine",
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T08:15:00-03:00",
+   "to": "ceci",
+   "text": "Anoté la toma de pecho izquierdo de 15 min de las 08:15.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T08:20:00-03:00",
+   "to": "ceci",
+   "text": "Anoté el pañal sucio de las 08:20.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T08:50:00-03:00",
+   "to": "ceci",
+   "text": "Anoté que el bebé se durmió a las 08:50.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T10:30:00-03:00",
+   "to": "gonza",
+   "text": "Anoté el sueño de 08:50 a 10:30, 1 h 40 min.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T10:40:00-03:00",
+   "to": "gonza",
+   "text": "Anoté la mamadera de 90 ml de las 10:40.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T10:42:00-03:00",
+   "to": "gonza",
+   "text": "Anoté el pañal mojado de las 10:42.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T11:22:00-03:00",
+   "to": "ceci",
+   "text": "La última toma fue a las 10:40, una mamadera de 90 ml.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T11:30:00-03:00",
+   "to": "gonza",
+   "text": "Anoté que el bebé se durmió a las 11:30.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T12:00:00-03:00",
+   "to": "ceci",
+   "text": "Borrador del resumen para Grandma (Ceci's mom), de 15:00 a 18:00. No le mando nada a Grandma (Ceci's mom) si no me decís. Reenviáselo vos.\n\nHola Grandma (Ceci's mom), gracias por cuidar a Theo de 15:00 a 18:00.\n\nComida\n- Última toma a las 10:25, mamadera de fórmula, 90 ml.\n- La próxima toma se espera cerca de las 12:50. Viene comiendo cada 2 h 25 min más o menos.\n- Hoy van 5 tomas, 380 ml de mamadera.\n\nSueño\n- Está dormido desde las 11:30.\n\nPañales\n- Último pañal a las 10:42, mojado.\n\nSalud\n- Por cualquier cosa de su salud, llamanos primero. Si no nos ubicás, llamá a la pediatra. En una emergencia llamá al 911.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T12:00:00-03:00",
+   "to": "ceci",
+   "text": "Listo el resumen para tu mamá de 15 a 18. Revísalo y dime si lo envío.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T12:51:00-03:00",
+   "to": "gonza",
+   "text": "Próxima toma en unos 20 min, cerca de las 13:10. Las tomas vienen cada 2 h 46 min más o menos.",
+   "proactive": true,
+   "source": "rhythm",
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T12:51:00-03:00",
+   "to": "ceci",
+   "text": "Próxima toma en unos 20 min, cerca de las 13:10. Las tomas vienen cada 2 h 46 min más o menos.",
+   "proactive": true,
+   "source": "rhythm",
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T13:15:00-03:00",
+   "to": "ceci",
+   "text": "Anoté el sueño de 11:30 a 13:15, 1 h 45 min.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T13:25:00-03:00",
+   "to": "ceci",
+   "text": "Anoté la mamadera de 90 ml de las 13:25.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T13:27:00-03:00",
+   "to": "ceci",
+   "text": "Anoté el pañal mojado de las 13:27.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T13:50:00-03:00",
+   "to": "ceci",
+   "text": "Anoté que el bebé se durmió a las 13:50.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T15:35:00-03:00",
+   "to": "gonza",
+   "text": "Próxima toma en unos 20 min, cerca de las 15:55. Las tomas vienen cada 2 h 45 min más o menos.",
+   "proactive": true,
+   "source": "rhythm",
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T15:35:00-03:00",
+   "to": "ceci",
+   "text": "Próxima toma en unos 20 min, cerca de las 15:55. Las tomas vienen cada 2 h 45 min más o menos.",
+   "proactive": true,
+   "source": "rhythm",
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T15:40:00-03:00",
+   "to": "gonza",
+   "text": "Anoté el sueño de 13:50 a 15:40, 1 h 50 min.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T15:55:00-03:00",
+   "to": "gonza",
+   "text": "Anoté la mamadera de 80 ml de las 15:55.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T16:00:00-03:00",
+   "to": "gonza",
+   "text": "Anoté el pañal sucio de las 16:00.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T16:10:00-03:00",
+   "to": "gonza",
+   "text": "Preparé pañales para la lista de compras, queda pendiente que lo confirmes.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T16:30:00-03:00",
+   "to": "gonza",
+   "text": "Anoté que el bebé se durmió a las 16:30.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T17:50:00-03:00",
+   "to": "gonza",
+   "text": "Próxima toma en unos 20 min, cerca de las 18:10. Las tomas vienen cada 2 h 30 min más o menos.",
+   "proactive": true,
+   "source": "rhythm",
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T17:50:00-03:00",
+   "to": "ceci",
+   "text": "Próxima toma en unos 20 min, cerca de las 18:10. Las tomas vienen cada 2 h 30 min más o menos.",
+   "proactive": true,
+   "source": "rhythm",
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T18:00:00-03:00",
+   "to": "ceci",
+   "text": "Grandma (Ceci's mom) cuidó a Theo de 15:00 a 18:00. En el registro de esas horas: 1 toma (80 ml), 1 pañal.",
+   "proactive": true,
+   "source": "sitter",
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T18:20:00-03:00",
+   "to": "ceci",
+   "text": "Anoté el sueño de 16:30 a 18:20, 1 h 50 min.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T18:35:00-03:00",
+   "to": "ceci",
+   "text": "Anoté la toma de pecho de los dos lados de 20 min de las 18:35.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T18:40:00-03:00",
+   "to": "ceci",
+   "text": "Anoté el pañal mojado de las 18:40.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T19:05:00-03:00",
+   "to": "ceci",
+   "text": "Anoté el baño de las 19:05.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T19:40:00-03:00",
+   "to": "ceci",
+   "text": "Anoté que el bebé se durmió a las 19:40.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T19:41:00-03:00",
+   "to": "gonza",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 21:40, 00:30, 03:10, 05:30. La luz espera a que se despierte.",
+   "proactive": true,
+   "source": "house-brain",
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T19:41:00-03:00",
+   "to": "ceci",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 21:40, 00:30, 03:10, 05:30. La luz espera a que se despierte.",
+   "proactive": true,
+   "source": "house-brain",
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T20:00:00-03:00",
+   "to": "gonza",
+   "text": "Ceci pidió dormir esta noche, así que esta noche estás de turno vos, Gonza. Los avisos de la noche te llegan solo a vos.",
+   "proactive": true,
+   "source": "night_feed",
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T20:00:00-03:00",
+   "to": "ceci",
+   "text": "Sí, Gonza está de guardia esta noche.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T20:25:00-03:00",
+   "to": "gonza",
+   "text": "Próxima toma en unos 20 min, cerca de las 20:45. Las tomas vienen cada 2 h 30 min más o menos.",
+   "proactive": true,
+   "source": "rhythm",
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T20:25:00-03:00",
+   "to": "ceci",
+   "text": "Próxima toma en unos 20 min, cerca de las 20:45. Las tomas vienen cada 2 h 30 min más o menos.",
+   "proactive": true,
+   "source": "rhythm",
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T22:05:00-03:00",
+   "to": "gonza",
+   "text": "Cambió el plan: El sueño desde las 19:40 es 40 minutos más largo que lo habitual, por eso se quitó el precalentado de las 21:40 y se mantuvieron los precalentados nocturnos a las 00:30, 03:10 y 05:30, Gonza y Ceci.",
+   "proactive": true,
+   "source": "house-brain",
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T22:20:00-03:00",
+   "to": "gonza",
+   "text": "Anoté el sueño de 19:40 a 22:20, 2 h 40 min.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T22:35:00-03:00",
+   "to": "gonza",
+   "text": "Anoté la mamadera de 90 ml de las 22:35.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T22:37:00-03:00",
+   "to": "gonza",
+   "text": "Anoté el pañal mojado de las 22:37.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-29T22:55:00-03:00",
+   "to": "gonza",
+   "text": "Anoté que el bebé se durmió a las 22:55.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-30T01:46:00-03:00",
+   "to": "gonza",
+   "text": "Cambió el plan: El sueño se extendió 40 minutos más de lo habitual hasta las 01:51, por eso se movieron los precalentados y la ventana de limpieza para ajustarse a los sueños previstos. Vos, Ceci, seguís de guardia.",
+   "proactive": true,
+   "source": "house-brain",
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-30T02:50:00-03:00",
+   "to": "gonza",
+   "text": "Se despertó, se oyó un llanto. Está en el colecho, en el cuarto de ustedes. Calentador de mamadera encendido: solo anotado (prueba en seco). Estás de turno, Gonza.",
+   "proactive": true,
+   "source": "night_feed",
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-30T03:12:00-03:00",
+   "to": "gonza",
+   "text": "«le di 90 mililitros de mamadera a las 3»\nAnoté la mamadera de 90 ml de las 03:00.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-30T03:15:00-03:00",
+   "to": "gonza",
+   "text": "Anoté el pañal mojado de las 03:15.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-30T03:30:00-03:00",
+   "to": "gonza",
+   "text": "Anoté que el bebé se durmió a las 03:30.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-30T06:05:00-03:00",
+   "to": "gonza",
+   "text": "Anoté el sueño de 03:30 a 06:05, 2 h 35 min y que el bebé se durmió a las 22:55.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-30T06:15:00-03:00",
+   "to": "gonza",
+   "text": "Anoté la mamadera de 80 ml de las 06:15.",
+   "proactive": false,
+   "source": null,
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-30T07:30:00-03:00",
+   "to": "gonza",
+   "text": "Buen día, Gonza.\nAnoche: 2 tomas, el sueño más largo 2.7 h, te levantaste 2 veces.\nClima: nublado, 16 a 16 C.\nSe está terminando: Pañales (quedan unos 2.9 días).\nLa casa de noche: Se preparó para 2 tomas nocturnas, todo solo anotado (prueba en seco).",
+   "proactive": true,
+   "source": "family-push",
+   "problems": [],
+   "verdict": "ok"
+  },
+  {
+   "at": "2026-10-30T07:30:00-03:00",
+   "to": "ceci",
+   "text": "Buen día, Ceci.\nAnoche: 2 tomas, el sueño más largo 2.7 h, no te levantaste.\nEsta noche te toca a vos.\nClima: nublado, 16 a 16 C.\nSe está terminando: Pañales (quedan unos 2.9 días).",
+   "proactive": true,
+   "source": "family-push",
+   "problems": [],
+   "verdict": "ok"
+  }
+ ],
+ "expected": [
+  {
+   "item": "morning message day 0 to gonza",
+   "found": true,
+   "detail": "1 morning message(s), 2 message(s) in all 07:25 to 08:10"
+  },
+  {
+   "item": "morning message day 0 to ceci",
+   "found": true,
+   "detail": "1 morning message(s), 2 message(s) in all 07:25 to 08:10"
+  },
+  {
+   "item": "morning message day 1 to gonza",
+   "found": true,
+   "detail": "1 morning message(s), 1 message(s) in all 07:25 to 08:10"
+  },
+  {
+   "item": "morning message day 1 to ceci",
+   "found": true,
+   "detail": "1 morning message(s), 1 message(s) in all 07:25 to 08:10"
+  },
+  {
+   "item": "next-feed reminder before the 08:15 feed",
+   "found": false,
+   "detail": "0 reminder(s) in the 90 min before"
+  },
+  {
+   "item": "next-feed reminder before the 10:40 feed",
+   "found": false,
+   "detail": "0 reminder(s) in the 90 min before"
+  },
+  {
+   "item": "next-feed reminder before the 13:25 feed",
+   "found": true,
+   "detail": "2 reminder(s) in the 90 min before"
+  },
+  {
+   "item": "next-feed reminder before the 15:55 feed",
+   "found": true,
+   "detail": "2 reminder(s) in the 90 min before"
+  },
+  {
+   "item": "next-feed reminder before the 18:35 feed",
+   "found": true,
+   "detail": "2 reminder(s) in the 90 min before"
+  },
+  {
+   "item": "next-feed reminder before the 06:15 feed",
+   "found": false,
+   "detail": "0 reminder(s) in the 90 min before"
+  },
+  {
+   "item": "nap mode on after the 06:35 sleep",
+   "found": true,
+   "detail": "nap mode on since 06:36"
+  },
+  {
+   "item": "nap mode on after the 08:50 sleep",
+   "found": true,
+   "detail": "nap mode on since 08:51"
+  },
+  {
+   "item": "nap mode on after the 11:30 sleep",
+   "found": true,
+   "detail": "nap mode on since 11:31"
+  },
+  {
+   "item": "nap mode on after the 13:50 sleep",
+   "found": true,
+   "detail": "nap mode on since 13:51"
+  },
+  {
+   "item": "nap mode on after the 16:30 sleep",
+   "found": true,
+   "detail": "nap mode on since 16:31"
+  },
+  {
+   "item": "nap mode on after the 19:40 sleep",
+   "found": true,
+   "detail": "nap mode on since 19:41"
+  },
+  {
+   "item": "nap mode on after the 22:55 sleep",
+   "found": true,
+   "detail": "nap mode on since 19:41"
+  },
+  {
+   "item": "nap mode on after the 03:30 sleep",
+   "found": true,
+   "detail": "nap mode on since 19:41"
+  },
+  {
+   "item": "night handover to Gonza after Ceci asked to sleep",
+   "found": true,
+   "detail": "1 message(s) to Gonza 20:00 to 21:30"
+  },
+  {
+   "item": "tonight's plan at bedtime, at most one per parent",
+   "found": true,
+   "detail": "2 plan message(s)"
+  },
+  {
+   "item": "night cry: push to Gonza (on duty) within 5 min",
+   "found": true,
+   "detail": "1 push(es)"
+  },
+  {
+   "item": "no night push to Ceci after she asked to sleep",
+   "found": true,
+   "detail": "0 night push(es) to Ceci"
+  },
+  {
+   "item": "diapers running low told once to each parent",
+   "found": false,
+   "detail": "none"
+  },
+  {
+   "item": "diapers on the shopping list once (dry in the run)",
+   "found": true,
+   "detail": "1 shopping list write(s): shopping"
+  },
+  {
+   "item": "sitter brief drafted for Ceci's mother",
+   "found": true,
+   "detail": "2 reply, events: ['sitter_draft', 'sitter_summary']"
+  },
+  {
+   "item": "sitter summary after the window",
+   "found": true,
+   "detail": [
+    "sitter_draft",
+    "sitter_summary"
+   ]
+  },
+  {
+   "item": "grandma's question through Ceci answered with the last feed time",
+   "found": true,
+   "detail": "La última toma fue a las 10:40, una mamadera de 90 ml."
+  },
+  {
+   "item": "grandma's own message: no family user, ignored and nothing sent to her chat",
+   "found": true,
+   "detail": "1 ignored, 0 sent (no grandma in the people block)"
+  },
+  {
+   "item": "voice note heard",
+   "found": true,
+   "detail": "1 voice_heard"
+  },
+  {
+   "item": "no door routine",
+   "found": true,
+   "detail": "0 door routine event(s)"
+  },
+  {
+   "item": "morning message day 0 to gonza: Spanish, only what is theirs",
+   "found": true,
+   "detail": "clean"
+  },
+  {
+   "item": "morning message day 0 to ceci: Spanish, only what is theirs",
+   "found": true,
+   "detail": "clean"
+  },
+  {
+   "item": "morning message day 1 to gonza: Spanish, only what is theirs",
+   "found": true,
+   "detail": "clean"
+  },
+  {
+   "item": "morning message day 1 to ceci: Spanish, only what is theirs",
+   "found": true,
+   "detail": "clean"
+  }
+ ],
+ "log": [
+  {
+   "at": "2026-10-29T06:10:00-03:00",
+   "who": "gonza",
+   "said": "Le di 80 ml de mamadera.",
+   "want": "feeding",
+   "got": "bottle 80.0 ml at 05:55",
+   "ok": true
+  },
+  {
+   "at": "2026-10-29T06:12:00-03:00",
+   "who": "gonza",
+   "said": "Cambié el pañal, estaba mojado.",
+   "want": "change",
+   "got": "wet True solid False",
+   "ok": true
+  },
+  {
+   "at": "2026-10-29T08:05:00-03:00",
+   "who": "ceci",
+   "said": "Se despertó.",
+   "want": "sleep_end",
+   "got": "sleep 06:35 to 08:05",
+   "ok": true
+  },
+  {
+   "at": "2026-10-29T08:15:00-03:00",
+   "who": "ceci",
+   "said": "Le di teta 15 minutos del lado izquierdo.",
+   "want": "feeding",
+   "got": "left breast None ml at 08:00",
+   "ok": true
+  },
+  {
+   "at": "2026-10-29T08:20:00-03:00",
+   "who": "ceci",
+   "said": "Pañal con caca.",
+   "want": "change",
+   "got": "wet False solid True",
+   "ok": true
+  },
+  {
+   "at": "2026-10-29T10:30:00-03:00",
+   "who": "gonza",
+   "said": "Se despertó.",
+   "want": "sleep_end",
+   "got": "sleep 08:50 to 10:30",
+   "ok": true
+  },
+  {
+   "at": "2026-10-29T10:40:00-03:00",
+   "who": "gonza",
+   "said": "Tomó 90 ml de mamadera.",
+   "want": "feeding",
+   "got": "bottle 90.0 ml at 10:25",
+   "ok": true
+  },
+  {
+   "at": "2026-10-29T10:42:00-03:00",
+   "who": "gonza",
+   "said": "Pañal mojado.",
+   "want": "change",
+   "got": "wet True solid False",
+   "ok": true
+  },
+  {
+   "at": "2026-10-29T13:15:00-03:00",
+   "who": "ceci",
+   "said": "Se despertó.",
+   "want": "sleep_end",
+   "got": "sleep 11:30 to 13:15",
+   "ok": true
+  },
+  {
+   "at": "2026-10-29T13:25:00-03:00",
+   "who": "ceci",
+   "said": "Le di 90 ml de mamadera.",
+   "want": "feeding",
+   "got": "bottle 90.0 ml at 13:10",
+   "ok": true
+  },
+  {
+   "at": "2026-10-29T13:27:00-03:00",
+   "who": "ceci",
+   "said": "Pañal mojado.",
+   "want": "change",
+   "got": "wet True solid False",
+   "ok": true
+  },
+  {
+   "at": "2026-10-29T15:40:00-03:00",
+   "who": "gonza",
+   "said": "Se despertó.",
+   "want": "sleep_end",
+   "got": "sleep 13:50 to 15:40",
+   "ok": true
+  },
+  {
+   "at": "2026-10-29T15:55:00-03:00",
+   "who": "gonza",
+   "said": "Tomó 80 ml.",
+   "want": "feeding",
+   "got": "bottle 80.0 ml at 15:40",
+   "ok": true
+  },
+  {
+   "at": "2026-10-29T16:00:00-03:00",
+   "who": "gonza",
+   "said": "Pañal sucio.",
+   "want": "change",
+   "got": "wet False solid True",
+   "ok": true
+  },
+  {
+   "at": "2026-10-29T18:20:00-03:00",
+   "who": "ceci",
+   "said": "Se despertó.",
+   "want": "sleep_end",
+   "got": "sleep 16:30 to 18:20",
+   "ok": true
+  },
+  {
+   "at": "2026-10-29T18:35:00-03:00",
+   "who": "ceci",
+   "said": "Teta 20 minutos, los dos lados.",
+   "want": "feeding",
+   "got": "both breasts None ml at 18:15",
+   "ok": true
+  },
+  {
+   "at": "2026-10-29T18:40:00-03:00",
+   "who": "ceci",
+   "said": "Pañal mojado.",
+   "want": "change",
+   "got": "wet True solid False",
+   "ok": true
+  },
+  {
+   "at": "2026-10-29T19:05:00-03:00",
+   "who": "ceci",
+   "said": "Lo bañamos.",
+   "want": "bath",
+   "got": "Bath. Lo bañamos.",
+   "ok": true
+  },
+  {
+   "at": "2026-10-29T22:20:00-03:00",
+   "who": "gonza",
+   "said": "Se despertó.",
+   "want": "sleep_end",
+   "got": "sleep 19:40 to 22:20",
+   "ok": true
+  },
+  {
+   "at": "2026-10-29T22:35:00-03:00",
+   "who": "gonza",
+   "said": "Le di 90 ml de mamadera.",
+   "want": "feeding",
+   "got": "bottle 90.0 ml at 22:20",
+   "ok": true
+  },
+  {
+   "at": "2026-10-29T22:37:00-03:00",
+   "who": "gonza",
+   "said": "Pañal mojado.",
+   "want": "change",
+   "got": "wet True solid False",
+   "ok": true
+  },
+  {
+   "at": "2026-10-30T03:12:00-03:00",
+   "who": "gonza",
+   "said": "(voice note)",
+   "want": "feeding",
+   "got": "bottle 90.0 ml at 02:45",
+   "ok": true
+  },
+  {
+   "at": "2026-10-30T03:15:00-03:00",
+   "who": "gonza",
+   "said": "Pañal mojado.",
+   "want": "change",
+   "got": "wet True solid False",
+   "ok": true
+  },
+  {
+   "at": "2026-10-30T06:05:00-03:00",
+   "who": "gonza",
+   "said": "Se despertó.",
+   "want": "sleep_end",
+   "got": "sleep 03:30 to 06:05",
+   "ok": true
+  },
+  {
+   "at": "2026-10-30T06:15:00-03:00",
+   "who": "gonza",
+   "said": "Tomó 80 ml.",
+   "want": "feeding",
+   "got": "bottle 80.0 ml at 06:00",
+   "ok": true
+  }
+ ],
+ "log_extra": []
+}
