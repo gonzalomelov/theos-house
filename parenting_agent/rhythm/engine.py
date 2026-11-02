@@ -17,7 +17,7 @@ from .log import BabyBuddyLog, FixtureLog
 CHANNELS = ("ear", "speaker", "telegram", "partner_phone")
 DEFAULTS = {"source": "babybuddy", "fixture": "tests/fixtures/simweek.json", "child": "Test",
             "channel": "telegram", "lead_min": 20, "summary_at": "07:30", "notes_at": "20:00",
-            "parents": ["Parent A", "Parent B"], "poll_s": 60, "utc_offset_h": -3}
+            "parents": ["Parent A", "Parent B"], "poll_s": 60, "utc_offset_h": -3, "dawn_min": 60}
 
 
 class Rhythm:
@@ -71,11 +71,14 @@ class RhythmPlugin(Plugin):
     """Agent plug-in "parenting_agent.rhythm.engine:RhythmPlugin", settings under "rhythm".
 
     On the family agent ("kinds": ["next_feed"]) it sends one next feed reminder per feed, lead_min before the feed
-    the log rhythm expects, by day only: at night the night feed (night_feed.py) gets the house ready on a real awake
-    signal instead of a guess. The feed comes from sleep_forecast.predict_feed, the rhythm the night feed and the
+    the log rhythm expects. A feed expected deep in the night gets none: the night feed (night_feed.py) gets the house
+    ready on a real awake signal instead of a guess. The first feed of the morning, expected from dawn_min before the
+    night ends, does get one. The feed comes from sleep_forecast.predict_feed, the rhythm the night feed and the
     families bot read (a top-up within 30 min is the same feed, no guess from a feed older than 6 h). With the family
-    push loaded the reminder is a notify event in English and Spanish, to both parents. Without it, it is said on
-    the configured channel as before. Silent before the birth ("baby": {"born": false}, baby_phase.py)."""
+    push loaded the reminder is a notify event in English and Spanish: to both parents by day, and to the parent on
+    duty only at night or once a parent asked to sleep tonight, so a sleeping parent is never woken by a guess. With
+    no night rota to name that parent, nothing goes out at night. Without the family push it is said on the
+    configured channel as before, by day only. Silent before the birth ("baby": {"born": false}, baby_phase.py)."""
     name = "rhythm"
 
     def __init__(self, agent, config, log=None, clock=None):
@@ -127,21 +130,49 @@ class RhythmPlugin(Plugin):
     def next_feed(self, now):
         from ..sleep_forecast import predict_feed
         nxt = predict_feed(self.log.entries(), now)
-        if not nxt or patterns.is_night(nxt["at"].astimezone(self.tz)):
+        if not nxt or self.deep_night(nxt["at"]):
             return None
         key = nxt["computed_from"][-1]
         lead = datetime.timedelta(minutes=self.s["lead_min"])
         if key in self.sent or not (nxt["at"] - lead <= now < nxt["at"] + datetime.timedelta(minutes=5)):
             return None
+        pushed = any(getattr(p, "name", "") == "family-push" for p in getattr(self.agent, "plugins", []))
+        night = patterns.is_night(now.astimezone(self.tz))
+        duty = self.on_duty(now, night) if pushed else None
+        if night and duty is None:
+            return None
         self.sent.add(key)
         texts = next_feed_texts(nxt, now, self.tz)
         if not all(patterns.no_advice(t) for t in texts.values()):
             return None
-        if any(getattr(p, "name", "") == "family-push" for p in getattr(self.agent, "plugins", [])):
+        if pushed:
+            to = {"parent": duty} if duty else {}
             return self.agent.bus.publish("notify", text=texts["en"], texts=texts, channel="telegram", source="rhythm",
-                                          routine="next_feed", at=now.isoformat(), computed_from=nxt["computed_from"])
+                                          routine="next_feed", at=now.isoformat(), computed_from=nxt["computed_from"],
+                                          **to)
         return deliver(self.agent, {"kind": "next_feed", "text": texts["en"], "computed_from": nxt["computed_from"],
                                     "channel": self.s["channel"]})
+
+    def deep_night(self, t):
+        """True for a feed expected at night but not in the last dawn_min before the night ends."""
+        local = t.astimezone(self.tz)
+        return patterns.is_night(local) and patterns.is_night(local + datetime.timedelta(minutes=self.s["dawn_min"]))
+
+    def on_duty(self, now, night):
+        """The rota label of the parent on duty when only they should get the reminder: at night, or from the evening a
+        parent asked to sleep (night_feed.py). None by day otherwise, and None with no night rota."""
+        rota = getattr(self.agent, "rota", None)
+        if rota is None:
+            return None
+        ask = getattr(rota, "sleep_ask", None)
+        asked = bool(ask) and ask.get("night") == rota.night_of(now, self.tz) and now.astimezone(self.tz).hour >= 12
+        if not (night or asked):
+            return None
+        try:
+            return rota.on_duty(now)
+        except Exception as error:  # a bad log read: no night push rather than one to a sleeping parent
+            self.agent.bus.publish("rhythm_error", error=f"night rota: {str(error)[:180]}")
+            return None
 
     def stop(self):
         self.stopped.set()

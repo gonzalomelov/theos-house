@@ -13,6 +13,10 @@ NIGHT_START, NIGHT_END = 22, 6
 # The median of the last 5 gaps: one or two feeds logged close together (a top-up, a test log) do not move the next
 # feed by an hour (round b5 saw 154 min become 54 after two test logs, with the median of 2).
 RECENT_GAPS = 5
+# A gap longer than this is a hole in the log (days nobody logged, a test log that stopped), not the rhythm. The e2e day
+# (Nov 1) started from a history with 19 h and 29 h holes in its last five gaps, so the first guesses of the day landed
+# hours after the real feeds and the 08:15 and 10:40 feeds got no reminder.
+LOG_HOLE = datetime.timedelta(hours=6)
 PARENT_RE = re.compile(r"handled by (.+)$", re.IGNORECASE)
 ADVICE_RE = re.compile(r"\b(should|must|try|recommend|consider|doctor|pediatrician|worr\w*|normal|concern\w*|"
                        r"sick|ill|fever|medicine|medication|dose|diagnos\w*|need to|advise\w*)\b", re.IGNORECASE)
@@ -36,12 +40,15 @@ def feeds(entries, until=None):
 
 
 def next_feed(entries, now):
-    """Estimated start of the next feed and the feeds it was computed from, or None before two feeds."""
+    """Estimated start of the next feed and the feeds it was computed from, or None before two feeds. The median of the
+    last gaps that are not holes in the log."""
     rows = feeds(entries, now)
     if len(rows) < 2:
         return None
     starts = [when(e) for e in rows]
-    gaps = [(b - a).total_seconds() for a, b in zip(starts, starts[1:])][-RECENT_GAPS:]
+    gaps = [(b - a).total_seconds() for a, b in zip(starts, starts[1:]) if b - a <= LOG_HOLE][-RECENT_GAPS:]
+    if not gaps:
+        return None
     gap = datetime.timedelta(seconds=statistics.median(gaps))
     return {"at": starts[-1] + gap, "gap_min": round(gap.total_seconds() / 60),
             "computed_from": [e["ref"] for e in rows[-(RECENT_GAPS + 1):]]}

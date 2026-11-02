@@ -6,7 +6,7 @@
 | door | skill | a doorbell sound or a person at the door | silent push while nap mode is on, the Echo says one fixed line otherwise |
 | floor_clean | schedule | before a predicted tummy time | vacuum only when he is out or awake in another room and the run ends before the next predicted nap. Waits for Gonza's yes until floor_clean_alone is set |
 | morning_brief | schedule | morning_at (07:30) | night summary, who was up, appointments, Cookidoo dinner, weather, supplies running low. Telegram text at once, the Echo when he is awake and someone is in the kitchen |
-| supplies | schedule | every tick | diapers, wipes and formula from the log, onto the shopping list two days before they run out. Live on the family agent since Oct 30 (shopping_list_add), never twice on the list |
+| supplies | schedule | every tick | diapers, wipes and formula from the log, onto the shopping list and to both parents once, three days before they run out. Live on the family agent since Oct 30 (shopping_list_add), never twice on the list |
 | parents_meals | schedule | the morning after a hard night | quick Thermomix recipes from Cookidoo (read only) for the next quiet window, logistics only |
 
 Every house write goes through DayWriter, which knows a fixed set of writes and refuses everything else, the never list
@@ -72,7 +72,7 @@ DEFAULTS = {
     "run_min": 31, "margin_min": 10, "resume_alone": True,
     "floor_room": "living room", "floor_lead_min": 5, "floor_window_min": 25, "floor_alone": False,
     "tummy_days": 3, "morning_at": "07:30", "echo_until": "10:30", "echo_motion_min": 10,
-    "supplies": {"diapers": None, "wipes": None, "formula": None}, "wipes_per_change": 3, "low_days": 2.0,
+    "supplies": {"diapers": None, "wipes": None, "formula": None}, "wipes_per_change": 3, "low_days": 3.0,
     "bad_night": {}, "fast_max_min": 30, "quiet_min_extra": 10, "day_end": "21:00", "poll_s": 60,
     # The binary sensors that count as someone at the door. The family agent sets [] so
     # a camera person detection is not a doorbell.
@@ -743,7 +743,7 @@ class DayEnginePlugin(Plugin):
                              schema({"item": {"type": "string"}}, ["item"]), self.add_to_shopping_list))
         agent.tools.add(Tool("set_supply_stock", "When a parent says how many diapers or wipes, or how much formula (ml), "
                              "the family has at home now, for example 'tenemos 26 pañales'. The supplies routine counts "
-                             "down from it and puts the item on the shopping list two days before it runs out.",
+                             "down from it and puts the item on the shopping list three days before it runs out.",
                              schema({"item": {"type": "string", "enum": list(SUPPLY_NAMES)},
                                      "count": {"type": "integer"}}, ["item", "count"]), self.set_stock))
         agent.tools.add(Tool("day_engine_status", "What the day engine is doing: nap mode, open questions. Changes nothing.",
@@ -807,7 +807,7 @@ class DayEnginePlugin(Plugin):
             return f"Stock already kept: {item} {count}, nothing new written."
         entry = self.agent.baby_log.add("note", {"text": text})
         self.agent.bus.publish("supplies_stock", item=item, count=count, entry=entry.get("id"))
-        return f"Stock kept: {item} {count}. I tell you both and add it to the shopping list two days before it runs out."
+        return f"Stock kept: {item} {count}. I tell you both and add it to the shopping list three days before it runs out."
 
     def status(self):
         mode = self.engine.mode

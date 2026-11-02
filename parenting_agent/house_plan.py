@@ -86,7 +86,7 @@ DEFAULTS = {
     "persons": ["person.gonza", "person.ceci"],
     "run_min": 31, "margin_min": 10, "settle_min": 10, "nap_lead_min": 5,
     "day_start": "08:00", "day_end": "19:00", "quiet_at": "10:30",
-    "supplies": {"diapers": None, "wipes": None, "formula": None}, "wipes_per_change": 3, "low_days": 2.0,
+    "supplies": {"diapers": None, "wipes": None, "formula": None}, "wipes_per_change": 3, "low_days": 3.0,
     "bad_night": {}, "fast_max_min": 30, "recipes": "home-agents", "recipes_fixture": "tests/fixtures/fast_recipes.json",
     "morning_at": "07:30", "dinner_from": "17:30", "dinner_by": "21:00", "dinner_cook_min": 30,
     "white_noise": True, "poll_s": 60, "clean_area": None,
