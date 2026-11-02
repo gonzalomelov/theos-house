@@ -1,0 +1,221 @@
+{
+ "id": "A3-059",
+ "child": "heldout-baby-a",
+ "created": [],
+ "seed_after": [
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 1136,
+    "child": 3,
+    "start": "2026-10-22T06:05:00Z",
+    "end": "2026-10-22T06:25:00Z",
+    "duration": "00:20:00",
+    "type": "breast milk",
+    "method": "left breast",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 1136,
+    "child": 3,
+    "start": "2026-10-22T06:05:00Z",
+    "end": "2026-10-22T06:25:00Z",
+    "duration": "00:20:00",
+    "type": "breast milk",
+    "method": "left breast",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "sleep",
+   "before": {
+    "id": 416,
+    "child": 3,
+    "start": "2026-10-22T03:15:00Z",
+    "end": "2026-10-22T06:00:00Z",
+    "duration": "02:45:00",
+    "nap": false,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "sleep",
+    "id": 416,
+    "child": 3,
+    "start": "2026-10-22T03:15:00Z",
+    "end": "2026-10-22T06:00:00Z",
+    "duration": "02:45:00",
+    "nap": false,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "sleep",
+   "before": {
+    "id": 417,
+    "child": 3,
+    "start": "2026-10-22T07:10:00Z",
+    "end": "2026-10-22T09:40:00Z",
+    "duration": "02:30:00",
+    "nap": true,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "sleep",
+    "id": 417,
+    "child": 3,
+    "start": "2026-10-22T07:10:00Z",
+    "end": "2026-10-22T09:40:00Z",
+    "duration": "02:30:00",
+    "nap": true,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "sleep",
+   "before": {
+    "id": 418,
+    "child": 3,
+    "start": "2026-10-22T11:00:00Z",
+    "end": "2026-10-22T12:20:00Z",
+    "duration": "01:20:00",
+    "nap": true,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "sleep",
+    "id": 418,
+    "child": 3,
+    "start": "2026-10-22T11:00:00Z",
+    "end": "2026-10-22T12:20:00Z",
+    "duration": "01:20:00",
+    "nap": true,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "sleep",
+   "before": {
+    "id": 419,
+    "child": 3,
+    "start": "2026-10-22T13:30:00Z",
+    "end": "2026-10-22T15:00:00Z",
+    "duration": "01:30:00",
+    "nap": true,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "sleep",
+    "id": 419,
+    "child": 3,
+    "start": "2026-10-22T13:30:00Z",
+    "end": "2026-10-22T15:00:00Z",
+    "duration": "01:30:00",
+    "nap": true,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T12:30:00-03:00",
+   "chat": "9000002",
+   "text": "Since midnight today, 485 minutes total, about 8 hours 5 minutes, across 4 sleeps. Last sleep ended at 12:00."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T12:30:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "total sleep since midnight?",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.007,
+ "brain_calls": {
+  "inference.baseten.co": 2
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T12:30:00-03:00",
+   "unix": 1792683000.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4235,
+   "output_tokens": 193,
+   "reasoning_tokens": 100,
+   "usd": 0.006114,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T12:30:00-03:00",
+   "unix": 1792683000.0,
+   "channel": "telegram",
+   "text": "Since midnight today, 485 minutes total, about 8 hours 5 minutes, across 4 sleeps. Last sleep ended at 12:00.",
+   "chat_id": "9000002",
+   "guard_lang": null
+  },
+  {
+   "kind": "turn",
+   "t": -1792298916.474,
+   "ts": "2026-10-22T12:30:00-03:00",
+   "unix": 1793583434.184,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 27
+  }
+ ]
+}

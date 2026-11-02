@@ -1,0 +1,220 @@
+{
+ "id": "A3-029",
+ "child": "heldout-baby-b",
+ "created": [
+  {
+   "endpoint": "feedings",
+   "id": 1416,
+   "child": 4,
+   "start": "2026-10-22T23:20:00Z",
+   "end": "2026-10-22T23:40:00Z",
+   "duration": "00:20:00",
+   "type": "breast milk",
+   "method": "both breasts",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [
+  {
+   "endpoint": "changes",
+   "before": {
+    "id": 1060,
+    "child": 4,
+    "time": "2026-10-22T22:30:00Z",
+    "wet": true,
+    "solid": true,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "changes",
+    "id": 1060,
+    "child": 4,
+    "time": "2026-10-22T22:30:00Z",
+    "wet": true,
+    "solid": true,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T20:38:00-03:00",
+   "chat": "9000001",
+   "text": "Plan de esta noche. De turno: Ceci.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:00 a 07:45."
+  },
+  {
+   "at": "2026-10-22T20:38:00-03:00",
+   "chat": "9000002",
+   "text": "Plan de esta noche. De turno: Ceci.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:00 a 07:45."
+  },
+  {
+   "at": "2026-10-22T20:40:00-03:00",
+   "chat": "9000001",
+   "text": "Anoté la toma de pecho de los dos lados de 20 min de las 20:40."
+  },
+  {
+   "at": "2026-10-22T20:43:00-03:00",
+   "chat": "9000002",
+   "text": "Looks like the same feeding of both sides for 20 minutes you already logged at 20:40. Was this sent twice or were there two separate feedings?"
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T20:40:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "ceci le dio los dos lados 20 min",
+   "setup": true,
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-22T20:43:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "fed him both sides, 20 min",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0527,
+ "brain_calls": {
+  "inference.baseten.co": 7
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T20:38:00-03:00",
+   "unix": 1792712280.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Plan de esta noche. De turno: Ceci.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:00 a 07:45.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T20:38:00-03:00",
+   "unix": 1792712280.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Plan de esta noche. De turno: Ceci.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:00 a 07:45.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T20:40:00-03:00",
+   "unix": 1792712400.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4173,
+   "output_tokens": 207,
+   "reasoning_tokens": 113,
+   "usd": 0.006096,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T20:40:00-03:00",
+   "unix": 1792712400.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T20:40:00-03:00",
+   "unix": 1792712400.0,
+   "channel": "telegram",
+   "text": "Anoté la toma de pecho de los dos lados de 20 min de las 20:40.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792324161.701,
+   "ts": "2026-10-22T20:40:00-03:00",
+   "unix": 1793587589.05,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 32
+  },
+  {
+   "kind": "brain_call",
+   "t": 300.0,
+   "ts": "2026-10-22T20:43:00-03:00",
+   "unix": 1792712580.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4236,
+   "output_tokens": 175,
+   "reasoning_tokens": 81,
+   "usd": 0.00603875,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 300.0,
+   "ts": "2026-10-22T20:43:00-03:00",
+   "unix": 1792712580.0,
+   "channel": "telegram",
+   "text": "Looks like the same feeding of both sides for 20 minutes you already logged at 20:40. Was this sent twice or were there two separate feedings?",
+   "chat_id": "9000002",
+   "guard_lang": null
+  },
+  {
+   "kind": "turn",
+   "t": -1792324150.875,
+   "ts": "2026-10-22T20:43:00-03:00",
+   "unix": 1793587599.876,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 26
+  }
+ ]
+}

@@ -1,0 +1,157 @@
+{
+ "id": "A4-066",
+ "child": "heldout-baby-b",
+ "created": [
+  {
+   "endpoint": "feedings",
+   "id": 1671,
+   "child": 4,
+   "start": "2026-10-22T04:40:00Z",
+   "end": "2026-10-22T04:50:00Z",
+   "duration": "00:10:00",
+   "type": "breast milk",
+   "method": "right breast",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  },
+  {
+   "endpoint": "notes",
+   "id": 672,
+   "child": 4,
+   "note": "he has hiccups again",
+   "image": null,
+   "time": "2026-10-22T04:50:00Z",
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T01:48:00-03:00",
+   "chat": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 09:00 a 10:00."
+  },
+  {
+   "at": "2026-10-22T01:48:00-03:00",
+   "chat": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 09:00 a 10:00."
+  },
+  {
+   "at": "2026-10-22T01:50:00-03:00",
+   "chat": "9000002",
+   "text": "Logged the 01:50 right breast feed of 10 min and a note at 01:50: \"he has hiccups again\". I can't give medical advice on it: please ask your pediatrician, or call emergency services (911 in Uruguay) if it is urgent."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T01:50:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "right side 10 min, he has hiccups again, should i do something?",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0121,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T01:48:00-03:00",
+   "unix": 1792644480.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 09:00 a 10:00.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T01:48:00-03:00",
+   "unix": 1792644480.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 09:00 a 10:00.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T01:50:00-03:00",
+   "unix": 1792644600.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4130,
+   "output_tokens": 248,
+   "reasoning_tokens": 125,
+   "usd": 0.0062165,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T01:50:00-03:00",
+   "unix": 1792644600.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T01:50:00-03:00",
+   "unix": 1792644600.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T01:50:00-03:00",
+   "unix": 1792644600.0,
+   "channel": "telegram",
+   "text": "Logged the 01:50 right breast feed of 10 min and a note at 01:50: \"he has hiccups again\". I can't give medical advice on it: please ask your pediatrician, or call emergency services (911 in Uruguay) if it is urgent.",
+   "chat_id": "9000002",
+   "guard_lang": null
+  },
+  {
+   "kind": "turn",
+   "t": -1792253066.939,
+   "ts": "2026-10-22T01:50:00-03:00",
+   "unix": 1793590883.762,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 63
+  }
+ ]
+}

@@ -1,0 +1,135 @@
+{
+ "id": "A2-069",
+ "child": "heldout-baby-c",
+ "created": [],
+ "seed_after": [
+  {
+   "endpoint": "timers",
+   "before": {
+    "id": 262,
+    "child": 5,
+    "name": "sleep",
+    "start": "2026-10-22T02:50:00Z",
+    "duration": "10 23:50:21.576545",
+    "user": 2
+   },
+   "after": {
+    "endpoint": "timers",
+    "id": 262,
+    "child": 5,
+    "name": "sleep",
+    "start": "2026-10-22T02:50:00Z",
+    "duration": "10 23:50:38.055196",
+    "user": 2
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T02:23:00-03:00",
+   "chat": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:05 a 07:46.\nPor qué: El plan mantiene una ventana de limpieza de piso de 07:05 a 07:46 fuera del sueño previsto y dentro de la ventana diurna, Gonza queda de guardia."
+  },
+  {
+   "at": "2026-10-22T02:23:00-03:00",
+   "chat": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:05 a 07:46.\nPor qué: El plan mantiene una ventana de limpieza de piso de 07:05 a 07:46 fuera del sueño previsto y dentro de la ventana diurna, Gonza queda de guardia."
+  },
+  {
+   "at": "2026-10-22T02:25:00-03:00",
+   "chat": "9000002",
+   "text": "Still snoozing, all good."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T02:25:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "still asleep",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0121,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T02:23:00-03:00",
+   "unix": 1792646580.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:05 a 07:46.\nPor qué: El plan mantiene una ventana de limpieza de piso de 07:05 a 07:46 fuera del sueño previsto y dentro de la ventana diurna, Gonza queda de guardia.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T02:23:00-03:00",
+   "unix": 1792646580.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:05 a 07:46.\nPor qué: El plan mantiene una ventana de limpieza de piso de 07:05 a 07:46 fuera del sueño previsto y dentro de la ventana diurna, Gonza queda de guardia.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T02:25:00-03:00",
+   "unix": 1792646700.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4134,
+   "output_tokens": 189,
+   "reasoning_tokens": 120,
+   "usd": 0.00597075,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T02:25:00-03:00",
+   "unix": 1792646700.0,
+   "channel": "telegram",
+   "text": "Still snoozing, all good.",
+   "chat_id": "9000002",
+   "guard_lang": null
+  },
+  {
+   "kind": "turn",
+   "t": -1792258816.164,
+   "ts": "2026-10-22T02:25:00-03:00",
+   "unix": 1793587234.582,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 12
+  }
+ ]
+}

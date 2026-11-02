@@ -1,0 +1,160 @@
+{
+ "id": "A1-077",
+ "child": "heldout-baby-b",
+ "created": [
+  {
+   "endpoint": "feedings",
+   "id": 1370,
+   "child": 4,
+   "start": "2026-10-23T02:00:00Z",
+   "end": "2026-10-23T02:10:00Z",
+   "duration": "00:10:00",
+   "type": "breast milk",
+   "method": "left breast",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  },
+  {
+   "endpoint": "changes",
+   "id": 1003,
+   "child": 4,
+   "time": "2026-10-23T02:10:00Z",
+   "wet": false,
+   "solid": true,
+   "color": "",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T23:08:00-03:00",
+   "chat": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 09:00 a 10:00.\nPor qué: Limpieza de piso armada de 09:00 a 10:00 en horario diurno sin solapamiento con sueño."
+  },
+  {
+   "at": "2026-10-22T23:08:00-03:00",
+   "chat": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 09:00 a 10:00.\nPor qué: Limpieza de piso armada de 09:00 a 10:00 en horario diurno sin solapamiento con sueño."
+  },
+  {
+   "at": "2026-10-22T23:10:00-03:00",
+   "chat": "9000001",
+   "text": "Logged the 23:10 dirty diaper and the 23:10 left breast feed of 10 min."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T23:10:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "changed a poopy diaper, then he nursed on the left 10 min",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0115,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T23:08:00-03:00",
+   "unix": 1792721280.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 09:00 a 10:00.\nPor qué: Limpieza de piso armada de 09:00 a 10:00 en horario diurno sin solapamiento con sueño.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T23:08:00-03:00",
+   "unix": 1792721280.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 09:00 a 10:00.\nPor qué: Limpieza de piso armada de 09:00 a 10:00 en horario diurno sin solapamiento con sueño.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T23:10:00-03:00",
+   "unix": 1792721400.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4129,
+   "output_tokens": 315,
+   "reasoning_tokens": 206,
+   "usd": 0.0065,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T23:10:00-03:00",
+   "unix": 1792721400.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T23:10:00-03:00",
+   "unix": 1792721400.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T23:10:00-03:00",
+   "unix": 1792721400.0,
+   "channel": "telegram",
+   "text": "Logged the 23:10 dirty diaper and the 23:10 left breast feed of 10 min.",
+   "chat_id": "9000001",
+   "guard_lang": null
+  },
+  {
+   "kind": "turn",
+   "t": -1792334061.481,
+   "ts": "2026-10-22T23:10:00-03:00",
+   "unix": 1793586689.258,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 57
+  }
+ ]
+}

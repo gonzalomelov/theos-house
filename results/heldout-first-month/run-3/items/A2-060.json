@@ -1,0 +1,170 @@
+{
+ "id": "A2-060",
+ "child": "heldout-baby-c",
+ "created": [
+  {
+   "endpoint": "timers",
+   "id": 258,
+   "child": 5,
+   "name": "sleep",
+   "start": "2026-10-22T20:00:00Z",
+   "duration": "10 06:39:40.454814",
+   "user": 2
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T16:58:00-03:00",
+   "chat": "9000001",
+   "text": "Cambió el plan: La siesta extendida hasta las 17:03 movió los huecos de la tarde así que la ventana de limpieza pasó a 17:05-17:50 y los precalentados nocturnos se alinearon con los sueños posteriores, Gonza y Ceci."
+  },
+  {
+   "at": "2026-10-22T16:58:00-03:00",
+   "chat": "9000002",
+   "text": "Cambió el plan: La siesta extendida hasta las 17:03 movió los huecos de la tarde así que la ventana de limpieza pasó a 17:05-17:50 y los precalentados nocturnos se alinearon con los sueños posteriores, Gonza y Ceci."
+  },
+  {
+   "at": "2026-10-22T17:00:00-03:00",
+   "chat": "9000001",
+   "text": "Anoté que el bebé se durmió a las 17:00."
+  },
+  {
+   "at": "2026-10-22T17:01:00-03:00",
+   "chat": "9000001",
+   "text": "Cambió el plan: La siesta larga se extendio hasta las 17:06 y se superponia con la ventana previa de las 17:05 asi que la movi a 17:07-17:50 y alinee los precalentados nocturnos con las 21:36, 00:36 y 03:06, Gonza y Ceci."
+  },
+  {
+   "at": "2026-10-22T17:01:00-03:00",
+   "chat": "9000002",
+   "text": "Cambió el plan: La siesta larga se extendio hasta las 17:06 y se superponia con la ventana previa de las 17:05 asi que la movi a 17:07-17:50 y alinee los precalentados nocturnos con las 21:36, 00:36 y 03:06, Gonza y Ceci."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T17:00:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "s durmio en el coche",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0262,
+ "brain_calls": {
+  "inference.baseten.co": 4
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T16:58:00-03:00",
+   "unix": 1792699080.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Cambió el plan: La siesta extendida hasta las 17:03 movió los huecos de la tarde así que la ventana de limpieza pasó a 17:05-17:50 y los precalentados nocturnos se alinearon con los sueños posteriores, Gonza y Ceci.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "replan",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T16:58:00-03:00",
+   "unix": 1792699080.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Cambió el plan: La siesta extendida hasta las 17:03 movió los huecos de la tarde así que la ventana de limpieza pasó a 17:05-17:50 y los precalentados nocturnos se alinearon con los sueños posteriores, Gonza y Ceci.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "replan",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T17:00:00-03:00",
+   "unix": 1792699200.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4138,
+   "output_tokens": 255,
+   "reasoning_tokens": 180,
+   "usd": 0.00625625,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T17:00:00-03:00",
+   "unix": 1792699200.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T17:00:00-03:00",
+   "unix": 1792699200.0,
+   "channel": "telegram",
+   "text": "Anoté que el bebé se durmió a las 17:00.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792311380.334,
+   "ts": "2026-10-22T17:00:00-03:00",
+   "unix": 1793587170.411,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 20
+  },
+  {
+   "kind": "reply",
+   "t": 180.0,
+   "ts": "2026-10-22T17:01:00-03:00",
+   "unix": 1792699260.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Cambió el plan: La siesta larga se extendio hasta las 17:06 y se superponia con la ventana previa de las 17:05 asi que la movi a 17:07-17:50 y alinee los precalentados nocturnos con las 21:36, 00:36 y 03:06, Gonza y Ceci.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "replan",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 180.0,
+   "ts": "2026-10-22T17:01:00-03:00",
+   "unix": 1792699260.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Cambió el plan: La siesta larga se extendio hasta las 17:06 y se superponia con la ventana previa de las 17:05 asi que la movi a 17:07-17:50 y alinee los precalentados nocturnos con las 21:36, 00:36 y 03:06, Gonza y Ceci.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "replan",
+   "check_now": null
+  }
+ ]
+}

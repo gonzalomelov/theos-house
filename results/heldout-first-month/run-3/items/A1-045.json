@@ -1,0 +1,138 @@
+{
+ "id": "A1-045",
+ "child": "heldout-baby-c",
+ "created": [
+  {
+   "endpoint": "feedings",
+   "id": 1338,
+   "child": 5,
+   "start": "2026-10-22T07:38:00Z",
+   "end": "2026-10-22T07:50:00Z",
+   "duration": "00:12:00",
+   "type": "breast milk",
+   "method": "right breast",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T04:48:00-03:00",
+   "chat": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 10:00 a 11:00.\nPor qué: La limpieza del piso está programada de 10:00 a 11:00 dentro del día sin superposición con siestas previstas, las otras rutinas quedan apagadas y vos, Gonza, quedás de guardia por rotación."
+  },
+  {
+   "at": "2026-10-22T04:48:00-03:00",
+   "chat": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 10:00 a 11:00.\nPor qué: La limpieza del piso está programada de 10:00 a 11:00 dentro del día sin superposición con siestas previstas, las otras rutinas quedan apagadas y vos, Gonza, quedás de guardia por rotación."
+  },
+  {
+   "at": "2026-10-22T04:50:00-03:00",
+   "chat": "9000001",
+   "text": "Anoté la toma de pecho derecho de 12 min de las 04:50."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T04:50:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "mamo del derecho como 12 min",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0122,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T04:48:00-03:00",
+   "unix": 1792655280.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 10:00 a 11:00.\nPor qué: La limpieza del piso está programada de 10:00 a 11:00 dentro del día sin superposición con siestas previstas, las otras rutinas quedan apagadas y vos, Gonza, quedás de guardia por rotación.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T04:48:00-03:00",
+   "unix": 1792655280.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 10:00 a 11:00.\nPor qué: La limpieza del piso está programada de 10:00 a 11:00 dentro del día sin superposición con siestas previstas, las otras rutinas quedan apagadas y vos, Gonza, quedás de guardia por rotación.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T04:50:00-03:00",
+   "unix": 1792655400.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4139,
+   "output_tokens": 352,
+   "reasoning_tokens": 266,
+   "usd": 0.00666975,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T04:50:00-03:00",
+   "unix": 1792655400.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T04:50:00-03:00",
+   "unix": 1792655400.0,
+   "channel": "telegram",
+   "text": "Anoté la toma de pecho derecho de 12 min de las 04:50.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792268364.632,
+   "ts": "2026-10-22T04:50:00-03:00",
+   "unix": 1793586386.103,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 28
+  }
+ ]
+}

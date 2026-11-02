@@ -1,0 +1,137 @@
+{
+ "id": "A2-032",
+ "child": "heldout-baby-b",
+ "created": [
+  {
+   "endpoint": "changes",
+   "id": 1042,
+   "child": 4,
+   "time": "2026-10-22T19:30:00Z",
+   "wet": false,
+   "solid": true,
+   "color": "green",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T16:43:00-03:00",
+   "chat": "9000001",
+   "text": "Cambió el plan: Lo que pasó muestra 418 min de sueño desde las 09:45, 343 min más que los 75 habituales, por eso se rearmó el plan alrededor de la siesta larga en curso y los próximos huecos previstos."
+  },
+  {
+   "at": "2026-10-22T16:43:00-03:00",
+   "chat": "9000002",
+   "text": "Cambió el plan: Lo que pasó muestra 418 min de sueño desde las 09:45, 343 min más que los 75 habituales, por eso se rearmó el plan alrededor de la siesta larga en curso y los próximos huecos previstos."
+  },
+  {
+   "at": "2026-10-22T16:45:00-03:00",
+   "chat": "9000002",
+   "text": "Logged the 16:30 dirty diaper, green stool."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T16:45:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "changed a poopy diaper about 15 min ago, kind of greenish",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0169,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T16:43:00-03:00",
+   "unix": 1792698180.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Cambió el plan: Lo que pasó muestra 418 min de sueño desde las 09:45, 343 min más que los 75 habituales, por eso se rearmó el plan alrededor de la siesta larga en curso y los próximos huecos previstos.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "replan",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T16:43:00-03:00",
+   "unix": 1792698180.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Cambió el plan: Lo que pasó muestra 418 min de sueño desde las 09:45, 343 min más que los 75 habituales, por eso se rearmó el plan alrededor de la siesta larga en curso y los próximos huecos previstos.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "replan",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T16:45:00-03:00",
+   "unix": 1792698300.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4128,
+   "output_tokens": 310,
+   "reasoning_tokens": 218,
+   "usd": 0.0064775,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T16:45:00-03:00",
+   "unix": 1792698300.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T16:45:00-03:00",
+   "unix": 1792698300.0,
+   "channel": "telegram",
+   "text": "Logged the 16:30 dirty diaper, green stool.",
+   "chat_id": "9000002",
+   "guard_lang": null
+  },
+  {
+   "kind": "turn",
+   "t": -1792310636.538,
+   "ts": "2026-10-22T16:45:00-03:00",
+   "unix": 1793587014.205,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 57
+  }
+ ]
+}

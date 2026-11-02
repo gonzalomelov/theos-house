@@ -1,0 +1,196 @@
+{
+ "id": "B1-046",
+ "child": "heldout-baby-c",
+ "created": [
+  {
+   "endpoint": "changes",
+   "id": 741,
+   "child": 5,
+   "time": "2026-10-22T11:00:00Z",
+   "wet": false,
+   "solid": true,
+   "color": "yellow",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T07:58:00-03:00",
+   "chat": "9000001",
+   "text": "Buen día, Gonza.\nEsta noche te toca a vos.\nClima: lluvia, 16 a 17 C, 3.1 mm de lluvia.\nMenú de Cookidoo: Arroz blanco."
+  },
+  {
+   "at": "2026-10-22T07:58:00-03:00",
+   "chat": "9000002",
+   "text": "Buen día, Ceci.\nClima: lluvia, 16 a 17 C, 3.1 mm de lluvia.\nMenú de Cookidoo: Arroz blanco."
+  },
+  {
+   "at": "2026-10-22T08:00:00-03:00",
+   "chat": "9000002",
+   "text": "Anoté el pañal sucio con caca verde de las 08:00."
+  },
+  {
+   "at": "2026-10-22T08:04:00-03:00",
+   "chat": "9000002",
+   "text": "Corregí el pañal de las 08:00: verde → amarilla."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T08:00:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "pañal con caca verde",
+   "setup": true,
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-22T08:04:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "no era verde era amarilla, con la luz del velador se veia cualquier cosa",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0189,
+ "brain_calls": {
+  "inference.baseten.co": 5
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T07:58:00-03:00",
+   "unix": 1792666680.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Buen día, Gonza.\nEsta noche te toca a vos.\nClima: lluvia, 16 a 17 C, 3.1 mm de lluvia.\nMenú de Cookidoo: Arroz blanco.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "family-push",
+   "routine": "morning",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T07:58:00-03:00",
+   "unix": 1792666680.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Buen día, Ceci.\nClima: lluvia, 16 a 17 C, 3.1 mm de lluvia.\nMenú de Cookidoo: Arroz blanco.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "family-push",
+   "routine": "morning",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T08:00:00-03:00",
+   "unix": 1792666800.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4129,
+   "output_tokens": 392,
+   "reasoning_tokens": 300,
+   "usd": 0.00682725,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T08:00:00-03:00",
+   "unix": 1792666800.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T08:00:00-03:00",
+   "unix": 1792666800.0,
+   "channel": "telegram",
+   "text": "Anoté el pañal sucio con caca verde de las 08:00.",
+   "chat_id": "9000002",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792283982.918,
+   "ts": "2026-10-22T08:00:00-03:00",
+   "unix": 1793582167.752,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 20
+  },
+  {
+   "kind": "brain_call",
+   "t": 360.0,
+   "ts": "2026-10-22T08:04:00-03:00",
+   "unix": 1792667040.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4216,
+   "output_tokens": 230,
+   "reasoning_tokens": 133,
+   "usd": 0.0062475,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 360.0,
+   "ts": "2026-10-22T08:04:00-03:00",
+   "unix": 1792667040.0,
+   "name": "edit_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 360.0,
+   "ts": "2026-10-22T08:04:00-03:00",
+   "unix": 1792667040.0,
+   "channel": "telegram",
+   "text": "Corregí el pañal de las 08:00: verde → amarilla.",
+   "chat_id": "9000002",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792283971.633,
+   "ts": "2026-10-22T08:04:00-03:00",
+   "unix": 1793582179.029,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 72
+  }
+ ]
+}

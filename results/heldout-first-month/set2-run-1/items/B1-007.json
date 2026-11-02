@@ -1,0 +1,100 @@
+{
+ "id": "B1-007",
+ "child": "heldout-baby-c",
+ "created": [
+  {
+   "endpoint": "feedings",
+   "id": 883,
+   "child": 5,
+   "start": "2026-10-22T23:00:00Z",
+   "end": "2026-10-22T23:15:00Z",
+   "duration": "00:15:00",
+   "type": "formula",
+   "method": "bottle",
+   "amount": 90.0,
+   "notes": "length not said, milk type not said",
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T20:15:00-03:00",
+   "chat": "9000002",
+   "text": "Anoté la mamadera de 90 ml de las 20:15."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T20:15:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "le prepare 120 y dejo como 30 asi q tomo 90 nomas",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0068,
+ "brain_calls": {
+  "inference.baseten.co": 2
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T20:15:00-03:00",
+   "unix": 1792710900.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4140,
+   "output_tokens": 164,
+   "reasoning_tokens": 78,
+   "usd": 0.005872,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T20:15:00-03:00",
+   "unix": 1792710900.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T20:15:00-03:00",
+   "unix": 1792710900.0,
+   "channel": "telegram",
+   "text": "Anoté la mamadera de 90 ml de las 20:15.",
+   "chat_id": "9000002",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792328941.678,
+   "ts": "2026-10-22T20:15:00-03:00",
+   "unix": 1793581308.99,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 49
+  }
+ ]
+}

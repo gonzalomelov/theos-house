@@ -1,0 +1,201 @@
+{
+ "id": "A3-073",
+ "child": "heldout-baby-a",
+ "created": [],
+ "seed_after": [
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 1510,
+    "child": 3,
+    "start": "2026-10-22T21:40:00Z",
+    "end": "2026-10-22T21:55:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 100.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 1510,
+    "child": 3,
+    "start": "2026-10-22T21:40:00Z",
+    "end": "2026-10-22T21:55:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 100.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "changes",
+   "before": {
+    "id": 1103,
+    "child": 3,
+    "time": "2026-10-22T23:15:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "changes",
+    "id": 1103,
+    "child": 3,
+    "time": "2026-10-22T23:15:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "notes",
+   "before": {
+    "id": 561,
+    "child": 3,
+    "note": "Bath",
+    "image": null,
+    "time": "2026-10-21T22:00:00Z",
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "notes",
+    "id": 561,
+    "child": 3,
+    "note": "Bath",
+    "image": null,
+    "time": "2026-10-21T22:00:00Z",
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T21:28:00-03:00",
+   "chat": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 00:30, 02:30, 04:30, 06:30. La luz espera a que se despierte.\nVentana para aspirar de 07:00 a 07:41.\nPor qué: Calentador de mamadera armado a las 00:30, 02:30, 04:30 y 06:30 para la noche y limpieza del piso armada de 07:00 a 07:41 en la ventana de la mañana."
+  },
+  {
+   "at": "2026-10-22T21:28:00-03:00",
+   "chat": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 00:30, 02:30, 04:30, 06:30. La luz espera a que se despierte.\nVentana para aspirar de 07:00 a 07:41.\nPor qué: Calentador de mamadera armado a las 00:30, 02:30, 04:30 y 06:30 para la noche y limpieza del piso armada de 07:00 a 07:41 en la ventana de la mañana."
+  },
+  {
+   "at": "2026-10-22T21:30:00-03:00",
+   "chat": "9000001",
+   "text": "No, hoy todavía no tiene baño registrado. El último fue ayer a las 19:00."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T21:30:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "lo bañamos hoy?",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0146,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T21:28:00-03:00",
+   "unix": 1792715280.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 00:30, 02:30, 04:30, 06:30. La luz espera a que se despierte.\nVentana para aspirar de 07:00 a 07:41.\nPor qué: Calentador de mamadera armado a las 00:30, 02:30, 04:30 y 06:30 para la noche y limpieza del piso armada de 07:00 a 07:41 en la ventana de la mañana.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T21:28:00-03:00",
+   "unix": 1792715280.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 00:30, 02:30, 04:30, 06:30. La luz espera a que se despierte.\nVentana para aspirar de 07:00 a 07:41.\nPor qué: Calentador de mamadera armado a las 00:30, 02:30, 04:30 y 06:30 para la noche y limpieza del piso armada de 07:00 a 07:41 en la ventana de la mañana.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T21:30:00-03:00",
+   "unix": 1792715400.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4234,
+   "output_tokens": 199,
+   "reasoning_tokens": 118,
+   "usd": 0.00613825,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T21:30:00-03:00",
+   "unix": 1792715400.0,
+   "channel": "telegram",
+   "text": "No, hoy todavía no tiene baño registrado. El último fue ayer a las 19:00.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792326808.022,
+   "ts": "2026-10-22T21:30:00-03:00",
+   "unix": 1793587942.733,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 15
+  }
+ ]
+}

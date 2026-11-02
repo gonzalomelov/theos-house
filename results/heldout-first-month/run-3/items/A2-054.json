@@ -1,0 +1,149 @@
+{
+ "id": "A2-054",
+ "child": "heldout-baby-c",
+ "created": [
+  {
+   "endpoint": "sleep",
+   "id": 516,
+   "child": 5,
+   "start": "2026-10-22T08:00:00Z",
+   "end": "2026-10-22T10:15:00Z",
+   "duration": "02:15:00",
+   "nap": true,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [
+  {
+   "endpoint": "timers",
+   "before": {
+    "id": 251,
+    "child": 5,
+    "name": "sleep",
+    "start": "2026-10-22T08:00:00Z",
+    "duration": "10 18:38:33.889909",
+    "user": 2
+   },
+   "after": null
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T07:23:00-03:00",
+   "chat": "9000001",
+   "text": "Cambió el plan: El plan se movió porque durmió 488 min desde las 23:15, 368 min más de lo habitual, así que la ventana de la mañana se pasó para después del despertar tardío previsto a las 07:28, Gonza y Ceci, mirá los horarios."
+  },
+  {
+   "at": "2026-10-22T07:23:00-03:00",
+   "chat": "9000002",
+   "text": "Cambió el plan: El plan se movió porque durmió 488 min desde las 23:15, 368 min más de lo habitual, así que la ventana de la mañana se pasó para después del despertar tardío previsto a las 07:28, Gonza y Ceci, mirá los horarios."
+  },
+  {
+   "at": "2026-10-22T07:25:00-03:00",
+   "chat": "9000001",
+   "text": "Anoté el sueño de 05:00 a 07:15, 2 h 15 min."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T07:25:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "se desperto hace 10 min",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0147,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T07:23:00-03:00",
+   "unix": 1792664580.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Cambió el plan: El plan se movió porque durmió 488 min desde las 23:15, 368 min más de lo habitual, así que la ventana de la mañana se pasó para después del despertar tardío previsto a las 07:28, Gonza y Ceci, mirá los horarios.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "replan",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T07:23:00-03:00",
+   "unix": 1792664580.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Cambió el plan: El plan se movió porque durmió 488 min desde las 23:15, 368 min más de lo habitual, así que la ventana de la mañana se pasó para después del despertar tardío previsto a las 07:28, Gonza y Ceci, mirá los horarios.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "replan",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T07:25:00-03:00",
+   "unix": 1792664700.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4158,
+   "output_tokens": 176,
+   "reasoning_tokens": 76,
+   "usd": 0.0059455,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T07:25:00-03:00",
+   "unix": 1792664700.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T07:25:00-03:00",
+   "unix": 1792664700.0,
+   "channel": "telegram",
+   "text": "Anoté el sueño de 05:00 a 07:15, 2 h 15 min.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792276920.321,
+   "ts": "2026-10-22T07:25:00-03:00",
+   "unix": 1793587130.424,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 23
+  }
+ ]
+}

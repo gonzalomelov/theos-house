@@ -1,0 +1,135 @@
+{
+ "id": "A2-069",
+ "child": "heldout-baby-a",
+ "created": [],
+ "seed_after": [
+  {
+   "endpoint": "timers",
+   "before": {
+    "id": 204,
+    "child": 3,
+    "name": "sleep",
+    "start": "2026-10-22T02:50:00Z",
+    "duration": "10 22:32:13.497275",
+    "user": 2
+   },
+   "after": {
+    "endpoint": "timers",
+    "id": 204,
+    "child": 3,
+    "name": "sleep",
+    "start": "2026-10-22T02:50:00Z",
+    "duration": "10 22:32:30.605101",
+    "user": 2
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T02:23:00-03:00",
+   "chat": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 02:40, 04:50. La luz espera a que se despierte.\nVentana para aspirar de 07:30 a 08:20.\nPor qué: Ventana de limpieza del piso armada de 07:30 a 08:20 en hueco diurno entre sueños y precalentado de mamadera a las 02:40 y 04:50 para los despertares nocturnos, vos Gonza quedás de guardia."
+  },
+  {
+   "at": "2026-10-22T02:23:00-03:00",
+   "chat": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 02:40, 04:50. La luz espera a que se despierte.\nVentana para aspirar de 07:30 a 08:20.\nPor qué: Ventana de limpieza del piso armada de 07:30 a 08:20 en hueco diurno entre sueños y precalentado de mamadera a las 02:40 y 04:50 para los despertares nocturnos, vos Gonza quedás de guardia."
+  },
+  {
+   "at": "2026-10-22T02:25:00-03:00",
+   "chat": "9000002",
+   "text": "Still snoozing, thanks for the update. Hope you can rest a bit too."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T02:25:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "still asleep",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0165,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T02:23:00-03:00",
+   "unix": 1792646580.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 02:40, 04:50. La luz espera a que se despierte.\nVentana para aspirar de 07:30 a 08:20.\nPor qué: Ventana de limpieza del piso armada de 07:30 a 08:20 en hueco diurno entre sueños y precalentado de mamadera a las 02:40 y 04:50 para los despertares nocturnos, vos Gonza quedás de guardia.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T02:23:00-03:00",
+   "unix": 1792646580.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 02:40, 04:50. La luz espera a que se despierte.\nVentana para aspirar de 07:30 a 08:20.\nPor qué: Ventana de limpieza del piso armada de 07:30 a 08:20 en hueco diurno entre sueños y precalentado de mamadera a las 02:40 y 04:50 para los despertares nocturnos, vos Gonza quedás de guardia.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T02:25:00-03:00",
+   "unix": 1792646700.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4125,
+   "output_tokens": 227,
+   "reasoning_tokens": 148,
+   "usd": 0.006121,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T02:25:00-03:00",
+   "unix": 1792646700.0,
+   "channel": "telegram",
+   "text": "Still snoozing, thanks for the update. Hope you can rest a bit too.",
+   "chat_id": "9000002",
+   "guard_lang": null
+  },
+  {
+   "kind": "turn",
+   "t": -1792263503.144,
+   "ts": "2026-10-22T02:25:00-03:00",
+   "unix": 1793582547.51,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 12
+  }
+ ]
+}

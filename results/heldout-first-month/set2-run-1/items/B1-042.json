@@ -1,0 +1,159 @@
+{
+ "id": "B1-042",
+ "child": "heldout-baby-c",
+ "created": [
+  {
+   "endpoint": "feedings",
+   "id": 958,
+   "child": 5,
+   "start": "2026-10-22T16:40:00Z",
+   "end": "2026-10-22T17:00:00Z",
+   "duration": "00:20:00",
+   "type": "breast milk",
+   "method": "right breast",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T14:00:00-03:00",
+   "chat": "9000002",
+   "text": "Anoté la toma de pecho izquierdo de 20 min de las 14:00."
+  },
+  {
+   "at": "2026-10-22T14:03:00-03:00",
+   "chat": "9000002",
+   "text": "Corregí la toma de pecho de las 14:00: pecho izquierdo → pecho derecho."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T14:00:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "izquierda 20 min",
+   "setup": true,
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-22T14:03:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "me equivoque era la derecha jaja tengo la cabeza quemada",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0135,
+ "brain_calls": {
+  "inference.baseten.co": 4
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T14:00:00-03:00",
+   "unix": 1792688400.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4126,
+   "output_tokens": 133,
+   "reasoning_tokens": 25,
+   "usd": 0.00572275,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T14:00:00-03:00",
+   "unix": 1792688400.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T14:00:00-03:00",
+   "unix": 1792688400.0,
+   "channel": "telegram",
+   "text": "Anoté la toma de pecho izquierdo de 20 min de las 14:00.",
+   "chat_id": "9000002",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792305699.179,
+   "ts": "2026-10-22T14:00:00-03:00",
+   "unix": 1793582051.496,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 16
+  },
+  {
+   "kind": "brain_call",
+   "t": 300.0,
+   "ts": "2026-10-22T14:03:00-03:00",
+   "unix": 1792688580.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4206,
+   "output_tokens": 175,
+   "reasoning_tokens": 56,
+   "usd": 0.00600125,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 300.0,
+   "ts": "2026-10-22T14:03:00-03:00",
+   "unix": 1792688580.0,
+   "name": "edit_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 300.0,
+   "ts": "2026-10-22T14:03:00-03:00",
+   "unix": 1792688580.0,
+   "channel": "telegram",
+   "text": "Corregí la toma de pecho de las 14:00: pecho izquierdo → pecho derecho.",
+   "chat_id": "9000002",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792305689.195,
+   "ts": "2026-10-22T14:03:00-03:00",
+   "unix": 1793582061.481,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 56
+  }
+ ]
+}

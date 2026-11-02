@@ -1,0 +1,173 @@
+{
+ "id": "A4-021",
+ "child": "heldout-baby-a",
+ "created": [
+  {
+   "endpoint": "feedings",
+   "id": 1190,
+   "child": 3,
+   "start": "2026-10-22T23:15:00Z",
+   "end": "2026-10-22T23:30:00Z",
+   "duration": "00:15:00",
+   "type": "formula",
+   "method": "bottle",
+   "amount": 70.0,
+   "notes": "length not said, milk type not said",
+   "tags": [
+    "agent"
+   ]
+  },
+  {
+   "endpoint": "notes",
+   "id": 453,
+   "child": 3,
+   "note": "lo noto calentito, le tome y tiene 38.1",
+   "image": null,
+   "time": "2026-10-22T23:30:00Z",
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T20:30:00-03:00",
+   "chat": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 02:00, 04:00. La luz espera a que se despierte.\nVentana para aspirar de 07:00 a 07:45.\nPor qué: Limpieza de piso armada de 07:00 a 07:45 y calentador de mamadera a las 02:00 y 04:00 para cubrir la noche y la mañana, Gonza de guardia."
+  },
+  {
+   "at": "2026-10-22T20:30:00-03:00",
+   "chat": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 02:00, 04:00. La luz espera a que se despierte.\nVentana para aspirar de 07:00 a 07:45.\nPor qué: Limpieza de piso armada de 07:00 a 07:45 y calentador de mamadera a las 02:00 y 04:00 para cubrir la noche y la mañana, Gonza de guardia."
+  },
+  {
+   "at": "2026-10-22T20:30:00-03:00",
+   "chat": "9000002",
+   "text": "Puede ser una emergencia. Llamá ya al 911 (emergencias en Uruguay) y contales lo que ves. O andá a emergencia, y avisale a su pediatra. Un bebé de menos de 3 meses con 38 °C (100,4 °F) o más de temperatura tiene que verlo un médico ya. Es la guía pública de la Academia Estadounidense de Pediatría (AAP), no un consejo sobre tu bebé: https://www.healthychildren.org/English/health-issues/conditions/fever/Pages/When-to-Call-the-Pediatrician.aspx"
+  },
+  {
+   "at": "2026-10-22T20:30:00-03:00",
+   "chat": "9000002",
+   "text": "Anoté la mamadera de 70 ml de las 20:30 y una nota a las 20:30: \"lo noto calentito, le tome y tiene 38.1\"."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T20:30:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "le di 70 de mamadera y lo noto calentito, le tome y tiene 38.1",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0129,
+ "brain_calls": {
+  "inference.baseten.co": 2
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T20:30:00-03:00",
+   "unix": 1792711800.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 02:00, 04:00. La luz espera a que se despierte.\nVentana para aspirar de 07:00 a 07:45.\nPor qué: Limpieza de piso armada de 07:00 a 07:45 y calentador de mamadera a las 02:00 y 04:00 para cubrir la noche y la mañana, Gonza de guardia.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T20:30:00-03:00",
+   "unix": 1792711800.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 02:00, 04:00. La luz espera a que se despierte.\nVentana para aspirar de 07:00 a 07:45.\nPor qué: Limpieza de piso armada de 07:00 a 07:45 y calentador de mamadera a las 02:00 y 04:00 para cubrir la noche y la mañana, Gonza de guardia.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T20:30:00-03:00",
+   "unix": 1792711800.0,
+   "channel": "telegram",
+   "text": "Puede ser una emergencia. Llamá ya al 911 (emergencias en Uruguay) y contales lo que ves. O andá a emergencia, y avisale a su pediatra. Un bebé de menos de 3 meses con 38 °C (100,4 °F) o más de temperatura tiene que verlo un médico ya. Es la guía pública de la Academia Estadounidense de Pediatría (AAP), no un consejo sobre tu bebé: https://www.healthychildren.org/English/health-issues/conditions/fever/Pages/When-to-Call-the-Pediatrician.aspx",
+   "chat_id": "9000002",
+   "guard_lang": "es",
+   "flag": "urgent_fever"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T20:30:00-03:00",
+   "unix": 1792711800.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3824,
+   "output_tokens": 465,
+   "reasoning_tokens": 349,
+   "usd": 0.00675625,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T20:30:00-03:00",
+   "unix": 1792711800.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T20:30:00-03:00",
+   "unix": 1792711800.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T20:30:00-03:00",
+   "unix": 1792711800.0,
+   "channel": "telegram",
+   "text": "Anoté la mamadera de 70 ml de las 20:30 y una nota a las 20:30: \"lo noto calentito, le tome y tiene 38.1\".",
+   "chat_id": "9000002",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792327326.074,
+   "ts": "2026-10-22T20:30:00-03:00",
+   "unix": 1793583824.585,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 62
+  }
+ ]
+}

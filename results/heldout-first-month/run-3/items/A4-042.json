@@ -1,0 +1,93 @@
+{
+ "id": "A4-042",
+ "child": "heldout-baby-b",
+ "created": [],
+ "seed_after": [
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 1666,
+    "child": 4,
+    "start": "2026-10-22T12:00:00Z",
+    "end": "2026-10-22T12:10:00Z",
+    "duration": "00:10:00",
+    "type": "breast milk",
+    "method": "left breast",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 1666,
+    "child": 4,
+    "start": "2026-10-22T12:00:00Z",
+    "end": "2026-10-22T12:10:00Z",
+    "duration": "00:10:00",
+    "type": "breast milk",
+    "method": "left breast",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T18:00:00-03:00",
+   "chat": "9000002",
+   "text": "That sounds like a total for the day, so I did not add it as a new feed. Today the log has 1 feed, the last at 09:10. If a feed is missing, tell me when it was and how much, and I will add it."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T18:00:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "dirty diaper, but he hasnt fed since like 9am, wont latch at all, and this is the first diaper all day",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0048,
+ "brain_calls": {
+  "inference.baseten.co": 1
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T18:00:00-03:00",
+   "unix": 1792702800.0,
+   "channel": "telegram",
+   "text": "That sounds like a total for the day, so I did not add it as a new feed. Today the log has 1 feed, the last at 09:10. If a feed is missing, tell me when it was and how much, and I will add it.",
+   "chat_id": "9000002",
+   "guard_lang": null
+  },
+  {
+   "kind": "turn",
+   "t": -1792311395.565,
+   "ts": "2026-10-22T18:00:00-03:00",
+   "unix": 1793590755.137,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 102
+  }
+ ]
+}

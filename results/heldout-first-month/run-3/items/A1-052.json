@@ -1,0 +1,138 @@
+{
+ "id": "A1-052",
+ "child": "heldout-baby-c",
+ "created": [
+  {
+   "endpoint": "feedings",
+   "id": 1344,
+   "child": 5,
+   "start": "2026-10-22T02:55:00Z",
+   "end": "2026-10-22T03:10:00Z",
+   "duration": "00:15:00",
+   "type": "breast milk",
+   "method": "left breast",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T00:08:00-03:00",
+   "chat": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:30 a 08:11.\nPor qué: Ventana de limpieza armada 07:30-08:11 por disponibilidad diurna y la noche queda de turno con Gonza."
+  },
+  {
+   "at": "2026-10-22T00:08:00-03:00",
+   "chat": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:30 a 08:11.\nPor qué: Ventana de limpieza armada 07:30-08:11 por disponibilidad diurna y la noche queda de turno con Gonza."
+  },
+  {
+   "at": "2026-10-22T00:10:00-03:00",
+   "chat": "9000001",
+   "text": "Anoté la toma de pecho izquierdo de 15 min de las 00:10."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T00:10:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "eh bueno le dimos la teta como quince minutos del lado izquierdo y ahora esta tranquilo",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0127,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T00:08:00-03:00",
+   "unix": 1792638480.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:30 a 08:11.\nPor qué: Ventana de limpieza armada 07:30-08:11 por disponibilidad diurna y la noche queda de turno con Gonza.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T00:08:00-03:00",
+   "unix": 1792638480.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:30 a 08:11.\nPor qué: Ventana de limpieza armada 07:30-08:11 por disponibilidad diurna y la noche queda de turno con Gonza.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T00:10:00-03:00",
+   "unix": 1792638600.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4149,
+   "output_tokens": 166,
+   "reasoning_tokens": 80,
+   "usd": 0.00589175,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T00:10:00-03:00",
+   "unix": 1792638600.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T00:10:00-03:00",
+   "unix": 1792638600.0,
+   "channel": "telegram",
+   "text": "Anoté la toma de pecho izquierdo de 15 min de las 00:10.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792251507.746,
+   "ts": "2026-10-22T00:10:00-03:00",
+   "unix": 1793586442.99,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 87
+  }
+ ]
+}

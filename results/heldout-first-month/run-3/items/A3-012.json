@@ -1,0 +1,191 @@
+{
+ "id": "A3-012",
+ "child": "heldout-baby-c",
+ "created": [
+  {
+   "endpoint": "changes",
+   "id": 1054,
+   "child": 5,
+   "time": "2026-10-22T15:10:00Z",
+   "wet": false,
+   "solid": true,
+   "color": "yellow",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 1394,
+    "child": 5,
+    "start": "2026-10-22T14:30:00Z",
+    "end": "2026-10-22T14:45:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 90.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 1394,
+    "child": 5,
+    "start": "2026-10-22T14:30:00Z",
+    "end": "2026-10-22T14:45:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 90.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T12:10:00-03:00",
+   "chat": "9000001",
+   "text": "Anoté el pañal sucio con caca verde de las 12:10."
+  },
+  {
+   "at": "2026-10-22T12:11:00-03:00",
+   "chat": "9000001",
+   "text": "Corregí el pañal de las 12:10: verde → amarilla."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T12:10:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "pañal con caca verde",
+   "setup": true,
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-22T12:11:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "no era verde era amarilla, la luz del baño jaja",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0147,
+ "brain_calls": {
+  "inference.baseten.co": 4
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T12:10:00-03:00",
+   "unix": 1792681800.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4176,
+   "output_tokens": 241,
+   "reasoning_tokens": 133,
+   "usd": 0.00624425,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T12:10:00-03:00",
+   "unix": 1792681800.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T12:10:00-03:00",
+   "unix": 1792681800.0,
+   "channel": "telegram",
+   "text": "Anoté el pañal sucio con caca verde de las 12:10.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792293748.847,
+   "ts": "2026-10-22T12:10:00-03:00",
+   "unix": 1793587401.902,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 20
+  },
+  {
+   "kind": "brain_call",
+   "t": 180.0,
+   "ts": "2026-10-22T12:11:00-03:00",
+   "unix": 1792681860.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4263,
+   "output_tokens": 215,
+   "reasoning_tokens": 113,
+   "usd": 0.0062425,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 180.0,
+   "ts": "2026-10-22T12:11:00-03:00",
+   "unix": 1792681860.0,
+   "name": "edit_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 180.0,
+   "ts": "2026-10-22T12:11:00-03:00",
+   "unix": 1792681860.0,
+   "channel": "telegram",
+   "text": "Corregí el pañal de las 12:10: verde → amarilla.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792293740.715,
+   "ts": "2026-10-22T12:11:00-03:00",
+   "unix": 1793587410.034,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 47
+  }
+ ]
+}

@@ -1,0 +1,289 @@
+{
+ "id": "A3-045",
+ "child": "heldout-baby-a",
+ "created": [],
+ "seed_after": [
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 1076,
+    "child": 3,
+    "start": "2026-10-22T13:30:00Z",
+    "end": "2026-10-22T13:45:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 80.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 1076,
+    "child": 3,
+    "start": "2026-10-22T13:30:00Z",
+    "end": "2026-10-22T13:45:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 80.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "changes",
+   "before": {
+    "id": 814,
+    "child": 3,
+    "time": "2026-10-22T05:00:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "changes",
+    "id": 814,
+    "child": 3,
+    "time": "2026-10-22T05:00:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "changes",
+   "before": {
+    "id": 815,
+    "child": 3,
+    "time": "2026-10-22T09:15:00Z",
+    "wet": true,
+    "solid": true,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "changes",
+    "id": 815,
+    "child": 3,
+    "time": "2026-10-22T09:15:00Z",
+    "wet": true,
+    "solid": true,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "changes",
+   "before": {
+    "id": 816,
+    "child": 3,
+    "time": "2026-10-22T12:00:00Z",
+    "wet": false,
+    "solid": true,
+    "color": "yellow",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "changes",
+    "id": 816,
+    "child": 3,
+    "time": "2026-10-22T12:00:00Z",
+    "wet": false,
+    "solid": true,
+    "color": "yellow",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "changes",
+   "before": {
+    "id": 817,
+    "child": 3,
+    "time": "2026-10-22T14:30:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "changes",
+    "id": 817,
+    "child": 3,
+    "time": "2026-10-22T14:30:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "changes",
+   "before": {
+    "id": 818,
+    "child": 3,
+    "time": "2026-10-22T17:20:00Z",
+    "wet": false,
+    "solid": true,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "changes",
+    "id": 818,
+    "child": 3,
+    "time": "2026-10-22T17:20:00Z",
+    "wet": false,
+    "solid": true,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "changes",
+   "before": {
+    "id": 819,
+    "child": 3,
+    "time": "2026-10-22T19:50:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "changes",
+    "id": 819,
+    "child": 3,
+    "time": "2026-10-22T19:50:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T18:00:00-03:00",
+   "chat": "9000001",
+   "text": "Hoy hizo 3 cacas: a las 06:15, a las 09:00 y a las 14:20."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T18:00:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "cuantas cacas hizo hoy?",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0071,
+ "brain_calls": {
+  "inference.baseten.co": 2
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T18:00:00-03:00",
+   "unix": 1792702800.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4274,
+   "output_tokens": 234,
+   "reasoning_tokens": 145,
+   "usd": 0.006337,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T18:00:00-03:00",
+   "unix": 1792702800.0,
+   "channel": "telegram",
+   "text": "Hoy hizo 3 cacas: a las 06:15, a las 09:00 y a las 14:20.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792318850.96,
+   "ts": "2026-10-22T18:00:00-03:00",
+   "unix": 1793583299.698,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 23
+  }
+ ]
+}

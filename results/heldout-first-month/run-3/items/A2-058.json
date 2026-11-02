@@ -1,0 +1,135 @@
+{
+ "id": "A2-058",
+ "child": "heldout-baby-a",
+ "created": [],
+ "seed_after": [
+  {
+   "endpoint": "timers",
+   "before": {
+    "id": 249,
+    "child": 3,
+    "name": "sleep",
+    "start": "2026-10-22T02:15:00Z",
+    "duration": "11 00:23:20.221337",
+    "user": 2
+   },
+   "after": {
+    "endpoint": "timers",
+    "id": 249,
+    "child": 3,
+    "name": "sleep",
+    "start": "2026-10-22T02:15:00Z",
+    "duration": "11 00:23:39.059025",
+    "user": 2
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T01:18:00-03:00",
+   "chat": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 03:23, 05:53. La luz espera a que se despierte.\nVentana para aspirar de 08:38 a 09:19.\nPor qué: Robot de limpieza armado en el hueco de la mañana entre siestas y calentador de mamadera armado antes de los despertares nocturnos previstos."
+  },
+  {
+   "at": "2026-10-22T01:18:00-03:00",
+   "chat": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 03:23, 05:53. La luz espera a que se despierte.\nVentana para aspirar de 08:38 a 09:19.\nPor qué: Robot de limpieza armado en el hueco de la mañana entre siestas y calentador de mamadera armado antes de los despertares nocturnos previstos."
+  },
+  {
+   "at": "2026-10-22T01:20:00-03:00",
+   "chat": "9000001",
+   "text": "Descansá vos también, que siga durmiendo lindo."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T01:20:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "sigue durmiendo, yo me voy a acostar",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0151,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T01:18:00-03:00",
+   "unix": 1792642680.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 03:23, 05:53. La luz espera a que se despierte.\nVentana para aspirar de 08:38 a 09:19.\nPor qué: Robot de limpieza armado en el hueco de la mañana entre siestas y calentador de mamadera armado antes de los despertares nocturnos previstos.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T01:18:00-03:00",
+   "unix": 1792642680.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 03:23, 05:53. La luz espera a que se despierte.\nVentana para aspirar de 08:38 a 09:19.\nPor qué: Robot de limpieza armado en el hueco de la mañana entre siestas y calentador de mamadera armado antes de los despertares nocturnos previstos.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T01:20:00-03:00",
+   "unix": 1792642800.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4162,
+   "output_tokens": 185,
+   "reasoning_tokens": 89,
+   "usd": 0.00598875,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T01:20:00-03:00",
+   "unix": 1792642800.0,
+   "channel": "telegram",
+   "text": "Descansá vos también, que siga durmiendo lindo.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792255035.538,
+   "ts": "2026-10-22T01:20:00-03:00",
+   "unix": 1793587115.207,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 36
+  }
+ ]
+}

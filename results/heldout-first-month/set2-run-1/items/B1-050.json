@@ -1,0 +1,221 @@
+{
+ "id": "B1-050",
+ "child": "heldout-baby-c",
+ "created": [
+  {
+   "endpoint": "timers",
+   "id": 181,
+   "child": 5,
+   "name": "sleep",
+   "start": "2026-10-23T02:09:00Z",
+   "duration": "9 23:09:16.832013",
+   "user": 2
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T23:07:00-03:00",
+   "chat": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 00:57, 03:27, 05:57. La luz espera a que se despierte.\nVentana para aspirar de 08:22 a 09:22.\nPor qué: Calentador a las 00:57, 03:27 y 05:57 antes de los despertares previstos y ventana de limpieza 08:22-09:22 entre siestas, Gonza de guardia."
+  },
+  {
+   "at": "2026-10-22T23:07:00-03:00",
+   "chat": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 00:57, 03:27, 05:57. La luz espera a que se despierte.\nVentana para aspirar de 08:22 a 09:22.\nPor qué: Calentador a las 00:57, 03:27 y 05:57 antes de los despertares previstos y ventana de limpieza 08:22-09:22 entre siestas, Gonza de guardia."
+  },
+  {
+   "at": "2026-10-22T23:09:00-03:00",
+   "chat": "9000001",
+   "text": "Anoté que el bebé se durmió a las 23:09."
+  },
+  {
+   "at": "2026-10-22T23:10:00-03:00",
+   "chat": "9000001",
+   "text": "Cambió el plan: La ventana de limpieza se movió a 09:00-10:00 para no superponerse con el sueño previsto y los horarios del calentador se actualizaron a los nuevos despertares previstos tras el sueño prolongado desde las 09:45."
+  },
+  {
+   "at": "2026-10-22T23:10:00-03:00",
+   "chat": "9000002",
+   "text": "Cambió el plan: La ventana de limpieza se movió a 09:00-10:00 para no superponerse con el sueño previsto y los horarios del calentador se actualizaron a los nuevos despertares previstos tras el sueño prolongado desde las 09:45."
+  },
+  {
+   "at": "2026-10-22T23:10:00-03:00",
+   "chat": "9000001",
+   "text": "Sigue dormidito desde las 23:09 entonces, lo dejamos así."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T23:09:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "bueno se acaba de dormir en la cuna",
+   "setup": true,
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-22T23:10:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "bueno se acaba de dormir en la cuna",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0292,
+ "brain_calls": {
+  "inference.baseten.co": 6
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T23:07:00-03:00",
+   "unix": 1792721220.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 00:57, 03:27, 05:57. La luz espera a que se despierte.\nVentana para aspirar de 08:22 a 09:22.\nPor qué: Calentador a las 00:57, 03:27 y 05:57 antes de los despertares previstos y ventana de limpieza 08:22-09:22 entre siestas, Gonza de guardia.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T23:07:00-03:00",
+   "unix": 1792721220.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 00:57, 03:27, 05:57. La luz espera a que se despierte.\nVentana para aspirar de 08:22 a 09:22.\nPor qué: Calentador a las 00:57, 03:27 y 05:57 antes de los despertares previstos y ventana de limpieza 08:22-09:22 entre siestas, Gonza de guardia.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T23:09:00-03:00",
+   "unix": 1792721340.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4131,
+   "output_tokens": 144,
+   "reasoning_tokens": 56,
+   "usd": 0.00577575,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T23:09:00-03:00",
+   "unix": 1792721340.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T23:09:00-03:00",
+   "unix": 1792721340.0,
+   "channel": "telegram",
+   "text": "Anoté que el bebé se durmió a las 23:09.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792338408.886,
+   "ts": "2026-10-22T23:09:00-03:00",
+   "unix": 1793582281.768,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 35
+  },
+  {
+   "kind": "reply",
+   "t": 180.0,
+   "ts": "2026-10-22T23:10:00-03:00",
+   "unix": 1792721400.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Cambió el plan: La ventana de limpieza se movió a 09:00-10:00 para no superponerse con el sueño previsto y los horarios del calentador se actualizaron a los nuevos despertares previstos tras el sueño prolongado desde las 09:45.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "replan",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 180.0,
+   "ts": "2026-10-22T23:10:00-03:00",
+   "unix": 1792721400.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Cambió el plan: La ventana de limpieza se movió a 09:00-10:00 para no superponerse con el sueño previsto y los horarios del calentador se actualizaron a los nuevos despertares previstos tras el sueño prolongado desde las 09:45.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "replan",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 180.0,
+   "ts": "2026-10-22T23:10:00-03:00",
+   "unix": 1792721400.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4198,
+   "output_tokens": 189,
+   "reasoning_tokens": 110,
+   "usd": 0.00605075,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 180.0,
+   "ts": "2026-10-22T23:10:00-03:00",
+   "unix": 1792721400.0,
+   "channel": "telegram",
+   "text": "Sigue dormidito desde las 23:09 entonces, lo dejamos así.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792338396.678,
+   "ts": "2026-10-22T23:10:00-03:00",
+   "unix": 1793582293.975,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 35
+  }
+ ]
+}

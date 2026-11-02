@@ -1,0 +1,76 @@
+{
+ "id": "A5-019",
+ "child": "heldout-baby-a",
+ "created": [],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T13:00:00-03:00",
+   "chat": "9000002",
+   "text": "Obvio, te paso una super fácil y rápida:\n\n**Milanesas al horno jugosas**\n\n1. Prendé el horno fuerte, a 200°C. Aceitá apenas una fuente o placa.\n2. Si ya tenés milanesas rebozadas genial, si no: pasá la carne o pollo por huevo batido con un poquito de sal, ajo y perejil, y después por pan rallado.\n3. Acomodalas en la fuente sin encimarlas. Rocialas con un hilo de aceite o spray por arriba, eso las deja doraditas sin tener que freír.\n4. Al horno 15 min de un lado, dalas vuelta y 10 min más del otro lado hasta que estén doradas.\n5. Si querés napolitanas express: arriba jamón, queso y tomate en los últimos 5 min.\n\nTip para que no se sequen: no las hagas muy finitas y no te pases de horno. Quedan prontas en 25 min.\n\n¿De carne o de pollo las querés hacer?"
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T13:00:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "pasame una receta facil de milanesas al horno q no tengo tiempo de nada",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0078,
+ "brain_calls": {
+  "inference.baseten.co": 2
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T13:00:00-03:00",
+   "unix": 1792684800.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4149,
+   "output_tokens": 401,
+   "reasoning_tokens": 108,
+   "usd": 0.0068905,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T13:00:00-03:00",
+   "unix": 1792684800.0,
+   "channel": "telegram",
+   "text": "Obvio, te paso una super fácil y rápida:\n\n**Milanesas al horno jugosas**\n\n1. Prendé el horno fuerte, a 200°C. Aceitá apenas una fuente o placa.\n2. Si ya tenés milanesas rebozadas genial, si no: pasá la carne o pollo por huevo batido con un poquito de sal, ajo y perejil, y después por pan rallado.\n3. Acomodalas en la fuente sin encimarlas. Rocialas con un hilo de aceite o spray por arriba, eso las deja doraditas sin tener que freír.\n4. Al horno 15 min de un lado, dalas vuelta y 10 min más del otro lado hasta que estén doradas.\n5. Si querés napolitanas express: arriba jamón, queso y tomate en los últimos 5 min.\n\nTip para que no se sequen: no las hagas muy finitas y no te pases de horno. Quedan prontas en 25 min.\n\n¿De carne o de pollo las querés hacer?",
+   "chat_id": "9000002",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792295495.802,
+   "ts": "2026-10-22T13:00:00-03:00",
+   "unix": 1793588654.963,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 71
+  }
+ ]
+}

@@ -1,0 +1,195 @@
+{
+ "id": "A3-075",
+ "child": "heldout-baby-a",
+ "created": [],
+ "seed_after": [
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 1166,
+    "child": 3,
+    "start": "2026-10-22T14:00:00Z",
+    "end": "2026-10-22T14:15:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 90.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 1166,
+    "child": 3,
+    "start": "2026-10-22T14:00:00Z",
+    "end": "2026-10-22T14:15:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 90.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "changes",
+   "before": {
+    "id": 856,
+    "child": 3,
+    "time": "2026-10-22T17:15:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "changes",
+    "id": 856,
+    "child": 3,
+    "time": "2026-10-22T17:15:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "sleep",
+   "before": {
+    "id": 424,
+    "child": 3,
+    "start": "2026-10-22T12:00:00Z",
+    "end": "2026-10-22T13:30:00Z",
+    "duration": "01:30:00",
+    "nap": true,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "sleep",
+    "id": 424,
+    "child": 3,
+    "start": "2026-10-22T12:00:00Z",
+    "end": "2026-10-22T13:30:00Z",
+    "duration": "01:30:00",
+    "nap": true,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "sleep",
+   "before": {
+    "id": 425,
+    "child": 3,
+    "start": "2026-10-22T15:20:00Z",
+    "end": "2026-10-22T17:05:00Z",
+    "duration": "01:45:00",
+    "nap": true,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "sleep",
+    "id": 425,
+    "child": 3,
+    "start": "2026-10-22T15:20:00Z",
+    "end": "2026-10-22T17:05:00Z",
+    "duration": "01:45:00",
+    "nap": true,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T16:00:00-03:00",
+   "chat": "9000001",
+   "text": "La última siesta fue de 12:20 a 14:05, duró 1 hora 45 minutos."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T16:00:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "cuanto duro la ultima siesta",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0149,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T16:00:00-03:00",
+   "unix": 1792695600.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4247,
+   "output_tokens": 199,
+   "reasoning_tokens": 113,
+   "usd": 0.0061545,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T16:00:00-03:00",
+   "unix": 1792695600.0,
+   "channel": "telegram",
+   "text": "La última siesta fue de 12:20 a 14:05, duró 1 hora 45 minutos.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792311387.613,
+   "ts": "2026-10-22T16:00:00-03:00",
+   "unix": 1793583563.045,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 28
+  }
+ ]
+}

@@ -1,0 +1,171 @@
+{
+ "id": "A1-075",
+ "child": "heldout-baby-b",
+ "created": [
+  {
+   "endpoint": "changes",
+   "id": 700,
+   "child": 4,
+   "time": "2026-10-22T10:00:00Z",
+   "wet": true,
+   "solid": true,
+   "color": "",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  },
+  {
+   "endpoint": "sleep",
+   "id": 368,
+   "child": 4,
+   "start": "2026-10-22T08:20:00Z",
+   "end": "2026-10-22T10:00:00Z",
+   "duration": "01:40:00",
+   "nap": true,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [
+  {
+   "endpoint": "timers",
+   "before": {
+    "id": 172,
+    "child": 4,
+    "name": "sleep",
+    "start": "2026-10-22T08:20:00Z",
+    "duration": "10 16:50:56.324083",
+    "user": 2
+   },
+   "after": null
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T07:38:00-03:00",
+   "chat": "9000001",
+   "text": "Buen día, Gonza.\nEsta noche te toca a vos.\nClima: lluvia, 16 a 17 C, 3.1 mm de lluvia.\nMenú de Cookidoo: Arroz blanco."
+  },
+  {
+   "at": "2026-10-22T07:38:00-03:00",
+   "chat": "9000002",
+   "text": "Buen día, Ceci.\nClima: lluvia, 16 a 17 C, 3.1 mm de lluvia.\nMenú de Cookidoo: Arroz blanco."
+  },
+  {
+   "at": "2026-10-22T07:40:00-03:00",
+   "chat": "9000001",
+   "text": "Anoté el pañal mojado y sucio de las 07:00 y el sueño de 05:20 a 07:00, 1 h 40 min."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T07:40:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "se desperto a las 7, le cambie el pañal tenia pis y caca, y ahora le voy a dar la mamadera",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0107,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T07:38:00-03:00",
+   "unix": 1792665480.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Buen día, Gonza.\nEsta noche te toca a vos.\nClima: lluvia, 16 a 17 C, 3.1 mm de lluvia.\nMenú de Cookidoo: Arroz blanco.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "family-push",
+   "routine": "morning",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T07:38:00-03:00",
+   "unix": 1792665480.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Buen día, Ceci.\nClima: lluvia, 16 a 17 C, 3.1 mm de lluvia.\nMenú de Cookidoo: Arroz blanco.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "family-push",
+   "routine": "morning",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T07:40:00-03:00",
+   "unix": 1792665600.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4173,
+   "output_tokens": 354,
+   "reasoning_tokens": 215,
+   "usd": 0.00672075,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T07:40:00-03:00",
+   "unix": 1792665600.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T07:40:00-03:00",
+   "unix": 1792665600.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T07:40:00-03:00",
+   "unix": 1792665600.0,
+   "channel": "telegram",
+   "text": "Anoté el pañal mojado y sucio de las 07:00 y el sueño de 05:20 a 07:00, 1 h 40 min.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792283083.23,
+   "ts": "2026-10-22T07:40:00-03:00",
+   "unix": 1793581867.444,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 90
+  }
+ ]
+}

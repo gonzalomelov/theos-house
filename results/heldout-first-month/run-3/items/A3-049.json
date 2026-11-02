@@ -1,0 +1,299 @@
+{
+ "id": "A3-049",
+ "child": "heldout-baby-a",
+ "created": [],
+ "seed_after": [
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 1443,
+    "child": 3,
+    "start": "2026-10-22T01:30:00Z",
+    "end": "2026-10-22T01:45:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 70.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 1443,
+    "child": 3,
+    "start": "2026-10-22T01:30:00Z",
+    "end": "2026-10-22T01:45:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 70.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 1444,
+    "child": 3,
+    "start": "2026-10-22T03:50:00Z",
+    "end": "2026-10-22T04:05:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 60.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 1444,
+    "child": 3,
+    "start": "2026-10-22T03:50:00Z",
+    "end": "2026-10-22T04:05:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 60.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 1445,
+    "child": 3,
+    "start": "2026-10-22T06:30:00Z",
+    "end": "2026-10-22T06:45:00Z",
+    "duration": "00:15:00",
+    "type": "breast milk",
+    "method": "left breast",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 1445,
+    "child": 3,
+    "start": "2026-10-22T06:30:00Z",
+    "end": "2026-10-22T06:45:00Z",
+    "duration": "00:15:00",
+    "type": "breast milk",
+    "method": "left breast",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 1446,
+    "child": 3,
+    "start": "2026-10-22T09:00:00Z",
+    "end": "2026-10-22T09:15:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 80.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 1446,
+    "child": 3,
+    "start": "2026-10-22T09:00:00Z",
+    "end": "2026-10-22T09:15:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 80.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 1447,
+    "child": 3,
+    "start": "2026-10-22T11:45:00Z",
+    "end": "2026-10-22T12:05:00Z",
+    "duration": "00:20:00",
+    "type": "breast milk",
+    "method": "right breast",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 1447,
+    "child": 3,
+    "start": "2026-10-22T11:45:00Z",
+    "end": "2026-10-22T12:05:00Z",
+    "duration": "00:20:00",
+    "type": "breast milk",
+    "method": "right breast",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 1448,
+    "child": 3,
+    "start": "2026-10-22T14:10:00Z",
+    "end": "2026-10-22T14:25:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 90.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 1448,
+    "child": 3,
+    "start": "2026-10-22T14:10:00Z",
+    "end": "2026-10-22T14:25:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 90.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "changes",
+   "before": {
+    "id": 1069,
+    "child": 3,
+    "time": "2026-10-22T12:00:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "changes",
+    "id": 1069,
+    "child": 3,
+    "time": "2026-10-22T12:00:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T12:00:00-03:00",
+   "chat": "9000002",
+   "text": "Lleva 5 tomas desde medianoche, 3 mamaderas de fórmula con 230 ml en total y 2 tomas de pecho. La última fue a las 11:25, mamadera de 90 ml."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T12:00:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "cuantas tomas lleva desde medianoche",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0072,
+ "brain_calls": {
+  "inference.baseten.co": 2
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T12:00:00-03:00",
+   "unix": 1792681200.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4312,
+   "output_tokens": 203,
+   "reasoning_tokens": 95,
+   "usd": 0.00625275,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T12:00:00-03:00",
+   "unix": 1792681200.0,
+   "channel": "telegram",
+   "text": "Lleva 5 tomas desde medianoche, 3 mamaderas de fórmula con 230 ml en total y 2 tomas de pecho. La última fue a las 11:25, mamadera de 90 ml.",
+   "chat_id": "9000002",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792292828.418,
+   "ts": "2026-10-22T12:00:00-03:00",
+   "unix": 1793587722.335,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 36
+  }
+ ]
+}

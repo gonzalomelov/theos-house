@@ -1,0 +1,114 @@
+{
+ "id": "A1-050",
+ "child": "heldout-baby-a",
+ "created": [],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T22:13:00-03:00",
+   "chat": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 01:30, 04:30. La luz espera a que se despierte.\nVentana para aspirar de 07:00 a 07:45.\nPor qué: Calentador de mamadera armado dos veces durante la noche y ventana de limpieza de piso armada 07:00-07:45 de día sin superposición con sueño previsto, Gonza queda de guardia."
+  },
+  {
+   "at": "2026-10-22T22:13:00-03:00",
+   "chat": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 01:30, 04:30. La luz espera a que se despierte.\nVentana para aspirar de 07:00 a 07:45.\nPor qué: Calentador de mamadera armado dos veces durante la noche y ventana de limpieza de piso armada 07:00-07:45 de día sin superposición con sueño previsto, Gonza queda de guardia."
+  },
+  {
+   "at": "2026-10-22T22:15:00-03:00",
+   "chat": "9000001",
+   "text": "Perfecto, cuando termine me contás y lo anotamos."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T22:15:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "ahora ceci le va a dar la teta",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0132,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T22:13:00-03:00",
+   "unix": 1792717980.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 01:30, 04:30. La luz espera a que se despierte.\nVentana para aspirar de 07:00 a 07:45.\nPor qué: Calentador de mamadera armado dos veces durante la noche y ventana de limpieza de piso armada 07:00-07:45 de día sin superposición con sueño previsto, Gonza queda de guardia.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T22:13:00-03:00",
+   "unix": 1792717980.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 01:30, 04:30. La luz espera a que se despierte.\nVentana para aspirar de 07:00 a 07:45.\nPor qué: Calentador de mamadera armado dos veces durante la noche y ventana de limpieza de piso armada 07:00-07:45 de día sin superposición con sueño previsto, Gonza queda de guardia.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T22:15:00-03:00",
+   "unix": 1792718100.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4131,
+   "output_tokens": 125,
+   "reasoning_tokens": 51,
+   "usd": 0.005695,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T22:15:00-03:00",
+   "unix": 1792718100.0,
+   "channel": "telegram",
+   "text": "Perfecto, cuando termine me contás y lo anotamos.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792335846.168,
+   "ts": "2026-10-22T22:15:00-03:00",
+   "unix": 1793581604.503,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 30
+  }
+ ]
+}

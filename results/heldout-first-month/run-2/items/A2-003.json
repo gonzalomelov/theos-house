@@ -1,0 +1,170 @@
+{
+ "id": "A2-003",
+ "child": "heldout-baby-b",
+ "created": [
+  {
+   "endpoint": "changes",
+   "id": 711,
+   "child": 4,
+   "time": "2026-10-22T06:25:00Z",
+   "wet": true,
+   "solid": true,
+   "color": "",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 953,
+    "child": 4,
+    "start": "2026-10-22T05:55:00Z",
+    "end": "2026-10-22T06:15:00Z",
+    "duration": "00:20:00",
+    "type": "breast milk",
+    "method": "right breast",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 953,
+    "child": 4,
+    "start": "2026-10-22T05:55:00Z",
+    "end": "2026-10-22T06:15:00Z",
+    "duration": "00:20:00",
+    "type": "breast milk",
+    "method": "right breast",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T03:23:00-03:00",
+   "chat": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 09:00 a 10:00.\nPor qué: El plan mantiene la noche sin ventanas automatizadas y arma la limpieza del piso de 09:00 a 10:00 mientras la ventana del día está libre."
+  },
+  {
+   "at": "2026-10-22T03:23:00-03:00",
+   "chat": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 09:00 a 10:00.\nPor qué: El plan mantiene la noche sin ventanas automatizadas y arma la limpieza del piso de 09:00 a 10:00 mientras la ventana del día está libre."
+  },
+  {
+   "at": "2026-10-22T03:25:00-03:00",
+   "chat": "9000002",
+   "text": "Anoté el pañal mojado y sucio de las 03:25."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T03:25:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "cambiado. pis y caca",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.016,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T03:23:00-03:00",
+   "unix": 1792650180.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 09:00 a 10:00.\nPor qué: El plan mantiene la noche sin ventanas automatizadas y arma la limpieza del piso de 09:00 a 10:00 mientras la ventana del día está libre.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T03:23:00-03:00",
+   "unix": 1792650180.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 09:00 a 10:00.\nPor qué: El plan mantiene la noche sin ventanas automatizadas y arma la limpieza del piso de 09:00 a 10:00 mientras la ventana del día está libre.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T03:25:00-03:00",
+   "unix": 1792650300.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4154,
+   "output_tokens": 254,
+   "reasoning_tokens": 154,
+   "usd": 0.006272,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T03:25:00-03:00",
+   "unix": 1792650300.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T03:25:00-03:00",
+   "unix": 1792650300.0,
+   "channel": "telegram",
+   "text": "Anoté el pañal mojado y sucio de las 03:25.",
+   "chat_id": "9000002",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792267667.792,
+   "ts": "2026-10-22T03:25:00-03:00",
+   "unix": 1793581982.883,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 20
+  }
+ ]
+}

@@ -1,0 +1,209 @@
+{
+ "id": "A3-072",
+ "child": "heldout-baby-c",
+ "created": [],
+ "seed_after": [
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 1601,
+    "child": 5,
+    "start": "2026-10-22T09:00:00Z",
+    "end": "2026-10-22T09:15:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 90.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 1601,
+    "child": 5,
+    "start": "2026-10-22T09:00:00Z",
+    "end": "2026-10-22T09:15:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 90.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 1602,
+    "child": 5,
+    "start": "2026-10-22T12:15:00Z",
+    "end": "2026-10-22T12:30:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 70.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 1602,
+    "child": 5,
+    "start": "2026-10-22T12:15:00Z",
+    "end": "2026-10-22T12:30:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 70.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "changes",
+   "before": {
+    "id": 1232,
+    "child": 5,
+    "time": "2026-10-22T09:20:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "changes",
+    "id": 1232,
+    "child": 5,
+    "time": "2026-10-22T09:20:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T10:28:00-03:00",
+   "chat": "9000001",
+   "text": "Buen día, Gonza.\nEsta noche te toca a vos.\nClima: nublado, 16 a 16 C.\nMenú de Cookidoo: Arroz blanco."
+  },
+  {
+   "at": "2026-10-22T10:28:00-03:00",
+   "chat": "9000002",
+   "text": "Buen día, Ceci.\nClima: nublado, 16 a 16 C.\nMenú de Cookidoo: Arroz blanco."
+  },
+  {
+   "at": "2026-10-22T10:30:00-03:00",
+   "chat": "9000002",
+   "text": "La última toma fue hoy a las 09:30, tomó 70 ml de fórmula en mamadera."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T10:30:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "cuanto tomo la ultima vez",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0101,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T10:28:00-03:00",
+   "unix": 1792675680.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Buen día, Gonza.\nEsta noche te toca a vos.\nClima: nublado, 16 a 16 C.\nMenú de Cookidoo: Arroz blanco.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "family-push",
+   "routine": "morning",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T10:28:00-03:00",
+   "unix": 1792675680.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Buen día, Ceci.\nClima: nublado, 16 a 16 C.\nMenú de Cookidoo: Arroz blanco.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "family-push",
+   "routine": "morning",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T10:30:00-03:00",
+   "unix": 1792675800.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4220,
+   "output_tokens": 226,
+   "reasoning_tokens": 143,
+   "usd": 0.0062355,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T10:30:00-03:00",
+   "unix": 1792675800.0,
+   "channel": "telegram",
+   "text": "La última toma fue hoy a las 09:30, tomó 70 ml de fórmula en mamadera.",
+   "chat_id": "9000002",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792287039.009,
+   "ts": "2026-10-22T10:30:00-03:00",
+   "unix": 1793588111.749,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 25
+  }
+ ]
+}

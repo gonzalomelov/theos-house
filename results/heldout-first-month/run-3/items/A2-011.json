@@ -1,0 +1,107 @@
+{
+ "id": "A2-011",
+ "child": "heldout-baby-c",
+ "created": [],
+ "seed_after": [
+  {
+   "endpoint": "changes",
+   "before": {
+    "id": 1013,
+    "child": 5,
+    "time": "2026-10-22T12:40:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "changes",
+    "id": 1013,
+    "child": 5,
+    "time": "2026-10-22T12:40:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T11:20:00-03:00",
+   "chat": "9000002",
+   "text": "Dale."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T11:20:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "lo revisé y el pañal estaba seco, no lo cambié",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0066,
+ "brain_calls": {
+  "inference.baseten.co": 2
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T11:20:00-03:00",
+   "unix": 1792678800.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4168,
+   "output_tokens": 72,
+   "reasoning_tokens": 11,
+   "usd": 0.005516,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T11:20:00-03:00",
+   "unix": 1792678800.0,
+   "channel": "telegram",
+   "text": "Dale.",
+   "chat_id": "9000002",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792291382.024,
+   "ts": "2026-10-22T11:20:00-03:00",
+   "unix": 1793586768.716,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 46
+  }
+ ]
+}

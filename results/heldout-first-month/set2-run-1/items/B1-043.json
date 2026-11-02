@@ -1,0 +1,174 @@
+{
+ "id": "B1-043",
+ "child": "heldout-baby-c",
+ "created": [],
+ "seed_after": [
+  {
+   "endpoint": "changes",
+   "before": {
+    "id": 724,
+    "child": 5,
+    "time": "2026-10-22T19:20:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "changes",
+    "id": 724,
+    "child": 5,
+    "time": "2026-10-22T19:20:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T16:30:00-03:00",
+   "chat": "9000001",
+   "text": "Anoté el pañal mojado de las 16:30."
+  },
+  {
+   "at": "2026-10-22T16:33:00-03:00",
+   "chat": "9000001",
+   "text": "Borré el pañal de las 16:30."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T16:30:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "pañal con pis",
+   "setup": true,
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-22T16:33:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "borra el pañal q mande recien, era el mismo q ya habia puesto ceci",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0155,
+ "brain_calls": {
+  "inference.baseten.co": 4
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T16:30:00-03:00",
+   "unix": 1792697400.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4148,
+   "output_tokens": 497,
+   "reasoning_tokens": 406,
+   "usd": 0.00729725,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T16:30:00-03:00",
+   "unix": 1792697400.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T16:30:00-03:00",
+   "unix": 1792697400.0,
+   "channel": "telegram",
+   "text": "Anoté el pañal mojado de las 16:30.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792314668.215,
+   "ts": "2026-10-22T16:30:00-03:00",
+   "unix": 1793582082.461,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 13
+  },
+  {
+   "kind": "brain_call",
+   "t": 300.0,
+   "ts": "2026-10-22T16:33:00-03:00",
+   "unix": 1792697580.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4218,
+   "output_tokens": 159,
+   "reasoning_tokens": 80,
+   "usd": 0.00594825,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 300.0,
+   "ts": "2026-10-22T16:33:00-03:00",
+   "unix": 1792697580.0,
+   "name": "delete_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 300.0,
+   "ts": "2026-10-22T16:33:00-03:00",
+   "unix": 1792697580.0,
+   "channel": "telegram",
+   "text": "Borré el pañal de las 16:30.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792314659.715,
+   "ts": "2026-10-22T16:33:00-03:00",
+   "unix": 1793582090.961,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 66
+  }
+ ]
+}

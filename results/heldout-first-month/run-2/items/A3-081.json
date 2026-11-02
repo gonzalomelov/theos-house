@@ -1,0 +1,169 @@
+{
+ "id": "A3-081",
+ "child": "heldout-baby-a",
+ "created": [],
+ "seed_after": [
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 1177,
+    "child": 3,
+    "start": "2026-10-22T06:00:00Z",
+    "end": "2026-10-22T06:15:00Z",
+    "duration": "00:15:00",
+    "type": "breast milk",
+    "method": "left breast",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 1177,
+    "child": 3,
+    "start": "2026-10-22T06:00:00Z",
+    "end": "2026-10-22T06:15:00Z",
+    "duration": "00:15:00",
+    "type": "breast milk",
+    "method": "left breast",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "changes",
+   "before": {
+    "id": 860,
+    "child": 3,
+    "time": "2026-10-22T04:00:00Z",
+    "wet": true,
+    "solid": true,
+    "color": "yellow",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "changes",
+    "id": 860,
+    "child": 3,
+    "time": "2026-10-22T04:00:00Z",
+    "wet": true,
+    "solid": true,
+    "color": "yellow",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "changes",
+   "before": {
+    "id": 861,
+    "child": 3,
+    "time": "2026-10-22T08:30:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "changes",
+    "id": 861,
+    "child": 3,
+    "time": "2026-10-22T08:30:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T07:15:00-03:00",
+   "chat": "9000002",
+   "text": "Yes, his last dirty diaper was at 01:00 today and it was yellow."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T07:15:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "was his last poop yellow",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0067,
+ "brain_calls": {
+  "inference.baseten.co": 2
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T07:15:00-03:00",
+   "unix": 1792664100.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4195,
+   "output_tokens": 123,
+   "reasoning_tokens": 43,
+   "usd": 0.0057665,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T07:15:00-03:00",
+   "unix": 1792664100.0,
+   "channel": "telegram",
+   "text": "Yes, his last dirty diaper was at 01:00 today and it was yellow.",
+   "chat_id": "9000002",
+   "guard_lang": null
+  },
+  {
+   "kind": "turn",
+   "t": -1792279841.749,
+   "ts": "2026-10-22T07:15:00-03:00",
+   "unix": 1793583608.909,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 24
+  }
+ ]
+}

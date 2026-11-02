@@ -1,0 +1,151 @@
+{
+ "id": "A3-040",
+ "child": "heldout-baby-b",
+ "created": [
+  {
+   "endpoint": "feedings",
+   "id": 1053,
+   "child": 4,
+   "start": "2026-10-22T17:55:00Z",
+   "end": "2026-10-22T18:10:00Z",
+   "duration": "00:15:00",
+   "type": "formula",
+   "method": "bottle",
+   "amount": 90.0,
+   "notes": "length not said, milk type not said",
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T15:10:00-03:00",
+   "chat": "9000001",
+   "text": "Anoté la mamadera de 90 ml de las 15:10."
+  },
+  {
+   "at": "2026-10-22T15:11:00-03:00",
+   "chat": "9000001",
+   "text": "Me parece que ya había anotado esa mamadera de 90 ml de las 15:10, ¿la mandaste dos veces o fueron dos tomas?"
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T15:10:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "eh bueno tomo la mamadera de noventa y ahora esta tranqui",
+   "setup": true,
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-22T15:11:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "eh bueno tomó la mamadera de 90 y ahora está tranqui",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0147,
+ "brain_calls": {
+  "inference.baseten.co": 4
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T15:10:00-03:00",
+   "unix": 1792692600.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4136,
+   "output_tokens": 327,
+   "reasoning_tokens": 241,
+   "usd": 0.00655975,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T15:10:00-03:00",
+   "unix": 1792692600.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T15:10:00-03:00",
+   "unix": 1792692600.0,
+   "channel": "telegram",
+   "text": "Anoté la mamadera de 90 ml de las 15:10.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792308755.242,
+   "ts": "2026-10-22T15:10:00-03:00",
+   "unix": 1793583195.415,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 57
+  },
+  {
+   "kind": "brain_call",
+   "t": 180.0,
+   "ts": "2026-10-22T15:11:00-03:00",
+   "unix": 1792692660.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4222,
+   "output_tokens": 226,
+   "reasoning_tokens": 106,
+   "usd": 0.006238,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 180.0,
+   "ts": "2026-10-22T15:11:00-03:00",
+   "unix": 1792692660.0,
+   "channel": "telegram",
+   "text": "Me parece que ya había anotado esa mamadera de 90 ml de las 15:10, ¿la mandaste dos veces o fueron dos tomas?",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792308748.642,
+   "ts": "2026-10-22T15:11:00-03:00",
+   "unix": 1793583202.015,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 52
+  }
+ ]
+}

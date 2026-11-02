@@ -1,0 +1,136 @@
+{
+ "id": "A2-055",
+ "child": "heldout-baby-a",
+ "created": [
+  {
+   "endpoint": "sleep",
+   "id": 512,
+   "child": 3,
+   "start": "2026-10-22T11:00:00Z",
+   "end": "2026-10-22T12:00:00Z",
+   "duration": "01:00:00",
+   "nap": true,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T09:08:00-03:00",
+   "chat": "9000001",
+   "text": "Buen día, Gonza.\nEsta noche te toca a vos.\nClima: nublado, 16 a 16 C.\nMenú de Cookidoo: Arroz blanco."
+  },
+  {
+   "at": "2026-10-22T09:08:00-03:00",
+   "chat": "9000002",
+   "text": "Buen día, Ceci.\nClima: nublado, 16 a 16 C.\nMenú de Cookidoo: Arroz blanco."
+  },
+  {
+   "at": "2026-10-22T09:10:00-03:00",
+   "chat": "9000002",
+   "text": "Anoté el sueño de 08:00 a 09:00, 1 h 00 min."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T09:10:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "durmio una siesta de 8 a 9",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0085,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T09:08:00-03:00",
+   "unix": 1792670880.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Buen día, Gonza.\nEsta noche te toca a vos.\nClima: nublado, 16 a 16 C.\nMenú de Cookidoo: Arroz blanco.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "family-push",
+   "routine": "morning",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T09:08:00-03:00",
+   "unix": 1792670880.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Buen día, Ceci.\nClima: nublado, 16 a 16 C.\nMenú de Cookidoo: Arroz blanco.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "family-push",
+   "routine": "morning",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T09:10:00-03:00",
+   "unix": 1792671000.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4143,
+   "output_tokens": 114,
+   "reasoning_tokens": 26,
+   "usd": 0.00566325,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T09:10:00-03:00",
+   "unix": 1792671000.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T09:10:00-03:00",
+   "unix": 1792671000.0,
+   "channel": "telegram",
+   "text": "Anoté el sueño de 08:00 a 09:00, 1 h 00 min.",
+   "chat_id": "9000002",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792283258.2,
+   "ts": "2026-10-22T09:10:00-03:00",
+   "unix": 1793587092.544,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 26
+  }
+ ]
+}

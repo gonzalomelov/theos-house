@@ -1,0 +1,76 @@
+{
+ "id": "A5-020",
+ "child": "heldout-baby-b",
+ "created": [],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T15:45:00-03:00",
+   "chat": "9000002",
+   "text": "Felices 3 semanas para Theo, che. Acá va un poemita para él:\n\nTres semanitas, Theo querido,\nojitos que recién se abren al mundo,\nmanitos chiquitas, sueño profundo,\ny en casa todo es más sentido.\n\nTres semanas de amor infinito,\nde noches cortas y mimos sin fin,\ncrecés tan rápido, tan chiquitín,\nnuestro bebito tan bonito."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T15:45:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "escribime un poema para theo q hoy cumple 3 semanas",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0078,
+ "brain_calls": {
+  "inference.baseten.co": 2
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T15:45:00-03:00",
+   "unix": 1792694700.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4135,
+   "output_tokens": 354,
+   "reasoning_tokens": 203,
+   "usd": 0.00667325,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T15:45:00-03:00",
+   "unix": 1792694700.0,
+   "channel": "telegram",
+   "text": "Felices 3 semanas para Theo, che. Acá va un poemita para él:\n\nTres semanitas, Theo querido,\nojitos que recién se abren al mundo,\nmanitos chiquitas, sueño profundo,\ny en casa todo es más sentido.\n\nTres semanas de amor infinito,\nde noches cortas y mimos sin fin,\ncrecés tan rápido, tan chiquitín,\nnuestro bebito tan bonito.",
+   "chat_id": "9000002",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792309328.556,
+   "ts": "2026-10-22T15:45:00-03:00",
+   "unix": 1793584722.153,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 51
+  }
+ ]
+}

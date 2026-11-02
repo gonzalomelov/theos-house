@@ -1,0 +1,200 @@
+{
+ "id": "A3-025",
+ "child": "heldout-baby-a",
+ "created": [
+  {
+   "endpoint": "feedings",
+   "id": 1035,
+   "child": 3,
+   "start": "2026-10-22T05:53:00Z",
+   "end": "2026-10-22T06:05:00Z",
+   "duration": "00:12:00",
+   "type": "breast milk",
+   "method": "left breast",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  },
+  {
+   "endpoint": "notes",
+   "id": 423,
+   "child": 3,
+   "note": "Night wake-up handled by Gonza",
+   "image": null,
+   "time": "2026-10-22T06:06:00Z",
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T03:03:00-03:00",
+   "chat": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:00 a 08:00.\nPor qué: Piso programado para limpieza 07:00-08:00 en ventana diurna sin solapamiento con siestas previstas, sin otras ventanas armadas hasta las 15:03."
+  },
+  {
+   "at": "2026-10-22T03:03:00-03:00",
+   "chat": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:00 a 08:00.\nPor qué: Piso programado para limpieza 07:00-08:00 en ventana diurna sin solapamiento con siestas previstas, sin otras ventanas armadas hasta las 15:03."
+  },
+  {
+   "at": "2026-10-22T03:05:00-03:00",
+   "chat": "9000002",
+   "text": "Anoté la toma de pecho izquierdo de 12 min de las 03:05."
+  },
+  {
+   "at": "2026-10-22T03:06:00-03:00",
+   "chat": "9000002",
+   "text": "Ya tengo anotada una toma de pecho izquierdo de 12 min a las 03:05, ¿la mandaste dos veces o fueron dos tomas distintas?"
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T03:05:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "le di teta izq 12 min",
+   "setup": true,
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-22T03:06:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "le di teta izq 12 min",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0195,
+ "brain_calls": {
+  "inference.baseten.co": 5
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T03:03:00-03:00",
+   "unix": 1792648980.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:00 a 08:00.\nPor qué: Piso programado para limpieza 07:00-08:00 en ventana diurna sin solapamiento con siestas previstas, sin otras ventanas armadas hasta las 15:03.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T03:03:00-03:00",
+   "unix": 1792648980.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:00 a 08:00.\nPor qué: Piso programado para limpieza 07:00-08:00 en ventana diurna sin solapamiento con siestas previstas, sin otras ventanas armadas hasta las 15:03.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T03:05:00-03:00",
+   "unix": 1792649100.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4131,
+   "output_tokens": 324,
+   "reasoning_tokens": 238,
+   "usd": 0.00654075,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T03:05:00-03:00",
+   "unix": 1792649100.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T03:05:00-03:00",
+   "unix": 1792649100.0,
+   "channel": "telegram",
+   "text": "Anoté la toma de pecho izquierdo de 12 min de las 03:05.",
+   "chat_id": "9000002",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792265505.529,
+   "ts": "2026-10-22T03:05:00-03:00",
+   "unix": 1793582945.127,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 21
+  },
+  {
+   "kind": "brain_call",
+   "t": 180.0,
+   "ts": "2026-10-22T03:06:00-03:00",
+   "unix": 1792649160.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4224,
+   "output_tokens": 259,
+   "reasoning_tokens": 165,
+   "usd": 0.00638075,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 180.0,
+   "ts": "2026-10-22T03:06:00-03:00",
+   "unix": 1792649160.0,
+   "channel": "telegram",
+   "text": "Ya tengo anotada una toma de pecho izquierdo de 12 min a las 03:05, ¿la mandaste dos veces o fueron dos tomas distintas?",
+   "chat_id": "9000002",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792265498.013,
+   "ts": "2026-10-22T03:06:00-03:00",
+   "unix": 1793582952.643,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 21
+  }
+ ]
+}

@@ -347,7 +347,10 @@ RED_FLAG = re.compile(
     r"(vomit|throw)\w* (up )?(for|all) (hours|day|night|the whole \w+)|(won'?t|can'?t|cannot|isn'?t|is not|not) (keep|keeping) anything down|"
     r"(vomit\w*|throw\w* up|threw up) everything|vomit\w* todo|no retiene nada|vomit\w* (hace|desde hace) horas|"
     r"weak suck\w*|(can'?t|cannot|won'?t|isn'?t able to) suck|weak cry\w*|"
-    r"(won'?t|will not|isn'?t|is not|not|refus\w*( to)?) (feed|feeding|eat|eating)\b|refus\w* (every|all|each|the) (feeds?|bottles?|breast)|"
+    r"(won'?t|will not|isn'?t|is not|not|refus\w*( to)?) (feed|feeding|eat|eating)\b|"
+    # Held-out run-3: "he hasnt fed since like 9am, wont latch at all" got no line when the meaning screen said safe.
+    r"(hasn'?t|hasnt|has not|haven'?t) (fed|eaten|nursed|had a (feed|bottle))\b|(won'?t|wont|will not|can'?t|isn'?t|not) "
+    r"latch\w*|no se (prende|engancha)\w*|no (come|toma|mama) (nada )?desde\b|refus\w* (every|all|each|the) (feeds?|bottles?|breast)|"
     r"can'?t finish (a |his |her |any |the )?feeds?|(won'?t|doesn'?t) wake (up )?(for|to) (feeds?|eat)|"
     r"blood (in|on) (his |her |the )?(stool|poop|poo|diaper|nappy|vomit|spit[- ]?up)|bloody (stool|poop|diaper|nappy|vomit)|"
     r"sangre en (la |el |las )?(caca|pa[ñn]al|heces|v[oó]mito|deposici\w*)|caca con sangre|v[oó]mito con sangre|deca[ií]d[oa]|"

@@ -1,0 +1,267 @@
+{
+ "id": "A3-057",
+ "child": "heldout-baby-c",
+ "created": [],
+ "seed_after": [
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 1559,
+    "child": 5,
+    "start": "2026-10-22T05:00:00Z",
+    "end": "2026-10-22T05:15:00Z",
+    "duration": "00:15:00",
+    "type": "breast milk",
+    "method": "bottle",
+    "amount": 70.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 1559,
+    "child": 5,
+    "start": "2026-10-22T05:00:00Z",
+    "end": "2026-10-22T05:15:00Z",
+    "duration": "00:15:00",
+    "type": "breast milk",
+    "method": "bottle",
+    "amount": 70.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 1561,
+    "child": 5,
+    "start": "2026-10-22T08:30:00Z",
+    "end": "2026-10-22T08:45:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 80.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 1561,
+    "child": 5,
+    "start": "2026-10-22T08:30:00Z",
+    "end": "2026-10-22T08:45:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 80.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 1563,
+    "child": 5,
+    "start": "2026-10-22T12:00:00Z",
+    "end": "2026-10-22T12:15:00Z",
+    "duration": "00:15:00",
+    "type": "breast milk",
+    "method": "bottle",
+    "amount": 90.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 1563,
+    "child": 5,
+    "start": "2026-10-22T12:00:00Z",
+    "end": "2026-10-22T12:15:00Z",
+    "duration": "00:15:00",
+    "type": "breast milk",
+    "method": "bottle",
+    "amount": 90.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 1565,
+    "child": 5,
+    "start": "2026-10-22T15:00:00Z",
+    "end": "2026-10-22T15:15:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 100.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 1565,
+    "child": 5,
+    "start": "2026-10-22T15:00:00Z",
+    "end": "2026-10-22T15:15:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 100.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 1567,
+    "child": 5,
+    "start": "2026-10-22T18:30:00Z",
+    "end": "2026-10-22T18:45:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 60.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 1567,
+    "child": 5,
+    "start": "2026-10-22T18:30:00Z",
+    "end": "2026-10-22T18:45:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 60.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "changes",
+   "before": {
+    "id": 1104,
+    "child": 5,
+    "time": "2026-10-22T12:15:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "changes",
+    "id": 1104,
+    "child": 5,
+    "time": "2026-10-22T12:15:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T16:40:00-03:00",
+   "chat": "9000001",
+   "text": "Hoy lleva 240 ml de fórmula en 3 mamaderas."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T16:40:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "cuanto lleva de formula hoy",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0071,
+ "brain_calls": {
+  "inference.baseten.co": 2
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T16:40:00-03:00",
+   "unix": 1792698000.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4290,
+   "output_tokens": 118,
+   "reasoning_tokens": 44,
+   "usd": 0.005864,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T16:40:00-03:00",
+   "unix": 1792698000.0,
+   "channel": "telegram",
+   "text": "Hoy lleva 240 ml de fórmula en 3 mamaderas.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792309391.315,
+   "ts": "2026-10-22T16:40:00-03:00",
+   "unix": 1793587959.441,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 27
+  }
+ ]
+}

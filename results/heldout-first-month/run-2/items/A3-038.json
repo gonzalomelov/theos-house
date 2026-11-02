@@ -1,0 +1,222 @@
+{
+ "id": "A3-038",
+ "child": "heldout-baby-b",
+ "created": [
+  {
+   "endpoint": "feedings",
+   "id": 1051,
+   "child": 4,
+   "start": "2026-10-22T03:30:00Z",
+   "end": "2026-10-22T03:45:00Z",
+   "duration": "00:15:00",
+   "type": "formula",
+   "method": "bottle",
+   "amount": 60.0,
+   "notes": "length not said, milk type not said",
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 1050,
+    "child": 4,
+    "start": "2026-10-22T00:50:00Z",
+    "end": "2026-10-22T01:05:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 90.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 1050,
+    "child": 4,
+    "start": "2026-10-22T00:50:00Z",
+    "end": "2026-10-22T01:05:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 90.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T00:43:00-03:00",
+   "chat": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:00 a 07:45.\nPor qué: Plan hasta las 12:43 arma limpieza de piso 07:00-07:45 sin solaparse con sueño previsto y deja las demás rutinas desactivadas."
+  },
+  {
+   "at": "2026-10-22T00:43:00-03:00",
+   "chat": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:00 a 07:45.\nPor qué: Plan hasta las 12:43 arma limpieza de piso 07:00-07:45 sin solaparse con sueño previsto y deja las demás rutinas desactivadas."
+  },
+  {
+   "at": "2026-10-22T00:45:00-03:00",
+   "chat": "9000002",
+   "text": "Logged the 00:45 bottle of 60 ml."
+  },
+  {
+   "at": "2026-10-22T00:46:00-03:00",
+   "chat": "9000002",
+   "text": "I already have a 60 ml bottle at 00:45, was this sent twice or was there another 60 ml bottle at 00:46?"
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T00:45:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "60ml bottle",
+   "setup": true,
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-22T00:46:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "60 ml bottle",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.019,
+ "brain_calls": {
+  "inference.baseten.co": 5
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T00:43:00-03:00",
+   "unix": 1792640580.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:00 a 07:45.\nPor qué: Plan hasta las 12:43 arma limpieza de piso 07:00-07:45 sin solaparse con sueño previsto y deja las demás rutinas desactivadas.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T00:43:00-03:00",
+   "unix": 1792640580.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:00 a 07:45.\nPor qué: Plan hasta las 12:43 arma limpieza de piso 07:00-07:45 sin solaparse con sueño previsto y deja las demás rutinas desactivadas.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T00:45:00-03:00",
+   "unix": 1792640700.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4150,
+   "output_tokens": 194,
+   "reasoning_tokens": 108,
+   "usd": 0.006012,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T00:45:00-03:00",
+   "unix": 1792640700.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T00:45:00-03:00",
+   "unix": 1792640700.0,
+   "channel": "telegram",
+   "text": "Logged the 00:45 bottle of 60 ml.",
+   "chat_id": "9000002",
+   "guard_lang": null
+  },
+  {
+   "kind": "turn",
+   "t": -1792256874.608,
+   "ts": "2026-10-22T00:45:00-03:00",
+   "unix": 1793583176.049,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 11
+  },
+  {
+   "kind": "brain_call",
+   "t": 180.0,
+   "ts": "2026-10-22T00:46:00-03:00",
+   "unix": 1792640760.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4211,
+   "output_tokens": 186,
+   "reasoning_tokens": 93,
+   "usd": 0.00605425,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 180.0,
+   "ts": "2026-10-22T00:46:00-03:00",
+   "unix": 1792640760.0,
+   "channel": "telegram",
+   "text": "I already have a 60 ml bottle at 00:45, was this sent twice or was there another 60 ml bottle at 00:46?",
+   "chat_id": "9000002",
+   "guard_lang": null
+  },
+  {
+   "kind": "turn",
+   "t": -1792256868.306,
+   "ts": "2026-10-22T00:46:00-03:00",
+   "unix": 1793583182.351,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 12
+  }
+ ]
+}

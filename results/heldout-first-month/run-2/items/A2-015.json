@@ -1,0 +1,121 @@
+{
+ "id": "A2-015",
+ "child": "heldout-baby-a",
+ "created": [
+  {
+   "endpoint": "changes",
+   "id": 720,
+   "child": 3,
+   "time": "2026-10-22T16:00:00Z",
+   "wet": true,
+   "solid": false,
+   "color": "",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  },
+  {
+   "endpoint": "changes",
+   "id": 721,
+   "child": 3,
+   "time": "2026-10-22T16:00:00Z",
+   "wet": false,
+   "solid": true,
+   "color": "",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T13:00:00-03:00",
+   "chat": "9000002",
+   "text": "Anoté el pañal mojado de las 13:00 y el pañal sucio de las 13:00."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T13:00:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "le cambie dos pañales seguidos, el primero con pis y el segundo con caca",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0077,
+ "brain_calls": {
+  "inference.baseten.co": 2
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T13:00:00-03:00",
+   "unix": 1792684800.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4142,
+   "output_tokens": 312,
+   "reasoning_tokens": 206,
+   "usd": 0.0065035,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T13:00:00-03:00",
+   "unix": 1792684800.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T13:00:00-03:00",
+   "unix": 1792684800.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T13:00:00-03:00",
+   "unix": 1792684800.0,
+   "channel": "telegram",
+   "text": "Anoté el pañal mojado de las 13:00 y el pañal sucio de las 13:00.",
+   "chat_id": "9000002",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792302109.572,
+   "ts": "2026-10-22T13:00:00-03:00",
+   "unix": 1793582041.104,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 72
+  }
+ ]
+}

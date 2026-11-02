@@ -1,0 +1,197 @@
+{
+ "id": "A3-023",
+ "child": "heldout-baby-b",
+ "created": [
+  {
+   "endpoint": "feedings",
+   "id": 1411,
+   "child": 4,
+   "start": "2026-10-22T03:55:00Z",
+   "end": "2026-10-22T04:10:00Z",
+   "duration": "00:15:00",
+   "type": "breast milk",
+   "method": "left breast",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T01:38:00-03:00",
+   "chat": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:00 a 07:45.\nPor qué: Piso programado para limpieza de 07:00 a 07:45 de día y fuera de los sueños previstos, sin otras ventanas armadas, vos Gonza y vos Ceci quedan avisados."
+  },
+  {
+   "at": "2026-10-22T01:38:00-03:00",
+   "chat": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:00 a 07:45.\nPor qué: Piso programado para limpieza de 07:00 a 07:45 de día y fuera de los sueños previstos, sin otras ventanas armadas, vos Gonza y vos Ceci quedan avisados."
+  },
+  {
+   "at": "2026-10-22T01:40:00-03:00",
+   "chat": "9000002",
+   "text": "Logged the 01:40 left breast feed of 15 min."
+  },
+  {
+   "at": "2026-10-22T01:41:00-03:00",
+   "chat": "9000002",
+   "text": "Fixed the 01:40 breast feed: 01:40 → 01:10."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T01:40:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "fed him left side 15 min",
+   "setup": true,
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-22T01:41:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "that was at 1:10 btw forgot to send",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0194,
+ "brain_calls": {
+  "inference.baseten.co": 5
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T01:38:00-03:00",
+   "unix": 1792643880.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:00 a 07:45.\nPor qué: Piso programado para limpieza de 07:00 a 07:45 de día y fuera de los sueños previstos, sin otras ventanas armadas, vos Gonza y vos Ceci quedan avisados.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T01:38:00-03:00",
+   "unix": 1792643880.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:00 a 07:45.\nPor qué: Piso programado para limpieza de 07:00 a 07:45 de día y fuera de los sueños previstos, sin otras ventanas armadas, vos Gonza y vos Ceci quedan avisados.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T01:40:00-03:00",
+   "unix": 1792644000.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4119,
+   "output_tokens": 134,
+   "reasoning_tokens": 48,
+   "usd": 0.00571825,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T01:40:00-03:00",
+   "unix": 1792644000.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T01:40:00-03:00",
+   "unix": 1792644000.0,
+   "channel": "telegram",
+   "text": "Logged the 01:40 left breast feed of 15 min.",
+   "chat_id": "9000002",
+   "guard_lang": null
+  },
+  {
+   "kind": "turn",
+   "t": -1792255835.347,
+   "ts": "2026-10-22T01:40:00-03:00",
+   "unix": 1793587515.403,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 24
+  },
+  {
+   "kind": "brain_call",
+   "t": 180.0,
+   "ts": "2026-10-22T01:41:00-03:00",
+   "unix": 1792644060.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4192,
+   "output_tokens": 170,
+   "reasoning_tokens": 73,
+   "usd": 0.0059625,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 180.0,
+   "ts": "2026-10-22T01:41:00-03:00",
+   "unix": 1792644060.0,
+   "name": "edit_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 180.0,
+   "ts": "2026-10-22T01:41:00-03:00",
+   "unix": 1792644060.0,
+   "channel": "telegram",
+   "text": "Fixed the 01:40 breast feed: 01:40 → 01:10.",
+   "chat_id": "9000002",
+   "guard_lang": null
+  },
+  {
+   "kind": "turn",
+   "t": -1792255828.428,
+   "ts": "2026-10-22T01:41:00-03:00",
+   "unix": 1793587522.322,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 35
+  }
+ ]
+}

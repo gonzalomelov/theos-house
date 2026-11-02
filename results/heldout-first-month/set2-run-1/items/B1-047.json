@@ -1,0 +1,189 @@
+{
+ "id": "B1-047",
+ "child": "heldout-baby-c",
+ "created": [
+  {
+   "endpoint": "feedings",
+   "id": 962,
+   "child": 5,
+   "start": "2026-10-22T06:24:00Z",
+   "end": "2026-10-22T06:39:00Z",
+   "duration": "00:15:00",
+   "type": "formula",
+   "method": "bottle",
+   "amount": 70.0,
+   "notes": "length not said, milk type not said",
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T03:37:00-03:00",
+   "chat": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 04:45. La luz espera a que se despierte.\nVentana para aspirar de 07:00 a 08:00.\nPor qué: Ventana de limpieza de piso armada para las 07:00 y precalentado de mamadera a las 04:45 planificado para la ventana nocturna, vos Gonza estás de guardia."
+  },
+  {
+   "at": "2026-10-22T03:37:00-03:00",
+   "chat": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 04:45. La luz espera a que se despierte.\nVentana para aspirar de 07:00 a 08:00.\nPor qué: Ventana de limpieza de piso armada para las 07:00 y precalentado de mamadera a las 04:45 planificado para la ventana nocturna, vos Gonza estás de guardia."
+  },
+  {
+   "at": "2026-10-22T03:39:00-03:00",
+   "chat": "9000001",
+   "text": "Anoté la mamadera de 70 ml de las 03:39."
+  },
+  {
+   "at": "2026-10-22T03:40:00-03:00",
+   "chat": "9000001",
+   "text": "Me parece que es el mismo de recién, ¿lo mandaste dos veces o fueron dos mamaderas de 70 ml?"
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T03:39:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "tomo 70 d mamadera",
+   "setup": true,
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-22T03:40:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "tomo 70 d mamadera",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0201,
+ "brain_calls": {
+  "inference.baseten.co": 5
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T03:37:00-03:00",
+   "unix": 1792651020.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 04:45. La luz espera a que se despierte.\nVentana para aspirar de 07:00 a 08:00.\nPor qué: Ventana de limpieza de piso armada para las 07:00 y precalentado de mamadera a las 04:45 planificado para la ventana nocturna, vos Gonza estás de guardia.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T03:37:00-03:00",
+   "unix": 1792651020.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 04:45. La luz espera a que se despierte.\nVentana para aspirar de 07:00 a 08:00.\nPor qué: Ventana de limpieza de piso armada para las 07:00 y precalentado de mamadera a las 04:45 planificado para la ventana nocturna, vos Gonza estás de guardia.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T03:39:00-03:00",
+   "unix": 1792651140.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4129,
+   "output_tokens": 302,
+   "reasoning_tokens": 198,
+   "usd": 0.00644475,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T03:39:00-03:00",
+   "unix": 1792651140.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T03:39:00-03:00",
+   "unix": 1792651140.0,
+   "channel": "telegram",
+   "text": "Anoté la mamadera de 70 ml de las 03:39.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792268289.044,
+   "ts": "2026-10-22T03:39:00-03:00",
+   "unix": 1793582201.611,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 18
+  },
+  {
+   "kind": "brain_call",
+   "t": 180.0,
+   "ts": "2026-10-22T03:40:00-03:00",
+   "unix": 1792651200.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4207,
+   "output_tokens": 214,
+   "reasoning_tokens": 128,
+   "usd": 0.00616825,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 180.0,
+   "ts": "2026-10-22T03:40:00-03:00",
+   "unix": 1792651200.0,
+   "channel": "telegram",
+   "text": "Me parece que es el mismo de recién, ¿lo mandaste dos veces o fueron dos mamaderas de 70 ml?",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792268281.996,
+   "ts": "2026-10-22T03:40:00-03:00",
+   "unix": 1793582208.659,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 18
+  }
+ ]
+}

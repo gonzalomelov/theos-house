@@ -1,0 +1,202 @@
+{
+ "id": "A3-015",
+ "child": "heldout-baby-a",
+ "created": [
+  {
+   "endpoint": "sleep",
+   "id": 397,
+   "child": 3,
+   "start": "2026-10-22T16:10:00Z",
+   "end": "2026-10-22T17:40:00Z",
+   "duration": "01:30:00",
+   "nap": true,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 1017,
+    "child": 3,
+    "start": "2026-10-22T15:40:00Z",
+    "end": "2026-10-22T16:00:00Z",
+    "duration": "00:20:00",
+    "type": "breast milk",
+    "method": "left breast",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 1017,
+    "child": 3,
+    "start": "2026-10-22T15:40:00Z",
+    "end": "2026-10-22T16:00:00Z",
+    "duration": "00:20:00",
+    "type": "breast milk",
+    "method": "left breast",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "timers",
+   "before": {
+    "id": 211,
+    "child": 3,
+    "name": "sleep",
+    "start": "2026-10-22T16:10:00Z",
+    "duration": "10 09:16:27.495503",
+    "user": 2
+   },
+   "after": null
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T15:00:00-03:00",
+   "chat": "9000002",
+   "text": "Anoté el sueño de 13:10 a 15:00, 1 h 50 min."
+  },
+  {
+   "at": "2026-10-22T15:03:00-03:00",
+   "chat": "9000002",
+   "text": "Corregí el sueño de las 15:00: 15:00 → 14:40."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T15:00:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "se desperto",
+   "setup": true,
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-22T15:03:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "en realidad se desperto a las 14:40, recien lo anoto",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0225,
+ "brain_calls": {
+  "inference.baseten.co": 5
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T15:00:00-03:00",
+   "unix": 1792692000.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4172,
+   "output_tokens": 229,
+   "reasoning_tokens": 162,
+   "usd": 0.00618825,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T15:00:00-03:00",
+   "unix": 1792692000.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T15:00:00-03:00",
+   "unix": 1792692000.0,
+   "channel": "telegram",
+   "text": "Anoté el sueño de 13:10 a 15:00, 1 h 50 min.",
+   "chat_id": "9000002",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792308551.774,
+   "ts": "2026-10-22T15:00:00-03:00",
+   "unix": 1793582798.881,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 11
+  },
+  {
+   "kind": "brain_call",
+   "t": 300.0,
+   "ts": "2026-10-22T15:03:00-03:00",
+   "unix": 1792692180.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4247,
+   "output_tokens": 194,
+   "reasoning_tokens": 71,
+   "usd": 0.00613325,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 300.0,
+   "ts": "2026-10-22T15:03:00-03:00",
+   "unix": 1792692180.0,
+   "name": "edit_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 300.0,
+   "ts": "2026-10-22T15:03:00-03:00",
+   "unix": 1792692180.0,
+   "channel": "telegram",
+   "text": "Corregí el sueño de las 15:00: 15:00 → 14:40.",
+   "chat_id": "9000002",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792308536.553,
+   "ts": "2026-10-22T15:03:00-03:00",
+   "unix": 1793582814.102,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 52
+  }
+ ]
+}

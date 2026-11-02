@@ -1,0 +1,248 @@
+{
+ "id": "A1-069",
+ "child": "heldout-baby-b",
+ "created": [
+  {
+   "endpoint": "feedings",
+   "id": 939,
+   "child": 4,
+   "start": "2026-10-22T12:45:00Z",
+   "end": "2026-10-22T13:00:00Z",
+   "duration": "00:15:00",
+   "type": "breast milk",
+   "method": "left breast",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  },
+  {
+   "endpoint": "sleep",
+   "id": 366,
+   "child": 4,
+   "start": "2026-10-22T11:15:00Z",
+   "end": "2026-10-22T13:00:00Z",
+   "duration": "01:45:00",
+   "nap": true,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [
+  {
+   "endpoint": "timers",
+   "before": {
+    "id": 166,
+    "child": 4,
+    "name": "sleep",
+    "start": "2026-10-22T11:15:00Z",
+    "duration": "10 13:54:38.136343",
+    "user": 2
+   },
+   "after": null
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T09:58:00-03:00",
+   "chat": "9000001",
+   "text": "Cambió el plan: El plan se adapto porque el sueno desde las 03:30 duro 388 minutos, 268 minutos mas que los 120 minutos habituales."
+  },
+  {
+   "at": "2026-10-22T09:58:00-03:00",
+   "chat": "9000002",
+   "text": "Cambió el plan: El plan se adapto porque el sueno desde las 03:30 duro 388 minutos, 268 minutos mas que los 120 minutos habituales."
+  },
+  {
+   "at": "2026-10-22T09:58:00-03:00",
+   "chat": "9000001",
+   "text": "Buen día, Gonza.\nAnoche: 1 toma, te levantaste una vez.\nClima: lluvia, 16 a 17 C, 3.1 mm de lluvia.\nMenú de Cookidoo: Arroz blanco."
+  },
+  {
+   "at": "2026-10-22T09:58:00-03:00",
+   "chat": "9000002",
+   "text": "Buen día, Ceci.\nAnoche: 1 toma, no te levantaste.\nEsta noche te toca a vos.\nClima: lluvia, 16 a 17 C, 3.1 mm de lluvia.\nMenú de Cookidoo: Arroz blanco."
+  },
+  {
+   "at": "2026-10-22T10:00:00-03:00",
+   "chat": "9000002",
+   "text": "Anoté la toma de pecho izquierdo de 15 min de las 10:00 y el sueño de 08:15 a 10:00, 1 h 45 min."
+  },
+  {
+   "at": "2026-10-22T10:03:00-03:00",
+   "chat": "9000001",
+   "text": "Podría pasar la aspiradora antes de las 11:03, pero el registro no dice dónde está en las últimas 2 horas, así que queda en su base. Decime dónde está, o si salió con ustedes."
+  },
+  {
+   "at": "2026-10-22T10:03:00-03:00",
+   "chat": "9000002",
+   "text": "Podría pasar la aspiradora antes de las 11:03, pero el registro no dice dónde está en las últimas 2 horas, así que queda en su base. Decime dónde está, o si salió con ustedes."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T10:00:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "se desperto recien, le di teta izquierda 15 min",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.022,
+ "brain_calls": {
+  "inference.baseten.co": 4
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T09:58:00-03:00",
+   "unix": 1792673880.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Cambió el plan: El plan se adapto porque el sueno desde las 03:30 duro 388 minutos, 268 minutos mas que los 120 minutos habituales.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "replan",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T09:58:00-03:00",
+   "unix": 1792673880.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Cambió el plan: El plan se adapto porque el sueno desde las 03:30 duro 388 minutos, 268 minutos mas que los 120 minutos habituales.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "replan",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T09:58:00-03:00",
+   "unix": 1792673880.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Buen día, Gonza.\nAnoche: 1 toma, te levantaste una vez.\nClima: lluvia, 16 a 17 C, 3.1 mm de lluvia.\nMenú de Cookidoo: Arroz blanco.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "family-push",
+   "routine": "morning",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T09:58:00-03:00",
+   "unix": 1792673880.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Buen día, Ceci.\nAnoche: 1 toma, no te levantaste.\nEsta noche te toca a vos.\nClima: lluvia, 16 a 17 C, 3.1 mm de lluvia.\nMenú de Cookidoo: Arroz blanco.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "family-push",
+   "routine": "morning",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T10:00:00-03:00",
+   "unix": 1792674000.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4156,
+   "output_tokens": 313,
+   "reasoning_tokens": 179,
+   "usd": 0.00652525,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T10:00:00-03:00",
+   "unix": 1792674000.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T10:00:00-03:00",
+   "unix": 1792674000.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T10:00:00-03:00",
+   "unix": 1792674000.0,
+   "channel": "telegram",
+   "text": "Anoté la toma de pecho izquierdo de 15 min de las 10:00 y el sueño de 08:15 a 10:00, 1 h 45 min.",
+   "chat_id": "9000002",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792291553.616,
+   "ts": "2026-10-22T10:00:00-03:00",
+   "unix": 1793581797.057,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 47
+  },
+  {
+   "kind": "reply",
+   "t": 300.0,
+   "ts": "2026-10-22T10:03:00-03:00",
+   "unix": 1792674180.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Podría pasar la aspiradora antes de las 11:03, pero el registro no dice dónde está en las últimas 2 horas, así que queda en su base. Decime dónde está, o si salió con ustedes.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "day-engine",
+   "routine": "floor_clean",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 300.0,
+   "ts": "2026-10-22T10:03:00-03:00",
+   "unix": 1792674180.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Podría pasar la aspiradora antes de las 11:03, pero el registro no dice dónde está en las últimas 2 horas, así que queda en su base. Decime dónde está, o si salió con ustedes.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "day-engine",
+   "routine": "floor_clean",
+   "check_now": null
+  }
+ ]
+}

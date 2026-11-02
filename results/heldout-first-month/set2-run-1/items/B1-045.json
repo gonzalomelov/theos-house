@@ -1,0 +1,191 @@
+{
+ "id": "B1-045",
+ "child": "heldout-baby-c",
+ "created": [
+  {
+   "endpoint": "timers",
+   "id": 176,
+   "child": 5,
+   "name": "sleep",
+   "start": "2026-10-22T03:30:00Z",
+   "duration": "10 21:45:55.186070",
+   "user": 2
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T01:00:00-03:00",
+   "chat": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:00 a 08:00."
+  },
+  {
+   "at": "2026-10-22T01:00:00-03:00",
+   "chat": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:00 a 08:00."
+  },
+  {
+   "at": "2026-10-22T01:02:00-03:00",
+   "chat": "9000001",
+   "text": "Anoté que el bebé se durmió a las 01:00."
+  },
+  {
+   "at": "2026-10-22T01:10:00-03:00",
+   "chat": "9000001",
+   "text": "Anoté que el bebé se durmió a las 00:30."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T01:02:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "se durmio a la 1",
+   "setup": true,
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-22T01:10:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "uh no, se durmio a las 12 y media no a la 1",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0208,
+ "brain_calls": {
+  "inference.baseten.co": 5
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T01:00:00-03:00",
+   "unix": 1792641600.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:00 a 08:00.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T01:00:00-03:00",
+   "unix": 1792641600.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:00 a 08:00.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T01:02:00-03:00",
+   "unix": 1792641720.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4130,
+   "output_tokens": 176,
+   "reasoning_tokens": 101,
+   "usd": 0.0059105,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T01:02:00-03:00",
+   "unix": 1792641720.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T01:02:00-03:00",
+   "unix": 1792641720.0,
+   "channel": "telegram",
+   "text": "Anoté que el bebé se durmió a las 01:00.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792258932.095,
+   "ts": "2026-10-22T01:02:00-03:00",
+   "unix": 1793582138.582,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 16
+  },
+  {
+   "kind": "brain_call",
+   "t": 600.0,
+   "ts": "2026-10-22T01:10:00-03:00",
+   "unix": 1792642200.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4206,
+   "output_tokens": 311,
+   "reasoning_tokens": 192,
+   "usd": 0.00657925,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 600.0,
+   "ts": "2026-10-22T01:10:00-03:00",
+   "unix": 1792642200.0,
+   "name": "edit_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 600.0,
+   "ts": "2026-10-22T01:10:00-03:00",
+   "unix": 1792642200.0,
+   "channel": "telegram",
+   "text": "Anoté que el bebé se durmió a las 00:30.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792258920.246,
+   "ts": "2026-10-22T01:10:00-03:00",
+   "unix": 1793582150.431,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 43
+  }
+ ]
+}

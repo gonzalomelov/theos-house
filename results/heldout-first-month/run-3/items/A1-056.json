@@ -1,0 +1,114 @@
+{
+ "id": "A1-056",
+ "child": "heldout-baby-a",
+ "created": [],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T08:58:00-03:00",
+   "chat": "9000001",
+   "text": "Buen día, Gonza.\nEsta noche te toca a vos.\nClima: nublado, 16 a 16 C.\nMenú de Cookidoo: Arroz blanco."
+  },
+  {
+   "at": "2026-10-22T08:58:00-03:00",
+   "chat": "9000002",
+   "text": "Buen día, Ceci.\nClima: nublado, 16 a 16 C.\nMenú de Cookidoo: Arroz blanco."
+  },
+  {
+   "at": "2026-10-22T09:00:00-03:00",
+   "chat": "9000001",
+   "text": "Dale, cuando se despierte lo anotas y lo dejamos registrado."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T09:00:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "cuando se despierte le da teta ceci",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0088,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T08:58:00-03:00",
+   "unix": 1792670280.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Buen día, Gonza.\nEsta noche te toca a vos.\nClima: nublado, 16 a 16 C.\nMenú de Cookidoo: Arroz blanco.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "family-push",
+   "routine": "morning",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T08:58:00-03:00",
+   "unix": 1792670280.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Buen día, Ceci.\nClima: nublado, 16 a 16 C.\nMenú de Cookidoo: Arroz blanco.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "family-push",
+   "routine": "morning",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T09:00:00-03:00",
+   "unix": 1792670400.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4140,
+   "output_tokens": 83,
+   "reasoning_tokens": 6,
+   "usd": 0.00552775,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T09:00:00-03:00",
+   "unix": 1792670400.0,
+   "channel": "telegram",
+   "text": "Dale, cuando se despierte lo anotas y lo dejamos registrado.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792283298.502,
+   "ts": "2026-10-22T09:00:00-03:00",
+   "unix": 1793586452.234,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 35
+  }
+ ]
+}

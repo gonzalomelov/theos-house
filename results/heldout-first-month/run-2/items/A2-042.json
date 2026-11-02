@@ -1,0 +1,113 @@
+{
+ "id": "A2-042",
+ "child": "heldout-baby-b",
+ "created": [],
+ "seed_after": [
+  {
+   "endpoint": "timers",
+   "before": {
+    "id": 185,
+    "child": 4,
+    "name": "sleep",
+    "start": "2026-10-22T16:30:00Z",
+    "duration": "10 08:48:29.613202",
+    "user": 2
+   },
+   "after": {
+    "endpoint": "timers",
+    "id": 185,
+    "child": 4,
+    "name": "sleep",
+    "start": "2026-10-22T16:30:00Z",
+    "duration": "10 08:48:45.485302",
+    "user": 2
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T15:00:00-03:00",
+   "chat": "9000001",
+   "text": "Sigue descansando tranquilo, que siga durmiendo bien."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T15:00:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "sigue dormido",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0131,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T15:00:00-03:00",
+   "unix": 1792692000.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 4145,
+   "output_tokens": 168,
+   "reasoning_tokens": 152,
+   "usd": 0.00589525,
+   "fallback": false
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T15:00:00-03:00",
+   "unix": 1792692000.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4169,
+   "output_tokens": 197,
+   "reasoning_tokens": 123,
+   "usd": 0.0060485,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T15:00:00-03:00",
+   "unix": 1792692000.0,
+   "channel": "telegram",
+   "text": "Sigue descansando tranquilo, que siga durmiendo bien.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792309029.206,
+   "ts": "2026-10-22T15:00:00-03:00",
+   "unix": 1793582321.448,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 13
+  }
+ ]
+}

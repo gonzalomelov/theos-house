@@ -1,0 +1,150 @@
+{
+ "id": "A3-035",
+ "child": "heldout-baby-a",
+ "created": [
+  {
+   "endpoint": "changes",
+   "id": 792,
+   "child": 3,
+   "time": "2026-10-22T21:40:00Z",
+   "wet": true,
+   "solid": true,
+   "color": "",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T18:40:00-03:00",
+   "chat": "9000001",
+   "text": "Anoté el pañal mojado y sucio de las 18:40."
+  },
+  {
+   "at": "2026-10-22T18:43:00-03:00",
+   "chat": "9000002",
+   "text": "Parece el mismo pañal que anotamos a las 18:40. ¿Fue un pañal nuevo que cambió Gonza o me contaron el mismo dos veces?"
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T18:40:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "le cambie el pañal, tenia pis y caca",
+   "setup": true,
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-22T18:43:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "gonza le cambio el pañal, pis y caca",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0146,
+ "brain_calls": {
+  "inference.baseten.co": 4
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T18:40:00-03:00",
+   "unix": 1792705200.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4136,
+   "output_tokens": 172,
+   "reasoning_tokens": 81,
+   "usd": 0.005901,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T18:40:00-03:00",
+   "unix": 1792705200.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T18:40:00-03:00",
+   "unix": 1792705200.0,
+   "channel": "telegram",
+   "text": "Anoté el pañal mojado y sucio de las 18:40.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792321415.814,
+   "ts": "2026-10-22T18:40:00-03:00",
+   "unix": 1793583134.843,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 36
+  },
+  {
+   "kind": "brain_call",
+   "t": 300.0,
+   "ts": "2026-10-22T18:43:00-03:00",
+   "unix": 1792705380.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4221,
+   "output_tokens": 340,
+   "reasoning_tokens": 242,
+   "usd": 0.00672125,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 300.0,
+   "ts": "2026-10-22T18:43:00-03:00",
+   "unix": 1792705380.0,
+   "channel": "telegram",
+   "text": "Parece el mismo pañal que anotamos a las 18:40. ¿Fue un pañal nuevo que cambió Gonza o me contaron el mismo dos veces?",
+   "chat_id": "9000002",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792321407.784,
+   "ts": "2026-10-22T18:43:00-03:00",
+   "unix": 1793583142.872,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 36
+  }
+ ]
+}

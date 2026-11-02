@@ -1,0 +1,267 @@
+{
+ "id": "A3-085",
+ "child": "heldout-baby-a",
+ "created": [],
+ "seed_after": [
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 1598,
+    "child": 3,
+    "start": "2026-10-22T07:00:00Z",
+    "end": "2026-10-22T07:15:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 90.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 1598,
+    "child": 3,
+    "start": "2026-10-22T07:00:00Z",
+    "end": "2026-10-22T07:15:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 90.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "changes",
+   "before": {
+    "id": 1224,
+    "child": 3,
+    "time": "2026-10-22T01:30:00Z",
+    "wet": false,
+    "solid": true,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "changes",
+    "id": 1224,
+    "child": 3,
+    "time": "2026-10-22T01:30:00Z",
+    "wet": false,
+    "solid": true,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "changes",
+   "before": {
+    "id": 1225,
+    "child": 3,
+    "time": "2026-10-22T05:00:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "changes",
+    "id": 1225,
+    "child": 3,
+    "time": "2026-10-22T05:00:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "changes",
+   "before": {
+    "id": 1226,
+    "child": 3,
+    "time": "2026-10-22T08:10:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "changes",
+    "id": 1226,
+    "child": 3,
+    "time": "2026-10-22T08:10:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "changes",
+   "before": {
+    "id": 1227,
+    "child": 3,
+    "time": "2026-10-22T11:00:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "changes",
+    "id": 1227,
+    "child": 3,
+    "time": "2026-10-22T11:00:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T09:38:00-03:00",
+   "chat": "9000001",
+   "text": "Buen día, Gonza.\nAnoche: 1 toma, no te levantaste.\nEsta noche te toca a vos.\nClima: nublado, 16 a 16 C.\nMenú de Cookidoo: Arroz blanco."
+  },
+  {
+   "at": "2026-10-22T09:38:00-03:00",
+   "chat": "9000002",
+   "text": "Buen día, Ceci.\nAnoche: 1 toma, no te levantaste.\nClima: nublado, 16 a 16 C.\nMenú de Cookidoo: Arroz blanco."
+  },
+  {
+   "at": "2026-10-22T09:40:00-03:00",
+   "chat": "9000002",
+   "text": "No, no dirty diaper since midnight. Last poop was yesterday at 22:30, and today you had 3 wet diapers at 02:00, 05:10 and 08:00."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T09:40:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "did he poop since midnight",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0109,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T09:38:00-03:00",
+   "unix": 1792672680.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Buen día, Gonza.\nAnoche: 1 toma, no te levantaste.\nEsta noche te toca a vos.\nClima: nublado, 16 a 16 C.\nMenú de Cookidoo: Arroz blanco.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "family-push",
+   "routine": "morning",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T09:38:00-03:00",
+   "unix": 1792672680.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Buen día, Ceci.\nAnoche: 1 toma, no te levantaste.\nClima: nublado, 16 a 16 C.\nMenú de Cookidoo: Arroz blanco.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "family-push",
+   "routine": "morning",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T09:40:00-03:00",
+   "unix": 1792672800.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4249,
+   "output_tokens": 191,
+   "reasoning_tokens": 85,
+   "usd": 0.006123,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T09:40:00-03:00",
+   "unix": 1792672800.0,
+   "channel": "telegram",
+   "text": "No, no dirty diaper since midnight. Last poop was yesterday at 22:30, and today you had 3 wet diapers at 02:00, 05:10 and 08:00.",
+   "chat_id": "9000002",
+   "guard_lang": null
+  },
+  {
+   "kind": "turn",
+   "t": -1792284079.02,
+   "ts": "2026-10-22T09:40:00-03:00",
+   "unix": 1793588071.738,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 26
+  }
+ ]
+}

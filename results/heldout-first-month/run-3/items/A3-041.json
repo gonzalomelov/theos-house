@@ -1,0 +1,297 @@
+{
+ "id": "A3-041",
+ "child": "heldout-baby-b",
+ "created": [],
+ "seed_after": [
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 1431,
+    "child": 4,
+    "start": "2026-10-22T02:40:00Z",
+    "end": "2026-10-22T02:55:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 90.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 1431,
+    "child": 4,
+    "start": "2026-10-22T02:40:00Z",
+    "end": "2026-10-22T02:55:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 90.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 1432,
+    "child": 4,
+    "start": "2026-10-22T06:00:00Z",
+    "end": "2026-10-22T06:15:00Z",
+    "duration": "00:15:00",
+    "type": "breast milk",
+    "method": "left breast",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 1432,
+    "child": 4,
+    "start": "2026-10-22T06:00:00Z",
+    "end": "2026-10-22T06:15:00Z",
+    "duration": "00:15:00",
+    "type": "breast milk",
+    "method": "left breast",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 1433,
+    "child": 4,
+    "start": "2026-10-22T10:30:00Z",
+    "end": "2026-10-22T10:45:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 90.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 1433,
+    "child": 4,
+    "start": "2026-10-22T10:30:00Z",
+    "end": "2026-10-22T10:45:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 90.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 1434,
+    "child": 4,
+    "start": "2026-10-22T13:15:00Z",
+    "end": "2026-10-22T13:30:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 80.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 1434,
+    "child": 4,
+    "start": "2026-10-22T13:15:00Z",
+    "end": "2026-10-22T13:30:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 80.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 1435,
+    "child": 4,
+    "start": "2026-10-22T15:40:00Z",
+    "end": "2026-10-22T15:55:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 100.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 1435,
+    "child": 4,
+    "start": "2026-10-22T15:40:00Z",
+    "end": "2026-10-22T15:55:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 100.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "changes",
+   "before": {
+    "id": 1065,
+    "child": 4,
+    "time": "2026-10-22T06:10:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "changes",
+    "id": 1065,
+    "child": 4,
+    "time": "2026-10-22T06:10:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "changes",
+   "before": {
+    "id": 1066,
+    "child": 4,
+    "time": "2026-10-22T11:00:00Z",
+    "wet": true,
+    "solid": true,
+    "color": "yellow",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "changes",
+    "id": 1066,
+    "child": 4,
+    "time": "2026-10-22T11:00:00Z",
+    "wet": true,
+    "solid": true,
+    "color": "yellow",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T13:30:00-03:00",
+   "chat": "9000002",
+   "text": "Hoy desde la medianoche tomó 270 ml en 3 mamaderas de fórmula, más una toma de pecho a las 03:15. La última fue a las 12:55 con 100 ml."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T13:30:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "cuanto tomo desde la mañana",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0073,
+ "brain_calls": {
+  "inference.baseten.co": 2
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T13:30:00-03:00",
+   "unix": 1792686600.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4329,
+   "output_tokens": 215,
+   "reasoning_tokens": 111,
+   "usd": 0.006325,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T13:30:00-03:00",
+   "unix": 1792686600.0,
+   "channel": "telegram",
+   "text": "Hoy desde la medianoche tomó 270 ml en 3 mamaderas de fórmula, más una toma de pecho a las 03:15. La última fue a las 12:55 con 100 ml.",
+   "chat_id": "9000002",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792298252.109,
+   "ts": "2026-10-22T13:30:00-03:00",
+   "unix": 1793587698.644,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 27
+  }
+ ]
+}

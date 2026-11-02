@@ -1,0 +1,357 @@
+{
+ "id": "A3-048",
+ "child": "heldout-baby-b",
+ "created": [],
+ "seed_after": [
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 1075,
+    "child": 4,
+    "start": "2026-10-22T12:00:00Z",
+    "end": "2026-10-22T12:15:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 90.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 1075,
+    "child": 4,
+    "start": "2026-10-22T12:00:00Z",
+    "end": "2026-10-22T12:15:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 90.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "changes",
+   "before": {
+    "id": 807,
+    "child": 4,
+    "time": "2026-10-22T03:20:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "changes",
+    "id": 807,
+    "child": 4,
+    "time": "2026-10-22T03:20:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "changes",
+   "before": {
+    "id": 808,
+    "child": 4,
+    "time": "2026-10-22T07:00:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "changes",
+    "id": 808,
+    "child": 4,
+    "time": "2026-10-22T07:00:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "changes",
+   "before": {
+    "id": 809,
+    "child": 4,
+    "time": "2026-10-22T10:30:00Z",
+    "wet": true,
+    "solid": true,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "changes",
+    "id": 809,
+    "child": 4,
+    "time": "2026-10-22T10:30:00Z",
+    "wet": true,
+    "solid": true,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "changes",
+   "before": {
+    "id": 810,
+    "child": 4,
+    "time": "2026-10-22T13:40:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "changes",
+    "id": 810,
+    "child": 4,
+    "time": "2026-10-22T13:40:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "changes",
+   "before": {
+    "id": 811,
+    "child": 4,
+    "time": "2026-10-22T16:00:00Z",
+    "wet": false,
+    "solid": true,
+    "color": "green",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "changes",
+    "id": 811,
+    "child": 4,
+    "time": "2026-10-22T16:00:00Z",
+    "wet": false,
+    "solid": true,
+    "color": "green",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "changes",
+   "before": {
+    "id": 812,
+    "child": 4,
+    "time": "2026-10-22T19:30:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "changes",
+    "id": 812,
+    "child": 4,
+    "time": "2026-10-22T19:30:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "changes",
+   "before": {
+    "id": 813,
+    "child": 4,
+    "time": "2026-10-22T23:10:00Z",
+    "wet": true,
+    "solid": true,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "changes",
+    "id": 813,
+    "child": 4,
+    "time": "2026-10-22T23:10:00Z",
+    "wet": true,
+    "solid": true,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T22:58:00-03:00",
+   "chat": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 02:00, 05:00. La luz espera a que se despierte.\nVentana para aspirar de 08:00 a 09:00.\nPor qué: Ventana de floor clean de 08:00 a 09:00 y bottle prewarm a las 02:00 y 05:00 armados para la noche y la mañana."
+  },
+  {
+   "at": "2026-10-22T22:58:00-03:00",
+   "chat": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 02:00, 05:00. La luz espera a que se despierte.\nVentana para aspirar de 08:00 a 09:00.\nPor qué: Ventana de floor clean de 08:00 a 09:00 y bottle prewarm a las 02:00 y 05:00 armados para la noche y la mañana."
+  },
+  {
+   "at": "2026-10-22T23:00:00-03:00",
+   "chat": "9000002",
+   "text": "Today, Thursday, you logged 7 diapers: 4 wet only, 3 dirty. Last was wet and dirty at 20:10."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T23:00:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "how many diapers today",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0131,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T22:58:00-03:00",
+   "unix": 1792720680.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 02:00, 05:00. La luz espera a que se despierte.\nVentana para aspirar de 08:00 a 09:00.\nPor qué: Ventana de floor clean de 08:00 a 09:00 y bottle prewarm a las 02:00 y 05:00 armados para la noche y la mañana.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T22:58:00-03:00",
+   "unix": 1792720680.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 02:00, 05:00. La luz espera a que se despierte.\nVentana para aspirar de 08:00 a 09:00.\nPor qué: Ventana de floor clean de 08:00 a 09:00 y bottle prewarm a las 02:00 y 05:00 armados para la noche y la mañana.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T23:00:00-03:00",
+   "unix": 1792720800.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4267,
+   "output_tokens": 128,
+   "reasoning_tokens": 36,
+   "usd": 0.00587775,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T23:00:00-03:00",
+   "unix": 1792720800.0,
+   "channel": "telegram",
+   "text": "Today, Thursday, you logged 7 diapers: 4 wet only, 3 dirty. Last was wet and dirty at 20:10.",
+   "chat_id": "9000002",
+   "guard_lang": null
+  },
+  {
+   "kind": "turn",
+   "t": -1792336858.622,
+   "ts": "2026-10-22T23:00:00-03:00",
+   "unix": 1793583292.035,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 22
+  }
+ ]
+}
