@@ -165,3 +165,13 @@ feed closes that sleep at the feed's start and opens the new one (`log_ops.stale
 The 03:30 reply: "Anoté el sueño de 22:55 a 02:45, 3 h 50 min y que el bebé se durmió a las 03:30", and 06:05 closed
 03:30 to 06:05. The 1 extra entry is that closed 22:55 to 02:45 sleep: no parent said when he woke, the agent ends it at
 the feed by design, and the scorer counts any entry nobody asked for.
+
+## Rerun after the blind round b6 fixes (Nov 2, `nov2-b6/`)
+
+The same after day on E2E Baby, from a clean worktree at main 518d8dd (PRs #206 and #207), the family agent deployed with it.
+
+| Run | Things to get | Noise | Log right | Muse |
+|---|---|---|---|---|
+| `nov2-b6/` | 34 of 34 | 0 of 66 | 25 of 25, 1 extra | 0.61 USD |
+
+The 02:50 cry push now says "Está en su cunita, al lado de la cama de ustedes.", never "colecho". The 1 extra entry is the same as in `nov2-run3/`: the open 22:55 sleep closed at the 02:45 feed by design.
