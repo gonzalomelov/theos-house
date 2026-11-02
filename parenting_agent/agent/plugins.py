@@ -25,3 +25,8 @@ def load(spec, agent, config):
     module_name, _, class_name = spec.partition(":")
     cls = getattr(importlib.import_module(module_name), class_name)
     return cls(agent, config)
+
+
+def find_plugin(agent, name):
+    """The agent's plug-in with that name, or None."""
+    return next((p for p in getattr(agent, "plugins", []) or [] if getattr(p, "name", "") == name), None)
