@@ -1,0 +1,138 @@
+{
+ "id": "A1-047",
+ "child": "heldout-baby-b",
+ "created": [
+  {
+   "endpoint": "feedings",
+   "id": 922,
+   "child": 4,
+   "start": "2026-10-22T05:25:00Z",
+   "end": "2026-10-22T05:40:00Z",
+   "duration": "00:15:00",
+   "type": "breast milk",
+   "method": "left breast",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T02:38:00-03:00",
+   "chat": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 09:00 a 09:45.\nPor qué: Ventana de limpieza de piso armada de 09:00 a 09:45 en horario diurno sin solapamiento con sueño previsto hasta las 14:38, vos estás avisado Gonza y vos también Ceci."
+  },
+  {
+   "at": "2026-10-22T02:38:00-03:00",
+   "chat": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 09:00 a 09:45.\nPor qué: Ventana de limpieza de piso armada de 09:00 a 09:45 en horario diurno sin solapamiento con sueño previsto hasta las 14:38, vos estás avisado Gonza y vos también Ceci."
+  },
+  {
+   "at": "2026-10-22T02:40:00-03:00",
+   "chat": "9000002",
+   "text": "Logged the 02:40 left breast feed of 15 min."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T02:40:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "nursed on the left for 15 min",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0132,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T02:38:00-03:00",
+   "unix": 1792647480.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 09:00 a 09:45.\nPor qué: Ventana de limpieza de piso armada de 09:00 a 09:45 en horario diurno sin solapamiento con sueño previsto hasta las 14:38, vos estás avisado Gonza y vos también Ceci.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T02:38:00-03:00",
+   "unix": 1792647480.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 09:00 a 09:45.\nPor qué: Ventana de limpieza de piso armada de 09:00 a 09:45 en horario diurno sin solapamiento con sueño previsto hasta las 14:38, vos estás avisado Gonza y vos también Ceci.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T02:40:00-03:00",
+   "unix": 1792647600.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4112,
+   "output_tokens": 242,
+   "reasoning_tokens": 132,
+   "usd": 0.0061685,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T02:40:00-03:00",
+   "unix": 1792647600.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T02:40:00-03:00",
+   "unix": 1792647600.0,
+   "channel": "telegram",
+   "text": "Logged the 02:40 left breast feed of 15 min.",
+   "chat_id": "9000002",
+   "guard_lang": null
+  },
+  {
+   "kind": "turn",
+   "t": -1792265349.598,
+   "ts": "2026-10-22T02:40:00-03:00",
+   "unix": 1793581601.074,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 29
+  }
+ ]
+}

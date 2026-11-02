@@ -1,0 +1,70 @@
+{
+ "id": "A5-016",
+ "child": "heldout-baby-b",
+ "created": [
+  {
+   "endpoint": "notes",
+   "id": 543,
+   "child": 4,
+   "note": "La pediatra dijo: vitamina d pero no me acuerdo cuantas gotas eran vos sabes?",
+   "image": null,
+   "time": "2026-10-22T23:25:00Z",
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T20:25:00-03:00",
+   "chat": "9000001",
+   "text": "Anotado en el registro: «La pediatra dijo: vitamina d pero no me acuerdo cuantas gotas eran vos sabes?». No quedan preguntas abiertas."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T20:25:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "la pediatra dijo vitamina d pero no me acuerdo cuantas gotas eran vos sabes?",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0,
+ "brain_calls": {},
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T20:25:00-03:00",
+   "unix": 1793584674.664,
+   "channel": "telegram",
+   "text": "Anotado en el registro: «La pediatra dijo: vitamina d pero no me acuerdo cuantas gotas eran vos sabes?». No quedan preguntas abiertas.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792326176.043,
+   "ts": "2026-10-22T20:25:00-03:00",
+   "unix": 1793584674.665,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 76
+  }
+ ]
+}

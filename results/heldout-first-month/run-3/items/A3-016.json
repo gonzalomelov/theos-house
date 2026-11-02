@@ -1,0 +1,228 @@
+{
+ "id": "A3-016",
+ "child": "heldout-baby-a",
+ "created": [
+  {
+   "endpoint": "feedings",
+   "id": 1390,
+   "child": 3,
+   "start": "2026-10-22T11:05:00Z",
+   "end": "2026-10-22T11:20:00Z",
+   "duration": "00:15:00",
+   "type": "formula",
+   "method": "bottle",
+   "amount": 90.0,
+   "notes": "length not said, milk type not said",
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [
+  {
+   "endpoint": "changes",
+   "before": {
+    "id": 1050,
+    "child": 3,
+    "time": "2026-10-22T09:30:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "changes",
+    "id": 1050,
+    "child": 3,
+    "time": "2026-10-22T09:30:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T08:18:00-03:00",
+   "chat": "9000001",
+   "text": "Buen día, Gonza.\nEsta noche te toca a vos.\nClima: nublado, 16 a 16 C.\nMenú de Cookidoo: Arroz blanco."
+  },
+  {
+   "at": "2026-10-22T08:18:00-03:00",
+   "chat": "9000002",
+   "text": "Buen día, Ceci.\nClima: nublado, 16 a 16 C.\nMenú de Cookidoo: Arroz blanco."
+  },
+  {
+   "at": "2026-10-22T08:20:00-03:00",
+   "chat": "9000001",
+   "text": "Anoté la mamadera de 60 ml de las 08:20."
+  },
+  {
+   "at": "2026-10-22T08:25:00-03:00",
+   "chat": "9000002",
+   "text": "Fixed the 08:20 bottle: 60 ml → 90 ml."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T08:20:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "le di 60 de mamadera",
+   "setup": true,
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-22T08:25:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "gonza it was 90, I made 90 and he finished it",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0166,
+ "brain_calls": {
+  "inference.baseten.co": 5
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T08:18:00-03:00",
+   "unix": 1792667880.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Buen día, Gonza.\nEsta noche te toca a vos.\nClima: nublado, 16 a 16 C.\nMenú de Cookidoo: Arroz blanco.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "family-push",
+   "routine": "morning",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T08:18:00-03:00",
+   "unix": 1792667880.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Buen día, Ceci.\nClima: nublado, 16 a 16 C.\nMenú de Cookidoo: Arroz blanco.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "family-push",
+   "routine": "morning",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T08:20:00-03:00",
+   "unix": 1792668000.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4160,
+   "output_tokens": 139,
+   "reasoning_tokens": 35,
+   "usd": 0.00579075,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T08:20:00-03:00",
+   "unix": 1792668000.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T08:20:00-03:00",
+   "unix": 1792668000.0,
+   "channel": "telegram",
+   "text": "Anoté la mamadera de 60 ml de las 08:20.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792279998.991,
+   "ts": "2026-10-22T08:20:00-03:00",
+   "unix": 1793587351.757,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 20
+  },
+  {
+   "kind": "brain_call",
+   "t": 420.0,
+   "ts": "2026-10-22T08:25:00-03:00",
+   "unix": 1792668300.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4232,
+   "output_tokens": 167,
+   "reasoning_tokens": 81,
+   "usd": 0.00599975,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 420.0,
+   "ts": "2026-10-22T08:25:00-03:00",
+   "unix": 1792668300.0,
+   "name": "edit_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 420.0,
+   "ts": "2026-10-22T08:25:00-03:00",
+   "unix": 1792668300.0,
+   "channel": "telegram",
+   "text": "Fixed the 08:20 bottle: 60 ml → 90 ml.",
+   "chat_id": "9000002",
+   "guard_lang": null
+  },
+  {
+   "kind": "turn",
+   "t": -1792279985.734,
+   "ts": "2026-10-22T08:25:00-03:00",
+   "unix": 1793587365.014,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 45
+  }
+ ]
+}

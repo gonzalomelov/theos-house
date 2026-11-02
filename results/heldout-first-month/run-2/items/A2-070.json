@@ -1,0 +1,98 @@
+{
+ "id": "A2-070",
+ "child": "heldout-baby-b",
+ "created": [
+  {
+   "endpoint": "sleep",
+   "id": 396,
+   "child": 4,
+   "start": "2026-10-22T19:00:00Z",
+   "end": "2026-10-22T20:15:00Z",
+   "duration": "01:15:00",
+   "nap": false,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T17:45:00-03:00",
+   "chat": "9000002",
+   "text": "Logged the sleep from 16:00 to 17:15, 1 h 15 min."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T17:45:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "napped in the stroller from 4 to 5:15",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0066,
+ "brain_calls": {
+  "inference.baseten.co": 2
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T17:45:00-03:00",
+   "unix": 1792701900.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4117,
+   "output_tokens": 151,
+   "reasoning_tokens": 63,
+   "usd": 0.005788,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T17:45:00-03:00",
+   "unix": 1792701900.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T17:45:00-03:00",
+   "unix": 1792701900.0,
+   "channel": "telegram",
+   "text": "Logged the sleep from 16:00 to 17:15, 1 h 15 min.",
+   "chat_id": "9000002",
+   "guard_lang": null
+  },
+  {
+   "kind": "turn",
+   "t": -1792318636.189,
+   "ts": "2026-10-22T17:45:00-03:00",
+   "unix": 1793582614.466,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 37
+  }
+ ]
+}

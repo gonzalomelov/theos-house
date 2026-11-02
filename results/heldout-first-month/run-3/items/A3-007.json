@@ -1,0 +1,190 @@
+{
+ "id": "A3-007",
+ "child": "heldout-baby-a",
+ "created": [
+  {
+   "endpoint": "feedings",
+   "id": 1384,
+   "child": 3,
+   "start": "2026-10-22T13:15:00Z",
+   "end": "2026-10-22T13:30:00Z",
+   "duration": "00:15:00",
+   "type": "formula",
+   "method": "bottle",
+   "amount": 70.0,
+   "notes": "length not said, milk type not said",
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [
+  {
+   "endpoint": "changes",
+   "before": {
+    "id": 1046,
+    "child": 3,
+    "time": "2026-10-22T11:15:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "changes",
+    "id": 1046,
+    "child": 3,
+    "time": "2026-10-22T11:15:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T11:02:00-03:00",
+   "chat": "9000001",
+   "text": "Anoté la mamadera de 70 ml de las 10:00."
+  },
+  {
+   "at": "2026-10-22T11:04:00-03:00",
+   "chat": "9000001",
+   "text": "Corregí la mamadera de las 10:00: 10:00 → 10:30."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T11:02:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "tomo 70 a las 10",
+   "setup": true,
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-22T11:04:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "no a las 10 y media fue",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0147,
+ "brain_calls": {
+  "inference.baseten.co": 4
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T11:02:00-03:00",
+   "unix": 1792677720.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4161,
+   "output_tokens": 200,
+   "reasoning_tokens": 106,
+   "usd": 0.00605125,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T11:02:00-03:00",
+   "unix": 1792677720.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T11:02:00-03:00",
+   "unix": 1792677720.0,
+   "channel": "telegram",
+   "text": "Anoté la mamadera de 70 ml de las 10:00.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792289806.992,
+   "ts": "2026-10-22T11:02:00-03:00",
+   "unix": 1793587263.755,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 16
+  },
+  {
+   "kind": "brain_call",
+   "t": 240.0,
+   "ts": "2026-10-22T11:04:00-03:00",
+   "unix": 1792677840.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4245,
+   "output_tokens": 168,
+   "reasoning_tokens": 81,
+   "usd": 0.00602025,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 240.0,
+   "ts": "2026-10-22T11:04:00-03:00",
+   "unix": 1792677840.0,
+   "name": "edit_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 240.0,
+   "ts": "2026-10-22T11:04:00-03:00",
+   "unix": 1792677840.0,
+   "channel": "telegram",
+   "text": "Corregí la mamadera de las 10:00: 10:00 → 10:30.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792289796.177,
+   "ts": "2026-10-22T11:04:00-03:00",
+   "unix": 1793587274.57,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 23
+  }
+ ]
+}

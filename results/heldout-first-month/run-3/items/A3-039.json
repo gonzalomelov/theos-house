@@ -1,0 +1,248 @@
+{
+ "id": "A3-039",
+ "child": "heldout-baby-c",
+ "created": [
+  {
+   "endpoint": "changes",
+   "id": 1072,
+   "child": 5,
+   "time": "2026-10-22T12:10:00Z",
+   "wet": true,
+   "solid": false,
+   "color": "",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  },
+  {
+   "endpoint": "changes",
+   "id": 1068,
+   "child": 5,
+   "time": "2026-10-22T11:00:00Z",
+   "wet": true,
+   "solid": false,
+   "color": "",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T07:58:00-03:00",
+   "chat": "9000001",
+   "text": "Buen día, Gonza.\nAnoche: 3 tomas, no te levantaste.\nEsta noche te toca a vos.\nClima: nublado, 16 a 16 C.\nMenú de Cookidoo: Arroz blanco."
+  },
+  {
+   "at": "2026-10-22T07:58:00-03:00",
+   "chat": "9000002",
+   "text": "Buen día, Ceci.\nAnoche: 3 tomas, no te levantaste.\nClima: nublado, 16 a 16 C.\nMenú de Cookidoo: Arroz blanco."
+  },
+  {
+   "at": "2026-10-22T08:00:00-03:00",
+   "chat": "9000002",
+   "text": "Anoté el pañal mojado de las 08:00."
+  },
+  {
+   "at": "2026-10-22T09:10:00-03:00",
+   "chat": "9000001",
+   "text": "Anoté el pañal mojado de las 09:10."
+  },
+  {
+   "at": "2026-10-22T09:11:00-03:00",
+   "chat": "9000001",
+   "text": "Próxima toma en unos 0 min, cerca de las 09:10. Las tomas vienen cada 4 h 00 min más o menos."
+  },
+  {
+   "at": "2026-10-22T09:11:00-03:00",
+   "chat": "9000002",
+   "text": "Próxima toma en unos 0 min, cerca de las 09:10. Las tomas vienen cada 4 h 00 min más o menos."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T08:00:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "pañal con pis",
+   "setup": true,
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-22T09:10:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "otro pañal con pis",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0167,
+ "brain_calls": {
+  "inference.baseten.co": 5
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T07:58:00-03:00",
+   "unix": 1792666680.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Buen día, Gonza.\nAnoche: 3 tomas, no te levantaste.\nEsta noche te toca a vos.\nClima: nublado, 16 a 16 C.\nMenú de Cookidoo: Arroz blanco.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "family-push",
+   "routine": "morning",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T07:58:00-03:00",
+   "unix": 1792666680.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Buen día, Ceci.\nAnoche: 3 tomas, no te levantaste.\nClima: nublado, 16 a 16 C.\nMenú de Cookidoo: Arroz blanco.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "family-push",
+   "routine": "morning",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T08:00:00-03:00",
+   "unix": 1792666800.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4136,
+   "output_tokens": 150,
+   "reasoning_tokens": 59,
+   "usd": 0.0058075,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T08:00:00-03:00",
+   "unix": 1792666800.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T08:00:00-03:00",
+   "unix": 1792666800.0,
+   "channel": "telegram",
+   "text": "Anoté el pañal mojado de las 08:00.",
+   "chat_id": "9000002",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792278458.256,
+   "ts": "2026-10-22T08:00:00-03:00",
+   "unix": 1793587692.496,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 13
+  },
+  {
+   "kind": "brain_call",
+   "t": 4320.0,
+   "ts": "2026-10-22T09:10:00-03:00",
+   "unix": 1792671000.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4201,
+   "output_tokens": 399,
+   "reasoning_tokens": 316,
+   "usd": 0.006947,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 4320.0,
+   "ts": "2026-10-22T09:10:00-03:00",
+   "unix": 1792671000.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 4320.0,
+   "ts": "2026-10-22T09:10:00-03:00",
+   "unix": 1792671000.0,
+   "channel": "telegram",
+   "text": "Anoté el pañal mojado de las 09:10.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792278387.038,
+   "ts": "2026-10-22T09:10:00-03:00",
+   "unix": 1793587763.715,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 18
+  },
+  {
+   "kind": "reply",
+   "t": 4380.0,
+   "ts": "2026-10-22T09:11:00-03:00",
+   "unix": 1792671060.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Próxima toma en unos 0 min, cerca de las 09:10. Las tomas vienen cada 4 h 00 min más o menos.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "rhythm",
+   "routine": "next_feed",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 4380.0,
+   "ts": "2026-10-22T09:11:00-03:00",
+   "unix": 1792671060.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Próxima toma en unos 0 min, cerca de las 09:10. Las tomas vienen cada 4 h 00 min más o menos.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "rhythm",
+   "routine": "next_feed",
+   "check_now": null
+  }
+ ]
+}

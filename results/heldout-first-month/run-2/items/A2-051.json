@@ -1,0 +1,187 @@
+{
+ "id": "A2-051",
+ "child": "heldout-baby-a",
+ "created": [
+  {
+   "endpoint": "sleep",
+   "id": 382,
+   "child": 3,
+   "start": "2026-10-22T01:30:00Z",
+   "end": "2026-10-22T04:30:00Z",
+   "duration": "03:00:00",
+   "nap": false,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [
+  {
+   "endpoint": "timers",
+   "before": {
+    "id": 189,
+    "child": 3,
+    "name": "sleep",
+    "start": "2026-10-22T01:30:00Z",
+    "duration": "10 23:49:12.808319",
+    "user": 2
+   },
+   "after": null
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T01:58:00-03:00",
+   "chat": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 02:10, 04:40. La luz espera a que se despierte.\nVentana para aspirar de 07:10 a 07:55.\nPor qué: El plan activa el calentador de mamadera a las 02:10 y 04:40 para los despertares nocturnos previstos y una ventana de limpieza de piso de 07:10 a 07:55 en el intervalo entre sueños, Gonza y Ceci."
+  },
+  {
+   "at": "2026-10-22T01:58:00-03:00",
+   "chat": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 02:10, 04:40. La luz espera a que se despierte.\nVentana para aspirar de 07:10 a 07:55.\nPor qué: El plan activa el calentador de mamadera a las 02:10 y 04:40 para los despertares nocturnos previstos y una ventana de limpieza de piso de 07:10 a 07:55 en el intervalo entre sueños, Gonza y Ceci."
+  },
+  {
+   "at": "2026-10-22T01:58:00-03:00",
+   "chat": "9000001",
+   "text": "Cambió el plan: El sueño más largo desde las 22:30 movió el próximo despertar hacia las 02:03, por eso los horarios de precalentado y la ventana de limpieza se ajustaron a los sueños previstos actualizados, Gonza y Ceci."
+  },
+  {
+   "at": "2026-10-22T01:58:00-03:00",
+   "chat": "9000002",
+   "text": "Cambió el plan: El sueño más largo desde las 22:30 movió el próximo despertar hacia las 02:03, por eso los horarios de precalentado y la ventana de limpieza se ajustaron a los sueños previstos actualizados, Gonza y Ceci."
+  },
+  {
+   "at": "2026-10-22T02:00:00-03:00",
+   "chat": "9000002",
+   "text": "Anoté el sueño de 22:30 a 01:30, 3 h 00 min."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T02:00:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "se desperto a la 1:30 y no se vuelve a dormir",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.015,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T01:58:00-03:00",
+   "unix": 1792645080.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 02:10, 04:40. La luz espera a que se despierte.\nVentana para aspirar de 07:10 a 07:55.\nPor qué: El plan activa el calentador de mamadera a las 02:10 y 04:40 para los despertares nocturnos previstos y una ventana de limpieza de piso de 07:10 a 07:55 en el intervalo entre sueños, Gonza y Ceci.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T01:58:00-03:00",
+   "unix": 1792645080.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 02:10, 04:40. La luz espera a que se despierte.\nVentana para aspirar de 07:10 a 07:55.\nPor qué: El plan activa el calentador de mamadera a las 02:10 y 04:40 para los despertares nocturnos previstos y una ventana de limpieza de piso de 07:10 a 07:55 en el intervalo entre sueños, Gonza y Ceci.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T01:58:00-03:00",
+   "unix": 1792645080.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Cambió el plan: El sueño más largo desde las 22:30 movió el próximo despertar hacia las 02:03, por eso los horarios de precalentado y la ventana de limpieza se ajustaron a los sueños previstos actualizados, Gonza y Ceci.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "replan",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T01:58:00-03:00",
+   "unix": 1792645080.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Cambió el plan: El sueño más largo desde las 22:30 movió el próximo despertar hacia las 02:03, por eso los horarios de precalentado y la ventana de limpieza se ajustaron a los sueños previstos actualizados, Gonza y Ceci.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "replan",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T02:00:00-03:00",
+   "unix": 1792645200.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4157,
+   "output_tokens": 227,
+   "reasoning_tokens": 120,
+   "usd": 0.006161,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T02:00:00-03:00",
+   "unix": 1792645200.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T02:00:00-03:00",
+   "unix": 1792645200.0,
+   "channel": "telegram",
+   "text": "Anoté el sueño de 22:30 a 01:30, 3 h 00 min.",
+   "chat_id": "9000002",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792262183.554,
+   "ts": "2026-10-22T02:00:00-03:00",
+   "unix": 1793582367.099,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 45
+  }
+ ]
+}

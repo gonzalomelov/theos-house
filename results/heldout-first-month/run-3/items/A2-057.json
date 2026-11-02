@@ -1,0 +1,111 @@
+{
+ "id": "A2-057",
+ "child": "heldout-baby-c",
+ "created": [
+  {
+   "endpoint": "sleep",
+   "id": 519,
+   "child": 5,
+   "start": "2026-10-22T17:10:00Z",
+   "end": "2026-10-22T18:35:00Z",
+   "duration": "01:25:00",
+   "nap": true,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [
+  {
+   "endpoint": "timers",
+   "before": {
+    "id": 254,
+    "child": 5,
+    "name": "sleep",
+    "start": "2026-10-22T17:10:00Z",
+    "duration": "10 09:28:58.977982",
+    "user": 2
+   },
+   "after": null
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T15:35:00-03:00",
+   "chat": "9000002",
+   "text": "Anoté el sueño de 14:10 a 15:35, 1 h 25 min."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T15:35:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "ya se desperto",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0073,
+ "brain_calls": {
+  "inference.baseten.co": 2
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T15:35:00-03:00",
+   "unix": 1792694100.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4155,
+   "output_tokens": 318,
+   "reasoning_tokens": 251,
+   "usd": 0.00654525,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T15:35:00-03:00",
+   "unix": 1792694100.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T15:35:00-03:00",
+   "unix": 1792694100.0,
+   "channel": "telegram",
+   "text": "Anoté el sueño de 14:10 a 15:35, 1 h 25 min.",
+   "chat_id": "9000002",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792306302.229,
+   "ts": "2026-10-22T15:35:00-03:00",
+   "unix": 1793587148.516,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 14
+  }
+ ]
+}

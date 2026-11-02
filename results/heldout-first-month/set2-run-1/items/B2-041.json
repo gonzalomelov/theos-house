@@ -1,0 +1,130 @@
+{
+ "id": "B2-041",
+ "child": "heldout-baby-c",
+ "created": [],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T22:38:00-03:00",
+   "chat": "9000001",
+   "text": "Plan de esta noche. De turno: Ceci.\nCalentador de mamadera (solo agua) a las 01:30, 03:30, 05:30. La luz espera a que se despierte.\nVentana para aspirar de 07:30 a 08:15.\nPor qué: Calentador de mamadera armado para la noche y ventana de limpieza de piso programada para el viernes a la mañana con Ceci de guardia."
+  },
+  {
+   "at": "2026-10-22T22:38:00-03:00",
+   "chat": "9000002",
+   "text": "Plan de esta noche. De turno: Ceci.\nCalentador de mamadera (solo agua) a las 01:30, 03:30, 05:30. La luz espera a que se despierte.\nVentana para aspirar de 07:30 a 08:15.\nPor qué: Calentador de mamadera armado para la noche y ventana de limpieza de piso programada para el viernes a la mañana con Ceci de guardia."
+  },
+  {
+   "at": "2026-10-22T22:40:00-03:00",
+   "chat": "9000002",
+   "text": "Theo chiquito, tres semanas ya,\nojitos dulces que empiezan a mirar.\nQue sigas creciendo sanito y feliz, te festejamos mucho por acá."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T22:40:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "escribime un poema cortito para theo q hoy cumple 3 semanas",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0191,
+ "brain_calls": {
+  "inference.baseten.co": 4
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T22:38:00-03:00",
+   "unix": 1792719480.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Plan de esta noche. De turno: Ceci.\nCalentador de mamadera (solo agua) a las 01:30, 03:30, 05:30. La luz espera a que se despierte.\nVentana para aspirar de 07:30 a 08:15.\nPor qué: Calentador de mamadera armado para la noche y ventana de limpieza de piso programada para el viernes a la mañana con Ceci de guardia.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T22:38:00-03:00",
+   "unix": 1792719480.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Plan de esta noche. De turno: Ceci.\nCalentador de mamadera (solo agua) a las 01:30, 03:30, 05:30. La luz espera a que se despierte.\nVentana para aspirar de 07:30 a 08:15.\nPor qué: Calentador de mamadera armado para la noche y ventana de limpieza de piso programada para el viernes a la mañana con Ceci de guardia.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T22:40:00-03:00",
+   "unix": 1792719600.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 4137,
+   "output_tokens": 59,
+   "reasoning_tokens": 10,
+   "usd": 0.005422,
+   "fallback": false
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T22:40:00-03:00",
+   "unix": 1792719600.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4161,
+   "output_tokens": 298,
+   "reasoning_tokens": 198,
+   "usd": 0.00646775,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T22:40:00-03:00",
+   "unix": 1792719600.0,
+   "channel": "telegram",
+   "text": "Theo chiquito, tres semanas ya,\nojitos dulces que empiezan a mirar.\nQue sigas creciendo sanito y feliz, te festejamos mucho por acá.",
+   "chat_id": "9000002",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792335899.521,
+   "ts": "2026-10-22T22:40:00-03:00",
+   "unix": 1793583051.136,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 59
+  }
+ ]
+}

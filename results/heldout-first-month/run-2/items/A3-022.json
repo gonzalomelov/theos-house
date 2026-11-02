@@ -1,0 +1,192 @@
+{
+ "id": "A3-022",
+ "child": "heldout-baby-b",
+ "created": [
+  {
+   "endpoint": "feedings",
+   "id": 1033,
+   "child": 4,
+   "start": "2026-10-22T09:35:00Z",
+   "end": "2026-10-22T09:50:00Z",
+   "duration": "00:15:00",
+   "type": "breast milk",
+   "method": "bottle",
+   "amount": 70.0,
+   "notes": "length not said",
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 1031,
+    "child": 4,
+    "start": "2026-10-22T06:30:00Z",
+    "end": "2026-10-22T06:50:00Z",
+    "duration": "00:20:00",
+    "type": "breast milk",
+    "method": "both breasts",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 1031,
+    "child": 4,
+    "start": "2026-10-22T06:30:00Z",
+    "end": "2026-10-22T06:50:00Z",
+    "duration": "00:20:00",
+    "type": "breast milk",
+    "method": "both breasts",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T06:50:00-03:00",
+   "chat": "9000001",
+   "text": "Anoté la mamadera de 70 ml de fórmula de las 06:50."
+  },
+  {
+   "at": "2026-10-22T06:52:00-03:00",
+   "chat": "9000001",
+   "text": "Corregí la mamadera de las 06:50: fórmula → leche materna. Corregido, era leche materna de la heladera."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T06:50:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "le di 70 de formula",
+   "setup": true,
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-22T06:52:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "ah no, era leche de ceci la q estaba en la heladera",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0149,
+ "brain_calls": {
+  "inference.baseten.co": 4
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T06:50:00-03:00",
+   "unix": 1792662600.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4155,
+   "output_tokens": 197,
+   "reasoning_tokens": 77,
+   "usd": 0.006031,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T06:50:00-03:00",
+   "unix": 1792662600.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T06:50:00-03:00",
+   "unix": 1792662600.0,
+   "channel": "telegram",
+   "text": "Anoté la mamadera de 70 ml de fórmula de las 06:50.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792279031.744,
+   "ts": "2026-10-22T06:50:00-03:00",
+   "unix": 1793582918.912,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 19
+  },
+  {
+   "kind": "brain_call",
+   "t": 240.0,
+   "ts": "2026-10-22T06:52:00-03:00",
+   "unix": 1792662720.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4239,
+   "output_tokens": 198,
+   "reasoning_tokens": 81,
+   "usd": 0.00614025,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 240.0,
+   "ts": "2026-10-22T06:52:00-03:00",
+   "unix": 1792662720.0,
+   "name": "edit_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 240.0,
+   "ts": "2026-10-22T06:52:00-03:00",
+   "unix": 1792662720.0,
+   "channel": "telegram",
+   "text": "Corregí la mamadera de las 06:50: fórmula → leche materna. Corregido, era leche materna de la heladera.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792279023.428,
+   "ts": "2026-10-22T06:52:00-03:00",
+   "unix": 1793582927.227,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 51
+  }
+ ]
+}

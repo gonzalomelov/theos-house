@@ -1,0 +1,96 @@
+{
+ "id": "A4-069",
+ "child": "heldout-baby-a",
+ "created": [
+  {
+   "endpoint": "notes",
+   "id": 536,
+   "child": 3,
+   "note": "Bath.",
+   "image": null,
+   "time": "2026-10-22T22:40:00Z",
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T19:40:00-03:00",
+   "chat": "9000002",
+   "text": "Logged the bath at 19:40. I can't give medical advice on it: please ask your pediatrician, or call emergency services (911 in Uruguay) if it is urgent."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T19:40:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "bath done, the skin on his feet is peeling, should i put lotion?",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0083,
+ "brain_calls": {
+  "inference.baseten.co": 2
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T19:40:00-03:00",
+   "unix": 1792708800.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4120,
+   "output_tokens": 351,
+   "reasoning_tokens": 257,
+   "usd": 0.00664175,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T19:40:00-03:00",
+   "unix": 1792708800.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T19:40:00-03:00",
+   "unix": 1792708800.0,
+   "channel": "telegram",
+   "text": "Logged the bath at 19:40. I can't give medical advice on it: please ask your pediatrician, or call emergency services (911 in Uruguay) if it is urgent.",
+   "chat_id": "9000002",
+   "guard_lang": null
+  },
+  {
+   "kind": "turn",
+   "t": -1792323667.293,
+   "ts": "2026-10-22T19:40:00-03:00",
+   "unix": 1793584483.413,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 64
+  }
+ ]
+}

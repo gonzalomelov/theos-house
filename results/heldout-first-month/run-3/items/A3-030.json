@@ -1,0 +1,190 @@
+{
+ "id": "A3-030",
+ "child": "heldout-baby-c",
+ "created": [
+  {
+   "endpoint": "feedings",
+   "id": 1418,
+   "child": 5,
+   "start": "2026-10-22T16:50:00Z",
+   "end": "2026-10-22T17:05:00Z",
+   "duration": "00:15:00",
+   "type": "formula",
+   "method": "bottle",
+   "amount": 70.0,
+   "notes": "length not said, milk type not said",
+   "tags": [
+    "agent"
+   ]
+  },
+  {
+   "endpoint": "feedings",
+   "id": 1413,
+   "child": 5,
+   "start": "2026-10-22T15:45:00Z",
+   "end": "2026-10-22T16:00:00Z",
+   "duration": "00:15:00",
+   "type": "formula",
+   "method": "bottle",
+   "amount": 70.0,
+   "notes": "length not said, milk type not said",
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T13:00:00-03:00",
+   "chat": "9000002",
+   "text": "Puede ser una emergencia. Llamá ya al 911 (emergencias en Uruguay) y contales lo que ves."
+  },
+  {
+   "at": "2026-10-22T13:00:00-03:00",
+   "chat": "9000002",
+   "text": "Anoté la mamadera de 70 ml de las 13:00."
+  },
+  {
+   "at": "2026-10-22T14:05:00-03:00",
+   "chat": "9000001",
+   "text": "Anoté la mamadera de 70 ml de las 14:05."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T13:00:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "tomo 70",
+   "setup": true,
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-22T14:05:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "tomo otra mamadera, 70 de nuevo",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0165,
+ "brain_calls": {
+  "inference.baseten.co": 4
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T13:00:00-03:00",
+   "unix": 1792684800.0,
+   "channel": "telegram",
+   "text": "Puede ser una emergencia. Llamá ya al 911 (emergencias en Uruguay) y contales lo que ves.",
+   "chat_id": "9000002",
+   "guard_lang": "es",
+   "flag": "emergency"
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T13:00:00-03:00",
+   "unix": 1792684800.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 3699,
+   "output_tokens": 327,
+   "reasoning_tokens": 240,
+   "usd": 0.0060135,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T13:00:00-03:00",
+   "unix": 1792684800.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T13:00:00-03:00",
+   "unix": 1792684800.0,
+   "channel": "telegram",
+   "text": "Anoté la mamadera de 70 ml de las 13:00.",
+   "chat_id": "9000002",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792296596.494,
+   "ts": "2026-10-22T13:00:00-03:00",
+   "unix": 1793587554.256,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 7
+  },
+  {
+   "kind": "brain_call",
+   "t": 4020.0,
+   "ts": "2026-10-22T14:05:00-03:00",
+   "unix": 1792688700.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4253,
+   "output_tokens": 212,
+   "reasoning_tokens": 118,
+   "usd": 0.00621725,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 4020.0,
+   "ts": "2026-10-22T14:05:00-03:00",
+   "unix": 1792688700.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 4020.0,
+   "ts": "2026-10-22T14:05:00-03:00",
+   "unix": 1792688700.0,
+   "channel": "telegram",
+   "text": "Anoté la mamadera de 70 ml de las 14:05.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792296529.419,
+   "ts": "2026-10-22T14:05:00-03:00",
+   "unix": 1793587621.333,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 31
+  }
+ ]
+}

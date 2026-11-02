@@ -1,0 +1,197 @@
+{
+ "id": "A3-011",
+ "child": "heldout-baby-a",
+ "created": [
+  {
+   "endpoint": "feedings",
+   "id": 1012,
+   "child": 3,
+   "start": "2026-10-22T12:15:00Z",
+   "end": "2026-10-22T12:30:00Z",
+   "duration": "00:15:00",
+   "type": "breast milk",
+   "method": "both breasts",
+   "amount": null,
+   "notes": "",
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T09:28:00-03:00",
+   "chat": "9000001",
+   "text": "Buen día, Gonza.\nEsta noche te toca a vos.\nClima: lluvia, 16 a 17 C, 3.1 mm de lluvia.\nMenú de Cookidoo: Arroz blanco."
+  },
+  {
+   "at": "2026-10-22T09:28:00-03:00",
+   "chat": "9000002",
+   "text": "Buen día, Ceci.\nClima: lluvia, 16 a 17 C, 3.1 mm de lluvia.\nMenú de Cookidoo: Arroz blanco."
+  },
+  {
+   "at": "2026-10-22T09:30:00-03:00",
+   "chat": "9000002",
+   "text": "Anoté la toma de pecho de los dos lados de 25 min de las 09:30."
+  },
+  {
+   "at": "2026-10-22T09:33:00-03:00",
+   "chat": "9000002",
+   "text": "Corregí la toma de pecho de las 09:30: 25 min → 15 min."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T09:30:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "eh bueno le dimos la teta de los dos lados como 25 minutos y ahora esta re tranquilo",
+   "setup": true,
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-22T09:33:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "eh no perdon fueron 15 no 25",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.018,
+ "brain_calls": {
+  "inference.baseten.co": 5
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T09:28:00-03:00",
+   "unix": 1792672080.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Buen día, Gonza.\nEsta noche te toca a vos.\nClima: lluvia, 16 a 17 C, 3.1 mm de lluvia.\nMenú de Cookidoo: Arroz blanco.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "family-push",
+   "routine": "morning",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T09:28:00-03:00",
+   "unix": 1792672080.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Buen día, Ceci.\nClima: lluvia, 16 a 17 C, 3.1 mm de lluvia.\nMenú de Cookidoo: Arroz blanco.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "family-push",
+   "routine": "morning",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T09:30:00-03:00",
+   "unix": 1792672200.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4143,
+   "output_tokens": 375,
+   "reasoning_tokens": 271,
+   "usd": 0.0067725,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T09:30:00-03:00",
+   "unix": 1792672200.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T09:30:00-03:00",
+   "unix": 1792672200.0,
+   "channel": "telegram",
+   "text": "Anoté la toma de pecho de los dos lados de 25 min de las 09:30.",
+   "chat_id": "9000002",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792288805.177,
+   "ts": "2026-10-22T09:30:00-03:00",
+   "unix": 1793582745.478,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 84
+  },
+  {
+   "kind": "brain_call",
+   "t": 300.0,
+   "ts": "2026-10-22T09:33:00-03:00",
+   "unix": 1792672380.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4223,
+   "output_tokens": 160,
+   "reasoning_tokens": 61,
+   "usd": 0.00595875,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 300.0,
+   "ts": "2026-10-22T09:33:00-03:00",
+   "unix": 1792672380.0,
+   "name": "edit_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 300.0,
+   "ts": "2026-10-22T09:33:00-03:00",
+   "unix": 1792672380.0,
+   "channel": "telegram",
+   "text": "Corregí la toma de pecho de las 09:30: 25 min → 15 min.",
+   "chat_id": "9000002",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792288796.713,
+   "ts": "2026-10-22T09:33:00-03:00",
+   "unix": 1793582753.942,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 28
+  }
+ ]
+}

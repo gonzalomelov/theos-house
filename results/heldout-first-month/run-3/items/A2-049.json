@@ -1,0 +1,217 @@
+{
+ "id": "A2-049",
+ "child": "heldout-baby-a",
+ "created": [
+  {
+   "endpoint": "sleep",
+   "id": 509,
+   "child": 3,
+   "start": "2026-10-22T02:40:00Z",
+   "end": "2026-10-22T06:15:00Z",
+   "duration": "03:35:00",
+   "nap": false,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  },
+  {
+   "endpoint": "notes",
+   "id": 553,
+   "child": 3,
+   "note": "Night wake-up handled by Ceci",
+   "image": null,
+   "time": "2026-10-22T06:15:00Z",
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [
+  {
+   "endpoint": "timers",
+   "before": {
+    "id": 242,
+    "child": 3,
+    "name": "sleep",
+    "start": "2026-10-22T02:40:00Z",
+    "duration": "10 23:57:15.452010",
+    "user": 2
+   },
+   "after": null
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T03:13:00-03:00",
+   "chat": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 05:15. La luz espera a que se despierte.\nVentana para aspirar de 12:03 a 13:00.\nPor qué: El plan arma una ventana diurna para el piso entre siestas y un precalentado nocturno del biberón alineado con los despertares previstos."
+  },
+  {
+   "at": "2026-10-22T03:13:00-03:00",
+   "chat": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 05:15. La luz espera a que se despierte.\nVentana para aspirar de 12:03 a 13:00.\nPor qué: El plan arma una ventana diurna para el piso entre siestas y un precalentado nocturno del biberón alineado con los despertares previstos."
+  },
+  {
+   "at": "2026-10-22T03:13:00-03:00",
+   "chat": "9000001",
+   "text": "Cambió el plan: El sueño desde las 23:40 duró 213 minutos, más que lo habitual, por eso el plan alinea las próximas ventanas con los sueños previstos actualizados."
+  },
+  {
+   "at": "2026-10-22T03:13:00-03:00",
+   "chat": "9000002",
+   "text": "Cambió el plan: El sueño desde las 23:40 duró 213 minutos, más que lo habitual, por eso el plan alinea las próximas ventanas con los sueños previstos actualizados."
+  },
+  {
+   "at": "2026-10-22T03:15:00-03:00",
+   "chat": "9000001",
+   "text": "Se despertó, lo avisó un padre. Está en el colecho, en el cuarto de ustedes. Estás de turno, Gonza."
+  },
+  {
+   "at": "2026-10-22T03:15:00-03:00",
+   "chat": "9000002",
+   "text": "Anoté el sueño de 23:40 a 03:15, 3 h 35 min."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T03:15:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "se desperto llorando",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0172,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T03:13:00-03:00",
+   "unix": 1792649580.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 05:15. La luz espera a que se despierte.\nVentana para aspirar de 12:03 a 13:00.\nPor qué: El plan arma una ventana diurna para el piso entre siestas y un precalentado nocturno del biberón alineado con los despertares previstos.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T03:13:00-03:00",
+   "unix": 1792649580.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 05:15. La luz espera a que se despierte.\nVentana para aspirar de 12:03 a 13:00.\nPor qué: El plan arma una ventana diurna para el piso entre siestas y un precalentado nocturno del biberón alineado con los despertares previstos.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T03:13:00-03:00",
+   "unix": 1792649580.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Cambió el plan: El sueño desde las 23:40 duró 213 minutos, más que lo habitual, por eso el plan alinea las próximas ventanas con los sueños previstos actualizados.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "replan",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T03:13:00-03:00",
+   "unix": 1792649580.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Cambió el plan: El sueño desde las 23:40 duró 213 minutos, más que lo habitual, por eso el plan alinea las próximas ventanas con los sueños previstos actualizados.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "replan",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T03:15:00-03:00",
+   "unix": 1792649700.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Se despertó, lo avisó un padre. Está en el colecho, en el cuarto de ustedes. Estás de turno, Gonza.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "night_feed",
+   "routine": null,
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T03:15:00-03:00",
+   "unix": 1792649700.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4170,
+   "output_tokens": 281,
+   "reasoning_tokens": 206,
+   "usd": 0.00640675,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T03:15:00-03:00",
+   "unix": 1792649700.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T03:15:00-03:00",
+   "unix": 1792649700.0,
+   "channel": "telegram",
+   "text": "Anoté el sueño de 23:40 a 03:15, 3 h 35 min.",
+   "chat_id": "9000002",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792261997.784,
+   "ts": "2026-10-22T03:15:00-03:00",
+   "unix": 1793587052.96,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 20
+  }
+ ]
+}

@@ -1,0 +1,128 @@
+{
+ "id": "A2-047",
+ "child": "heldout-baby-a",
+ "created": [
+  {
+   "endpoint": "sleep",
+   "id": 376,
+   "child": 3,
+   "start": "2026-10-22T16:00:00Z",
+   "end": "2026-10-22T17:00:00Z",
+   "duration": "01:00:00",
+   "nap": true,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  },
+  {
+   "endpoint": "timers",
+   "id": 187,
+   "child": 3,
+   "name": "sleep",
+   "start": "2026-10-22T17:20:00Z",
+   "duration": "10 07:58:47.992893",
+   "user": 2
+  }
+ ],
+ "seed_after": [
+  {
+   "endpoint": "timers",
+   "before": {
+    "id": 186,
+    "child": 3,
+    "name": "sleep",
+    "start": "2026-10-22T16:00:00Z",
+    "duration": "10 09:18:32.350996",
+    "user": 2
+   },
+   "after": null
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T14:45:00-03:00",
+   "chat": "9000002",
+   "text": "Anoté el sueño de 13:00 a 14:00, 1 h 00 min y que el bebé se durmió a las 14:20."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T14:45:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "se desperto a las 14, estuvo despierto un rato y a las 14:20 se volvio a dormir",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0075,
+ "brain_calls": {
+  "inference.baseten.co": 2
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T14:45:00-03:00",
+   "unix": 1792691100.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4167,
+   "output_tokens": 299,
+   "reasoning_tokens": 186,
+   "usd": 0.0064795,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T14:45:00-03:00",
+   "unix": 1792691100.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T14:45:00-03:00",
+   "unix": 1792691100.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T14:45:00-03:00",
+   "unix": 1792691100.0,
+   "channel": "telegram",
+   "text": "Anoté el sueño de 13:00 a 14:00, 1 h 00 min y que el bebé se durmió a las 14:20.",
+   "chat_id": "9000002",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792308126.781,
+   "ts": "2026-10-22T14:45:00-03:00",
+   "unix": 1793582323.873,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 79
+  }
+ ]
+}

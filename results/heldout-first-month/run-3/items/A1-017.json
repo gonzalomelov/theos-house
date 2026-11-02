@@ -1,0 +1,100 @@
+{
+ "id": "A1-017",
+ "child": "heldout-baby-b",
+ "created": [
+  {
+   "endpoint": "feedings",
+   "id": 1316,
+   "child": 4,
+   "start": "2026-10-22T15:25:00Z",
+   "end": "2026-10-22T15:40:00Z",
+   "duration": "00:15:00",
+   "type": "formula",
+   "method": "bottle",
+   "amount": 80.0,
+   "notes": "length not said, milk type not said",
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T12:40:00-03:00",
+   "chat": "9000001",
+   "text": "Anoté la mamadera de 80 ml de las 12:40."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T12:40:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "le preparé 100 y tomó 80",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0067,
+ "brain_calls": {
+  "inference.baseten.co": 2
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T12:40:00-03:00",
+   "unix": 1792683600.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4140,
+   "output_tokens": 129,
+   "reasoning_tokens": 35,
+   "usd": 0.00572325,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T12:40:00-03:00",
+   "unix": 1792683600.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T12:40:00-03:00",
+   "unix": 1792683600.0,
+   "channel": "telegram",
+   "text": "Anoté la mamadera de 80 ml de las 12:40.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792296784.897,
+   "ts": "2026-10-22T12:40:00-03:00",
+   "unix": 1793586165.834,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 24
+  }
+ ]
+}

@@ -1,0 +1,199 @@
+{
+ "id": "A3-032",
+ "child": "heldout-baby-b",
+ "created": [
+  {
+   "endpoint": "changes",
+   "id": 790,
+   "child": 4,
+   "time": "2026-10-22T10:02:00Z",
+   "wet": true,
+   "solid": false,
+   "color": "",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 1043,
+    "child": 4,
+    "start": "2026-10-22T09:10:00Z",
+    "end": "2026-10-22T09:25:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 100.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 1043,
+    "child": 4,
+    "start": "2026-10-22T09:10:00Z",
+    "end": "2026-10-22T09:25:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 100.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T07:02:00-03:00",
+   "chat": "9000001",
+   "text": "Anoté el pañal mojado de las 07:02."
+  },
+  {
+   "at": "2026-10-22T07:03:00-03:00",
+   "chat": "9000001",
+   "text": "Ya tenía anotado un pañal mojado a las 07:02, ¿este de las 07:03 es el mismo que se mandó dos veces o fueron dos pañales distintos?"
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T07:02:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "pañal mojado",
+   "setup": true,
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-22T07:03:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "pañal mojado",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0194,
+ "brain_calls": {
+  "inference.baseten.co": 5
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T07:02:00-03:00",
+   "unix": 1792663320.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4165,
+   "output_tokens": 119,
+   "reasoning_tokens": 41,
+   "usd": 0.005712,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T07:02:00-03:00",
+   "unix": 1792663320.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T07:02:00-03:00",
+   "unix": 1792663320.0,
+   "channel": "telegram",
+   "text": "Anoté el pañal mojado de las 07:02.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792279578.205,
+   "ts": "2026-10-22T07:02:00-03:00",
+   "unix": 1793583092.452,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 12
+  },
+  {
+   "kind": "brain_call",
+   "t": 180.0,
+   "ts": "2026-10-22T07:03:00-03:00",
+   "unix": 1792663380.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 4232,
+   "output_tokens": 125,
+   "reasoning_tokens": 88,
+   "usd": 0.00582125,
+   "fallback": false
+  },
+  {
+   "kind": "brain_call",
+   "t": 180.0,
+   "ts": "2026-10-22T07:03:00-03:00",
+   "unix": 1792663380.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4256,
+   "output_tokens": 251,
+   "reasoning_tokens": 148,
+   "usd": 0.00638675,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 180.0,
+   "ts": "2026-10-22T07:03:00-03:00",
+   "unix": 1792663380.0,
+   "channel": "telegram",
+   "text": "Ya tenía anotado un pañal mojado a las 07:02, ¿este de las 07:03 es el mismo que se mandó dos veces o fueron dos pañales distintos?",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792279569.562,
+   "ts": "2026-10-22T07:03:00-03:00",
+   "unix": 1793583101.095,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 12
+  }
+ ]
+}

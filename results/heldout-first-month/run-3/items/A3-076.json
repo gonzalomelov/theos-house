@@ -1,0 +1,209 @@
+{
+ "id": "A3-076",
+ "child": "heldout-baby-a",
+ "created": [],
+ "seed_after": [
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 1588,
+    "child": 3,
+    "start": "2026-10-22T01:10:00Z",
+    "end": "2026-10-22T01:25:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 90.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 1588,
+    "child": 3,
+    "start": "2026-10-22T01:10:00Z",
+    "end": "2026-10-22T01:25:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 90.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 1589,
+    "child": 3,
+    "start": "2026-10-22T02:55:00Z",
+    "end": "2026-10-22T03:10:00Z",
+    "duration": "00:15:00",
+    "type": "breast milk",
+    "method": "right breast",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 1589,
+    "child": 3,
+    "start": "2026-10-22T02:55:00Z",
+    "end": "2026-10-22T03:10:00Z",
+    "duration": "00:15:00",
+    "type": "breast milk",
+    "method": "right breast",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "changes",
+   "before": {
+    "id": 1109,
+    "child": 3,
+    "time": "2026-10-22T03:05:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "changes",
+    "id": 1109,
+    "child": 3,
+    "time": "2026-10-22T03:05:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T02:18:00-03:00",
+   "chat": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 03:30, 05:30. La luz espera a que se despierte.\nVentana para aspirar de 09:00 a 10:00.\nPor qué: El plan mantiene a Gonza de guardia con precalentado de mamadera a las 03:30 y 05:30 y ventana de limpieza de piso de 09:00 a 10:00 libre de sueño."
+  },
+  {
+   "at": "2026-10-22T02:18:00-03:00",
+   "chat": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 03:30, 05:30. La luz espera a que se despierte.\nVentana para aspirar de 09:00 a 10:00.\nPor qué: El plan mantiene a Gonza de guardia con precalentado de mamadera a las 03:30 y 05:30 y ventana de limpieza de piso de 09:00 a 10:00 libre de sueño."
+  },
+  {
+   "at": "2026-10-22T02:20:00-03:00",
+   "chat": "9000002",
+   "text": "His last feed was at 00:10, right breast for 15 minutes."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T02:20:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "when did he last eat",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0358,
+ "brain_calls": {
+  "inference.baseten.co": 4
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T02:18:00-03:00",
+   "unix": 1792646280.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 03:30, 05:30. La luz espera a que se despierte.\nVentana para aspirar de 09:00 a 10:00.\nPor qué: El plan mantiene a Gonza de guardia con precalentado de mamadera a las 03:30 y 05:30 y ventana de limpieza de piso de 09:00 a 10:00 libre de sueño.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T02:18:00-03:00",
+   "unix": 1792646280.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 03:30, 05:30. La luz espera a que se despierte.\nVentana para aspirar de 09:00 a 10:00.\nPor qué: El plan mantiene a Gonza de guardia con precalentado de mamadera a las 03:30 y 05:30 y ventana de limpieza de piso de 09:00 a 10:00 libre de sueño.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T02:20:00-03:00",
+   "unix": 1792646400.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 1225,
+   "output_tokens": 80,
+   "reasoning_tokens": 53,
+   "usd": 0.00187125,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T02:20:00-03:00",
+   "unix": 1792646400.0,
+   "channel": "telegram",
+   "text": "His last feed was at 00:10, right breast for 15 minutes.",
+   "chat_id": "9000002",
+   "guard_lang": null
+  },
+  {
+   "kind": "turn",
+   "t": -1792257758.753,
+   "ts": "2026-10-22T02:20:00-03:00",
+   "unix": 1793587992.003,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 20
+  }
+ ]
+}

@@ -1,0 +1,213 @@
+{
+ "id": "A3-084",
+ "child": "heldout-baby-b",
+ "created": [],
+ "seed_after": [
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 1176,
+    "child": 4,
+    "start": "2026-10-22T20:40:00Z",
+    "end": "2026-10-22T20:55:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 100.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 1176,
+    "child": 4,
+    "start": "2026-10-22T20:40:00Z",
+    "end": "2026-10-22T20:55:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 100.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "sleep",
+   "before": {
+    "id": 426,
+    "child": 4,
+    "start": "2026-10-22T21:10:00Z",
+    "end": "2026-10-22T23:05:00Z",
+    "duration": "01:55:00",
+    "nap": false,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "sleep",
+    "id": 426,
+    "child": 4,
+    "start": "2026-10-22T21:10:00Z",
+    "end": "2026-10-22T23:05:00Z",
+    "duration": "01:55:00",
+    "nap": false,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T20:48:00-03:00",
+   "chat": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 23:23, 01:53, 04:23, 06:23. La luz espera a que se despierte."
+  },
+  {
+   "at": "2026-10-22T20:48:00-03:00",
+   "chat": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 23:23, 01:53, 04:23, 06:23. La luz espera a que se despierte."
+  },
+  {
+   "at": "2026-10-22T20:48:00-03:00",
+   "chat": "9000001",
+   "text": "Cambió el plan: El plan se ajustó por el sueño largo en curso desde las 16:20 hasta las 20:53 y los despertares nocturnos previstos después."
+  },
+  {
+   "at": "2026-10-22T20:48:00-03:00",
+   "chat": "9000002",
+   "text": "Cambió el plan: El plan se ajustó por el sueño largo en curso desde las 16:20 hasta las 20:53 y los despertares nocturnos previstos después."
+  },
+  {
+   "at": "2026-10-22T20:50:00-03:00",
+   "chat": "9000001",
+   "text": "Se despertó a las 20:05 de hoy."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T20:50:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "se desperto a q hora?",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0134,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T20:48:00-03:00",
+   "unix": 1792712880.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 23:23, 01:53, 04:23, 06:23. La luz espera a que se despierte.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T20:48:00-03:00",
+   "unix": 1792712880.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 23:23, 01:53, 04:23, 06:23. La luz espera a que se despierte.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T20:48:00-03:00",
+   "unix": 1792712880.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Cambió el plan: El plan se ajustó por el sueño largo en curso desde las 16:20 hasta las 20:53 y los despertares nocturnos previstos después.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "replan",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T20:48:00-03:00",
+   "unix": 1792712880.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Cambió el plan: El plan se ajustó por el sueño largo en curso desde las 16:20 hasta las 20:53 y los despertares nocturnos previstos después.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "replan",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T20:50:00-03:00",
+   "unix": 1792713000.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4201,
+   "output_tokens": 136,
+   "reasoning_tokens": 63,
+   "usd": 0.00582925,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T20:50:00-03:00",
+   "unix": 1792713000.0,
+   "channel": "telegram",
+   "text": "Se despertó a las 20:05 de hoy.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792328741.179,
+   "ts": "2026-10-22T20:50:00-03:00",
+   "unix": 1793583609.479,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 21
+  }
+ ]
+}

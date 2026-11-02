@@ -1,0 +1,114 @@
+{
+ "id": "A1-021",
+ "child": "heldout-baby-c",
+ "created": [],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T21:58:00-03:00",
+   "chat": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nPor qué: No se armó ninguna rutina para la noche y la mañana temprano porque no se predijeron ventanas de sueño o de toma que requieran acción."
+  },
+  {
+   "at": "2026-10-22T21:58:00-03:00",
+   "chat": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nPor qué: No se armó ninguna rutina para la noche y la mañana temprano porque no se predijeron ventanas de sueño o de toma que requieran acción."
+  },
+  {
+   "at": "2026-10-22T22:00:00-03:00",
+   "chat": "9000001",
+   "text": "Got it, just let me know when he takes it and I'll log it."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T22:00:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "about to give him a bottle, 90ml",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0126,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T21:58:00-03:00",
+   "unix": 1792717080.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nPor qué: No se armó ninguna rutina para la noche y la mañana temprano porque no se predijeron ventanas de sueño o de toma que requieran acción.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T21:58:00-03:00",
+   "unix": 1792717080.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nPor qué: No se armó ninguna rutina para la noche y la mañana temprano porque no se predijeron ventanas de sueño o de toma que requieran acción.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T22:00:00-03:00",
+   "unix": 1792717200.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4122,
+   "output_tokens": 185,
+   "reasoning_tokens": 108,
+   "usd": 0.00593875,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T22:00:00-03:00",
+   "unix": 1792717200.0,
+   "channel": "telegram",
+   "text": "Got it, just let me know when he takes it and I'll log it.",
+   "chat_id": "9000001",
+   "guard_lang": null
+  },
+  {
+   "kind": "turn",
+   "t": -1792330364.078,
+   "ts": "2026-10-22T22:00:00-03:00",
+   "unix": 1793586186.654,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 32
+  }
+ ]
+}

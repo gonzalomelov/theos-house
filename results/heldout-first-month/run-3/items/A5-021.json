@@ -1,0 +1,114 @@
+{
+ "id": "A5-021",
+ "child": "heldout-baby-c",
+ "created": [],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T04:18:00-03:00",
+   "chat": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 09:00 a 10:00."
+  },
+  {
+   "at": "2026-10-22T04:18:00-03:00",
+   "chat": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 09:00 a 10:00."
+  },
+  {
+   "at": "2026-10-22T04:20:00-03:00",
+   "chat": "9000002",
+   "text": "Why did the baby bottle go to school? It wanted to be a little smarter."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T04:20:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "tell me a joke im literally falling asleep",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.012,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T04:18:00-03:00",
+   "unix": 1792653480.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 09:00 a 10:00.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T04:18:00-03:00",
+   "unix": 1792653480.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 09:00 a 10:00.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T04:20:00-03:00",
+   "unix": 1792653600.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4120,
+   "output_tokens": 164,
+   "reasoning_tokens": 86,
+   "usd": 0.005847,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T04:20:00-03:00",
+   "unix": 1792653600.0,
+   "channel": "telegram",
+   "text": "Why did the baby bottle go to school? It wanted to be a little smarter.",
+   "chat_id": "9000002",
+   "guard_lang": null
+  },
+  {
+   "kind": "turn",
+   "t": -1792264111.308,
+   "ts": "2026-10-22T04:20:00-03:00",
+   "unix": 1793588839.46,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 42
+  }
+ ]
+}

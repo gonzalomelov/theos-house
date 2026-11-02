@@ -1,0 +1,170 @@
+{
+ "id": "A2-045",
+ "child": "heldout-baby-c",
+ "created": [
+  {
+   "endpoint": "timers",
+   "id": 243,
+   "child": 5,
+   "name": "sleep",
+   "start": "2026-10-22T21:30:00Z",
+   "duration": "10 05:07:41.435579",
+   "user": 2
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T18:30:00-03:00",
+   "chat": "9000002",
+   "text": "Anoté que el bebé se durmió a las 18:30."
+  },
+  {
+   "at": "2026-10-22T18:31:00-03:00",
+   "chat": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 22:00, 00:00, 02:30, 05:30. La luz espera a que se despierte.\nPuerta en aviso silencioso de 19:36 a 20:51.\nVentana para aspirar de 18:36 a 19:36.\nPor qué: La puerta queda en silencio de 19:36 a 20:51, la limpieza queda armada de 18:36 a 19:36 entre sueños en horario diurno y tenés 4 precalentados nocturnos armados, Gonza queda de guardia."
+  },
+  {
+   "at": "2026-10-22T18:31:00-03:00",
+   "chat": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 22:00, 00:00, 02:30, 05:30. La luz espera a que se despierte.\nPuerta en aviso silencioso de 19:36 a 20:51.\nVentana para aspirar de 18:36 a 19:36.\nPor qué: La puerta queda en silencio de 19:36 a 20:51, la limpieza queda armada de 18:36 a 19:36 entre sueños en horario diurno y tenés 4 precalentados nocturnos armados, Gonza queda de guardia."
+  },
+  {
+   "at": "2026-10-22T18:31:00-03:00",
+   "chat": "9000001",
+   "text": "Cambió el plan: El plan se reinició para cubrir el sueño extendido desde las 23:40 y los sueños previstos actualizados hasta las 06:36."
+  },
+  {
+   "at": "2026-10-22T18:31:00-03:00",
+   "chat": "9000002",
+   "text": "Cambió el plan: El plan se reinició para cubrir el sueño extendido desde las 23:40 y los sueños previstos actualizados hasta las 06:36."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T18:30:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "se durmio en el cochecito",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0262,
+ "brain_calls": {
+  "inference.baseten.co": 4
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T18:30:00-03:00",
+   "unix": 1792704600.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4140,
+   "output_tokens": 324,
+   "reasoning_tokens": 249,
+   "usd": 0.006552,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T18:30:00-03:00",
+   "unix": 1792704600.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T18:30:00-03:00",
+   "unix": 1792704600.0,
+   "channel": "telegram",
+   "text": "Anoté que el bebé se durmió a las 18:30.",
+   "chat_id": "9000002",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792316903.291,
+   "ts": "2026-10-22T18:30:00-03:00",
+   "unix": 1793587047.452,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 25
+  },
+  {
+   "kind": "reply",
+   "t": 180.0,
+   "ts": "2026-10-22T18:31:00-03:00",
+   "unix": 1792704660.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 22:00, 00:00, 02:30, 05:30. La luz espera a que se despierte.\nPuerta en aviso silencioso de 19:36 a 20:51.\nVentana para aspirar de 18:36 a 19:36.\nPor qué: La puerta queda en silencio de 19:36 a 20:51, la limpieza queda armada de 18:36 a 19:36 entre sueños en horario diurno y tenés 4 precalentados nocturnos armados, Gonza queda de guardia.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 180.0,
+   "ts": "2026-10-22T18:31:00-03:00",
+   "unix": 1792704660.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 22:00, 00:00, 02:30, 05:30. La luz espera a que se despierte.\nPuerta en aviso silencioso de 19:36 a 20:51.\nVentana para aspirar de 18:36 a 19:36.\nPor qué: La puerta queda en silencio de 19:36 a 20:51, la limpieza queda armada de 18:36 a 19:36 entre sueños en horario diurno y tenés 4 precalentados nocturnos armados, Gonza queda de guardia.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 180.0,
+   "ts": "2026-10-22T18:31:00-03:00",
+   "unix": 1792704660.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Cambió el plan: El plan se reinició para cubrir el sueño extendido desde las 23:40 y los sueños previstos actualizados hasta las 06:36.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "replan",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 180.0,
+   "ts": "2026-10-22T18:31:00-03:00",
+   "unix": 1792704660.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Cambió el plan: El plan se reinició para cubrir el sueño extendido desde las 23:40 y los sueños previstos actualizados hasta las 06:36.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "replan",
+   "check_now": null
+  }
+ ]
+}

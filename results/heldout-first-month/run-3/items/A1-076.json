@@ -1,0 +1,123 @@
+{
+ "id": "A1-076",
+ "child": "heldout-baby-a",
+ "created": [
+  {
+   "endpoint": "feedings",
+   "id": 1363,
+   "child": 3,
+   "start": "2026-10-22T20:45:00Z",
+   "end": "2026-10-22T21:00:00Z",
+   "duration": "00:15:00",
+   "type": "formula",
+   "method": "bottle",
+   "amount": 30.0,
+   "notes": "length not said",
+   "tags": [
+    "agent"
+   ]
+  },
+  {
+   "endpoint": "feedings",
+   "id": 1362,
+   "child": 3,
+   "start": "2026-10-22T20:29:00Z",
+   "end": "2026-10-22T20:44:00Z",
+   "duration": "00:15:00",
+   "type": "breast milk",
+   "method": "bottle",
+   "amount": 50.0,
+   "notes": "length not said",
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T18:00:00-03:00",
+   "chat": "9000002",
+   "text": "Anoté la mamadera de 50 ml de leche materna de las 17:44 y la mamadera de 30 ml de fórmula de las 18:00."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T18:00:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "le di 50 de leche materna y como quedo con hambre despues otra mamadera de 30 de formula",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.008,
+ "brain_calls": {
+  "inference.baseten.co": 2
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T18:00:00-03:00",
+   "unix": 1792702800.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4154,
+   "output_tokens": 310,
+   "reasoning_tokens": 166,
+   "usd": 0.00651,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T18:00:00-03:00",
+   "unix": 1792702800.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T18:00:00-03:00",
+   "unix": 1792702800.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T18:00:00-03:00",
+   "unix": 1792702800.0,
+   "channel": "telegram",
+   "text": "Anoté la mamadera de 50 ml de leche materna de las 17:44 y la mamadera de 30 ml de fórmula de las 18:00.",
+   "chat_id": "9000002",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792315545.811,
+   "ts": "2026-10-22T18:00:00-03:00",
+   "unix": 1793586604.927,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 88
+  }
+ ]
+}

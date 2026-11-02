@@ -1,0 +1,188 @@
+{
+ "id": "B1-049",
+ "child": "heldout-baby-c",
+ "created": [
+  {
+   "endpoint": "changes",
+   "id": 750,
+   "child": 5,
+   "time": "2026-10-22T22:02:00Z",
+   "wet": true,
+   "solid": true,
+   "color": "",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T19:02:00-03:00",
+   "chat": "9000002",
+   "text": "Anoté el pañal mojado y sucio de las 19:02."
+  },
+  {
+   "at": "2026-10-22T19:03:00-03:00",
+   "chat": "9000001",
+   "text": "Cambió el plan: El plan sumó precalentados nocturnos y ventana de limpieza después de que la siesta iniciada a las 15:20 se extendiera a 223 minutos, Gonza y Ceci."
+  },
+  {
+   "at": "2026-10-22T19:03:00-03:00",
+   "chat": "9000002",
+   "text": "Cambió el plan: El plan sumó precalentados nocturnos y ventana de limpieza después de que la siesta iniciada a las 15:20 se extendiera a 223 minutos, Gonza y Ceci."
+  },
+  {
+   "at": "2026-10-22T19:03:00-03:00",
+   "chat": "9000002",
+   "text": "¿Fue el mismo pañal de las 19:02 mandado dos veces o fueron dos pañales distintos?"
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T19:02:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "pañal con pis y caca",
+   "setup": true,
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-22T19:03:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "pañal con pis y caca",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.025,
+ "brain_calls": {
+  "inference.baseten.co": 5
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T19:02:00-03:00",
+   "unix": 1792706520.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4130,
+   "output_tokens": 127,
+   "reasoning_tokens": 36,
+   "usd": 0.00570225,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T19:02:00-03:00",
+   "unix": 1792706520.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T19:02:00-03:00",
+   "unix": 1792706520.0,
+   "channel": "telegram",
+   "text": "Anoté el pañal mojado y sucio de las 19:02.",
+   "chat_id": "9000002",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792323621.799,
+   "ts": "2026-10-22T19:02:00-03:00",
+   "unix": 1793582248.854,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 20
+  },
+  {
+   "kind": "reply",
+   "t": 180.0,
+   "ts": "2026-10-22T19:03:00-03:00",
+   "unix": 1792706580.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Cambió el plan: El plan sumó precalentados nocturnos y ventana de limpieza después de que la siesta iniciada a las 15:20 se extendiera a 223 minutos, Gonza y Ceci.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "replan",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 180.0,
+   "ts": "2026-10-22T19:03:00-03:00",
+   "unix": 1792706580.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Cambió el plan: El plan sumó precalentados nocturnos y ventana de limpieza después de que la siesta iniciada a las 15:20 se extendiera a 223 minutos, Gonza y Ceci.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "replan",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 180.0,
+   "ts": "2026-10-22T19:03:00-03:00",
+   "unix": 1792706580.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4210,
+   "output_tokens": 214,
+   "reasoning_tokens": 128,
+   "usd": 0.006172,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 180.0,
+   "ts": "2026-10-22T19:03:00-03:00",
+   "unix": 1792706580.0,
+   "channel": "telegram",
+   "text": "¿Fue el mismo pañal de las 19:02 mandado dos veces o fueron dos pañales distintos?",
+   "chat_id": "9000002",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792323608.715,
+   "ts": "2026-10-22T19:03:00-03:00",
+   "unix": 1793582261.938,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 20
+  }
+ ]
+}

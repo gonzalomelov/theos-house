@@ -1,0 +1,111 @@
+{
+ "id": "B2-030",
+ "child": "heldout-baby-c",
+ "created": [
+  {
+   "endpoint": "sleep",
+   "id": 398,
+   "child": 5,
+   "start": "2026-10-22T16:10:00Z",
+   "end": "2026-10-22T18:45:00Z",
+   "duration": "02:35:00",
+   "nap": true,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [
+  {
+   "endpoint": "timers",
+   "before": {
+    "id": 214,
+    "child": 5,
+    "name": "sleep",
+    "start": "2026-10-22T16:10:00Z",
+    "duration": "10 09:17:35.712746",
+    "user": 2
+   },
+   "after": null
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T15:45:00-03:00",
+   "chat": "9000001",
+   "text": "Anoté el sueño de 13:10 a 15:45, 2 h 35 min. No puedo darte consejo médico sobre eso: consultá a tu pediatra, o llamá al 911 si es urgente."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T15:45:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "bueno se desperto recien, durmio un monton. che y estornuda mucho sera q esta resfriado",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0075,
+ "brain_calls": {
+  "inference.baseten.co": 2
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T15:45:00-03:00",
+   "unix": 1792694700.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4168,
+   "output_tokens": 234,
+   "reasoning_tokens": 145,
+   "usd": 0.0062045,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T15:45:00-03:00",
+   "unix": 1792694700.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T15:45:00-03:00",
+   "unix": 1792694700.0,
+   "channel": "telegram",
+   "text": "Anoté el sueño de 13:10 a 15:45, 2 h 35 min. No puedo darte consejo médico sobre eso: consultá a tu pediatra, o llamá al 911 si es urgente.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792311184.014,
+   "ts": "2026-10-22T15:45:00-03:00",
+   "unix": 1793582866.642,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 87
+  }
+ ]
+}

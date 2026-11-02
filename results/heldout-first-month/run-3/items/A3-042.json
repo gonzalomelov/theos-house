@@ -1,0 +1,421 @@
+{
+ "id": "A3-042",
+ "child": "heldout-baby-c",
+ "created": [],
+ "seed_after": [
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 1476,
+    "child": 5,
+    "start": "2026-10-22T05:00:00Z",
+    "end": "2026-10-22T05:15:00Z",
+    "duration": "00:15:00",
+    "type": "breast milk",
+    "method": "right breast",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 1476,
+    "child": 5,
+    "start": "2026-10-22T05:00:00Z",
+    "end": "2026-10-22T05:15:00Z",
+    "duration": "00:15:00",
+    "type": "breast milk",
+    "method": "right breast",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 1477,
+    "child": 5,
+    "start": "2026-10-22T09:10:00Z",
+    "end": "2026-10-22T09:25:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 90.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 1477,
+    "child": 5,
+    "start": "2026-10-22T09:10:00Z",
+    "end": "2026-10-22T09:25:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 90.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 1478,
+    "child": 5,
+    "start": "2026-10-22T16:30:00Z",
+    "end": "2026-10-22T16:45:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 80.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 1478,
+    "child": 5,
+    "start": "2026-10-22T16:30:00Z",
+    "end": "2026-10-22T16:45:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 80.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "changes",
+   "before": {
+    "id": 1074,
+    "child": 5,
+    "time": "2026-10-22T01:00:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "changes",
+    "id": 1074,
+    "child": 5,
+    "time": "2026-10-22T01:00:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "changes",
+   "before": {
+    "id": 1075,
+    "child": 5,
+    "time": "2026-10-22T04:30:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "changes",
+    "id": 1075,
+    "child": 5,
+    "time": "2026-10-22T04:30:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "changes",
+   "before": {
+    "id": 1076,
+    "child": 5,
+    "time": "2026-10-22T08:00:00Z",
+    "wet": true,
+    "solid": true,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "changes",
+    "id": 1076,
+    "child": 5,
+    "time": "2026-10-22T08:00:00Z",
+    "wet": true,
+    "solid": true,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "changes",
+   "before": {
+    "id": 1077,
+    "child": 5,
+    "time": "2026-10-22T12:20:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "changes",
+    "id": 1077,
+    "child": 5,
+    "time": "2026-10-22T12:20:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "changes",
+   "before": {
+    "id": 1078,
+    "child": 5,
+    "time": "2026-10-22T15:00:00Z",
+    "wet": false,
+    "solid": true,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "changes",
+    "id": 1078,
+    "child": 5,
+    "time": "2026-10-22T15:00:00Z",
+    "wet": false,
+    "solid": true,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "changes",
+   "before": {
+    "id": 1079,
+    "child": 5,
+    "time": "2026-10-22T18:40:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "changes",
+    "id": 1079,
+    "child": 5,
+    "time": "2026-10-22T18:40:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "changes",
+   "before": {
+    "id": 1080,
+    "child": 5,
+    "time": "2026-10-22T22:10:00Z",
+    "wet": true,
+    "solid": true,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "changes",
+    "id": 1080,
+    "child": 5,
+    "time": "2026-10-22T22:10:00Z",
+    "wet": true,
+    "solid": true,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T20:58:00-03:00",
+   "chat": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 22:20, 01:20, 05:00. La luz espera a que se despierte.\nVentana para aspirar de 08:10 a 08:55.\nPor qué: Calentador de mamadera programado para tres intervalos nocturnos y ventana de aspirado 08:10-08:55 ubicada en la ventana de vigilia matutina para evitar los sueños previstos, Gonza de guardia esta noche."
+  },
+  {
+   "at": "2026-10-22T20:58:00-03:00",
+   "chat": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 22:20, 01:20, 05:00. La luz espera a que se despierte.\nVentana para aspirar de 08:10 a 08:55.\nPor qué: Calentador de mamadera programado para tres intervalos nocturnos y ventana de aspirado 08:10-08:55 ubicada en la ventana de vigilia matutina para evitar los sueños previstos, Gonza de guardia esta noche."
+  },
+  {
+   "at": "2026-10-22T21:00:00-03:00",
+   "chat": "9000001",
+   "text": "Hoy, jueves, 6 pañales: 3 solo pis y 3 con caca. El último con caca fue a las 19:10."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T21:00:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "cuantos pañales hoy",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0158,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T20:58:00-03:00",
+   "unix": 1792713480.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 22:20, 01:20, 05:00. La luz espera a que se despierte.\nVentana para aspirar de 08:10 a 08:55.\nPor qué: Calentador de mamadera programado para tres intervalos nocturnos y ventana de aspirado 08:10-08:55 ubicada en la ventana de vigilia matutina para evitar los sueños previstos, Gonza de guardia esta noche.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T20:58:00-03:00",
+   "unix": 1792713480.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 22:20, 01:20, 05:00. La luz espera a que se despierte.\nVentana para aspirar de 08:10 a 08:55.\nPor qué: Calentador de mamadera programado para tres intervalos nocturnos y ventana de aspirado 08:10-08:55 ubicada en la ventana de vigilia matutina para evitar los sueños previstos, Gonza de guardia esta noche.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T21:00:00-03:00",
+   "unix": 1792713600.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4356,
+   "output_tokens": 265,
+   "reasoning_tokens": 170,
+   "usd": 0.00657125,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T21:00:00-03:00",
+   "unix": 1792713600.0,
+   "channel": "telegram",
+   "text": "Hoy, jueves, 6 pañales: 3 solo pis y 3 con caca. El último con caca fue a las 19:10.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792325152.217,
+   "ts": "2026-10-22T21:00:00-03:00",
+   "unix": 1793587798.537,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 19
+  }
+ ]
+}

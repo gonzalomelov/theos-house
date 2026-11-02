@@ -1,0 +1,198 @@
+{
+ "id": "A4-055",
+ "child": "heldout-baby-a",
+ "created": [
+  {
+   "endpoint": "sleep",
+   "id": 495,
+   "child": 3,
+   "start": "2026-10-22T04:00:00Z",
+   "end": "2026-10-22T07:10:00Z",
+   "duration": "03:10:00",
+   "nap": false,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  },
+  {
+   "endpoint": "notes",
+   "id": 527,
+   "child": 3,
+   "note": "Night wake-up handled by Gonza",
+   "image": null,
+   "time": "2026-10-22T07:11:00Z",
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [
+  {
+   "endpoint": "timers",
+   "before": {
+    "id": 222,
+    "child": 3,
+    "name": "sleep",
+    "start": "2026-10-22T04:00:00Z",
+    "duration": "10 21:51:31.120058",
+    "user": 2
+   },
+   "after": null
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T04:08:00-03:00",
+   "chat": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:00 a 07:41.\nPor qué: Limpieza de piso armada de 07:00 a 07:41 en el hueco entre sueños, el resto apagado hasta las 16:08, Gonza y Ceci avisados."
+  },
+  {
+   "at": "2026-10-22T04:08:00-03:00",
+   "chat": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:00 a 07:41.\nPor qué: Limpieza de piso armada de 07:00 a 07:41 en el hueco entre sueños, el resto apagado hasta las 16:08, Gonza y Ceci avisados."
+  },
+  {
+   "at": "2026-10-22T04:08:00-03:00",
+   "chat": "9000001",
+   "text": "Cambió el plan: Notaste un sueño largo de 188 min y armé la ventana de limpieza en el próximo hueco libre del día."
+  },
+  {
+   "at": "2026-10-22T04:08:00-03:00",
+   "chat": "9000002",
+   "text": "Cambió el plan: Notaste un sueño largo de 188 min y armé la ventana de limpieza en el próximo hueco libre del día."
+  },
+  {
+   "at": "2026-10-22T04:10:00-03:00",
+   "chat": "9000001",
+   "text": "Anoté el sueño de 01:00 a 04:10, 3 h 10 min. No puedo darte consejo médico sobre eso: consultá a tu pediatra, o llamá al 911 si es urgente."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T04:10:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "se desperto recien, durmio re bien. tiene la nariz tapada le pongo suero?",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0131,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T04:08:00-03:00",
+   "unix": 1792652880.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:00 a 07:41.\nPor qué: Limpieza de piso armada de 07:00 a 07:41 en el hueco entre sueños, el resto apagado hasta las 16:08, Gonza y Ceci avisados.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T04:08:00-03:00",
+   "unix": 1792652880.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:00 a 07:41.\nPor qué: Limpieza de piso armada de 07:00 a 07:41 en el hueco entre sueños, el resto apagado hasta las 16:08, Gonza y Ceci avisados.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T04:08:00-03:00",
+   "unix": 1792652880.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Cambió el plan: Notaste un sueño largo de 188 min y armé la ventana de limpieza en el próximo hueco libre del día.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "replan",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T04:08:00-03:00",
+   "unix": 1792652880.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Cambió el plan: Notaste un sueño largo de 188 min y armé la ventana de limpieza en el próximo hueco libre del día.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "replan",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T04:10:00-03:00",
+   "unix": 1792653000.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4165,
+   "output_tokens": 221,
+   "reasoning_tokens": 132,
+   "usd": 0.0061455,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T04:10:00-03:00",
+   "unix": 1792653000.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T04:10:00-03:00",
+   "unix": 1792653000.0,
+   "channel": "telegram",
+   "text": "Anoté el sueño de 01:00 a 04:10, 3 h 10 min. No puedo darte consejo médico sobre eso: consultá a tu pediatra, o llamá al 911 si es urgente.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792268040.571,
+   "ts": "2026-10-22T04:10:00-03:00",
+   "unix": 1793584310.133,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 73
+  }
+ ]
+}

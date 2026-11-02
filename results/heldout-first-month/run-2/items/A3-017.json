@@ -1,0 +1,247 @@
+{
+ "id": "A3-017",
+ "child": "heldout-baby-a",
+ "created": [
+  {
+   "endpoint": "feedings",
+   "id": 1023,
+   "child": 3,
+   "start": "2026-10-22T05:06:00Z",
+   "end": "2026-10-22T05:16:00Z",
+   "duration": "00:10:00",
+   "type": "breast milk",
+   "method": "left breast",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  },
+  {
+   "endpoint": "notes",
+   "id": 419,
+   "child": 3,
+   "note": "Night wake-up handled by Gonza",
+   "image": null,
+   "time": "2026-10-22T05:17:00Z",
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [
+  {
+   "endpoint": "changes",
+   "before": {
+    "id": 782,
+    "child": 3,
+    "time": "2026-10-22T04:50:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "changes",
+    "id": 782,
+    "child": 3,
+    "time": "2026-10-22T04:50:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T02:13:00-03:00",
+   "chat": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nPor qué: Sin rutinas programadas para la noche hasta las 14:13, sigue el monitoreo estándar."
+  },
+  {
+   "at": "2026-10-22T02:13:00-03:00",
+   "chat": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nPor qué: Sin rutinas programadas para la noche hasta las 14:13, sigue el monitoreo estándar."
+  },
+  {
+   "at": "2026-10-22T02:15:00-03:00",
+   "chat": "9000001",
+   "text": "Anoté que el bebé se durmió a las 02:15."
+  },
+  {
+   "at": "2026-10-22T02:16:00-03:00",
+   "chat": "9000001",
+   "text": "Borré el sueño de las 02:15. Anoté la toma de pecho izquierdo de 10 min de las 02:16."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T02:15:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "se durmio",
+   "setup": true,
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-22T02:16:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "no para, no se durmio, quise poner q tomo teta del izquierdo 10 min",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0209,
+ "brain_calls": {
+  "inference.baseten.co": 5
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T02:13:00-03:00",
+   "unix": 1792645980.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nPor qué: Sin rutinas programadas para la noche hasta las 14:13, sigue el monitoreo estándar.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T02:13:00-03:00",
+   "unix": 1792645980.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nPor qué: Sin rutinas programadas para la noche hasta las 14:13, sigue el monitoreo estándar.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T02:15:00-03:00",
+   "unix": 1792646100.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4147,
+   "output_tokens": 244,
+   "reasoning_tokens": 177,
+   "usd": 0.00622075,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T02:15:00-03:00",
+   "unix": 1792646100.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T02:15:00-03:00",
+   "unix": 1792646100.0,
+   "channel": "telegram",
+   "text": "Anoté que el bebé se durmió a las 02:15.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792262611.711,
+   "ts": "2026-10-22T02:15:00-03:00",
+   "unix": 1793582838.944,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 9
+  },
+  {
+   "kind": "brain_call",
+   "t": 180.0,
+   "ts": "2026-10-22T02:16:00-03:00",
+   "unix": 1792646160.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4227,
+   "output_tokens": 226,
+   "reasoning_tokens": 104,
+   "usd": 0.00624425,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 180.0,
+   "ts": "2026-10-22T02:16:00-03:00",
+   "unix": 1792646160.0,
+   "name": "delete_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "tool",
+   "t": 180.0,
+   "ts": "2026-10-22T02:16:00-03:00",
+   "unix": 1792646160.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 180.0,
+   "ts": "2026-10-22T02:16:00-03:00",
+   "unix": 1792646160.0,
+   "channel": "telegram",
+   "text": "Borré el sueño de las 02:15. Anoté la toma de pecho izquierdo de 10 min de las 02:16.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792262605.055,
+   "ts": "2026-10-22T02:16:00-03:00",
+   "unix": 1793582845.6,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 67
+  }
+ ]
+}

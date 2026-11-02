@@ -1,0 +1,203 @@
+{
+ "id": "A3-067",
+ "child": "heldout-baby-a",
+ "created": [],
+ "seed_after": [
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 1153,
+    "child": 3,
+    "start": "2026-10-22T12:00:00Z",
+    "end": "2026-10-22T12:15:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 90.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 1153,
+    "child": 3,
+    "start": "2026-10-22T12:00:00Z",
+    "end": "2026-10-22T12:15:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 90.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 1154,
+    "child": 3,
+    "start": "2026-10-22T14:50:00Z",
+    "end": "2026-10-22T15:05:00Z",
+    "duration": "00:15:00",
+    "type": "breast milk",
+    "method": "left breast",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 1154,
+    "child": 3,
+    "start": "2026-10-22T14:50:00Z",
+    "end": "2026-10-22T15:05:00Z",
+    "duration": "00:15:00",
+    "type": "breast milk",
+    "method": "left breast",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 1155,
+    "child": 3,
+    "start": "2026-10-22T17:10:00Z",
+    "end": "2026-10-22T17:25:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 80.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 1155,
+    "child": 3,
+    "start": "2026-10-22T17:10:00Z",
+    "end": "2026-10-22T17:25:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 80.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "changes",
+   "before": {
+    "id": 846,
+    "child": 3,
+    "time": "2026-10-22T17:30:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "changes",
+    "id": 846,
+    "child": 3,
+    "time": "2026-10-22T17:30:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T15:40:00-03:00",
+   "chat": "9000001",
+   "text": "La última toma fue la mamadera de 80 ml de fórmula de las 14:25."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T15:40:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "a que hora fue la ultima toma",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0028,
+ "brain_calls": {
+  "inference.baseten.co": 2
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T15:40:00-03:00",
+   "unix": 1792694400.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 0,
+   "input_tokens": 1244,
+   "output_tokens": 66,
+   "reasoning_tokens": 36,
+   "usd": 0.0018355,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T15:40:00-03:00",
+   "unix": 1792694400.0,
+   "channel": "telegram",
+   "text": "La última toma fue la mamadera de 80 ml de fórmula de las 14:25.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792310252.967,
+   "ts": "2026-10-22T15:40:00-03:00",
+   "unix": 1793583497.691,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 29
+  }
+ ]
+}

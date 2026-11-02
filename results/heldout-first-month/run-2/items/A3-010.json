@@ -1,0 +1,176 @@
+{
+ "id": "A3-010",
+ "child": "heldout-baby-b",
+ "created": [],
+ "seed_after": [
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 1013,
+    "child": 4,
+    "start": "2026-10-22T20:15:00Z",
+    "end": "2026-10-22T20:33:00Z",
+    "duration": "00:18:00",
+    "type": "breast milk",
+    "method": "right breast",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 1013,
+    "child": 4,
+    "start": "2026-10-22T20:15:00Z",
+    "end": "2026-10-22T20:33:00Z",
+    "duration": "00:18:00",
+    "type": "breast milk",
+    "method": "right breast",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T18:00:00-03:00",
+   "chat": "9000002",
+   "text": "Logged that the baby fell asleep at 18:00."
+  },
+  {
+   "at": "2026-10-22T18:02:00-03:00",
+   "chat": "9000002",
+   "text": "Deleted the 18:00 sleep."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T18:00:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "he fell asleep",
+   "setup": true,
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-22T18:02:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "delete the last one, false alarm he's wide awake",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.015,
+ "brain_calls": {
+  "inference.baseten.co": 4
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T18:00:00-03:00",
+   "unix": 1792702800.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4133,
+   "output_tokens": 228,
+   "reasoning_tokens": 161,
+   "usd": 0.00613525,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T18:00:00-03:00",
+   "unix": 1792702800.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T18:00:00-03:00",
+   "unix": 1792702800.0,
+   "channel": "telegram",
+   "text": "Logged that the baby fell asleep at 18:00.",
+   "chat_id": "9000002",
+   "guard_lang": null
+  },
+  {
+   "kind": "turn",
+   "t": -1792319391.895,
+   "ts": "2026-10-22T18:00:00-03:00",
+   "unix": 1793582758.76,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 14
+  },
+  {
+   "kind": "brain_call",
+   "t": 240.0,
+   "ts": "2026-10-22T18:02:00-03:00",
+   "unix": 1792702920.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4196,
+   "output_tokens": 392,
+   "reasoning_tokens": 300,
+   "usd": 0.006911,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 240.0,
+   "ts": "2026-10-22T18:02:00-03:00",
+   "unix": 1792702920.0,
+   "name": "delete_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 240.0,
+   "ts": "2026-10-22T18:02:00-03:00",
+   "unix": 1792702920.0,
+   "channel": "telegram",
+   "text": "Deleted the 18:00 sleep.",
+   "chat_id": "9000002",
+   "guard_lang": null
+  },
+  {
+   "kind": "turn",
+   "t": -1792319383.858,
+   "ts": "2026-10-22T18:02:00-03:00",
+   "unix": 1793582766.797,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 48
+  }
+ ]
+}

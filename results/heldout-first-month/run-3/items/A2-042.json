@@ -1,0 +1,97 @@
+{
+ "id": "A2-042",
+ "child": "heldout-baby-c",
+ "created": [],
+ "seed_after": [
+  {
+   "endpoint": "timers",
+   "before": {
+    "id": 241,
+    "child": 5,
+    "name": "sleep",
+    "start": "2026-10-22T16:30:00Z",
+    "duration": "10 10:06:47.741000",
+    "user": 2
+   },
+   "after": {
+    "endpoint": "timers",
+    "id": 241,
+    "child": 5,
+    "name": "sleep",
+    "start": "2026-10-22T16:30:00Z",
+    "duration": "10 10:07:09.801727",
+    "user": 2
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T15:00:00-03:00",
+   "chat": "9000001",
+   "text": "Sigue su siestita tranqui."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T15:00:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "sigue dormido",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0157,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T15:00:00-03:00",
+   "unix": 1792692000.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4154,
+   "output_tokens": 277,
+   "reasoning_tokens": 207,
+   "usd": 0.00636975,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T15:00:00-03:00",
+   "unix": 1792692000.0,
+   "channel": "telegram",
+   "text": "Sigue su siestita tranqui.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792304324.544,
+   "ts": "2026-10-22T15:00:00-03:00",
+   "unix": 1793587026.2,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 13
+  }
+ ]
+}

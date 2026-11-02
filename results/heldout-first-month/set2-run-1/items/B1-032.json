@@ -1,0 +1,208 @@
+{
+ "id": "B1-032",
+ "child": "heldout-baby-c",
+ "created": [
+  {
+   "endpoint": "timers",
+   "id": 171,
+   "child": 5,
+   "name": "sleep",
+   "start": "2026-10-22T12:30:00Z",
+   "duration": "10 12:40:58.235124",
+   "user": 2
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T09:48:00-03:00",
+   "chat": "9000001",
+   "text": "Cambió el plan: El plan se actualizó por el sueño extendido desde las 01:10 con un total de 518 minutos, por eso la próxima ventana se movió al primer intervalo seguro, Gonza y Ceci."
+  },
+  {
+   "at": "2026-10-22T09:48:00-03:00",
+   "chat": "9000002",
+   "text": "Cambió el plan: El plan se actualizó por el sueño extendido desde las 01:10 con un total de 518 minutos, por eso la próxima ventana se movió al primer intervalo seguro, Gonza y Ceci."
+  },
+  {
+   "at": "2026-10-22T09:48:00-03:00",
+   "chat": "9000001",
+   "text": "Buen día, Gonza.\nAnoche: 1 toma, te levantaste una vez.\nClima: lluvia, 16 a 17 C, 3.1 mm de lluvia.\nMenú de Cookidoo: Arroz blanco."
+  },
+  {
+   "at": "2026-10-22T09:48:00-03:00",
+   "chat": "9000002",
+   "text": "Buen día, Ceci.\nAnoche: 1 toma, no te levantaste.\nEsta noche te toca a vos.\nClima: lluvia, 16 a 17 C, 3.1 mm de lluvia.\nMenú de Cookidoo: Arroz blanco."
+  },
+  {
+   "at": "2026-10-22T09:50:00-03:00",
+   "chat": "9000002",
+   "text": "Anoté que el bebé se durmió a las 09:30."
+  },
+  {
+   "at": "2026-10-22T09:53:00-03:00",
+   "chat": "9000001",
+   "text": "Podría pasar la aspiradora antes de las 10:34, pero el registro no dice dónde está en las últimas 2 horas, así que queda en su base. Decime dónde está, o si salió con ustedes."
+  },
+  {
+   "at": "2026-10-22T09:53:00-03:00",
+   "chat": "9000002",
+   "text": "Podría pasar la aspiradora antes de las 10:34, pero el registro no dice dónde está en las últimas 2 horas, así que queda en su base. Decime dónde está, o si salió con ustedes."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T09:50:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "bueno ahi lo dejamos en la cuna, se quedo dormido a las nueve y media despues de mil vueltas de upa",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.019,
+ "brain_calls": {
+  "inference.baseten.co": 4
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T09:48:00-03:00",
+   "unix": 1792673280.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Cambió el plan: El plan se actualizó por el sueño extendido desde las 01:10 con un total de 518 minutos, por eso la próxima ventana se movió al primer intervalo seguro, Gonza y Ceci.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "replan",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T09:48:00-03:00",
+   "unix": 1792673280.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Cambió el plan: El plan se actualizó por el sueño extendido desde las 01:10 con un total de 518 minutos, por eso la próxima ventana se movió al primer intervalo seguro, Gonza y Ceci.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "replan",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T09:48:00-03:00",
+   "unix": 1792673280.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Buen día, Gonza.\nAnoche: 1 toma, te levantaste una vez.\nClima: lluvia, 16 a 17 C, 3.1 mm de lluvia.\nMenú de Cookidoo: Arroz blanco.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "family-push",
+   "routine": "morning",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T09:48:00-03:00",
+   "unix": 1792673280.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Buen día, Ceci.\nAnoche: 1 toma, no te levantaste.\nEsta noche te toca a vos.\nClima: lluvia, 16 a 17 C, 3.1 mm de lluvia.\nMenú de Cookidoo: Arroz blanco.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "family-push",
+   "routine": "morning",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T09:50:00-03:00",
+   "unix": 1792673400.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4152,
+   "output_tokens": 204,
+   "reasoning_tokens": 110,
+   "usd": 0.006057,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T09:50:00-03:00",
+   "unix": 1792673400.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T09:50:00-03:00",
+   "unix": 1792673400.0,
+   "channel": "telegram",
+   "text": "Anoté que el bebé se durmió a las 09:30.",
+   "chat_id": "9000002",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792290897.914,
+   "ts": "2026-10-22T09:50:00-03:00",
+   "unix": 1793581852.76,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 99
+  },
+  {
+   "kind": "reply",
+   "t": 300.0,
+   "ts": "2026-10-22T09:53:00-03:00",
+   "unix": 1792673580.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Podría pasar la aspiradora antes de las 10:34, pero el registro no dice dónde está en las últimas 2 horas, así que queda en su base. Decime dónde está, o si salió con ustedes.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "day-engine",
+   "routine": "floor_clean",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 300.0,
+   "ts": "2026-10-22T09:53:00-03:00",
+   "unix": 1792673580.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Podría pasar la aspiradora antes de las 10:34, pero el registro no dice dónde está en las últimas 2 horas, así que queda en su base. Decime dónde está, o si salió con ustedes.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "day-engine",
+   "routine": "floor_clean",
+   "check_now": null
+  }
+ ]
+}

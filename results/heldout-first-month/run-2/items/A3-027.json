@@ -1,0 +1,201 @@
+{
+ "id": "A3-027",
+ "child": "heldout-baby-a",
+ "created": [
+  {
+   "endpoint": "changes",
+   "id": 788,
+   "child": 3,
+   "time": "2026-10-22T14:20:00Z",
+   "wet": false,
+   "solid": true,
+   "color": "",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T11:20:00-03:00",
+   "chat": "9000002",
+   "text": "Anoté el pañal sucio de las 11:20."
+  },
+  {
+   "at": "2026-10-22T11:20:00-03:00",
+   "chat": "9000002",
+   "text": "¿Lo mandaste dos veces o fueron dos pañales distintos con caca cerquita de las 11:20?"
+  },
+  {
+   "at": "2026-10-22T11:21:00-03:00",
+   "chat": "9000002",
+   "text": "Perfecto, quedó anotado como uno solo de las 11:20."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T11:20:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "pañal con caca",
+   "setup": true,
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-22T11:20:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "pañal con caca",
+   "setup": true,
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-22T11:21:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "uh lo mande dos veces, es uno solo",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0206,
+ "brain_calls": {
+  "inference.baseten.co": 6
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T11:20:00-03:00",
+   "unix": 1792678800.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4128,
+   "output_tokens": 205,
+   "reasoning_tokens": 127,
+   "usd": 0.00603125,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T11:20:00-03:00",
+   "unix": 1792678800.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T11:20:00-03:00",
+   "unix": 1792678800.0,
+   "channel": "telegram",
+   "text": "Anoté el pañal sucio de las 11:20.",
+   "chat_id": "9000002",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792295183.042,
+   "ts": "2026-10-22T11:20:00-03:00",
+   "unix": 1793582967.614,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 14
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T11:20:00-03:00",
+   "unix": 1792678800.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4198,
+   "output_tokens": 200,
+   "reasoning_tokens": 114,
+   "usd": 0.0060975,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T11:20:00-03:00",
+   "unix": 1792678800.0,
+   "channel": "telegram",
+   "text": "¿Lo mandaste dos veces o fueron dos pañales distintos con caca cerquita de las 11:20?",
+   "chat_id": "9000002",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792295179.387,
+   "ts": "2026-10-22T11:20:00-03:00",
+   "unix": 1793582971.269,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 14
+  },
+  {
+   "kind": "brain_call",
+   "t": 180.0,
+   "ts": "2026-10-22T11:21:00-03:00",
+   "unix": 1792678860.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4254,
+   "output_tokens": 181,
+   "reasoning_tokens": 104,
+   "usd": 0.00608675,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 180.0,
+   "ts": "2026-10-22T11:21:00-03:00",
+   "unix": 1792678860.0,
+   "channel": "telegram",
+   "text": "Perfecto, quedó anotado como uno solo de las 11:20.",
+   "chat_id": "9000002",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792295171.962,
+   "ts": "2026-10-22T11:21:00-03:00",
+   "unix": 1793582978.694,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 34
+  }
+ ]
+}

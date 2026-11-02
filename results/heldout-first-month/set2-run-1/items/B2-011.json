@@ -1,0 +1,167 @@
+{
+ "id": "B2-011",
+ "child": "heldout-baby-c",
+ "created": [],
+ "seed_after": [
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 997,
+    "child": 5,
+    "start": "2026-10-22T17:50:00Z",
+    "end": "2026-10-22T18:05:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 90.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 997,
+    "child": 5,
+    "start": "2026-10-22T17:50:00Z",
+    "end": "2026-10-22T18:05:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 90.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "timers",
+   "before": {
+    "id": 200,
+    "child": 5,
+    "name": "sleep",
+    "start": "2026-10-22T18:20:00Z",
+    "duration": "10 07:01:45.298730",
+    "user": 2
+   },
+   "after": {
+    "endpoint": "timers",
+    "id": 200,
+    "child": 5,
+    "name": "sleep",
+    "start": "2026-10-22T18:20:00Z",
+    "duration": "10 07:02:04.056673",
+    "user": 2
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T17:03:00-03:00",
+   "chat": "9000001",
+   "text": "Cambió el plan: Se actualizó el plan porque el sueño desde las 01:10 fue más largo de lo habitual y se usó para ubicar la limpieza del piso en el próximo hueco despierto."
+  },
+  {
+   "at": "2026-10-22T17:03:00-03:00",
+   "chat": "9000002",
+   "text": "Cambió el plan: Se actualizó el plan porque el sueño desde las 01:10 fue más largo de lo habitual y se usó para ubicar la limpieza del piso en el próximo hueco despierto."
+  },
+  {
+   "at": "2026-10-22T17:05:00-03:00",
+   "chat": "9000001",
+   "text": "Lleva 1 hora 45 minutos dormido, desde las 15:20."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T17:05:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "cuanto lleva dormido ya",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0144,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T17:03:00-03:00",
+   "unix": 1792699380.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Cambió el plan: Se actualizó el plan porque el sueño desde las 01:10 fue más largo de lo habitual y se usó para ubicar la limpieza del piso en el próximo hueco despierto.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "replan",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T17:03:00-03:00",
+   "unix": 1792699380.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Cambió el plan: Se actualizó el plan porque el sueño desde las 01:10 fue más largo de lo habitual y se usó para ubicar la limpieza del piso en el próximo hueco despierto.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "replan",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T17:05:00-03:00",
+   "unix": 1792699500.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4184,
+   "output_tokens": 199,
+   "reasoning_tokens": 120,
+   "usd": 0.00607575,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T17:05:00-03:00",
+   "unix": 1792699500.0,
+   "channel": "telegram",
+   "text": "Lleva 1 hora 45 minutos dormido, desde las 15:20.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792316329.666,
+   "ts": "2026-10-22T17:05:00-03:00",
+   "unix": 1793582520.988,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 23
+  }
+ ]
+}

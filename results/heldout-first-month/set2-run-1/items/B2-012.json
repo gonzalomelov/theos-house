@@ -1,0 +1,171 @@
+{
+ "id": "B2-012",
+ "child": "heldout-baby-c",
+ "created": [],
+ "seed_after": [
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 998,
+    "child": 5,
+    "start": "2026-10-22T09:10:00Z",
+    "end": "2026-10-22T09:25:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 80.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 998,
+    "child": 5,
+    "start": "2026-10-22T09:10:00Z",
+    "end": "2026-10-22T09:25:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 80.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "notes",
+   "before": {
+    "id": 403,
+    "child": 5,
+    "note": "Bath",
+    "image": null,
+    "time": "2026-10-21T22:30:00Z",
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "notes",
+    "id": 403,
+    "child": 5,
+    "note": "Bath",
+    "image": null,
+    "time": "2026-10-21T22:30:00Z",
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T08:28:00-03:00",
+   "chat": "9000001",
+   "text": "Buen día, Gonza.\nEsta noche te toca a vos.\nClima: lluvia, 16 a 17 C, 3.1 mm de lluvia.\nMenú de Cookidoo: Arroz blanco."
+  },
+  {
+   "at": "2026-10-22T08:28:00-03:00",
+   "chat": "9000002",
+   "text": "Buen día, Ceci.\nClima: lluvia, 16 a 17 C, 3.1 mm de lluvia.\nMenú de Cookidoo: Arroz blanco."
+  },
+  {
+   "at": "2026-10-22T08:30:00-03:00",
+   "chat": "9000002",
+   "text": "Sí, ayer sí lo bañaron a las 19:30."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T08:30:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "lo bañamos ayer o no? xq no me acuerdo",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0093,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T08:28:00-03:00",
+   "unix": 1792668480.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Buen día, Gonza.\nEsta noche te toca a vos.\nClima: lluvia, 16 a 17 C, 3.1 mm de lluvia.\nMenú de Cookidoo: Arroz blanco.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "family-push",
+   "routine": "morning",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T08:28:00-03:00",
+   "unix": 1792668480.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Buen día, Ceci.\nClima: lluvia, 16 a 17 C, 3.1 mm de lluvia.\nMenú de Cookidoo: Arroz blanco.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "family-push",
+   "routine": "morning",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T08:30:00-03:00",
+   "unix": 1792668600.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4205,
+   "output_tokens": 113,
+   "reasoning_tokens": 37,
+   "usd": 0.0057365,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T08:30:00-03:00",
+   "unix": 1792668600.0,
+   "channel": "telegram",
+   "text": "Sí, ayer sí lo bañaron a las 19:30.",
+   "chat_id": "9000002",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792285413.288,
+   "ts": "2026-10-22T08:30:00-03:00",
+   "unix": 1793582537.367,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 38
+  }
+ ]
+}

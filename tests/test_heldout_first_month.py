@@ -247,6 +247,12 @@ class Alerts(FamilyAgent):
         replies = self.say("no reacciona", ("text", "not a log_ops call"), ("text", "still not"))
         self.assertEqual(replies, [rules.EMERGENCY_REPLY["es"]])
 
+    def test_not_feeding_for_hours_is_a_red_flag_in_any_words(self):
+        for text in ("dirty diaper but he hasnt fed since 9am and wont latch", "no se prende a la teta desde la mañana",
+                     "no toma nada desde las 7"):
+            self.assertEqual(rules.newborn_red_flag(text), "red_flag", text)
+        self.assertIsNone(rules.newborn_red_flag("he fed at 9am and latched fine"))
+
     def test_a_reading_said_as_a_number_is_a_fever(self):
         for text in ("tiene 38,2 que le doy", "le di la mamadera y está calentito, le tomé y tiene 38.3", "he's at 38.4"):
             self.assertEqual(rules.newborn_red_flag(text), "fever", text)

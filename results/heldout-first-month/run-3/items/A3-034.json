@@ -1,0 +1,232 @@
+{
+ "id": "A3-034",
+ "child": "heldout-baby-a",
+ "created": [
+  {
+   "endpoint": "sleep",
+   "id": 528,
+   "child": 3,
+   "start": "2026-10-22T13:00:00Z",
+   "end": "2026-10-22T15:25:00Z",
+   "duration": "02:25:00",
+   "nap": true,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 1415,
+    "child": 3,
+    "start": "2026-10-22T12:35:00Z",
+    "end": "2026-10-22T12:50:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 90.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 1415,
+    "child": 3,
+    "start": "2026-10-22T12:35:00Z",
+    "end": "2026-10-22T12:50:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 90.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "timers",
+   "before": {
+    "id": 272,
+    "child": 3,
+    "name": "sleep",
+    "start": "2026-10-22T13:00:00Z",
+    "duration": "10 13:46:24.673979",
+    "user": 2
+   },
+   "after": null
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T12:28:00-03:00",
+   "chat": "9000001",
+   "text": "Cambió el plan: La siesta lleva 148 minutos, 73 minutos más que los 75 habituales, así que el plan mantiene una sola ventana diurna para el piso y deja las rutinas nocturnas sin armar por ahora, Gonza y Ceci."
+  },
+  {
+   "at": "2026-10-22T12:28:00-03:00",
+   "chat": "9000002",
+   "text": "Cambió el plan: La siesta lleva 148 minutos, 73 minutos más que los 75 habituales, así que el plan mantiene una sola ventana diurna para el piso y deja las rutinas nocturnas sin armar por ahora, Gonza y Ceci."
+  },
+  {
+   "at": "2026-10-22T12:30:00-03:00",
+   "chat": "9000002",
+   "text": "Anoté el sueño de 10:00 a 12:25, 2 h 25 min."
+  },
+  {
+   "at": "2026-10-22T12:31:00-03:00",
+   "chat": "9000002",
+   "text": "Ya tenía ese despertar de las 12:25, ¿lo mandaste dos veces o fueron dos despertares?"
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T12:30:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "se desperto a las 12:25",
+   "setup": true,
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-22T12:31:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "se despertó 12:25",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0237,
+ "brain_calls": {
+  "inference.baseten.co": 5
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T12:28:00-03:00",
+   "unix": 1792682880.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Cambió el plan: La siesta lleva 148 minutos, 73 minutos más que los 75 habituales, así que el plan mantiene una sola ventana diurna para el piso y deja las rutinas nocturnas sin armar por ahora, Gonza y Ceci.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "replan",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T12:28:00-03:00",
+   "unix": 1792682880.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Cambió el plan: La siesta lleva 148 minutos, 73 minutos más que los 75 habituales, así que el plan mantiene una sola ventana diurna para el piso y deja las rutinas nocturnas sin armar por ahora, Gonza y Ceci.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "replan",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T12:30:00-03:00",
+   "unix": 1792683000.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4198,
+   "output_tokens": 236,
+   "reasoning_tokens": 161,
+   "usd": 0.0062505,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T12:30:00-03:00",
+   "unix": 1792683000.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T12:30:00-03:00",
+   "unix": 1792683000.0,
+   "channel": "telegram",
+   "text": "Anoté el sueño de 10:00 a 12:25, 2 h 25 min.",
+   "chat_id": "9000002",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792294742.685,
+   "ts": "2026-10-22T12:30:00-03:00",
+   "unix": 1793587608.066,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 23
+  },
+  {
+   "kind": "brain_call",
+   "t": 180.0,
+   "ts": "2026-10-22T12:31:00-03:00",
+   "unix": 1792683060.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4263,
+   "output_tokens": 207,
+   "reasoning_tokens": 123,
+   "usd": 0.0062085,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 180.0,
+   "ts": "2026-10-22T12:31:00-03:00",
+   "unix": 1792683060.0,
+   "channel": "telegram",
+   "text": "Ya tenía ese despertar de las 12:25, ¿lo mandaste dos veces o fueron dos despertares?",
+   "chat_id": "9000002",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792294736.533,
+   "ts": "2026-10-22T12:31:00-03:00",
+   "unix": 1793587614.218,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 17
+  }
+ ]
+}

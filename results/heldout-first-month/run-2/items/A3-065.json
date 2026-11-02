@@ -1,0 +1,257 @@
+{
+ "id": "A3-065",
+ "child": "heldout-baby-a",
+ "created": [],
+ "seed_after": [
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 1149,
+    "child": 3,
+    "start": "2026-10-22T03:20:00Z",
+    "end": "2026-10-22T03:35:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 100.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 1149,
+    "child": 3,
+    "start": "2026-10-22T03:20:00Z",
+    "end": "2026-10-22T03:35:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 100.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 1150,
+    "child": 3,
+    "start": "2026-10-22T06:10:00Z",
+    "end": "2026-10-22T06:25:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 90.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 1150,
+    "child": 3,
+    "start": "2026-10-22T06:10:00Z",
+    "end": "2026-10-22T06:25:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 90.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 1151,
+    "child": 3,
+    "start": "2026-10-22T09:40:00Z",
+    "end": "2026-10-22T09:55:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 80.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 1151,
+    "child": 3,
+    "start": "2026-10-22T09:40:00Z",
+    "end": "2026-10-22T09:55:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 80.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 1152,
+    "child": 3,
+    "start": "2026-10-22T12:30:00Z",
+    "end": "2026-10-22T12:45:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 90.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 1152,
+    "child": 3,
+    "start": "2026-10-22T12:30:00Z",
+    "end": "2026-10-22T12:45:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 90.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "changes",
+   "before": {
+    "id": 845,
+    "child": 3,
+    "time": "2026-10-22T06:30:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "changes",
+    "id": 845,
+    "child": 3,
+    "time": "2026-10-22T06:30:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T09:58:00-03:00",
+   "chat": "9000001",
+   "text": "Buen día, Gonza.\nAnoche: 2 tomas, no te levantaste.\nEsta noche te toca a vos.\nClima: lluvia, 16 a 17 C, 3.1 mm de lluvia.\nMenú de Cookidoo: Arroz blanco."
+  },
+  {
+   "at": "2026-10-22T09:58:00-03:00",
+   "chat": "9000002",
+   "text": "Buen día, Ceci.\nAnoche: 2 tomas, no te levantaste.\nClima: lluvia, 16 a 17 C, 3.1 mm de lluvia.\nMenú de Cookidoo: Arroz blanco."
+  },
+  {
+   "at": "2026-10-22T10:00:00-03:00",
+   "chat": "9000001",
+   "text": "Eso suena a un total del día, así que no lo anoté como una toma nueva. Hoy el registro tiene 4 tomas, 360 ml en mamaderas, la última a las 09:45. Si falta una toma, decime a qué hora fue y cuánto, y la agrego."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T10:00:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "cunto tomo hoy en total",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.003,
+ "brain_calls": {
+  "inference.baseten.co": 2
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T09:58:00-03:00",
+   "unix": 1792673880.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Buen día, Gonza.\nAnoche: 2 tomas, no te levantaste.\nEsta noche te toca a vos.\nClima: lluvia, 16 a 17 C, 3.1 mm de lluvia.\nMenú de Cookidoo: Arroz blanco.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "family-push",
+   "routine": "morning",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T09:58:00-03:00",
+   "unix": 1792673880.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Buen día, Ceci.\nAnoche: 2 tomas, no te levantaste.\nClima: lluvia, 16 a 17 C, 3.1 mm de lluvia.\nMenú de Cookidoo: Arroz blanco.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "family-push",
+   "routine": "morning",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T10:00:00-03:00",
+   "unix": 1792674000.0,
+   "channel": "telegram",
+   "text": "Eso suena a un total del día, así que no lo anoté como una toma nueva. Hoy el registro tiene 4 tomas, 360 ml en mamaderas, la última a las 09:45. Si falta una toma, decime a qué hora fue y cuánto, y la agrego.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792289866.241,
+   "ts": "2026-10-22T10:00:00-03:00",
+   "unix": 1793583484.417,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 23
+  }
+ ]
+}

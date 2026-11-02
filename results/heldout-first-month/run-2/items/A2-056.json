@@ -1,0 +1,157 @@
+{
+ "id": "A2-056",
+ "child": "heldout-baby-b",
+ "created": [
+  {
+   "endpoint": "timers",
+   "id": 197,
+   "child": 4,
+   "name": "sleep",
+   "start": "2026-10-23T01:05:00Z",
+   "duration": "10 00:16:11.105667",
+   "user": 2
+  }
+ ],
+ "seed_after": [
+  {
+   "endpoint": "notes",
+   "before": {
+    "id": 400,
+    "child": 4,
+    "note": "Bath",
+    "image": null,
+    "time": "2026-10-23T00:00:00Z",
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "notes",
+    "id": 400,
+    "child": 4,
+    "note": "Bath",
+    "image": null,
+    "time": "2026-10-23T00:00:00Z",
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T22:03:00-03:00",
+   "chat": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 23:30, 02:00, 04:30. La luz espera a que se despierte.\nVentana para aspirar de 07:33 a 08:33.\nPor qué: Calentador del biberón programado para tres despertares nocturnos previstos y ventana de limpieza del piso armada de 07:33 a 08:33 entre el sueño y la siesta."
+  },
+  {
+   "at": "2026-10-22T22:03:00-03:00",
+   "chat": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 23:30, 02:00, 04:30. La luz espera a que se despierte.\nVentana para aspirar de 07:33 a 08:33.\nPor qué: Calentador del biberón programado para tres despertares nocturnos previstos y ventana de limpieza del piso armada de 07:33 a 08:33 entre el sueño y la siesta."
+  },
+  {
+   "at": "2026-10-22T22:05:00-03:00",
+   "chat": "9000001",
+   "text": "Anoté que el bebé se durmió a las 22:05."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T22:05:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "se durmio recien en la cuna",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0162,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T22:03:00-03:00",
+   "unix": 1792717380.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 23:30, 02:00, 04:30. La luz espera a que se despierte.\nVentana para aspirar de 07:33 a 08:33.\nPor qué: Calentador del biberón programado para tres despertares nocturnos previstos y ventana de limpieza del piso armada de 07:33 a 08:33 entre el sueño y la siesta.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T22:03:00-03:00",
+   "unix": 1792717380.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 23:30, 02:00, 04:30. La luz espera a que se despierte.\nVentana para aspirar de 07:33 a 08:33.\nPor qué: Calentador del biberón programado para tres despertares nocturnos previstos y ventana de limpieza del piso armada de 07:33 a 08:33 entre el sueño y la siesta.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T22:05:00-03:00",
+   "unix": 1792717500.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4151,
+   "output_tokens": 398,
+   "reasoning_tokens": 331,
+   "usd": 0.00688025,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T22:05:00-03:00",
+   "unix": 1792717500.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T22:05:00-03:00",
+   "unix": 1792717500.0,
+   "channel": "telegram",
+   "text": "Anoté que el bebé se durmió a las 22:05.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792334386.109,
+   "ts": "2026-10-22T22:05:00-03:00",
+   "unix": 1793582464.545,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 27
+  }
+ ]
+}

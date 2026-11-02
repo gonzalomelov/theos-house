@@ -1,0 +1,100 @@
+{
+ "id": "A1-022",
+ "child": "heldout-baby-b",
+ "created": [
+  {
+   "endpoint": "feedings",
+   "id": 892,
+   "child": 4,
+   "start": "2026-10-22T20:00:00Z",
+   "end": "2026-10-22T20:15:00Z",
+   "duration": "00:15:00",
+   "type": "formula",
+   "method": "bottle",
+   "amount": null,
+   "notes": "length not said, milk type not said",
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T17:45:00-03:00",
+   "chat": "9000001",
+   "text": "Anoté la mamadera de las 17:15."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T17:45:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "le dimos mamadera hace media hora",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0073,
+ "brain_calls": {
+  "inference.baseten.co": 2
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T17:45:00-03:00",
+   "unix": 1792701900.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4130,
+   "output_tokens": 305,
+   "reasoning_tokens": 200,
+   "usd": 0.00645875,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T17:45:00-03:00",
+   "unix": 1792701900.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T17:45:00-03:00",
+   "unix": 1792701900.0,
+   "channel": "telegram",
+   "text": "Anoté la mamadera de las 17:15.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792319860.1,
+   "ts": "2026-10-22T17:45:00-03:00",
+   "unix": 1793581390.569,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 33
+  }
+ ]
+}

@@ -1,0 +1,197 @@
+{
+ "id": "B2-010",
+ "child": "heldout-baby-c",
+ "created": [],
+ "seed_after": [
+  {
+   "endpoint": "changes",
+   "before": {
+    "id": 765,
+    "child": 5,
+    "time": "2026-10-22T12:30:00Z",
+    "wet": true,
+    "solid": true,
+    "color": "yellow",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "changes",
+    "id": 765,
+    "child": 5,
+    "time": "2026-10-22T12:30:00Z",
+    "wet": true,
+    "solid": true,
+    "color": "yellow",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "changes",
+   "before": {
+    "id": 766,
+    "child": 5,
+    "time": "2026-10-22T16:00:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "changes",
+    "id": 766,
+    "child": 5,
+    "time": "2026-10-22T16:00:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "changes",
+   "before": {
+    "id": 767,
+    "child": 5,
+    "time": "2026-10-22T19:45:00Z",
+    "wet": false,
+    "solid": true,
+    "color": "green",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "changes",
+    "id": 767,
+    "child": 5,
+    "time": "2026-10-22T19:45:00Z",
+    "wet": false,
+    "solid": true,
+    "color": "green",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "changes",
+   "before": {
+    "id": 768,
+    "child": 5,
+    "time": "2026-10-22T21:20:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "changes",
+    "id": 768,
+    "child": 5,
+    "time": "2026-10-22T21:20:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T19:10:00-03:00",
+   "chat": "9000002",
+   "text": "He last pooped at 16:45 today, green, and before that at 09:30."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T19:10:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "when did he last poop",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0066,
+ "brain_calls": {
+  "inference.baseten.co": 2
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T19:10:00-03:00",
+   "unix": 1792707000.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4189,
+   "output_tokens": 160,
+   "reasoning_tokens": 77,
+   "usd": 0.00591625,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T19:10:00-03:00",
+   "unix": 1792707000.0,
+   "channel": "telegram",
+   "text": "He last pooped at 16:45 today, green, and before that at 09:30.",
+   "chat_id": "9000002",
+   "guard_lang": null
+  },
+  {
+   "kind": "turn",
+   "t": -1792323850.383,
+   "ts": "2026-10-22T19:10:00-03:00",
+   "unix": 1793582500.271,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 21
+  }
+ ]
+}

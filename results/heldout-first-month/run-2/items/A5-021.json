@@ -1,0 +1,114 @@
+{
+ "id": "A5-021",
+ "child": "heldout-baby-a",
+ "created": [],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T04:18:00-03:00",
+   "chat": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:00 a 07:45.\nPor qué: La limpieza del piso está programada de 07:00 a 07:45 como ventana diurna sin superposición con el sueño previsto."
+  },
+  {
+   "at": "2026-10-22T04:18:00-03:00",
+   "chat": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:00 a 07:45.\nPor qué: La limpieza del piso está programada de 07:00 a 07:45 como ventana diurna sin superposición con el sueño previsto."
+  },
+  {
+   "at": "2026-10-22T04:20:00-03:00",
+   "chat": "9000002",
+   "text": "Sure, here's one: Why did the baby cookie go to the hospital? Because it felt crummy! Hang in there, you're doing great."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T04:20:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "tell me a joke im literally falling asleep",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0115,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T04:18:00-03:00",
+   "unix": 1792653480.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:00 a 07:45.\nPor qué: La limpieza del piso está programada de 07:00 a 07:45 como ventana diurna sin superposición con el sueño previsto.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T04:18:00-03:00",
+   "unix": 1792653480.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:00 a 07:45.\nPor qué: La limpieza del piso está programada de 07:00 a 07:45 como ventana diurna sin superposición con el sueño previsto.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T04:20:00-03:00",
+   "unix": 1792653600.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4111,
+   "output_tokens": 141,
+   "reasoning_tokens": 51,
+   "usd": 0.005738,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T04:20:00-03:00",
+   "unix": 1792653600.0,
+   "channel": "telegram",
+   "text": "Sure, here's one: Why did the baby cookie go to the hospital? Because it felt crummy! Hang in there, you're doing great.",
+   "chat_id": "9000002",
+   "guard_lang": null
+  },
+  {
+   "kind": "turn",
+   "t": -1792268190.795,
+   "ts": "2026-10-22T04:20:00-03:00",
+   "unix": 1793584759.914,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 42
+  }
+ ]
+}
