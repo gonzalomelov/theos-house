@@ -1,0 +1,266 @@
+{
+ "id": "A3-006",
+ "child": "heldout-baby-c",
+ "created": [
+  {
+   "endpoint": "feedings",
+   "id": 1923,
+   "child": 5,
+   "start": "2026-10-23T00:00:00Z",
+   "end": "2026-10-23T00:15:00Z",
+   "duration": "00:15:00",
+   "type": "formula",
+   "method": "bottle",
+   "amount": 120.0,
+   "notes": "length not said",
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [
+  {
+   "endpoint": "changes",
+   "before": {
+    "id": 1544,
+    "child": 5,
+    "time": "2026-10-22T23:40:00Z",
+    "wet": true,
+    "solid": true,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "changes",
+    "id": 1544,
+    "child": 5,
+    "time": "2026-10-22T23:40:00Z",
+    "wet": true,
+    "solid": true,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T21:13:00-03:00",
+   "chat": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 23:55, 02:25, 05:05. La luz espera a que se despierte.\nVentana para aspirar de 07:48 a 08:48.\nPor qué: La limpieza del piso está programada de 07:48 a 08:48 y el calentador de mamadera a las 23:55, 02:25 y 05:05 para los despertares nocturnos previstos, Gonza y Ceci."
+  },
+  {
+   "at": "2026-10-22T21:13:00-03:00",
+   "chat": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 23:55, 02:25, 05:05. La luz espera a que se despierte.\nVentana para aspirar de 07:48 a 08:48.\nPor qué: La limpieza del piso está programada de 07:48 a 08:48 y el calentador de mamadera a las 23:55, 02:25 y 05:05 para los despertares nocturnos previstos, Gonza y Ceci."
+  },
+  {
+   "at": "2026-10-22T21:13:00-03:00",
+   "chat": "9000001",
+   "text": "Cambió el plan: Se registró un sueño más largo desde las 18:00, por eso las ventanas se alinearon a los sueños previstos que terminan a las 21:18, Gonza y Ceci."
+  },
+  {
+   "at": "2026-10-22T21:13:00-03:00",
+   "chat": "9000002",
+   "text": "Cambió el plan: Se registró un sueño más largo desde las 18:00, por eso las ventanas se alinearon a los sueños previstos que terminan a las 21:18, Gonza y Ceci."
+  },
+  {
+   "at": "2026-10-22T21:15:00-03:00",
+   "chat": "9000002",
+   "text": "Logged the 21:15 bottle of 100 ml, formula."
+  },
+  {
+   "at": "2026-10-22T21:16:00-03:00",
+   "chat": "9000002",
+   "text": "Fixed the 21:15 bottle: 100 ml → 120 ml."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T21:15:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "fed him 100 ml formula",
+   "setup": true,
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-22T21:16:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "sorry 120 not 100",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0237,
+ "brain_calls": {
+  "inference.baseten.co": 5
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T21:13:00-03:00",
+   "unix": 1792714380.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 23:55, 02:25, 05:05. La luz espera a que se despierte.\nVentana para aspirar de 07:48 a 08:48.\nPor qué: La limpieza del piso está programada de 07:48 a 08:48 y el calentador de mamadera a las 23:55, 02:25 y 05:05 para los despertares nocturnos previstos, Gonza y Ceci.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T21:13:00-03:00",
+   "unix": 1792714380.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 23:55, 02:25, 05:05. La luz espera a que se despierte.\nVentana para aspirar de 07:48 a 08:48.\nPor qué: La limpieza del piso está programada de 07:48 a 08:48 y el calentador de mamadera a las 23:55, 02:25 y 05:05 para los despertares nocturnos previstos, Gonza y Ceci.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T21:13:00-03:00",
+   "unix": 1792714380.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Cambió el plan: Se registró un sueño más largo desde las 18:00, por eso las ventanas se alinearon a los sueños previstos que terminan a las 21:18, Gonza y Ceci.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "replan",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T21:13:00-03:00",
+   "unix": 1792714380.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Cambió el plan: Se registró un sueño más largo desde las 18:00, por eso las ventanas se alinearon a los sueños previstos que terminan a las 21:18, Gonza y Ceci.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "replan",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T21:15:00-03:00",
+   "unix": 1792714500.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4151,
+   "output_tokens": 430,
+   "reasoning_tokens": 338,
+   "usd": 0.00701625,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T21:15:00-03:00",
+   "unix": 1792714500.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T21:15:00-03:00",
+   "unix": 1792714500.0,
+   "channel": "telegram",
+   "text": "Logged the 21:15 bottle of 100 ml, formula.",
+   "chat_id": "9000002",
+   "guard_lang": null
+  },
+  {
+   "kind": "turn",
+   "t": -1792319111.38,
+   "ts": "2026-10-22T21:15:00-03:00",
+   "unix": 1793594739.383,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 22
+  },
+  {
+   "kind": "brain_call",
+   "t": 180.0,
+   "ts": "2026-10-22T21:16:00-03:00",
+   "unix": 1792714560.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4231,
+   "output_tokens": 154,
+   "reasoning_tokens": 61,
+   "usd": 0.00594325,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 180.0,
+   "ts": "2026-10-22T21:16:00-03:00",
+   "unix": 1792714560.0,
+   "name": "edit_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 180.0,
+   "ts": "2026-10-22T21:16:00-03:00",
+   "unix": 1792714560.0,
+   "channel": "telegram",
+   "text": "Fixed the 21:15 bottle: 100 ml → 120 ml.",
+   "chat_id": "9000002",
+   "guard_lang": null
+  },
+  {
+   "kind": "turn",
+   "t": -1792319103.607,
+   "ts": "2026-10-22T21:16:00-03:00",
+   "unix": 1793594747.157,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 17
+  }
+ ]
+}

@@ -1,0 +1,76 @@
+{
+ "id": "A5-019",
+ "child": "heldout-baby-a",
+ "created": [],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T13:00:00-03:00",
+   "chat": "9000002",
+   "text": "Te paso una fácil al horno: condimentá las milanesas con ajo y perejil, pasalas por huevo batido y pan rallado, ponelas en una fuente aceitada y llevalas a horno fuerte 15 minutos de cada lado hasta que queden doraditas."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T13:00:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "pasame una receta facil de milanesas al horno q no tengo tiempo de nada",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0082,
+ "brain_calls": {
+  "inference.baseten.co": 2
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T13:00:00-03:00",
+   "unix": 1792684800.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4149,
+   "output_tokens": 463,
+   "reasoning_tokens": 339,
+   "usd": 0.007154,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T13:00:00-03:00",
+   "unix": 1792684800.0,
+   "channel": "telegram",
+   "text": "Te paso una fácil al horno: condimentá las milanesas con ajo y perejil, pasalas por huevo batido y pan rallado, ponelas en una fuente aceitada y llevalas a horno fuerte 15 minutos de cada lado hasta que queden doraditas.",
+   "chat_id": "9000002",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792288109.88,
+   "ts": "2026-10-22T13:00:00-03:00",
+   "unix": 1793596040.916,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 71
+  }
+ ]
+}

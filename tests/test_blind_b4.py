@@ -16,7 +16,7 @@ import unittest
 from parenting_agent import cry_reason
 from parenting_agent.agent import brain as brain_mod
 from parenting_agent.agent import rules
-from parenting_agent.agent.memory import LocalBabyLog, Memory
+from parenting_agent.agent.memory import LocalBabyLog, Memory, feed_start
 from parenting_agent.demo import tonight
 from parenting_agent.demo.babylog import DemoBabyLog, started, finished
 
@@ -51,7 +51,7 @@ class LastFeedGoesToMuse(unittest.TestCase):
         last = app.visitor("v").agent.latest_of("feeding")
         self.assertEqual(brain.calls, 1)
         self.assertEqual(body["answered_by"], {"kind": "brain", "model": brain.model, "muse": True})
-        self.assertIn(last["ts"][11:16], body["reply"])
+        self.assertIn(feed_start(last)[11:16], body["reply"])
         self.assertTrue(body["reply"].startswith("Theo tomó"), body["reply"])
 
     def test_a_muse_error_gets_the_fixed_line_labelled_busy(self):

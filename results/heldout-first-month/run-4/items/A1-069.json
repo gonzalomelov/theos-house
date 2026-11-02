@@ -1,0 +1,172 @@
+{
+ "id": "A1-069",
+ "child": "heldout-baby-c",
+ "created": [
+  {
+   "endpoint": "feedings",
+   "id": 1890,
+   "child": 5,
+   "start": "2026-10-22T12:45:00Z",
+   "end": "2026-10-22T13:00:00Z",
+   "duration": "00:15:00",
+   "type": "breast milk",
+   "method": "left breast",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  },
+  {
+   "endpoint": "sleep",
+   "id": 776,
+   "child": 5,
+   "start": "2026-10-22T11:15:00Z",
+   "end": "2026-10-22T13:00:00Z",
+   "duration": "01:45:00",
+   "nap": true,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [
+  {
+   "endpoint": "timers",
+   "before": {
+    "id": 298,
+    "child": 5,
+    "name": "sleep",
+    "start": "2026-10-22T11:15:00Z",
+    "duration": "10 17:17:43.407823",
+    "user": 2
+   },
+   "after": null
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T09:58:00-03:00",
+   "chat": "9000001",
+   "text": "Buen día, Gonza.\nEsta noche te toca a vos.\nClima: soleado, 15 a 23 C.\nMenú de Cookidoo: Arroz blanco."
+  },
+  {
+   "at": "2026-10-22T09:58:00-03:00",
+   "chat": "9000002",
+   "text": "Buen día, Ceci.\nClima: soleado, 15 a 23 C.\nMenú de Cookidoo: Arroz blanco."
+  },
+  {
+   "at": "2026-10-22T10:00:00-03:00",
+   "chat": "9000002",
+   "text": "Anoté el sueño de 08:15 a 10:00, 1 h 45 min y la toma de pecho izquierdo de 15 min de las 10:00."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T10:00:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "se desperto recien, le di teta izquierda 15 min",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0104,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T09:58:00-03:00",
+   "unix": 1792673880.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Buen día, Gonza.\nEsta noche te toca a vos.\nClima: soleado, 15 a 23 C.\nMenú de Cookidoo: Arroz blanco.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "family-push",
+   "routine": "morning",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T09:58:00-03:00",
+   "unix": 1792673880.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Buen día, Ceci.\nClima: soleado, 15 a 23 C.\nMenú de Cookidoo: Arroz blanco.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "family-push",
+   "routine": "morning",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T10:00:00-03:00",
+   "unix": 1792674000.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4165,
+   "output_tokens": 370,
+   "reasoning_tokens": 261,
+   "usd": 0.00677875,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T10:00:00-03:00",
+   "unix": 1792674000.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T10:00:00-03:00",
+   "unix": 1792674000.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T10:00:00-03:00",
+   "unix": 1792674000.0,
+   "channel": "telegram",
+   "text": "Anoté el sueño de 08:15 a 10:00, 1 h 45 min y la toma de pecho izquierdo de 15 min de las 10:00.",
+   "chat_id": "9000002",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792279364.792,
+   "ts": "2026-10-22T10:00:00-03:00",
+   "unix": 1793593985.964,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 47
+  }
+ ]
+}

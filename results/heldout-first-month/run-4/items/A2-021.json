@@ -1,0 +1,137 @@
+{
+ "id": "A2-021",
+ "child": "heldout-baby-c",
+ "created": [
+  {
+   "endpoint": "changes",
+   "id": 1519,
+   "child": 5,
+   "time": "2026-10-22T07:15:00Z",
+   "wet": false,
+   "solid": true,
+   "color": "yellow",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T04:13:00-03:00",
+   "chat": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:30 a 08:30.\nPor qué: Ventana de limpieza de piso de 07:30 a 08:30 armada para el horario diurno sin solapamiento con sueño previsto y con control de condición en el momento de ejecución, vos quedás informada, Gonza, y vos también, Ceci."
+  },
+  {
+   "at": "2026-10-22T04:13:00-03:00",
+   "chat": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:30 a 08:30.\nPor qué: Ventana de limpieza de piso de 07:30 a 08:30 armada para el horario diurno sin solapamiento con sueño previsto y con control de condición en el momento de ejecución, vos quedás informada, Gonza, y vos también, Ceci."
+  },
+  {
+   "at": "2026-10-22T04:15:00-03:00",
+   "chat": "9000002",
+   "text": "Anoté el pañal sucio con caca amarilla de las 04:15."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T04:15:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "pañal con caca, era como mostaza pero mas clarita",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0137,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T04:13:00-03:00",
+   "unix": 1792653180.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:30 a 08:30.\nPor qué: Ventana de limpieza de piso de 07:30 a 08:30 armada para el horario diurno sin solapamiento con sueño previsto y con control de condición en el momento de ejecución, vos quedás informada, Gonza, y vos también, Ceci.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T04:13:00-03:00",
+   "unix": 1792653180.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:30 a 08:30.\nPor qué: Ventana de limpieza de piso de 07:30 a 08:30 armada para el horario diurno sin solapamiento con sueño previsto y con control de condición en el momento de ejecución, vos quedás informada, Gonza, y vos también, Ceci.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T04:15:00-03:00",
+   "unix": 1792653300.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4146,
+   "output_tokens": 214,
+   "reasoning_tokens": 117,
+   "usd": 0.006092,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T04:15:00-03:00",
+   "unix": 1792653300.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T04:15:00-03:00",
+   "unix": 1792653300.0,
+   "channel": "telegram",
+   "text": "Anoté el pañal sucio con caca amarilla de las 04:15.",
+   "chat_id": "9000002",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792258414.418,
+   "ts": "2026-10-22T04:15:00-03:00",
+   "unix": 1793594236.341,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 49
+  }
+ ]
+}

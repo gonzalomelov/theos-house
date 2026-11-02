@@ -1,0 +1,271 @@
+{
+ "id": "A3-036",
+ "child": "heldout-baby-c",
+ "created": [
+  {
+   "endpoint": "feedings",
+   "id": 1967,
+   "child": 5,
+   "start": "2026-10-23T00:55:00Z",
+   "end": "2026-10-23T01:10:00Z",
+   "duration": "00:15:00",
+   "type": "formula",
+   "method": "bottle",
+   "amount": 100.0,
+   "notes": "length not said, milk type not said",
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [
+  {
+   "endpoint": "changes",
+   "before": {
+    "id": 1562,
+    "child": 5,
+    "time": "2026-10-23T00:30:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "changes",
+    "id": 1562,
+    "child": 5,
+    "time": "2026-10-23T00:30:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T22:08:00-03:00",
+   "chat": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 23:05, 02:00, 05:20. La luz espera a que se despierte.\nVentana para aspirar de 07:30 a 08:15.\nPor qué: Calentador del biberón armado a las 23:05, 02:00 y 05:20 para acompañar los horarios previos de tomas nocturnas y ventana de limpieza de piso de 07:30 a 08:15 planificada para la mañana."
+  },
+  {
+   "at": "2026-10-22T22:08:00-03:00",
+   "chat": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 23:05, 02:00, 05:20. La luz espera a que se despierte.\nVentana para aspirar de 07:30 a 08:15.\nPor qué: Calentador del biberón armado a las 23:05, 02:00 y 05:20 para acompañar los horarios previos de tomas nocturnas y ventana de limpieza de piso de 07:30 a 08:15 planificada para la mañana."
+  },
+  {
+   "at": "2026-10-22T22:10:00-03:00",
+   "chat": "9000001",
+   "text": "Anoté la mamadera de 100 ml de las 22:10."
+  },
+  {
+   "at": "2026-10-22T22:11:00-03:00",
+   "chat": "9000001",
+   "text": "Parece que me mandaste la misma mamadera de 100 ml dos veces seguidas, ¿fue un envío duplicado o fueron dos tomas distintas?"
+  },
+  {
+   "at": "2026-10-22T22:12:00-03:00",
+   "chat": "9000001",
+   "text": "Tranquilo, quedó anotada una sola vez. Gracias por avisar."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T22:10:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "100 ml de mamadera",
+   "setup": true,
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-22T22:11:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "100 ml de mamadera",
+   "setup": true,
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-22T22:12:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "perdon lo mande 2 veces, fue una sola",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0257,
+ "brain_calls": {
+  "inference.baseten.co": 7
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T22:08:00-03:00",
+   "unix": 1792717680.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 23:05, 02:00, 05:20. La luz espera a que se despierte.\nVentana para aspirar de 07:30 a 08:15.\nPor qué: Calentador del biberón armado a las 23:05, 02:00 y 05:20 para acompañar los horarios previos de tomas nocturnas y ventana de limpieza de piso de 07:30 a 08:15 planificada para la mañana.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T22:08:00-03:00",
+   "unix": 1792717680.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 23:05, 02:00, 05:20. La luz espera a que se despierte.\nVentana para aspirar de 07:30 a 08:15.\nPor qué: Calentador del biberón armado a las 23:05, 02:00 y 05:20 para acompañar los horarios previos de tomas nocturnas y ventana de limpieza de piso de 07:30 a 08:15 planificada para la mañana.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T22:10:00-03:00",
+   "unix": 1792717800.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4159,
+   "output_tokens": 114,
+   "reasoning_tokens": 28,
+   "usd": 0.00568325,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T22:10:00-03:00",
+   "unix": 1792717800.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T22:10:00-03:00",
+   "unix": 1792717800.0,
+   "channel": "telegram",
+   "text": "Anoté la mamadera de 100 ml de las 22:10.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792322001.877,
+   "ts": "2026-10-22T22:10:00-03:00",
+   "unix": 1793595148.906,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 18
+  },
+  {
+   "kind": "brain_call",
+   "t": 180.0,
+   "ts": "2026-10-22T22:11:00-03:00",
+   "unix": 1792717860.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4241,
+   "output_tokens": 112,
+   "reasoning_tokens": 18,
+   "usd": 0.00577725,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 180.0,
+   "ts": "2026-10-22T22:11:00-03:00",
+   "unix": 1792717860.0,
+   "channel": "telegram",
+   "text": "Parece que me mandaste la misma mamadera de 100 ml dos veces seguidas, ¿fue un envío duplicado o fueron dos tomas distintas?",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792321995.789,
+   "ts": "2026-10-22T22:11:00-03:00",
+   "unix": 1793595154.994,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 18
+  },
+  {
+   "kind": "brain_call",
+   "t": 240.0,
+   "ts": "2026-10-22T22:12:00-03:00",
+   "unix": 1792717920.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4306,
+   "output_tokens": 222,
+   "reasoning_tokens": 145,
+   "usd": 0.006326,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 240.0,
+   "ts": "2026-10-22T22:12:00-03:00",
+   "unix": 1792717920.0,
+   "channel": "telegram",
+   "text": "Tranquilo, quedó anotada una sola vez. Gracias por avisar.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792321992.1,
+   "ts": "2026-10-22T22:12:00-03:00",
+   "unix": 1793595158.683,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 37
+  }
+ ]
+}

@@ -1,0 +1,76 @@
+{
+ "id": "A5-025",
+ "child": "heldout-baby-a",
+ "created": [],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T19:35:00-03:00",
+   "chat": "9000001",
+   "text": "I don't have live sports results, but I can help with the baby log if you'd like."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T19:35:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "who won the nacional game last night",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.007,
+ "brain_calls": {
+  "inference.baseten.co": 2
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T19:35:00-03:00",
+   "unix": 1792708500.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4119,
+   "output_tokens": 216,
+   "reasoning_tokens": 112,
+   "usd": 0.00606675,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T19:35:00-03:00",
+   "unix": 1792708500.0,
+   "channel": "telegram",
+   "text": "I don't have live sports results, but I can help with the baby log if you'd like.",
+   "chat_id": "9000001",
+   "guard_lang": null
+  },
+  {
+   "kind": "turn",
+   "t": -1792311781.577,
+   "ts": "2026-10-22T19:35:00-03:00",
+   "unix": 1793596069.219,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 36
+  }
+ ]
+}

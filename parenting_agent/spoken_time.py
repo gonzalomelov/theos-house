@@ -15,11 +15,12 @@ RELATIVE = {"es": {0: "hoy", 1: "ayer", 2: "anteayer", -1: "mañana"},
 ISO = re.compile(r"(?:\b(el|del|on)\s+)?\b(\d{4})-(\d{2})-(\d{2})"
                  r"(?:[T ](\d{2}):(\d{2})(?::\d{2}(?:\.\d+)?)?(?:Z|[+-]\d{2}:?\d{2})?)?\b", re.I)
 DAY_MONTH = re.compile(r"\b(del|on)\s+(\d{1,2})/(\d{1,2})\b", re.I)
-LEADING_ZERO = re.compile(r"(?<![\d:])0(\d):(\d{2})\b")
+# "07:50" is said "7:50". The hour after midnight keeps its two zeros, "00:34", never "0:34".
+LEADING_ZERO = re.compile(r"(?<![\d:])0([1-9]):(\d{2})\b")
 
 
 def clock(hour, minute):
-    return f"{int(hour)}:{int(minute):02d}"
+    return f"{int(hour) or '00'}:{int(minute):02d}"
 
 
 def at_words(hour, minute, lang):

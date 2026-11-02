@@ -1,0 +1,170 @@
+{
+ "id": "A2-003",
+ "child": "heldout-baby-a",
+ "created": [
+  {
+   "endpoint": "changes",
+   "id": 1495,
+   "child": 3,
+   "time": "2026-10-22T06:25:00Z",
+   "wet": true,
+   "solid": true,
+   "color": "",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 1900,
+    "child": 3,
+    "start": "2026-10-22T05:55:00Z",
+    "end": "2026-10-22T06:15:00Z",
+    "duration": "00:20:00",
+    "type": "breast milk",
+    "method": "right breast",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 1900,
+    "child": 3,
+    "start": "2026-10-22T05:55:00Z",
+    "end": "2026-10-22T06:15:00Z",
+    "duration": "00:20:00",
+    "type": "breast milk",
+    "method": "right breast",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T03:23:00-03:00",
+   "chat": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 05:00. La luz espera a que se despierte.\nVentana para aspirar de 07:00 a 08:00.\nPor qué: Limpieza de piso de 07:00 a 08:00 y precalentado de mamadera a las 05:00 armados para la ventana de noche a mañana."
+  },
+  {
+   "at": "2026-10-22T03:23:00-03:00",
+   "chat": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 05:00. La luz espera a que se despierte.\nVentana para aspirar de 07:00 a 08:00.\nPor qué: Limpieza de piso de 07:00 a 08:00 y precalentado de mamadera a las 05:00 armados para la ventana de noche a mañana."
+  },
+  {
+   "at": "2026-10-22T03:25:00-03:00",
+   "chat": "9000002",
+   "text": "Anoté el pañal mojado y sucio de las 03:25."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T03:25:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "cambiado. pis y caca",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0137,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T03:23:00-03:00",
+   "unix": 1792650180.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 05:00. La luz espera a que se despierte.\nVentana para aspirar de 07:00 a 08:00.\nPor qué: Limpieza de piso de 07:00 a 08:00 y precalentado de mamadera a las 05:00 armados para la ventana de noche a mañana.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T03:23:00-03:00",
+   "unix": 1792650180.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 05:00. La luz espera a que se despierte.\nVentana para aspirar de 07:00 a 08:00.\nPor qué: Limpieza de piso de 07:00 a 08:00 y precalentado de mamadera a las 05:00 armados para la ventana de noche a mañana.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T03:25:00-03:00",
+   "unix": 1792650300.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4164,
+   "output_tokens": 412,
+   "reasoning_tokens": 329,
+   "usd": 0.006956,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T03:25:00-03:00",
+   "unix": 1792650300.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T03:25:00-03:00",
+   "unix": 1792650300.0,
+   "channel": "telegram",
+   "text": "Anoté el pañal mojado y sucio de las 03:25.",
+   "chat_id": "9000002",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792255567.576,
+   "ts": "2026-10-22T03:25:00-03:00",
+   "unix": 1793594083.181,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 20
+  }
+ ]
+}

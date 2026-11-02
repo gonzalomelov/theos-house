@@ -1,0 +1,237 @@
+{
+ "id": "A3-004",
+ "child": "heldout-baby-a",
+ "created": [
+  {
+   "endpoint": "changes",
+   "id": 1542,
+   "child": 3,
+   "time": "2026-10-22T10:40:00Z",
+   "wet": false,
+   "solid": true,
+   "color": "",
+   "amount": null,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 1916,
+    "child": 3,
+    "start": "2026-10-22T08:50:00Z",
+    "end": "2026-10-22T09:05:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 90.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 1916,
+    "child": 3,
+    "start": "2026-10-22T08:50:00Z",
+    "end": "2026-10-22T09:05:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 90.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T07:38:00-03:00",
+   "chat": "9000001",
+   "text": "Buen día, Gonza.\nAnoche: 1 toma, no te levantaste.\nEsta noche te toca a vos.\nClima: soleado, 15 a 23 C.\nMenú de Cookidoo: Arroz blanco."
+  },
+  {
+   "at": "2026-10-22T07:38:00-03:00",
+   "chat": "9000002",
+   "text": "Buen día, Ceci.\nAnoche: 1 toma, no te levantaste.\nClima: soleado, 15 a 23 C.\nMenú de Cookidoo: Arroz blanco."
+  },
+  {
+   "at": "2026-10-22T07:40:00-03:00",
+   "chat": "9000001",
+   "text": "Anoté la mamadera de 80 ml de las 07:40."
+  },
+  {
+   "at": "2026-10-22T07:42:00-03:00",
+   "chat": "9000001",
+   "text": "Borré la mamadera de 80 ml de las 07:40. Anoté el pañal sucio de las 07:40."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T07:40:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "anota una toma de 80",
+   "setup": true,
+   "accepted": 1,
+   "answered": true
+  },
+  {
+   "at": "2026-10-22T07:42:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "perdon me equivoque no era una toma era un pañal con caca",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0197,
+ "brain_calls": {
+  "inference.baseten.co": 5
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T07:38:00-03:00",
+   "unix": 1792665480.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Buen día, Gonza.\nAnoche: 1 toma, no te levantaste.\nEsta noche te toca a vos.\nClima: soleado, 15 a 23 C.\nMenú de Cookidoo: Arroz blanco.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "family-push",
+   "routine": "morning",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T07:38:00-03:00",
+   "unix": 1792665480.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Buen día, Ceci.\nAnoche: 1 toma, no te levantaste.\nClima: soleado, 15 a 23 C.\nMenú de Cookidoo: Arroz blanco.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "family-push",
+   "routine": "morning",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T07:40:00-03:00",
+   "unix": 1792665600.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4176,
+   "output_tokens": 549,
+   "reasoning_tokens": 443,
+   "usd": 0.00755325,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T07:40:00-03:00",
+   "unix": 1792665600.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T07:40:00-03:00",
+   "unix": 1792665600.0,
+   "channel": "telegram",
+   "text": "Anoté la mamadera de 80 ml de las 07:40.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792270304.985,
+   "ts": "2026-10-22T07:40:00-03:00",
+   "unix": 1793594645.778,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 20
+  },
+  {
+   "kind": "brain_call",
+   "t": 240.0,
+   "ts": "2026-10-22T07:42:00-03:00",
+   "unix": 1792665720.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4258,
+   "output_tokens": 380,
+   "reasoning_tokens": 246,
+   "usd": 0.0069375,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 240.0,
+   "ts": "2026-10-22T07:42:00-03:00",
+   "unix": 1792665720.0,
+   "name": "delete_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "tool",
+   "t": 240.0,
+   "ts": "2026-10-22T07:42:00-03:00",
+   "unix": 1792665720.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 240.0,
+   "ts": "2026-10-22T07:42:00-03:00",
+   "unix": 1792665720.0,
+   "channel": "telegram",
+   "text": "Borré la mamadera de 80 ml de las 07:40. Anoté el pañal sucio de las 07:40.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792270291.366,
+   "ts": "2026-10-22T07:42:00-03:00",
+   "unix": 1793594659.396,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 57
+  }
+ ]
+}

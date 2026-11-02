@@ -1,0 +1,132 @@
+{
+ "id": "A2-060",
+ "child": "heldout-baby-c",
+ "created": [
+  {
+   "endpoint": "timers",
+   "id": 327,
+   "child": 5,
+   "name": "sleep",
+   "start": "2026-10-22T20:00:00Z",
+   "duration": "10 08:43:06.249801",
+   "user": 2
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T17:00:00-03:00",
+   "chat": "9000001",
+   "text": "Anoté que el bebé se durmió a las 17:00."
+  },
+  {
+   "at": "2026-10-22T17:01:00-03:00",
+   "chat": "9000001",
+   "text": "Cambió el plan: Actualicé el plan porque la siesta desde las 13:40 llegó a 201 minutos, 126 minutos más que los 75 habituales."
+  },
+  {
+   "at": "2026-10-22T17:01:00-03:00",
+   "chat": "9000002",
+   "text": "Cambió el plan: Actualicé el plan porque la siesta desde las 13:40 llegó a 201 minutos, 126 minutos más que los 75 habituales."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T17:00:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "s durmio en el coche",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0187,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T17:00:00-03:00",
+   "unix": 1792699200.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4138,
+   "output_tokens": 292,
+   "reasoning_tokens": 225,
+   "usd": 0.0064135,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T17:00:00-03:00",
+   "unix": 1792699200.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T17:00:00-03:00",
+   "unix": 1792699200.0,
+   "channel": "telegram",
+   "text": "Anoté que el bebé se durmió a las 17:00.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792303980.772,
+   "ts": "2026-10-22T17:00:00-03:00",
+   "unix": 1793594569.99,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 20
+  },
+  {
+   "kind": "reply",
+   "t": 180.0,
+   "ts": "2026-10-22T17:01:00-03:00",
+   "unix": 1792699260.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Cambió el plan: Actualicé el plan porque la siesta desde las 13:40 llegó a 201 minutos, 126 minutos más que los 75 habituales.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "replan",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 180.0,
+   "ts": "2026-10-22T17:01:00-03:00",
+   "unix": 1792699260.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Cambió el plan: Actualicé el plan porque la siesta desde las 13:40 llegó a 201 minutos, 126 minutos más que los 75 habituales.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "replan",
+   "check_now": null
+  }
+ ]
+}

@@ -1,0 +1,170 @@
+{
+ "id": "A2-039",
+ "child": "heldout-baby-c",
+ "created": [
+  {
+   "endpoint": "timers",
+   "id": 307,
+   "child": 5,
+   "name": "sleep",
+   "start": "2026-10-22T18:20:00Z",
+   "duration": "10 10:19:50.717698",
+   "user": 2
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T15:58:00-03:00",
+   "chat": "9000001",
+   "text": "Cambió el plan: El plan se agregó tras el sueño más largo desde las 10:40 para ubicar la limpieza fuera del sueño previsto y alinear los precalentados con los despertares nocturnos."
+  },
+  {
+   "at": "2026-10-22T15:58:00-03:00",
+   "chat": "9000002",
+   "text": "Cambió el plan: El plan se agregó tras el sueño más largo desde las 10:40 para ubicar la limpieza fuera del sueño previsto y alinear los precalentados con los despertares nocturnos."
+  },
+  {
+   "at": "2026-10-22T16:00:00-03:00",
+   "chat": "9000002",
+   "text": "Anoté que el bebé se durmió a las 15:20."
+  },
+  {
+   "at": "2026-10-22T16:01:00-03:00",
+   "chat": "9000001",
+   "text": "Cambió el plan: El plan se adaptó tras el sueño más largo desde las 09:45 para ubicar la limpieza fuera del sueño previsto hasta las 16:06 y alinear los precalentados con los despertares nocturnos."
+  },
+  {
+   "at": "2026-10-22T16:01:00-03:00",
+   "chat": "9000002",
+   "text": "Cambió el plan: El plan se adaptó tras el sueño más largo desde las 09:45 para ubicar la limpieza fuera del sueño previsto hasta las 16:06 y alinear los precalentados con los despertares nocturnos."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T16:00:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "se durmio a las 15:20",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.025,
+ "brain_calls": {
+  "inference.baseten.co": 4
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T15:58:00-03:00",
+   "unix": 1792695480.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Cambió el plan: El plan se agregó tras el sueño más largo desde las 10:40 para ubicar la limpieza fuera del sueño previsto y alinear los precalentados con los despertares nocturnos.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "replan",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T15:58:00-03:00",
+   "unix": 1792695480.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Cambió el plan: El plan se agregó tras el sueño más largo desde las 10:40 para ubicar la limpieza fuera del sueño previsto y alinear los precalentados con los despertares nocturnos.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "replan",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T16:00:00-03:00",
+   "unix": 1792695600.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4141,
+   "output_tokens": 193,
+   "reasoning_tokens": 118,
+   "usd": 0.0059965,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T16:00:00-03:00",
+   "unix": 1792695600.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T16:00:00-03:00",
+   "unix": 1792695600.0,
+   "channel": "telegram",
+   "text": "Anoté que el bebé se durmió a las 15:20.",
+   "chat_id": "9000002",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792300572.176,
+   "ts": "2026-10-22T16:00:00-03:00",
+   "unix": 1793594378.584,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 21
+  },
+  {
+   "kind": "reply",
+   "t": 180.0,
+   "ts": "2026-10-22T16:01:00-03:00",
+   "unix": 1792695660.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Cambió el plan: El plan se adaptó tras el sueño más largo desde las 09:45 para ubicar la limpieza fuera del sueño previsto hasta las 16:06 y alinear los precalentados con los despertares nocturnos.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "replan",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 180.0,
+   "ts": "2026-10-22T16:01:00-03:00",
+   "unix": 1792695660.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Cambió el plan: El plan se adaptó tras el sueño más largo desde las 09:45 para ubicar la limpieza fuera del sueño previsto hasta las 16:06 y alinear los precalentados con los despertares nocturnos.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "replan",
+   "check_now": null
+  }
+ ]
+}

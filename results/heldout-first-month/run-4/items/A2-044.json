@@ -1,0 +1,136 @@
+{
+ "id": "A2-044",
+ "child": "heldout-baby-b",
+ "created": [
+  {
+   "endpoint": "sleep",
+   "id": 788,
+   "child": 4,
+   "start": "2026-10-22T17:00:00Z",
+   "end": "2026-10-22T18:40:00Z",
+   "duration": "01:40:00",
+   "nap": true,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T16:18:00-03:00",
+   "chat": "9000001",
+   "text": "Cambió el plan: Plan adaptado al sueño en curso extendido desde las 23:15 y a los horarios de sueño previstos actualizados."
+  },
+  {
+   "at": "2026-10-22T16:18:00-03:00",
+   "chat": "9000002",
+   "text": "Cambió el plan: Plan adaptado al sueño en curso extendido desde las 23:15 y a los horarios de sueño previstos actualizados."
+  },
+  {
+   "at": "2026-10-22T16:20:00-03:00",
+   "chat": "9000001",
+   "text": "Anoté el sueño de 14:00 a 15:40, 1 h 40 min."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T16:20:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "durmio de 14 a 15:40",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0154,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T16:18:00-03:00",
+   "unix": 1792696680.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Cambió el plan: Plan adaptado al sueño en curso extendido desde las 23:15 y a los horarios de sueño previstos actualizados.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "replan",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T16:18:00-03:00",
+   "unix": 1792696680.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Cambió el plan: Plan adaptado al sueño en curso extendido desde las 23:15 y a los horarios de sueño previstos actualizados.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "replan",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T16:20:00-03:00",
+   "unix": 1792696800.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4142,
+   "output_tokens": 155,
+   "reasoning_tokens": 67,
+   "usd": 0.00583625,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T16:20:00-03:00",
+   "unix": 1792696800.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T16:20:00-03:00",
+   "unix": 1792696800.0,
+   "channel": "telegram",
+   "text": "Anoté el sueño de 14:00 a 15:40, 1 h 40 min.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792301633.388,
+   "ts": "2026-10-22T16:20:00-03:00",
+   "unix": 1793594517.374,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 20
+  }
+ ]
+}

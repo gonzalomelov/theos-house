@@ -151,3 +151,17 @@ The same after day on E2E Baby, from a clean worktree at main 27e2635, the famil
 | main at 27e2635, after PR #202 (`nov2-fix/`) | 34 of 34 | 0 of 65 | 24 of 25, 1 extra | 0.60 USD |
 
 The 4 misses are gone. The next feed median skipped the history's 19 h and 29 h log holes, so reminders came at 08:10 and 10:02, before the 08:15 and 10:40 feeds. The 06:15 feed, expected at 05:30, got its reminder at 05:10 to Gonza only, on duty after Ceci asked to sleep, and the 20:25 reminder went to Gonza only too. Diapers low reached both parents once at 16:01 in Spanish, 22 left at 8 a day (2.75 days, under the new 3 day line), before Gonza asked for the shopping list at 16:10. The one log miss is not from #202: at 03:30 "Se durmió" got "Sigue dormido desde las 22:55", so the 22:55 sleep was never closed, and at 06:05 "Se despertó" wrote a sleep from 03:00 to 06:05 instead of ending the 03:30 one.
+
+## Rerun after the stale open sleep fix (Nov 2, `nov2-run3/`)
+
+At 03:30 "Se durmió" had got "Sigue dormido desde las 22:55" (a sleep opened at 22:55 was still open after the 02:45
+feed), so "Se despertó" at 06:05 wrote a sleep from 03:00. Now a new "se durmió" with a sleep open since before a logged
+feed closes that sleep at the feed's start and opens the new one (`log_ops.stale_sleep_ops`).
+
+| Run | Things to get | Noise | Log right | Muse |
+|---|---|---|---|---|
+| `nov2-run3/` | 34 of 34 | 0 of 65 | 25 of 25, 1 extra | 0.59 USD |
+
+The 03:30 reply: "Anoté el sueño de 22:55 a 02:45, 3 h 50 min y que el bebé se durmió a las 03:30", and 06:05 closed
+03:30 to 06:05. The 1 extra entry is that closed 22:55 to 02:45 sleep: no parent said when he woke, the agent ends it at
+the feed by design, and the scorer counts any entry nobody asked for.

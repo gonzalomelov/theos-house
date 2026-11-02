@@ -17,7 +17,7 @@ from . import brain as brain_mod
 from . import log_ops
 from . import rules
 from . import final_guard
-from .memory import parse_time
+from .memory import feed_start, parse_time
 
 SYSTEM = """You are a persistent agent built for new parents. You know their baby from the log and the facts below,
 you speak first when it helps, and you act in the home only through your tools.
@@ -280,12 +280,13 @@ SIDE_WORDS = {"es": {"left breast": " izquierdo", "right breast": " derecho", "b
                      "both breasts": "breast feed on both sides"}}
 
 
-def describe_stored(entry, lang, name=None):
+def describe_stored(entry, lang, name=None, at=None):
     """A logged entry in a few words, from what the log stored and nothing else: "la toma de pecho derecho de 12 min de
-    las 05:20", "la mamadera de 90 ml de fórmula de las 02:10", "el pañal mojado de las 03:00"."""
+    las 05:20", "la mamadera de 90 ml de fórmula de las 02:10", "el pañal mojado de las 03:00". at names another clock
+    time for it, a feed's start in the last feed answer."""
     words = TEXTS.get(lang, TEXTS["en"])
     kind, d = entry.get("kind"), entry.get("details") or {}
-    at = str(entry.get("ts") or "")[11:16]
+    at = at or str(entry.get("ts") or "")[11:16]
     if kind == "feeding":
         method = str(d.get("method") or "bottle")
         breast = "breast" in method
@@ -850,6 +851,15 @@ class Agent:
             self.say(channel, self.emergency(text), flag="emergency")
             self.log_after_alert(channel, text)
             return
+        if rules.asks_dose(text):
+            # "La pediatra dijo vitamina D pero no me acuerdo cuántas gotas eran": the fixed no-dose line, and the
+            # question is never kept as a note (held-out run-3, A5-016). A feed or diaper told with it is still logged.
+            self.memory.add_message(channel, "user", text, ts=self.now())
+            self.bus.publish("guard", status="dose_question")
+            entries = self.log_reported(text)
+            lang = self.lang(text) if self.lang(text) in rules.NO_DOSE else "en"
+            self.say(channel, (logged_text(entries, lang) + " " if entries else "") + rules.NO_DOSE[lang])
+            return
         if rules.asks_about_self(text):
             # Where the agent runs, from the facts, the same every time (round b5: "Meta's servers", then "nothing ran").
             self.memory.add_message(channel, "user", text, ts=self.now())
@@ -1282,8 +1292,9 @@ class Agent:
         entry = self.latest_of("feeding")
         if entry is None:
             return LAST_FEED["none"][lang]
-        what = describe_stored(entry, lang)
-        day = str(entry.get("ts") or "")[:10]
+        began = str(feed_start(entry) or "")
+        what = describe_stored(entry, lang, at=began[11:16])
+        day = began[:10]
         try:
             today = self.now().date().isoformat()
         except Exception:  # noqa: BLE001 no clock, no day word
@@ -1321,7 +1332,7 @@ class Agent:
             self.brain_busy = True
             return self.busy_line(fixed, request)
         text = strip_codes(BRAIN_ASK_LINE.sub("", reply.text or "").strip())
-        hhmm = str((entry or {}).get("ts") or "")[11:16]
+        hhmm = str(feed_start(entry or {}) or "")[11:16]
         said_time = bool(hhmm) and (hhmm in text or hhmm.lstrip("0") in text)
         if (not text or reply.tool_calls or rules.claims_done(text) or rules.claims_change(text)
                 or rules.message_lang(text) not in (None, lang)

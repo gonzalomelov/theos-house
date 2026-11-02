@@ -1,0 +1,401 @@
+{
+ "id": "A3-053",
+ "child": "heldout-baby-b",
+ "created": [],
+ "seed_after": [
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 2007,
+    "child": 4,
+    "start": "2026-10-22T03:30:00Z",
+    "end": "2026-10-22T03:45:00Z",
+    "duration": "00:15:00",
+    "type": "breast milk",
+    "method": "left breast",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 2007,
+    "child": 4,
+    "start": "2026-10-22T03:30:00Z",
+    "end": "2026-10-22T03:45:00Z",
+    "duration": "00:15:00",
+    "type": "breast milk",
+    "method": "left breast",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 2008,
+    "child": 4,
+    "start": "2026-10-22T06:00:00Z",
+    "end": "2026-10-22T06:12:00Z",
+    "duration": "00:12:00",
+    "type": "breast milk",
+    "method": "right breast",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 2008,
+    "child": 4,
+    "start": "2026-10-22T06:00:00Z",
+    "end": "2026-10-22T06:12:00Z",
+    "duration": "00:12:00",
+    "type": "breast milk",
+    "method": "right breast",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 2009,
+    "child": 4,
+    "start": "2026-10-22T08:40:00Z",
+    "end": "2026-10-22T08:55:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 80.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 2009,
+    "child": 4,
+    "start": "2026-10-22T08:40:00Z",
+    "end": "2026-10-22T08:55:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 80.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 2010,
+    "child": 4,
+    "start": "2026-10-22T11:20:00Z",
+    "end": "2026-10-22T11:40:00Z",
+    "duration": "00:20:00",
+    "type": "breast milk",
+    "method": "both breasts",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 2010,
+    "child": 4,
+    "start": "2026-10-22T11:20:00Z",
+    "end": "2026-10-22T11:40:00Z",
+    "duration": "00:20:00",
+    "type": "breast milk",
+    "method": "both breasts",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 2011,
+    "child": 4,
+    "start": "2026-10-22T14:00:00Z",
+    "end": "2026-10-22T14:15:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 90.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 2011,
+    "child": 4,
+    "start": "2026-10-22T14:00:00Z",
+    "end": "2026-10-22T14:15:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 90.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 2012,
+    "child": 4,
+    "start": "2026-10-22T17:10:00Z",
+    "end": "2026-10-22T17:28:00Z",
+    "duration": "00:18:00",
+    "type": "breast milk",
+    "method": "left breast",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 2012,
+    "child": 4,
+    "start": "2026-10-22T17:10:00Z",
+    "end": "2026-10-22T17:28:00Z",
+    "duration": "00:18:00",
+    "type": "breast milk",
+    "method": "left breast",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 2013,
+    "child": 4,
+    "start": "2026-10-22T20:30:00Z",
+    "end": "2026-10-22T20:45:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 100.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 2013,
+    "child": 4,
+    "start": "2026-10-22T20:30:00Z",
+    "end": "2026-10-22T20:45:00Z",
+    "duration": "00:15:00",
+    "type": "formula",
+    "method": "bottle",
+    "amount": 100.0,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 2014,
+    "child": 4,
+    "start": "2026-10-22T22:50:00Z",
+    "end": "2026-10-22T23:00:00Z",
+    "duration": "00:10:00",
+    "type": "breast milk",
+    "method": "right breast",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 2014,
+    "child": 4,
+    "start": "2026-10-22T22:50:00Z",
+    "end": "2026-10-22T23:00:00Z",
+    "duration": "00:10:00",
+    "type": "breast milk",
+    "method": "right breast",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "changes",
+   "before": {
+    "id": 1572,
+    "child": 4,
+    "time": "2026-10-22T14:20:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "changes",
+    "id": 1572,
+    "child": 4,
+    "time": "2026-10-22T14:20:00Z",
+    "wet": true,
+    "solid": false,
+    "color": "",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T20:28:00-03:00",
+   "chat": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 21:10, 01:10, 04:40. La luz espera a que se despierte."
+  },
+  {
+   "at": "2026-10-22T20:28:00-03:00",
+   "chat": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 21:10, 01:10, 04:40. La luz espera a que se despierte."
+  },
+  {
+   "at": "2026-10-22T20:30:00-03:00",
+   "chat": "9000002",
+   "text": "8 feeds today: 5 breast feeds and 3 bottles of formula for 270 ml total, last at 19:50."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T20:30:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "how many feeds today?",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0142,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T20:28:00-03:00",
+   "unix": 1792711680.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 21:10, 01:10, 04:40. La luz espera a que se despierte.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T20:28:00-03:00",
+   "unix": 1792711680.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nCalentador de mamadera (solo agua) a las 21:10, 01:10, 04:40. La luz espera a que se despierte.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T20:30:00-03:00",
+   "unix": 1792711800.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4302,
+   "output_tokens": 133,
+   "reasoning_tokens": 45,
+   "usd": 0.00594275,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T20:30:00-03:00",
+   "unix": 1792711800.0,
+   "channel": "telegram",
+   "text": "8 feeds today: 5 breast feeds and 3 bottles of formula for 270 ml total, last at 19:50.",
+   "chat_id": "9000002",
+   "guard_lang": null
+  },
+  {
+   "kind": "turn",
+   "t": -1792315866.185,
+   "ts": "2026-10-22T20:30:00-03:00",
+   "unix": 1793595284.601,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 21
+  }
+ ]
+}

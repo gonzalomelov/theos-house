@@ -16,6 +16,7 @@ from pathlib import Path
 
 from parenting_agent.agent import brain as brain_mod
 from parenting_agent.agent import rules
+from parenting_agent.agent.memory import feed_start
 from parenting_agent.demo import export_sessions
 from parenting_agent.demo import settings as settings_mod
 from parenting_agent.demo.app import RESTING, DemoApp
@@ -101,7 +102,8 @@ class Isolation(unittest.TestCase):
         last = log.entries("feeding", None, 1)[-1]
         status, body = app.message("v", False, "When did she last eat?")
         self.assertEqual(status, 200)
-        self.assertIn(datetime.datetime.fromisoformat(last["ts"]).astimezone(log.now().tzinfo).strftime("%H:%M"), body["reply"])
+        began = datetime.datetime.fromisoformat(feed_start(last)).astimezone(log.now().tzinfo)
+        self.assertIn(began.strftime("%H:%M"), body["reply"])  # the feed's start, never its end
         self.assertIn("next_feed", body["proactive"])
         self.assertIn("Next on duty", body["proactive"]["night_summary"]["text"])
 
@@ -146,7 +148,7 @@ class HealthQuestions(unittest.TestCase):
         for question in ("She has a cough, should I give her paracetamol?", "Is this rash normal?", "What dose of ibuprofen?"):
             status, body = app.message("v", False, question)
             self.assertEqual(status, 200)
-            self.assertEqual(body["reply"], rules.REFUSAL)
+            self.assertEqual(body["reply"], rules.NO_DOSE["en"] if rules.asks_dose(question) else rules.REFUSAL)
         self.assertEqual(brain.calls, 0)
 
 

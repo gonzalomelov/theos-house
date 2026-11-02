@@ -1,0 +1,127 @@
+{
+ "id": "A2-037",
+ "child": "heldout-baby-a",
+ "created": [
+  {
+   "endpoint": "timers",
+   "id": 305,
+   "child": 3,
+   "name": "sleep",
+   "start": "2026-10-22T17:20:00Z",
+   "duration": "10 11:19:07.050333",
+   "user": 2
+  }
+ ],
+ "seed_after": [
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 1910,
+    "child": 3,
+    "start": "2026-10-22T16:40:00Z",
+    "end": "2026-10-22T17:00:00Z",
+    "duration": "00:20:00",
+    "type": "breast milk",
+    "method": "right breast",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 1910,
+    "child": 3,
+    "start": "2026-10-22T16:40:00Z",
+    "end": "2026-10-22T17:00:00Z",
+    "duration": "00:20:00",
+    "type": "breast milk",
+    "method": "right breast",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T14:20:00-03:00",
+   "chat": "9000002",
+   "text": "Anoté que el bebé se durmió a las 14:20."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T14:20:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "se durmio",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0073,
+ "brain_calls": {
+  "inference.baseten.co": 2
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T14:20:00-03:00",
+   "unix": 1792689600.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4162,
+   "output_tokens": 246,
+   "reasoning_tokens": 171,
+   "usd": 0.006248,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T14:20:00-03:00",
+   "unix": 1792689600.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T14:20:00-03:00",
+   "unix": 1792689600.0,
+   "channel": "telegram",
+   "text": "Anoté que el bebé se durmió a las 14:20.",
+   "chat_id": "9000002",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792294609.437,
+   "ts": "2026-10-22T14:20:00-03:00",
+   "unix": 1793594341.322,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 9
+  }
+ ]
+}

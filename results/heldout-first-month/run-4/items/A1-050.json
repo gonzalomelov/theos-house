@@ -1,0 +1,114 @@
+{
+ "id": "A1-050",
+ "child": "heldout-baby-a",
+ "created": [],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T22:13:00-03:00",
+   "chat": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:00 a 08:00.\nPor qué: La limpieza del piso está programada de 07:00 a 08:00 y no programaste rutinas nocturnas porque no hay sueños previstos antes de las 10:13."
+  },
+  {
+   "at": "2026-10-22T22:13:00-03:00",
+   "chat": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:00 a 08:00.\nPor qué: La limpieza del piso está programada de 07:00 a 08:00 y no programaste rutinas nocturnas porque no hay sueños previstos antes de las 10:13."
+  },
+  {
+   "at": "2026-10-22T22:15:00-03:00",
+   "chat": "9000001",
+   "text": "Dale, cuando termine me contás y lo anoto."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T22:15:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "ahora ceci le va a dar la teta",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0119,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T22:13:00-03:00",
+   "unix": 1792717980.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:00 a 08:00.\nPor qué: La limpieza del piso está programada de 07:00 a 08:00 y no programaste rutinas nocturnas porque no hay sueños previstos antes de las 10:13.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T22:13:00-03:00",
+   "unix": 1792717980.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Plan de esta noche. De turno: Gonza.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:00 a 08:00.\nPor qué: La limpieza del piso está programada de 07:00 a 08:00 y no programaste rutinas nocturnas porque no hay sueños previstos antes de las 10:13.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T22:15:00-03:00",
+   "unix": 1792718100.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4140,
+   "output_tokens": 194,
+   "reasoning_tokens": 120,
+   "usd": 0.0059995,
+   "fallback": false
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T22:15:00-03:00",
+   "unix": 1792718100.0,
+   "channel": "telegram",
+   "text": "Dale, cuando termine me contás y lo anoto.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792323602.049,
+   "ts": "2026-10-22T22:15:00-03:00",
+   "unix": 1793593848.705,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 30
+  }
+ ]
+}

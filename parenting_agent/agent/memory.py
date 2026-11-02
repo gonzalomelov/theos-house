@@ -36,6 +36,19 @@ def hhmm(ts, tz=None):
     return parse_time(ts, tz).strftime("%H:%M") if ts else None
 
 
+def feed_start(entry):
+    """When a feed began, as an ISO time: its start when its length is known (said by the parent or recorded in Baby
+    Buddy), else the time the parent told, the only time the log really has. "¿A qué hora comió?" means the start:
+    held-out run-3 answered the end of the 13:10 feed, 13:25. Any other entry gives its own time."""
+    details = entry.get("details") or {}
+    if entry.get("kind") != "feeding" or not details.get("duration_min"):
+        return entry.get("ts")
+    if details.get("start"):
+        return details["start"]
+    begun = parse_time(entry["ts"]) - datetime.timedelta(minutes=float(details["duration_min"]))
+    return begun.isoformat(timespec="seconds")
+
+
 def start_after_feeds(start, end, feeds):
     """A sleep never spans a feed: its start moves past the end of the last feed logged inside it. feeds are (start,
     end) pairs. Raises ValueError when a feed covers the sleep's end, so there is no sleep left to log."""
@@ -167,8 +180,8 @@ class BabyLog:
         return {
             "since": since, "until": until or current.isoformat(timespec="seconds"), "now": current.isoformat(timespec="seconds"),
             "feedings": {"count": len(feeds), "total_ml": round(sum(float(e["details"].get("amount_ml") or 0) for e in feeds)),
-                         "last_at": at(last_feed["ts"]) if last_feed else None,
-                         "last_date": last_feed["ts"][:10] if last_feed else None,
+                         "last_at": at(feed_start(last_feed)) if last_feed else None,
+                         "last_date": feed_start(last_feed)[:10] if last_feed else None,
                          "last_amount_ml": last_feed["details"].get("amount_ml") if last_feed else None,
                          "last_method": last_feed["details"].get("method") if last_feed else None},
             # Counts that add up: "4 diapers, 4 wet and 1 dirty" read as five to a round b4 judge. said is the line to use.

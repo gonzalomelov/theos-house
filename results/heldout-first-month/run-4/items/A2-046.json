@@ -1,0 +1,98 @@
+{
+ "id": "A2-046",
+ "child": "heldout-baby-a",
+ "created": [
+  {
+   "endpoint": "sleep",
+   "id": 782,
+   "child": 3,
+   "start": "2026-10-22T19:15:00Z",
+   "end": "2026-10-22T20:30:00Z",
+   "duration": "01:15:00",
+   "nap": false,
+   "notes": null,
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T17:50:00-03:00",
+   "chat": "9000001",
+   "text": "Anoté el sueño de 16:15 a 17:30, 1 h 15 min."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T17:50:00-03:00",
+   "do": "message",
+   "who": "gonza",
+   "text": "durmió en el cochecito de 16:15 a 17:30 mientras caminabamos por la rambla",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.007,
+ "brain_calls": {
+  "inference.baseten.co": 2
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T17:50:00-03:00",
+   "unix": 1792702200.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4157,
+   "output_tokens": 113,
+   "reasoning_tokens": 25,
+   "usd": 0.0056765,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T17:50:00-03:00",
+   "unix": 1792702200.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T17:50:00-03:00",
+   "unix": 1792702200.0,
+   "channel": "telegram",
+   "text": "Anoté el sueño de 16:15 a 17:30, 1 h 15 min.",
+   "chat_id": "9000001",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792307135.14,
+   "ts": "2026-10-22T17:50:00-03:00",
+   "unix": 1793594415.62,
+   "channel": "telegram",
+   "person": "gonza",
+   "answered": true,
+   "test": false,
+   "chars": 74
+  }
+ ]
+}

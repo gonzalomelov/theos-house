@@ -12,6 +12,7 @@ from unittest import mock
 from parenting_agent import hud_cards
 from parenting_agent.agent import build
 from parenting_agent.agent import config as config_mod
+from parenting_agent.agent import rules
 from parenting_agent.channels.push import FamilyPush
 from parenting_agent.channels.telegram import Telegram
 from parenting_agent.pediatrician import ADVICE, Pediatrician, aligned, facts, full_days, parse_when
@@ -271,6 +272,13 @@ class Questions(unittest.TestCase):
         self.assertIn("No hay una pregunta 5", fam.say(CECI, "cerrá pregunta 5"))
         self.assertIn("cerré las 1 preguntas", fam.say(CECI, "cerrar todas las preguntas"))
         self.assertEqual(fam.pedi.questions(), [])
+
+    def test_a_dose_question_is_never_a_visit_note(self):
+        fam = family(self, at(28, 9))
+        text = "la pediatra dijo vitamina d pero no me acuerdo cuantas gotas eran vos sabes?"
+        self.assertIsNone(fam.pedi.take({"person": "ceci"}, text))
+        self.assertEqual(fam.say(CECI, text), rules.NO_DOSE["es"])
+        self.assertEqual(fam.agent.baby_log.entries("note"), [])
 
     def test_a_red_flag_is_never_taken_here(self):
         fam = family(self, at(28, 9))

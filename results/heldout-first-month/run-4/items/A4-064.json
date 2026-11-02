@@ -1,0 +1,157 @@
+{
+ "id": "A4-064",
+ "child": "heldout-baby-c",
+ "created": [
+  {
+   "endpoint": "feedings",
+   "id": 2122,
+   "child": 5,
+   "start": "2026-10-22T12:50:00Z",
+   "end": "2026-10-22T13:05:00Z",
+   "duration": "00:15:00",
+   "type": "formula",
+   "method": "bottle",
+   "amount": 120.0,
+   "notes": "length not said, milk type not said",
+   "tags": [
+    "agent"
+   ]
+  },
+  {
+   "endpoint": "notes",
+   "id": 852,
+   "child": 5,
+   "note": "he spit up a little after",
+   "image": null,
+   "time": "2026-10-22T13:05:00Z",
+   "tags": [
+    "agent"
+   ]
+  }
+ ],
+ "seed_after": [],
+ "sent": [
+  {
+   "at": "2026-10-22T10:03:00-03:00",
+   "chat": "9000001",
+   "text": "Buen día, Gonza.\nEsta noche te toca a vos.\nClima: soleado, 15 a 23 C.\nMenú de Cookidoo: Arroz blanco."
+  },
+  {
+   "at": "2026-10-22T10:03:00-03:00",
+   "chat": "9000002",
+   "text": "Buen día, Ceci.\nClima: soleado, 15 a 23 C.\nMenú de Cookidoo: Arroz blanco."
+  },
+  {
+   "at": "2026-10-22T10:05:00-03:00",
+   "chat": "9000002",
+   "text": "Logged the 10:05 bottle of 120 ml and a note at 10:05: \"he spit up a little after\". I can't give medical advice on it: please ask your pediatrician, or call emergency services (911 in Uruguay) if it is urgent."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T10:05:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "fed him 4 oz, he spit up a little after, normal?",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.01,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T10:03:00-03:00",
+   "unix": 1792674180.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Buen día, Gonza.\nEsta noche te toca a vos.\nClima: soleado, 15 a 23 C.\nMenú de Cookidoo: Arroz blanco.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "family-push",
+   "routine": "morning",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T10:03:00-03:00",
+   "unix": 1792674180.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Buen día, Ceci.\nClima: soleado, 15 a 23 C.\nMenú de Cookidoo: Arroz blanco.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "family-push",
+   "routine": "morning",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T10:05:00-03:00",
+   "unix": 1792674300.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4127,
+   "output_tokens": 406,
+   "reasoning_tokens": 282,
+   "usd": 0.00688425,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T10:05:00-03:00",
+   "unix": 1792674300.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T10:05:00-03:00",
+   "unix": 1792674300.0,
+   "name": "log_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T10:05:00-03:00",
+   "unix": 1792674300.0,
+   "channel": "telegram",
+   "text": "Logged the 10:05 bottle of 120 ml and a note at 10:05: \"he spit up a little after\". I can't give medical advice on it: please ask your pediatrician, or call emergency services (911 in Uruguay) if it is urgent.",
+   "chat_id": "9000002",
+   "guard_lang": null
+  },
+  {
+   "kind": "turn",
+   "t": -1792277609.812,
+   "ts": "2026-10-22T10:05:00-03:00",
+   "unix": 1793596040.983,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 48
+  }
+ ]
+}

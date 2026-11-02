@@ -1,0 +1,187 @@
+{
+ "id": "A3-018",
+ "child": "heldout-baby-c",
+ "created": [],
+ "seed_after": [
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 1938,
+    "child": 5,
+    "start": "2026-10-22T04:15:00Z",
+    "end": "2026-10-22T04:30:00Z",
+    "duration": "00:15:00",
+    "type": "breast milk",
+    "method": "right breast",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 1938,
+    "child": 5,
+    "start": "2026-10-22T04:15:00Z",
+    "end": "2026-10-22T04:30:00Z",
+    "duration": "00:15:00",
+    "type": "breast milk",
+    "method": "right breast",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  },
+  {
+   "endpoint": "feedings",
+   "before": {
+    "id": 1939,
+    "child": 5,
+    "start": "2026-10-22T07:00:00Z",
+    "end": "2026-10-22T07:10:00Z",
+    "duration": "00:10:00",
+    "type": "breast milk",
+    "method": "left breast",
+    "amount": null,
+    "notes": null,
+    "tags": [
+     "heldout-seed"
+    ]
+   },
+   "after": {
+    "endpoint": "feedings",
+    "id": 1939,
+    "child": 5,
+    "start": "2026-10-22T06:50:00Z",
+    "end": "2026-10-22T07:10:00Z",
+    "duration": "00:20:00",
+    "type": "breast milk",
+    "method": "left breast",
+    "amount": null,
+    "notes": "",
+    "tags": [
+     "heldout-seed"
+    ]
+   }
+  }
+ ],
+ "sent": [
+  {
+   "at": "2026-10-22T04:28:00-03:00",
+   "chat": "9000001",
+   "text": "Plan de esta noche. De turno: Ceci.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:30 a 08:30.\nPor qué: Ventana de limpieza de piso armada de 07:30 a 08:30 en horario diurno sin solapamiento con sueño previsto, vos Ceci quedás de guardia y vos Gonza quedás de apoyo."
+  },
+  {
+   "at": "2026-10-22T04:28:00-03:00",
+   "chat": "9000002",
+   "text": "Plan de esta noche. De turno: Ceci.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:30 a 08:30.\nPor qué: Ventana de limpieza de piso armada de 07:30 a 08:30 en horario diurno sin solapamiento con sueño previsto, vos Ceci quedás de guardia y vos Gonza quedás de apoyo."
+  },
+  {
+   "at": "2026-10-22T04:30:00-03:00",
+   "chat": "9000002",
+   "text": "Corregí la toma de pecho de las 04:10: 10 min → 20 min."
+  }
+ ],
+ "steps": [
+  {
+   "at": "2026-10-22T04:30:00-03:00",
+   "do": "message",
+   "who": "ceci",
+   "text": "el de las 4 fueron 20 min no 10",
+   "scored": true,
+   "accepted": 1,
+   "answered": true
+  }
+ ],
+ "brain_usd": 0.0118,
+ "brain_calls": {
+  "inference.baseten.co": 3
+ },
+ "refused": [],
+ "tunnel_down": [],
+ "over_budget": false,
+ "chats": {
+  "gonza": "9000001",
+  "ceci": "9000002",
+  "grandma": "9000003"
+ },
+ "fallbacks": 0,
+ "events": [
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T04:28:00-03:00",
+   "unix": 1792654080.0,
+   "channel": "telegram",
+   "chat_id": "9000001",
+   "text": "Plan de esta noche. De turno: Ceci.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:30 a 08:30.\nPor qué: Ventana de limpieza de piso armada de 07:30 a 08:30 en horario diurno sin solapamiento con sueño previsto, vos Ceci quedás de guardia y vos Gonza quedás de apoyo.",
+   "person": "gonza",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "reply",
+   "t": 0.0,
+   "ts": "2026-10-22T04:28:00-03:00",
+   "unix": 1792654080.0,
+   "channel": "telegram",
+   "chat_id": "9000002",
+   "text": "Plan de esta noche. De turno: Ceci.\nSin precalentado: si llora, la casa se prepara igual.\nVentana para aspirar de 07:30 a 08:30.\nPor qué: Ventana de limpieza de piso armada de 07:30 a 08:30 en horario diurno sin solapamiento con sueño previsto, vos Ceci quedás de guardia y vos Gonza quedás de apoyo.",
+   "person": "ceci",
+   "proactive": true,
+   "source": "house-brain",
+   "routine": "tonight",
+   "check_now": null
+  },
+  {
+   "kind": "brain_call",
+   "t": 120.0,
+   "ts": "2026-10-22T04:30:00-03:00",
+   "unix": 1792654200.0,
+   "provider": "openai_compatible",
+   "model": "meta-models/muse-spark-open-1026",
+   "destination": "inference.baseten.co",
+   "seconds": 0.0,
+   "tool_calls": 1,
+   "input_tokens": 4186,
+   "output_tokens": 134,
+   "reasoning_tokens": 48,
+   "usd": 0.005802,
+   "fallback": false
+  },
+  {
+   "kind": "tool",
+   "t": 120.0,
+   "ts": "2026-10-22T04:30:00-03:00",
+   "unix": 1792654200.0,
+   "name": "edit_baby_event",
+   "status": "ran"
+  },
+  {
+   "kind": "reply",
+   "t": 120.0,
+   "ts": "2026-10-22T04:30:00-03:00",
+   "unix": 1792654200.0,
+   "channel": "telegram",
+   "text": "Corregí la toma de pecho de las 04:10: 10 min → 20 min.",
+   "chat_id": "9000002",
+   "guard_lang": "es"
+  },
+  {
+   "kind": "turn",
+   "t": -1792258624.573,
+   "ts": "2026-10-22T04:30:00-03:00",
+   "unix": 1793594926.208,
+   "channel": "telegram",
+   "person": "ceci",
+   "answered": true,
+   "test": false,
+   "chars": 31
+  }
+ ]
+}
