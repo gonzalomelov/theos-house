@@ -130,3 +130,14 @@ Regression tests for blind round 1: `tests/test_blind_round1_clean_replies.py` (
 python -m parenting_agent.e2e --label guard-after --set baby.born=true --out results/e2e-day/guard-after
 python scripts/glasses_day_noise.py --out results/e2e-day/glasses-after.json
 ```
+
+## Rerun after #187 to #198 (Nov 1, PR #200)
+
+The same after day (`--set baby.born=true`) on E2E Baby, from a clean worktree.
+
+| Run | Things to get | Noise | Log right | Muse |
+|---|---|---|---|---|
+| main at a0e4a87 (`nov1/`) | 29 of 34 | 2 of 62 | 25 of 25, 0 extra | 0.59 USD |
+| main at da87075, after PR #200 (`nov1-fix/`) | 30 of 34 | 0 of 60 | 25 of 25, 0 extra | 0.60 USD |
+
+The regression: Ceci got "Cambió el plan" at 22:05 and 01:46 after she asked to sleep. Round b5 gave Muse a Spanish why for a re-plan, so a Spanish family now reads it, and a re-plan was a shared push. Since PR #200 a re-plan at night goes to the parent on duty only. The 4 misses are the same as before (two first feeds and the 06:15 feed without a reminder, no diapers low push at 2.4 days). The 02:50 cry push reached Gonza only, with the side bed line.
