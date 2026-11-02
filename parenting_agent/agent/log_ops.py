@@ -14,7 +14,7 @@ import re
 
 from . import brain as brain_mod
 from . import rules
-from .memory import parse_time
+from .memory import feed_start, parse_time
 
 LOG_HOURS = 30
 HISTORY = 12
@@ -157,7 +157,7 @@ def entry_line(entry, tz):
     """One log entry as the brain reads it: id, day and time, kind and what it holds."""
     d = entry.get("details") or {}
     kind = entry.get("kind")
-    parts = [f"#{entry.get('id')}", _hm(entry["ts"], tz), kind]
+    parts = [f"#{entry.get('id')}", _hm(feed_start(entry), tz), kind]
     if kind == "feeding":
         parts.append(str(d.get("method") or "bottle"))
         if d.get("amount_ml") is not None:
@@ -273,6 +273,8 @@ def clock(value, now, hours=frozenset()):
             moment = parse_time(value, now.tzinfo)
         except (TypeError, ValueError):
             return None
+        if re.match(r"^\d{4}-\d{2}-\d{2}T", str(value)) and moment <= now + datetime.timedelta(minutes=1):
+            return moment  # a full instant (the agent's own, a stale sleep closed at a feed) is already the moment
         match = HHMM.match(moment.strftime("%H:%M"))
     hour, minute = int(match.group(1)), int(match.group(2))
     if hour > 23 or minute > 59:
@@ -335,6 +337,10 @@ def to_call(op, now, hours=frozenset()):
                 details["type"] = op["type"]
             if op.get("duration_min"):
                 details["duration_min"] = op["duration_min"]
+                ended = at + datetime.timedelta(minutes=float(op["duration_min"])) if at else None
+                if ended is not None and ended <= now:
+                    # "a las 13:10 le di pecho 20 min": the time named is the start, as the prompt reads it.
+                    details["start"], ts = at.isoformat(timespec="seconds"), ended.isoformat(timespec="seconds")
         elif kind == "diaper":
             details = {"wet": bool(op.get("wet")), "solid": bool(op.get("solid"))}
             if color(op.get("color")):
@@ -472,7 +478,53 @@ def stagger(ops, now):
 
 AFTER_ALERT = ("[from the agent, not the parent] The fixed emergency line was already sent for this message, and the "
                "parent is calling for help. Return only the log operations for what the message reports happened (a "
-               "feed, a diaper, a sleep) and a note with the parent's words about the sign. The reply is not used.")
+               "feed, a diaper, a sleep that is over) and a note with the parent's words about the sign. A baby who is "
+               "very sleepy, limp or cannot be woken ('ahora está muy dormido', 'no hay forma de despertarlo') is the "
+               "sign, never a sleep: no sleep_start. A dirty or wet diaper told with the sign is a diaper entry. The "
+               "reply is not used.")
+
+
+def after_alert_ops(request, ops):
+    """What a red flag message reported, as Muse proposed it, held to the words: a baby who is very sleepy or cannot be
+    woken is the sign, so no sleep starts (held-out run-3 opened one on "ahora esta muy dormido" after a fall, and on
+    "no hay forma de despertarlo"), and a feed or diaper the words plainly name is logged when Muse proposed none of
+    that kind ("dirty diaper, but he hasnt fed since like 9am" was kept as nothing)."""
+    ops = [op for op in ops if op.get("op") != "sleep_start"]
+    proposed = {op.get("kind") for op in ops if op.get("op") == "add"}
+    for kind, details in rules.reported_entries(request):
+        if kind in ("feeding", "diaper") and kind not in proposed:
+            ops.append({"op": "add", "kind": kind, **{k: v for k, v in details.items() if k != "ts"}})
+    return ops
+
+
+def woke_for_feed(agent, opened):
+    """The start of the first feed logged after an open sleep began, as an ISO time, or None: the baby was awake for
+    it, so that sleep ended there."""
+    try:
+        start = parse_time(opened)
+        feeds = agent.baby_log.entries("feeding", opened, 50)
+    except Exception:  # noqa: BLE001 a log that cannot be read keeps the open sleep as it is
+        return None
+    began = sorted(parse_time((e.get("details") or {}).get("start") or e["ts"]) for e in feeds)
+    began = [moment for moment in began if moment > start]
+    return began[0].isoformat(timespec="seconds") if began else None
+
+
+def stale_sleep_ops(agent, request, ops):
+    """A new "se durmió" while a sleep opened before a logged feed is still open: that sleep ended when he woke for the
+    feed, so it is closed there and the new one opens (e2e day Nov 2: at 03:30 "Se durmió" got "Sigue dormido desde
+    las 22:55", and "Se despertó" at 06:05 wrote a sleep from 03:00)."""
+    starts = any(op.get("op") == "sleep_start" for op in ops)
+    if not (starts or (not ops and rules.fell_asleep(request))) or any(op.get("op") == "sleep_end" for op in ops):
+        return ops
+    opened = agent.open_sleep()
+    woke = woke_for_feed(agent, opened) if opened else None
+    if woke is None:
+        return ops
+    agent.bus.publish("guard", status="stale_open_sleep", opened=opened, closed=woke)
+    rest = [op for op in ops if op.get("op") != "sleep_start"]
+    new = next((op for op in ops if op.get("op") == "sleep_start"), {"op": "sleep_start"})
+    return [{"op": "sleep_end", "at": woke}] + rest + [new]
 
 
 def decide(agent, channel, request, verify=False, health=False, after_alert=False):
@@ -521,6 +573,10 @@ def decide(agent, channel, request, verify=False, health=False, after_alert=Fals
             ops = [op for op in check["ops"] if isinstance(op, dict)]
     if health:
         ops = observation_ops(agent, request, ops, now)
+    if after_alert:
+        ops = after_alert_ops(request, ops)
+    else:
+        ops = stale_sleep_ops(agent, request, ops)
     # Held-out run-1 dev: "many babies strain when they poop" came from the ops reply to a health question. Muse's own
     # words never answer one: the fixed no-advice line does, whether Muse flagged it or the words say it.
     health_question = proposal.get("health") is True or asks_health(request)

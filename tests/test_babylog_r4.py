@@ -156,7 +156,7 @@ class BareClockHours(LogOps):
     def test_a_las_2_said_at_15_is_14(self):
         self.say("15:00", "me olvide de anotar, a las 2 le di pecho 15 min",
                  self.ops({"op": "add", "kind": "feeding", "method": "breast", "duration_min": 15, "at": "02:00"}))
-        self.assertEqual(self.at(), "2026-10-29T14:00")
+        self.assertEqual((self.log()[-1]["details"]["start"][:16], self.at()), ("2026-10-29T14:00", "2026-10-29T14:15"))
 
     def test_a_las_11_menos_cuarto_said_at_11_45_is_10_45(self):
         self.say("11:45", "le dimos 60 a las 11 menos cuarto",
@@ -190,11 +190,11 @@ class YesterdayLabels(LogOps):
         self.clock["now"] = datetime.datetime(2026, 10, 30, 19, 0, tzinfo=TZ)
         self.fam.log.add("feeding", {"method": "both breasts", "duration_min": 30}, ts="2026-10-30T01:05:00-03:00")
         yesterday = self.fam.log.summary("2026-10-29T00:00:00-03:00", "2026-10-30T00:00:00-03:00")["feedings"]
-        self.assertEqual((yesterday["last_at"], yesterday["last_date"]), ("14:00", "2026-10-29"))
+        self.assertEqual((yesterday["last_at"], yesterday["last_date"]), ("13:45", "2026-10-29"))  # its start
         self.say("19:00", "cuantas mamaderas ayer", self.ops(reply="Ayer 1 toma."), day=30)
         shown = self.brain.seen[-1]["text"]
         self.assertIn("Yesterday (Thu 2026-10-29)", shown)
-        self.assertIn('"last_at": "14:00"', shown.split("Yesterday (", 1)[1])
+        self.assertIn('"last_at": "13:45"', shown.split("Yesterday (", 1)[1])
 
 
 class Demo(unittest.TestCase):

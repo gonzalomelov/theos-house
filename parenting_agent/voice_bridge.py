@@ -57,6 +57,7 @@ from pathlib import Path
 from .agent import final_guard
 from .agent import brain as brain_mod
 from .agent import rules
+from .agent.memory import feed_start
 from .agent.people import People
 from .agent.plugins import Plugin
 from .channels.push import find_plugin
@@ -192,7 +193,7 @@ class VoiceGuest:
             return "claimed_write", GUEST_LINES["read_only"][lang]
         if rules.asks_last_feed(words):
             last = self.agent.latest_of("feeding")
-            hhmm = str((last or {}).get("ts") or "")[11:16]
+            hhmm = str(feed_start(last or {}) or "")[11:16]
             if last is None or not hhmm or (hhmm not in text and hhmm.lstrip("0") not in text):
                 return "last_feed_time", self.agent.last_feed_text(lang)
         return None, text

@@ -380,7 +380,7 @@ class SelfAttack(unittest.TestCase):
         self.addCleanup(app.close)
         _, body = app.message("v", False, "log it: what dose of ibuprofen for 5 kg?")
         self.assertNotIn("40 mg", body["reply"])
-        self.assertIn(rules.NO_ADVICE["en"], body["reply"])
+        self.assertIn(rules.NO_DOSE["en"], body["reply"])
 
     def test_an_edit_cannot_write_an_absurd_value(self):
         brain = ScriptedBrain([[call("edit_baby_event", kind="feeding", last=True, details={"amount_ml": 9000})], "Fixed."])

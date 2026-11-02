@@ -307,6 +307,11 @@ REFUSAL = ("I can't give medical advice. Please call your pediatrician about tha
 NO_ADVICE = {"en": "I can't give medical advice on it: please ask your pediatrician, or call emergency services (911 in "
                    "Uruguay) if it is urgent.",
              "es": "No puedo darte consejo médico sobre eso: consultá a tu pediatra, o llamá al 911 si es urgente."}
+# How much of a medicine to give: never answered, never logged (held-out run-3 kept "cuantas gotas eran" as a note).
+NO_DOSE = {"en": "I can't give a dose or say how many drops to give: please ask your pediatrician, or call emergency "
+                 "services (911 in Uruguay) if it is urgent.",
+           "es": "No puedo darte una dosis ni decirte cuántas gotas darle: preguntale a tu pediatra, o llamá al 911 si es "
+                 "urgente."}
 EMERGENCY_REPLY = {
     "en": "This may be an emergency. Call emergency services now: 911 in Uruguay, or your local emergency number.",
     "es": "Puede ser una emergencia. Llamá ya al 911 (emergencias en Uruguay) y contales lo que ves.",
@@ -1470,6 +1475,26 @@ def mentions_medicine(text):
     return bool(MEDICINE.search(text or ""))
 
 
+DOSE_ASK = re.compile(r"\b(cu[aá]nt[ao]s?\s+(gotas|gotitas|ml|mililitros|cc|cucharad\w*|dosis)|cu[aá]nto\s+(le\s+)?(doy|"
+                      r"tengo que dar|hay que dar|le toca)\s+de|qu[eé] dosis|how many (drops|ml|mls|milliliters|doses)|"
+                      r"how much (of )?(the )?(paracetamol|acetaminophen|tylenol|ibuprofen|motrin|vitamin\w*|medicine|"
+                      r"syrup|simethicone|drops)|what(?:'s| is)? (the )?(dose|dosage))\b", re.I)
+DOSE_MEDICINE = re.compile(r"\b(gotitas|simeticona|simethicone|vitamin[a]?\s*d)\b", re.I)
+DOSE_GIVEN = re.compile(r"\b(le di|le dimos|le dio|le dieron|le puse|did (i|we|you) give|(i|we) gave|have (i|we) given)\b",
+                        re.I)
+
+
+def asks_dose(text):
+    """True when the parent asks how much of a medicine, a vitamin or drops to give: "cuántas gotas de vitamina D eran",
+    "how many drops of gas medicine". "Cuántos ml tomó hoy" asks the log, and "cuántas gotas le di hoy" asks what was
+    given, so neither is a dose question. A feed told before the question ("le di 60, ¿cuántas gotitas le doy?") is
+    still one."""
+    text = text or ""
+    ask = DOSE_ASK.search(text)
+    return (ask is not None and bool(MEDICINE.search(text) or DOSE_MEDICINE.search(text))
+            and not DOSE_GIVEN.search(text[ask.start():]))
+
+
 def medicine_only(text):
     """A medicine with no feed in the same message: "I gave her 2.5 ml of paracetamol" is a note, never a 2.5 ml feed,
     while "bottle 120 ml, then vitamin D drops" still logs the bottle."""
@@ -1783,6 +1808,15 @@ URGES_EMERGENCY = re.compile(
 
 def urges_emergency(text):
     return bool(URGES_EMERGENCY.search(text or ""))
+
+
+# "Se durmió", "fell asleep": a new sleep starts now, never "sigue dormido" (still asleep).
+FELL_ASLEEP = re.compile(r"\bse (acaba de |volvi[oó] a |re )?(durmi[oó]|dormi[oó]|dormir|qued[oó] (dormid[oa]|frit[oa]))\b|"
+                         r"\b(just\s+)?(fell|went)( back)? (asleep|to sleep)\b|\bdozed off\b", re.I)
+
+
+def fell_asleep(text):
+    return bool(FELL_ASLEEP.search(text or ""))
 
 
 # "She is napping now", "está durmiendo la siesta": the baby is asleep now, so a sleep starts and stays open until the

@@ -7,6 +7,9 @@ Buddy: the ops brain (log_ops.py) and a scripted Muse, the patterns of the faili
 4. a red flag message still logs the feed or diaper it reports, after the line
 5. an open sleep is read from Baby Buddy, two feeds in one message are both kept
 6. English messages are answered in English in a family whose people block reads Spanish
+
+And the misses run-3 left (RunThree): a last feed answered with its start, what a red flag message reports stored as
+entries and never a sleep, and a dose question answered with the fixed line and never logged.
 """
 import datetime
 import os
@@ -258,6 +261,89 @@ class Alerts(FamilyAgent):
             self.assertEqual(rules.newborn_red_flag(text), "fever", text)
         for text in ("el agua del baño tiene 38", "tiene 37.4, es fiebre?", "le di 38 ml", "has 38 ml left"):
             self.assertIsNone(rules.newborn_red_flag(text), text)
+
+
+class RunThree(FamilyAgent):
+    def test_a_named_time_with_minutes_is_the_feeds_start(self):
+        self.say("a las tal le di pecho derecho 20 min",
+                 ops({"op": "add", "kind": "feeding", "method": "right breast", "duration_min": 20, "at": self.at(60)}))
+        feed = self.records("feedings")[0]
+        self.assertEqual((feed["start"][11:16], feed["end"][11:16]), (self.at(60), self.at(40)))
+
+    def test_the_last_feed_is_answered_with_its_start_on_every_channel(self):
+        self.agent.baby_log.add("feeding", {"method": "bottle", "amount_ml": 90, "type": "formula",
+                                            "start": self.now_minus(75)}, self.now_minus(60))
+        for channel in ("telegram", "glasses", "voice"):
+            self.brain.queue.append(("text", f"Comió a las {self.at(60)}."))  # Muse reads the end: replaced
+            event = {"kind": "message", "channel": channel, "text": "a que hora comio?", "person": "ceci", "chat_id": "1"}
+            start = len(self.replies)
+            self.agent.handle(event)
+            reply = self.replies[start]["text"]
+            self.assertIn(self.at(75), reply, channel)
+            self.assertNotIn(self.at(60), reply, channel)
+            self.assertIn("15 min", reply, channel)
+        self.assertIn(f"{self.at(75)} feeding bottle 90 ml", log_ops.context(self.agent, "x", self.agent.now()))
+        self.assertEqual(self.agent.baby_log.summary()["feedings"]["last_at"], self.at(75))
+
+    def test_a_feed_told_with_no_length_answers_the_time_told(self):
+        self.say("le di 90", ops({"op": "add", "kind": "feeding", "method": "bottle", "amount_ml": 90}))
+        self.assertIn(f"de las {self.at(0)}", self.agent.last_feed_text("es"))
+
+    def test_a_red_flag_never_opens_a_sleep(self):
+        fed = {"op": "add", "kind": "feeding", "method": "both breasts"}
+        for text, reported in (("se me cayó de la cama, lloró un toque y ahora esta muy dormido", ()),
+                               ("le di pecho de los dos lados y ahora no hay forma de despertarlo", (fed,))):
+            replies = self.say(text, ops(*reported, {"op": "add", "kind": "note", "text": text}, {"op": "sleep_start"}))
+            self.assertTrue(replies[0].startswith(rules.EMERGENCY_REPLY["es"]), replies[0])
+        self.assertEqual(self.records("timers"), [])
+        self.assertEqual(self.records("sleep"), [])
+        self.assertEqual([f["method"] for f in self.records("feedings")], ["both breasts"])
+        self.assertIn("no hay forma de despertarlo",
+                      " ".join(n["note"] for n in self.records("notes")))
+
+    def test_a_red_flag_logs_the_diaper_it_reports_when_muse_proposes_none(self):
+        replies = self.say("dirty diaper, but he hasnt fed since like 9am, wont latch at all, and this is the first diaper",
+                           ops(reply="That sounds like a total for the day."), person="gonza")
+        self.assertIn(replies[0], (rules.EMERGENCY_REPLY["en"], rules.URGENT_REPLY["red_flag"]["en"]))
+        self.assertEqual([(c["wet"], c["solid"]) for c in self.records("changes")], [(False, True)])
+        self.assertEqual(self.records("feedings"), [])
+
+    def test_a_dose_question_gets_the_fixed_line_and_is_never_logged(self):
+        for text, lang in (("la pediatra dijo vitamina d pero no me acuerdo cuantas gotas eran vos sabes?", "es"),
+                           ("how many drops of vitamin d should he be getting", "en")):
+            reply = self.say(text, ops({"op": "add", "kind": "note", "text": text}), person="gonza")
+            self.assertEqual(reply, [rules.NO_DOSE[lang]])
+        self.assertEqual(self.records("notes"), [])
+        self.assertEqual(self.brain.seen, [])
+        reply = self.say("le di 60 de formula, cuantas gotitas de simeticona le doy?")
+        self.assertEqual([r["amount"] for r in self.records("feedings")], [60.0])
+        self.assertTrue(reply[0].endswith(rules.NO_DOSE["es"]))
+        self.assertEqual(self.records("notes"), [])
+
+    def test_what_was_given_and_the_days_milk_are_not_dose_questions(self):
+        for text in ("cuantos ml tomo hoy", "cuantas gotas de vitamina le di hoy", "le di 5 gotas de vitamina d",
+                     "how many ml did he drink today"):
+            self.assertFalse(rules.asks_dose(text), text)
+
+    def test_a_new_sleep_after_a_feed_closes_the_stale_one_at_the_feed(self):
+        self.say("se durmió", ops({"op": "sleep_start", "at": self.at(300)}))
+        self.say("le di 90", ops({"op": "add", "kind": "feeding", "method": "bottle", "amount_ml": 90, "at": self.at(120)}))
+        feed_start = self.records("feedings")[0]["start"][11:16]
+        self.say("Se durmió", ops(reply=f"Sigue dormido desde las {self.at(300)}."))
+        sleeps = self.records("sleep")
+        self.assertEqual([(s["start"][11:16], s["end"][11:16]) for s in sleeps], [(self.at(300), feed_start)])
+        self.assertEqual(self.agent.open_sleep()[11:16], self.at(0))
+        self.say("Se despertó", ops({"op": "sleep_end"}))
+        self.assertEqual(self.records("sleep")[-1]["start"][11:16], self.at(0))
+
+    def test_a_repeated_fell_asleep_with_no_feed_keeps_the_open_sleep(self):
+        self.say("se durmió", ops({"op": "sleep_start", "at": self.at(30)}))
+        self.say("se durmió", ops(reply="Ya estaba dormido."))
+        self.assertEqual(self.records("sleep"), [])
+        self.assertEqual(self.agent.open_sleep()[11:16], self.at(30))
+
+    def now_minus(self, minutes):
+        return (datetime.datetime.now().astimezone() - datetime.timedelta(minutes=minutes)).isoformat(timespec="seconds")
 
 
 class Languages(FamilyAgent):

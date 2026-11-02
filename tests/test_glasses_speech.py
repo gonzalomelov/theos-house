@@ -229,6 +229,8 @@ class HeardByTheAgent(unittest.TestCase):
         self.use_ear(["Hola Theo, qué lindo", "agente", "Agente, ¿cuándo comió?"])
         words = []
         self.channel.on_dropped_words = words.append
+        ticks = iter(range(1_000_000, 1_000_100))  # one heard_unix per utterance: two in one wall-clock ms collided
+        self.channel.clock = lambda: float(next(ticks))
         for _ in range(3):
             self.channel.hear(wav(), "gonza", {"speech_end_unix": 1.0, "speech_s": 2.5})
         dropped, wake, kept = self.speech()

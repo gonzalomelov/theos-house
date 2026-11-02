@@ -23,10 +23,14 @@ from parenting_agent.virtual_devices import SHOPPING, VirtualSwitch
 from parenting_agent.agent.brain import Reply
 from parenting_agent import voice_bridge as voice_bridge_mod
 from parenting_agent.voice_bridge import VoiceBridge, spoken, strip_wake
+from tests import fixed_clock
 from tests.test_house_tools import FakeHA
 
 TZ = datetime.timezone(datetime.timedelta(hours=-3))
 ROOT = Path(__file__).resolve().parent.parent
+# A logged feed is confirmed with its two-digit clock time: between 00:00 and 01:00 the Echo says "0:30", so the tests
+# that read that line run at a fixed afternoon, never at the wall clock.
+AFTERNOON = fixed_clock.REAL(2026, 10, 31, 15, 0).astimezone()
 
 
 def at(day, hh, mm):
@@ -455,6 +459,7 @@ class VoiceBridgeTest(unittest.TestCase):
         with urllib.request.urlopen(request, timeout=15) as response:
             return response.status, json.loads(response.read())
 
+    @fixed_clock.frozen(AFTERNOON)
     def test_a_fake_utterance_logs_a_feed_and_says_so(self):
         status, body = self.post({"text": "baby agent, fed 90 ml", "source": "echo", "person": "Gonza"})
         self.assertEqual(status, 200)
@@ -558,6 +563,13 @@ class VoiceGuestTest(unittest.TestCase):
         self.assertNotRegex(reply, r"\d+/\d+|\d{4}-\d{2}")
         self.assertEqual(events(self.agent, "voice_guest")[-1]["guard"], "last_feed_time")
 
+    def test_a_feed_with_its_length_is_told_by_its_start(self):
+        self.agent.baby_log.add("feeding", {"method": "right breast", "duration_min": 20}, "2026-10-30T09:20:00-03:00")
+        self.guest_brain("Comió a las 09:20.")  # the end of the feed: replaced by the log's start
+        reply = self.bridge.ask("¿cuándo comió Theo por última vez?", "echo", "abuela")["reply"]
+        self.assertIn("de las 9:00", reply)
+        self.assertEqual(events(self.agent, "voice_guest")[-1]["guard"], "last_feed_time")
+
     def test_a_guest_cannot_log_and_a_write_tool_is_refused(self):
         self.guest_brain(("log_baby_event", {"kind": "feeding", "details": {"amount_ml": 90}}), "Anoté 90 ml.")
         before = len(self.agent.baby_log.entries())
@@ -654,6 +666,7 @@ class VoiceSkillDoorTest(unittest.TestCase):
         self.assertEqual(events(self.agent, "message"), [])
         self.assertEqual(events(self.agent, "voice_bridge", status="answered")[-1]["via"], "skill")
 
+    @fixed_clock.frozen(AFTERNOON)
     def test_a_parent_skill_logs_for_a_named_parent_and_reads_for_anyone_else(self):
         self.bridge("parent")
         body = self.post({"text": "fed 90 ml", "source": "echo", "person": "gonza"}, "s" * 24)
@@ -791,6 +804,14 @@ class WordsTest(unittest.TestCase):
     def test_spoken_is_short_and_plain(self):
         self.assertEqual(spoken("**Done**, see https://x.y/z now"), "Done, see now")
         self.assertLessEqual(len(spoken("word " * 200)), 401)
+
+    def test_the_hour_after_midnight_keeps_its_zeros(self):
+        from parenting_agent.spoken_time import at_words, natural_dates
+        now = AFTERNOON
+        self.assertEqual(natural_dates("Logged the 00:34 bottle, the 07:50 one and the 10:05 one.", now, "en"),
+                         "Logged the 00:34 bottle, the 7:50 one and the 10:05 one.")
+        self.assertEqual((at_words(0, 34, "es"), at_words(1, 5, "es"), at_words(7, 50, "en")),
+                         ("a las 00:34", "a la 1:05", "at 7:50"))
 
 
 if __name__ == "__main__":
