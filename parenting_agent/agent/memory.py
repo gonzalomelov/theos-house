@@ -61,6 +61,28 @@ def start_after_feeds(start, end, feeds):
     return last_end
 
 
+def place_sleep(start, end, feeds):
+    """(start, end) of a finished sleep told with its length ("napped about 40 minutes") that never spans a feed. When
+    moving its start past a feed would keep less than half of the length the parent said, the nap came before that
+    feed: it keeps its length and ends when the feed began (round b7 logged "napped about 40 minutes" right after a
+    bottle as a 1 minute sleep)."""
+    length = end - start
+    for _ in range(len(feeds) + 1):
+        moved = None
+        try:
+            moved = start_after_feeds(start, end, feeds)
+        except ValueError:
+            pass
+        if moved is not None and end - moved >= length / 2:
+            return moved, end
+        inside = [a for a, b in feeds if a < end and b > start]
+        if not inside:
+            return start, end
+        end = min(inside)
+        start = end - length
+    return start_after_feeds(start, end, feeds), end
+
+
 class Memory:
     def __init__(self, path):
         self.db = sqlite3.connect(str(path), check_same_thread=False)

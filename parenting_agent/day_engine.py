@@ -536,8 +536,8 @@ class DayEngine:
                       "low": [{"item": i, "days_left": r["days_left"]} for i, r in low],
                       "appointments": [f"{self._hm(e['start'])} {e['summary'][:60]}" for e in events],
                       "meals": [m[:60] for m in meals_today]}
-        longest = f"{night['longest_h']:.1f}" if night["longest_h"] is not None else "unknown"
-        echo = [f"Good morning. Last night he woke {night['wakeups']} times, longest sleep {longest} hours."]
+        longest = patterns.hours_words(night["longest_h"]) if night["longest_h"] is not None else "unknown"
+        echo = [f"Good morning. Last night he woke {night['wakeups']} times, longest sleep {longest}."]
         if sky:
             echo.append(f"Today {sky}, up to {round(weather['temperature'])} degrees.")
         echo.append(f"{len(events)} appointment{'s' if len(events) != 1 else ''} today"
@@ -602,7 +602,7 @@ class DayEngine:
             return [self.routine("parents_meals", "no_recipes", now)]
         cook = max(r["total_time_seconds"] for r in recipes) / 60
         window = self.quiet_window(entries, now, cook + self.s["quiet_min_extra"])
-        longest = f"{night['longest_h']:.1f} h" if night["longest_h"] is not None else "unknown"
+        longest = patterns.hours_words(night["longest_h"]) if night["longest_h"] is not None else "unknown"
         when_text = (f"Next quiet window: his {window['kind']} around {self._hm(window['start'])} to {self._hm(window['end'])}."
                      if window else "No predicted quiet window long enough today.")
         names = ", ".join(f"{r['name']} ({round(r['total_time_seconds'] / 60)} min)" for r in recipes)

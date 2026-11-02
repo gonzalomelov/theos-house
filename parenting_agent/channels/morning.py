@@ -21,6 +21,7 @@ in data/scheduled-pushes.json (Sent below). On Oct 29 restarts sent the morning 
 import json
 import threading
 from pathlib import Path
+from ..rhythm.patterns import hours_words
 
 SKY = {"en": {"sunny": "sunny", "clear-night": "clear", "partlycloudy": "partly cloudy", "cloudy": "cloudy",
               "rainy": "rain", "pouring": "heavy rain", "fog": "fog", "windy": "windy", "windy-variant": "windy",
@@ -34,14 +35,14 @@ SUPPLY = {"en": {"diapers": "Diapers", "wipes": "Wipes", "formula": "Formula"},
 WORDS = {
     "en": {"hello": "Good morning, {name}.", "night": "Last night: {feeds} feed{s}{longest}, you were up {times}.",
            "night_none": "Last night: {feeds} feed{s}{longest}, you were not up.",
-           "longest": ", longest sleep {h} h",
+           "longest": ", longest sleep {h}",
            "times": ("once", "{n} times"), "duty": "You are on duty tonight.", "weather": "Weather: {sky}, {low} to {high} C{rain}.",
            "rain": ", {mm:g} mm of rain", "low": "Running low: {items}.", "left": "{name} (about {d:.1f} days left)",
            "today": "Today: {items}.", "meals": "Cookidoo meal plan: {items}.", "house": "The house overnight: {text}",
            "prep": "Before he arrives: {line}"},
     "es": {"hello": "Buen día, {name}.", "night": "Anoche: {feeds} toma{s}{longest}, te levantaste {times}.",
            "night_none": "Anoche: {feeds} toma{s}{longest}, no te levantaste.",
-           "longest": ", el sueño más largo {h} h",
+           "longest": ", el sueño más largo {h}",
            "times": ("una vez", "{n} veces"), "duty": "Esta noche te toca a vos.", "weather": "Clima: {sky}, {low} a {high} C{rain}.",
            "rain": ", {mm:g} mm de lluvia", "low": "Se está terminando: {items}.", "left": "{name} (quedan unos {d:.1f} días)",
            "today": "Hoy: {items}.", "meals": "Menú de Cookidoo: {items}.", "house": "La casa de noche: {text}",
@@ -62,7 +63,7 @@ def compose(lang, name, label, brief=None, explain=None, prep=(), tonight=None, 
         times = w["times"][0] if up == 1 else w["times"][1].format(n=up)
         line = w["night"] if up else w["night_none"]
         hours = night.get("longest_h") or 0
-        longest = w["longest"].format(h=f"{hours:.1f}") if hours >= 0.05 else ""  # never "el sueño más largo 0.0 h"
+        longest = w["longest"].format(h=hours_words(hours)) if hours >= 0.05 else ""  # never "el sueño más largo 0.0 h"
         lines.append(line.format(feeds=feeds, s="" if feeds == 1 else "s", longest=longest, times=times))
     if tonight and tonight == label:
         lines.append(w["duty"])

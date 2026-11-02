@@ -104,7 +104,7 @@ class NoZeroLongestSleep(unittest.TestCase):
                    {"kind": "feeding", "start": "2026-10-30T02:35:00-03:00", "ref": "f1"}]
         summary = patterns.night_summary(entries, datetime.datetime(2026, 10, 30, 7, 30, tzinfo=TZ), TZ, ["Parent A", "Parent B"])
         self.assertEqual(summary["longest_h"], 6.8)
-        self.assertIn("longest sleep 6.8 h", summary["text"])
+        self.assertIn("longest sleep 6 h 50 min", summary["text"])
 
     def test_no_sleep_in_the_log_is_no_line_never_zero(self):
         entries = [{"kind": "feeding", "start": "2026-10-30T02:35:00-03:00", "ref": "f1"}]
@@ -118,7 +118,7 @@ class NoZeroLongestSleep(unittest.TestCase):
             self.assertNotIn("sueño más largo", text)
             self.assertIn("Anoche: 2 tomas, te levantaste una vez.", text)
         brief = {"night": {"feeds": 2, "longest_h": 3.2, "wakeups": {"Parent A": 0, "Parent B": 0}}}
-        self.assertIn("el sueño más largo 3.2 h", morning.compose("es", "Gonza", "Parent A", brief))
+        self.assertIn("el sueño más largo 3 h 12 min", morning.compose("es", "Gonza", "Parent A", brief))
 
 
 class SpanishDemoNeverMixes(unittest.TestCase):

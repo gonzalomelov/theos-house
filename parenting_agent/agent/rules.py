@@ -1117,6 +1117,8 @@ LOG_QUESTIONS = (
         r"\bnext (?:feed|feeding|bottle)\b|\bwhen (?:is|will|should|do|does|would|can)\b[^?.!]{0,40}\b(?:feed|eat|bottle|hungry)\b"
         r"(?! (?:last|earlier))|\bwhen (?:is )?(?:he|she|the baby|theo) due\b", re.I)),
     ("last_feed", re.compile(LAST_FEED.pattern + r"|\blast (?:feed|feeding|bottle)\b|\b[uú]ltima (?:toma|mamadera)\b", re.I)),
+    ("feeds", re.compile(r"\b(?:cu[aá]ntas|how many|cantidad de|n[uú]mero de)\s+(?:tomas|feeds|feedings|bottles|mamaderas)\b|"
+                         r"\b(?:feed|feeding|toma)s? (?:count|total)s?\b", re.I)),
     ("diapers", re.compile(r"\b(?:cu[aá]ntos|how many|cantidad de|n[uú]mero de)\s+(?:pa[nñ]ales|diapers|cambios)\b|"
                            r"\bdiaper (?:count|total)s?\b|\bpa[nñ]ales (?:lleva|van|hay|hizo|hoy)\b", re.I)),
 )

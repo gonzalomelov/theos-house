@@ -530,11 +530,14 @@ def diff_text(diff, lang, name=None):
 
 NIGHT_START, NIGHT_END = 22, 6
 COUNT_WORDS = {
-    "en": {"today": "Today, since 00:00", "day24": "In the last 24 hours", "since_night": " ({n} since 22:00)"},
-    "es": {"today": "Hoy, desde las 00:00", "day24": "En las últimas 24 horas", "since_night": " ({n} desde las 22:00)"},
+    "en": {"today": "Today, since 00:00", "day24": "In the last 24 hours", "night": "Since 22:00",
+           "feeds": "{n} feed{s}", "bottles": ", {b} bottle{bs} with {ml} ml in all", "breast": ", {k} at the breast"},
+    "es": {"today": "Hoy, desde las 00:00", "day24": "En las últimas 24 horas", "night": "Desde las 22:00",
+           "feeds": "{n} toma{s}", "bottles": ", {b} mamadera{bs} con {ml} ml en total", "breast": ", {k} de pecho"},
 }
 TOPIC_WORDS = {"next_feed": re.compile(r"next feed|pr[oó]xima toma|le toca|toca (la )?(otra|pr[oó]xima)|expected|esperamos", re.I),
-               "diapers": re.compile(r"\b(\d+|un|one)\s+(pa[nñ]al|diaper)", re.I)}
+               "diapers": re.compile(r"\b(\d+|un|one)\s+(pa[nñ]al|diaper)", re.I),
+               "feeds": re.compile(r"\b(\d+)\s+(?:feeds?|feedings?|tomas?|bottles?|mamaderas?)\b|\b(\d+)\s*ml\b", re.I)}
 HHMM_IN = re.compile(r"\b(\d{1,2}):(\d{2})\b")
 SENTENCE = re.compile(r"(?<=[.!?])\s+")
 
@@ -544,7 +547,9 @@ def _times(text):
 
 
 def _counts(text, topic):
-    return {m.group(1).lower() for m in TOPIC_WORDS[topic].finditer(text or "")} if topic == "diapers" else set()
+    if topic not in ("diapers", "feeds"):
+        return set()
+    return {(m.group(1) or m.group(m.lastindex)).lower() for m in TOPIC_WORDS[topic].finditer(text or "")}
 
 
 def drop_other(text, topic, line):
@@ -556,7 +561,9 @@ def drop_other(text, topic, line):
     for sentence in SENTENCE.split(text):
         if topic == "next_feed" and TOPIC_WORDS[topic].search(sentence) and _times(sentence) and not _times(sentence) & _times(line):
             continue
-        if topic == "diapers" and _counts(sentence, topic) and not _counts(sentence, topic) & _counts(line, topic):
+        if topic in ("diapers", "feeds") and _counts(sentence, topic) and not _counts(sentence, topic) <= _counts(line, topic):
+            # A count or a total the log's line does not hold is never said next to it ("4 feeds totaling 120 ml"
+            # beside a summary of 3, blind round b7): counts come from code, Muse only words them.
             continue
         kept.append(sentence)
     return " ".join(kept)
@@ -1054,8 +1061,40 @@ class Agent:
         except Exception:  # noqa: BLE001 no count rather than a wrong one
             return None
         said = rules.diaper_line(d["count"], d.get("wet_only", 0), d.get("dirty", 0), d.get("dry", 0), lang)
-        extra = COUNT_WORDS[lang]["since_night"].format(n=tonight["count"]) if tonight else ""
-        return f"{label}: {said}{extra}."
+        # The night so far is its own sentence with its unit: "5 con caca (4 desde las 22:00)" read as 4 dirty ones.
+        extra = (f" {COUNT_WORDS[lang]['night']}: " + rules.diaper_line(
+            tonight["count"], tonight.get("wet_only", 0), tonight.get("dirty", 0), tonight.get("dry", 0), lang) + "."
+                 ) if tonight else ""
+        return f"{label}: {said}.{extra}"
+
+    def feeds_count(self, since, lang):
+        """"3 feeds, 2 bottles with 180 ml in all, 1 at the breast": feeds that started since an instant, counted in
+        code from the log, as the night summary counts them (by their start)."""
+        entries = self.baby_log.entries("feeding", (since - datetime.timedelta(hours=3)).isoformat(timespec="seconds"), 300)
+        feeds = [e for e in entries if parse_time(feed_start(e)) >= since]
+        ml = [float((e.get("details") or {}).get("amount_ml") or 0) for e in feeds]
+        bottles = sum(1 for v in ml if v > 0)
+        breast = sum(1 for e in feeds if "breast" in str((e.get("details") or {}).get("method") or ""))
+        w = COUNT_WORDS[lang]
+        if not feeds:
+            return None
+        text = w["feeds"].format(n=len(feeds), s="" if len(feeds) == 1 else "s")
+        if bottles:
+            text += w["bottles"].format(b=bottles, bs="" if bottles == 1 else "s", ml=round(sum(ml)))
+        if breast:
+            text += w["breast"].format(k=breast)
+        return text
+
+    def feeds_line(self, lang):
+        """The feeds and their total from the log, for the window count_window gives, with the night so far."""
+        since, night, label = self.count_window(lang)
+        try:
+            day, tonight = self.feeds_count(since, lang), self.feeds_count(night, lang) if night else None
+        except Exception:  # noqa: BLE001 no count rather than a wrong one
+            return None
+        if not day:
+            return None
+        return f"{label}: {day}." + (f" {COUNT_WORDS[lang]['night']}: {tonight}." if tonight else "")
 
     def log_answer_lines(self, request, text):
         """The fixed line from the log for each log question in the parent's message (rules.log_questions) that text
@@ -1071,6 +1110,8 @@ class Agent:
                 line = self.next_feed_line(lang)
             elif topic == "last_feed":
                 line = self.last_feed_text(lang)
+            elif topic == "feeds":
+                line = self.feeds_line(lang)
             else:
                 line = self.count_line(topic, lang)
             if not line:
@@ -1397,6 +1438,16 @@ class Agent:
         if not (minutes or woke):
             return arguments
         timed = {"ts": arguments["ts"]} if arguments.get("ts") else {}
+        details = arguments.get("details") if isinstance(arguments.get("details"), dict) else {}
+        named_end = details.get("end") or arguments.get("ts")
+        if minutes:
+            # The length the parent said wins: "napped about 40 minutes" is 40 minutes, never the minute since a
+            # simulated sleep or a timer opened, nor what is left after a bottle (round b7 logged a 1 minute sleep).
+            end = parse_time(named_end) if named_end else self.now()
+            start = (end - datetime.timedelta(minutes=minutes)).isoformat(timespec="seconds")
+            if self.open_sleep():
+                return {"kind": "sleep", "details": {"action": "end", "start": start}, **timed}
+            return {"kind": "sleep", "details": {"start": start, "end": end.isoformat(timespec="seconds")}}
         if self.open_sleep():
             return {"kind": "sleep", "details": {"action": "end"}, **timed}
         if minutes:
@@ -1405,6 +1456,23 @@ class Agent:
             return {"kind": "sleep", "details": {"start": start.isoformat(timespec="seconds"),
                                                  "end": end.isoformat(timespec="seconds")}}
         return arguments
+
+    def told_sleep(self, request):
+        """The sleep a message tells, logged in code when the brain logged nothing: "quedó dormido" starts one (round b7
+        never logged it), "napped about 40 minutes" is a 40 minute sleep. Returns the confirmation, or None."""
+        if rules.asleep_now(request) and not self.open_sleep():
+            named = rules.named_time(request, self.now())
+            arguments = {"kind": "sleep", "details": {"action": "start"}, **({"ts": named} if named else {})}
+        elif rules.slept_minutes(request):
+            arguments = self.sleep_call({"kind": "sleep", "details": {}}, request)
+        else:
+            return None
+        status, entry = self.tools.run("log_baby_event", arguments)
+        self.bus.publish("tool", name="log_baby_event", status=status)
+        if status != "ran" or not isinstance(entry, dict):
+            return None
+        self.bus.publish("guard", status="told_sleep")
+        return logged_text([entry], self.lang(request))
 
     def addendum(self, request):
         """A short follow-up that adds one detail to the entry just logged ("como 14 min" after "teta izq", "y pis tmb"
@@ -1820,6 +1888,9 @@ class Agent:
                         text = diff_text(log_diff(before, self.log_state()), lang, self.baby_name())
                         return finish(text or " ".join(said), fixed=True)
                     return finish(" ".join(said + ([reply.text] if kept and reply.text else [])), fixed=True)
+                told = self.told_sleep(request) if not kept and not editing else None
+                if told:
+                    return finish(told, fixed=True)
                 if not kept and self.needs_log(request, reply.text, failed, acted, read=bool(read)):
                     if not checked:
                         checked = True
