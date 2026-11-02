@@ -983,6 +983,13 @@ class Agent:
                 self.bus.publish("guard", status="long_cry")
                 self.say(channel, said)
                 return
+        if rules.is_wake_report(text):
+            # "He just woke up crying": the wake-up logged by code and the house step taken, labelled where it is only
+            # simulated or written down (blind round b7 got nothing back). No brain call.
+            self.memory.add_message(channel, "user", text, ts=self.now())
+            self.bus.publish("guard", status="wake_report")
+            self.say(channel, self.wake_answer(event, text))
+            return
         if rules.is_courtesy(text) and rules.THANKS.search(text) and self.double is None:
             # "ok thanks": a short fixed reply in the turn's language, no brain call, nothing said about the baby.
             self.memory.add_message(channel, "user", text, ts=self.now())
@@ -1204,8 +1211,29 @@ class Agent:
         entries = self.log_reported(request)
         if entries:
             rows = self.rhythm_rows()
-        said = cry_reason.long_cry(rows, self.now(), self.now().tzinfo, lang, who=self.baby_name() or "the baby")
+        said = cry_reason.long_cry(rows, self.now(), self.now().tzinfo, lang, who=self.baby_name() or "the baby",
+                                   fever=self.fever_line(lang))
         return (logged_text(entries, lang, self.baby_name()) + " " if entries else "") + said
+
+    def wake_answer(self, event, request):
+        """The reply to a bare wake-up report: the open sleep ended, or a note in the parent's words when no sleep was
+        open, then what the house did (wake_step)."""
+        lang = self.lang(request) if self.lang(request) in ("es", "en") else "en"
+        if self.open_sleep():
+            status, entry = self.tools.run("log_baby_event", {"kind": "sleep", "details": {"action": "end"}})
+        else:
+            status, entry = self.tools.run("log_baby_event", {"kind": "note", "details": {"text": request.strip()}})
+        self.bus.publish("tool", name="log_baby_event", status=status)
+        said = logged_text([entry], lang, self.baby_name()) if status == "ran" and isinstance(entry, dict) else \
+            rules.WAKE_NOT_LOGGED[lang]
+        step = self.wake_step(event, lang)
+        return said + (" " + step if step else "")
+
+    def wake_step(self, event, lang):
+        """What the house did for a wake-up: the night feed's step on the family agent, else None."""
+        from ..night_feed import find_plugin  # night_feed imports the agent's plug-in base, never the loop
+        plugin = find_plugin(self, "night-feed")
+        return plugin.wake_step(event or {}, lang) if plugin is not None else None
 
     def emergency(self, request):
         return rules.EMERGENCY_REPLY[self.lang(request)]
