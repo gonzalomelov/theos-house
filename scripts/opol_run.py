@@ -122,7 +122,7 @@ def run():
     from parenting_agent.agent import config as config_mod
     from parenting_agent.channels.push import FamilyPush
     from parenting_agent.channels.telegram import Telegram
-    from parenting_agent.glasses import Glasses
+    from parenting_agent.glasses import Glasses, with_dropped_words
     from parenting_agent.glasses_speech import Gate
     from parenting_agent.opol import Opol
     missing = [c for c, *_ in LINES if not (CLIPS / f"{c}.wav").is_file()]
@@ -149,7 +149,8 @@ def run():
     push = FamilyPush(agent, config, clock=clock)
     opol = Opol(agent, config, clock=clock)
     agent.plugins = [glasses, telegram, push, opol]
-    seen = []
+    seen, dropped = [], []
+    glasses.on_dropped_words = dropped.append
     agent.bus.subscribe(seen.append, None)
     agent.start()
     glasses.start()
@@ -170,7 +171,7 @@ def run():
             deadline = time.monotonic() + 120
             done = None
             while time.monotonic() < deadline and done is None:
-                events = seen[since:]
+                events = with_dropped_words(seen[since:], dropped)
                 speech = next((e for e in events if e["kind"] == "speech"), None)
                 if speech is not None and not speech["took"]:
                     done = next((e for e in events if e["kind"] == "opol"), None)
@@ -179,7 +180,7 @@ def run():
                 time.sleep(0.1)
             opol.queue.join()
             time.sleep(0.3)
-            events = seen[since:]
+            events = with_dropped_words(seen[since:], dropped)
             speech = next((e for e in events if e["kind"] == "speech"), {})
             counted = [e for e in events if e["kind"] == "opol" and e["action"] != "lid_ready"]
             row = {"id": clip_id, "wearer": wearer, "lang": lang, "to": to, "text": text,
