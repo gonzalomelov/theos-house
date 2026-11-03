@@ -23,7 +23,7 @@ button{cursor:pointer}
 
 .stage{display:grid;gap:12px;padding:10px 24px;max-width:1500px;margin:auto;
   grid-template-columns:minmax(210px,260px) minmax(210px,260px) minmax(380px,1.2fr) minmax(300px,1fr);
-  grid-template-rows:auto auto minmax(0,1fr);grid-template-areas:"gonza ceci house trace" "gonza ceci controls trace" "gonza ceci memory trace";height:max(640px,calc(100vh - 248px))}
+  grid-template-rows:auto auto minmax(0,1fr);grid-template-areas:"gonza ceci house trace" "gonza ceci controls trace" "gonza ceci memory trace";height:max(800px,calc(100vh - 248px))}
 #phone-gonza{grid-area:gonza}#phone-ceci{grid-area:ceci}.house{grid-area:house}.trace{grid-area:trace}.memory{grid-area:memory}
 
 .phone{display:flex;flex-direction:column;min-height:0}
@@ -201,3 +201,20 @@ footer p{margin:0 0 6px}
   #dehum-s{font-size:16px}
 }
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}#cry.on circle{opacity:.8}}
+
+.meta{margin:0 auto 18px;max-width:1500px;padding:0 16px}
+.meta-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px}
+.meta h2{margin:0}
+.meta>p{margin:4px 0 10px;color:var(--soft);font-size:14px}
+.meta-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:10px}
+.m-card{background:var(--panel);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.m-card h3{margin:0;font-size:16px}
+.m-card .how{align-self:flex-start;font-size:12px;font-weight:700;padding:1px 8px;border-radius:999px;border:1px solid currentColor;color:var(--soft)}
+.m-card.live .how{color:var(--mind)}
+.m-card p{margin:0;font-size:13.5px;line-height:1.35}
+.m-card audio{width:100%;height:36px}
+.m-card img{width:100%;height:84px;object-fit:cover;border-radius:8px}
+.stage{scroll-margin-top:6px}
+.meta-where{font-size:13px}
+.meta a{color:var(--honey)}
+#meta-more summary{cursor:pointer;font-weight:700;margin-bottom:8px}

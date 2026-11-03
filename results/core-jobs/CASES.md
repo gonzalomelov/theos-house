@@ -20,6 +20,8 @@ Run with `scripts/core_jobs_eval.py`, on the mock home, real Muse on Baseten, ea
 | New parent's fixes | 7 cases from a review agent playing a new parent (`third-tuned.json`, the `third` group). Tuned on, not quoted | 21 of 21. Root cause of the blocker: Muse wrote "at three" as `03:00+01:00`, kept by the log as 23:00 the evening before. Times Muse writes now read as the home's wall clock |
 | Held-out 7 | 14 new cases, committed before any run (`bc04de5`), run once (`held-out-7.json`). Not tuned on | **42 of 42** |
 
+| Third review agents' fixes | 5 cases from round 3 of the review agents (`fourth-tuned.json`, the `fourth` group), plus offline tests in `tests/test_core_round3.py`. Tuned on, not quoted | 15 of 15 |
+| Held-out 8 | 14 new cases, committed before any run (`256f4ed`), run once (`held-out-8.json`). Not tuned on. Two fixes came after it and weren't rerun on it: the simulator's feeds and one wake about the air at a time | **42 of 42** |
 | Quiet first reading | 3 tuned cases on real Muse (`quiet-start.json`), not quotable | 9 of 9 |
 
 ## Tuned on

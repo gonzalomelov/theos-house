@@ -83,6 +83,16 @@ async def wakes(core, every=20):
         await asyncio.sleep(every)
 
 
+async def gaps(core, every=300):
+    """The feed gap ladder speaks by itself as time passes, whatever else happens or doesn't."""
+    while True:
+        try:
+            await core.tick_gap()
+        except Exception as failure:
+            core.publish("source", name="gaps", status=f"retrying after {type(failure).__name__}")
+        await asyncio.sleep(every)
+
+
 async def schedule(core, times=SCHEDULE):
     while True:
         moment, name = next_time(datetime.datetime.now(TZ), times)

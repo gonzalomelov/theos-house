@@ -1,0 +1,212 @@
+{
+ "q feed before gap": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Anotado, Gonza, 80 ml en botella a las 03:12.",
+      "at": 1793747142.379359
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Anotado, 80 ml en biberón a las 3:12. Gracias por avisar.",
+      "at": 1793747147.6067462
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Anotado, Gonza, 80 ml en biberón a las 03:12. Gracias por avisar.",
+      "at": 1793747153.19123
+     }
+    ]
+   }
+  ]
+ },
+ "q morning alarm": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Buen día Gonza. Anoche estuviste vos de guardia, esta noche le toca a Ceci. Tomas de la noche: 23:12 y 02:12. A las 03:12 Ceci escribió que Theo no respiraba y estaba morado y ambos fueron avisados.",
+      "at": 1793747160.9071202
+     },
+     {
+      "to": "ceci",
+      "text": "Buen día Ceci. Anoche estuvo Gonza de guardia, esta noche te toca a vos. Tomas de la noche: 23:12 y 02:12. A las 03:12 vos escribiste que Theo no respiraba y estaba morado y ambos fueron avisados.",
+      "at": 1793747160.907146
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Buen día, Gonza. Anoche de guardia estuviste vos, esta noche (05/11) le toca a Ceci. Tomas de la noche: 23:12 y 02:12, 2 tomas, 180 ml en total. A las 03:12 Ceci escribió: Theo no respira y está morado, y ambos fueron avisados.",
+      "at": 1793747169.652815
+     },
+     {
+      "to": "ceci",
+      "text": "Buen día, Ceci. Anoche de guardia estuvo Gonza, esta noche (05/11) te toca a vos. Tomas de la noche: 23:12 y 02:12, 2 tomas, 180 ml en total. A las 03:12 escribiste: Theo no respira y está morado, y ambos fueron avisados.",
+      "at": 1793747169.653789
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Hola Gonza. A las 03:12 Ceci escribió: Theo no respira y está morado y los dos recibieron el aviso. Anoche después de las 22:00 hubo dos tomas, a las 23:12 y a las 02:12. Anoche estuviste vos, hoy a la noche le toca a Ceci.",
+      "at": 1793747194.202673
+     },
+     {
+      "to": "ceci",
+      "text": "Hola Ceci. A las 03:12 escribiste: Theo no respira y está morado y los dos recibieron el aviso. Anoche después de las 22:00 hubo dos tomas, a las 23:12 y a las 02:12. Anoche estuvo Gonza, hoy a la noche te toca a vos.",
+      "at": 1793747195.274658
+     }
+    ]
+   }
+  ]
+ },
+ "q no promise": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Anotado, Ceci, lo guardé. De noche solo le escribo al que está de guardia, hoy es Gonza, y los checks de la mañana y la tarde siguen saliendo igual.",
+      "at": 1793747205.697409
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Notado, Ceci. Lo dejo guardado, pero no puedo garantizar silencio total: los checks de la mañana y la noche siguen saliendo y de noche solo despierto a quien está de guardia.",
+      "at": 1793747215.680007
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Anotado, Ceci. No puedo prometerte silencio total porque los chequeos de la mañana y la noche siguen saliendo igual, y de noche solo le escribimos a quien está de guardia (hoy Gonza). Pero guardo tu preferencia y no te mando nada más no esencial por hoy.",
+      "at": 1793747225.148531
+     }
+    ]
+   }
+  ]
+ },
+ "q hearsay": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Gonza dice que esta noche te quedás vos de guardia, avísame si no es así",
+      "at": 1793747233.269135
+     },
+     {
+      "to": "gonza",
+      "text": "Anotado, queda Ceci de guardia esta noche (04/11)",
+      "at": 1793747233.269164
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Gonza dice que esta noche te quedás vos de guardia, ¿está bien?",
+      "at": 1793747240.588274
+     },
+     {
+      "to": "gonza",
+      "text": "Anotado, queda Ceci de guardia esta noche.",
+      "at": 1793747240.5883038
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Gonza me dijo que vos te quedás de guardia esta noche (04/11), avisame si no es así.",
+      "at": 1793747247.458754
+     },
+     {
+      "to": "gonza",
+      "text": "Anotado, queda Ceci de guardia esta noche (04/11).",
+      "at": 1793747247.458786
+     }
+    ]
+   }
+  ]
+ },
+ "q number": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "El número de emergencias en Uruguay es el 911, Gonza.",
+      "at": 1793747252.153474
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "El número de emergencias en Uruguay es el 911, Gonza.",
+      "at": 1793747257.134781
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "El número de emergencias en Uruguay es el 911.",
+      "at": 1793747264.105998
+     }
+    ]
+   }
+  ]
+ }
+}

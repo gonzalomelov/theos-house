@@ -38,7 +38,9 @@ GAP_LINES = {"en": ("The log shows no feed for {h} hours. Did feeds go unlogged?
                     "No hay tomas en el registro hace {h} horas. Si de verdad no comió, llamá ahora a su pediatra o a emergencias. Fijate cómo está y anotá lo que tomó.")}
 # "Not an emergency" counts, unless the words name a sign nobody can wave away.
 DENIED = re.compile(r"\b(not an emergency|no emergency|nothing urgent|not urgent|no es (?:una )?(?:emergencia|urgencia)|no es urgente|nada urgente)\b", re.I)
-VITAL = re.compile(r"not breathing|stop\w* breathing|can'?t breathe|no respira|dej[oó] de respirar|\bblue\b|\bazul|\bmorad|unresponsive|no reacciona|no responde|seizure|convuls", re.I)
+VITAL = re.compile(r"not breathing|stop\w* breathing|can'?t breathe|no respira|dej[oó] de respirar|\bblu(?:e|ish)\b|\bazul|\bmorad|\blimp\b|won'?t wake|not waking|no (?:se )?despierta|unresponsive|no reacciona|no responde|seizure|convuls", re.I)
+# "Lips not blue" is reassurance, so it is no sign.
+NOT_A_SIGN = re.compile(r"\b(?:not|aren'?t|isn'?t|no|sin|ni)\s+(?:\w+\s+)?(?:blu(?:e|ish)|azul\w*|morad\w*|limp)\b", re.I)
 # Words on a label or a shelf, not about a baby now (Nov 3, a toy label and a thermometer on sale both called 911).
 ERRANDS = re.compile(r"\bchoking hazards?\b|\bpeligro de asfixia\b|\bfever (?:thermometers?|reducers?)\b|\bterm[oó]metros? para (?:la )?fiebre\b", re.I)
 STOPPED = re.compile(r"\bstops? breathing\b|\bdeja de respirar\b", re.I)
@@ -54,6 +56,14 @@ JUMP_MINUTES = 10
 # What a message can't promise or say. The end time of the warmer is when it switches off, not when a bottle is ready.
 PROMISE = re.compile(r"\bi'?ll (?:remind|ping|wake|message|text|check in|let you know|tell you)\b|\b(?:te|les) (?:aviso|avisar[eé]|recuerdo|escribo|despierto)\b|\bvoy a (?:avisar|recordar|escribir)\w*", re.I)
 READY_AT = re.compile(r"\b(?:ready|warm)\s+(?:by|at|around)\s+\d|\b(?:lista|pronta|tibia|caliente)\s+(?:a las|para las|a eso de)\s+\d", re.I)
+# A parent saying they fed him: the feed goes in the log first, so the gap it closes is never raised.
+FEED_REPORT = re.compile(r"\b(?:gave|fed|just fed|nursed|drank|ate)\b|\bbottle (?:at|of)\b|\ble di\b|\btom[oó]\b|\bcomi[oó]\b|\bmamadera (?:a las|de)\b|\b\d+\s?ml\b", re.I)
+# What the agent can't keep: the home decides these, not a promise in a chat.
+CANT_KEEP = re.compile(r"\bi (?:won'?t|will not) (?:message|text|wake|bother|tell|write)\b|\bno (?:te|le|les) (?:escribo|aviso|molesto|despierto|voy a (?:escribir|avisar|molestar|despertar))\b|\bi'?ll (?:alert|tell|wake|message|text) (?:you )?both\b|\b(?:les )?aviso a (?:los |ustedes )?dos\b|\bdespierto a los dos\b", re.I)
+WRONG_NUMBER = re.compile(r"\b(?:112|999|000)\b")
+# What the rest of a message has to ask for, once the gate answered the worrying part. "He's 3 weeks old" isn't an errand.
+ERRAND = re.compile(r"\b(?:add|log|buy|turn|put|remind|tell|write|note|shopping)\b|\bagreg|\banot|\bcompr|\bpon[eé]\b|\bprend|\bapag|\brecord|\bavis|\bdecile\b|\blista\b", re.I)
+ALARM_TOLD = re.compile(r"emergenc|\b911\b|alarm|fever|fiebre|urgent|pediatr|call|llam|wrote|escribi|respir|breath|anoche|last night|esta madrugada", re.I)
 JARGON = re.compile(r"\brota\b|\bper the\b|\bas per\b|\bper (?:ceci|gonza)\b|\bdoes that (?:still )?stand\b|\bsince 22:00\b|\bdesde las 22\b", re.I)
 
 
@@ -113,6 +123,10 @@ def just_worry(text):
     return bool(SCARED.search(text) or WORN_OUT.search(text) or LOG_QUESTION.search(text)) and not DANGER_SIGN.search(text)
 
 
+def reports_feed(text):
+    return bool(FEED_REPORT.search(text or "")) and "?" not in (text or "")
+
+
 def worn_out(text):
     return bool(WORN_OUT.search(text or "")) and not DANGER_SIGN.search(text or "")
 
@@ -131,8 +145,11 @@ def gate(text, screen=None, lang=None):
     lang = lang or lang_of(text)
     if about_a_story(text):  # a dose Muse might write is still refused on the way out
         return None
-    if DENIED.search(text or "") and not VITAL.search(text or ""):
-        return None
+    signs = NOT_A_SIGN.sub(" ", text or "")
+    if DENIED.search(text or ""):
+        if not VITAL.search(signs):
+            return None
+        return "emergency", rules.EMERGENCY_REPLY[lang]  # a sign named outranks the words around it, with or without the model
     text = ERRANDS.sub(" ", text or "")
     if rules.is_emergency(text) or rules.spoken_emergency(text) or (STOPPED.search(text) and not FICTION.search(text)):
         return "emergency", rules.EMERGENCY_REPLY[lang]
@@ -151,7 +168,7 @@ def gate(text, screen=None, lang=None):
 def rest_of(text):
     """The parts of a message the gate has no business with, for Muse. An alarm in one sentence never eats the errand in the next."""
     parts = [p.strip(" ,") for p in CLAUSE.split(text or "") if p and len(p.split()) >= 3]
-    return " ".join(p + "." for p in parts if len(parts) > 1 and not gate(p, _NO_SCREEN))
+    return " ".join(p + "." for p in parts if len(parts) > 1 and ERRAND.search(p) and not gate(p, _NO_SCREEN))
 
 
 class _NoScreen:

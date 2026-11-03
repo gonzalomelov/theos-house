@@ -322,8 +322,11 @@ def memory_tools(store, home):
 
     async def forget(key: str) -> str:
         """Drop a fact or a plan that no longer holds."""
-        await store.adelete(namespace, re.sub(r"\W+", "_", key)[:60])
-        return "Forgotten."
+        for name in {str(key), re.sub(r"\W+", "_", key)[:60]}:  # a night's duty keeps the dashes of its date
+            if await store.aget(namespace, name):
+                await store.adelete(namespace, name)
+                return "Forgotten."
+        return f"Nothing is remembered under {key}."
     return [StructuredTool.from_function(coroutine=remember), StructuredTool.from_function(coroutine=forget)]
 
 

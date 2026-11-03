@@ -31,9 +31,11 @@ RECOVER_WITHIN = "15 minutes"
 PRUNE_EVERY = 25
 STALE_WAKE_MIN, END_LATE_MIN = 30, 60
 HAND_HOLD_H = 2
+ALARM_HOURS = 24
 OWN_MOVE_S = 60
 # A wake to get something ready means nothing after its moment has passed, unlike a reminder.
 PREPARES = re.compile(r"warm|bottle|feed|mamadera|calent|toma|dehumid|deshumid|humid", re.I)
+ABOUT_THE_AIR = re.compile(r"dehumid|deshumid|humid", re.I)
 ENDED = {"warmer_off_at": {"es": "El calentador de mamaderas se apagó solo a las {at}.", "en": "The bottle warmer turned itself off at {at}."},
          "vacuum_off_at": {"es": "La aspiradora terminó y volvió a su base a las {at}.", "en": "The vacuum finished and went back to its base at {at}."}}
 GAP_TOLD = re.compile(r"\d+\s*(?:h|hs|hours?|horas?)\b|\bfeeds?\b|\btomas?\b|comi[oó]", re.I)
@@ -106,8 +108,16 @@ def today_note(event, moment, facts):
     if event["type"] != "schedule" or event["payload"].get("name") != "morning":
         return None
     names = [str(moment.date()), moment.strftime("%A").lower(), {"Monday": "lunes", "Tuesday": "martes", "Wednesday": "miércoles", "Thursday": "jueves", "Friday": "viernes", "Saturday": "sábado", "Sunday": "domingo"}[moment.strftime("%A")]]
-    found = [f"{k}: {v}" for k, v in facts.items() if not k.startswith(("on_duty", "duty_note", "hand_", "feed_gap", "fever")) and any(n in str(v).lower() for n in names)]
+    found = [f"{k}: {v}" for k, v in facts.items() if not k.startswith(("on_duty", "duty_note", "hand_", "feed_gap", "fever", "alarm_")) and any(n in str(v).lower() for n in names)]
     return "Remembered for today, name it with its time: " + "; ".join(found) + "." if found else None
+
+
+def alarm_note(event, facts):
+    """What the gate or an emergency set off since the last check, so a check can't read as if the night was quiet."""
+    if event["type"] != "schedule":
+        return None
+    found = [v for k, v in sorted(facts.items()) if k.startswith("alarm_")]
+    return "Since the last check, these happened, say them plainly in one line to each parent, with the time, and no advice: " + " ".join(found) if found else None
 
 
 def describe(event, moment, facts, feed=None, lang="es", extra=()):
@@ -115,7 +125,7 @@ def describe(event, moment, facts, feed=None, lang="es", extra=()):
     payload = event["payload"]
     when = moment.strftime("%A %Y-%m-%d %H:%M")
     night = is_night(moment)
-    notes = [f"Write for people in {'English' if lang == 'en' else 'Rioplatense Spanish'}.", *timed_lines(moment, facts), feed_line(moment, feed), rota_note(event, moment, facts), today_note(event, moment, facts), *extra]
+    notes = [f"Write for people in {'English' if lang == 'en' else 'Rioplatense Spanish'}.", *timed_lines(moment, facts), feed_line(moment, feed), rota_note(event, moment, facts), today_note(event, moment, facts), alarm_note(event, facts), *extra]
     facts = {k: v for k, v in facts.items() if k not in ("warmer_off_at", "vacuum_off_at", "feed_gap_told", "language") and not k.startswith("hand_")}
     rota = (f"The night that belongs to this moment began on the evening of {night_of(moment)}. On duty that night: {who_is_on(moment, facts)}"
             if night else
@@ -260,7 +270,14 @@ class Core:
         """A night handed over in the small hours waits for the morning, unless it was that parent's own night anyway."""
         moment = self.now()
         if moment.hour >= 7 or parent == self.sender or parent == on_duty(moment):  # before midnight the one taking over has to know
-            return ""
+            other = next(p for p in tools_mod.PARENTS if p != self.sender) if self.sender in tools_mod.PARENTS else None
+            if not other or (is_night(moment) and other != parent):  # the small hours or late: the other parent hears it in the morning
+                if other:
+                    await self.store.aput((*tools_mod.FACTS, self.settings.home), f"duty_note_{day}",
+                                          {"value": f"{self.sender} took the night of {day}: tell {other} in the morning check."})
+                return ""
+            self.duty_told = other
+            return f" Tell {other} now, in one line, that {self.sender} changed this, so they can say if it's wrong."
         self.held = parent
         await self.store.aput((*tools_mod.FACTS, self.settings.home), f"duty_note_{day}",
                               {"value": f"{self.sender} passed the night of {day} to {parent}: tell {parent} in the morning check."})
@@ -348,6 +365,10 @@ class Core:
         """What a message can't say, from the clock: a warm bottle with the warmer off, or calm about a long gap between feeds."""
         if self.after_start:
             return "Refused, nothing was sent: the agent just restarted and this is only its first reading. Handle the room and message nobody."
+        if safety.CANT_KEEP.search(text):
+            return "Refused, nothing was sent: that isn't yours to promise. Checks still go out, and at night only the parent on duty is woken. Say what will happen."
+        if safety.WRONG_NUMBER.search(text):
+            return "Refused, nothing was sent: the home is in Uruguay and the emergency number is 911."
         if safety.JARGON.search(text):
             return "Refused, nothing was sent: write like a friend, without words such as rota or per. Say whose night it is, in plain words."
         if safety.READY_AT.search(text):
@@ -381,12 +402,21 @@ class Core:
             if found and datetime.date.fromisoformat(found.group(1)) < night_of(moment) - datetime.timedelta(days=1):
                 await self.store.adelete((*tools_mod.FACTS, self.settings.home), key)
                 del facts[key]
+            alarm = re.match(r"alarm_(\d{12})$", key)
+            if alarm and datetime.datetime.strptime(alarm.group(1), "%Y%m%d%H%M").replace(tzinfo=TZ) < moment - datetime.timedelta(hours=ALARM_HOURS):
+                await self.store.adelete((*tools_mod.FACTS, self.settings.home), key)
+                del facts[key]
         return facts
 
     async def add_wake(self, moment, why):
         if not why.startswith("device_end:"):
             self.reminder_set = True
         async with self.pool.connection() as db:
+            if ABOUT_THE_AIR.search(why):  # the home's own check on the dehumidifier and Muse's reminder often land together (Nov 3)
+                near = await (await db.execute("select why from wakes where home = %s and not fired and at between %s and %s",
+                                               (self.settings.home, moment - datetime.timedelta(minutes=2), moment + datetime.timedelta(minutes=2)))).fetchall()
+                if any(ABOUT_THE_AIR.search(row["why"]) for row in near):
+                    return
             await db.execute("insert into wakes (home, at, why) values (%s, %s, %s)", (self.settings.home, moment, why))
 
     async def wakes(self):
@@ -499,6 +529,8 @@ class Core:
         try:
             if event["type"] == "device_ended":
                 return await self.ended(event)
+            if event["type"] == "gap_check":
+                return await self.gap_only(event)
             if event["type"] == "state_changed":
                 await self.note_hand(event)
             if event["type"] == "message":
@@ -557,6 +589,10 @@ class Core:
         kind, line = verdict
         sender = event["payload"].get("from")
         to = list(tools_mod.PARENTS) if kind != "medical" or sender not in tools_mod.PARENTS else [sender]
+        duty = who_is_on(event["moment"], await tools_mod.facts(self.store, self.settings.home))
+        if kind == "medical" and duty not in to:  # the one on duty knows what was asked, without being woken for it
+            await asyncio.to_thread(self.channel.send, duty, safety.because(sender, text, rules.NO_ADVICE[self.settings.lang if self.settings.lang in rules.NO_ADVICE else "es"], self.settings.lang), True)
+            await self.record(event["id"], "gate_message", {"to": duty, "kind": kind, "quiet": True}, "Told quietly.")
         for parent in to:  # one phone failing never keeps the line from the other, and it is tried once more
             words = safety.because(sender or "A parent", text, line, self.settings.lang) if kind != "medical" and parent != sender else line
             for attempt in range(2):
@@ -571,6 +607,8 @@ class Core:
         self.publish("gate", event_id=event["id"], gate=kind, to=to, text=line)
         if kind == "urgent" and rules.names_fever(text):  # it stays known across the night, whoever is on duty
             await self.keep_fever(event, sender, text)
+        if kind != "medical":
+            await self.keep_alarm(event, sender, text)
         await self.agent.aupdate_state(self.config, {"messages": [
             HumanMessage(f"{sender or 'A parent'} wrote: {rules.parent_text(text)}"),
             AIMessage(f"The safety gate answered this with its fixed {kind} line to {', '.join(to)}. I did not answer it.")]}, as_node="model")
@@ -591,6 +629,15 @@ class Core:
             self.publish("error", event_id=event["id"], error=f"{type(failure).__name__}: {str(failure)[:300]}")
         await self.store.aput((*tools_mod.FACTS, self.settings.home), "fever_reported", {"value": f"{sender} reported at {moment:%A %H:%M}: {text[:120]}. Both parents were told to call."})
 
+    async def keep_alarm(self, event, who, text):
+        """An alarm goes in the log and in memory, so the next checks say it, and nothing reads as a quiet night."""
+        moment = event["moment"]
+        try:
+            await asyncio.to_thread(self.log.add, "note", {"text": f"Alarm at {moment:%H:%M}, {who}: {text[:120]}"}, moment.isoformat())
+        except Exception as failure:
+            self.publish("error", event_id=event["id"], error=f"{type(failure).__name__}: {str(failure)[:300]}")
+        await self.store.aput((*tools_mod.FACTS, self.settings.home), f"alarm_{moment:%Y%m%d%H%M}", {"value": f"At {moment:%A %H:%M} {who} wrote: {text[:120]}, and both parents were told."})
+
     async def ended(self, event):
         """What Muse started ended by itself, so the parent on duty hears it, quietly. Too late to matter is only tidied."""
         payload, moment = event["payload"], event["moment"]
@@ -608,6 +655,41 @@ class Core:
         await self.record(event["id"], "notify", {"parent": duty, "text": line, "quiet": True}, f"Sent to {duty}.")
         self.publish("tool_result", event_id=event["id"], tool="notify", arguments={"parent": duty, "text": line, "quiet": True}, result=f"Sent to {duty}.")
         return await self.finish(event, "done", f"Told {duty}.")
+
+    def current_feed(self, moment):
+        """The last feed that counts: at home, a log nobody writes to says nothing about Theo (Nov 3, a false alarm to both parents)."""
+        feed = self.last_feed(moment)
+        if feed and part("log") == "real" and (moment - feed).total_seconds() / 3600 >= safety.STALE_LOG_H:
+            return None
+        return feed
+
+    def gap_due(self, feed, facts, after, until):
+        """The first moment in (after, until] the ladder reaches a step it hasn't said yet, or None. Nobody has to send anything for it to speak."""
+        if not feed:
+            return None
+        told = str(facts.get("feed_gap_told", "")).rsplit("|", 1)
+        said = int(told[1]) if told[0] == feed.isoformat() and len(told) == 2 else 0
+        for step in safety.GAP_STEPS:
+            at = feed + datetime.timedelta(hours=step)
+            if step > said and at <= until:
+                if at > after or safety.gap_step((until - feed).total_seconds() / 3600) == step:
+                    return max(at, after)
+        return None
+
+    async def tick_gap(self, moment=None):
+        """The ladder, as time passes. The real home calls this on a timer, and the simulator's clock calls it on its way."""
+        moment = moment or datetime.datetime.now(TZ)
+        feed = await asyncio.to_thread(self.current_feed, moment)
+        facts = await tools_mod.facts(self.store, self.settings.home)
+        at = self.gap_due(feed, facts, moment - datetime.timedelta(seconds=1), moment)
+        return await self.dispatch("gap_check", {}, source="clock", at=moment.isoformat()) if at else None
+
+    async def gap_only(self, event):
+        moment = event["moment"]
+        facts = await self.tidy_facts(moment)
+        self.feed = await asyncio.to_thread(self.current_feed, moment)
+        said = await self.raise_gap(event, moment, facts)
+        return await self.finish(event, "done", "Raised the feed gap." if said else "Nothing done.")
 
     async def raise_gap(self, event, moment, facts):
         """The feed gap ladder, from code: each step said once, both parents from BOTH_FROM up. Returns what Muse has to know."""
@@ -666,6 +748,7 @@ class Core:
     screen = None
     reminder_set = False  # for this event: a promise needs a reminder behind it
     after_start = False  # for this event: the first reading after a restart
+    duty_told = None  # for this event: who has to hear about a duty change
 
     async def decide(self, event, started):
         self.reminder_set = False
@@ -673,10 +756,12 @@ class Core:
         await agent_mod.repair(self.agent, self.config)
         moment = event["moment"]
         facts = await self.tidy_facts(moment)
-        self.feed = await asyncio.to_thread(self.last_feed, moment)
-        if self.feed and part("log") == "real" and (moment - self.feed).total_seconds() / 3600 >= safety.STALE_LOG_H:  # at home, a log nobody writes to says nothing about Theo (Nov 3, a false alarm to both parents)
-            self.feed = None
+        self.feed = await asyncio.to_thread(self.current_feed, moment)
+        self.duty_told = None
         extra = [event["note"]] if event.get("note") else []
+        if event["type"] == "message" and safety.reports_feed(self.heard):  # the feed goes in the log first: it may close the gap, and no alarm goes out over it
+            self.feed = None
+            extra.append("This parent is telling you about a feed. Log it first, then answer from what the log shows.")
         extra += await self.raise_gap(event, moment, facts)
         extra += self.log_note(event, moment)
         extra += self.reading_note(event, moment)
@@ -720,6 +805,8 @@ class Core:
         if unanswered(event, calls) or unheard_cry(event, calls):  # asked twice and still nothing: nobody is left waiting on Muse
             for parent in await self.without_brain(event):
                 calls.append(("notify", {"parent": parent}, f"Sent to {parent}."))
+        if any(tool == "notify" and arguments.get("emergency") and (result or "").startswith("Sent") for tool, arguments, result in calls):
+            await self.keep_alarm(event, "the agent", " ".join(str(arguments.get("text", "")) for tool, arguments, _ in calls if tool == "notify" and arguments.get("emergency"))[:120])
         line = tools_mod.record_line(calls)
         if final:  # Muse's own closing line can contradict what it did (Nov 3), so it is kept apart and the record is the calls
             final = safety.plain(final)
@@ -753,6 +840,11 @@ class Core:
             self.checked_today[name] = event["moment"].date()
         if event.get("hand") and not told:
             asks.append(f"A person switched {event['hand']} by hand and nobody has heard from you. Tell the parent on duty in one short line, or ask them. At night, set quiet.")
+        said_to = {arguments.get("parent") for tool, arguments, result in calls if tool == "notify" and (result or "").startswith("Sent")}
+        if self.duty_told and self.duty_told not in said_to:
+            asks.append(f"{self.sender} changed who is on duty and {self.duty_told} doesn't know. Tell {self.duty_told} in one line, so they can say if it's wrong.")
+        if event["type"] == "schedule" and any(k.startswith("alarm_") for k in facts) and not safety.ALARM_TOLD.search(" ".join(str(arguments.get("text", "")) for tool, arguments, _ in calls if tool == "notify")):
+            asks.append("Your message left out what happened since the last check. Say it plainly in one short line, with the time, no advice.")
         cry_words = " ".join(str(arguments.get("text", "")) for tool, arguments, _ in calls if tool == "notify")
         if event["type"] == "sound" and "cry" in str(event["payload"].get("kind", "")).lower() and self.gap_hours() >= safety.FEED_GAP_H and not GAP_TOLD.search(cry_words):
             asks.append(f"Your message about the crying left out that the log shows no feed for {self.gap_hours():.0f} hours. Tell the same parent, in one short line, without reassuring.")

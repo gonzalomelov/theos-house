@@ -23,7 +23,8 @@ CLIENT_HEADER = os.environ.get("PA_SIM_CLIENT_HEADER", "")
 SECURE = os.environ.get("PA_SIM_SECURE_COOKIE") == "1"
 CSP = ("default-src 'none'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self'; "
        "media-src 'self'; connect-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'")
-BUSY = "The simulator is full. Try again in a few minutes."
+BUSY = "All the simulated homes are in use right now. One frees up within two minutes, and this page keeps trying."
+STARTS_USED = "This address started many homes this hour. Please try again in a while."
 USED = "This session reached its limit. Start over, or try again in an hour."
 ONE_AT_A_TIME = "Muse is still on the last one."
 STREAMED = {"event", "tool_call", "tool_result", "gate", "decision", "done", "error"}
@@ -75,8 +76,8 @@ def app(model=None, media=None):
         if session is None:
             try:
                 session = await sessions.create(client_of(request), "es" if (await body_of(request)).get("lang") == "es" else "en")
-            except Full:
-                return JSONResponse({"error": BUSY}, 503)
+            except Full as why:
+                return JSONResponse({"error": STARTS_USED if str(why) == "address" else BUSY}, 429 if str(why) == "address" else 503)
         return with_cookie(JSONResponse({**await session.state(), "scenes": [s["id"] for s in SCENES]}), session)
 
     def session_only(handler):
@@ -159,21 +160,24 @@ def app(model=None, media=None):
         await session.advance(session.moment + datetime.timedelta(minutes=minutes))
         return JSONResponse(await session.state())
 
+    async def feeds(request, session):
+        """Whether simulated Theo keeps eating. Off, nobody logs a feed, and what the home does about it is Muse's and the ladder's."""
+        session.feeds_on = bool((await body_of(request)).get("on"))
+        return JSONResponse(await session.state())
+
     async def lang(request, session):
         await session.set_lang("es" if (await body_of(request)).get("lang") == "es" else "en")
         return JSONResponse({"lang": session.lang})
 
     async def reset(request, session):
         chosen = session.lang
-        try:
-            sessions.opened.take(client_of(request))
-        except Full:
-            return JSONResponse({"error": USED}, 429)
+        if not sessions.opened.left(client_of(request)):  # checked first, so a refused start doesn't lose the home that's open
+            return JSONResponse({"error": STARTS_USED}, 429)
         await sessions.drop(session.token)
         try:
             fresh = await sessions.create(client_of(request), chosen)
-        except Full:
-            return JSONResponse({"error": BUSY}, 503)
+        except Full as why:
+            return JSONResponse({"error": STARTS_USED if str(why) == "address" else BUSY}, 429 if str(why) == "address" else 503)
         return with_cookie(JSONResponse({**await fresh.state(), "scenes": [s["id"] for s in SCENES]}), fresh)
 
     async def stream(request, session):
@@ -214,7 +218,7 @@ def app(model=None, media=None):
         Route("/", page), Route("/health", health), Route("/api/session", open_session, methods=["POST"]),
         Route("/api/state", session_only(state)), Route("/api/scene", session_only(one_at_a_time(scene)), methods=["POST"]),
         Route("/api/sense", session_only(one_at_a_time(sense)), methods=["POST"]), Route("/api/write", session_only(one_at_a_time(write)), methods=["POST"]), Route("/api/events", session_only(one_at_a_time(event)), methods=["POST"]),
-        Route("/api/home", session_only(set_home), methods=["POST"]), Route("/api/clock", session_only(clock), methods=["POST"]), Route("/api/lang", session_only(lang), methods=["POST"]),
+        Route("/api/home", session_only(set_home), methods=["POST"]), Route("/api/clock", session_only(clock), methods=["POST"]), Route("/api/lang", session_only(lang), methods=["POST"]), Route("/api/feeds", session_only(feeds), methods=["POST"]),
         Route("/api/reset", session_only(reset), methods=["POST"]), Route("/api/stream", session_only(stream)),
         Mount("/media", StaticFiles(directory=media, check_dir=False)), Mount("/static", StaticFiles(directory=STATIC))])
     built.state.sessions = sessions

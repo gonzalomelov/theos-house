@@ -27,6 +27,11 @@ ADDRESS_SESSIONS = int(os.environ.get("PA_SIM_ADDRESS_SESSIONS", "12"))
 HIDDEN_FACTS = ("language", "warmer_off_at", "vacuum_off_at", "feed_gap_told")
 DAILY = (((7, 30), "morning"), ((21, 30), "evening"))
 HUMIDITY_STEP = 5.0
+# A clock press can't outlive a browser's request behind Cloudflare, which gives up at 100 s. What's still running keeps its order.
+ADVANCE_WAIT_S = 75
+EVICT_IDLE_S = 120  # when every home is taken, the one nobody has touched for this long makes room
+DAY_FEED_H, NIGHT_FEED_H = 3, 7.5
+SIM_FEED = {"amount_ml": 90, "method": "bottle", "simulated": True}
 
 
 class Full(Exception):
@@ -102,6 +107,7 @@ class Session:
         self.last_said = None
         self.events_used = 0
         self.checks = set()
+        self.feeds_on = True
         self.last_seen = time.monotonic()
         self.dir = tempfile.mkdtemp(prefix="sim-")
         self.memory = Memory(Path(self.dir) / "log.sqlite")
@@ -139,27 +145,66 @@ class Session:
             self.memory.db.close()
             shutil.rmtree(self.dir, ignore_errors=True)
 
-    async def advance(self, moment, daily=True):
-        """The clock moves. Any wake Muse asked for on the way fires, and the daily checks it passed, as they would at home.
-        A moment from the story skips the checks on the way: a judge pressed one thing, and sees that thing."""
-        passed = []
+    def next_feed(self):
+        """When simulated Theo eats next: every few hours by day, one long stretch at night. A parent's logged feed moves it, the log is the only record."""
+        last = self.core.last_feed(self.moment) if self.feeds_on else None
+        if not last:
+            return None
+        day = last + datetime.timedelta(hours=DAY_FEED_H)
+        return day if 7 <= day.hour < 22 else last + datetime.timedelta(hours=NIGHT_FEED_H)
+
+    async def next_step(self, moment, daily):
+        """What happens first on the way to this moment: a daily check, a wake Muse asked for, a feed, or a step of the feed gap ladder."""
+        steps = []
+        feed = self.next_feed()
+        if feed and feed <= moment:
+            steps.append((feed, 0, "feed", None))
+        for row in await self.core.wakes():
+            if row["at"] <= moment:
+                steps.append((row["at"].astimezone(self.moment.tzinfo), 1, "wake", None))
         day = self.moment.date()
         while daily and day <= moment.date():
-            passed += [(self.moment.replace(year=day.year, month=day.month, day=day.day, hour=h, minute=m, second=0, microsecond=0), name) for (h, m), name in DAILY]
+            for (h, m), name in DAILY:
+                at = self.moment.replace(year=day.year, month=day.month, day=day.day, hour=h, minute=m, second=0, microsecond=0)
+                if self.moment < at < moment and (at.date(), name) not in self.checks:
+                    steps.append((at, 2, "check", name))
             day += datetime.timedelta(days=1)
-        for at, name in sorted(p for p in passed if self.moment < p[0] < moment):
-            self.moment = at
-            await self.core.fire_wakes(at)
-            if (at.date(), name) not in self.checks:
+        gap = self.core.gap_due(self.core.last_feed(self.moment), await tools_mod.facts(self.core.store, self.settings.home), self.moment, moment)
+        if gap and not (feed and feed <= gap):
+            steps.append((gap, 3, "gap", None))
+        return min(steps, key=lambda s: s[:2]) if steps else None
+
+    async def settled(self, deadline):
+        """Waits for what is running, so the next step reads the log and the wakes it left behind."""
+        pending = [v[1] for v in self.core.running.values() if not v[1].done()]
+        left = deadline - time.monotonic()
+        if pending and left > 0:
+            await asyncio.wait(pending, timeout=left)
+
+    async def advance(self, moment, daily=True):
+        """The clock moves, one thing at a time and each at its own moment: a wake Muse asked for fires then, not hours late, and nothing is skipped
+        by a long jump. A moment from the story skips the daily checks on the way: a judge pressed one thing, and sees that thing."""
+        deadline = time.monotonic() + ADVANCE_WAIT_S
+        await self.settled(deadline)
+        while (step := await self.next_step(moment, daily)):
+            at, _, kind, name = step
+            self.moment = max(self.moment, at)
+            if kind == "feed":
+                self.seed(at.isoformat(timespec="seconds"), "feeding", SIM_FEED)
+            elif kind == "wake":
+                await self.core.fire_wakes(at)
+            elif kind == "check":
                 self.checks.add((at.date(), name))
                 await self.core.dispatch("schedule", {"name": name}, "simulator", at.isoformat())
+            else:
+                await self.core.dispatch("gap_check", {}, "clock", at.isoformat())
+            await self.settled(deadline)
         self.moment = moment
         before = self.humidity()
         self.core.mock.tick(moment)
         after = self.humidity()
         if before is not None and after is not None and abs(after - before) >= HUMIDITY_STEP:  # the room moved: the sensor says so, as it does at home
             await self.core.dispatch("state_changed", {"entity_id": "sensor.nursery_climate_humidity", "state": str(after)}, "simulator", moment.isoformat())
-        await self.core.fire_wakes(moment)
 
     def humidity(self):
         try:
@@ -219,7 +264,7 @@ class Session:
     async def state(self):
         facts = await tools_mod.facts(self.core.store, self.settings.home)
         return {"clock": self.moment.isoformat(), "lang": self.lang, "played": self.played, "events_left": MAX_EVENTS - self.events_used,
-                "starts_left": self.opened.left(self.client) if self.opened else None,
+                "starts_left": self.opened.left(self.client) if self.opened else None, "feeds_on": self.feeds_on,
                 "home": self.core.mock.snapshot(), "sent": list(self.channel.sent), "said": self.said,
                 "facts": {k: v for k, v in facts.items() if k not in HIDDEN_FACTS},
                 "log": self.log.entries(limit=8), "seq": self.core.seq}
@@ -244,8 +289,11 @@ class Sessions:
             mine = sorted((s for s in self.live.values() if s.client == client), key=lambda s: s.last_seen)
             if len(mine) >= MAX_PER_CLIENT:
                 await self.drop(mine[0].token)
-            if len(self.live) >= MAX_SESSIONS:
-                raise Full("sessions")
+            if len(self.live) >= MAX_SESSIONS:  # a home nobody is touching makes room, so nobody is locked out by a tab left open
+                idle = min(self.live.values(), key=lambda s: s.last_seen)
+                if time.monotonic() - idle.last_seen < EVICT_IDLE_S:
+                    raise Full("sessions")
+                await self.drop(idle.token)
             self.opened.take(client)
             session = await Session(client, self.model, lang, self.events, self.opened).start()
             self.live[session.token] = session

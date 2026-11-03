@@ -28,6 +28,21 @@
   <p class="status" id="status" role="status"></p>
 </nav>
 
+<section class="meta" id="meta" aria-labelledby="meta-t">
+  <div class="meta-head"><h2 id="meta-t"></h2><a id="arch-link" href="/static/architecture.svg" target="_blank" rel="noopener"></a></div>
+  <p id="meta-lead"></p>
+  <details id="meta-more" open><summary id="meta-sum"></summary>
+  <div class="meta-cards">
+    <article class="m-card live" id="m-muse"><h3></h3><span class="how"></span><p class="say-it"></p></article>
+    <article class="m-card" id="m-pe"><h3></h3><span class="how"></span><audio controls preload="none" src="/static/senses/cry.m4a"></audio><p class="say-it"></p></article>
+    <article class="m-card" id="m-sam"><h3></h3><span class="how"></span><img src="/static/senses/hands-on-mask.jpg" alt="SAM 3.1 masks on a generated clip" width="640" height="352" loading="lazy"><p class="say-it"></p></article>
+    <article class="m-card" id="m-gadget"><h3></h3><span class="how"></span><p class="say-it"></p></article>
+    <article class="m-card" id="m-tts"><h3></h3><span class="how"></span><audio id="mms" controls preload="none" src="/static/senses/mms-coach-en.m4a"></audio><p class="say-it"></p></article>
+  </div>
+  <p class="meta-where" id="meta-where"></p>
+  </details>
+</section>
+
 <main class="stage">
   <div class="ptabs" id="ptabs"><button type="button" id="tab-gonza" data-phone="gonza" aria-pressed="true"></button><button type="button" id="tab-ceci" data-phone="ceci" aria-pressed="false"></button></div>
   <section class="phone" id="phone-gonza" aria-labelledby="ph-g">
@@ -96,6 +111,7 @@
       <button type="button" class="ghost" data-event="schedule" data-name="evening" id="b-pm"></button>
       <button type="button" class="ghost" data-clock="60" id="b-1h"></button>
       <button type="button" class="ghost" data-clock="360" id="b-6h"></button>
+      <button type="button" class="ghost" id="b-feeds"></button>
     </div>
   </section>
 

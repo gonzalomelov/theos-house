@@ -13,6 +13,7 @@ from .settings import part
 async def main(port):
     async with Core() as core:
         jobs = [asyncio.create_task(sources.forever(core, "schedule", sources.schedule)), asyncio.create_task(sources.forever(core, "wakes", sources.wakes))] if os.environ.get("PA_SCHEDULE", "1") == "1" else []
+        jobs.append(asyncio.create_task(sources.forever(core, "gaps", sources.gaps)))
         if part("home") == "real":
             jobs.append(asyncio.create_task(sources.forever(core, "home_assistant", sources.home_assistant)))
         if os.environ.get("PA_SIM_THEO") == "1":
