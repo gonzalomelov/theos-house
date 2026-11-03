@@ -1,0 +1,879 @@
+From 6b932536aa5cda7dca79a954b099c192e6cb7f6f Mon Sep 17 00:00:00 2001
+From: Gonza <gonza@example.invalid>
+Date: Mon, 2 Nov 2026 13:03:11 -0300
+Subject: [PATCH 1/3] AHT30 sensor on I2C (sensors.read) and the
+ nursery-climate board profile
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+---
+ esp32/devices/sdkconfig.nursery-climate |  52 ++++++
+ esp32/main/CMakeLists.txt               |   3 +
+ esp32/main/Kconfig.projbuild            |  17 ++
+ esp32/main/aht30_sensor.c               | 206 ++++++++++++++++++++++++
+ esp32/main/aht30_sensor.h               |  31 ++++
+ esp32/main/app.c                        |  11 ++
+ esp32/main/noise_control.cpp            |   7 +
+ esp32/tests/link_aht30_harness.c        | 119 ++++++++++++++
+ esp32/tests/test_link_aht30.py          |  66 ++++++++
+ esp32/tools/board.sh                    |   2 +-
+ 10 files changed, 513 insertions(+), 1 deletion(-)
+ create mode 100644 esp32/devices/sdkconfig.nursery-climate
+ create mode 100644 esp32/main/aht30_sensor.c
+ create mode 100644 esp32/main/aht30_sensor.h
+ create mode 100644 esp32/tests/link_aht30_harness.c
+ create mode 100644 esp32/tests/test_link_aht30.py
+
+diff --git a/esp32/devices/sdkconfig.nursery-climate b/esp32/devices/sdkconfig.nursery-climate
+new file mode 100644
+index 0000000..9cf7584
+--- /dev/null
++++ b/esp32/devices/sdkconfig.nursery-climate
+@@ -0,0 +1,52 @@
++# Copyright (c) Meta Platforms, Inc. and affiliates.
++#
++# Licensed under the Apache License, Version 2.0 (the "License");
++# you may not use this file except in compliance with the License.
++# You may obtain a copy of the License at
++#
++#     http://www.apache.org/licenses/LICENSE-2.0
++#
++# Unless required by applicable law or agreed to in writing, software
++# distributed under the License is distributed on an "AS IS" BASIS,
++# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++# See the License for the specific language governing permissions and
++# limitations under the License.
++
++# Espressif ESP32-S3-DevKitC-1 v1.1, N8R8 (ESP32-S3-WROOM-1-N8R8 or -1U-N8R8):
++# 8 MB quad flash, 8 MB octal PSRAM, an addressable RGB LED on GPIO38, the BOOT
++# button, and two USB ports, the S3's own USB-Serial-JTAG and a USB-UART
++# bridge. Load last, after sdkconfig.defaults (see README.md in this
++# directory). The N32R16V variant (octal flash, 1.8 V) is not covered.
++# Source: Espressif's ESP32-S3-DevKitC-1 v1.1 user guide and IDF's blink
++# example (sdkconfig.defaults.esp32s3).
++CONFIG_IDF_TARGET="esp32s3"
++CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ_240=y
++
++# The onboard addressable LED. v1.0 boards have it on GPIO48 instead, as does
++# the Aideepen N16R8 clone: set CONFIG_HOMEHUB_LED_STRIP_GPIO=48 in
++# the build directory's sdkconfig (see README.md).
++CONFIG_HOMEHUB_LED_BACKEND_DEVKIT_GPIO27=y
++CONFIG_HOMEHUB_LED_STRIP_GPIO=48
++# Green first, as WS2812s usually are; unlike the C5 DevKitC-1's LED.
++CONFIG_HOMEHUB_LED_RGB_ORDER=n
++# BOOT button, active low.
++CONFIG_HOMEHUB_BUTTON_GPIO=0
++
++# 8 MB quad flash, as listed for the N8R8 module.
++CONFIG_ESPTOOLPY_FLASHMODE_QIO=y
++CONFIG_ESPTOOLPY_FLASHFREQ_80M=y
++CONFIG_ESPTOOLPY_FLASHSIZE_8MB=y
++CONFIG_ESPTOOLPY_FLASHSIZE="8MB"
++
++# Octal PSRAM holds the TLS buffers and keeps the home-network tunnel on.
++CONFIG_SPIRAM=y
++CONFIG_SPIRAM_MODE_OCT=y
++CONFIG_SPIRAM_MODE_QUAD=n
++CONFIG_SPIRAM_SPEED_80M=y
++
++# The BLE controller already takes ~70 KB of internal RAM on the S3; keep the
++# NimBLE host's allocations in PSRAM so pairing has room.
++CONFIG_BT_NIMBLE_MEM_ALLOC_MODE_EXTERNAL=y
++
++# Theo's room: an AHT30 on SDA GPIO4, SCL GPIO5 (sensors.read).
++CONFIG_HOMEHUB_AHT30_SENSOR=y
+diff --git a/esp32/main/CMakeLists.txt b/esp32/main/CMakeLists.txt
+index ad823a9..433a245 100644
+--- a/esp32/main/CMakeLists.txt
++++ b/esp32/main/CMakeLists.txt
+@@ -108,6 +108,9 @@ endif()
+ if(CONFIG_HOMEHUB_SENSECAP_SENSORS)
+     list(APPEND GADGET_SRCS "sensecap_sensors.c")
+ endif()
++if(CONFIG_HOMEHUB_AHT30_SENSOR)
++    list(APPEND GADGET_SRCS "aht30_sensor.c")
++endif()
+ if(CONFIG_HOMEHUB_RETERMINAL_SHT4X)
+     list(APPEND GADGET_SRCS "reterminal_sht4x.c")
+ endif()
+diff --git a/esp32/main/Kconfig.projbuild b/esp32/main/Kconfig.projbuild
+index 7423cf7..ad632bf 100644
+--- a/esp32/main/Kconfig.projbuild
++++ b/esp32/main/Kconfig.projbuild
+@@ -534,6 +534,23 @@ menu "ESP32 Device SDK"
+             tenths of a degree Celsius. The E100x sensor reads warm from board
+             heat; -33 (-3.3 C, about -6 F) is a starting point for those boards.
+ 
++    config HOMEHUB_AHT30_SENSOR
++        bool "AHT30 temperature and humidity sensor on I2C (sensors.read)"
++        default n
++        help
++            Poll an AHT30 at address 0x38 and answer sensors.read with the
++            latest temperature and humidity.
++
++    config HOMEHUB_AHT30_SDA_GPIO
++        int "AHT30 SDA GPIO"
++        depends on HOMEHUB_AHT30_SENSOR
++        default 4
++
++    config HOMEHUB_AHT30_SCL_GPIO
++        int "AHT30 SCL GPIO"
++        depends on HOMEHUB_AHT30_SENSOR
++        default 5
++
+     config HOMEHUB_DISPLAY_COMMANDS
+         bool
+         default y if HOMEHUB_DISPLAY
+diff --git a/esp32/main/aht30_sensor.c b/esp32/main/aht30_sensor.c
+new file mode 100644
+index 0000000..536bb79
+--- /dev/null
++++ b/esp32/main/aht30_sensor.c
+@@ -0,0 +1,206 @@
++/*
++ * Copyright (c) Meta Platforms, Inc. and affiliates.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *     http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++#include "aht30_sensor.h"
++
++#include <math.h>
++#include <stdbool.h>
++#include <stdint.h>
++#include <string.h>
++
++#include "driver/i2c_master.h"
++#include "esp_log.h"
++#include "esp_timer.h"
++#include "freertos/FreeRTOS.h"
++#include "freertos/task.h"
++#include "stack_monitor.h"
++
++// ---- Protocol (host-tested) -------------------------------------------------
++
++// Aosong AHT30 on its own I2C bus. Send the trigger, wait ~80 ms, read back
++// 7 bytes: status, 20 bits of humidity, 20 bits of temperature, CRC.
++#define AHT30_ADDR       0x38
++#define AHT30_MEASURE_MS 80
++#define AHT30_STATUS_BUSY 0x80
++
++// CRC-8 of the first 6 bytes: polynomial 0x31, initialized to 0xFF.
++static uint8_t aht30_crc(const uint8_t *data, size_t len) {
++    uint8_t crc = 0xFF;
++    for (size_t i = 0; i < len; i++) {
++        crc ^= data[i];
++        for (int bit = 0; bit < 8; bit++) {
++            crc = (crc & 0x80) ? (uint8_t)((crc << 1) ^ 0x31) : (uint8_t)(crc << 1);
++        }
++    }
++    return crc;
++}
++
++// Decode one 7-byte measurement into degrees Celsius and percent RH. Returns
++// false when the sensor is still busy or the CRC fails.
++static bool aht30_decode(const uint8_t raw[7], float *temp_c, float *rh_pct) {
++    if (raw[0] & AHT30_STATUS_BUSY) return false;
++    if (aht30_crc(raw, 6) != raw[6]) return false;
++    uint32_t raw_rh = ((uint32_t)raw[1] << 12) | ((uint32_t)raw[2] << 4) | (raw[3] >> 4);
++    uint32_t raw_t = (((uint32_t)raw[3] & 0x0F) << 16) | ((uint32_t)raw[4] << 8) | raw[5];
++    *rh_pct = 100.0f * (float)raw_rh / 1048576.0f;
++    *temp_c = 200.0f * (float)raw_t / 1048576.0f - 50.0f;
++    return isfinite(*temp_c) && isfinite(*rh_pct);
++}
++
++// Readings older than this count as missing, so a dead sensor drops out.
++#define STALE_US (30LL * 1000 * 1000)
++
++enum { SENSOR_TEMPERATURE, SENSOR_HUMIDITY, SENSOR_COUNT };
++
++static const struct {
++    const char *name;
++    const char *unit;
++    int decimals;
++} SENSORS[SENSOR_COUNT] = {
++    [SENSOR_TEMPERATURE] = {"temperature", "celsius", 1},
++    [SENSOR_HUMIDITY] = {"humidity", "percent_rh", 1},
++};
++
++typedef struct {
++    bool valid;
++    float value;
++    int64_t at_us;
++} reading_t;
++
++// sensors.read result: each reading with its value, unit and age in
++// seconds; stale readings are null; with no readings at all, an error.
++static cJSON *readings_result(const reading_t *readings, int64_t now_us) {
++    cJSON *result = cJSON_CreateObject();
++    cJSON *payload = cJSON_CreateObject();
++    if (!result || !payload) {
++        cJSON_Delete(result);
++        cJSON_Delete(payload);
++        return NULL;
++    }
++    bool any = false;
++    for (int i = 0; i < SENSOR_COUNT; i++) {
++        const reading_t *r = &readings[i];
++        if (!r->valid || now_us - r->at_us > STALE_US) {
++            cJSON_AddNullToObject(payload, SENSORS[i].name);
++            continue;
++        }
++        cJSON *sensor = cJSON_AddObjectToObject(payload, SENSORS[i].name);
++        double scale = pow(10, SENSORS[i].decimals);
++        cJSON_AddNumberToObject(sensor, "value", round(r->value * scale) / scale);
++        cJSON_AddStringToObject(sensor, "unit", SENSORS[i].unit);
++        cJSON_AddNumberToObject(sensor, "age_s", (double)((now_us - r->at_us) / 1000000));
++        any = true;
++    }
++    if (!any) {
++        cJSON_Delete(payload);
++        cJSON_AddBoolToObject(result, "ok", false);
++        cJSON *error = cJSON_AddObjectToObject(result, "error");
++        cJSON_AddStringToObject(error, "code", "no_readings");
++        cJSON_AddStringToObject(error, "message",
++                                "no sensor readings; check the AHT30's wiring");
++        return result;
++    }
++    cJSON_AddBoolToObject(result, "ok", true);
++    cJSON_AddItemToObject(result, "payload", payload);
++    return result;
++}
++
++// ---- I2C driver --------------------------------------------------------------
++
++#define POLL_MS 10000
++
++static const char *TAG = "link.aht30";
++
++static portMUX_TYPE s_lock = portMUX_INITIALIZER_UNLOCKED;
++static reading_t s_readings[SENSOR_COUNT];
++static i2c_master_dev_handle_t s_dev = NULL;
++
++static bool poll_once(float *temp_c, float *rh_pct) {
++    const uint8_t cmd[] = {0xAC, 0x33, 0x00};
++    uint8_t raw[7];
++    if (i2c_master_transmit(s_dev, cmd, sizeof(cmd), 100) != ESP_OK) return false;
++    vTaskDelay(pdMS_TO_TICKS(AHT30_MEASURE_MS));
++    if (i2c_master_receive(s_dev, raw, sizeof(raw), 100) != ESP_OK) return false;
++    if (!aht30_decode(raw, temp_c, rh_pct)) return false;
++    int64_t now = esp_timer_get_time();
++    taskENTER_CRITICAL(&s_lock);
++    s_readings[SENSOR_TEMPERATURE] = (reading_t){true, *temp_c, now};
++    s_readings[SENSOR_HUMIDITY] = (reading_t){true, *rh_pct, now};
++    taskEXIT_CRITICAL(&s_lock);
++    return true;
++}
++
++static void sensors_task(void *arg) {
++    (void)arg;
++    stack_monitor_t stack = STACK_MONITOR_INIT;
++    bool failing = false;
++    vTaskDelay(pdMS_TO_TICKS(100));  // the AHT30 needs 100 ms after power-on
++    for (;;) {
++        float temp_c, rh_pct;
++        if (poll_once(&temp_c, &rh_pct)) {
++            // Every reading is logged, so the serial console shows them before pairing.
++            ESP_LOGI(TAG, "reading: %.1f C, %.1f %%RH", temp_c, rh_pct);
++            failing = false;
++        } else if (!failing) {
++            // Log once per run of failures, not every poll.
++            failing = true;
++            ESP_LOGW(TAG, "sensor read failed; will retry");
++        }
++        stack_monitor_poll(&stack);
++        vTaskDelay(pdMS_TO_TICKS(POLL_MS));
++    }
++}
++
++void aht30_sensor_init(void) {
++    i2c_master_bus_config_t bus_cfg = {
++        .i2c_port = -1,
++        .sda_io_num = CONFIG_HOMEHUB_AHT30_SDA_GPIO,
++        .scl_io_num = CONFIG_HOMEHUB_AHT30_SCL_GPIO,
++        .clk_source = I2C_CLK_SRC_DEFAULT,
++        .glitch_ignore_cnt = 7,
++        .flags.enable_internal_pullup = true,
++    };
++    i2c_master_bus_handle_t bus = NULL;
++    esp_err_t err = i2c_new_master_bus(&bus_cfg, &bus);
++    if (err == ESP_OK && i2c_master_probe(bus, AHT30_ADDR, 100) != ESP_OK) {
++        ESP_LOGW(TAG, "AHT30 not responding at boot; will retry reads");
++    }
++    i2c_device_config_t dev_cfg = {
++        .dev_addr_length = I2C_ADDR_BIT_LEN_7,
++        .device_address = AHT30_ADDR,
++        .scl_speed_hz = 100000,
++    };
++    if (err == ESP_OK) err = i2c_master_bus_add_device(bus, &dev_cfg, &s_dev);
++    if (err != ESP_OK) {
++        ESP_LOGW(TAG, "no AHT30 at 0x%02x: %s", AHT30_ADDR, esp_err_to_name(err));
++        if (bus) i2c_del_master_bus(bus);
++        return;
++    }
++    if (xTaskCreate(sensors_task, "aht30", 3072, NULL, 2, NULL) != pdPASS) {
++        ESP_LOGE(TAG, "failed to start the sensor task");
++        return;
++    }
++    ESP_LOGI(TAG, "polling the AHT30 on I2C (SDA=%d SCL=%d)",
++             CONFIG_HOMEHUB_AHT30_SDA_GPIO, CONFIG_HOMEHUB_AHT30_SCL_GPIO);
++}
++
++cJSON *aht30_sensor_command(void) {
++    reading_t snapshot[SENSOR_COUNT];
++    taskENTER_CRITICAL(&s_lock);
++    memcpy(snapshot, s_readings, sizeof(snapshot));
++    taskEXIT_CRITICAL(&s_lock);
++    return readings_result(snapshot, esp_timer_get_time());
++}
+diff --git a/esp32/main/aht30_sensor.h b/esp32/main/aht30_sensor.h
+new file mode 100644
+index 0000000..dbd8f67
+--- /dev/null
++++ b/esp32/main/aht30_sensor.h
+@@ -0,0 +1,31 @@
++/*
++ * Copyright (c) Meta Platforms, Inc. and affiliates.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *     http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++// An AHT30 temperature and humidity sensor wired to any board over I2C. A
++// background task polls it every 10 seconds and keeps the latest of each
++// reading; sensors.read answers with those.
++
++#pragma once
++
++#include "cJSON.h"
++
++// Start the I2C bus and the polling task. Logs and does nothing else when
++// the bus can't start. A missing sensor is retried.
++void aht30_sensor_init(void);
++
++// sensors.read: the latest temperature and humidity readings, with their
++// age. A sensor with no recent reading is null; with none at all, an error.
++cJSON *aht30_sensor_command(void);
+diff --git a/esp32/main/app.c b/esp32/main/app.c
+index 3c3333c..ceba2db 100644
+--- a/esp32/main/app.c
++++ b/esp32/main/app.c
+@@ -76,6 +76,9 @@
+ #if CONFIG_HOMEHUB_RETERMINAL_SHT4X
+ #include "reterminal_sht4x.h"
+ #endif
++#if CONFIG_HOMEHUB_AHT30_SENSOR
++#include "aht30_sensor.h"
++#endif
+ #if CONFIG_MUSE_WATCHER_CAMERA
+ #include "boards/watcher_camera.h"
+ #endif
+@@ -1941,6 +1944,11 @@ static cJSON *on_ws_command(
+     if (strcmp(command, "sensors.read") == 0) {
+         return reterminal_sht4x_command();
+     }
++#endif
++#if CONFIG_HOMEHUB_AHT30_SENSOR
++    if (strcmp(command, "sensors.read") == 0) {
++        return aht30_sensor_command();
++    }
+ #endif
+     if (strcmp(command, "device.reset_vm") == 0) {
+         return queue_ws_control(WS_CONTROL_RESET_VM, NULL);
+@@ -2764,6 +2772,9 @@ void app_run(void) {
+ #if CONFIG_HOMEHUB_RETERMINAL_SHT4X
+     reterminal_sht4x_init();
+ #endif
++#if CONFIG_HOMEHUB_AHT30_SENSOR
++    aht30_sensor_init();
++#endif
+ 
+     if (!setup_complete) {
+         // Unpaired devices advertise automatically — no button press is needed
+diff --git a/esp32/main/noise_control.cpp b/esp32/main/noise_control.cpp
+index a90648d..a9bbc85 100644
+--- a/esp32/main/noise_control.cpp
++++ b/esp32/main/noise_control.cpp
+@@ -1544,6 +1544,13 @@ static char *build_register_json(void) {
+                 "in seconds; a sensor with no recent reading is null.",
+                 nullptr, nullptr);
+ #endif
++#if CONFIG_HOMEHUB_AHT30_SENSOR
++    add_command(commands, "sensors.read",
++                "Read the AHT30 air sensor: temperature in degrees Celsius and "
++                "relative humidity in percent. Each reading has its age in "
++                "seconds; a sensor with no recent reading is null.",
++                nullptr, nullptr);
++#endif
+ 
+ #if CONFIG_MUSE_WATCHER_CAMERA
+     add_command(commands, "camera.capture",
+diff --git a/esp32/tests/link_aht30_harness.c b/esp32/tests/link_aht30_harness.c
+new file mode 100644
+index 0000000..422df3f
+--- /dev/null
++++ b/esp32/tests/link_aht30_harness.c
+@@ -0,0 +1,119 @@
++/*
++ * Copyright (c) Meta Platforms, Inc. and affiliates.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *     http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++// Host AHT30 harness: raw sensor bytes in, sensors.read result out.
++// The runner extracts the production protocol code into aht30_protocol.inc.
++#include <assert.h>
++#include <math.h>
++#include <stdbool.h>
++#include <stdint.h>
++#include <stdio.h>
++#include <string.h>
++#include "cJSON.h"
++
++#include "aht30_protocol.inc"
++
++#define S(x) (x * 1000000LL)
++
++// Build a 7-byte measurement with a valid CRC.
++static void make_raw(uint8_t status, uint32_t raw_rh, uint32_t raw_t, uint8_t out[7]) {
++    out[0] = status;
++    out[1] = (uint8_t)(raw_rh >> 12);
++    out[2] = (uint8_t)(raw_rh >> 4);
++    out[3] = (uint8_t)(((raw_rh & 0x0F) << 4) | ((raw_t >> 16) & 0x0F));
++    out[4] = (uint8_t)(raw_t >> 8);
++    out[5] = (uint8_t)raw_t;
++    out[6] = aht30_crc(out, 6);
++}
++
++static void check_crc(void) {
++    // Same CRC-8 parameters as Sensirion's datasheet vector.
++    const uint8_t vec[] = {0xBE, 0xEF};
++    assert(aht30_crc(vec, sizeof(vec)) == 0x92);
++    assert(aht30_crc(vec, 0) == 0xFF);
++}
++
++static void check_decode(void) {
++    uint8_t raw[7];
++    float t, rh;
++
++    // Endpoints of the conversion formulas.
++    make_raw(0x18, 0x00000, 0x00000, raw);
++    assert(aht30_decode(raw, &t, &rh));
++    assert(fabsf(t - -50.0f) < 0.01f);
++    assert(rh == 0.0f);
++
++    // Mid-scale: 0x80000 -> 50 %RH, 50 C.
++    make_raw(0x18, 0x80000, 0x80000, raw);
++    assert(aht30_decode(raw, &t, &rh));
++    assert(fabsf(t - 50.0f) < 0.01f);
++    assert(fabsf(rh - 50.0f) < 0.01f);
++
++    // A room: 58.2 %RH and 19.4 C share byte 3 without mixing.
++    make_raw(0x18, (uint32_t)(0.582 * 1048576), (uint32_t)((19.4 + 50) / 200 * 1048576), raw);
++    assert(aht30_decode(raw, &t, &rh));
++    assert(fabsf(t - 19.4f) < 0.01f);
++    assert(fabsf(rh - 58.2f) < 0.01f);
++
++    // Busy and corrupted measurements are rejected.
++    make_raw(0x98, 0x80000, 0x80000, raw);
++    assert(!aht30_decode(raw, &t, &rh));
++    make_raw(0x18, 0x80000, 0x80000, raw);
++    raw[6] ^= 0x01;
++    assert(!aht30_decode(raw, &t, &rh));
++}
++
++static void check_result(void) {
++    reading_t r[SENSOR_COUNT] = {0};
++
++    // Nothing yet: an error, not an all-null payload.
++    cJSON *result = readings_result(r, S(10));
++    assert(cJSON_IsFalse(cJSON_GetObjectItem(result, "ok")));
++    cJSON *error = cJSON_GetObjectItem(result, "error");
++    assert(!strcmp(cJSON_GetObjectItem(error, "code")->valuestring, "no_readings"));
++    assert(!cJSON_GetObjectItem(result, "payload"));
++    cJSON_Delete(result);
++
++    // Fresh readings round to one decimal and carry their age.
++    r[SENSOR_TEMPERATURE] = (reading_t){true, 23.46f, S(7)};
++    r[SENSOR_HUMIDITY] = (reading_t){true, 41.04f, S(9)};
++    result = readings_result(r, S(10));
++    assert(cJSON_IsTrue(cJSON_GetObjectItem(result, "ok")));
++    int keys = 0;
++    for (cJSON *item = result->child; item; item = item->next) keys++;
++    assert(keys == 2);
++    char *json = cJSON_PrintUnformatted(cJSON_GetObjectItem(result, "payload"));
++    assert(strstr(json, "\"temperature\":{\"value\":23.5,\"unit\":\"celsius\",\"age_s\":3}"));
++    assert(strstr(json, "\"humidity\":{\"value\":41,\"unit\":\"percent_rh\",\"age_s\":1}"));
++    cJSON_free(json);
++    cJSON_Delete(result);
++
++    // Stale readings are null but the other sensor still reports.
++    r[SENSOR_TEMPERATURE].at_us = S(10) - STALE_US - 1;
++    result = readings_result(r, S(10));
++    assert(cJSON_IsTrue(cJSON_GetObjectItem(result, "ok")));
++    cJSON *payload = cJSON_GetObjectItem(result, "payload");
++    assert(cJSON_IsNull(cJSON_GetObjectItem(payload, "temperature")));
++    assert(cJSON_IsNumber(cJSON_GetObjectItem(
++        cJSON_GetObjectItem(payload, "humidity"), "value")));
++    cJSON_Delete(result);
++}
++
++int main(void) {
++    check_crc(); check_decode(); check_result();
++    puts("PASS aht30: CRC vector, decode endpoints, busy and bad CRC, result envelope");
++    return 0;
++}
+diff --git a/esp32/tests/test_link_aht30.py b/esp32/tests/test_link_aht30.py
+new file mode 100644
+index 0000000..88a50b6
+--- /dev/null
++++ b/esp32/tests/test_link_aht30.py
+@@ -0,0 +1,66 @@
++# Copyright (c) Meta Platforms, Inc. and affiliates.
++#
++# Licensed under the Apache License, Version 2.0 (the "License");
++# you may not use this file except in compliance with the License.
++# You may obtain a copy of the License at
++#
++#     http://www.apache.org/licenses/LICENSE-2.0
++#
++# Unless required by applicable law or agreed to in writing, software
++# distributed under the License is distributed on an "AS IS" BASIS,
++# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++# See the License for the specific language governing permissions and
++# limitations under the License.
++
++from pathlib import Path
++import os
++import shlex
++import subprocess
++import tempfile
++import unittest
++
++ROOT = Path(__file__).resolve().parents[1]
++# CI supplies pinned upstream sources; local IDF builds already have cJSON.
++JSON = Path(os.environ.get(
++    "CJSON_SOURCE_DIR", ROOT / "managed_components/espressif__cjson/cJSON"
++))
++
++
++class LinkAht30Test(unittest.TestCase):
++    @classmethod
++    def setUpClass(cls):
++        cls.temp = tempfile.TemporaryDirectory()
++        cls.addClassCleanup(cls.temp.cleanup)
++        out = Path(cls.temp.name)
++        source = (ROOT / "main/aht30_sensor.c").read_text()
++        start = source.index("// ---- Protocol (host-tested)")
++        (out / "aht30_protocol.inc").write_text(source[start:source.index("// ---- I2C driver", start)])
++        cc = shlex.split(os.environ.get("CC", "cc"))
++        flags = ["-Wall", "-Wextra", "-Werror", "-DCJSON_NESTING_LIMIT=16", "-I", str(JSON), "-I", str(out)]
++        commands = [
++            [*cc, "-std=c11", *flags, "-c", str(JSON / "cJSON.c"), "-o", str(out / "cjson.o")],
++            [*cc, "-std=c11", *flags, str(ROOT / "tests/link_aht30_harness.c"), str(out / "cjson.o"), "-lm", "-o", str(out / "aht30")],
++        ]
++        for cmd in commands:
++            compiled = subprocess.run(cmd, capture_output=True, text=True)
++            if compiled.returncode:
++                raise AssertionError(compiled.stdout + compiled.stderr)
++        cls.out = out
++
++    def test_bytes_to_sensors_read_result(self):
++        result = subprocess.run([str(self.out / "aht30")], capture_output=True, text=True)
++        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
++
++    def test_command_is_advertised_and_dispatched_with_the_feature(self):
++        noise = (ROOT / "main/noise_control.cpp").read_text()
++        start = noise.index("#if CONFIG_HOMEHUB_AHT30_SENSOR")
++        self.assertIn('add_command(commands, "sensors.read"', noise[start:noise.index("#endif", start)])
++        app = (ROOT / "main/app.c").read_text()
++        start = app.index("static cJSON *on_ws_command(")
++        dispatch = app[start:app.index("unsupported command", start)]
++        block = dispatch[dispatch.index("#if CONFIG_HOMEHUB_AHT30_SENSOR"):]
++        self.assertIn('"sensors.read"', block[:block.index("#endif")])
++
++
++if __name__ == "__main__":
++    unittest.main()
+diff --git a/esp32/tools/board.sh b/esp32/tools/board.sh
+index a8a1f7b..03a201a 100755
+--- a/esp32/tools/board.sh
++++ b/esp32/tools/board.sh
+@@ -104,7 +104,7 @@ case "$BOARD" in
+     # The C6's own USB-Serial-JTAG.
+     PORTS="/dev/cu.usbmodem* /dev/ttyACM*"
+     ;;
+-  espressif-s3-devkitc-1)
++  espressif-s3-devkitc-1|nursery-climate)
+     TARGET=esp32s3
+     DEFAULTS="$DEFAULTS;devices/sdkconfig.$BOARD"
+     # The "ESP32-S3 USB Port", the chip's own USB-Serial-JTAG. The
+-- 
+2.51.0
+
+
+From 566d50a7c87074f6f3d84343ca8ae10f40155422 Mon Sep 17 00:00:00 2001
+From: Gonza <gonza@example.invalid>
+Date: Tue, 3 Nov 2026 09:17:08 -0300
+Subject: [PATCH 2/3] AHT30: soft reset at start, longer wait and retried
+ reads, bus recovery, boot scan and raw byte logs
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+---
+ esp32/main/aht30_sensor.c | 50 +++++++++++++++++++++++++++++----------
+ 1 file changed, 37 insertions(+), 13 deletions(-)
+
+diff --git a/esp32/main/aht30_sensor.c b/esp32/main/aht30_sensor.c
+index 536bb79..4083de5 100644
+--- a/esp32/main/aht30_sensor.c
++++ b/esp32/main/aht30_sensor.c
+@@ -33,7 +33,8 @@
+ // Aosong AHT30 on its own I2C bus. Send the trigger, wait ~80 ms, read back
+ // 7 bytes: status, 20 bits of humidity, 20 bits of temperature, CRC.
+ #define AHT30_ADDR       0x38
+-#define AHT30_MEASURE_MS 80
++#define AHT30_MEASURE_MS 150
++#define AHT30_RETRIES    5
+ #define AHT30_STATUS_BUSY 0x80
+ 
+ // CRC-8 of the first 6 bytes: polynomial 0x31, initialized to 0xFF.
+@@ -127,14 +128,31 @@ static const char *TAG = "link.aht30";
+ static portMUX_TYPE s_lock = portMUX_INITIALIZER_UNLOCKED;
+ static reading_t s_readings[SENSOR_COUNT];
+ static i2c_master_dev_handle_t s_dev = NULL;
++static i2c_master_bus_handle_t s_bus = NULL;
+ 
+ static bool poll_once(float *temp_c, float *rh_pct) {
+     const uint8_t cmd[] = {0xAC, 0x33, 0x00};
+-    uint8_t raw[7];
+-    if (i2c_master_transmit(s_dev, cmd, sizeof(cmd), 100) != ESP_OK) return false;
++    uint8_t raw[7] = {0};
++    esp_err_t err = i2c_master_transmit(s_dev, cmd, sizeof(cmd), 100);
++    if (err != ESP_OK) {
++        ESP_LOGW(TAG, "trigger failed: %s", esp_err_to_name(err));
++        i2c_master_bus_reset(s_bus);
++        return false;
++    }
+     vTaskDelay(pdMS_TO_TICKS(AHT30_MEASURE_MS));
+-    if (i2c_master_receive(s_dev, raw, sizeof(raw), 100) != ESP_OK) return false;
+-    if (!aht30_decode(raw, temp_c, rh_pct)) return false;
++    // The sensor may refuse a read while it is still measuring, so give it a few tries.
++    for (int attempt = 0;; attempt++) {
++        err = i2c_master_receive(s_dev, raw, sizeof(raw), 100);
++        if (err == ESP_OK && aht30_decode(raw, temp_c, rh_pct)) break;
++        if (attempt == AHT30_RETRIES - 1) {
++            ESP_LOGW(TAG, "read failed: %s, raw %02x %02x %02x %02x %02x %02x %02x, crc %02x",
++                     esp_err_to_name(err), raw[0], raw[1], raw[2], raw[3], raw[4], raw[5],
++                     raw[6], aht30_crc(raw, 6));
++            i2c_master_bus_reset(s_bus);
++            return false;
++        }
++        vTaskDelay(pdMS_TO_TICKS(50));
++    }
+     int64_t now = esp_timer_get_time();
+     taskENTER_CRITICAL(&s_lock);
+     s_readings[SENSOR_TEMPERATURE] = (reading_t){true, *temp_c, now};
+@@ -146,18 +164,16 @@ static bool poll_once(float *temp_c, float *rh_pct) {
+ static void sensors_task(void *arg) {
+     (void)arg;
+     stack_monitor_t stack = STACK_MONITOR_INIT;
+-    bool failing = false;
+     vTaskDelay(pdMS_TO_TICKS(100));  // the AHT30 needs 100 ms after power-on
++    const uint8_t soft_reset = 0xBA;
++    esp_err_t err = i2c_master_transmit(s_dev, &soft_reset, 1, 100);
++    ESP_LOGI(TAG, "soft reset: %s", esp_err_to_name(err));
++    vTaskDelay(pdMS_TO_TICKS(50));
+     for (;;) {
+         float temp_c, rh_pct;
+         if (poll_once(&temp_c, &rh_pct)) {
+             // Every reading is logged, so the serial console shows them before pairing.
+             ESP_LOGI(TAG, "reading: %.1f C, %.1f %%RH", temp_c, rh_pct);
+-            failing = false;
+-        } else if (!failing) {
+-            // Log once per run of failures, not every poll.
+-            failing = true;
+-            ESP_LOGW(TAG, "sensor read failed; will retry");
+         }
+         stack_monitor_poll(&stack);
+         vTaskDelay(pdMS_TO_TICKS(POLL_MS));
+@@ -175,8 +191,16 @@ void aht30_sensor_init(void) {
+     };
+     i2c_master_bus_handle_t bus = NULL;
+     esp_err_t err = i2c_new_master_bus(&bus_cfg, &bus);
+-    if (err == ESP_OK && i2c_master_probe(bus, AHT30_ADDR, 100) != ESP_OK) {
+-        ESP_LOGW(TAG, "AHT30 not responding at boot; will retry reads");
++    s_bus = bus;
++    if (err == ESP_OK) {
++        int found = 0;
++        for (uint8_t addr = 0x08; addr < 0x78; addr++) {
++            if (i2c_master_probe(bus, addr, 50) == ESP_OK) {
++                ESP_LOGI(TAG, "I2C device at 0x%02x", addr);
++                found++;
++            }
++        }
++        if (found == 0) ESP_LOGW(TAG, "no I2C device answered on this bus");
+     }
+     i2c_device_config_t dev_cfg = {
+         .dev_addr_length = I2C_ADDR_BIT_LEN_7,
+-- 
+2.51.0
+
+
+From d4ff50780b3893c48d844a3a22c68a2e6cbcf75e Mon Sep 17 00:00:00 2001
+From: Gonza <gonza@example.invalid>
+Date: Tue, 3 Nov 2026 10:22:50 -0300
+Subject: [PATCH 3/3] AHT30: serve readings read-only on the LAN at GET
+ /sensors, WiFi from an untracked overlay
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+---
+ esp32/devices/sdkconfig.nursery-climate |  1 +
+ esp32/main/CMakeLists.txt               |  1 +
+ esp32/main/Kconfig.projbuild            |  8 ++++++
+ esp32/main/aht30_sensor.c               | 34 +++++++++++++++++++++++++
+ esp32/tools/board.sh                    |  2 ++
+ 5 files changed, 46 insertions(+)
+
+diff --git a/esp32/devices/sdkconfig.nursery-climate b/esp32/devices/sdkconfig.nursery-climate
+index 9cf7584..f395e5b 100644
+--- a/esp32/devices/sdkconfig.nursery-climate
++++ b/esp32/devices/sdkconfig.nursery-climate
+@@ -50,3 +50,4 @@ CONFIG_BT_NIMBLE_MEM_ALLOC_MODE_EXTERNAL=y
+ 
+ # Theo's room: an AHT30 on SDA GPIO4, SCL GPIO5 (sensors.read).
+ CONFIG_HOMEHUB_AHT30_SENSOR=y
++CONFIG_HOMEHUB_AHT30_HTTP=y
+diff --git a/esp32/main/CMakeLists.txt b/esp32/main/CMakeLists.txt
+index 433a245..6ccf2d9 100644
+--- a/esp32/main/CMakeLists.txt
++++ b/esp32/main/CMakeLists.txt
+@@ -54,6 +54,7 @@ set(GADGET_REQUIRES
+     esp_event
+     esp_netif
+     esp_http_client
++    esp_http_server
+     esp_https_ota
+     app_update
+     esp_app_format
+diff --git a/esp32/main/Kconfig.projbuild b/esp32/main/Kconfig.projbuild
+index ad632bf..ef26cc3 100644
+--- a/esp32/main/Kconfig.projbuild
++++ b/esp32/main/Kconfig.projbuild
+@@ -551,6 +551,14 @@ menu "ESP32 Device SDK"
+         depends on HOMEHUB_AHT30_SENSOR
+         default 5
+ 
++    config HOMEHUB_AHT30_HTTP
++        bool "Serve the AHT30 readings on the LAN at GET /sensors"
++        depends on HOMEHUB_AHT30_SENSOR
++        default n
++        help
++            Answer GET /sensors on port 80 with the sensors.read JSON. Read
++            only and unauthenticated, for polling from a home server.
++
+     config HOMEHUB_DISPLAY_COMMANDS
+         bool
+         default y if HOMEHUB_DISPLAY
+diff --git a/esp32/main/aht30_sensor.c b/esp32/main/aht30_sensor.c
+index 4083de5..860796d 100644
+--- a/esp32/main/aht30_sensor.c
++++ b/esp32/main/aht30_sensor.c
+@@ -22,6 +22,9 @@
+ #include <string.h>
+ 
+ #include "driver/i2c_master.h"
++#if CONFIG_HOMEHUB_AHT30_HTTP
++#include "esp_http_server.h"
++#endif
+ #include "esp_log.h"
+ #include "esp_timer.h"
+ #include "freertos/FreeRTOS.h"
+@@ -180,6 +183,34 @@ static void sensors_task(void *arg) {
+     }
+ }
+ 
++#if CONFIG_HOMEHUB_AHT30_HTTP
++// GET /sensors answers with the same JSON as sensors.read, read only, so a home
++// server on the LAN can poll the sensor without the gadget being paired.
++static esp_err_t sensors_get(httpd_req_t *req) {
++    cJSON *result = aht30_sensor_command();
++    char *json = result ? cJSON_PrintUnformatted(result) : NULL;
++    cJSON_Delete(result);
++    if (!json) return httpd_resp_send_500(req);
++    httpd_resp_set_type(req, "application/json");
++    esp_err_t err = httpd_resp_sendstr(req, json);
++    cJSON_free(json);
++    return err;
++}
++
++static void http_start(void) {
++    httpd_config_t cfg = HTTPD_DEFAULT_CONFIG();
++    httpd_handle_t server = NULL;
++    esp_err_t err = httpd_start(&server, &cfg);
++    if (err != ESP_OK) {
++        ESP_LOGE(TAG, "HTTP server failed: %s", esp_err_to_name(err));
++        return;
++    }
++    const httpd_uri_t uri = {.uri = "/sensors", .method = HTTP_GET, .handler = sensors_get};
++    httpd_register_uri_handler(server, &uri);
++    ESP_LOGI(TAG, "serving readings on port %d at /sensors", cfg.server_port);
++}
++#endif
++
+ void aht30_sensor_init(void) {
+     i2c_master_bus_config_t bus_cfg = {
+         .i2c_port = -1,
+@@ -219,6 +250,9 @@ void aht30_sensor_init(void) {
+     }
+     ESP_LOGI(TAG, "polling the AHT30 on I2C (SDA=%d SCL=%d)",
+              CONFIG_HOMEHUB_AHT30_SDA_GPIO, CONFIG_HOMEHUB_AHT30_SCL_GPIO);
++#if CONFIG_HOMEHUB_AHT30_HTTP
++    http_start();
++#endif
+ }
+ 
+ cJSON *aht30_sensor_command(void) {
+diff --git a/esp32/tools/board.sh b/esp32/tools/board.sh
+index 03a201a..8440edf 100755
+--- a/esp32/tools/board.sh
++++ b/esp32/tools/board.sh
+@@ -107,6 +107,8 @@ case "$BOARD" in
+   espressif-s3-devkitc-1|nursery-climate)
+     TARGET=esp32s3
+     DEFAULTS="$DEFAULTS;devices/sdkconfig.$BOARD"
++    # Untracked WiFi for a board that polls from the LAN without pairing.
++    [ -f "devices/sdkconfig.$BOARD.local" ] && DEFAULTS="$DEFAULTS;devices/sdkconfig.$BOARD.local"
+     # The "ESP32-S3 USB Port", the chip's own USB-Serial-JTAG. The
+     # USB-to-UART port works too; pass it explicitly.
+     PORTS="/dev/cu.usbmodem* /dev/ttyACM*"
+-- 
+2.51.0
+
