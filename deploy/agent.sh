@@ -161,7 +161,7 @@ rollback_core() {
   echo "rolled back to the old agent $CURRENT, the core $TAG runs next to it with no Telegram"
 }
 refuse_after_cutover() {
-  [ ! -f "$CUTOVER_FILE" ] || fail "the persistent agent is the family's since the cutover: use rollback first"
+  [ ! -f "$CUTOVER_FILE" ] || fail "the persistent agent runs for the family since the cutover: use rollback first"
 }
 # One Home Assistant request before any other. Home Assistant bans an IP after a few failed logins,
 # so a rejected token (probe exit 3) stops the check here instead of trying again.
