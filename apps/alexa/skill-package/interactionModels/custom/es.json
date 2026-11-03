@@ -1,0 +1,129 @@
+{
+  "interactionModel": {
+    "languageModel": {
+      "invocationName": "agente del bebé",
+      "intents": [
+        {
+          "name": "ChatIntent",
+          "slots": [
+            {
+              "name": "query",
+              "type": "ANY_TEXT"
+            }
+          ],
+          "samples": [
+            "{query}",
+            "sobre {query}",
+            "dime {query}",
+            "responde {query}"
+          ]
+        },
+        {
+          "name": "AMAZON.StopIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.CancelIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.HelpIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.NavigateHomeIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.FallbackIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.YesIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.NoIntent",
+          "samples": []
+        }
+      ],
+      "types": [
+        {
+          "name": "ANY_TEXT",
+          "values": [
+            {
+              "name": {
+                "value": "cuándo comió theo por última vez"
+              }
+            },
+            {
+              "name": {
+                "value": "cuánto tomó hoy"
+              }
+            },
+            {
+              "name": {
+                "value": "cuándo le toca comer"
+              }
+            },
+            {
+              "name": {
+                "value": "cuánto durmió"
+              }
+            },
+            {
+              "name": {
+                "value": "qué falta preparar"
+              }
+            },
+            {
+              "name": {
+                "value": "tomó noventa mililitros"
+              }
+            },
+            {
+              "name": {
+                "value": "cuándo fue el último pañal"
+              }
+            },
+            {
+              "name": {
+                "value": "resumen del día"
+              }
+            },
+            {
+              "name": {
+                "value": "le di noventa mililitros de mamadera"
+              }
+            },
+            {
+              "name": {
+                "value": "cambié un pañal sucio"
+              }
+            },
+            {
+              "name": {
+                "value": "cambié un pañal mojado"
+              }
+            },
+            {
+              "name": {
+                "value": "se durmió"
+              }
+            },
+            {
+              "name": {
+                "value": "se despertó"
+              }
+            },
+            {
+              "name": {
+                "value": "perdón eran cien no noventa"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

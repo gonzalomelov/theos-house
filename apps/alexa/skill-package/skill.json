@@ -1,0 +1,97 @@
+{
+  "manifest": {
+    "manifestVersion": "1.0",
+    "publishingInformation": {
+      "locales": {
+        "en-US": {
+          "name": "Baby Agent",
+          "summary": "Ask the family baby agent through your Echo",
+          "description": "Private skill. Asks the family's baby agent, answered by Muse Spark Open. Say: Echo, ask baby agent when Theo last ate.",
+          "examplePhrases": [
+            "Alexa, open baby agent",
+            "Alexa, ask baby agent when theo last ate"
+          ],
+          "keywords": [
+            "baby",
+            "agent"
+          ]
+        },
+        "es-US": {
+          "name": "Agente del bebé",
+          "summary": "Preguntale al agente del bebé desde tu Echo",
+          "description": "Skill privada. Pregunta al agente del bebé de la familia, responde Muse Spark Open.",
+          "examplePhrases": [
+            "Alexa, abre agente del bebé",
+            "Alexa, pregúntale a agente del bebé cuándo comió theo"
+          ],
+          "keywords": [
+            "bebé",
+            "agente"
+          ]
+        },
+        "es-MX": {
+          "name": "Agente del bebé",
+          "summary": "Preguntale al agente del bebé desde tu Echo",
+          "description": "Skill privada. Pregunta al agente del bebé de la familia, responde Muse Spark Open.",
+          "examplePhrases": [
+            "Alexa, abre agente del bebé",
+            "Alexa, pregúntale a agente del bebé cuándo comió theo"
+          ],
+          "keywords": [
+            "bebé",
+            "agente"
+          ]
+        },
+        "es-ES": {
+          "name": "Agente del bebé",
+          "summary": "Preguntale al agente del bebé desde tu Echo",
+          "description": "Skill privada. Pregunta al agente del bebé de la familia, responde Muse Spark Open.",
+          "examplePhrases": [
+            "Alexa, abre agente del bebé",
+            "Alexa, pregúntale a agente del bebé cuándo comió theo"
+          ],
+          "keywords": [
+            "bebé",
+            "agente"
+          ]
+        }
+      },
+      "isAvailableWorldwide": true,
+      "testingInstructions": "Personal skill, development stage only. Never submit for certification.",
+      "category": "KNOWLEDGE_AND_TRIVIA",
+      "distributionCountries": []
+    },
+    "apis": {
+      "custom": {
+        "endpoint": {
+          "uri": "arn:aws:lambda:us-east-1:000000000000:function:alexaMuseBabyAgent"
+        }
+      }
+    },
+    "privacyAndCompliance": {
+      "allowsPurchases": false,
+      "usesPersonalInfo": false,
+      "isChildDirected": false,
+      "isExportCompliant": true,
+      "containsAds": false,
+      "locales": {
+        "en-US": {
+          "privacyPolicyUrl": "",
+          "termsOfUseUrl": ""
+        },
+        "es-US": {
+          "privacyPolicyUrl": "",
+          "termsOfUseUrl": ""
+        },
+        "es-MX": {
+          "privacyPolicyUrl": "",
+          "termsOfUseUrl": ""
+        },
+        "es-ES": {
+          "privacyPolicyUrl": "",
+          "termsOfUseUrl": ""
+        }
+      }
+    }
+  }
+}
