@@ -10,6 +10,8 @@ Run with `scripts/core_jobs_eval.py`, on the mock home, real Muse on Baseten, ea
 | Held-out 1 | Written after round 1b, first run with no tuning | 24 of 27: 8 cases 3/3, "wake just fed" 0/3 |
 | 2 | Prompt line for that failure: check next_feed when the wake comes | "wake just fed" 3/3, so that case is now tuned on |
 
+| Held-out 3 | 12 new cases written before any run, after the claim check and the record from the calls. Not tuned on in this pass | 33 of 36: 10 cases 3/3, "dry room plug off" 1/3 (the plug stayed on at 41 %), "clean seat no coach" 2/3 (no reply at all to the parent once) |
+
 ## Tuned on
 morning, voice note, Echo question, car seat, warmer cry due, warmer just fed, evening plans prewarm, wake prewarms, wake just fed.
 
