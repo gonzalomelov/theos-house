@@ -324,7 +324,7 @@ class PiecesTest(unittest.TestCase):
 
     def test_a_reading_wakes_only_when_it_moved_enough(self):
         last, watch = {}, {"s": 2.0}
-        self.assertFalse(sources.worth_waking("s", "50", last, watch))
+        self.assertTrue(sources.worth_waking("s", "50", last, watch))
         self.assertFalse(sources.worth_waking("s", "51", last, watch))
         self.assertTrue(sources.worth_waking("s", "52", last, watch))
         self.assertFalse(sources.worth_waking("other", "1", last, watch))

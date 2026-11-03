@@ -17,12 +17,12 @@ from .tools import PARENTS
 
 
 def worth_waking(entity, state, last, watch):
-    """True when a watched reading moved enough since the last one Muse saw. The first reading only sets the mark."""
+    """True when a watched reading moved enough since the last one Muse saw. The first after a start wakes Muse, a room left too humid can't wait."""
     if entity not in watch or state in ("unavailable", "unknown", None):
         return False
     if entity not in last:
         last[entity] = state
-        return False
+        return True
     try:
         moved = abs(float(state) - float(last[entity])) >= watch[entity]
     except ValueError:
