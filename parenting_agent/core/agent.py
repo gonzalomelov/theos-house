@@ -9,6 +9,7 @@ from langchain.agents import create_agent
 from langchain.agents.middleware import before_model, wrap_model_call
 from langchain_core.messages import RemoveMessage, ToolMessage, trim_messages
 from langchain_core.messages.utils import count_tokens_approximately
+from langchain_core.rate_limiters import InMemoryRateLimiter
 from langchain_openai import ChatOpenAI
 from langgraph.graph.message import REMOVE_ALL_MESSAGES
 
@@ -79,8 +80,14 @@ async def retry_empty(request, handler):
     return response
 
 
+# Baseten answers 429 when many visitors press at once (Nov 3, 9 failures with 12 sessions), and the simulator shares the family's key.
+RPS = float(os.environ.get("PA_MUSE_RPS", "0"))
+LIMITER = InMemoryRateLimiter(requests_per_second=RPS, check_every_n_seconds=0.1, max_bucket_size=max(RPS, 1)) if RPS else None
+
+
 def muse():
-    return ChatOpenAI(model=MODEL, base_url=BASE_URL, api_key=os.environ.get("BASETEN_API_KEY", "missing"), max_tokens=6000, timeout=90, reasoning_effort="low")
+    return ChatOpenAI(model=MODEL, base_url=BASE_URL, api_key=os.environ.get("BASETEN_API_KEY", "missing"), max_tokens=6000, timeout=90, reasoning_effort="low",
+                      rate_limiter=LIMITER, max_retries=int(os.environ.get("PA_MUSE_RETRIES", "2")))
 
 
 def build(model, tools, saver, store):

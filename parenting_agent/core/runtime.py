@@ -87,7 +87,7 @@ def unanswered(event, calls):
 
 
 def unheard_cry(event, calls):
-    if event["type"] != "sound" or "cry" not in str(event["payload"].get("kind", "")).lower() or not is_night(event["moment"]):
+    if event["type"] != "sound" or "cry" not in str(event["payload"].get("kind", "")).lower():
         return False
     return not any(tool == "notify" and (result or "").startswith("Sent") for tool, _, result in calls)
 
@@ -289,7 +289,7 @@ class Core:
         await think(text)
         if unanswered(event, calls):  # Muse sometimes leaves a parent's question with no reply at all (Nov 3, 1 of 3 runs). Ask once.
             await think(f"{self.sender} wrote to you and has received nothing from you. Answer them with notify, in one short line.")
-        elif unheard_cry(event, calls):  # the same with a cry at night: once the warmer went on and nobody was told (Nov 3)
+        elif unheard_cry(event, calls):  # the same with a cry: once the warmer went on and nobody was told (Nov 3)
             await think("Theo is crying and no parent has been told. Tell the parent on duty with notify, in one short line.")
         line = tools_mod.record_line(calls)
         if final:  # Muse's own closing line can contradict what it did (Nov 3), so it is kept apart and the record is the calls

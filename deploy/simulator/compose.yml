@@ -36,6 +36,9 @@ services:
       PA_SIM_CLIENT_HEADER: CF-Connecting-IP
       # A panel of judges can share one address.
       PA_SIM_MAX_PER_CLIENT: "6"
+      # Visitors wait in line for Muse instead of failing, and don't use up the family's rate on Baseten.
+      PA_MUSE_RPS: "1.5"
+      PA_MUSE_RETRIES: "6"
       PA_SIM_SECURE_COOKIE: "1"
       HTTPS_PROXY: http://egress:8888
       NO_PROXY: localhost,127.0.0.1,db
