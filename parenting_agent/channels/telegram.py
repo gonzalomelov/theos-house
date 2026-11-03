@@ -93,8 +93,9 @@ class TelegramMessenger(Messenger):
         """The bot's own username, from getMe. Never the token."""
         return self._call("getMe", {}, timeout=15).get("username") or ""
 
-    def send(self, chat_id, text):
-        return self._call("sendMessage", {"chat_id": chat_id, "text": text}, timeout=15)["message_id"]
+    def send(self, chat_id, text, quiet=False):
+        fields = {"chat_id": chat_id, "text": text, **({"disable_notification": True} if quiet else {})}
+        return self._call("sendMessage", fields, timeout=15)["message_id"]
 
 
 class Telegram(MessagingChannel):

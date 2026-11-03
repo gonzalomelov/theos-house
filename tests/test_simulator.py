@@ -154,16 +154,30 @@ class Visitors(unittest.TestCase):
             self.assertEqual(httpx.get(url + "/api/state", trust_env=False).status_code, 410)
 
     def test_the_coach_plays_the_recording_and_the_log_lives_in_december(self):
-        app = gateway.app(scripted(call("start_car_seat_coach", parent="gonza"), AIMessage("Coach started."),
+        # The evening and morning checks the clock passes on the way run first, with their second asks.
+        passed = [AIMessage("Nothing yet.") for _ in range(5)]
+        app = gateway.app(scripted(*passed, call("start_car_seat_coach", parent="gonza"), AIMessage("Coach started."),
                                    call("log_baby_event", kind="feeding", details={"amount_ml": 90, "method": "bottle"}), AIMessage("Logged.")))
         with served(app) as url:
             visitor = self.visitor(url)
             visitor.post("/api/scene", json={"id": "carseat"})
-            session = self.done(app, visitor)
+            session = self.done(app, visitor, 3)
             self.assertTrue(any(item["kind"] == "tool_call" and item["tool"] == "start_car_seat_coach" for item in session.core.recent))
             visitor.post("/api/write", json={"as": "gonza", "text": "le di 90 ml"})
-            self.done(app, visitor, 2)
+            self.done(app, visitor, 4)
             self.assertTrue(visitor.get("/api/state").json()["log"][-1]["ts"].startswith("2026-12-16T18:11"))
+
+    def test_the_clock_runs_the_checks_it_passes_and_ends_the_warmer(self):
+        app = gateway.app(scripted(*[AIMessage("Nothing yet.") for _ in range(9)]))
+        with served(app) as url:
+            visitor = self.visitor(url)
+            session = app.state.sessions.get(visitor.cookies["pa_sim"])
+            session.core.mock.move("HassTurnOn", "Tapo P110 - Bottle Warmer", "on")
+            visitor.post("/api/clock", json={"minutes": 360})
+            self.done(app, visitor, 1)
+            names = [e["payload"].get("name") for e in session.core.recent if e["kind"] == "event"]
+            self.assertEqual(names, ["evening"])
+            self.assertEqual(session.core.mock.state("switch.study_tapo_p110_bottle_warmer"), "off")
 
     def test_an_empty_answer_from_muse_is_asked_again(self):
         app = gateway.app(scripted(AIMessage(""), call("HassTurnOn", name=DEHUMIDIFIER), AIMessage("Turned it on.")))

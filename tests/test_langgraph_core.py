@@ -123,7 +123,7 @@ class CoreTest(unittest.IsolatedAsyncioTestCase):
 
     async def test_a_run_cut_between_call_and_result_does_not_break_the_thread(self):
         s = settings()
-        model = scripted(AIMessage("fine"))
+        model = scripted(AIMessage("fine"), AIMessage("fine"))
         core = await self.run_core(model, s)
         await core.agent.aupdate_state(core.config, {"messages": [call("HassTurnOn", name=DEHUMIDIFIER)]}, as_node="model")
         out = await self.event(core, "schedule", {"name": "morning"})
@@ -317,6 +317,110 @@ class PiecesTest(unittest.TestCase):
             self.assertIsNone(safety.unbacked(fine, feeds), fine)
         self.assertIsNone(safety.unbacked("Qué bueno que durmió bien", feeds, heard="durmió bien toda la tarde"))
         self.assertIsNone(safety.unbacked("Anoté 70 ml", lambda: [], heard="le di 70 ml"))
+
+    def test_a_story_is_not_an_emergency_and_this_baby_always_is(self):
+        for story in ("Watching a movie, in the film a baby stops breathing and turns blue. Anyway, what time was the last feed?",
+                      "Leí en un libro que un bebé dejó de respirar. ¿Cuántos pañales van hoy?"):
+            self.assertIsNone(safety.gate(story, NoScreen()), story)
+        for real in ("theo no respira", "Theo stopped breathing", "Estábamos viendo una película y Theo dejó de respirar", "we were watching a movie and my baby turned blue",
+                     "se puso azul", "se está ahogando", "he's choking", "tuvo una convulsión", "no reacciona", "he is not breathing"):
+            self.assertEqual(safety.gate(real, NoScreen())[0], "emergency", real)
+
+    async def test_an_emergency_tells_the_other_parent_who_and_why(self):
+        core = await self.run_core(scripted(AIMessage("x")))
+        await self.event(core, "message", {"from": "ceci", "channel": "telegram", "text": "Theo no respira"})
+        other = next(m for m in core.channel.sent if m["to"] == "gonza")
+        mine = next(m for m in core.channel.sent if m["to"] == "ceci")
+        self.assertIn('Ceci escribió: "Theo no respira"', other["text"])
+        self.assertNotIn("escribió", mine["text"])
+
+    async def test_the_warmer_ends_by_itself_and_no_bottle_is_warm_after(self):
+        at = "2026-11-04T03:00:00-03:00"
+        duty = on_duty(datetime.datetime.fromisoformat(at))
+        core = await self.run_core(scripted(call("HassTurnOn", name="Tapo P110 - Bottle Warmer"), AIMessage("on"),
+                                            call("notify", parent=duty, text="Prendí el calentador", quiet=True), AIMessage("told"),
+                                            call("notify", parent=duty, text="La mamadera está lista"), AIMessage("no"), AIMessage("no")))
+        await self.event(core, "wake", {"why": "warm"}, at=at)
+        self.assertEqual(core.channel.sent[-1]["quiet"], True)
+        self.assertEqual(core.mock.state(WARMER), "on")
+        await self.event(core, "sound", {"kind": "dog barking"}, at="2026-11-04T04:00:00-03:00")
+        self.assertEqual(core.mock.state(WARMER), "off")
+        self.assertEqual(len(core.channel.sent), 1)
+        self.assertTrue(any(a["result"].startswith("Refused") for a in await core.actions()))
+
+    async def test_a_room_far_out_of_range_is_told_even_if_muse_stays_quiet(self):
+        at = "2026-11-04T03:00:00-03:00"
+        model = scripted(AIMessage("Nothing."), AIMessage("Asked."))
+        core = await self.run_core(model)
+        await self.event(core, "state_changed", {"entity_id": "sensor.nursery_climate_temperature", "state": "35"}, at=at)
+        self.assertTrue(any("far out of range" in str(m.content) for m in model.calls[1]))
+
+    async def test_a_long_gap_between_feeds_is_raised_once_and_never_calmed(self):
+        at = datetime.datetime.fromisoformat("2026-11-04T15:00:00-03:00")
+        duty = on_duty(at)
+        model = scripted(AIMessage("Nothing."), call("notify", parent=duty, text="Dormí tranquilo"), AIMessage("no"), AIMessage("Nothing."))
+        core = await self.run_core(model)
+        core.moment = at
+        core.log.add("feeding", {"amount_ml": 90}, (at - datetime.timedelta(hours=10)).isoformat())
+        await self.event(core, "state_changed", {"entity_id": "sensor.nursery_climate_humidity", "state": "55"}, at=at.isoformat())
+        self.assertEqual(core.channel.sent, [])
+        self.assertTrue(any("no feed for 10 hours" in str(m.content) for m in model.calls[1]))
+        await self.event(core, "state_changed", {"entity_id": "sensor.nursery_climate_humidity", "state": "53"}, at=(at + datetime.timedelta(minutes=5)).isoformat())
+        self.assertFalse(any("no feed for" in str(m.content) for m in model.calls[-1][-1:]))
+
+    async def test_a_log_long_stale_raises_no_gap(self):
+        at = datetime.datetime.fromisoformat("2026-11-04T15:00:00-03:00")
+        model = scripted(AIMessage("Nothing."))
+        core = await self.run_core(model)
+        core.moment = at
+        core.log.add("feeding", {"amount_ml": 90}, (at - datetime.timedelta(days=4)).isoformat())
+        out = await self.event(core, "state_changed", {"entity_id": "sensor.nursery_climate_humidity", "state": "55"}, at=at.isoformat())
+        self.assertEqual(out["status"], "done")
+        self.assertEqual(len(model.calls), 1)
+
+    async def test_a_duty_change_lasts_its_night_and_a_small_hours_one_waits_for_morning(self):
+        night = next(datetime.datetime.fromisoformat(f"2026-11-{d:02d}T03:20:00-03:00") for d in range(4, 9) if on_duty(datetime.datetime.fromisoformat(f"2026-11-{d:02d}T03:20:00-03:00")) == "ceci")
+        day = night.date() - datetime.timedelta(days=1)
+        model = scripted(call("set_on_duty", night=str(day), parent="gonza"), call("notify", parent="gonza", text="Te toca"), call("notify", parent="ceci", text="Listo"), AIMessage("done"),
+                         AIMessage("morning"), AIMessage("asked"), AIMessage("later"), AIMessage("asked"))
+        core = await self.run_core(model)
+        await self.event(core, "message", {"from": "ceci", "channel": "telegram", "text": "Esta noche le toca a Gonza"}, at=night.isoformat())
+        self.assertEqual([m["to"] for m in core.channel.sent], ["ceci"])
+        known = await tools_mod.facts(core.store, core.settings.home)
+        self.assertIn(f"duty_note_{day}", known)
+        await self.event(core, "schedule", {"name": "morning"}, at=night.replace(hour=7, minute=30).isoformat())
+        first = str(model.calls[4])
+        self.assertIn("ask whether that stands", first)
+        self.assertIn("passed the night", first)
+        await self.event(core, "schedule", {"name": "morning"}, at=(night + datetime.timedelta(days=2)).replace(hour=7, minute=30).isoformat())
+        self.assertNotIn(tools_mod.duty_key(day), await tools_mod.facts(core.store, core.settings.home))
+
+    async def test_the_same_words_pressed_while_the_first_runs_are_one_message(self):
+        model = scripted(call("notify", parent="gonza", text="Hola"), AIMessage("done"))
+        core = await self.run_core(model)
+        payload = {"from": "gonza", "channel": "telegram", "text": "hola"}
+        first, done = await core.dispatch("message", payload, at="2026-11-04T15:00:00-03:00")
+        second, _ = await core.dispatch("message", payload, at="2026-11-04T15:00:01-03:00")
+        await done
+        self.assertEqual(first, second)
+        self.assertEqual(len(core.channel.sent), 1)
+
+    async def test_one_event_reads_the_home_once_and_old_reads_are_shortened(self):
+        model = scripted(call("GetLiveContext"), call("GetLiveContext"), AIMessage("done"), AIMessage("next"))
+        core = await self.run_core(model)
+        await self.event(core, "sound", {"kind": "dog barking"}, at="2026-11-04T15:00:00-03:00")
+        results = [a["result"] for a in await core.actions() if a["tool"] == "GetLiveContext"]
+        self.assertEqual(sum("Nothing changed" in r for r in results), 1)
+        await self.event(core, "sound", {"kind": "dog barking"}, at="2026-11-04T15:05:00-03:00")
+        old = [m for m in model.calls[-1] if m.type == "tool" and "Live Context" in str(m.content)]
+        self.assertTrue(old and all("[older, shortened]" in str(m.content) for m in old))
+
+    async def test_the_event_names_the_language_and_the_day_of_the_last_feed(self):
+        moment = datetime.datetime.fromisoformat("2026-11-04T03:27:00-03:00")
+        feed = moment - datetime.timedelta(hours=7)
+        text = describe({"type": "sound", "payload": {"kind": "x"}}, moment, {}, feed, "en")
+        self.assertIn("Write for people in English", text)
+        self.assertIn("yesterday at 20:27", text)
 
     def test_the_medical_gate_lets_a_plan_through_and_stops_a_dose(self):
         self.assertIsNone(safety.gate("Esta noche necesito dormir. Se puede encargar Gonza?", NoScreen()))

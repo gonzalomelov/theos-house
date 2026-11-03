@@ -3,6 +3,7 @@
 The agent connects to it exactly as it connects to the real one, so its code is the same on both sides. It has no route
 to the real home. moves lists every change the agent made.
 """
+import datetime
 import json
 import threading
 import time
@@ -23,10 +24,15 @@ START = {
 }
 
 
+# The real warmer plug turns itself off after 30 minutes, and a vacuum finishes and docks.
+AUTO_END = {"Tapo P110 - Bottle Warmer": ("on", "off", 30), "Robot vacuum": ("cleaning", "docked", 60)}
+
+
 class MockHome:
     def __init__(self, port=0):
         self.port = port
         self.lock = threading.Lock()
+        self.clock = None
         self.reset()
         self.server = None
 
@@ -35,6 +41,7 @@ class MockHome:
             self.devices = {name: dict(spec) for name, spec in START.items()}
             self.moves = []
             self.shopping = []
+            self.timers = {}
 
     def snapshot(self):
         with self.lock:
@@ -43,11 +50,29 @@ class MockHome:
     def set_state(self, entity_id, state):
         """Set a device by entity id, as the world would. The simulator's way to change a reading."""
         with self.lock:
-            for spec in self.devices.values():
+            for name, spec in self.devices.items():
                 if spec["entity_id"] == entity_id:
                     spec["state"] = str(state)
+                    self.arm(name, str(state))
                     return True
         return False
+
+    def arm(self, name, state):
+        end = AUTO_END.get(name)
+        if end and self.clock:
+            if state == end[0]:
+                self.timers[name] = self.clock() + datetime.timedelta(minutes=end[2])
+            else:
+                self.timers.pop(name, None)
+
+    def tick(self, moment):
+        """The devices that end by themselves, on the clock the home is living."""
+        with self.lock:
+            for name, until in list(self.timers.items()):
+                if until <= moment:
+                    self.devices[name]["state"] = AUTO_END[name][1]
+                    del self.timers[name]
+                    self.moves.append({"tool": "ended by itself", "name": name, "state": AUTO_END[name][1], "at": time.time()})
 
     def state(self, entity_id):
         with self.lock:
@@ -76,6 +101,7 @@ class MockHome:
             if spec is None:
                 return {"error": f"No exposed entities matched name '{name}'"}
             spec["state"] = state
+            self.arm(name, state)
             self.moves.append({"tool": tool, "name": name, "state": state, "at": time.time()})
             return {"speech": {}, "response_type": "action_done",
                     "data": {"success": [{"name": name, "type": "entity", "id": spec["entity_id"]}], "failed": []}}

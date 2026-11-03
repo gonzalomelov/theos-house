@@ -24,7 +24,8 @@ MAX_TEXT = 280
 HOUR_S = 3600
 ADDRESS_EVENTS = int(os.environ.get("PA_SIM_ADDRESS_EVENTS", "120"))
 ADDRESS_SESSIONS = int(os.environ.get("PA_SIM_ADDRESS_SESSIONS", "12"))
-HIDDEN_FACTS = ("language",)
+HIDDEN_FACTS = ("language", "warmer_off_at", "vacuum_off_at", "feed_gap_told")
+DAILY = (((7, 30), "morning"), ((21, 30), "evening"))
 
 
 class Full(Exception):
@@ -74,8 +75,8 @@ class SimChannel(tools_mod.MockChannel):
         super().__init__()
         self.clock = clock
 
-    def send(self, parent, text):
-        super().send(parent, text)
+    def send(self, parent, text, quiet=False):
+        super().send(parent, text, quiet)
         self.sent[-1]["at"] = self.clock().isoformat()
 
     def echo(self, text):
@@ -92,6 +93,7 @@ class Session:
         self.moment = datetime.datetime.fromisoformat(START)
         self.played = []
         self.said = []
+        self.last_said = None
         self.events_used = 0
         self.last_seen = time.monotonic()
         self.dir = tempfile.mkdtemp(prefix="sim-")
@@ -131,8 +133,18 @@ class Session:
             shutil.rmtree(self.dir, ignore_errors=True)
 
     async def advance(self, moment):
-        """The clock moves, and any wake Muse asked for on the way fires first, in order."""
+        """The clock moves. Any wake Muse asked for on the way fires, and the daily checks it passed, as they would at home."""
+        passed = []
+        day = self.moment.date()
+        while day <= moment.date():
+            passed += [(self.moment.replace(year=day.year, month=day.month, day=day.day, hour=h, minute=m, second=0, microsecond=0), name) for (h, m), name in DAILY]
+            day += datetime.timedelta(days=1)
+        for at, name in sorted(p for p in passed if self.moment < p[0] < moment):
+            self.moment = at
+            await self.core.fire_wakes(at)
+            await self.core.dispatch("schedule", {"name": name}, "simulator", at.isoformat())
         self.moment = moment
+        self.core.mock.tick(moment)
         await self.core.fire_wakes(moment)
 
     async def play(self, scene_id):
@@ -149,9 +161,10 @@ class Session:
     async def send(self, kind, payload, at=None):
         """One event down the real path. The clock only moves forward."""
         await self.advance(max(self.moment + datetime.timedelta(minutes=1), at or self.moment))
-        if kind == "message":
-            self.said.append({"from": payload["from"], "text": payload["text"], "channel": payload["channel"], "at": self.moment.isoformat()})
         event_id, _ = await self.core.dispatch(kind, payload, "simulator", self.moment.isoformat())
+        if kind == "message" and event_id != self.last_said:
+            self.last_said = event_id
+            self.said.append({"from": payload["from"], "text": payload["text"], "channel": payload["channel"], "at": self.moment.isoformat()})
         return event_id
 
     async def write(self, parent, text):

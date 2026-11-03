@@ -52,8 +52,8 @@ class MockChannel:
     def __init__(self):
         self.sent = []
 
-    def send(self, parent, text):
-        self.sent.append({"to": parent, "text": text, "at": time.time()})
+    def send(self, parent, text, quiet=False):
+        self.sent.append({"to": parent, "text": text, "at": time.time(), **({"quiet": True} if quiet else {})})
 
     def echo(self, text):
         if self.hold is not None:
@@ -69,13 +69,14 @@ class RealChannel:
         self.ha = HomeAssistant(settings.ha_url, settings.ha_token)
         self.whatsapp = WhatsApp.from_env(settings.data_dir)
 
-    def by_telegram(self, parent, text):
-        self.telegram.send(os.environ[PARENTS[parent]], text)
+    def by_telegram(self, parent, text, quiet=False):
+        self.telegram.send(os.environ[PARENTS[parent]], text, quiet)
 
-    def send(self, parent, text):
-        """WhatsApp when it can carry the words, Telegram when it can't. What happened comes back for the record."""
-        if not self.whatsapp or parent not in self.whatsapp.numbers:
-            return self.by_telegram(parent, text)
+    def send(self, parent, text, quiet=False):
+        """WhatsApp when it can carry the words, Telegram when it can't. What happened comes back for the record. A quiet one
+        makes no sound, and only Telegram can do that."""
+        if quiet or not self.whatsapp or parent not in self.whatsapp.numbers:
+            return self.by_telegram(parent, text, quiet)
         try:
             if self.whatsapp.send(parent, text) == "text":
                 return "On WhatsApp."
@@ -103,35 +104,51 @@ def baby_log(settings, clock):
     return memory, LocalBabyLog(memory)
 
 
-async def home_tools(settings, mock):
-    """Home Assistant's own tools under their short names. Only allowed devices can be switched."""
+async def home_tools(settings, mock, turn=lambda: None, after=None):
+    """Home Assistant's own tools under their short names. Only allowed devices can be switched. turn is the event running now, so
+    one event reads the whole home once. after hears what moved, and its words go back to Muse."""
     real = part("home") == "real"
     url = settings.ha_url + "/api/mcp" if real else mock.url
     headers = {"Authorization": "Bearer " + settings.ha_token} if real else {}
     client = MultiServerMCPClient({"home": {"transport": "streamable_http", "url": url, "headers": headers}})
     found = {t.name.rsplit("__", 1)[-1]: t for t in await client.get_tools()}
+    read = {"turn": None}
+
+    async def GetLiveContext() -> str:
+        """The state of every device and sensor in the home right now. It takes no arguments and reads everything."""
+        if read["turn"] is not None and read["turn"] == turn():
+            return "Nothing changed since your last look in this event."
+        try:
+            result = text_of(await found["GetLiveContext"].ainvoke({}))
+        except Exception as failure:
+            return f"Error: the home is not answering ({type(failure).__name__}), nothing changed that you can be sure of."
+        read["turn"] = turn()
+        return result
 
     def wrap(short, tool):
         async def call(**arguments):
             if short in NAMED and arguments.get("name") not in settings.devices:
                 return f"Refused: you may only switch {', '.join(settings.devices)}."
             try:
-                return text_of(await tool.ainvoke({k: v for k, v in arguments.items() if v is not None}))
+                result = text_of(await tool.ainvoke({k: v for k, v in arguments.items() if v is not None}))
+                read["turn"] = None
+                return result + (await after(short, arguments, result) if after else "")
             except Exception as failure:  # Home Assistant away is something Muse hears about, the run goes on
                 return f"Error: the home is not answering ({type(failure).__name__}), nothing changed that you can be sure of."
         return StructuredTool.from_function(coroutine=call, name=short, description=tool.description or short, args_schema=tool.args_schema)
     usable = [short for short in HOME_TOOLS if not (real and short in GATED and GATED[short] not in settings.devices)]
-    return [wrap(short, found[short]) for short in usable if short in found]
+    return [StructuredTool.from_function(coroutine=GetLiveContext) if short == "GetLiveContext" else wrap(short, found[short]) for short in usable if short in found]
 
 
-def channel_tools(channel, settings, log=None, heard=lambda: "", night_check=None):
+def channel_tools(channel, settings, log=None, heard=lambda: "", night_check=None, claims=lambda text: None):
     def checked(text):
         out, why = safety.outbound(text, settings.lang)
-        return out, why or (safety.unbacked(out, lambda: log.entries(None, None, 50), heard()) if log else None)
+        return out, why or claims(out or "") or (safety.unbacked(out, lambda: log.entries(None, None, 50), heard()) if log else None)
 
-    async def notify(parent: str, text: str, emergency: bool = False) -> str:
+    async def notify(parent: str, text: str, emergency: bool = False, quiet: bool = False) -> str:
         """Send one message to one parent's phone. parent is gonza or ceci. It wakes them at night. emergency is only for a
-        danger to someone's life or the house, and it wakes a parent who isn't on duty."""
+        danger to someone's life or the house, and it wakes a parent who isn't on duty. quiet makes no sound, for what they
+        should know but isn't worth waking them."""
         if parent not in PARENTS:
             return "Refused: parent is gonza or ceci."
         why = await night_check(parent, emergency) if night_check else None
@@ -141,7 +158,7 @@ def channel_tools(channel, settings, log=None, heard=lambda: "", night_check=Non
         if why:
             return why
         try:
-            note = await asyncio.to_thread(channel.send, parent, out)
+            note = await asyncio.to_thread(channel.send, parent, out, *([True] if quiet else []))
         except Exception as failure:  # the phone channel away is something Muse hears about, the run goes on
             return f"Failed, nothing was sent: the phone channel is not answering ({type(failure).__name__})."
         return f"Sent to {parent}. {note}" if note else f"Sent to {parent}."
@@ -253,7 +270,7 @@ def duty_key(night):
     return f"on_duty_{night}"
 
 
-def duty_tool(store, home):
+def duty_tool(store, home, on_set=None):
     async def set_on_duty(night: str, parent: str) -> str:
         """Change who is on duty for one night. night is the date of that night's evening, YYYY-MM-DD. parent is gonza or ceci."""
         if parent not in PARENTS:
@@ -263,7 +280,8 @@ def duty_tool(store, home):
         except ValueError:
             return "Refused: night is a date, for example 2026-11-04."
         await store.aput((*FACTS, home), duty_key(day), {"value": parent})
-        return f"{parent} is on duty the night of {day}."
+        note = await on_set(day, parent) if on_set else ""
+        return f"{parent} is on duty the night of {day}.{note}"
     return [StructuredTool.from_function(coroutine=set_on_duty)]
 
 

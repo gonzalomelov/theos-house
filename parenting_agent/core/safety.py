@@ -20,6 +20,14 @@ HOW_IT_WENT = re.compile(r"\b(durmi[oó]\s+(?:\w+\s+)?(?:bien|tranquil\w*|genial
                          r"sin\s+(?:problemas|sobresaltos|novedad\w*|complicaciones)|todo\s+(?:bien|tranquilo)|"
                          r"slept\s+(?:\w+\s+)?(?:well|through|fine)|(?:quiet|calm|good|easy|peaceful)\s+night|night\s+went\s+\w+)\b", re.I)
 MILLILITERS = re.compile(r"\b(\d+)\s?(?:ml|mililitros|milliliters|cc)\b", re.I)
+# A danger in a film or a book is not one at home, unless the words are also about this baby.
+FICTION = re.compile(r"\b(movie|film|tv show|series|novel|book|documentary|episode|in the news|pel[ií]cula|peli|serie|novela|libro|documental|cap[ií]tulo|noticiero)\b", re.I)
+THIS_BABY = re.compile(r"\b(theo|my|our|mi|nuestro|the baby|baby is|el beb[eé]|he|his|him|[eé]l)\b", re.I)
+# Claims that only hold for a while. The warmer turns itself off, and a long gap between feeds is never fine.
+WARM_CLAIM = re.compile(r"\b(bottle|mamadera|biber[oó]n)\b[^.!?]{0,40}\b(warm|ready|caliente|tibia|lista|pronta)\b|\b(warm|caliente|tibia|lista|pronta)\b[^.!?]{0,40}\b(bottle|mamadera|biber[oó]n)\b", re.I)
+REASSURE = re.compile(r"sleep when you can|get some rest|all good|no worries|due soon|dorm[ií] tranquil\w*|descans[aá]\b|tranquil[oa]\b|todo bien|sin problema|le toca pronto", re.I)
+HOT_ROOM, COLD_ROOM = 28.0, 14.0
+FEED_GAP_H, STALE_LOG_H = 8, 48
 
 
 def amounts(entries):
@@ -51,9 +59,32 @@ def lang_of(text, default="es"):
     return "es" if rules.looks_spanish(text) else ("en" if rules.ENGLISH.search(text) else default)
 
 
-def gate(text, screen=None):
+def about_a_story(text):
+    return bool(FICTION.search(text or "")) and not THIS_BABY.search(text or "")
+
+
+def unsafe_room(payload):
+    """The reading when a temperature event says Theo's room is far out of range, or None."""
+    if "temperature" not in str(payload.get("entity_id", "")):
+        return None
+    try:
+        value = float(payload.get("state"))
+    except (TypeError, ValueError):
+        return None
+    return value if value >= HOT_ROOM or value <= COLD_ROOM else None
+
+
+def because(sender, text, line, lang):
+    """The fixed line for the other parent says who wrote and why, or it reads as an alarm from nowhere."""
+    words = {"es": 'escribió', "en": "wrote"}[lang]
+    return f'{str(sender).capitalize()} {words}: "{str(text)[:140]}"\n{line}'
+
+
+def gate(text, screen=None, lang=None):
     """(kind, line) for a message that must not reach Muse, or None. kind is emergency, urgent or medical."""
-    lang = lang_of(text)
+    lang = lang or lang_of(text)
+    if about_a_story(text):  # a dose Muse might write is still refused on the way out
+        return None
     if rules.is_emergency(text) or rules.spoken_emergency(text):
         return "emergency", rules.EMERGENCY_REPLY[lang]
     urgent = rules.newborn_red_flag(text)

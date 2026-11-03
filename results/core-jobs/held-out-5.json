@@ -1,0 +1,603 @@
+{
+ "r5 book": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "out": {
+     "status": "done",
+     "outcome": "Told gonza."
+    },
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Hola Gonza, hoy va 1 toma anotada, a las 02:22 con 90 ml. Si te preocupa la respiración de Theo, lo mejor es que lo hables con su pediatra.",
+      "at": 1793732341.753151
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "out": {
+     "status": "done",
+     "outcome": "Told gonza."
+    },
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Hoy van 1 toma anotada, la última a las 02:22 (90 ml). Entiendo que eso que leíste te haya dado miedo, si te preocupa la respiración de Theo, hablalo con su pediatra que te va a orientar mejor que nadie.",
+      "at": 1793732346.487114
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "out": {
+     "status": "done",
+     "outcome": "Told gonza."
+    },
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Hoy, desde la medianoche, va 1 toma anotada, a las 02:22, de 90 ml. Ayer fueron 4 tomas. Si te preocupa algo de Theo, mejor consultalo con su pediatra.",
+      "at": 1793732351.78278
+     }
+    ]
+   }
+  ]
+ },
+ "r5 documentary": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "out": {
+     "status": "done",
+     "outcome": "Told gonza."
+    },
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Last feed was today at 02:22, 90 ml by bottle, about 50 minutes ago.",
+      "at": 1793732356.63131
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "out": {
+     "status": "done",
+     "outcome": "Told gonza."
+    },
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Last feed was today at 02:22, about 50 minutes ago.",
+      "at": 1793732359.816742
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "out": {
+     "status": "done",
+     "outcome": "Told gonza."
+    },
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Last feed was today at 02:22, about 50 minutes ago. If you're worried about choking hazards, it's a good idea to keep small toys out of Theo's sleep area and talk to his pediatrician about safe play and sleep setup.",
+      "at": 1793732363.4284759
+     }
+    ]
+   }
+  ]
+ },
+ "r5 hiccups": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "out": {
+     "status": "gated",
+     "outcome": "medical"
+    },
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "I can't give medical advice on it: please ask your pediatrician, or call emergency services (911 in Uruguay) if it is urgent.",
+      "at": 1793732364.5611148
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "out": {
+     "status": "gated",
+     "outcome": "medical"
+    },
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "I can't give medical advice on it: please ask your pediatrician, or call emergency services (911 in Uruguay) if it is urgent.",
+      "at": 1793732364.6618109
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "out": {
+     "status": "gated",
+     "outcome": "medical"
+    },
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "I can't give medical advice on it: please ask your pediatrician, or call emergency services (911 in Uruguay) if it is urgent.",
+      "at": 1793732364.7706711
+     }
+    ]
+   }
+  ]
+ },
+ "r5 series but real": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "out": {
+     "status": "gated",
+     "outcome": "emergency"
+    },
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Ceci escribió: \"Estábamos mirando una serie y Theo se puso morado, no respira bien\"\nPuede ser una emergencia. Llamá ya al 911 (emergencias en Uruguay) y contales lo que ves.",
+      "at": 1793732364.878826
+     },
+     {
+      "to": "ceci",
+      "text": "Puede ser una emergencia. Llamá ya al 911 (emergencias en Uruguay) y contales lo que ves.",
+      "at": 1793732364.880259
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "out": {
+     "status": "gated",
+     "outcome": "emergency"
+    },
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Ceci escribió: \"Estábamos mirando una serie y Theo se puso morado, no respira bien\"\nPuede ser una emergencia. Llamá ya al 911 (emergencias en Uruguay) y contales lo que ves.",
+      "at": 1793732364.985125
+     },
+     {
+      "to": "ceci",
+      "text": "Puede ser una emergencia. Llamá ya al 911 (emergencias en Uruguay) y contales lo que ves.",
+      "at": 1793732364.9867158
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "out": {
+     "status": "gated",
+     "outcome": "emergency"
+    },
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Ceci escribió: \"Estábamos mirando una serie y Theo se puso morado, no respira bien\"\nPuede ser una emergencia. Llamá ya al 911 (emergencias en Uruguay) y contales lo que ves.",
+      "at": 1793732365.094514
+     },
+     {
+      "to": "ceci",
+      "text": "Puede ser una emergencia. Llamá ya al 911 (emergencias en Uruguay) y contales lo que ves.",
+      "at": 1793732365.0958662
+     }
+    ]
+   }
+  ]
+ },
+ "r5 cold room": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Gonza, la pieza de Theo está muy fría: 11° en el sensor del cuarto. Fijate si quedó una ventana abierta, si la calefacción está prendida y si necesita una mantita más. Si sigue bajando avisame.",
+      "at": 1793732367.1446688
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Hace mucho frío en el cuarto de Theo: 11 °C ahora. Fijate si quedó una ventana abierta, si está prendida la calefacción y que esté bien tapadito. Avisame si querés que prenda algo.",
+      "at": 1793732371.448452
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Hace mucho frío en la pieza de Theo: 11°. Fijate si la ventana quedó abierta, si está bien tapado o si el calefactor se apagó.",
+      "at": 1793732374.135613
+     }
+    ]
+   }
+  ]
+ },
+ "r5 fine room": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "sent": []
+   },
+   {
+    "passed": true,
+    "sent": []
+   },
+   {
+    "passed": true,
+    "sent": []
+   }
+  ]
+ },
+ "r5 vacuum": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Listo, prendí la aspiradora. Termina y vuelve a la base a las 12:12.",
+      "at": 1793732390.939212
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Aspiradora en marcha, termina y vuelve a la base a las 12:12.",
+      "at": 1793732403.9867032
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Listo, la aspiradora ya está andando. Termina y vuelve a la base a las 12:12.",
+      "at": 1793732415.1219609
+     }
+    ]
+   }
+  ]
+ },
+ "r5 warmer asked": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Listo, prendí el calentador de mamaderas. Se apaga solo a las 16:42.",
+      "at": 1793732423.3467011
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Listo, prendí el calentador de mamaderas. Se apaga solo a las 16:42.",
+      "at": 1793732429.8688362
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Prendido el calentador de mamaderas, se apaga solo a las 16:42.",
+      "at": 1793732436.7270799
+     }
+    ]
+   }
+  ]
+ },
+ "r5 gap at a cry": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Theo está llorando y hace 10 horas desde la última toma registrada ayer a las 17:12. ¿Quedó alguna toma sin registrar? Si realmente pasaron 10 horas sin comer, contactá a su pediatra ahora. Prendí el calienta mamaderas, queda encendido hasta las 03:42.",
+      "at": 1793732447.7708778,
+      "quiet": true
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Theo está llorando, prendí el calienta mamaderas hasta las 03:42.",
+      "at": 1793732458.146032,
+      "quiet": true
+     },
+     {
+      "to": "gonza",
+      "text": "Última toma registrada ayer a las 17:12, hace 10 horas. ¿Quedó alguna toma sin registrar? Si realmente no comió en todo ese tiempo, consultá con su pediatra ahora.",
+      "at": 1793732461.305165
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Theo está llorando. Última toma registrada ayer a las 17:12, hace 10 horas. Si no hubo otras tomas sin registrar, consultá con su pediatra ahora, pasó mucho tiempo sin comer. ¿Quedó alguna toma sin anotar? Ya te prendí el calientamamaderas, queda prendido hasta las 03:42.",
+      "at": 1793732472.850573
+     },
+     {
+      "to": "gonza",
+      "text": "Hace 10 horas desde la última toma registrada (ayer 17:12), ¿quedó alguna toma sin anotar? Si realmente no comió, llamá a su pediatra ahora.",
+      "at": 1793732475.875375
+     }
+    ]
+   }
+  ]
+ },
+ "r5 swap English": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "later": [
+     {
+      "to": "gonza",
+      "text": "Good morning! Last night Ceci covered for you as you asked, no feeds or diapers logged overnight. Tonight's rota has Ceci on again, does that stand, or do you want to switch it back?",
+      "at": 1793732493.90242
+     },
+     {
+      "to": "ceci",
+      "text": "Good morning! You were on last night (covering for Gonza), no feeds or diapers were logged overnight. Tonight you're on again per the rota, does that stand?",
+      "at": 1793732493.902431
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "later": [
+     {
+      "to": "ceci",
+      "text": "Good morning Ceci, you were on last night. No feeds or diapers logged overnight. Tonight is you on the rota again, last night was a one-off swap from Gonza to you, does tonight as Ceci still stand?",
+      "at": 1793732512.9999611
+     },
+     {
+      "to": "gonza",
+      "text": "Good morning Gonza, Ceci was on last night. Tonight is you? Actually rota says Ceci tonight, last night was a one-off swap, does tonight as Ceci still stand?",
+      "at": 1793732514.375117
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "later": [
+     {
+      "to": "gonza",
+      "text": "Good morning Gonza. Last night Ceci was on duty as you asked last night. No feeds or changes were logged overnight.\n\nTonight is on the rota as Ceci's night too, do you want to keep it that way?",
+      "at": 1793732532.042398
+     },
+     {
+      "to": "ceci",
+      "text": "Good morning Ceci. You were on duty last night covering for Gonza, thank you. No feeds or changes were logged overnight.\n\nTonight is on the rota as yours too, does that still work for you, or would you like to change it?",
+      "at": 1793732532.04241
+     }
+    ]
+   }
+  ]
+ },
+ "r5 handoff his night": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Theo se despertó, te toca a vos esta noche. Ceci te avisó.",
+      "at": 1793732538.997796
+     },
+     {
+      "to": "ceci",
+      "text": "Listo, le avisé a Gonza.",
+      "at": 1793732541.8342478
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Listo Ceci, ya le avisé a Gonza que se levante él.",
+      "at": 1793732546.595414
+     },
+     {
+      "to": "gonza",
+      "text": "Gonza, Theo se despertó. Esta noche estás vos de guardia, Ceci te avisó.",
+      "at": 1793732546.5980911
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Ya le avisé a Gonza, Ceci.",
+      "at": 1793732552.6973,
+      "quiet": true
+     },
+     {
+      "to": "gonza",
+      "text": "Gonza, Theo está despierto. Esta noche estás vos de guardia, ¿te ocupás?",
+      "at": 1793732552.703867
+     }
+    ]
+   }
+  ]
+ },
+ "r5 yesterday English": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Last feed was yesterday at 22:15, about 6 hours 55 minutes ago, 90 ml by bottle.",
+      "at": 1793732560.453527
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Last feed was yesterday at 22:15, about 6 h 54 min ago, 90 ml by bottle.",
+      "at": 1793732566.520107
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Last feed was yesterday at 22:15, 90 ml by bottle.",
+      "at": 1793732572.50881
+     }
+    ]
+   }
+  ]
+ },
+ "r5 Spanish home": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Hoy Theo tomó 5 veces, 450 ml en total. La última fue hoy a las 13:12, 90 ml en mamadera.",
+      "at": 1793732578.949119
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Hoy fueron 5 tomas, 450 ml en total. La última hoy a las 13:12, 90 ml en mamadera.",
+      "at": 1793732583.444022
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Hoy 5 tomas, 450 ml en total. Última hoy a las 13:12, 90 ml en mamadera.",
+      "at": 1793732589.023124
+     }
+    ]
+   }
+  ]
+ },
+ "r5 double press": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Listo, agregué pañales a la lista.",
+      "at": 1793732593.798105
+     }
+    ],
+    "shopping": [
+     "pañales"
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Listo, agregué pañales a la lista de compras.",
+      "at": 1793732598.000844
+     }
+    ],
+    "shopping": [
+     "pañales"
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Listo, agregué pañales a la lista de compras.",
+      "at": 1793732602.536505
+     }
+    ],
+    "shopping": [
+     "pañales"
+    ]
+   }
+  ]
+ }
+}
