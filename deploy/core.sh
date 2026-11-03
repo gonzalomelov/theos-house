@@ -51,6 +51,8 @@ echo "networks: \$(docker inspect parenting-core --format '{{range \$name, \$_ :
 echo "ports: [\$(docker port parenting-core)\$(docker port parenting-core-db)]"
 echo "telegram names in the container: \$(docker exec parenting-core sh -c 'env | grep -c TELEGRAM || true')"
 echo "\$SHA" > "\$HOME/apps/parenting-core.current"
+# deploy/agent.sh reads this: check, rollback and refusing to start the old agent.
+if [ -n "\$CUTOVER" ]; then date -u +%FT%TZ > "\$HOME/apps/parenting-core.cutover"; fi
 echo "deployed \$SHA"
 REMOTE_END
 }

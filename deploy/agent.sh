@@ -10,7 +10,10 @@
 #   sh deploy/agent.sh logs [lines]      the agent's logs (default 100 lines)
 #   sh deploy/agent.sh stop | start      stop or start the agent and its two proxies
 #   sh deploy/agent.sh rollback          run the image of the previous good deploy again
+#   sh deploy/agent.sh check-core        the persistent agent's checks, also while it runs next to the old agent
 #
+# After the cutover (CUTOVER=1 sh deploy/core.sh deploy) the persistent agent is the family's. Then check runs check-core,
+# rollback stops it and starts the old agent again, and deploy, update and start refuse, since only one can poll the bot.
 # NO_HA=1 in front of deploy or check sends no request to Home Assistant at all, for when it has banned the relay.
 # Secrets are never printed and never in git. See docs/deploy-agent.md.
 set -eu
@@ -32,6 +35,10 @@ DIR="$HOME/apps/parenting-agent"
 ENV_FILE="$HOME/apps/parenting-agent.env"
 CURRENT_FILE="$HOME/apps/parenting-agent.current"
 PREVIOUS_FILE="$HOME/apps/parenting-agent.previous"
+CUTOVER_FILE="$HOME/apps/parenting-core.cutover"
+CORE=parenting-core
+CORE_DIR="$HOME/apps/parenting-core"
+CORE_ENV="$HOME/apps/parenting-core.env"
 NETWORK=parenting-agent-internal
 fail() { echo "$1" >&2; exit 1; }
 compose() { docker compose --env-file "$ENV_FILE" -f "$DIR/deploy/compose.yml" "$@"; }
@@ -107,6 +114,55 @@ door_walled() {
   [ "$BAD" = 0 ] && echo "door holds"
   return "$BAD"
 }
+# The persistent agent: no port, only its two networks, reads through the relay, the wall from inside it, and the one way in
+# for Home Assistant. Prints no secret. While it runs next to the old agent the way in still reaches the old one.
+core_checks() {
+  echo "== health: $(docker inspect "$CORE" --format "{{.State.Health.Status}}")"
+  [ "$(docker inspect "$CORE" --format "{{.State.Health.Status}}")" = healthy ] || { echo "WRONG $CORE is not healthy" >&2; return 1; }
+  NETWORKS="$(docker inspect "$CORE" --format "{{range \$name, \$_ := .NetworkSettings.Networks}}{{\$name}} {{end}}")"
+  [ "$NETWORKS" = "$NETWORK parenting-core_db " ] || { echo "WRONG $CORE is on: $NETWORKS" >&2; return 1; }
+  [ -z "$(docker port "$CORE")$(docker port "$CORE-db")" ] || { echo "WRONG a port of $CORE is published" >&2; return 1; }
+  network_is_walled || return 1
+  echo "PASS  no published port, networks: $NETWORKS"
+  echo "== the wall, from inside the core"
+  # shellcheck disable=SC2046
+  docker exec -i "$CORE" python - $(host_addresses) < "$DIR/deploy/wall_check.py" || return 1
+  echo "== Home Assistant, the token, from inside the core"
+  docker exec -i "$CORE" python -c "
+import os, sys, urllib.request as u
+r = u.Request(os.environ[\"HA_URL\"] + \"/api/\", headers={\"Authorization\": \"Bearer \" + os.environ[\"HA_MCP_TOKEN\"]})
+print(\"PASS  Home Assistant answers\", u.build_opener(u.ProxyHandler({})).open(r, timeout=15).status)" || return 1
+  if [ -f "$CUTOVER_FILE" ]; then
+    [ "$(docker inspect "$APP" --format "{{.State.Running}}" 2>/dev/null)" != true ] || { echo "WRONG the old agent runs too, both poll the bot" >&2; return 1; }
+    echo "PASS  the old agent is stopped"
+    ha_way_in_core
+  fi
+}
+ha_way_in_core() {
+  echo "== the way in for Home Assistant, from inside the homeassistant container"
+  docker exec homeassistant python3 -c "import socket; socket.create_connection((\"$APP-relay\", 8767), timeout=4)" \
+    || { echo "WRONG Home Assistant cannot reach the voice bridge through the relay" >&2; return 1; }
+  echo "PASS  relay:8767 reached"
+}
+# Back to the old agent: the core stops first, since it holds the bot and the name parenting-agent, then the deployed old image
+# runs again, then the core comes back next to it, without Telegram, and its memory stays in its own database.
+rollback_core() {
+  CURRENT="$(cat "$CURRENT_FILE" 2>/dev/null || true)"
+  [ -n "$CURRENT" ] || fail "no deploy of the old agent recorded"
+  docker image inspect "$APP:$CURRENT" >/dev/null 2>&1 || fail "image $APP:$CURRENT is gone, the core keeps running"
+  TAG="$(cat "$HOME/apps/parenting-core.current")"
+  echo "== stop the core, start the old agent $CURRENT"
+  docker stop "$CORE" >/dev/null
+  rm -f "$CUTOVER_FILE"
+  APP_TAG="$CURRENT" compose up -d --no-build --remove-orphans
+  healthy || fail "the old agent $CURRENT is not healthy, the core stays stopped: the family has no agent right now"
+  walled >/dev/null || { docker stop "$APP" >/dev/null 2>&1 || true; fail "the old agent failed the wall check and is stopped"; }
+  APP_TAG="$TAG" docker compose --env-file "$CORE_ENV" -f "$CORE_DIR/deploy/core/compose.yml" up -d --no-build --force-recreate core
+  echo "rolled back to the old agent $CURRENT, the core $TAG runs next to it with no Telegram"
+}
+refuse_after_cutover() {
+  [ ! -f "$CUTOVER_FILE" ] || fail "the persistent agent is the family's since the cutover: use rollback first"
+}
 # One Home Assistant request before any other. Home Assistant bans an IP after a few failed logins,
 # so a rejected token (probe exit 3) stops the check here instead of trying again.
 ha_token_ok() {
@@ -181,6 +237,7 @@ deploy() {
   send_code
   remote "SHA=$SHA REQUIRED_NAMES='$REQUIRED_NAMES' NO_HA=${NO_HA:-0} sh -s" <<REMOTE
 $REMOTE_LIB
+refuse_after_cutover
 [ -f "\$ENV_FILE" ] || fail "missing \$ENV_FILE: run sh deploy/agent.sh push-env"
 [ "\$(stat -c %a "\$ENV_FILE")" = "600" ] || fail "\$ENV_FILE must have mode 600"
 for NAME in \$REQUIRED_NAMES; do grep -Eq "^\$NAME=.+" "\$ENV_FILE" || fail "\$ENV_FILE has no value for \$NAME"; done
@@ -219,6 +276,7 @@ rollback() {
   deploy_lock "agent rollback"
   remote sh -s <<REMOTE
 $REMOTE_LIB
+if [ -f "\$CUTOVER_FILE" ]; then rollback_core; exit 0; fi
 PREVIOUS="\$(cat "\$PREVIOUS_FILE" 2>/dev/null || true)"
 CURRENT="\$(cat "\$CURRENT_FILE" 2>/dev/null || true)"
 [ -n "\$PREVIOUS" ] || fail "no previous deploy recorded"
@@ -243,7 +301,12 @@ case "${1:-}" in
   rollback) rollback ;;
   check) remote "NO_HA=${NO_HA:-0} sh -s" <<REMOTE
 $REMOTE_LIB
-checks
+if [ -f "\$CUTOVER_FILE" ]; then core_checks; else checks; fi
+REMOTE
+  ;;
+  check-core) remote sh -s <<REMOTE
+$REMOTE_LIB
+core_checks
 REMOTE
   ;;
   status) remote sh -s <<REMOTE
@@ -261,9 +324,10 @@ REMOTE
   ;;
   start) deploy_lock "agent start"; remote sh -s <<REMOTE
 $REMOTE_LIB
+refuse_after_cutover
 APP_TAG="\$(cat "\$CURRENT_FILE")" compose up -d --no-build
 healthy && echo "healthy"
 REMOTE
   ;;
-  *) sed -n 2,14p "$0"; exit 2 ;;
+  *) sed -n 2,18p "$0"; exit 2 ;;
 esac
