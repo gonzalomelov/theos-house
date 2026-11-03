@@ -36,6 +36,9 @@ services:
       PA_SIM_CLIENT_HEADER: CF-Connecting-IP
       # A panel of judges can share one address.
       PA_SIM_MAX_PER_CLIENT: "6"
+      # 12 at once ran with no failure and little memory, and a finished load test shouldn't lock judges out for 20 minutes.
+      PA_SIM_MAX_SESSIONS: "25"
+      PA_SIM_IDLE_S: "900"
       # Visitors wait in line for Muse instead of failing, and don't use up the family's rate on Baseten.
       PA_MUSE_RPS: "1.5"
       PA_MUSE_RETRIES: "6"
