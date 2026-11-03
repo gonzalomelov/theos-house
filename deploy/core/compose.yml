@@ -1,0 +1,96 @@
+# The persistent agent, next to the old one and changing nothing of it. Started by deploy/core.sh.
+#
+# It joins the old agent's walled network only to reach the relay (Home Assistant) and the egress proxy (Baseten), and
+# keeps PostgreSQL on an internal network of its own. No port is published. Its env file holds no Telegram token, and the
+# channel and the baby log are mock, so while it runs alongside nobody can get a message from it.
+# PA_ALLOWED_DEVICES=none refuses every switch.
+name: parenting-core
+
+x-logging: &logging
+  driver: json-file
+  options: { max-size: 10m, max-file: "3" }
+
+x-hardened: &hardened
+  restart: unless-stopped
+  read_only: true
+  cap_drop: [ALL]
+  security_opt: ["no-new-privileges:true"]
+  logging: *logging
+
+services:
+  core:
+    <<: *hardened
+    image: parenting-core:${APP_TAG:-latest}
+    build:
+      context: ../..
+      dockerfile: deploy/core/Dockerfile
+    container_name: parenting-core
+    networks: [walled, db]
+    depends_on:
+      db: { condition: service_healthy }
+    environment:
+      TZ: America/Montevideo
+      HA_MCP_TOKEN: ${HA_MCP_TOKEN}
+      BASETEN_API_KEY: ${BASETEN_API_KEY}
+      PA_DB_URL: postgresql://agent:${POSTGRES_PASSWORD}@parenting-core-db:5432/agent
+      HA_URL: http://parenting-agent-relay:8123
+      HTTPS_PROXY: http://parenting-agent-egress:8888
+      HTTP_PROXY: http://parenting-agent-egress:8888
+      NO_PROXY: parenting-agent-relay,parenting-core-db,localhost,127.0.0.1
+      PA_WORLD: mock
+      PA_HOME: real
+      PA_CHANNEL: mock
+      PA_LOG: mock
+      PA_HOME_ID: ${PA_HOME_ID:-alongside}
+      PA_ALLOWED_DEVICES: ${PA_ALLOWED_DEVICES:-none}
+      PA_WATCH_DELTA: ${PA_WATCH_DELTA:-}
+      PA_DATA_DIR: /data
+    volumes:
+      - data:/data
+    tmpfs:
+      - /tmp:rw,size=32m
+    mem_limit: 768m
+    memswap_limit: 768m
+    cpus: 1.0
+    pids_limit: 128
+    healthcheck:
+      test: ["CMD", "python", "-I", "-S", "-c", "import urllib.request as u; u.build_opener(u.ProxyHandler({})).open('http://127.0.0.1:8780/health', timeout=4)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 40s
+
+  db:
+    <<: *hardened
+    image: postgres@sha256:0cefaabd882e42bcb2a2f3dc56d3ce4770560ba62fd7f197f1a2e008fd5731ab
+    container_name: parenting-core-db
+    user: "70:70"
+    networks: [db]
+    environment:
+      POSTGRES_USER: agent
+      POSTGRES_DB: agent
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - pg:/var/lib/postgresql/data
+    tmpfs:
+      - /tmp:rw,size=32m
+      - /var/run/postgresql:rw,size=1m,uid=70,gid=70
+    mem_limit: 256m
+    memswap_limit: 256m
+    pids_limit: 64
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U agent -d agent"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  data:
+  pg:
+
+networks:
+  walled:
+    external: true
+    name: parenting-agent-internal
+  db:
+    internal: true

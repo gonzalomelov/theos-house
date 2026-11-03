@@ -85,7 +85,9 @@ async def home_tools(settings, mock):
                 return f"Refused: you may only switch {', '.join(settings.devices)}."
             return text_of(await tool.ainvoke({k: v for k, v in arguments.items() if v is not None}))
         return StructuredTool.from_function(coroutine=call, name=short, description=tool.description or short, args_schema=tool.args_schema)
-    return [wrap(short, found[short]) for short in HOME_TOOLS if short in found]
+    # The vacuum tools take no device name, so on the real home they stay out until they are allowed by name.
+    usable = [short for short in HOME_TOOLS if not (real and short.startswith("HassVacuum") and "vacuum" not in settings.devices)]
+    return [wrap(short, found[short]) for short in usable if short in found]
 
 
 def channel_tools(channel, settings):

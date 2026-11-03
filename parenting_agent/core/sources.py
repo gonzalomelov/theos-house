@@ -9,7 +9,7 @@ import websockets
 
 from ..channels.telegram import TelegramMessenger
 from .runtime import TZ
-from .settings import SCHEDULE, WATCH
+from .settings import SCHEDULE, watch as watch_list
 from .tools import PARENTS
 
 
@@ -29,10 +29,10 @@ def worth_waking(entity, state, last, watch):
     return moved
 
 
-async def home_assistant(core, watch=WATCH):
+async def home_assistant(core, watch=None):
     """Stays subscribed to state changes, and reconnects. A rejected token stops it, Home Assistant bans an IP that retries."""
     url = core.settings.ha_url.replace("http", "ws", 1) + "/api/websocket"
-    last = {}
+    last, watch = {}, watch or watch_list()
     while True:
         try:
             async with websockets.connect(url, max_size=None) as ws:

@@ -2,4 +2,5 @@
 !parenting_agent
 !config
 !simweek
+!requirements-core.txt
 **/__pycache__

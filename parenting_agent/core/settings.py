@@ -11,6 +11,12 @@ WATCH = {"sensor.nursery_climate_humidity": 2.0, "sensor.nursery_climate_tempera
 SCHEDULE = (("07:30", "morning"), ("21:30", "evening"))
 
 
+def watch():
+    """WATCH, or every sensor at PA_WATCH_DELTA for a test that must not wait for the room to change."""
+    delta = os.environ.get("PA_WATCH_DELTA")
+    return {entity: float(delta) for entity in WATCH} if delta else WATCH
+
+
 def part(name):
     return os.environ.get(f"PA_{name.upper()}", os.environ.get("PA_WORLD", "mock"))
 
