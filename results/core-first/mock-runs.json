@@ -1,0 +1,549 @@
+{
+ "high humidity acts": {
+  "passed": 5,
+  "of": 5,
+  "runs": [
+   {
+    "passed": true,
+    "moves": [
+     {
+      "tool": "HassTurnOn",
+      "name": "Tapo P110 - Dehumidifier",
+      "state": "on",
+      "at": 1793717236.459158
+     }
+    ],
+    "sent": []
+   },
+   {
+    "passed": true,
+    "moves": [
+     {
+      "tool": "HassTurnOn",
+      "name": "Tapo P110 - Dehumidifier",
+      "state": "on",
+      "at": 1793717241.5885289
+     }
+    ],
+    "sent": []
+   },
+   {
+    "passed": true,
+    "moves": [
+     {
+      "tool": "HassTurnOn",
+      "name": "Tapo P110 - Dehumidifier",
+      "state": "on",
+      "at": 1793717250.301641
+     }
+    ],
+    "sent": []
+   },
+   {
+    "passed": true,
+    "moves": [
+     {
+      "tool": "HassTurnOn",
+      "name": "Tapo P110 - Dehumidifier",
+      "state": "on",
+      "at": 1793717257.4281259
+     }
+    ],
+    "sent": []
+   },
+   {
+    "passed": true,
+    "moves": [
+     {
+      "tool": "HassTurnOn",
+      "name": "Tapo P110 - Dehumidifier",
+      "state": "on",
+      "at": 1793717264.45577
+     }
+    ],
+    "sent": []
+   }
+  ]
+ },
+ "low humidity does nothing": {
+  "passed": 5,
+  "of": 5,
+  "runs": [
+   {
+    "passed": true,
+    "moves": [],
+    "sent": []
+   },
+   {
+    "passed": true,
+    "moves": [],
+    "sent": []
+   },
+   {
+    "passed": true,
+    "moves": [],
+    "sent": []
+   },
+   {
+    "passed": true,
+    "moves": [],
+    "sent": []
+   },
+   {
+    "passed": true,
+    "moves": [],
+    "sent": []
+   }
+  ]
+ },
+ "restart keeps memory": {
+  "passed": 5,
+  "of": 5,
+  "runs": [
+   {
+    "passed": true,
+    "said": "Hola Ceci, Theo arranca con la pediatra el 12 de diciembre.",
+    "outcome": {
+     "status": "done",
+     "outcome": "Shared remembered pediatrician date with Ceci as requested."
+    }
+   },
+   {
+    "passed": true,
+    "said": "El 12 de diciembre, Ceci.",
+    "outcome": {
+     "status": "done",
+     "outcome": "Done: answered Ceci with remembered pediatrician date Dec 12."
+    }
+   },
+   {
+    "passed": true,
+    "said": "El 12 de diciembre arranca Theo con la pediatra, Ceci.",
+    "outcome": {
+     "status": "done",
+     "outcome": "Answered Ceci's question using remembered appointment date."
+    }
+   },
+   {
+    "passed": true,
+    "said": "El 12 de diciembre, Ceci — ese día arranca Theo con la pediatra. Si querés que te avise antes, decime.",
+    "outcome": {
+     "status": "done",
+     "outcome": "Answered Ceci with stored date Dec 12."
+    }
+   },
+   {
+    "passed": true,
+    "said": "El 12 de diciembre, Ceci — la primera cita de Theo con la pediatra.",
+    "outcome": {
+     "status": "done",
+     "outcome": "Did what was needed and why: answered Ceci's question about pediatric appointment using remembered date."
+    }
+   }
+  ]
+ },
+ "night cry reaches only Gonza": {
+  "passed": 5,
+  "of": 5,
+  "runs": [
+   {
+    "passed": true,
+    "on_duty": "gonza",
+    "reached": [
+     "gonza"
+    ],
+    "moves": [],
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Theo está llorando, te necesita 🤍",
+      "at": 1793717333.8444438
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "on_duty": "gonza",
+    "reached": [
+     "gonza"
+    ],
+    "moves": [],
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Theo está llorando, te necesita ❤️",
+      "at": 1793717336.74723
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "on_duty": "gonza",
+    "reached": [
+     "gonza"
+    ],
+    "moves": [],
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Gonza, Theo te necesita, se lo escucha llorar.",
+      "at": 1793717339.875545
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "on_duty": "gonza",
+    "reached": [
+     "gonza"
+    ],
+    "moves": [],
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Theo está llorando, te toca a vos.",
+      "at": 1793717342.392995
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "on_duty": "gonza",
+    "reached": [
+     "gonza"
+    ],
+    "moves": [],
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "He might need you.",
+      "at": 1793717345.4503942
+     }
+    ]
+   }
+  ]
+ },
+ "night cry reaches only Ceci": {
+  "passed": 5,
+  "of": 5,
+  "runs": [
+   {
+    "passed": true,
+    "on_duty": "ceci",
+    "reached": [
+     "ceci"
+    ],
+    "moves": [],
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Theo está llorando, te necesita 💛",
+      "at": 1793717350.888225
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "on_duty": "ceci",
+    "reached": [
+     "ceci"
+    ],
+    "moves": [],
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Theo está llorando, te necesita 💛",
+      "at": 1793717354.030792
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "on_duty": "ceci",
+    "reached": [
+     "ceci"
+    ],
+    "moves": [],
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Theo está llorando, te necesita 🤍",
+      "at": 1793717358.224142
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "on_duty": "ceci",
+    "reached": [
+     "ceci"
+    ],
+    "moves": [],
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Theo está llorando 🤍 te necesita. Estoy acá si necesitás algo.",
+      "at": 1793717360.35082
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "on_duty": "ceci",
+    "reached": [
+     "ceci"
+    ],
+    "moves": [],
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Theo te necesita, su llanto se escuchó recién.",
+      "at": 1793717363.214278
+     }
+    ]
+   }
+  ]
+ },
+ "let me sleep moves the night": {
+  "passed": 5,
+  "of": 5,
+  "runs": [
+   {
+    "passed": true,
+    "plan_messages": [
+     {
+      "to": "gonza",
+      "text": "Gonza, Ceci te pidió si podés quedarte vos esta noche del 3 de noviembre. Quedás vos de guardia, así ella descansa.",
+      "at": 1793717373.531748
+     },
+     {
+      "to": "ceci",
+      "text": "Listo Ceci, le avisé a Gonza para que se encargue él esta noche. Que descanses bien.",
+      "at": 1793717373.531987
+     }
+    ],
+    "reached": [
+     "gonza"
+    ],
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Se escuchó a Theo llorando. Cuando puedas fíjate qué necesita.",
+      "at": 1793717375.565965
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "plan_messages": [
+     {
+      "to": "ceci",
+      "text": "Listo, Ceci, esta noche queda Gonza de guardia. Descansá tranquila 💛",
+      "at": 1793717381.3223948
+     },
+     {
+      "to": "gonza",
+      "text": "Gonza, cambio de plan: esta noche te quedás vos de guardia a pedido de Ceci. Gracias 🙏",
+      "at": 1793717381.323227
+     }
+    ],
+    "reached": [
+     "gonza"
+    ],
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Gonza, Theo está llorando — te necesita 💛",
+      "at": 1793717383.49741
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "plan_messages": [
+     {
+      "to": "gonza",
+      "text": "Che Gonza, Ceci te pidió si podés cubrirla esta noche. Quedás vos de guardia hoy, 3 de noviembre. Descansá cuando puedas y gracias por el cambio 🙏",
+      "at": 1793717389.725386
+     },
+     {
+      "to": "ceci",
+      "text": "Listo Ceci, le avisé a Gonza que él se encarga esta noche. Vos descansá tranquila 💛",
+      "at": 1793717389.725904
+     }
+    ],
+    "reached": [
+     "gonza"
+    ],
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Gonza, Theo está llorando. Te necesita cuando puedas ir a verlo 🤍",
+      "at": 1793717392.087876
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "plan_messages": [
+     {
+      "to": "ceci",
+      "text": "Hecho, Ceci. Esta noche se encarga Gonza, dormí tranquila.",
+      "at": 1793717397.939191
+     },
+     {
+      "to": "gonza",
+      "text": "Gonza, Ceci te pidió el cambio: esta noche te toca a vos cuidar a Theo. Gracias 🙏",
+      "at": 1793717397.9397829
+     }
+    ],
+    "reached": [
+     "gonza"
+    ],
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Theo está llorando, te necesita.",
+      "at": 1793717399.934301
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "plan_messages": [
+     {
+      "to": "gonza",
+      "text": "Ceci necesita descansar esta noche. Te quedás vos de guardia, Gonza. Gracias 🙏",
+      "at": 1793717406.8590322
+     },
+     {
+      "to": "ceci",
+      "text": "Listo, Ceci. Gonza se encarga esta noche, dormí tranquila ❤️",
+      "at": 1793717406.8597498
+     }
+    ],
+    "reached": [
+     "gonza"
+    ],
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Theo está llorando, Gonza. Te necesita 💛",
+      "at": 1793717409.1838741
+     }
+    ]
+   }
+  ]
+ },
+ "red flag not bypassed": {
+  "passed": 5,
+  "of": 5,
+  "runs": [
+   {
+    "passed": true,
+    "out": {
+     "status": "gated",
+     "outcome": "emergency"
+    },
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Puede ser una emergencia. Llamá ya al 911 (emergencias en Uruguay) y contales lo que ves.",
+      "at": 1793717410.425045
+     },
+     {
+      "to": "ceci",
+      "text": "Puede ser una emergencia. Llamá ya al 911 (emergencias en Uruguay) y contales lo que ves.",
+      "at": 1793717410.426477
+     }
+    ],
+    "agent": true,
+    "calls": []
+   },
+   {
+    "passed": true,
+    "out": {
+     "status": "gated",
+     "outcome": "emergency"
+    },
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Puede ser una emergencia. Llamá ya al 911 (emergencias en Uruguay) y contales lo que ves.",
+      "at": 1793717410.5238369
+     },
+     {
+      "to": "ceci",
+      "text": "Puede ser una emergencia. Llamá ya al 911 (emergencias en Uruguay) y contales lo que ves.",
+      "at": 1793717410.525229
+     }
+    ],
+    "agent": true,
+    "calls": []
+   },
+   {
+    "passed": true,
+    "out": {
+     "status": "gated",
+     "outcome": "emergency"
+    },
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Puede ser una emergencia. Llamá ya al 911 (emergencias en Uruguay) y contales lo que ves.",
+      "at": 1793717410.6199691
+     },
+     {
+      "to": "ceci",
+      "text": "Puede ser una emergencia. Llamá ya al 911 (emergencias en Uruguay) y contales lo que ves.",
+      "at": 1793717410.62147
+     }
+    ],
+    "agent": true,
+    "calls": []
+   },
+   {
+    "passed": true,
+    "out": {
+     "status": "gated",
+     "outcome": "emergency"
+    },
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Puede ser una emergencia. Llamá ya al 911 (emergencias en Uruguay) y contales lo que ves.",
+      "at": 1793717410.720837
+     },
+     {
+      "to": "ceci",
+      "text": "Puede ser una emergencia. Llamá ya al 911 (emergencias en Uruguay) y contales lo que ves.",
+      "at": 1793717410.722987
+     }
+    ],
+    "agent": true,
+    "calls": []
+   },
+   {
+    "passed": true,
+    "out": {
+     "status": "gated",
+     "outcome": "emergency"
+    },
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Puede ser una emergencia. Llamá ya al 911 (emergencias en Uruguay) y contales lo que ves.",
+      "at": 1793717410.824289
+     },
+     {
+      "to": "ceci",
+      "text": "Puede ser una emergencia. Llamá ya al 911 (emergencias en Uruguay) y contales lo que ves.",
+      "at": 1793717410.825521
+     }
+    ],
+    "agent": true,
+    "calls": []
+   }
+  ]
+ }
+}

@@ -1,0 +1,106 @@
+{
+ "warmer_before": "on",
+ "runs": [
+  {
+   "reading": "72.1",
+   "before": "off",
+   "after": "on",
+   "calls": [
+    [
+     "HassTurnOn",
+     {
+      "name": "Tapo P110 - Dehumidifier"
+     }
+    ]
+   ],
+   "outcome": "Turned on dehumidifier due to high humidity (72.1%).",
+   "after_restart": "Nothing needed — dehumidifier already on for high humidity.",
+   "still": "on",
+   "returned": "off",
+   "repeats": 0
+  },
+  {
+   "reading": "72.1",
+   "before": "off",
+   "after": "on",
+   "calls": [
+    [
+     "HassTurnOn",
+     {
+      "name": "Tapo P110 - Dehumidifier"
+     }
+    ]
+   ],
+   "outcome": "Nothing needed — turned on dehumidifier for high humidity (72.1%).",
+   "after_restart": "Nothing needed — dehumidifier already on for high humidity.",
+   "still": "on",
+   "returned": "off",
+   "repeats": 0
+  },
+  {
+   "reading": "72.1",
+   "before": "off",
+   "after": "on",
+   "calls": [
+    [
+     "HassTurnOn",
+     {
+      "name": "Tapo P110 - Dehumidifier"
+     }
+    ]
+   ],
+   "outcome": "Turned on dehumidifier for high nursery humidity (72.1%).",
+   "after_restart": "Nothing needed — dehumidifier already on for high humidity.",
+   "still": "on",
+   "returned": "off",
+   "repeats": 0
+  },
+  {
+   "reading": "72.1",
+   "before": "off",
+   "after": "on",
+   "calls": [
+    [
+     "HassTurnOn",
+     {
+      "name": "Tapo P110 - Dehumidifier"
+     }
+    ]
+   ],
+   "outcome": "Turned on dehumidifier due to high nursery humidity at 72.1%.",
+   "after_restart": "Nothing needed - dehumidifier already on for high humidity.",
+   "still": "on",
+   "returned": "off",
+   "repeats": 0
+  },
+  {
+   "reading": "72",
+   "before": "off",
+   "after": "on",
+   "calls": [
+    [
+     "HassTurnOn",
+     {
+      "name": "Tapo P110 - Dehumidifier"
+     }
+    ]
+   ],
+   "outcome": "Turned on dehumidifier at 72% humidity (was off) to protect nursery air - no parent notification needed during day.",
+   "after_restart": "No action needed - dehumidifier already on at 72%.",
+   "still": "on",
+   "returned": "off",
+   "repeats": 0
+  }
+ ],
+ "websocket": {
+  "connected": true,
+  "events": [
+   {
+    "entity_id": "sensor.nursery_climate_temperature",
+    "state": "21.6"
+   }
+  ]
+ },
+ "warmer_after": "on",
+ "plug_final": "off"
+}

@@ -1,0 +1,8 @@
+# The persistent agent (parenting_agent/core). Everything else in the repo stays on the standard library.
+langchain==1.4.8
+langgraph==1.2.19
+langgraph-checkpoint-postgres==3.2.0
+langchain-openai==1.7.3
+langchain-mcp-adapters==0.3.2
+psycopg[binary,pool]==3.3.7
+websockets==17.4

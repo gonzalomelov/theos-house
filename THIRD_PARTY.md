@@ -72,3 +72,7 @@ All of it is synthetic or rendered, no family audio, photo or video. Checked on 
 | `results/hero/speech/*.wav`, the glasses voice in `results/hero*/` videos | iOS AVSpeechSynthesizer in the simulator | Apple's SDK and simulator terms |
 | `results/hero*/`, `results/glasses/` videos and screenshots | Screen recordings of the iOS simulator with DAT's mock device playing generated clips | Meta Wearables Developer Terms for the mock device, our own clips |
 | `results/glasses-live/*.png` | Screenshots of the iOS simulator with DAT's mock device and MockDisplayKit playing generated clips and, in, a Wikimedia Commons photo by Wang Yu Ching, Office of the President (Taiwan), credited on screen | Meta Wearables Developer Terms for the mock device, our own clips, CC BY 2.0 for the photo |
+
+## The persistent agent (requirements-core.txt)
+
+LangChain, LangGraph, langchain-openai and langchain-mcp-adapters (MIT), psycopg (LGPL-3.0), websockets (BSD-3-Clause). Installed as packages, nothing vendored.
