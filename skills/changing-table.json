@@ -3,7 +3,7 @@
   "concepts": {"hand": "hand", "baby": "baby"},
   "contact": {"min_overlap": 0.3, "min_hand_area": 0.012, "off_frames_to_alert": 1},
   "alarm": {"voice_hold_s": 1.2, "confirm_wait_s": 2.3, "clear_after_on_s": 0.5, "return_waits_for_confirm": true, "return_wait_s": 2.0, "unseen_wait_s": 4.0, "voice_text": "hand"},
-  "lift": {"enabled": true, "regions": "sam3", "camera_cm": 45, "min_lift_cm": 1.7, "mediapipe_min_lift_cm": 1.0, "rest_cm": 0.5, "refresh_s": 1.0, "smooth_frames": 5, "reset_after_off_s": 1.0, "held": true, "held_gone_s": 0.6, "split_scene": true},
+  "lift": {"enabled": true, "regions": "sam3", "camera_cm": 45, "min_lift_cm": 1.7, "rest_cm": 0.5, "refresh_s": 1.0, "smooth_frames": 5, "reset_after_off_s": 1.0, "held": true, "held_gone_s": 0.6, "split_scene": true},
   "phases": ["lay down", "unfasten", "wipe", "clean diaper", "fasten", "pick up"],
   "confirm": {
     "provider": "sam3_local",

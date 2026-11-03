@@ -1,30 +1,28 @@
-"""Import-only stand-in for triton, which has no CPU or arm64 wheel.
-
-SAM 3 imports triton at module level for GPU kernels (EDT, NMS, connected components) that the
-image path on CPU never calls. Calling any of them here raises, so a silent wrong result is impossible.
-"""
+"""SAM 3 imports triton when it loads, and triton has no arm64 or CPU wheel. Its image path here never runs a triton kernel,
+so this package only has to import. Every kernel built through it refuses to run, so nothing can silently compute a wrong result."""
 
 
-def _unavailable(*args, **kwargs):
-    raise RuntimeError("triton kernels are not available on CPU")
+def _refuse(*_, **__):
+    raise RuntimeError("this is the import-only triton stand-in, it has no kernels")
 
 
-def jit(fn=None, **kwargs):
-    return _unavailable if fn is not None else (lambda f: _unavailable)
+def _decorator(*args, **_):
+    if len(args) == 1 and callable(args[0]):  # @triton.jit
+        return _refuse
+    return lambda _kernel: _refuse  # @triton.jit(...), @triton.autotune(...), @triton.heuristics(...)
 
 
-def autotune(*args, **kwargs):
-    return lambda fn: _unavailable
-
-
-def heuristics(*args, **kwargs):
-    return lambda fn: _unavailable
+jit = autotune = heuristics = _decorator
 
 
 class Config:
-    def __init__(self, *args, **kwargs):
+    """A tuning choice, only ever passed to autotune."""
+
+    def __init__(self, *_, **__):
         pass
 
 
-def cdiv(a, b):
-    return -(-a // b)
+def cdiv(top, bottom):
+    """Ceiling division."""
+    whole, rest = divmod(top, bottom)
+    return whole + bool(rest)

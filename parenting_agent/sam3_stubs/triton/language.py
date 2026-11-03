@@ -1,9 +1,9 @@
-"""Names used in triton kernel signatures, so the modules that define them import on CPU."""
+"""triton's kernel signatures name types from here, so any name resolves to the same empty type."""
 
 
-class constexpr:
+class _AnyType:
     pass
 
 
-def __getattr__(name):
-    return constexpr
+def __getattr__(_name):
+    return _AnyType

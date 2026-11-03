@@ -1,4 +1,3 @@
-mediapipe==0.10.14
 numpy<2
 opencv-contrib-python==4.10.0.84
 freezegun==1.5.1  # the end-to-end day only (parenting_agent/e2e)

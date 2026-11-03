@@ -11,8 +11,7 @@ Every model the Ear calls is a Meta model (Oct 31 2026, results/sounds/meta-hear
 - SignalListener: plain signal processing for the cry (parenting_agent/cry_signal.py), no learned model at all.
 - Listeners: several listeners, each owning some labels. The default Ear is the one the held-out test chose: the
   Meta model for every label.
-PANNs, the listener until Oct 31, is not a Meta model and is no longer called. It stays offline only, as the before
-baseline in scripts/panns_baseline.py.
+PANNs, the listener until Oct 31, is not a Meta model and has left the repo.
 """
 import json
 import os

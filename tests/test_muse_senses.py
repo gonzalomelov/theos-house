@@ -1,6 +1,6 @@
 """Muse Spark Open's eyes and ears (issues #30 and #14), offline: a fake post stands in for Baseten.
 
-The real runs are scripts/carseat_muse_eval.py and scripts/sounds_muse_eval.py, results in results/carseat/muse/ and
+The real runs are scripts/carseat_muse_eval.py and the earlier sounds run, results in results/carseat/muse/ and
 results/sounds/muse/.
 """
 import datetime

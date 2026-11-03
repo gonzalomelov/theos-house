@@ -13,7 +13,7 @@ from parenting_agent.agent import config as config_mod
 from parenting_agent.agent import rules
 from parenting_agent.glasses import GlassesHub, with_dropped_words
 from parenting_agent.glasses_speech import Gate, plain, race, transcript, word_errors
-from tests.test_glasses import Events, call
+from tests.glasses_helpers import Events, call
 
 
 def wav(seconds=0.5, rate=16000):

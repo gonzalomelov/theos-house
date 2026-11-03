@@ -1,132 +1,82 @@
 <!doctype html>
-<html lang="en">
-<head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Head camera</title>
+<title>Phone camera</title>
 <style>
-  body { margin: 0; background: #111; color: #eee; font: 16px -apple-system, system-ui, sans-serif; }
-  main { padding: 16px; }
-  button { width: 100%; padding: 18px; font-size: 20px; border: 0; border-radius: 12px; background: #2f6fed; color: #fff; }
-  video { width: 100%; margin-top: 12px; border-radius: 8px; background: #000; }
-  dl { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; margin: 12px 0 0; }
-  dt { color: #999; }
-  #state.off { color: #ff6b6b; }
+  :root { color-scheme: dark; }
+  body { background: #101418; color: #e8edf2; font: 17px system-ui, sans-serif; margin: 0 auto; max-width: 640px; padding: 16px; }
+  #go { background: #1f7a5c; border: 0; border-radius: 10px; color: #fff; font: inherit; font-weight: 600; padding: 16px; width: 100%; }
+  #go:disabled { opacity: .5; }
+  #view { background: #000; border-radius: 10px; display: block; margin: 12px 0; width: 100%; }
+  #note { color: #9fb0bf; }
 </style>
-</head>
-<body>
-<main>
-  <button id="start">Start</button>
-  <video id="video" playsinline muted></video>
-  <dl>
-    <dt>Status</dt><dd id="status">tap Start, then allow the camera</dd>
-    <dt>Sent</dt><dd id="sent">0 frames</dd>
-    <dt>Capture to result</dt><dd id="rtt">-</dd>
-    <dt>Hands</dt><dd id="state">-</dd>
-  </dl>
-</main>
+<button id="go">Start the camera</button>
+<video id="view" autoplay muted playsinline></video>
+<p id="note">Tap, then allow the camera.</p>
 <script>
-// Frames go one at a time: the next is captured only after the last post finishes, so a slow link drops
-// frames instead of queueing them. Nothing is stored on the phone or the Mac.
-const WIDTH = 640, HEIGHT = 360, MIN_GAP_MS = 50, QUALITY = 0.7;
-const video = document.getElementById("video");
-const canvas = document.createElement("canvas");
-canvas.width = WIDTH; canvas.height = HEIGHT;
-const show = (id, text) => { document.getElementById(id).textContent = text; };
-const sentAt = new Map();
-let frameId = 0, lastRtt = null, audio = null;
+// One frame in flight at a time, so a slow link loses frames and never builds a queue. The phone keeps nothing.
+const SIZE = [640, 360], PAUSE_MS = 50, JPEG_QUALITY = 0.7;
+const view = document.querySelector("#view"), note = document.querySelector("#note"), go = document.querySelector("#go");
+const sheet = Object.assign(document.createElement("canvas"), { width: SIZE[0], height: SIZE[1] });
+let sound, sent = 0;
 
-function chime() {
-  const osc = audio.createOscillator(), gain = audio.createGain();
-  osc.frequency.value = 880;
-  gain.gain.setValueAtTime(0.25, audio.currentTime);
-  gain.gain.exponentialRampToValueAtTime(0.001, audio.currentTime + 0.25);
-  osc.connect(gain).connect(audio.destination);
-  osc.start(); osc.stop(audio.currentTime + 0.25);
-}
-
-function speak(text) {
-  if (!("speechSynthesis" in window)) return false;
+const beep = () => {
+  const tone = sound.createOscillator(), level = sound.createGain(), now = sound.currentTime;
+  tone.frequency.value = 880;
+  level.gain.setValueAtTime(0.25, now);
+  level.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+  tone.connect(level).connect(sound.destination);
+  tone.start();
+  tone.stop(now + 0.25);
+};
+const say = (words) => {
   speechSynthesis.cancel();
-  speechSynthesis.speak(new SpeechSynthesisUtterance(text));
-  return true;
-}
+  speechSynthesis.speak(new SpeechSynthesisUtterance(words));
+};
 
-function heard(kind, played) {
-  fetch("/heard", { method: "POST", body: JSON.stringify({ kind, played, phone_ms: Date.now() }) }).catch(() => {});
-}
-
-function listen() {
-  const events = new EventSource("/events");
-  events.onmessage = (event) => {
-    const message = JSON.parse(event.data);
-    if (message.kind === "result") {
-      const sent = sentAt.get(message.frame_id);
-      if (sent !== undefined) {
-        lastRtt = { id: message.frame_id, ms: performance.now() - sent };
-        sentAt.delete(message.frame_id);
-        show("rtt", `${Math.round(lastRtt.ms)} ms`);
-      }
-      const state = document.getElementById("state");
-      state.textContent = message.state; state.className = message.state;
-    } else if (message.kind === "chime") {
-      chime(); heard("chime", audio.state === "running");
-    } else if (message.kind === "voice") {
-      heard("voice", speak(message.text || "hand"));
-    }
+function followAgent() {
+  new EventSource("/events").onmessage = ({ data }) => {
+    const event = JSON.parse(data);
+    if (event.kind === "chime") beep();
+    if (event.kind === "voice") say(event.text || "hand");
   };
-  events.onerror = () => show("status", "event stream reconnecting");
 }
 
-async function send() {
-  const started = performance.now();
-  canvas.getContext("2d").drawImage(video, 0, 0, WIDTH, HEIGHT);
-  const blob = await new Promise((done) => canvas.toBlob(done, "image/jpeg", QUALITY));
-  const id = ++frameId;
-  sentAt.set(id, started);
-  for (const old of sentAt.keys()) if (old < id - 300) sentAt.delete(old);
-  const headers = { "Content-Type": "image/jpeg", "X-Frame-Id": String(id), "X-Capture-Ms": String(Date.now()) };
-  if (lastRtt) {
-    headers["X-Result-Rtt-Ms"] = lastRtt.ms.toFixed(1);
-    headers["X-Rtt-Frame-Id"] = String(lastRtt.id);
-    lastRtt = null;
+async function postFrames() {
+  for (;;) {
+    try {
+      sheet.getContext("2d").drawImage(view, 0, 0, ...SIZE);
+      const jpeg = await new Promise((done) => sheet.toBlob(done, "image/jpeg", JPEG_QUALITY));
+      await fetch("/frame", { method: "POST", headers: { "Content-Type": "image/jpeg" }, body: jpeg });
+      note.textContent = `Streaming, ${++sent} frames sent.`;
+      await new Promise((done) => setTimeout(done, PAUSE_MS));
+    } catch (failure) {
+      note.textContent = `Couldn't send a frame, trying again: ${failure.message}`;
+      await new Promise((done) => setTimeout(done, 1000));
+    }
   }
-  await fetch("/frame", { method: "POST", headers, body: blob });
-  show("sent", `${id} frames`);
-  const wait = MIN_GAP_MS - (performance.now() - started);
-  setTimeout(loop, Math.max(0, wait));
 }
 
-function loop() {
-  send().catch((error) => { show("status", `send failed: ${error.message}, retrying`); setTimeout(loop, 1000); });
-}
-
-async function start() {
-  // Audio and speech must be unlocked by this tap on iOS.
-  audio = new (window.AudioContext || window.webkitAudioContext)();
-  audio.resume().catch(() => {});
-  speak(" ");
+async function begin() {
+  // iOS unlocks sound and speech only inside a tap.
+  sound = new (window.AudioContext || window.webkitAudioContext)();
+  sound.resume();
+  say(" ");
   try {
-    const stream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: { ideal: "environment" }, width: { ideal: WIDTH }, height: { ideal: HEIGHT } },
+    view.srcObject = await navigator.mediaDevices.getUserMedia({
       audio: false,
+      video: { facingMode: { ideal: "environment" }, width: { ideal: SIZE[0] }, height: { ideal: SIZE[1] } },
     });
-    video.srcObject = stream;
-    await video.play();
-  } catch (error) {
-    show("status", `camera refused: ${error.message}`);
+    await view.play();
+  } catch (failure) {
+    note.textContent = `The camera was refused: ${failure.message}`;
     return;
   }
-  if ("wakeLock" in navigator) navigator.wakeLock.request("screen").catch(() => {});
-  document.getElementById("start").disabled = true;
-  show("status", "streaming");
-  listen();
-  loop();
+  navigator.wakeLock?.request("screen").catch(() => {});
+  go.disabled = true;
+  followAgent();
+  postFrames();
 }
 
-document.getElementById("start").onclick = start;
-// ?auto=1 starts without a tap, for the headless test on the Mac only (iOS needs the tap for audio).
-if (new URLSearchParams(location.search).has("auto")) start();
+go.addEventListener("click", begin);
 </script>
-</body>
-</html>

@@ -1,8 +1,8 @@
 """Tests for the cry reason from the sound (issue #161): the head kept for the record, the blend with the log, the wiring.
 
 Offline: a fake local guesser, the tone listener from test_sounds, the simulated-week fixture. The Oct 30 head read
-PANNs embeddings and was at chance, so since Oct 31 the agent never builds it (PANNs is not a Meta model). The offline
-reproduction of its held-out test is scripts/cry_reason_train.py with scripts/panns_baseline.py.
+PANNs embeddings and was at chance, so since Oct 31 the agent never builds it (PANNs is not a Meta model). The held-out
+result is in results/cry-reason/README.md.
 """
 import datetime
 import json

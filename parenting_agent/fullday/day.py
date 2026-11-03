@@ -44,11 +44,8 @@ def stamp(moment=None):
 
 
 def kr222_table():
-    """scripts/kr222_table.py holds the clip loop and the scoring the KR uses, reuse them as is."""
-    spec = importlib.util.spec_from_file_location("kr222_table", ROOT / "scripts" / "kr222_table.py")
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return module
+    """The clip loop for the camera skills was built on the removed hand reflex."""
+    raise RuntimeError("the camera clips are not part of this harness any more, run with --no-video")
 
 
 class HouseTools(Plugin):

@@ -8,7 +8,7 @@ model, and the head went with it: the agent never computes an embedding. The cry
 the baby log alone (cry_reason.py).
 
 What stays here:
-- Head: fit, load and probs, used offline by scripts/cry_reason_train.py to reproduce the Oct 30 result.
+- Head: fit, load and probs, kept to read the Oct 30 head.
 - combine: how any sound guess would be blended with the log reason, used by house_sounds.py for the guess the
   plug-in gets (Muse's opt-in guess goes through cry_muse.blend first). The log's reason stays first. A class is said
   only when the guess says it may be ("speak"). belly_pain is never said as pain: it becomes "check on him now", and
@@ -46,7 +46,7 @@ def softmax(z):
 
 
 class Head:
-    """Standardize, then a linear layer and a softmax. Trained by scripts/cry_reason_train.py."""
+    """Standardize, then a linear layer and a softmax. Trained offline on Oct 30."""
 
     def __init__(self, mean, std, weights, bias, classes=CLASSES, meta=None):
         self.mean, self.std = np.asarray(mean, np.float32), np.asarray(std, np.float32)

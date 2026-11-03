@@ -10,7 +10,7 @@ again once it falls under rest_cm. The baseline follows the hands while they res
 every refresh_s) and is frozen while they rise, so a slow drift is absorbed and a lift is not.
 The skill keeps the baseline through a short reflex flicker to off and drops it after reset_after_off_s.
 
-With regions "sam3" the hand regions come from SAM 3.1 instead of MediaPipe: the skill sends a resting frame to
+With regions "sam3" the hand regions come from SAM 3.1: the skill sends a resting frame to
 SAM 3.1, and its hand masks (the ones that touch the baby mask) become the baseline once the answer lands, about
 2 s later. The check then asks for a new anchor where it would otherwise refresh the baseline. No anchor, no reading.
 
@@ -25,7 +25,7 @@ import numpy as np
 
 DEFAULTS = {"camera_cm": 45.0, "min_lift_cm": 1.0, "rest_cm": 0.5, "refresh_s": 1.0, "smooth_frames": 5, "reset_after_off_s": 1.0,
             "min_matches": 8, "hull_grow": 1.18, "scene_margin_px": 30, "search_px": 60, "ratio": 0.8, "ransac_px": 2.0,
-            "min_hands": 1, "regions": "mediapipe", "held_gone_s": 0.3, "held_scene_px": 3.0, "split_scene": False, "max_scene_shift_px": None, "max_scene_zoom": None, "max_hand_shift_px": None}
+            "min_hands": 1, "regions": "sam3", "held_gone_s": 0.3, "held_scene_px": 3.0, "split_scene": False, "max_scene_shift_px": None, "max_scene_zoom": None, "max_hand_shift_px": None}
 
 
 def hand_masks(hands_px, shape, grow):

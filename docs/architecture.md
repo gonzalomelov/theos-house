@@ -7,7 +7,7 @@ flowchart LR
   subgraph House["Inside the house"]
     cam["Head camera<br/>Ray-Ban Meta app (DAT) or iPhone page<br/>home network only"]
     mic["Camera microphone<br/>Perception Encoder Audio labels #14"]
-    reflex["Local reflex<br/>MediaPipe hands"]
+    reflex["Hand watch<br/>SAM 3.1"]
     sam["SAM 3.1 open weights<br/>Mac GPU"]
     bus(("Event bus"))
     core["Agent core<br/>decide-act loop, allowed list"]
@@ -45,7 +45,7 @@ flowchart LR
 | Agent memory | `parenting_agent/agent/memory.py` | Conversation and facts in `data/memory.sqlite` |
 | Baby Buddy | `docs/deploy-babybuddy.md` | The baby's log on the family server, only on localhost there |
 | Brain | `parenting_agent/agent/brain.py` | Muse Spark Open on Baseten through the OpenAI-compatible provider, the only model. When a Muse call errors the fixed rules answer and the reply says the brain is busy (a logged `brain_fallback`). The fake rule-based brain runs the tests. No other vendor's model runs, `scripts/eval_brains.py` holds Claude for offline comparisons only |
-| Changing-table skill | `parenting_agent/changing_table.py`, `hands.py`, `reflex.py`, `alarm.py`, `skill.py`, `sam_hands.py` | Arms, holds notifications, chimes then says "hand", logs the change. One setting, `"hands"` in the agent config or the skill file, picks the hand detector: `mediapipe` (the prior work reflex and alarm from the private library `a private repo`, subclassed here), `sam3_only` (SAM 3.1 alone, no MediaPipe, no prior code) or `auto` (mediapipe when the library is installed) |
+| Changing-table skill | `parenting_agent/changing_table.py`, `hands.py`, `skill.py`, `sam_hands.py` | Arms, holds notifications, chimes then says "hand", logs the change.1 alone, no MediaPipe, no prior code) or `auto` (mediapipe when the library is installed) |
 | Camera skills from config | `parenting_agent/camera_skill.py`, `skills/bath.json` | A skill file with an agent block becomes tools, arm and finish phrases, reminders and prompt facts. The bath is the first, see `docs/bath.md` |
 | SAM 3.1 confirm | `parenting_agent/sam3_local.py`, `sam3_worker.py` | Confirms or cancels the hand alarm, locally, see `docs/sam3-local.md` |
 | Lift check | `parenting_agent/lift.py` | While the reflex reads on, measures how far each hand rose toward the head camera. A lifted hand counts as off and SAM 3.1 cannot cancel it. On the changing table it measures inside SAM 3.1 hand masks, in the bath it needs both hands. Blind set (Oct 29): 22 of 32 hovers, never said hand on 16 touches, 2 touches chimed, the 8 one-hand bath hovers missed by design. Earlier, smaller blind render: 15 of 16 hovers with 2 false alarms on 16 touches. See `results/hover/blind/README.md` |
@@ -74,7 +74,7 @@ flowchart LR
 
 | Flow | From | To | Leaves the house? |
 |---|---|---|---|
-| Camera frames | Head camera (iPhone page) | MediaPipe Hands reflex (Google, prior work) and SAM 3.1 on the Mac, or SAM 3.1 alone with `"hands": "sam3_only"` | No, except the opt-in car seat still below. Over the home Wi-Fi or Tailscale to the Mac (end to end encrypted, a Tailscale relay would see only encrypted packets), in memory only, never saved |
+| Camera frames | Head camera (iPhone page) | SAM 3.1 on the Mac, or SAM 3.1 alone with `"hands": "sam3_only"` | No, except the opt-in car seat still below. Over the home Wi-Fi or Tailscale to the Mac (end to end encrypted, a Tailscale relay would see only encrypted packets), in memory only, never saved |
 | Confirm or cancel | SAM 3.1 | Skill, then bus | No |
 | Baby log entries | Agent core | Baby Buddy on the family server | No |
 | Rhythm reads | Baby Buddy | Daily rhythm | No |

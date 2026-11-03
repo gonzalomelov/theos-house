@@ -34,20 +34,21 @@ DEFAULTS = {
 
 
 def ring_state(hand_masks, baby, cfg):
+    """How much of a thin band around each hand lies on the baby. Any hand over ring_min reads as on."""
     import cv2
     import numpy as np
-    pixels = baby.shape[0] * baby.shape[1]
-    kernel = np.ones((2 * cfg["ring_px"] + 1,) * 2, np.uint8)
-    rings = []
-    for mask in hand_masks:
-        if mask.sum() / pixels < cfg["min_hand_area"]:
-            continue
-        hand = mask & ~baby
-        ring = cv2.dilate(hand.astype(np.uint8), kernel).astype(bool) & ~hand
-        rings.append(round(float((ring & baby).sum() / max(ring.sum(), 1)), 3))
+    side = 2 * cfg["ring_px"] + 1
+    grow = cv2.getStructuringElement(cv2.MORPH_RECT, (side, side))
+    smallest = cfg["min_hand_area"] * baby.size
+    shares = []
+    for mask in filter(lambda m: m.sum() >= smallest, hand_masks):
+        outside_baby = mask & ~baby
+        band = cv2.dilate(outside_baby.astype(np.uint8), grow) > 0
+        band &= ~outside_baby
+        shares.append(round(float(np.count_nonzero(band & baby) / max(np.count_nonzero(band), 1)), 3))
     if not baby.any():
-        return "unknown", rings
-    return ("on" if any(r >= cfg["ring_min"] for r in rings) else "off"), rings
+        return "unknown", shares
+    return ("on" if shares and max(shares) >= cfg["ring_min"] else "off"), shares
 
 
 def holding(hands, objects, cfg, baby=None):
@@ -104,9 +105,10 @@ class Sam3:
                 tried.append(f"{source['repo']}: {type(error).__name__}")
                 continue
             model = build_sam3_image_model(device="cpu", load_from_HF=False, checkpoint_path=None)
-            ckpt = torch.load(path, map_location="cpu", weights_only=True)
-            ckpt = ckpt["model"] if isinstance(ckpt.get("model"), dict) else ckpt
-            missing, _ = model.load_state_dict({k.replace("detector.", ""): v for k, v in ckpt.items() if "detector" in k}, strict=False)
+            saved = torch.load(path, map_location="cpu", weights_only=True)
+            weights = saved["model"] if isinstance(saved.get("model"), dict) else saved
+            detector_only = {name.replace("detector.", ""): value for name, value in weights.items() if "detector" in name}
+            missing, _ = model.load_state_dict(detector_only, strict=False)
             model.eval()
             share = len(missing) / max(len(model.state_dict()), 1)
             if share <= cfg["max_missing_share"]:

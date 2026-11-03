@@ -22,7 +22,7 @@ With "preload_confirm": true the confirm detector (SAM 3.1, about 10 s to load o
 starts and again after each change, so "changing time" starts watching at once instead of after the load. Without
 it the skill is blind for those 10 s, and a hover in them is never seen (results/hero/README.md).
 A load that is still running after preload_wait_s (default 5) never holds up "changing time": the watch starts with
-the MediaPipe hand regions only, the agent says so, and the detector is used from the next change (round 3 red team).
+the hand regions only, the agent says so, and the detector is used from the next change (round 3 red team).
 With "keep_confirm": true the loaded detector is kept between changes instead of closed and loaded again, so one
 SAM 3.1 process serves the agent from start to stop and other checks can share it (sam3_local.live(), the dog watch
 on the glasses). "confirm_ready" says when the preload finished and how long it took.
@@ -49,12 +49,12 @@ FINISH_PHRASES = ["done", "all done", "change done", "done with the change", "ch
 ARMED_FACT = ("The changing-table watch is on now. When the parent says done, call finish_changing_table, "
               "never start_changing_table again.")
 IDLE_FACT = "No diaper change in progress, the changing-table watch is off."
-# How long "changing time" waits for a SAM 3.1 that is still loading before it watches with MediaPipe alone.
+# How long "changing time" waits for a SAM 3.1 that is still loading before it watches without it.
 PRELOAD_WAIT_S = 5
 # Plain words for the parent: no model names (agent/final_guard.py). The tool result for the brain names them.
 REGIONS_ONLY = ("Watching the changing table with the hand check only, the second check is still loading. "
                 "The chime works, this change the hand check is not confirmed a second time.")
-REGIONS_ONLY_TOOL = "MediaPipe hand regions only, SAM 3.1 is still loading: " + REGIONS_ONLY
+REGIONS_ONLY_TOOL = "hand regions only, SAM 3.1 is still loading: " + REGIONS_ONLY
 
 LAST_CHANGE = "last-diaper-change"
 CONTENT = {"wet": {"type": "boolean", "description": "true when the parent said wet or pee"},
@@ -183,7 +183,7 @@ class ChangingTable(Plugin):
 
     def take_warm(self):
         """The preloaded detector, waiting up to preload_wait_s for it if it is still loading, or None to build one
-        at arm as before. A load that takes longer leaves the watch on the MediaPipe hand regions only, and the late
+        at arm as before. A load that takes longer leaves the watch on the hand regions only, and the late
         detector stays for the next change."""
         warm = self.warm
         if warm is None:

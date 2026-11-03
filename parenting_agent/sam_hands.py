@@ -1,8 +1,4 @@
-"""SAM 3.1 only: the changing-table and bath watch with Meta's SAM 3.1 and no MediaPipe (hands "sam3_only").
-
-Written during the hackathon (Oct 31 2026) as the switch in case the organizers rule MediaPipe out. It uses no prior
-work: not the MediaPipe reflex and not the prior alarm (a private repo), so the project runs without
-that library.
+"""SAM 3.1 only: the changing-table and bath watch with Meta's SAM 3.1 (hands "sam3_only").
 
 How it watches. SAM 3.1 is too slow for every frame (1.5 to 3 s a look on the Mac GPU), so one look runs at a time on a
 background thread, on the newest frame, again and again while the skill is armed. Each look asks for the hand masks
@@ -20,9 +16,9 @@ stale and ignored. Gone moves only the frame state, so the lens clears; the alar
 off, so a region lost to a blur never chimes or speaks.
 
 The alarm here is new and small. A look that reads off raises it, chimes and speaks "hand" at once: SAM 3.1 already is
-the slow, careful look the MediaPipe path waits for. A lifted reading raises it and chimes, and speaks once it has
+a slow, careful look. A lifted reading raises it and chimes, and speaks once it has
 lasted voice_hold_s. A look or the lift check reading on for clear_after_on_s clears it, and a prompt not yet spoken is
-dropped. The events are the same as the MediaPipe path (frame, alarm, chime, voice, voice_dropped, skill_armed,
+dropped. The events are (frame, alarm, chime, voice, voice_dropped, skill_armed,
 skill_closed), so the speaker, the house and the glasses work unchanged.
 """
 import datetime
@@ -52,7 +48,7 @@ class SamAlarm:
     def __init__(self, bus, alarm):
         self.bus, self.cfg = bus, alarm
         self.episode, self.raised, self.spoken, self.raised_s, self.on_since, self.lifted = 0, False, False, None, None, False
-        self.cancelled = self.unseen = False  # the skill API the MediaPipe alarm has, never set here
+        self.cancelled = self.unseen = False  # the skill API, never set here
 
     def on_state(self, state, stream_s):
         if state == "on":

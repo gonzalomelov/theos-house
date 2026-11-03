@@ -1,11 +1,11 @@
-"""The Meta hearing swap, measured: PANNs before, Meta Perception Encoder Audio and plain signal processing after.
+"""The Meta hearing swap, measured: Meta Perception Encoder Audio and plain signal processing.
 
     python scripts/meta_hearing_eval.py scores --listener meta --split tune      # window scores, cached as numbers
     python scripts/meta_hearing_eval.py tune                                     # choices from tune only, tune.json
     python scripts/meta_hearing_eval.py scores --listener meta --split held_out  # only after tune.json is committed
     python scripts/meta_hearing_eval.py test                                     # once, eval.json
 
-Listeners: "panns" is the BEFORE baseline (scripts/panns_baseline.py, the SAM 3.1 venv), never tuned again. "meta" is
+Listeners: "meta" is
 parenting_agent.hearing.MetaListener, the worker the agent runs, in HEARING_PYTHON. "signal" is cry_signal.py in this
 process. The items and the rules were committed first (results/sounds/meta-hearing/split.json). Every item is decoded
 on a pipe through the camera channel and fed into the real Ear one second at a time, as at home. Only numbers are
@@ -68,8 +68,6 @@ def item_audio(data, item):
 
 
 def summarize(name, replies):
-    if name == "panns":
-        return {label: max((r.get("scores", {}).get(label, 0.0) for r in replies), default=0.0) for label in LABELS}
     if name == "meta":
         return {label: {mode: max((r["raw"][label][mode] for r in replies if "raw" in r), default=-99.0)
                         for mode in ("logit", "margin")} for label in LABELS}
@@ -77,9 +75,6 @@ def summarize(name, replies):
 
 
 def make_listener(name):
-    if name == "panns":
-        from panns_baseline import PannsListener
-        return PannsListener()
     if name == "meta":
         return hearing.MetaListener({"labels": list(LABELS), "device": os.environ.get("HEARING_DEVICE", "cpu")})
     return hearing.SignalListener()
@@ -87,7 +82,7 @@ def make_listener(name):
 
 def scores(args):
     data = split()
-    if args.split == "held_out" and args.listener != "panns" and not TUNE.is_file():
+    if args.split == "held_out" and not TUNE.is_file():
         raise SystemExit("tune.json first: the held-out set is scored only after every choice is written")
     items = [i for i in data["items"] if i["split"] == args.split]
     started = time.monotonic()
@@ -203,10 +198,7 @@ def tune(args):
 def fired_by(name, rows, choices):
     out = {}
     for r in rows:
-        if name == "panns":
-            from panns_baseline import THRESHOLDS
-            out[r["id"]] = {label for label in LABELS if r["score"][label] >= THRESHOLDS[label]}
-        elif name == "meta":
+        if name == "meta":
             c = choices["meta"]
             out[r["id"]] = {label for label in LABELS if r["score"][label][c[label]["mode"]] >= c[label]["raw_threshold"]}
         else:
@@ -222,7 +214,7 @@ def test(args):
     for which in ("tune", "held_out"):
         items = [i for i in data["items"] if i["split"] == which]
         result[which] = {}
-        for name in ("panns", "meta", "signal"):
+        for name in ("meta", "signal"):
             got = cached(name, which)
             if not got:
                 continue
@@ -238,7 +230,7 @@ def main():
     ap = argparse.ArgumentParser()
     sub = ap.add_subparsers(dest="step", required=True)
     s = sub.add_parser("scores")
-    s.add_argument("--listener", choices=("panns", "meta", "signal"), required=True)
+    s.add_argument("--listener", choices=("meta", "signal"), required=True)
     s.add_argument("--split", choices=("tune", "held_out"), required=True)
     sub.add_parser("tune")
     sub.add_parser("test")

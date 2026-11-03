@@ -209,43 +209,23 @@ class Alarm(unittest.TestCase):
 
 
 class Setting(unittest.TestCase):
-    def test_one_setting_picks_the_detector(self):
-        self.assertEqual(hands_mod.mode("sam3_only", "mediapipe"), "sam3_only")
-        self.assertEqual(hands_mod.mode(None, "mediapipe"), "mediapipe")
+    def test_every_setting_runs_sam(self):
+        self.assertEqual(hands_mod.mode(None), "sam3_only")
+        self.assertEqual(hands_mod.mode("auto"), "sam3_only")
         with self.assertRaises(ValueError):
-            hands_mod.mode("yolo")
+            hands_mod.mode("mediapipe")
 
     def test_build_gives_the_sam_only_skill(self):
         skill = hands_mod.build(config(), Bus(), "sam3_only", confirm_detector=ScriptedSam(1))
         self.assertIsInstance(skill, SamOnlySkill)
         skill.close()
 
-    def test_the_project_runs_without_the_prior_work_library(self):
-        """A clone without a private repo: auto picks SAM 3.1 only and the agent still loads."""
-        code = (
-            "import sys, importlib.abc\n"
-            "class Block(importlib.abc.MetaPathFinder):\n"
-            "    def find_spec(self, name, path, target=None):\n"
-            "        if name.split('.')[0] == 'hand_reflex_prior': raise ImportError('blocked')\n"
-            "sys.meta_path.insert(0, Block())\n"
-            "from parenting_agent import hands, reflex, alarm\n"
-            "assert not reflex.AVAILABLE and not alarm.AVAILABLE\n"
-            "assert hands.mode(None) == 'sam3_only', hands.mode(None)\n"
-            "import parenting_agent.changing_table, parenting_agent.camera_skill, parenting_agent.glasses\n"
-            "from parenting_agent.__main__ import main\n"
-            "sys.exit(main(['--config', 'config/agent.fake.json', '--check']))\n")
-        done = subprocess.run([sys.executable, "-c", code], cwd=ROOT, capture_output=True, text=True, timeout=120,
-                              env={**os.environ, "HOME": os.environ.get("HOME", "")})
-        self.assertEqual(done.returncode, 0, done.stderr[-2000:])
-
-    def test_no_prior_work_code_is_in_this_repo(self):
-        """The reflex and the alarm of Oct 22 to 23 live in the library, this repo only subclasses them."""
-        for name in ("reflex.py", "alarm.py"):
-            source = (ROOT / "parenting_agent" / name).read_text()
-            self.assertIn("hand_reflex_prior", source)
-            self.assertNotIn("def contact_state", source)
-            self.assertNotIn("vision.HandLandmarker.create_from_options", source)
-            self.assertNotIn("def _speak", source)
+    def test_no_runtime_code_imports_mediapipe(self):
+        for path in (ROOT / "parenting_agent").rglob("*.py"):
+            source = path.read_text()
+            self.assertNotIn("import mediapipe", source, path)
+            self.assertNotIn("from mediapipe", source, path)
+        self.assertNotIn("mediapipe", (ROOT / "requirements.txt").read_text())
 
 
 if __name__ == "__main__":
