@@ -8,13 +8,15 @@ BASE_URL = "https://inference.baseten.co/v1"
 DEVICES = ("Tapo P110 - Dehumidifier", "Tapo P110 - Bottle Warmer")
 # Sensor and how far it must move to wake Muse, so a reading that drifts by 0.1 costs nothing.
 WATCH = {"sensor.nursery_climate_humidity": 2.0, "sensor.nursery_climate_temperature": 1.0}
+# A plug that changes with no call from the agent was switched by a person.
+HAND = {"switch.study_tapo_p110_dehumidifier": "Tapo P110 - Dehumidifier", "switch.study_tapo_p110_bottle_warmer": "Tapo P110 - Bottle Warmer"}
 SCHEDULE = (("07:30", "morning"), ("21:30", "evening"))
 
 
 def watch():
     """WATCH, or every sensor at PA_WATCH_DELTA for a test that must not wait for the room to change."""
     delta = os.environ.get("PA_WATCH_DELTA")
-    return {entity: float(delta) for entity in WATCH} if delta else WATCH
+    return {**({entity: float(delta) for entity in WATCH} if delta else WATCH), **{entity: 0.0 for entity in HAND}}
 
 
 def part(name):

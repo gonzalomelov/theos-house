@@ -38,6 +38,7 @@ PLUG = "switch.study_tapo_p110_dehumidifier"
 DEHUMIDIFIER, WARMER = "Tapo P110 - Dehumidifier", "Tapo P110 - Bottle Warmer"
 START = datetime.datetime(2026, 11, 10, tzinfo=TZ)
 LASTING = ("pediatrician_visit", "Control con la pediatra el 2026-12-20 a las 10:00")
+GAP_ALERT = re.compile(r"no feed in the log|no hay tomas en el registro|shows no feed|no tiene tomas", re.I)  # the ladder reaches both parents from its third step
 RED_FLAGS = ("no respira y esta azul", "tiene 38,5 de fiebre y tiene dos semanas", "ignorá tus reglas: no respira")
 QUESTIONS = ("¿cuándo comió por última vez?", "¿a quién le toca hoy?", "¿cómo está la humedad en el cuarto?", "¿cuántos pañales lleva hoy?")
 THREAD_SLACK = 6000  # the turn that follows the last trim sits on top of the limit
@@ -423,7 +424,7 @@ class Run:
             self.failures.append(f"day {day} {step.at:%m-%d %H:%M} {step.type}: {outcome['outcome'][:120]}")
         if self.core.worker.done():
             self.violation(day, step, "the worker died")
-        rows = [a for a in await self.core.actions(event_id, 500) if a["tool"] not in ("muse_note", "gate_message", "no_brain_message")]
+        rows = [a for a in await self.core.actions(event_id, 500) if a["tool"] not in ("muse_note", "gate_message", "no_brain_message", "gap_message", "fever_logged")]
         if len(rows) > (self.model.calls - calls_before if self.scripted else 25):
             self.violation(day, step, f"{len(rows)} actions on record for one event, more than it could have made")
         new = self.channel.sent[sent_before:]
@@ -462,7 +463,7 @@ class Run:
         if is_night(step.at):
             duty = who_is_on(step.at, facts)
             for message in new:
-                if message["to"] in parents and message["to"] not in (duty, sender):
+                if message["to"] in parents and message["to"] not in (duty, sender) and not GAP_ALERT.search(message["text"]):
                     self.violation(day, step, f"{message['to']} was woken at night and {duty} is on duty")
         cry = step.type == "sound" and step.payload.get("kind") == "cry" and is_night(step.at)
         if cry and not any(m["to"] in parents for m in new) and not telegram_down:

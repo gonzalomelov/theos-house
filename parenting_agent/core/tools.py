@@ -104,9 +104,9 @@ def baby_log(settings, clock):
     return memory, LocalBabyLog(memory)
 
 
-async def home_tools(settings, mock, turn=lambda: None, after=None):
+async def home_tools(settings, mock, turn=lambda: None, after=None, before=None):
     """Home Assistant's own tools under their short names. Only allowed devices can be switched. turn is the event running now, so
-    one event reads the whole home once. after hears what moved, and its words go back to Muse."""
+    one event reads the whole home once. after hears what moved, and its words go back to Muse. before can refuse a switch."""
     real = part("home") == "real"
     url = settings.ha_url + "/api/mcp" if real else mock.url
     headers = {"Authorization": "Bearer " + settings.ha_token} if real else {}
@@ -129,6 +129,9 @@ async def home_tools(settings, mock, turn=lambda: None, after=None):
         async def call(**arguments):
             if short in NAMED and arguments.get("name") not in settings.devices:
                 return f"Refused: you may only switch {', '.join(settings.devices)}."
+            why = await before(short, arguments) if before else None
+            if why:
+                return why
             try:
                 result = text_of(await tool.ainvoke({k: v for k, v in arguments.items() if v is not None}))
                 read["turn"] = None

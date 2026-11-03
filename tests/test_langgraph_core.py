@@ -137,7 +137,7 @@ class CoreTest(unittest.IsolatedAsyncioTestCase):
             await self.event(core, "schedule", {"name": "morning"})
         messages = (await core.agent.aget_state(core.config)).values["messages"]
         self.assertLessEqual(len(messages), 4)
-        self.assertLess(sum(len(str(m.content)) for m in model.calls[-1]), 4 * agent_mod.MAX_HISTORY_TOKENS)
+        self.assertLess(sum(len(str(m.content)) for m in model.calls[-1] if m.type != "system"), 4 * agent_mod.MAX_HISTORY_TOKENS + 2000)  # the new turn stays whole
         self.assertEqual(model.calls[-1][-1].type, "human")
 
     async def test_at_night_only_the_parent_on_duty_is_woken(self):
@@ -440,12 +440,12 @@ class PiecesTest(unittest.TestCase):
         self.assertEqual(safety.gate("theo no respira", NoScreen())[0], "emergency")
 
     def test_a_reading_wakes_only_when_it_moved_enough(self):
-        last, watch = {}, {"s": 2.0}
-        self.assertTrue(sources.worth_waking("s", "50", last, watch))
-        self.assertFalse(sources.worth_waking("s", "51", last, watch))
-        self.assertTrue(sources.worth_waking("s", "52", last, watch))
+        last, watch = {}, {"sensor.s": 2.0}
+        self.assertTrue(sources.worth_waking("sensor.s", "50", last, watch))
+        self.assertFalse(sources.worth_waking("sensor.s", "51", last, watch))
+        self.assertTrue(sources.worth_waking("sensor.s", "52", last, watch))
         self.assertFalse(sources.worth_waking("other", "1", last, watch))
-        self.assertFalse(sources.worth_waking("s", "unavailable", last, watch))
+        self.assertFalse(sources.worth_waking("sensor.s", "unavailable", last, watch))
 
     def test_the_schedule_picks_the_next_time_across_midnight(self):
         moment = datetime.datetime(2026, 11, 3, 22, 0)

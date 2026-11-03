@@ -12,7 +12,7 @@ from ..channels.telegram import TelegramMessenger
 from ..voice import client as voice_client
 from ..voice import screen as voice_screen
 from .runtime import TZ
-from .settings import SCHEDULE, watch as watch_list
+from .settings import HAND, SCHEDULE, watch as watch_list
 from .tools import PARENTS
 
 
@@ -32,7 +32,7 @@ def worth_waking(entity, state, last, watch):
         return False
     if entity not in last:
         last[entity] = state
-        return True
+        return str(entity).startswith("sensor.")  # a plug's first state after a start says nothing
     try:
         moved = abs(float(state) - float(last[entity])) >= watch[entity]
     except ValueError:
@@ -60,7 +60,7 @@ async def home_assistant(core, watch=None):
                 async for raw in ws:
                     data = json.loads(raw).get("event", {}).get("data", {})
                     entity, new = data.get("entity_id"), (data.get("new_state") or {}).get("state")
-                    if worth_waking(entity, new, last, watch):
+                    if worth_waking(entity, new, last, watch) and (entity not in HAND or core.by_hand(entity, new)):
                         await core.dispatch("state_changed", {"entity_id": entity, "state": new}, source="home_assistant")
         except Exception as failure:  # the socket, or PostgreSQL under dispatch: this source can't stop for either
             core.publish("source", name="home_assistant", status=f"reconnecting after {type(failure).__name__}")

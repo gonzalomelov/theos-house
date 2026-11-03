@@ -26,6 +26,8 @@ START = {
 
 # The real warmer plug turns itself off after 30 minutes, and a vacuum finishes and docks.
 AUTO_END = {"Tapo P110 - Bottle Warmer": ("on", "off", 30), "Robot vacuum": ("cleaning", "docked", 60)}
+# The room answers over time: a running dehumidifier brings the air down, and the temperature drifts back to normal.
+DRY_PER_HOUR, DRY_FLOOR, ROOM_TEMP, TEMP_PER_HOUR = 8.0, 40.0, 21.5, 1.0
 
 
 class MockHome:
@@ -42,26 +44,27 @@ class MockHome:
             self.moves = []
             self.shopping = []
             self.timers = {}
+            self.ticked = None
 
     def snapshot(self):
         with self.lock:
             return {"devices": {name: dict(spec) for name, spec in self.devices.items()}, "moves": list(self.moves), "shopping": list(self.shopping)}
 
-    def set_state(self, entity_id, state):
-        """Set a device by entity id, as the world would. The simulator's way to change a reading."""
+    def set_state(self, entity_id, state, at=None):
+        """Set a device by entity id, as the world would. The simulator's way to change a reading. at is the moment it happened."""
         with self.lock:
             for name, spec in self.devices.items():
                 if spec["entity_id"] == entity_id:
                     spec["state"] = str(state)
-                    self.arm(name, str(state))
+                    self.arm(name, str(state), at)
                     return True
         return False
 
-    def arm(self, name, state):
+    def arm(self, name, state, at=None):
         end = AUTO_END.get(name)
-        if end and self.clock:
+        if end and (at or self.clock):
             if state == end[0]:
-                self.timers[name] = self.clock() + datetime.timedelta(minutes=end[2])
+                self.timers[name] = (at or self.clock()) + datetime.timedelta(minutes=end[2])
             else:
                 self.timers.pop(name, None)
 
@@ -73,6 +76,23 @@ class MockHome:
                     self.devices[name]["state"] = AUTO_END[name][1]
                     del self.timers[name]
                     self.moves.append({"tool": "ended by itself", "name": name, "state": AUTO_END[name][1], "at": time.time()})
+            self.drift(moment)
+
+    def drift(self, moment):
+        hours = (moment - self.ticked).total_seconds() / 3600 if self.ticked else 0
+        if self.ticked is None or hours > 0:
+            self.ticked = moment
+        if hours <= 0:
+            return
+        humid, temp = self.devices["Nursery climate humidity"], self.devices["Nursery climate temperature"]
+        try:
+            if self.devices["Tapo P110 - Dehumidifier"]["state"] == "on":
+                humid["state"] = f"{max(DRY_FLOOR, float(humid['state']) - DRY_PER_HOUR * hours):.1f}"
+            now = float(temp["state"])
+            step = min(abs(now - ROOM_TEMP), TEMP_PER_HOUR * hours)
+            temp["state"] = f"{now + (step if now < ROOM_TEMP else -step):.1f}"
+        except ValueError:  # a reading set to something odd stays as it is
+            pass
 
     def state(self, entity_id):
         with self.lock:

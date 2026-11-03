@@ -26,6 +26,7 @@ ADDRESS_EVENTS = int(os.environ.get("PA_SIM_ADDRESS_EVENTS", "120"))
 ADDRESS_SESSIONS = int(os.environ.get("PA_SIM_ADDRESS_SESSIONS", "12"))
 HIDDEN_FACTS = ("language", "warmer_off_at", "vacuum_off_at", "feed_gap_told")
 DAILY = (((7, 30), "morning"), ((21, 30), "evening"))
+HUMIDITY_STEP = 5.0
 
 
 class Full(Exception):
@@ -150,8 +151,18 @@ class Session:
             await self.core.fire_wakes(at)
             await self.core.dispatch("schedule", {"name": name}, "simulator", at.isoformat())
         self.moment = moment
+        before = self.humidity()
         self.core.mock.tick(moment)
+        after = self.humidity()
+        if before is not None and after is not None and abs(after - before) >= HUMIDITY_STEP:  # the room moved: the sensor says so, as it does at home
+            await self.core.dispatch("state_changed", {"entity_id": "sensor.nursery_climate_humidity", "state": str(after)}, "simulator", moment.isoformat())
         await self.core.fire_wakes(moment)
+
+    def humidity(self):
+        try:
+            return float(self.core.mock.state("sensor.nursery_climate_humidity"))
+        except (TypeError, ValueError):
+            return None
 
     async def play(self, scene_id):
         """A shortcut: it sends its event at its time, or just after the clock if that time has passed. It can be pressed again."""

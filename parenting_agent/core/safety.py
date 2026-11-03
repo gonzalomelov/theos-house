@@ -21,13 +21,31 @@ HOW_IT_WENT = re.compile(r"\b(durmi[oó]\s+(?:\w+\s+)?(?:bien|tranquil\w*|genial
                          r"slept\s+(?:\w+\s+)?(?:well|through|fine)|(?:quiet|calm|good|easy|peaceful)\s+night|night\s+went\s+\w+)\b", re.I)
 MILLILITERS = re.compile(r"\b(\d+)\s?(?:ml|mililitros|milliliters|cc)\b", re.I)
 # A danger in a film or a book is not one at home, unless the words are also about this baby.
-FICTION = re.compile(r"\b(movie|film|tv show|series|novel|book|documentary|episode|in the news|pel[ií]cula|peli|serie|novela|libro|documental|cap[ií]tulo|noticiero)\b", re.I)
+FICTION = re.compile(r"\b(movie|film|tv show|series|novel|book|story|documentary|episode|in the news|pel[ií]cula|peli|serie|novela|libro|cuento|historia|documental|cap[ií]tulo|noticiero)\b", re.I)
 THIS_BABY = re.compile(r"\b(theo|my|our|mi|nuestro|the baby|baby is|el beb[eé]|he|his|him|[eé]l)\b", re.I)
 # Claims that only hold for a while. The warmer turns itself off, and a long gap between feeds is never fine.
 WARM_CLAIM = re.compile(r"\b(bottle|mamadera|biber[oó]n)\b[^.!?]{0,40}\b(warm|ready|caliente|tibia|lista|pronta)\b|\b(warm|caliente|tibia|lista|pronta)\b[^.!?]{0,40}\b(bottle|mamadera|biber[oó]n)\b", re.I)
-REASSURE = re.compile(r"sleep when you can|get some rest|all good|no worries|due soon|dorm[ií] tranquil\w*|descans[aá]\b|tranquil[oa]\b|todo bien|sin problema|le toca pronto", re.I)
+REASSURE = re.compile(r"sleep when you can|get some rest|rest up|beside you|all good|no worries|due soon|al lado tuyo|dorm[ií] tranquil\w*|descans[aá]\b|tranquil[oa]\b|todo bien|sin problema|le toca pronto", re.I)
 HOT_ROOM, COLD_ROOM = 28.0, 14.0
 FEED_GAP_H, STALE_LOG_H = 8, 48
+# The ladder: each step is said once, from code, and from BOTH_FROM up it reaches both parents, day or night.
+GAP_STEPS, BOTH_FROM = (8, 12, 18, 24, 36), 18
+GAP_LINES = {"en": ("The log shows no feed for {h} hours. Did feeds go unlogged? If he truly hasn't eaten, call your pediatrician.",
+                    "The log shows no feed for {h} hours, which is long for a newborn. If feeds didn't go unlogged, call your pediatrician now.",
+                    "No feed in the log for {h} hours. If he truly hasn't eaten, call your pediatrician or emergency services now. Please check on him and log what he had."),
+             "es": ("El registro no tiene tomas hace {h} horas. ¿Quedaron tomas sin registrar? Si de verdad no comió, llamá a su pediatra.",
+                    "El registro no tiene tomas hace {h} horas, y es mucho para un recién nacido. Si no quedaron tomas sin registrar, llamá a su pediatra ahora.",
+                    "No hay tomas en el registro hace {h} horas. Si de verdad no comió, llamá ahora a su pediatra o a emergencias. Fijate cómo está y anotá lo que tomó.")}
+# "Not an emergency" counts, unless the words name a sign nobody can wave away.
+DENIED = re.compile(r"\b(not an emergency|no emergency|nothing urgent|not urgent|no es (?:una )?(?:emergencia|urgencia)|no es urgente|nada urgente)\b", re.I)
+VITAL = re.compile(r"not breathing|stop\w* breathing|can'?t breathe|no respira|dej[oó] de respirar|\bblue\b|\bazul|\bmorad|unresponsive|no reacciona|no responde|seizure|convuls", re.I)
+# Words on a label or a shelf, not about a baby now (Nov 3, a toy label and a thermometer on sale both called 911).
+ERRANDS = re.compile(r"\bchoking hazards?\b|\bpeligro de asfixia\b|\bfever (?:thermometers?|reducers?)\b|\bterm[oó]metros? para (?:la )?fiebre\b", re.I)
+STOPPED = re.compile(r"\bstops? breathing\b|\bdeja de respirar\b", re.I)
+CLAUSE = re.compile(r"[.!?;\n]+|\b(?:also|adem[aá]s|tambi[eé]n)\b|,\s*y\s+|,?\s+y\s+(?=agreg|anot|compr|pon|prend|apag)|,?\s+and\s+(?=add|log|buy|turn|put|remind|tell)", re.I)
+# How far a room can't move in a few minutes.
+SENSOR_JUMP = {"humidity": 30.0, "temperature": 10.0}
+JUMP_MINUTES = 10
 
 
 def amounts(entries):
@@ -85,7 +103,10 @@ def gate(text, screen=None, lang=None):
     lang = lang or lang_of(text)
     if about_a_story(text):  # a dose Muse might write is still refused on the way out
         return None
-    if rules.is_emergency(text) or rules.spoken_emergency(text):
+    if DENIED.search(text or "") and not VITAL.search(text or ""):
+        return None
+    text = ERRANDS.sub(" ", text or "")
+    if rules.is_emergency(text) or rules.spoken_emergency(text) or (STOPPED.search(text) and not FICTION.search(text)):
         return "emergency", rules.EMERGENCY_REPLY[lang]
     urgent = rules.newborn_red_flag(text)
     if urgent:
@@ -94,6 +115,38 @@ def gate(text, screen=None, lang=None):
         return "medical", rules.NO_ADVICE[lang]
     if (screen or danger.build(SCREEN)).screen(text)[0]:
         return "emergency", rules.EMERGENCY_REPLY[lang]
+    return None
+
+
+def rest_of(text):
+    """The parts of a message the gate has no business with, for Muse. An alarm in one sentence never eats the errand in the next."""
+    parts = [p.strip(" ,") for p in CLAUSE.split(text or "") if p and len(p.split()) >= 3]
+    return " ".join(p + "." for p in parts if len(parts) > 1 and not gate(p, _NO_SCREEN))
+
+
+class _NoScreen:
+    def screen(self, text):
+        return False, "words"
+
+
+_NO_SCREEN = _NoScreen()
+
+
+def gap_step(hours):
+    """The highest step of the ladder this gap has reached, or None."""
+    return max((s for s in GAP_STEPS if hours >= s), default=None)
+
+
+def gap_line(hours, step, lang="es"):
+    lines = GAP_LINES["en" if lang == "en" else "es"]
+    return lines[0 if step < BOTH_FROM else 1 if step < 24 else 2].format(h=int(hours))
+
+
+def sensor_jump(entity, value, before, minutes):
+    """Why a reading can't be the room, or None: a room doesn't move this far this fast."""
+    kind = next((k for k in SENSOR_JUMP if k in str(entity)), None)
+    if kind and minutes <= JUMP_MINUTES and abs(value - before) >= SENSOR_JUMP[kind]:
+        return f"This reading went from {before:g} to {value:g} in {minutes:.0f} minutes, which a room can't do. Suspect the sensor: say so to the parent on duty and don't move a device on it until another reading agrees."
     return None
 
 
