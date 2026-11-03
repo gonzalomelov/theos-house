@@ -184,7 +184,7 @@ def coach_tool():
         if parent not in PARENTS:
             return "Refused: parent is gonza or ceci."
         return ("The coach is running on their glasses and speaks each step itself. Do not give car seat steps or advice of "
-                "your own, not even in a message.")
+                "your own, not even in a message. Their yes, no and listo go to the coach by themselves, so don't answer those.")
     return [StructuredTool.from_function(start_car_seat_coach)]
 
 

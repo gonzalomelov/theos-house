@@ -166,6 +166,18 @@ class CoreTest(unittest.IsolatedAsyncioTestCase):
         refused = [a["result"] for a in await core.actions() if a["tool"] == "notify" and a["result"].startswith("Refused")]
         self.assertEqual(len(refused), 1)
 
+    async def test_a_coach_line_reaches_the_parent_and_muse_is_not_woken(self):
+        model = scripted(AIMessage("nothing"))
+        core = await self.run_core(model)
+        self.assertIsNone(await core.coach_line("gonza", "Pasá el cinturón por las guías.", "lap_guides"))
+        self.assertEqual(core.channel.sent[0]["to"], "gonza")
+        self.assertEqual(model.calls, [])
+        self.assertEqual((await core.actions())[0]["tool"], "coach_line")
+        self.assertEqual(next(i for i in core.recent if i["kind"] == "coach_line")["step"], "lap_guides")
+        self.assertTrue(await core.coach_line("gonza", "Dale 5 mg de paracetamol"))
+        self.assertTrue(await core.coach_line("abuela", "Hola"))
+        self.assertEqual(len(core.channel.sent), 1)
+
     async def test_the_api_takes_an_event_and_streams_what_happened(self):
         core = await self.run_core(scripted(call("notify", parent="gonza", text="Theo llora"), AIMessage("Told Gonza.")))
         http = uvicorn.Server(uvicorn.Config(server.app(core), host="127.0.0.1", port=0, log_level="error"))

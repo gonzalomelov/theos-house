@@ -6,6 +6,7 @@ GET  /events        latest events, GET /actions?event_id=n actions of one event
 GET  /home          the simulated home's devices and moves, POST /home {"entity_id": ..., "state": ...} sets one (mock only)
 GET  /messages      what was sent to whom (mock only)
 POST /reset         back to the starting home and outbox (mock only)
+POST /coach         {"parent": ..., "text": ..., "step": ...}: a line from the car seat coach on the Mac, Muse isn't woken
 GET  /health
 """
 import asyncio
@@ -59,6 +60,11 @@ def app(core):
         if request.query_params.get("wait"):
             return JSONResponse({"id": event_id, **await done})
         return JSONResponse({"id": event_id}, 202)
+
+    async def coach(request):
+        body = await request.json()
+        why = await core.coach_line(body.get("parent"), str(body.get("text", ""))[:600], body.get("step"))
+        return JSONResponse({"error": why}, 400) if why else JSONResponse({"ok": True})
 
     async def stream(request):
         after = int(request.query_params.get("after", core.seq))
@@ -119,6 +125,6 @@ def app(core):
         return JSONResponse({"ok": True, "queued": core.queue.qsize(), "seq": core.seq, "home": "mock" if core.mock else "real"})
 
     return Starlette(routes=[
-        Route("/events", post_event, methods=["POST"]), Route("/events", events), Route("/stream", stream), Route("/actions", actions),
+        Route("/coach", coach, methods=["POST"]), Route("/events", post_event, methods=["POST"]), Route("/events", events), Route("/stream", stream), Route("/actions", actions),
         Route("/home", mock_only(get_home)), Route("/home", mock_only(set_home), methods=["POST"]),
         Route("/messages", mock_channel(messages)), Route("/reset", mock_only(reset), methods=["POST"]), Route("/health", health)])

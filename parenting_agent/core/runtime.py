@@ -235,6 +235,19 @@ class Core:
         self.publish("decision", event_id=event["id"], text=line, note=final, seconds=round(time.monotonic() - started, 1), tokens=used)
         return await self.finish(event, "done", line)
 
+    async def coach_line(self, parent, text, step=None):
+        """A line the car seat coach on the Mac says to the parent. It comes from the seat's manual, so Muse isn't woken for it."""
+        out, why = safety.outbound(text, self.settings.lang)
+        if why or parent not in tools_mod.PARENTS:
+            return why or "Refused: parent is gonza or ceci."
+        async with self.pool.connection() as db:
+            row = await (await db.execute("insert into events (home, happened_at, type, source, payload, status, outcome) values (%s, now(), 'coach_line', 'coach', %s, 'done', %s) returning id",
+                                          (self.settings.home, Jsonb({"parent": parent, "step": step}), "Coach spoke."))).fetchone()
+        await asyncio.to_thread(self.channel.send, parent, out)
+        await self.record(row["id"], "coach_line", {"parent": parent, "step": step}, out)
+        self.publish("coach_line", event_id=row["id"], parent=parent, step=step, text=out)
+        return None
+
     async def actions(self, event_id=None, limit=200):
         async with self.pool.connection() as db:
             one = "and a.event_id = %s" if event_id else ""
