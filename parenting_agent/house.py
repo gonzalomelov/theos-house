@@ -114,6 +114,10 @@ class HomeAssistant:
     def attributes(self, entity_id):
         return self._call(f"/api/states/{entity_id}").get("attributes") or {}
 
+    def entity(self, entity_id):
+        """The whole state object: state, attributes, last_updated and last_reported."""
+        return self._call(f"/api/states/{entity_id}") or {}
+
     def camera_image(self, entity_id):
         """The camera's current JPEG through Home Assistant's camera proxy, as bytes in memory. Read only."""
         return self._call(f"/api/camera_proxy/{entity_id}", raw=True)

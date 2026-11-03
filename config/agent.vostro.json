@@ -39,7 +39,8 @@
     "remind_me",
     "add_to_shopping_list",
     "set_supply_stock",
-    "sitter_handover"
+    "sitter_handover",
+    "nursery_climate"
   ],
   "plugins": [
     "parenting_agent.agent.heartbeat:Heartbeat",
@@ -54,7 +55,8 @@
     "parenting_agent.rhythm.engine:RhythmPlugin",
     "parenting_agent.sitter:SitterHandover",
     "parenting_agent.channels.push:FamilyPush",
-    "parenting_agent.voice_bridge:VoiceBridge"
+    "parenting_agent.voice_bridge:VoiceBridge",
+    "parenting_agent.nursery_climate:NurseryClimate"
   ],
   "baby": {"born": false, "name": "Theo"},
   "opol": {"enabled": true, "languages": {"gonza": "en", "ceci": "es"}, "lid": {"enabled": false}},
