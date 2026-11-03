@@ -1,0 +1,523 @@
+{
+ "days": 5,
+ "counts": {
+  "events": 81,
+  "done": 76,
+  "gated": 1,
+  "failed": 4,
+  "faults": 10,
+  "restarts": 1,
+  "crashes": 1,
+  "trims": 15,
+  "recovered": 3
+ },
+ "faults": {
+  "restart": 1,
+  "telegram_down": 1,
+  "crash": 1,
+  "home_down": 1,
+  "db_cut": 1,
+  "brain_down": 1,
+  "malformed": 1,
+  "burst": 1,
+  "empty": 1,
+  "brain_gone": 1
+ },
+ "violations": [],
+ "findings": [],
+ "failures": [
+  "day 4 11-14 08:47 message: ModelDown: 503 from the brain, or a timeout Told without Muse: gonza.",
+  "day 4 11-14 10:53 state_changed: ModelDown: 503 from the brain, or a timeout",
+  "day 4 11-14 12:05 message: ModelDown: 503 from the brain, or a timeout Told without Muse: ceci.",
+  "day 4 11-14 14:07 state_changed: ModelDown: 503 from the brain, or a timeout"
+ ],
+ "daily": [
+  {
+   "day": 0,
+   "events": 15,
+   "failed": 0,
+   "thread_messages": 106,
+   "thread_tokens": 5199,
+   "biggest_prompt": null,
+   "facts": 1,
+   "checkpoints": 164,
+   "db_kb": 3504,
+   "recent": 60,
+   "tasks": 7,
+   "rss_mb": 152,
+   "trims": 0
+  },
+  {
+   "day": 1,
+   "events": 31,
+   "failed": 0,
+   "thread_messages": 207,
+   "thread_tokens": 10064,
+   "biggest_prompt": null,
+   "facts": 1,
+   "checkpoints": 328,
+   "db_kb": 13088,
+   "recent": 65,
+   "tasks": 8,
+   "rss_mb": 155,
+   "trims": 0
+  },
+  {
+   "day": 2,
+   "events": 46,
+   "failed": 0,
+   "thread_messages": 286,
+   "thread_tokens": 13905,
+   "biggest_prompt": null,
+   "facts": 1,
+   "checkpoints": 8,
+   "db_kb": 904,
+   "recent": 163,
+   "tasks": 7,
+   "rss_mb": 156,
+   "trims": 0
+  },
+  {
+   "day": 3,
+   "events": 66,
+   "failed": 0,
+   "thread_messages": 337,
+   "thread_tokens": 15921,
+   "biggest_prompt": null,
+   "facts": 1,
+   "checkpoints": 155,
+   "db_kb": 20061,
+   "recent": 274,
+   "tasks": 7,
+   "rss_mb": 156,
+   "trims": 4
+  },
+  {
+   "day": 4,
+   "events": 81,
+   "failed": 4,
+   "thread_messages": 312,
+   "thread_tokens": 15742,
+   "biggest_prompt": null,
+   "facts": 1,
+   "checkpoints": 130,
+   "db_kb": 20827,
+   "recent": 390,
+   "tasks": 7,
+   "rss_mb": 160,
+   "trims": 15
+  }
+ ],
+ "usage": {
+  "model_calls": 207,
+  "input_tokens": 3380860,
+  "output_tokens": 13622
+ },
+ "event_seconds": [
+  7.4,
+  2.7,
+  1.3,
+  5.4,
+  4.6,
+  4.5,
+  2.9,
+  4.3,
+  5.2,
+  1.0,
+  8.9,
+  4.5,
+  0.8,
+  1.0,
+  6.1,
+  1.0,
+  0.9,
+  1.0,
+  3.7,
+  1.0,
+  4.5,
+  2.9,
+  4.4,
+  5.5,
+  4.4,
+  5.4,
+  4.4,
+  4.8,
+  1.1,
+  3.3,
+  2.4,
+  2.3,
+  2.3,
+  1.1,
+  6.1,
+  3.7,
+  5.7,
+  5.2,
+  5.0,
+  0.0,
+  4.7,
+  3.7,
+  1.3,
+  4.9,
+  9.8,
+  1.2,
+  2.0,
+  1.4,
+  2.5,
+  4.2,
+  1.4,
+  1.6,
+  5.3,
+  6.2,
+  5.5,
+  5.7,
+  6.2,
+  5.2,
+  5.5,
+  1.4,
+  4.5,
+  5.8,
+  1.3,
+  4.7,
+  3.9,
+  5.3,
+  4.1,
+  5.2,
+  4.1,
+  7.5,
+  15.5,
+  1.3,
+  5.5,
+  4.2,
+  6.6
+ ],
+ "sent": [
+  {
+   "to": "ceci",
+   "text": "Theo está llorando — te necesita.",
+   "at": 1793730641.167588
+  },
+  {
+   "to": "ceci",
+   "text": "Buen día, Ceci. Sin registros en el log esta noche. Esta noche está de guardia Gonza.",
+   "at": 1793730651.1508749
+  },
+  {
+   "to": "gonza",
+   "text": "Buen día, Gonza. Sin registros en el log esta noche. Esta noche estás de guardia vos.",
+   "at": 1793730651.150887
+  },
+  {
+   "to": "ceci",
+   "text": "Anotado: 80 ml.",
+   "at": 1793730655.65769
+  },
+  {
+   "to": "ceci",
+   "text": "Listo, guardé: Control con la pediatra el 2026-12-20 a las 10:00.",
+   "at": 1793730660.197172
+  },
+  {
+   "to": "ceci",
+   "text": "Anotado: 80 ml.",
+   "at": 1793730667.3923252
+  },
+  {
+   "to": "ceci",
+   "text": "Humedad en el cuarto de Theo: 48,5 %.",
+   "at": 1793730672.633185
+  },
+  {
+   "to": "ceci",
+   "text": "Anotado: 60 ml.",
+   "at": 1793730682.49211
+  },
+  {
+   "to": "echo",
+   "text": "Theo comió a las 16:28, fueron 60 mililitros.",
+   "at": 1793730687.118268
+  },
+  {
+   "to": "ceci",
+   "text": "Buenas noches, Ceci. Esta noche está de guardia Gonza.",
+   "at": 1793730695.108302
+  },
+  {
+   "to": "gonza",
+   "text": "Buenas noches, Gonza. Esta noche estás de guardia vos.",
+   "at": 1793730695.108319
+  },
+  {
+   "to": "gonza",
+   "text": "Buen día, Gonza. Anoche no hubo registros. Hoy a la mañana está de guardia Ceci.",
+   "at": 1793730705.900274
+  },
+  {
+   "to": "ceci",
+   "text": "Buen día, Ceci. Anoche no hubo registros. Hoy a la mañana estás de guardia vos.",
+   "at": 1793730705.90029
+  },
+  {
+   "to": "ceci",
+   "text": "Anotado: 90 ml.",
+   "at": 1793730711.492329
+  },
+  {
+   "to": "gonza",
+   "text": "Esta noche está de guardia Ceci.",
+   "at": 1793730714.411322
+  },
+  {
+   "to": "gonza",
+   "text": "Esta noche está de guardia Ceci.",
+   "at": 1793730718.677517
+  },
+  {
+   "to": "ceci",
+   "text": "Anotado: 80 ml.",
+   "at": 1793730724.0604029
+  },
+  {
+   "to": "echo",
+   "text": "Theo comió a las 16:21, fueron 80 mililitros.",
+   "at": 1793730728.513692
+  },
+  {
+   "to": "ceci",
+   "text": "Theo está llorando — te necesita.",
+   "at": 1793730740.939656
+  },
+  {
+   "to": "ceci",
+   "text": "Anotado: 90 ml.",
+   "at": 1793730746.8077672
+  },
+  {
+   "to": "ceci",
+   "text": "Entendido, Ceci. ¿Querés que busquemos otra forma para esta noche?",
+   "at": 1793730750.717269
+  },
+  {
+   "to": "gonza",
+   "text": "Buenas noches, Gonza. Esta noche está de guardia Ceci.",
+   "at": 1793730756.208558
+  },
+  {
+   "to": "ceci",
+   "text": "Buenas noches, Ceci. Esta noche estás de guardia vos.",
+   "at": 1793730756.208568
+  },
+  {
+   "to": "ceci",
+   "text": "Theo está llorando — te necesita.",
+   "at": 1793730764.1624131
+  },
+  {
+   "to": "ceci",
+   "text": "Theo está llorando — te necesita.",
+   "at": 1793730766.307464
+  },
+  {
+   "to": "ceci",
+   "text": "Theo está llorando — te necesita.",
+   "at": 1793730768.7342489
+  },
+  {
+   "to": "ceci",
+   "text": "Theo está llorando — te necesita.",
+   "at": 1793730770.967411
+  },
+  {
+   "to": "ceci",
+   "text": "Buen día, Ceci. Anoche no hubo registros después de las 19:12. Esta noche está de guardia Gonza.",
+   "at": 1793730778.165782
+  },
+  {
+   "to": "gonza",
+   "text": "Buen día, Gonza. Anoche no hubo registros después de las 19:12. Esta noche estás de guardia vos.",
+   "at": 1793730778.165796
+  },
+  {
+   "to": "ceci",
+   "text": "Anotado: 80 ml.",
+   "at": 1793730787.595659
+  },
+  {
+   "to": "gonza",
+   "text": "Última toma: hoy a las 11:35, 80 ml.",
+   "at": 1793730792.196216
+  },
+  {
+   "to": "ceci",
+   "text": "Anotado: 120 ml.",
+   "at": 1793730797.847404
+  },
+  {
+   "to": "gonza",
+   "text": "Puede ser una emergencia. Llamá ya al 911 (emergencias en Uruguay) y contales lo que ves.",
+   "at": 1793730798.9607198
+  },
+  {
+   "to": "ceci",
+   "text": "Puede ser una emergencia. Llamá ya al 911 (emergencias en Uruguay) y contales lo que ves.",
+   "at": 1793730798.961524
+  },
+  {
+   "to": "echo",
+   "text": "Theo comió a las 13:11, fueron 120 mililitros.",
+   "at": 1793730802.5747788
+  },
+  {
+   "to": "echo",
+   "text": "Theo comió a las 13:11, fueron 120 mililitros.",
+   "at": 1793730806.2141068
+  },
+  {
+   "to": "gonza",
+   "text": "Anotado: 60 ml.",
+   "at": 1793730812.622676
+  },
+  {
+   "to": "ceci",
+   "text": "Buenas noches, Ceci. Esta noche está de guardia Gonza.",
+   "at": 1793730822.228603
+  },
+  {
+   "to": "gonza",
+   "text": "Buenas noches, Gonza. Esta noche estás de guardia vos.",
+   "at": 1793730822.2286441
+  },
+  {
+   "to": "gonza",
+   "text": "Theo está llorando — te necesita.",
+   "at": 1793730832.162144
+  },
+  {
+   "to": "gonza",
+   "text": "Buen día, Gonza. Anoche no hubo registros después de las 19:28. Esta noche está de guardia Ceci.",
+   "at": 1793730836.3639622
+  },
+  {
+   "to": "ceci",
+   "text": "Buen día, Ceci. Anoche no hubo registros después de las 19:28. Esta noche estás de guardia vos.",
+   "at": 1793730836.364171
+  },
+  {
+   "to": "gonza",
+   "text": "Anotado: 60 ml.",
+   "at": 1793730844.6248572
+  },
+  {
+   "to": "gonza",
+   "text": "Anotado: 60 ml.",
+   "at": 1793730850.38933
+  },
+  {
+   "to": "ceci",
+   "text": "Hoy: 0 pañales.",
+   "at": 1793730856.363012
+  },
+  {
+   "to": "gonza",
+   "text": "Anotado: 60 ml.",
+   "at": 1793730861.9532669
+  },
+  {
+   "to": "ceci",
+   "text": "Anotado: 60 ml.",
+   "at": 1793730881.727989
+  },
+  {
+   "to": "ceci",
+   "text": "Buenas noches, Ceci. Esta noche estás de guardia vos.",
+   "at": 1793730887.2177541
+  },
+  {
+   "to": "gonza",
+   "text": "Buenas noches, Gonza. Esta noche está de guardia Ceci.",
+   "at": 1793730887.217798
+  },
+  {
+   "to": "ceci",
+   "text": "Theo está llorando — te necesita.",
+   "at": 1793730896.543303
+  },
+  {
+   "to": "ceci",
+   "text": "Theo está llorando — te necesita.",
+   "at": 1793730902.280301
+  },
+  {
+   "to": "ceci",
+   "text": "Buen día, Ceci. Anoche no hubo registros después de las 19:02. Esta noche está de guardia Gonza.",
+   "at": 1793730908.704363
+  },
+  {
+   "to": "gonza",
+   "text": "Buen día, Gonza. Anoche no hubo registros después de las 19:02. Esta noche estás de guardia vos.",
+   "at": 1793730908.70437
+  },
+  {
+   "to": "gonza",
+   "text": "Se me cortó la conexión y no pude hacer lo que me pediste. Probá de nuevo en un rato.",
+   "at": 1793730919.0889769
+  },
+  {
+   "to": "ceci",
+   "text": "Se me cortó la conexión y no pude hacer lo que me pediste. Probá de nuevo en un rato.",
+   "at": 1793730928.437797
+  },
+  {
+   "to": "ceci",
+   "text": "Anotado: 80 ml.",
+   "at": 1793730938.3536692
+  },
+  {
+   "to": "echo",
+   "text": "Theo comió a las 16:21, fueron 80 mililitros.",
+   "at": 1793730944.120235
+  },
+  {
+   "to": "ceci",
+   "text": "Humedad en el cuarto de Theo: 43,0 %.",
+   "at": 1793730954.1050282
+  },
+  {
+   "to": "gonza",
+   "text": "Anotado: 120 ml.",
+   "at": 1793730961.136767
+  },
+  {
+   "to": "gonza",
+   "text": "Entendido, Gonza. ¿Querés que veamos cómo hacer el cambio de guardia?",
+   "at": 1793730965.1993349
+  },
+  {
+   "to": "gonza",
+   "text": "Buenas noches, Gonza. Esta noche estás de guardia vos.",
+   "at": 1793730971.624619
+  },
+  {
+   "to": "ceci",
+   "text": "Buenas noches, Ceci. Esta noche está de guardia Gonza.",
+   "at": 1793730971.624628
+  }
+ ],
+ "moves": 7,
+ "messages": 62,
+ "summary": {
+  "minutes": 5.7,
+  "per_simulated_day_usd": 0.86,
+  "usd": 4.28,
+  "input_tokens_per_call": 16333,
+  "model_seconds": {
+   "median": 1.23,
+   "p95": 2.15,
+   "max": 3.25
+  },
+  "event_seconds": {
+   "median": 4.4,
+   "p95": 7.5,
+   "max": 15.5
+  }
+ }
+}

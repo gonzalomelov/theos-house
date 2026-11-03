@@ -14,7 +14,7 @@ try:
     from langchain_core.language_models.fake_chat_models import GenericFakeChatModel
     from langchain_core.messages import AIMessage
 
-    from parenting_agent.core.runtime import Core
+    from parenting_agent.core.runtime import RETRY_WAITS, Core
     from parenting_agent.simulator import gateway
     from parenting_agent.simulator import sessions as sessions_mod
     READY = bool(os.environ.get("PA_DB_URL"))
@@ -59,6 +59,8 @@ class Visitors(unittest.TestCase):
     def setUp(self):
         Core.screen = NoScreen()
         self.addCleanup(setattr, Core, "screen", None)
+        Core.retry_waits = (0, 0)
+        self.addCleanup(setattr, Core, "retry_waits", RETRY_WAITS)
 
     def visitor(self, url):
         visitor = httpx.Client(base_url=url, trust_env=False, timeout=30)

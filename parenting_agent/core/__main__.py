@@ -12,11 +12,11 @@ from .settings import part
 
 async def main(port):
     async with Core() as core:
-        jobs = [asyncio.create_task(sources.schedule(core)), asyncio.create_task(sources.wakes(core))] if os.environ.get("PA_SCHEDULE", "1") == "1" else []
+        jobs = [asyncio.create_task(sources.forever(core, "schedule", sources.schedule)), asyncio.create_task(sources.forever(core, "wakes", sources.wakes))] if os.environ.get("PA_SCHEDULE", "1") == "1" else []
         if part("home") == "real":
-            jobs.append(asyncio.create_task(sources.home_assistant(core)))
+            jobs.append(asyncio.create_task(sources.forever(core, "home_assistant", sources.home_assistant)))
         if os.environ.get("PA_TELEGRAM_POLL") == "1":
-            jobs.append(asyncio.create_task(sources.telegram(core)))
+            jobs.append(asyncio.create_task(sources.forever(core, "telegram", sources.telegram)))
         if os.environ.get("PA_ECHO_PORT"):  # Home Assistant's one way in, through the relay, only /ask and /health
             echo = uvicorn.Server(uvicorn.Config(server.echo_app(core), host="0.0.0.0", port=int(os.environ["PA_ECHO_PORT"]), log_level="warning"))
             jobs.append(asyncio.create_task(echo.serve()))

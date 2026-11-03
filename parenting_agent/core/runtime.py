@@ -7,6 +7,7 @@ import asyncio
 import collections
 import datetime
 import json
+import re
 import time
 import zoneinfo
 
@@ -24,6 +25,17 @@ from .mock_home import MockHome
 from .settings import Settings, part
 
 TZ = zoneinfo.ZoneInfo("America/Montevideo")
+RECURSION_LIMIT = 60  # each tool round takes 3 graph steps, so this is about 20 rounds in one event. 24 ended a run after 8 rounds (Nov 3)
+RETRY_WAITS = (5, 30)
+RECOVER_WITHIN = "15 minutes"
+PRUNE_EVERY = 25
+ALARM = re.compile(r"alarm|smoke|humo|fire|fuego|\bgas\b", re.I)
+NO_BRAIN = {"es": {"cry": "Theo está llorando. Te aviso sin más detalle porque ahora no puedo pensar bien, se me cortó la conexión.",
+                   "alarm": "Se escuchó: {kind}. Ahora no puedo pensar bien porque se me cortó la conexión, revisá por favor.",
+                   "message": "Se me cortó la conexión y no pude hacer lo que me pediste. Probá de nuevo en un rato."},
+            "en": {"cry": "Theo is crying. I can't say more, I've lost my connection.",
+                   "alarm": "Heard: {kind}. I've lost my connection, please check.",
+                   "message": "I lost my connection and couldn't do what you asked. Please try again in a while."}}
 SCHEMA = ("""create table if not exists events (id bigserial primary key, home text not null, at timestamptz not null default now(),
     happened_at timestamptz not null, type text not null, source text not null, payload jsonb not null,
     status text not null default 'queued', outcome text)""",
@@ -114,7 +126,7 @@ class Core:
     async def __aenter__(self):
         s = self.settings
         self.pool = AsyncConnectionPool(s.db_url, min_size=1, max_size=s.pool_max, open=False,
-                                        kwargs={"autocommit": True, "row_factory": dict_row, "prepare_threshold": 0})
+                                        kwargs={"autocommit": True, "row_factory": dict_row, "prepare_threshold": 0}, check=AsyncConnectionPool.check_connection)  # a connection PostgreSQL dropped is replaced, never handed out
         await self.pool.open()
         saver, self.store = AsyncPostgresSaver(self.pool), AsyncPostgresStore(self.pool)
         await saver.setup()
@@ -131,7 +143,8 @@ class Core:
                       *tools_mod.next_feed_tool(self.log, self.now), *tools_mod.coach_tool(), *tools_mod.wake_tool(self)]
         self.saver = saver
         self.agent = agent_mod.build(self.model or agent_mod.muse(), self.tools, saver, self.store)
-        self.config = {"configurable": {"thread_id": f"home-{s.home}"}, "recursion_limit": 24}
+        self.config = {"configurable": {"thread_id": f"home-{s.home}"}, "recursion_limit": RECURSION_LIMIT}
+        await self.recover()
         self.worker = asyncio.create_task(self.work())
         return self
 
@@ -204,10 +217,39 @@ class Core:
         await self.queue.put(event)
         return event["id"], done
 
+    async def recover(self):
+        """What a power cut left unfinished runs now, a night cry can't be lost. Too old to matter is on record as missed."""
+        async with self.pool.connection() as db:
+            await db.execute("update events set status = 'missed', outcome = 'The agent was down when this came.' where home = %s and status = 'queued' and at < now() - %s::interval",
+                             (self.settings.home, RECOVER_WITHIN))
+            rows = await (await db.execute("select * from events where home = %s and status = 'queued' order by id", (self.settings.home,))).fetchall()
+        for row in rows:
+            event = {"id": row["id"], "type": row["type"], "payload": row["payload"], "source": row["source"], "moment": row["happened_at"].astimezone(TZ), "ask": False,
+                     "again": True, "done": asyncio.get_running_loop().create_future()}
+            await self.queue.put(event)
+        return len(rows)
+
+    async def prune(self):
+        """Every step of a thread is a full checkpoint, so this keeps only the latest, and rota entries for nights long gone."""
+        await self.saver.aprune([self.config["configurable"]["thread_id"]], strategy="keep_latest")
+        known = await tools_mod.facts(self.store, self.settings.home)
+        limit = self.now().date() - datetime.timedelta(days=2)
+        for key in known:
+            if key.startswith("on_duty_") and key[8:] < str(limit):
+                await self.store.adelete((*tools_mod.FACTS, self.settings.home), key)
+
     async def work(self):
+        ran = 0
         while True:
             event = await self.queue.get()
-            outcome = await self.run(event)
+            try:
+                outcome = await self.run(event)
+                ran += 1
+                if ran % PRUNE_EVERY == 0:
+                    await self.prune()
+            except Exception as failure:  # PostgreSQL gone while recording a failure: the worker still lives for the next event
+                outcome = {"status": "failed", "outcome": f"{type(failure).__name__}: {str(failure)[:300]}"}
+                self.publish("error", event_id=event["id"], error=outcome["outcome"])
             if event["ask"]:
                 outcome = {**outcome, "said": self.channel.hold or []}
             if not event["done"].done():
@@ -235,10 +277,48 @@ class Core:
                 stopped = await self.gated(event)
                 if stopped:
                     return stopped
-            return await self.decide(event, started)
+            return await self.attempts(event, started)
         except Exception as failure:  # one bad event never stops the agent: it is on record, and the next one runs
             self.publish("error", event_id=event["id"], error=f"{type(failure).__name__}: {str(failure)[:300]}")
             return await self.finish(event, "failed", f"{type(failure).__name__}: {str(failure)[:300]}")
+
+    retry_waits = RETRY_WAITS
+
+    async def attempts(self, event, started):
+        """The brain can be away for a moment. It gets asked again, and if it stays away, what can't wait goes out without it."""
+        for wait in (*self.retry_waits, None):
+            try:
+                return await self.decide(event, started)
+            except Exception as failure:
+                why = f"{type(failure).__name__}: {str(failure)[:300]}"
+                self.publish("error", event_id=event["id"], error=why)
+                if wait is None:
+                    told = await self.without_brain(event)
+                    return await self.finish(event, "failed", why + (f" Told without Muse: {', '.join(told)}." if told else ""))
+                event["again"] = True
+                await asyncio.sleep(wait)
+
+    async def without_brain(self, event):
+        """Fixed lines for when Muse is unreachable: a cry to the parent on duty, an alarm to both, a parent's message gets told to retry."""
+        payload, lang = event["payload"], self.settings.lang if self.settings.lang in NO_BRAIN else "es"
+        kind = str(payload.get("kind", "")).lower()
+        if event["type"] == "sound" and "cry" in kind:
+            to, line = [who_is_on(event["moment"], await tools_mod.facts(self.store, self.settings.home))], NO_BRAIN[lang]["cry"]
+        elif event["type"] == "sound" and ALARM.search(kind):
+            to, line = list(tools_mod.PARENTS), NO_BRAIN[lang]["alarm"].format(kind=payload.get("kind"))
+        elif event["type"] == "message" and payload.get("from") in tools_mod.PARENTS:
+            to, line = [payload["from"]], NO_BRAIN[lang]["message"]
+        else:
+            return []
+        told = []
+        for parent in to:
+            try:
+                await asyncio.to_thread(self.channel.send, parent, line)
+                await self.record(event["id"], "no_brain_message", {"to": parent}, line)
+                told.append(parent)
+            except Exception as failure:
+                self.publish("error", event_id=event["id"], error=f"{type(failure).__name__}: {str(failure)[:300]}")
+        return told
 
     async def gated(self, event):
         """Red flags and medical questions never reach Muse. The fixed line goes out and the thread learns it happened."""
@@ -249,9 +329,14 @@ class Core:
         kind, line = verdict
         sender = event["payload"].get("from")
         to = list(tools_mod.PARENTS) if kind != "medical" or sender not in tools_mod.PARENTS else [sender]
-        for parent in to:
-            await asyncio.to_thread(self.channel.send, parent, line)
-            await self.record(event["id"], "gate_message", {"to": parent, "kind": kind}, line)
+        for parent in to:  # one phone failing never keeps the line from the other, and it is tried once more
+            for attempt in range(2):
+                try:
+                    await asyncio.to_thread(self.channel.send, parent, line)
+                    await self.record(event["id"], "gate_message", {"to": parent, "kind": kind}, line)
+                    break
+                except Exception as failure:
+                    await self.record(event["id"], "gate_message", {"to": parent, "kind": kind, "attempt": attempt + 1}, f"Failed: {type(failure).__name__}")
         if self.channel.hold is not None:
             self.channel.hold.append(line)
         self.publish("gate", event_id=event["id"], gate=kind, to=to, text=line)
@@ -265,13 +350,17 @@ class Core:
     async def decide(self, event, started):
         await agent_mod.repair(self.agent, self.config)
         text = describe(event, event["moment"], await tools_mod.facts(self.store, self.settings.home))
+        if event.get("again"):
+            text += "\n\nAn earlier try at this event was cut off. Some of it may already be done, so check before repeating anything."
         final, used, calls = "", 0, []
 
         async def think(words):
             nonlocal final, used
             pending = {}
             async for update in self.agent.astream({"messages": [HumanMessage(words)]}, self.config, stream_mode="updates"):
-                for step in update.values():
+                for node, step in update.items():
+                    if node not in ("model", "tools"):  # the trim's update holds the whole kept history: nothing in it happened now
+                        continue
                     for message in (step or {}).get("messages", []) if isinstance(step, dict) else []:
                         if message.type == "ai":
                             used += (message.usage_metadata or {}).get("total_tokens", 0)
@@ -291,6 +380,9 @@ class Core:
             await think(f"{self.sender} wrote to you and has received nothing from you. Answer them with notify, in one short line.")
         elif unheard_cry(event, calls):  # the same with a cry: once the warmer went on and nobody was told (Nov 3)
             await think("Theo is crying and no parent has been told. Tell the parent on duty with notify, in one short line.")
+        if unanswered(event, calls) or unheard_cry(event, calls):  # asked twice and still nothing: nobody is left waiting on Muse
+            for parent in await self.without_brain(event):
+                calls.append(("notify", {"parent": parent}, f"Sent to {parent}."))
         line = tools_mod.record_line(calls)
         if final:  # Muse's own closing line can contradict what it did (Nov 3), so it is kept apart and the record is the calls
             final = safety.plain(final)

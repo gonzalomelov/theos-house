@@ -16,6 +16,16 @@ from .settings import SCHEDULE, watch as watch_list
 from .tools import PARENTS
 
 
+async def forever(core, name, job, *args, wait=30):
+    """A source that breaks comes back. Without this one failed poll means the agent stops hearing the parents, with its health still green."""
+    while True:
+        try:
+            return await job(core, *args)
+        except Exception as failure:
+            core.publish("source", name=name, status=f"restarting after {type(failure).__name__}")
+            await asyncio.sleep(wait)
+
+
 def worth_waking(entity, state, last, watch):
     """True when a watched reading moved enough since the last one Muse saw. The first after a start wakes Muse, a room left too humid can't wait."""
     if entity not in watch or state in ("unavailable", "unknown", None):
@@ -52,7 +62,7 @@ async def home_assistant(core, watch=None):
                     entity, new = data.get("entity_id"), (data.get("new_state") or {}).get("state")
                     if worth_waking(entity, new, last, watch):
                         await core.dispatch("state_changed", {"entity_id": entity, "state": new}, source="home_assistant")
-        except (OSError, websockets.WebSocketException, asyncio.TimeoutError) as failure:
+        except Exception as failure:  # the socket, or PostgreSQL under dispatch: this source can't stop for either
             core.publish("source", name="home_assistant", status=f"reconnecting after {type(failure).__name__}")
             await asyncio.sleep(10)
 
@@ -86,7 +96,13 @@ async def telegram(core):
     ears = voice_client.build({"service": os.environ["PA_VOICE_SERVICE"]}) if os.environ.get("PA_VOICE_SERVICE") else None
     offset = None
     while True:
-        for item in await asyncio.to_thread(bot.poll, offset, 25):
+        try:
+            items = await asyncio.to_thread(bot.poll, offset, 25)
+        except MessagingError as failure:  # Telegram away for a moment: keep the offset, nothing is lost, ask again
+            core.publish("source", name="telegram", status=f"retrying after {type(failure).__name__}")
+            await asyncio.sleep(10)
+            continue
+        for item in items:
             offset = item.update_id + 1
             if item.chat_id not in who:
                 continue

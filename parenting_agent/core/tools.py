@@ -115,7 +115,10 @@ async def home_tools(settings, mock):
         async def call(**arguments):
             if short in NAMED and arguments.get("name") not in settings.devices:
                 return f"Refused: you may only switch {', '.join(settings.devices)}."
-            return text_of(await tool.ainvoke({k: v for k, v in arguments.items() if v is not None}))
+            try:
+                return text_of(await tool.ainvoke({k: v for k, v in arguments.items() if v is not None}))
+            except Exception as failure:  # Home Assistant away is something Muse hears about, the run goes on
+                return f"Error: the home is not answering ({type(failure).__name__}), nothing changed that you can be sure of."
         return StructuredTool.from_function(coroutine=call, name=short, description=tool.description or short, args_schema=tool.args_schema)
     usable = [short for short in HOME_TOOLS if not (real and short in GATED and GATED[short] not in settings.devices)]
     return [wrap(short, found[short]) for short in usable if short in found]
@@ -137,7 +140,10 @@ def channel_tools(channel, settings, log=None, heard=lambda: "", night_check=Non
         out, why = await asyncio.to_thread(checked, text)
         if why:
             return why
-        note = await asyncio.to_thread(channel.send, parent, out)
+        try:
+            note = await asyncio.to_thread(channel.send, parent, out)
+        except Exception as failure:  # the phone channel away is something Muse hears about, the run goes on
+            return f"Failed, nothing was sent: the phone channel is not answering ({type(failure).__name__})."
         return f"Sent to {parent}. {note}" if note else f"Sent to {parent}."
 
     def say_on_echo(text: str) -> str:
@@ -145,7 +151,10 @@ def channel_tools(channel, settings, log=None, heard=lambda: "", night_check=Non
         out, why = checked(text)
         if why:
             return why
-        channel.echo(out)
+        try:
+            channel.echo(out)
+        except Exception as failure:
+            return f"Failed, nothing was said: the Echo is not answering ({type(failure).__name__})."
         return "Said on the kitchen Echo."
     return [StructuredTool.from_function(coroutine=notify), StructuredTool.from_function(say_on_echo)]
 
@@ -158,7 +167,7 @@ DID = {"HassTurnOn": lambda a: f"Turned on {a.get('name', 'a device')}", "HassTu
        "set_on_duty": lambda a: f"Put {a.get('parent', 'a parent')} on duty for the night of {a.get('night', 'a date')}",
        "remember": lambda a: f"Remembered {a.get('key', 'a fact')}", "forget": lambda a: f"Forgot {a.get('key', 'a fact')}",
        "wake_me_at": lambda a: f"Set a wake for {a.get('at', 'later')}", "start_car_seat_coach": lambda a: f"Started the car seat coach for {a.get('parent', 'a parent')}"}
-FAILED = re.compile(r'^\s*(refused|error|ask_parent|.{0,40}"error"|.{0,200}"response_type":\s*"error")', re.I | re.S)
+FAILED = re.compile(r'^\s*(refused|failed|error|ask_parent|.{0,40}"error"|.{0,200}"response_type":\s*"error")', re.I | re.S)
 
 
 def record_line(calls):
@@ -259,4 +268,4 @@ def duty_tool(store, home):
 
 
 async def facts(store, home):
-    return {item.key: item.value["value"] for item in await store.asearch((*FACTS, home), limit=100)}
+    return {item.key: item.value["value"] for item in await store.asearch((*FACTS, home), limit=1000)}  # Core.prune keeps this small
