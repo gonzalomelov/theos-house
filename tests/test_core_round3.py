@@ -4,6 +4,7 @@ import datetime
 import time
 import unittest
 
+from tests import test_langgraph_core as base
 from tests.test_langgraph_core import READY, NoScreen, call, scripted
 
 if READY:
@@ -11,7 +12,6 @@ if READY:
     from langchain_core.messages import AIMessage
     from parenting_agent.core import runtime, safety, tools as tools_mod
     from parenting_agent.simulator import gateway, sessions as sessions_mod
-    from tests import test_langgraph_core as base
     from tests.test_simulator import served
 
 
