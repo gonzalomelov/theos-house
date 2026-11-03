@@ -105,7 +105,7 @@ def app(model=None, media=None):
             return JSONResponse({"error": USED}, 429)
         if event_id is None:
             return JSONResponse({"error": "There is no such moment."}, 404)
-        return JSONResponse({"id": event_id}, 202)
+        return JSONResponse({"id": event_id or None}, 202)
 
     async def sense(request, session):
         """A saved result from Meta's model goes in as an event, and Muse decides live."""
@@ -134,7 +134,7 @@ def app(model=None, media=None):
         if payload is None:
             return JSONResponse({"error": "That isn't an event this home can send."}, 400)
         try:
-            return JSONResponse({"id": await session.event(body["type"], payload)}, 202)
+            return JSONResponse({"id": (await session.event(body["type"], payload)) or None}, 202)
         except Full:
             return JSONResponse({"error": USED}, 429)
 

@@ -225,13 +225,17 @@ class LocalBabyLog(BabyLog):
     """The baby log kept in the agent's own memory file, for offline runs and tests."""
     name = "local"
 
-    def __init__(self, memory):
-        self.memory = memory
+    def __init__(self, memory, clock=None):
+        self.memory, self.clock = memory, clock
+
+    def now(self):
+        """This log's own clock. A simulated home has its own time, and two visitors never share one."""
+        return parse_time(self.clock().isoformat(timespec="seconds")) if self.clock else parse_time(now())
 
     def add(self, kind, details, ts=None):
         if kind not in LOG_KINDS:
             raise ValueError(f"unknown log kind {kind}, expected one of {', '.join(LOG_KINDS)}")
-        current = parse_time(now())
+        current = self.now()
         moment = parse_time(ts) if ts else current
         entry = {"ts": min(moment, current).isoformat(timespec="seconds"), "kind": kind, "details": details}
         with self.memory.lock:

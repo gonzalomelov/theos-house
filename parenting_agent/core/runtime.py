@@ -210,7 +210,7 @@ class Core:
         self.tools = [*await tools_mod.home_tools(s, self.mock, lambda: self.current, self.moved, self.held_by_hand),
                       *tools_mod.channel_tools(self.channel, s, self.log, lambda: self.heard, self.night_check, self.claims),
                       *tools_mod.log_tools(self.log, memory), *tools_mod.memory_tools(self.store, s.home), *tools_mod.duty_tool(self.store, s.home, self.duty_set),
-                      *tools_mod.next_feed_tool(self.log, self.now), *tools_mod.coach_tool(), *tools_mod.wake_tool(self)]
+                      *tools_mod.next_feed_tool(self.log, self.now), *tools_mod.coach_tool(), *tools_mod.vacuum_tool(s, self.mock), *tools_mod.wake_tool(self)]
         self.saver = saver
         self.agent = agent_mod.build(self.model or agent_mod.muse(), self.tools, saver, self.store)
         self.config = {"configurable": {"thread_id": f"home-{s.home}"}, "recursion_limit": RECURSION_LIMIT}
@@ -316,7 +316,14 @@ class Core:
                          "Tell the parent on duty in one short line, or ask them. At night, set quiet.")
 
     async def held_by_hand(self, short, arguments):
-        """A plug a person just switched isn't switched back by Muse on its own."""
+        """A plug a person just switched isn't switched back by Muse on its own. The vacuum cleans by itself only with nobody home."""
+        if short == "HassVacuumStart" and self.sender not in tools_mod.PARENTS:
+            try:
+                empty = await asyncio.to_thread(tools_mod.nobody_home, self.settings)
+            except Exception:
+                empty = False
+            if not empty:
+                return "Refused, the vacuum stayed docked: someone may be home. It starts by itself only when nobody is home, or when a parent asks."
         name = arguments.get("name")
         if short not in tools_mod.NAMED or self.sender or not name:
             return None
@@ -334,6 +341,12 @@ class Core:
 
     def claims(self, text):
         """What a message can't say, from the clock: a warm bottle with the warmer off, or calm about a long gap between feeds."""
+        if safety.JARGON.search(text):
+            return "Refused, nothing was sent: write like a friend, without words such as rota or per. Say whose night it is, in plain words."
+        if safety.READY_AT.search(text):
+            return "Refused, nothing was sent: the time you have is when the warmer switches off, not when a bottle is ready. Say it is warming, without a ready time."
+        if safety.PROMISE.search(text) and not self.reminder_set:
+            return "Refused, nothing was sent: you have no reminder set, so don't promise one. Call wake_me_at first, or leave the promise out."
         if safety.WARM_CLAIM.search(text) and not (self.warm_until and self.now() < self.warm_until):
             return "Refused, nothing was sent: the bottle warmer is off, so no bottle is warm. Say it isn't, or turn it on."
         if self.gap_hours() >= safety.FEED_GAP_H and safety.REASSURE.search(text):
@@ -364,6 +377,8 @@ class Core:
         return facts
 
     async def add_wake(self, moment, why):
+        if not why.startswith("device_end:"):
+            self.reminder_set = True
         async with self.pool.connection() as db:
             await db.execute("insert into wakes (home, at, why) values (%s, %s, %s)", (self.settings.home, moment, why))
 
@@ -636,8 +651,10 @@ class Core:
         return [why] if why else []
 
     screen = None
+    reminder_set = False  # for this event: a promise needs a reminder behind it
 
     async def decide(self, event, started):
+        self.reminder_set = False
         await agent_mod.repair(self.agent, self.config)
         moment = event["moment"]
         facts = await self.tidy_facts(moment)

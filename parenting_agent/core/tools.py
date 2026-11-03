@@ -16,7 +16,6 @@ from zoneinfo import ZoneInfo
 from langchain_core.tools import StructuredTool
 from langchain_mcp_adapters.client import MultiServerMCPClient
 
-from ..agent import memory as memory_module
 from ..agent import rules
 from ..agent.memory import LocalBabyLog, Memory
 from ..agent.tools import core_tools
@@ -115,9 +114,8 @@ def baby_log(settings, clock):
         from ..agent.babybuddy import BabyBuddyLog
         return None, BabyBuddyLog.from_config({"child": os.environ.get("PA_BABY_CHILD", "test-baby")})
     Path(settings.data_dir).mkdir(parents=True, exist_ok=True)
-    memory_module.now = lambda: clock().isoformat(timespec="seconds")  # the simulated log lives the simulated moment
     memory = Memory(Path(settings.data_dir) / f"mock-log-{settings.home}.sqlite")
-    return memory, LocalBabyLog(memory)
+    return memory, LocalBabyLog(memory, clock)  # the simulated log lives the simulated moment
 
 
 async def home_tools(settings, mock, turn=lambda: None, after=None, before=None):
@@ -217,6 +215,22 @@ def record_line(calls):
     return line + (" Refused or failed: " + ", ".join(dict.fromkeys(refused)) + "." if refused else "")
 
 
+HOME_TZ = ZoneInfo("America/Montevideo")
+OFFSET = re.compile(r"(?:Z|[+-]\d{2}(?::?\d{2})?)$")
+
+
+def home_time(value):
+    """A time Muse writes, as the home's clock on the wall. Muse once wrote a parent's "at three" as 03:00+01:00, which the log
+    kept as 23:00 the evening before and then raised a false gap between feeds. Nobody here lives in another zone."""
+    text = str(value or "")
+    if "T" not in text:
+        return value
+    try:
+        return datetime.datetime.fromisoformat(OFFSET.sub("", text)).replace(tzinfo=HOME_TZ).isoformat(timespec="seconds")
+    except ValueError:
+        return value
+
+
 def log_tools(log, memory):
     """The baby log tools the old agent already had, with the same checks."""
     tools = core_tools(memory, log, LOG_TOOLS, remember_keys=())
@@ -225,6 +239,7 @@ def log_tools(log, memory):
         tool = tools.items[name]
 
         def call(**arguments):
+            arguments = {k: home_time(v) if k in ("ts", "since", "until") else v for k, v in arguments.items()}
             status, result = tools.run(name, arguments)
             return str(result) if status == "ran" else f"{status}: {result}"
         return StructuredTool.from_function(func=call, name=name, description=tool.description, args_schema=tool.parameters)
@@ -243,6 +258,33 @@ def next_feed_tool(log, clock):
     return [StructuredTool.from_function(next_feed)]
 
 
+VACUUM_IDENTIFY = "button.xiaomi_ov71gl_0681_identify"
+
+
+def nobody_home(settings):
+    """True only when Home Assistant says every person is away. Unknown counts as home. A mock home has no one to ask."""
+    if part("home") != "real":
+        return False
+    people = [s for s in HomeAssistant(settings.ha_url, settings.ha_token)._call("/api/states") if s.get("entity_id", "").startswith("person.")]
+    return bool(people) and all(s.get("state") == "not_home" for s in people)
+
+
+def vacuum_tool(settings, mock=None):
+    def vacuum_identify() -> str:
+        """Make the robot vacuum say here it is, so someone can find it. It doesn't clean or move."""
+        if part("home") != "real":
+            mock.moves.append({"tool": "vacuum_identify", "name": "Robot vacuum", "state": "identified", "at": time.time()})
+            return "The vacuum said here it is."
+        if "vacuum" not in settings.devices:
+            return "Refused: the vacuum isn't on the allowed list."
+        try:
+            HomeAssistant(settings.ha_url, settings.ha_token).service("button.press", VACUUM_IDENTIFY)
+        except Exception as failure:
+            return f"Error: the home is not answering ({type(failure).__name__})."
+        return "The vacuum said here it is."
+    return [StructuredTool.from_function(vacuum_identify)]
+
+
 def coach_tool():
     def start_car_seat_coach(parent: str, lang: str = "es") -> str:
         """Start the car seat coach for the parent asking for help installing the car seat. It runs on their glasses, sees
@@ -259,7 +301,7 @@ def wake_tool(core):
         """Ask to get an event later, to do something at that moment that nobody will ask for. at is an ISO time with its
         offset, why is what you meant to do then."""
         try:
-            moment = datetime.datetime.fromisoformat(at)
+            moment = datetime.datetime.fromisoformat(home_time(at))
         except ValueError:
             return "Refused: at is an ISO time, for example 2026-11-04T00:40:00-03:00."
         await core.add_wake(moment, why)

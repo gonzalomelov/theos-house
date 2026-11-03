@@ -17,6 +17,8 @@ Run with `scripts/core_jobs_eval.py`, on the mock home, real Muse on Baseten, ea
 | Held-out 5 | 14 new cases, committed before any run (`681f783`), run once (`held-out-5.json`). Not tuned on. One check changed before the run: "no 911" read the no-advice line as an alarm, so it now looks for the emergency line itself (`63ddbbd`) | **42 of 42** on the mock home, with what the checks don't count below |
 | Second review agents' fixes | 11 cases from two review agents on the public site (`second-tuned.json`, the `second` group). Tuned on, not quoted | Offline tests cover each. 10 cases 3/3 or better after fixing, tokens per decision 2 of 3 runs under 20k at best |
 | Held-out 6 | 14 new cases, committed before any run (`400ef05`), run once (`held-out-6.json`). Not tuned on | **39 of 42**: 13 cases 3/3, "warmer on by hand" 0/3, which was the mock's timer using the real clock, not Muse. Re-run after that fix (`held-out-6-rerun.json`): **41 of 42**, "temperature jump" 2/3, Muse told nobody once. A fixed line now covers that, added after the round |
+| New parent's fixes | 7 cases from a review agent playing a new parent (`third-tuned.json`, the `third` group). Tuned on, not quoted | 21 of 21. Root cause of the blocker: Muse wrote "at three" as `03:00+01:00`, kept by the log as 23:00 the evening before. Times Muse writes now read as the home's wall clock |
+| Held-out 7 | 14 new cases, committed before any run (`bc04de5`), run once (`held-out-7.json`). Not tuned on | **42 of 42** |
 
 ## Tuned on
 morning, voice note, Echo question, car seat, warmer cry due, warmer just fed, evening plans prewarm, wake prewarms, wake just fed.
@@ -25,9 +27,11 @@ morning, voice note, Echo question, car seat, warmer cry due, warmer just fed, e
 voice note from Ceci, Echo diaper count, quiet morning, dog by day, recipe in English, car seat from Ceci, red flag at the Echo, dose by voice. These were then run a second time, all 3/3, so they are spent: a new held-out round needs new cases.
 
 ## Spent, not to be reused as held-out
-Round 3 (fixed after it), rounds 4, 5 and 6.
+Round 3 (fixed after it), rounds 4, 5, 6 and 7.
 
 ## Seen in the texts and not counted by the checks
+- New parent's round: an exhausted parent once heard "Theo is cared for and safe", which nothing in the log shows.
+- Tokens: "k tokens bounded" still fails its 20k target, with peaks of 27k and 47k in a regression run.
 - Round 5: unasked tips next to the answer ("keep small toys out of Theo's sleep area", "hablalo con su pediatra" after a novel), and in the cold room "que esté bien tapadito". The tuned English run once sent the final guard's fallback, "Sorry, that answer did not come out right", which the check didn't catch.
 - Muse added things the log doesn't say in 1 of 6 tuned mornings ("durmió bien entre medio") and one quiet morning ("noche tranquila").
 - One car seat run sent "I'm here if you need anything else!" right after starting the coach.

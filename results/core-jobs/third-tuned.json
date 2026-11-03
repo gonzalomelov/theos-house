@@ -1,0 +1,388 @@
+{
+ "x three en": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "times": [
+     "2026-11-05T03:00:00-03:00"
+    ],
+    "gaps": 0,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Logged 90ml bottle at 3:00 am, thanks.",
+      "at": 1793742731.281437
+     },
+     {
+      "to": "gonza",
+      "text": "Morning, you were on last night. Theo had 2 bottles: midnight (85ml) and 3:00am (90ml). Tonight Ceci's on. Hope you got some rest.",
+      "at": 1793742736.990168
+     },
+     {
+      "to": "ceci",
+      "text": "Morning, Gonza covered last night, Theo had bottles at midnight (85ml) and 3:00am (90ml). You're on tonight.",
+      "at": 1793742736.990444
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "times": [
+     "2026-11-05T03:00:00-03:00"
+    ],
+    "gaps": 0,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Got it, 90 ml bottle at 3:00 logged.",
+      "at": 1793742745.427008
+     },
+     {
+      "to": "gonza",
+      "text": "Morning Gonza, you had 2 feeds last night: 12:00am (85ml) and 3:00am (90ml). Tonight Ceci is on duty. Hope you get some rest today.",
+      "at": 1793742749.618119
+     },
+     {
+      "to": "ceci",
+      "text": "Morning Ceci, last night Gonza had 2 feeds: 12:00am (85ml) and 3:00am (90ml). Tonight you're on duty.",
+      "at": 1793742749.6186008
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "times": [
+     "2026-11-05T03:00:00-03:00"
+    ],
+    "gaps": 0,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Logged, 90 ml bottle at 03:00.",
+      "at": 1793742758.0512938
+     },
+     {
+      "to": "gonza",
+      "text": "Morning, last night was yours. You gave 2 feeds overnight (175 ml total), last at 03:00, 90 ml bottle. Tonight Ceci's on.",
+      "at": 1793742764.467169
+     },
+     {
+      "to": "ceci",
+      "text": "Morning, Gonza did the night: 2 feeds, last at 03:00 (90 ml bottle, 175 ml total overnight). You're on tonight.",
+      "at": 1793742764.467187
+     }
+    ]
+   }
+  ]
+ },
+ "x three es": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "times": [
+     "2026-11-05T03:00:00-03:00"
+    ],
+    "gaps": 0,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Anotado: mamadera de 90 ml a las 3:00. Gracias, Gonza.",
+      "at": 1793742770.798592
+     },
+     {
+      "to": "gonza",
+      "text": "Buen día, Gonza. Anoche tomaste la guardia, gracias. Theo tomó dos mamaderas: a las 00:00 (85 ml) y a las 3:00 (90 ml). Que tengas un buen día y puedas descansar un rato.",
+      "at": 1793742776.189099
+     },
+     {
+      "to": "ceci",
+      "text": "Buen día, Ceci. Anoche estuvo Gonza de guardia: Theo tomó dos mamaderas, a las 00:00 (85 ml) y a las 3:00 (90 ml). Esta noche te toca a vos. Que tengas lindo día.",
+      "at": 1793742776.18912
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "times": [
+     "2026-11-05T03:00:00-03:00"
+    ],
+    "gaps": 0,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Anotado, Gonza, mamadera de 90 ml a las 3:00.",
+      "at": 1793742782.9902458
+     },
+     {
+      "to": "gonza",
+      "text": "Buen día, Gonza. Anoche tomaste vos la guardia: Theo tomó 2 mamaderas, a las 00:00 (85 ml) y a las 03:00 (90 ml). Esta noche le toca a Ceci.",
+      "at": 1793742790.64705
+     },
+     {
+      "to": "ceci",
+      "text": "Buen día, Ceci. Anoche estuvo Gonza de guardia: Theo tomó 2 mamaderas, a las 00:00 (85 ml) y a las 03:00 (90 ml). Esta noche te toca a vos.",
+      "at": 1793742790.647079
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "times": [
+     "2026-11-05T03:00:00-03:00"
+    ],
+    "gaps": 0,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Anotado: mamadera de 90 ml a las 03:00.",
+      "at": 1793742796.219177
+     },
+     {
+      "to": "ceci",
+      "text": "Buen día Ceci. Anoche Theo tomó 2 mamaderas, a las 00:00 y a las 03:00. Esta noche estás vos de guardia.",
+      "at": 1793742801.382881
+     },
+     {
+      "to": "gonza",
+      "text": "Buen día Gonza. Anoche tomaste la guardia: Theo tomó 2 mamaderas, a las 00:00 (85 ml) y a las 03:00 (90 ml). Esta noche está Ceci de guardia.",
+      "at": 1793742801.383156
+     }
+    ]
+   }
+  ]
+ },
+ "x scared log": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "The log shows Theo fed at 3:00 am today, 90 ml by bottle, and before that at 12:00 am, that's a 3-hour gap, not 8 hours. Last feed was 4 h 30 min ago at 3:00. If you're worried, please check with his pediatrician.",
+      "at": 1793742806.898578
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "I hear you, it's scary to worry he went that long. What I can see in the log is: Theo had a bottle at 12:00am today and again at 3:00am today (90ml each), so that's about 3 hours between those two. Yesterday he also ate at 3pm, 6pm and 9pm. That's everything I can see in the log, if you're worried about how he's feeding, please check with his pediatrician. Last night was Gonza on duty, and tonight it's you, Ceci.",
+      "at": 1793742813.2665548
+     },
+     {
+      "to": "gonza",
+      "text": "Good morning Gonza, last night was your night. Theo had 2 feeds since midnight: 12:00am and 3:00am (90ml each). Tonight it's Ceci on duty.",
+      "at": 1793742813.266573
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "I hear you, Ceci, I'm here with you. The log shows Theo ate, not 8 hours without food:\n\n- Today at 3:00am, 90 ml by bottle (Gonza's feed)\n- Today at 12:00am, 90 ml by bottle\n- Yesterday at 9:00pm, 90 ml by bottle\n\nSo between last night and this morning the longest gap was 3 hours. If you're worried about his feeding, please check with his pediatrician, they can guide you best.",
+      "at": 1793742819.913236
+     }
+    ]
+   }
+  ]
+ },
+ "x exhausted": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Good morning Ceci, Theo had 2 feeds overnight, at 00:00 and 03:00. Gonza was on last night, you're on tonight.",
+      "at": 1793742826.5213099
+     },
+     {
+      "to": "gonza",
+      "text": "You're doing an amazing job on hard nights, Gonza, it's normal to feel wiped out and unsure, and Theo is cared for and safe. Last night was yours, Theo had 2 feeds overnight, at 00:00 and 03:00 (90 ml each). Tonight Ceci is on duty. Rest when you can today.",
+      "at": 1793742826.5218859
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Gonza, you're doing so much better than you think, getting through a night like that while exhausted is already showing up for Theo with love. Last night you fed him at 00:00 and again at 03:00 (90 ml each time), so he's been eating steadily, 5 feeds since yesterday. Ceci has tonight, so you can get some rest, you're not doing this wrong at all.",
+      "at": 1793742834.3756979
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "You're carrying a lot, Gonza, and feeling exhausted doesn't mean you're doing it wrong, you're showing up for Theo through hard nights.\n\nFrom the log, Theo had 5 feeds since yesterday afternoon (15:00, 18:00, 21:00, 00:00 and the last at 03:00 today), 90 ml each, 450 ml total. Last feed was at 03:00, 4 h 30 min ago. You got through a full night on duty.",
+      "at": 1793742840.667518
+     }
+    ]
+   }
+  ]
+ },
+ "x morning plain": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Morning, last night was your night. Theo had 2 feeds: 12:00am and 3:00am. Tonight Ceci is on duty.",
+      "at": 1793742845.5793128
+     },
+     {
+      "to": "ceci",
+      "text": "Morning, Gonza was on last night. Theo had 2 feeds: 12:00am and 3:00am. You're on tonight.",
+      "at": 1793742845.579337
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Good morning! You had 2 feeds last night, 12:00am (90ml) and 3:00am (90ml). Thanks for taking the night. Tonight Ceci’s on. Hope you get some rest today.",
+      "at": 1793742853.256567
+     },
+     {
+      "to": "ceci",
+      "text": "Good morning! Last night Gonza did 2 feeds, 12:00am (90ml) and 3:00am (90ml). You’re on tonight. Hope you had a good sleep!",
+      "at": 1793742853.2568488
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Good morning, you were on last night. Theo had 2 feeds: 00:00 and 03:00 (last 90 ml bottle). Tonight Ceci is on.",
+      "at": 1793742859.690486
+     },
+     {
+      "to": "ceci",
+      "text": "Good morning, last night Gonza was on. Theo had 2 feeds overnight: 00:00 and 03:00 (last 90 ml bottle). You're on tonight.",
+      "at": 1793742859.690808
+     }
+    ]
+   }
+  ]
+ },
+ "x warmer no ready": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Theo's awake, I'm warming a bottle for you, on until 03:42.",
+      "at": 1793742866.391232
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Theo's awake, feed is due (last at 00:00). I've turned on the bottle warmer, it'll be on until 03:42.",
+      "at": 1793742875.273395,
+      "quiet": true
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Theo's up, feed was due around 3:00 (last at 12:00am). I've started the bottle warmer, it'll be ready until 3:42.",
+      "at": 1793742883.02544
+     }
+    ]
+   }
+  ]
+ },
+ "x no empty promise": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "You're on tonight, Gonza, 23:40 is the next feed likely, I've got the warmer set to pre-heat around 23:25. Sleep when you can.",
+      "at": 1793742892.239724
+     },
+     {
+      "to": "ceci",
+      "text": "Gonza's on tonight, Ceci, you can rest. Next feed likely around 23:40.",
+      "at": 1793742892.239878
+     }
+    ],
+    "wakes": [
+     "pre-warm bottle before expected feed at 23:40"
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Tonight Gonza's on, you had last night. Theo last fed at 20:40, next likely around 23:40.",
+      "at": 1793742897.295744
+     },
+     {
+      "to": "gonza",
+      "text": "Tonight is yours, Gonza, Ceci had last night. Theo last fed at 20:40 (90 ml), next likely around 23:40. I'll turn the warmer on a little before then so you don't have to wait.",
+      "at": 1793742898.9388711
+     }
+    ],
+    "wakes": [
+     "pre-feed bottle warmer for expected 23:40 feed"
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "You're on tonight, Gonza, last night was Ceci. Next feed likely around 23:40 (last at 20:40), I've set a quiet pre-warm for 23:25 if it's still due.",
+      "at": 1793742904.634753
+     },
+     {
+      "to": "ceci",
+      "text": "Gonza is on tonight, Ceci, you had last night. Rest easy.",
+      "at": 1793742904.634766
+     }
+    ],
+    "wakes": [
+     "pre-warm bottle before expected 23:40 feed, check next_feed first"
+    ]
+   }
+  ]
+ }
+}

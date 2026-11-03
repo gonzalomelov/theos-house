@@ -88,6 +88,18 @@ class Visitors(unittest.TestCase):
             self.assertEqual(theirs["home"]["devices"]["Nursery climate humidity"]["state"], "52.0")
             self.assertEqual(theirs["played"], [])
 
+    def test_the_morning_check_runs_once_a_day(self):
+        app = gateway.app(scripted(AIMessage("Morning."), AIMessage("Should not run.")))
+        with served(app) as url:
+            visitor = self.visitor(url)
+            answer = visitor.post("/api/scene", json={"id": "morning"})
+            self.assertEqual(answer.status_code, 202)
+            self.done(app, visitor)
+            again = visitor.post("/api/scene", json={"id": "morning"})
+            self.assertEqual((again.status_code, again.json()["id"]), (202, None))
+            by_hand = visitor.post("/api/events", json={"type": "schedule", "payload": {"name": "morning"}})
+            self.assertEqual((by_hand.status_code, by_hand.json()["id"]), (202, None))
+
     def test_rapid_presses_wait_for_muse(self):
         app = gateway.app(scripted(AIMessage("Nothing needed.")))
         with served(app) as url:

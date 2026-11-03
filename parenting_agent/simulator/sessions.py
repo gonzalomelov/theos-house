@@ -101,6 +101,7 @@ class Session:
         self.said = []
         self.last_said = None
         self.events_used = 0
+        self.checks = set()
         self.last_seen = time.monotonic()
         self.dir = tempfile.mkdtemp(prefix="sim-")
         self.memory = Memory(Path(self.dir) / "log.sqlite")
@@ -149,7 +150,9 @@ class Session:
         for at, name in sorted(p for p in passed if self.moment < p[0] < moment):
             self.moment = at
             await self.core.fire_wakes(at)
-            await self.core.dispatch("schedule", {"name": name}, "simulator", at.isoformat())
+            if (at.date(), name) not in self.checks:
+                self.checks.add((at.date(), name))
+                await self.core.dispatch("schedule", {"name": name}, "simulator", at.isoformat())
         self.moment = moment
         before = self.humidity()
         self.core.mock.tick(moment)
@@ -184,8 +187,14 @@ class Session:
         return await self.send(*found)
 
     async def send(self, kind, payload, at=None, daily=True):
-        """One event down the real path. The clock only moves forward."""
-        await self.advance(max(self.moment + datetime.timedelta(minutes=1), at or self.moment), daily)
+        """One event down the real path. The clock only moves forward. A daily check runs once a day, as it does at home: 0 means it already ran."""
+        target = max(self.moment + datetime.timedelta(minutes=1), at or self.moment)
+        if kind == "schedule":
+            check = (target.date(), payload["name"])
+            if check in self.checks:
+                return 0
+            self.checks.add(check)
+        await self.advance(target, daily)
         event_id, _ = await self.core.dispatch(kind, payload, "simulator", self.moment.isoformat())
         if kind == "message" and event_id != self.last_said:
             self.last_said = event_id

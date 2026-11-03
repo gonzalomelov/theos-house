@@ -43,9 +43,18 @@ VITAL = re.compile(r"not breathing|stop\w* breathing|can'?t breathe|no respira|d
 ERRANDS = re.compile(r"\bchoking hazards?\b|\bpeligro de asfixia\b|\bfever (?:thermometers?|reducers?)\b|\bterm[oó]metros? para (?:la )?fiebre\b", re.I)
 STOPPED = re.compile(r"\bstops? breathing\b|\bdeja de respirar\b", re.I)
 CLAUSE = re.compile(r"[.!?;\n]+|\b(?:also|adem[aá]s|tambi[eé]n)\b|,\s*y\s+|,?\s+y\s+(?=agreg|anot|compr|pon|prend|apag)|,?\s+and\s+(?=add|log|buy|turn|put|remind|tell)", re.I)
+# A parent who is scared or worn out, with no danger sign named, needs the log and a human line, not the 911 line.
+SCARED = re.compile(r"\b(?:i'?m|i am|im)\s+(?:so |really |very )?(?:scared|worried|frightened|anxious|nervous|panicking)\b|\btengo miedo\b|\bestoy\s+(?:muy |re )?(?:asustad[ao]|preocupad[ao]|nervios[ao])\b|\bme (?:asust\w+|preocupa)\b", re.I)
+WORN_OUT = re.compile(r"\b(?:i'?m|i am|im)\s+(?:so |really |very )?(?:exhausted|tired|wrecked|done)\b|\bdoing (?:this|it) (?:all )?wrong\b|\bcan'?t do this\b|\bagotad[ao]\b|\bno doy m[aá]s\b|\bestoy muert[ao]\b|\blo estoy haciendo mal\b", re.I)
+LOG_QUESTION = re.compile(r"\b(?:did|really|when|how long|how many|has he)\b[^.!?]{0,50}\b(?:eat|ate|eaten|fed|feed|feeds|bottle)\b[^.!]{0,40}\?|\b(?:de verdad|realmente|cu[aá]ndo|hace cu[aá]nto|cu[aá]ntas?)\b[^.!?]{0,50}\b(?:comi[oó]|tom[oó]|tomas?|mamadera)\b[^.!]{0,40}\?", re.I)
+DANGER_SIGN = re.compile(r"breath|respir|\bblue\b|azul|morad|\blimp\b|floppy|blando|won'?t wake|not waking|wake up|no (?:se )?despierta|unrespons|no reacciona|no responde|seizure|convuls|vomit|sangr|blood|fever|fiebre|\bhot\b|caliente|\bpale\b|p[aá]lid|rash|chok|ahog|won'?t eat|refus|no quiere|rechaz|weird|strange|not right|\boff\b|raro|\bmal\b(?! hecho)|sleepy|letarg|callad|\bquiet\b|\bfell\b|se cay|golpe|\bhit\b|inconsolable|no para de llorar|dolor|\bpain\b", re.I)
 # How far a room can't move in a few minutes.
 SENSOR_JUMP = {"humidity": 30.0, "temperature": 10.0}
 JUMP_MINUTES = 10
+# What a message can't promise or say. The end time of the warmer is when it switches off, not when a bottle is ready.
+PROMISE = re.compile(r"\bi'?ll (?:remind|ping|wake|message|text|check in|let you know|tell you)\b|\b(?:te|les) (?:aviso|avisar[eé]|recuerdo|escribo|despierto)\b|\bvoy a (?:avisar|recordar|escribir)\w*", re.I)
+READY_AT = re.compile(r"\b(?:ready|warm)\s+(?:by|at|around)\s+\d|\b(?:lista|pronta|tibia|caliente)\s+(?:a las|para las|a eso de)\s+\d", re.I)
+JARGON = re.compile(r"\brota\b|\bper the\b|\bas per\b|\bper (?:ceci|gonza)\b|\bdoes that (?:still )?stand\b|\bsince 22:00\b|\bdesde las 22\b", re.I)
 
 
 def amounts(entries):
@@ -98,6 +107,25 @@ def because(sender, text, line, lang):
     return f'{str(sender).capitalize()} {words}: "{str(text)[:140]}"\n{line}'
 
 
+def just_worry(text):
+    """Fear, tiredness or a question the log can answer, with no danger sign named. Muse reads the log and answers."""
+    text = text or ""
+    return bool(SCARED.search(text) or WORN_OUT.search(text) or LOG_QUESTION.search(text)) and not DANGER_SIGN.search(text)
+
+
+def worn_out(text):
+    return bool(WORN_OUT.search(text or "")) and not DANGER_SIGN.search(text or "")
+
+
+def brief(line):
+    """The fixed urgent line, short, with its source last and on its own line, so it stays one tap and not a wall of text."""
+    found = re.search(r"https?://\S+", line)
+    if not found:
+        return line
+    words = re.sub(r"\s*(?:This is the public guidance|Es la gu[ií]a p[uú]blica)[^:]*:?\s*$", "", line[:found.start()]).rstrip()
+    return f"{words}\n{found.group(0)}"
+
+
 def gate(text, screen=None, lang=None):
     """(kind, line) for a message that must not reach Muse, or None. kind is emergency, urgent or medical."""
     lang = lang or lang_of(text)
@@ -108,9 +136,11 @@ def gate(text, screen=None, lang=None):
     text = ERRANDS.sub(" ", text or "")
     if rules.is_emergency(text) or rules.spoken_emergency(text) or (STOPPED.search(text) and not FICTION.search(text)):
         return "emergency", rules.EMERGENCY_REPLY[lang]
+    if just_worry(text):
+        return None
     urgent = rules.newborn_red_flag(text)
     if urgent:
-        return "urgent", rules.URGENT_REPLY[urgent][lang]
+        return "urgent", brief(rules.URGENT_REPLY[urgent][lang])
     if rules.asks_dose(text) or (rules.asks_advice(text) and (rules.is_medical(text) or rules.is_medical_es(text))):
         return "medical", rules.NO_ADVICE[lang]
     if (screen or danger.build(SCREEN)).screen(text)[0]:

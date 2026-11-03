@@ -1,0 +1,609 @@
+{
+ "r7 half past two": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "times": [
+     "2026-11-05T02:30:00-03:00"
+    ],
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Anotado, Gonza: 02:30, 80 ml de mamadera.",
+      "at": 1793742920.015722
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "times": [
+     "2026-11-05T02:30:00-03:00"
+    ],
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Anotado, Gonza: mamadera de 80 ml a las 2:30.",
+      "at": 1793742924.691414
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "times": [
+     "2026-11-05T02:30:00-03:00"
+    ],
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Anotado, Gonza, 80 ml a las 2:30.",
+      "at": 1793742932.0458
+     }
+    ]
+   }
+  ]
+ },
+ "r7 eleven same evening": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "times": [
+     "2026-11-04T23:00:00-03:00"
+    ],
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Got it, 70 ml at 11pm logged.",
+      "at": 1793742938.703774
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "times": [
+     "2026-11-04T23:00:00-03:00"
+    ],
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Logged 70 ml at 11:00 pm.",
+      "at": 1793742946.077088
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "times": [
+     "2026-11-04T23:00:00-03:00"
+    ],
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Got it, 70 ml at 11pm logged.",
+      "at": 1793742951.7059042
+     }
+    ]
+   }
+  ]
+ },
+ "r7 midnight told later": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "times": [
+     "2026-11-05T00:00:00-03:00"
+    ],
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "The log shows no feed for 9 hours. Did feeds go unlogged? If he truly hasn't eaten, call your pediatrician.",
+      "at": 1793742954.658504
+     },
+     {
+      "to": "gonza",
+      "text": "Logged 60 ml at 00:00. Last feed was 6 hours 50 minutes ago at 00:00.",
+      "at": 1793742959.9548311
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "times": [
+     "2026-11-05T00:00:00-03:00"
+    ],
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "The log shows no feed for 9 hours. Did feeds go unlogged? If he truly hasn't eaten, call your pediatrician.",
+      "at": 1793742962.729853
+     },
+     {
+      "to": "gonza",
+      "text": "Got it, logged 60 ml at midnight (2026-11-05). That's the last feed in the log, about 6 hours 50 minutes ago.",
+      "at": 1793742970.027966
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "times": [
+     "2026-11-05T00:00:00-03:00"
+    ],
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "The log shows no feed for 9 hours. Did feeds go unlogged? If he truly hasn't eaten, call your pediatrician.",
+      "at": 1793742973.319335
+     },
+     {
+      "to": "gonza",
+      "text": "Logged 60 ml at 00:00. Last feed was 6 hours 50 minutes ago (midnight).",
+      "at": 1793742980.907462
+     }
+    ]
+   }
+  ]
+ },
+ "r7 three in the afternoon": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "times": [
+     "2026-11-05T15:00:00-03:00"
+    ],
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Anotado, 75 ml a las 15:00 🤍",
+      "at": 1793742986.993141
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "times": [
+     "2026-11-05T15:00:00-03:00"
+    ],
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Anotado, Ceci, 75 ml a las 15:00 ❤️",
+      "at": 1793742992.98484
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "times": [
+     "2026-11-05T15:00:00-03:00"
+    ],
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Anotado: 75 ml a las 15:00 ❤️",
+      "at": 1793743001.216147
+     }
+    ]
+   }
+  ]
+ },
+ "r7 worried when": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Theo last ate today at 09:15, 90 ml by bottle, about 2 hours ago. That's what the log shows. For any worries about his feeding, please check with your pediatrician.",
+      "at": 1793743005.543326
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Theo last ate today at 09:15, about an hour and 55 minutes ago, 90ml from the bottle. The log shows he's had 4 feeds since midnight (360ml total at 00:15, 03:15, 06:15 and 09:15), everything looks on track. If you're worried about anything else, his pediatrician is the best person to check with.",
+      "at": 1793743010.8751822
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "I checked the log, Theo last ate today at 09:15, about 2 hours ago (90 ml bottle). The log shows regular feeds through the night too. If you're worried, you can reach his pediatrician for guidance.",
+      "at": 1793743015.497788
+     }
+    ]
+   }
+  ]
+ },
+ "r7 preocupada cuando": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Ceci, según lo que tengo registrado la última toma de Theo fue hoy a las 07:00 (80 ml en mamadera), hace un ratito. Si te preocupa algo más de él, lo mejor es consultar con su pediatra.",
+      "at": 1793743020.5111449
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Ceci, según el registro la última toma fue hoy a las 07:00, hace un ratito. Fueron 80 ml en mamadera. Si te preocupa algo más, decime y lo vemos juntas. Para cualquier duda de salud, mejor consultá con su pediatra.",
+      "at": 1793743024.87402
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "La última toma que tengo registrada fue hoy a las 07:00, con 80 ml en mamadera. Eso responde a tu pregunta, quedó registrada así en el log.",
+      "at": 1793743029.993518
+     }
+    ]
+   }
+  ]
+ },
+ "r7 can't do this": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Gonza, it's completely understandable to feel like this, you're doing so much, and it's really hard, especially when you're tired. You're not alone in it.\n\nJust so you have it handy: Theo had his last bottle today at 12:00 (90 ml), and he's had 5 feeds today. Ceci is on duty tonight, so you'll get that rest. If you want to talk a bit, I'm here.",
+      "at": 1793743035.707773
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Gonza, it's a lot right now, and you're doing so much for Theo, it's understandable to feel wiped out.\n\nJust so you have it in front of you: Theo has had 5 feeds today, every 3 hours, last one today at 12:00 (90ml bottle). You're not alone in this, I'm here, and Ceci has tonight. If the tiredness feels overwhelming, please reach out to someone you trust right there with you.",
+      "at": 1793743040.9872499
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Gonza, you're doing so much and it's completely understandable to feel wiped, you're not alone in this. 💛\n\nTheo's log for today shows a steady rhythm: feeds at 12:00am, 3:00am, 6:00am, 9:00am and 12:00pm, 90ml each time. Last feed was at 12:00pm, about 2 hours ago. You're doing a great job keeping him fed through a long night and morning.",
+      "at": 1793743047.125507
+     }
+    ]
+   }
+  ]
+ },
+ "r7 agotada de noche": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Gonza, sos una mamá increíble y es normal sentirse así a esta hora, no estás haciendo nada mal. Theo tomó su última mamadera a la 01:00 (90 ml) y viene comiendo bien hoy, 5 tomas. Si querés, acá estoy para lo que necesites.",
+      "at": 1793743054.0544991
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Ay, Gonza, se nota que estás agotadísima y estás haciendo un montón. Sos una gran mamá y no estás sola en esto.\n\nTheo tomó su última mamadera a la 01:00 de hoy, 90 ml. Hace un ratito nomás, así que viene bien.\n\n¿Querés que te ayude con algo ahora? Si querés charlamos un rato, o si necesitás descansar decime y vemos cómo te doy una mano.",
+      "at": 1793743061.025391
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Gonza, se nota que estás dando todo y es un montón lo que estás haciendo, sos una gran mamá y lo estás haciendo bien aunque ahora se sienta pesadísimo.\n\nTheo tomó su última mamadera a la 01:00, 90 ml. Todavía no pasaron 3 horas desde esa toma, así que por ese lado viene bien. Si querés contarme cómo estás o si necesitás que te ayude con algo acá estoy.",
+      "at": 1793743066.004784
+     }
+    ]
+   }
+  ]
+ },
+ "r7 scared and limp": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Ceci wrote: \"I'm scared, he's limp and he won't wake up\"\nThis may be an emergency. Call emergency services now: 911 in Uruguay, or your local emergency number.",
+      "at": 1793743067.26409
+     },
+     {
+      "to": "ceci",
+      "text": "This may be an emergency. Call emergency services now: 911 in Uruguay, or your local emergency number.",
+      "at": 1793743067.2653198
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Ceci wrote: \"I'm scared, he's limp and he won't wake up\"\nThis may be an emergency. Call emergency services now: 911 in Uruguay, or your local emergency number.",
+      "at": 1793743067.36715
+     },
+     {
+      "to": "ceci",
+      "text": "This may be an emergency. Call emergency services now: 911 in Uruguay, or your local emergency number.",
+      "at": 1793743067.3683531
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Ceci wrote: \"I'm scared, he's limp and he won't wake up\"\nThis may be an emergency. Call emergency services now: 911 in Uruguay, or your local emergency number.",
+      "at": 1793743067.475361
+     },
+     {
+      "to": "ceci",
+      "text": "This may be an emergency. Call emergency services now: 911 in Uruguay, or your local emergency number.",
+      "at": 1793743067.476568
+     }
+    ]
+   }
+  ]
+ },
+ "r7 miedo y sangre": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Puede ser una emergencia. Llamá ya al 911 (emergencias en Uruguay) y contales lo que ves.",
+      "at": 1793743068.728832
+     },
+     {
+      "to": "ceci",
+      "text": "Gonza escribió: \"Tengo miedo, está vomitando sangre\"\nPuede ser una emergencia. Llamá ya al 911 (emergencias en Uruguay) y contales lo que ves.",
+      "at": 1793743068.730586
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Puede ser una emergencia. Llamá ya al 911 (emergencias en Uruguay) y contales lo que ves.",
+      "at": 1793743069.7884831
+     },
+     {
+      "to": "ceci",
+      "text": "Gonza escribió: \"Tengo miedo, está vomitando sangre\"\nPuede ser una emergencia. Llamá ya al 911 (emergencias en Uruguay) y contales lo que ves.",
+      "at": 1793743069.816651
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Puede ser una emergencia. Llamá ya al 911 (emergencias en Uruguay) y contales lo que ves.",
+      "at": 1793743070.9482849
+     },
+     {
+      "to": "ceci",
+      "text": "Gonza escribió: \"Tengo miedo, está vomitando sangre\"\nPuede ser una emergencia. Llamá ya al 911 (emergencias en Uruguay) y contales lo que ves.",
+      "at": 1793743070.950062
+     }
+    ]
+   }
+  ]
+ },
+ "r7 morning es plain": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Buen día, Gonza. Anoche estuviste vos de guardia, 3 tomas: 22:20, 01:20 y 04:20 (90 ml cada una). Esta noche le toca a Ceci.",
+      "at": 1793743075.1608179
+     },
+     {
+      "to": "ceci",
+      "text": "Buen día, Ceci. Anoche estuvo Gonza de guardia, 3 tomas: 22:20, 01:20 y 04:20 (90 ml cada una). Esta noche te toca a vos.",
+      "at": 1793743076.709111
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Buen día Gonza! Anoche la cubriste vos, Theo tomó 3 veces: 22:20, 01:20 y 04:20, 90 ml cada una. Esta noche le toca a Ceci. Descansá cuando puedas.",
+      "at": 1793743083.0171268
+     },
+     {
+      "to": "ceci",
+      "text": "Buen día Ceci! Anoche estuvo Gonza de guardia, Theo tomó 3 veces: 22:20, 01:20 y 04:20, 90 ml cada una. Esta noche te toca a vos. Que tengas lindo día.",
+      "at": 1793743083.0173252
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Buen día Gonza! Anoche estuviste vos y Theo tomó 3 veces: 22:20, 01:20 y 04:20, 90 ml cada una. La última a las 04:20. Esta noche está Ceci. Descansá hoy que te lo merecés!",
+      "at": 1793743096.200428
+     },
+     {
+      "to": "ceci",
+      "text": "Buen día Ceci! Anoche estuvo Gonza y Theo tomó 3 veces: 22:20, 01:20 y 04:20, 90 ml cada una. La última a las 04:20. Esta noche estás vos. Que tengas lindo día!",
+      "at": 1793743096.200762
+     }
+    ]
+   }
+  ]
+ },
+ "r7 cry no ready es": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Theo está llorando. Son las 03:12 y ya le toca comer, última toma a las 00:10. Prendí el calienta mamaderas, se apaga solo a las 03:42.",
+      "at": 1793743104.200835
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Theo está despierto. Como ya está cerca la toma, prendí el calienta mamaderas, se apaga solo a las 03:42.",
+      "at": 1793743113.9027572,
+      "quiet": true
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Theo llorando. Prendí el calientamamaderas, está tibio hasta las 03:42.",
+      "at": 1793743120.636311
+     }
+    ]
+   }
+  ]
+ },
+ "r7 grandma right time": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "echo": "Theo comió por última vez hoy a las tres de la mañana, 90 mililitros, hace 8 horas."
+   },
+   {
+    "passed": true,
+    "echo": "Theo tomó su última leche hoy a las tres de la mañana, hace más de ocho horas."
+   },
+   {
+    "passed": true,
+    "echo": "Theo comió por última vez hoy a las 3 de la mañana, hace 8 horas."
+   }
+  ]
+ },
+ "r7 promise evening es": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Buenas noches, Gonza. Hoy Theo tomó 5 veces (450 ml), la última a las 20:30. Esta noche estás vos de guardia, anoche estuvo Ceci. La próxima toma cae cerca de las 23:30, te dejo todo preparado para que no tengas que levantarte de más.",
+      "at": 1793743158.6617758
+     },
+     {
+      "to": "ceci",
+      "text": "Buenas noches, Ceci. Hoy Theo tomó 5 veces (450 ml), la última a las 20:30. Esta noche está Gonza de guardia, anoche estuviste vos. ¡Que descanses!",
+      "at": 1793743158.66221
+     }
+    ],
+    "wakes": [
+     "pre-warm bottle before expected 23:30 feed"
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Te toca a vos esta noche, Gonza. Anoche estuvo Ceci. Theo tomó a las 20:30, la próxima sería cerca de las 23:30. Te aviso un ratito antes para que tengas el biberón listo. Que descanses lo que puedas.",
+      "at": 1793743166.951971
+     },
+     {
+      "to": "ceci",
+      "text": "Esta noche le toca a Gonza, Ceci. Vos estuviste anoche. Theo tomó a las 20:30, la próxima sería cerca de las 23:30. Él se encarga, vos descansá tranquila.",
+      "at": 1793743166.95198
+     }
+    ],
+    "wakes": [
+     "pre-warm bottle for expected 23:30 feed, check next_feed first"
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Buenas noches, Gonza. Hoy te toca a vos, descansá un rato que a las 23:30 aprox le tocaría la próxima toma a Theo (última a las 20:30). Yo te aviso y dejo el calienta listo. Cualquier cosa me decís.",
+      "at": 1793743172.5660312
+     },
+     {
+      "to": "ceci",
+      "text": "Buenas noches, Ceci. Hoy le toca a Gonza, así que vos a descansar. La última toma de Theo fue a las 20:30 y la próxima sería cerca de las 23:30. Que descansen los dos.",
+      "at": 1793743172.5660381
+     }
+    ],
+    "wakes": [
+     "pre-warm bottle warmer before expected 23:30 feed"
+    ]
+   }
+  ]
+ }
+}
