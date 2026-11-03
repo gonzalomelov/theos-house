@@ -1,0 +1,25 @@
+{
+ "cries_sent": 339,
+ "cries": 348,
+ "others_sent": 1,
+ "others": 51,
+ "false": [
+  {
+   "id": 19,
+   "truth": "none",
+   "sent": 1
+  }
+ ],
+ "missed_ids": [
+  161,
+  182,
+  207,
+  225,
+  246,
+  380,
+  398,
+  539,
+  548
+ ],
+ "seconds_per_clip": 0.72
+}

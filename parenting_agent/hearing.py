@@ -304,8 +304,10 @@ def camera_url(env=os.environ):
 
 
 def camera_seconds(url):
-    """Yields one second of float32 PCM at a time from the camera's RTSP audio, video dropped, through a pipe."""
-    proc = subprocess.Popen(["ffmpeg", "-nostdin", "-loglevel", "error", "-rtsp_transport", "tcp", "-timeout", "10000000",
+    """Yields one second of float32 PCM at a time from the camera's RTSP audio, video dropped, through a pipe. Fatal errors only: the
+    Tapo's timestamps make ffmpeg log an error many times a second, which filled the stderr pipe nobody reads until the end and froze it
+    (Nov 3, a run asleep for 3.5 hours)."""
+    proc = subprocess.Popen(["ffmpeg", "-nostdin", "-loglevel", "fatal", "-rtsp_transport", "tcp", "-timeout", "10000000",
                              "-i", url, "-vn", "-ac", "1", "-ar", str(RATE), "-f", "s16le", "pipe:1"],
                             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     try:

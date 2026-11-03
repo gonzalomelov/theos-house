@@ -1,0 +1,174 @@
+{
+ "baseline_dbfs": -71.3,
+ "camera_seconds": 416,
+ "cries_played": 10,
+ "cries_audible": 4,
+ "cries_caught": 0,
+ "others_played": 10,
+ "others_audible": 6,
+ "false_cries": 0,
+ "cry_after_s_median": null,
+ "cry_after_s_max": null,
+ "rows": [
+  {
+   "id": 1,
+   "truth": "cry",
+   "peak_dbfs": -65.1,
+   "audible": true,
+   "labels": [],
+   "cry_after_s": null
+  },
+  {
+   "id": 155,
+   "truth": "cry",
+   "peak_dbfs": -65.9,
+   "audible": false,
+   "labels": [],
+   "cry_after_s": null
+  },
+  {
+   "id": 197,
+   "truth": "cry",
+   "peak_dbfs": -64.1,
+   "audible": true,
+   "labels": [],
+   "cry_after_s": null
+  },
+  {
+   "id": 233,
+   "truth": "cry",
+   "peak_dbfs": -49.0,
+   "audible": true,
+   "labels": [],
+   "cry_after_s": null
+  },
+  {
+   "id": 272,
+   "truth": "cry",
+   "peak_dbfs": -72.3,
+   "audible": false,
+   "labels": [],
+   "cry_after_s": null
+  },
+  {
+   "id": 312,
+   "truth": "cry",
+   "peak_dbfs": -72.3,
+   "audible": false,
+   "labels": [],
+   "cry_after_s": null
+  },
+  {
+   "id": 365,
+   "truth": "cry",
+   "peak_dbfs": -69.7,
+   "audible": false,
+   "labels": [],
+   "cry_after_s": null
+  },
+  {
+   "id": 403,
+   "truth": "cry",
+   "peak_dbfs": -71.3,
+   "audible": false,
+   "labels": [],
+   "cry_after_s": null
+  },
+  {
+   "id": 445,
+   "truth": "cry",
+   "peak_dbfs": -63.4,
+   "audible": true,
+   "labels": [],
+   "cry_after_s": null
+  },
+  {
+   "id": 481,
+   "truth": "cry",
+   "peak_dbfs": -72.3,
+   "audible": false,
+   "labels": [],
+   "cry_after_s": null
+  },
+  {
+   "id": 5,
+   "truth": "none",
+   "peak_dbfs": -72.1,
+   "audible": false,
+   "labels": [],
+   "cry_after_s": null
+  },
+  {
+   "id": 14,
+   "truth": "doorbell",
+   "peak_dbfs": -71.9,
+   "audible": false,
+   "labels": [],
+   "cry_after_s": null
+  },
+  {
+   "id": 24,
+   "truth": "dog",
+   "peak_dbfs": -52.3,
+   "audible": true,
+   "labels": [],
+   "cry_after_s": null
+  },
+  {
+   "id": 38,
+   "truth": "none",
+   "peak_dbfs": -72.3,
+   "audible": false,
+   "labels": [],
+   "cry_after_s": null
+  },
+  {
+   "id": 43,
+   "truth": "none",
+   "peak_dbfs": -63.3,
+   "audible": true,
+   "labels": [],
+   "cry_after_s": null
+  },
+  {
+   "id": 48,
+   "truth": "none",
+   "peak_dbfs": -27.9,
+   "audible": true,
+   "labels": [],
+   "cry_after_s": null
+  },
+  {
+   "id": 58,
+   "truth": "none",
+   "peak_dbfs": -49.3,
+   "audible": true,
+   "labels": [],
+   "cry_after_s": null
+  },
+  {
+   "id": 76,
+   "truth": "none",
+   "peak_dbfs": -61.7,
+   "audible": true,
+   "labels": [],
+   "cry_after_s": null
+  },
+  {
+   "id": 81,
+   "truth": "none",
+   "peak_dbfs": -59.6,
+   "audible": true,
+   "labels": [],
+   "cry_after_s": null
+  },
+  {
+   "id": 86,
+   "truth": "none",
+   "peak_dbfs": -68.2,
+   "audible": false,
+   "labels": [],
+   "cry_after_s": null
+  }
+ ]
+}
