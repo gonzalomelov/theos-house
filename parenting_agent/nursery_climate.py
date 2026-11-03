@@ -75,7 +75,8 @@ def _num(value, lang):
 def answer(r, lang="en", room=None, guide=GUIDE):
     """The reading as a parent reads it: the numbers, the guide and its source. Never advice."""
     room = (room or DEFAULTS["room"])[lang]
-    link = guide["url"].split("://", 1)[-1]
+    # The site, not the page: the final guard cuts this page's path out of a reply, and the source went with it.
+    link = guide["url"].split("/safer-sleep-advice")[0] + "/"
     if not r["ok"]:
         if lang == "es":
             last = f" La última fue hace {r['age_min']:.0f} min." if r["age_min"] is not None else ""
