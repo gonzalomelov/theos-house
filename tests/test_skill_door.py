@@ -103,7 +103,7 @@ class DoorConfigTest(unittest.TestCase):
         self.assertIn(f"deny {DOOR_SUBNET};", blocks["8123"])
         self.assertIn(f"deny {DOOR_SUBNET};", blocks["8790"])
         self.assertNotIn("deny", blocks["8767"])
-        self.assertIn("location ~ ^/(ask|health)$ {", blocks["8767"])
+        self.assertIn("location ~ ^/(ask|health|whatsapp)$ {", blocks["8767"])
 
     def test_only_the_door_is_published_and_only_on_loopback(self):
         door = compose_service(self.compose, "door")

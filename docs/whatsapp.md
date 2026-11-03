@@ -17,4 +17,4 @@ WHATSAPP_GONZA=          the number in international format, one of the approved
 WHATSAPP_CECI=           leave empty to keep her on Telegram
 ```
 
-The way in, once: rebuild the egress proxy (`graph.facebook.com` is in its filter), recreate the door and the relay so port 4831 and `/whatsapp` exist, add a tunnel hostname such as `whatsapp.home.example` to `127.0.0.1:4831` with no Access in front, and set `https://whatsapp.home.example/whatsapp` as the callback on Meta's webhook form, subscribed to `messages`.
+The way in, once: rebuild the egress proxy (`graph.facebook.com` is in its filter) and recreate the relay so `/whatsapp` exists. The deploy starts its own door, `parenting-whatsapp-door`, on `127.0.0.1:4831`. Add a tunnel hostname such as `whatsapp.home.example` to that port with no Access in front, and set `https://whatsapp.home.example/whatsapp` as the callback on Meta's webhook form, subscribed to `messages`.

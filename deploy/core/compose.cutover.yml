@@ -28,3 +28,26 @@ services:
       WHATSAPP_GONZA: ${WHATSAPP_GONZA:-}
       WHATSAPP_CECI: ${WHATSAPP_CECI:-}
       WHATSAPP_TEMPLATE: ${WHATSAPP_TEMPLATE:-}
+
+  whatsapp-door:
+    # The same pinned image as the relay and the Alexa skill's door. Nothing reaches it until a tunnel hostname points at the port.
+    image: nginxinc/nginx-unprivileged@sha256:0c79d56aee561a1d81c63f00eee5fb5fe29279560cdc55e91425133104c7fbe6
+    container_name: parenting-whatsapp-door
+    restart: unless-stopped
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    networks: [door]
+    ports: ["127.0.0.1:4831:8080"]
+    volumes:
+      - ./whatsapp-door.conf:/etc/nginx/nginx.conf:ro
+    tmpfs:
+      - /tmp:rw,size=8m
+    mem_limit: 32m
+    memswap_limit: 32m
+    pids_limit: 32
+
+networks:
+  door:
+    external: true
+    name: parenting-agent_door

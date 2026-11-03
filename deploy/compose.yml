@@ -89,7 +89,7 @@ services:
     networks: [door]
     depends_on:
       relay: { condition: service_started }
-    ports: ["127.0.0.1:4830:8080", "127.0.0.1:4831:8081"]
+    ports: ["127.0.0.1:4830:8080"]
     volumes:
       - ./door/nginx.conf:/etc/nginx/nginx.conf:ro
     tmpfs:

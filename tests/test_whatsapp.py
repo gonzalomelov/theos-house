@@ -46,6 +46,28 @@ class Base(unittest.TestCase):
         return WhatsApp("t", "1", {"gonza": "+598 91 111", "ceci": None}, self.path, post=self.meta, now=lambda: self.at)
 
 
+class WayIn(unittest.TestCase):
+    ROOT = Path(__file__).resolve().parent.parent
+
+    def test_its_door_forwards_one_path_and_touches_nothing_else(self):
+        door = (self.ROOT / "deploy/core/whatsapp-door.conf").read_text()
+        self.assertEqual(door.count("proxy_pass"), 1)
+        self.assertIn("location = /whatsapp {", door)
+        self.assertIn("set $relay parenting-agent-relay:8767;", door)
+        for name in ("homeassistant", "babybuddy", ":8123", ":8790", "/ask"):
+            self.assertNotIn(name, door.replace("Home Assistant", ""))
+
+    def test_it_sits_only_on_the_door_network_and_only_on_loopback(self):
+        compose = (self.ROOT / "deploy/core/compose.cutover.yml").read_text()
+        door = compose[compose.index("whatsapp-door:"):compose.index("networks:\n  door:")]
+        self.assertIn("networks: [door]", door)
+        self.assertIn('ports: ["127.0.0.1:4831:8080"]', door)
+
+    def test_only_meta_was_added_to_the_egress(self):
+        hosts = (self.ROOT / "deploy/egress/filter").read_text().split()
+        self.assertEqual(hosts, ["^inference\\.baseten\\.co$", "^api\\.telegram\\.org$", "^graph\\.facebook\\.com$"])
+
+
 class Window(Base):
     def test_only_a_parent_with_a_number_counts_and_numbers_are_digits(self):
         self.assertEqual(self.wa.numbers, {"gonza": "59891111"})
