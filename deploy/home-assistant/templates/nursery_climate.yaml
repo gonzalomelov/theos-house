@@ -19,6 +19,9 @@
       state: >
         {% set r = (reading.stdout | from_json(default={})).payload | default({}, true) %}
         {{ r.temperature.value if r.temperature else 'unavailable' }}
+      # A steady value alone does not refresh the timestamps the readers check for a fresh reading.
+      attributes:
+        read_at: "{{ now().isoformat() }}"
     - name: "Nursery climate humidity"
       unique_id: nursery_climate_humidity
       device_class: humidity
@@ -27,3 +30,5 @@
       state: >
         {% set r = (reading.stdout | from_json(default={})).payload | default({}, true) %}
         {{ r.humidity.value if r.humidity else 'unavailable' }}
+      attributes:
+        read_at: "{{ now().isoformat() }}"
