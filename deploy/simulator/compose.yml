@@ -34,6 +34,8 @@ services:
       BASETEN_API_KEY: ${BASETEN_API_KEY:?set BASETEN_API_KEY in the env file}
       PA_DB_URL: postgresql://agent@db:5432/agent
       PA_SIM_CLIENT_HEADER: CF-Connecting-IP
+      # A panel of judges can share one address.
+      PA_SIM_MAX_PER_CLIENT: "6"
       PA_SIM_SECURE_COOKIE: "1"
       HTTPS_PROXY: http://egress:8888
       NO_PROXY: localhost,127.0.0.1,db

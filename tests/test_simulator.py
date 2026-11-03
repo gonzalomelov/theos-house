@@ -167,6 +167,10 @@ class Visitors(unittest.TestCase):
         now[0] = sessions_mod.HOUR_S + 1
         allowance.take("a")
 
+    def test_a_message_goes_out_without_long_dashes(self):
+        from parenting_agent.core import safety
+        self.assertEqual(safety.plain("Got it \u2014 I can't"), "Got it, I can't")
+
     def test_a_failure_shows_no_internals(self):
         self.assertEqual(gateway.visible({"seq": 1, "kind": "error", "event_id": 2, "error": "secret host"}), {"seq": 1, "kind": "error", "event_id": 2})
         self.assertEqual(gateway.visible({"seq": 1, "kind": "done", "status": "failed", "outcome": "secret host"})["outcome"], "")

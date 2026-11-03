@@ -66,8 +66,13 @@ def gate(text, screen=None):
     return None
 
 
+def plain(text):
+    """Muse writes long dashes, and nobody in this house texts with them."""
+    return re.sub(r"\s*[\u2014\u2013]\s*", ", ", text or "")
+
+
 def outbound(text, lang="es"):
     """(text to send, why it was refused). The final guard drops machinery, a dose or a drug refuses the whole message."""
     if ADVICE_OUT.search(text or ""):
         return None, "Refused, nothing was sent: never a dose, a drug or a diagnosis. Say what you saw or did instead."
-    return final_guard.apply(text, lang=lang), None
+    return final_guard.apply(plain(text), lang=lang), None

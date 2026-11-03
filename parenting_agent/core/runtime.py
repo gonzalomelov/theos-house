@@ -293,6 +293,7 @@ class Core:
             await think("Theo is crying and no parent has been told. Tell the parent on duty with notify, in one short line.")
         line = tools_mod.record_line(calls)
         if final:  # Muse's own closing line can contradict what it did (Nov 3), so it is kept apart and the record is the calls
+            final = safety.plain(final)
             await self.record(event["id"], "muse_note", {}, final)
         self.publish("decision", event_id=event["id"], text=line, note=final, seconds=round(time.monotonic() - started, 1), tokens=used)
         return await self.finish(event, "done", line)
