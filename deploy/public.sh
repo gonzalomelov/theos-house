@@ -1,6 +1,6 @@
 #!/bin/sh
 # shellcheck disable=SC2016,SC2029  # remote commands are quoted on purpose, they expand on the Vostro
-# The public demo (pa-demo, https://baby.bygmv.com) and the families service (pa-families, Telegram) on the Vostro.
+# The old public demo (pa-demo, retired: baby.bygmv.com redirects, see deploy/demo-redirect) and the families service (pa-families, Telegram) on the Vostro.
 # Run from the Mac, in a clean checkout of this repo. Only committed files are deployed.
 #
 #   sh deploy/public.sh demo|families push-env   copy only the names the service needs to ~/apps/pa-<service>.env (mode 600)

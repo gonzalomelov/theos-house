@@ -1,0 +1,24 @@
+# baby.bygmv.com now only redirects to https://simulator.bygmv.com. It takes the old demo's port 4820, so the tunnel and DNS
+# don't change. It holds no secrets and reaches nothing. Run on the Vostro after sh deploy/public.sh demo stop:
+#
+#   docker compose -f deploy/demo-redirect/compose.yml up -d
+#
+# Back to the old demo: docker compose -f deploy/demo-redirect/compose.yml down, then sh deploy/public.sh demo start.
+name: pa-demo-redirect
+
+services:
+  redirect:
+    # The same pinned image as the agent's relay.
+    image: nginxinc/nginx-unprivileged@sha256:0c79d56aee561a1d81c63f00eee5fb5fe29279560cdc55e91425133104c7fbe6
+    container_name: pa-demo-redirect
+    restart: unless-stopped
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    ports: ["127.0.0.1:4820:8080"]
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    tmpfs: ["/tmp:rw,size=8m"]
+    mem_limit: 32m
+    memswap_limit: 32m
+    pids_limit: 32
