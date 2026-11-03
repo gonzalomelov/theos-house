@@ -80,7 +80,7 @@ class Answer(unittest.TestCase):
         text = answer(self.ok(18.6, 61.4), "es")
         self.assertEqual(text, "Cuarto de Theo: 18,6 °C y 61 % de humedad. La guía de Lullaby Trust y NHS para el cuarto "
                                "donde duerme un bebé es de 16 a 20 °C: está dentro de la guía. "
-                               "www.lullabytrust.org.uk/safer-sleep-advice/baby-room-temperature/")
+                               "https://www.lullabytrust.org.uk/")
 
     def test_english_above_and_below(self):
         self.assertIn("22.4 °C and 58 % humidity", answer(self.ok(22.4), "en"))
@@ -139,6 +139,7 @@ class OnTheFamilyAgent(unittest.TestCase):
                 self.assertEqual(len(sent), 1)
                 self.assertIn("Cuarto de Theo: 21,3 °C y 64 % de humedad", sent[0])
                 self.assertIn("está 1,3 °C arriba", sent[0])
+                self.assertIn("https://www.lullabytrust.org.uk/", sent[0])  # the source survives the final guard
                 self.assertEqual(brain.plans, [["(brain)"]])  # the brain never ran
                 self.assertEqual(ha.gets, [TEMP, HUM])
                 guards = [e["status"] for e in family.agent.bus.history if e["kind"] == "guard"]
