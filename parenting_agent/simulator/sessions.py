@@ -20,11 +20,31 @@ MAX_SESSIONS = int(os.environ.get("PA_SIM_MAX_SESSIONS", "12"))
 MAX_PER_CLIENT = int(os.environ.get("PA_SIM_MAX_PER_CLIENT", "3"))
 MAX_EVENTS = int(os.environ.get("PA_SIM_MAX_EVENTS", "40"))
 MAX_TEXT = 280
+# One address, across all its sessions, so Start over can't spend Muse without end.
+HOUR_S = 3600
+ADDRESS_EVENTS = int(os.environ.get("PA_SIM_ADDRESS_EVENTS", "120"))
+ADDRESS_SESSIONS = int(os.environ.get("PA_SIM_ADDRESS_SESSIONS", "12"))
 HIDDEN_FACTS = ("language",)
 
 
 class Full(Exception):
     pass
+
+
+class Allowance:
+    """How much one address used in the last hour."""
+    def __init__(self, limit, clock=time.monotonic):
+        self.limit = limit
+        self.clock = clock
+        self.used = {}
+
+    def take(self, address):
+        now = self.clock()
+        recent = [at for at in self.used.get(address, ()) if now - at < HOUR_S]
+        if len(recent) >= self.limit:
+            self.used[address] = recent
+            raise Full("address")
+        self.used[address] = [*recent, now]
 
 
 class SimLog(LocalBabyLog):
@@ -64,7 +84,8 @@ class SimChannel(tools_mod.MockChannel):
 
 
 class Session:
-    def __init__(self, client, model=None, lang="en"):
+    def __init__(self, client, model=None, lang="en", allowance=None):
+        self.allowance = allowance
         self.token = secrets.token_urlsafe(24)
         self.client = client
         self.lang = lang
@@ -144,6 +165,8 @@ class Session:
     def count(self):
         if self.events_used >= MAX_EVENTS:
             raise Full("events")
+        if self.allowance:
+            self.allowance.take(self.client)
         self.events_used += 1
 
     async def state(self):
@@ -159,6 +182,8 @@ class Sessions:
         self.model = model
         self.live = {}
         self.lock = asyncio.Lock()
+        self.events = Allowance(ADDRESS_EVENTS)
+        self.opened = Allowance(ADDRESS_SESSIONS)
 
     def get(self, token):
         session = self.live.get(token)
@@ -173,7 +198,8 @@ class Sessions:
                 await self.drop(mine[0].token)
             if len(self.live) >= MAX_SESSIONS:
                 raise Full("sessions")
-            session = await Session(client, self.model, lang).start()
+            self.opened.take(client)
+            session = await Session(client, self.model, lang, self.events).start()
             self.live[session.token] = session
             return session
 

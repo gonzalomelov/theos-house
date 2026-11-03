@@ -24,6 +24,7 @@ SECURE = os.environ.get("PA_SIM_SECURE_COOKIE") == "1"
 CSP = ("default-src 'none'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self'; "
        "media-src 'self'; connect-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'")
 BUSY = "The simulator is full. Try again in a few minutes."
+USED = "This session reached its limit. Start over, or try again in an hour."
 STREAMED = {"event", "tool_call", "tool_result", "gate", "decision", "done", "error"}
 PARENTS = ("gonza", "ceci")
 
@@ -92,7 +93,7 @@ def app(model=None, media=None):
         try:
             event_id = await session.play(str((await body_of(request)).get("id")))
         except Full:
-            return JSONResponse({"error": "This session used all its moments. Start over."}, 429)
+            return JSONResponse({"error": USED}, 429)
         if event_id is None:
             return JSONResponse({"error": "There is no such moment."}, 404)
         return JSONResponse({"id": event_id}, 202)
@@ -105,7 +106,7 @@ def app(model=None, media=None):
         try:
             return JSONResponse({"id": await session.write(body["as"], text)}, 202)
         except Full:
-            return JSONResponse({"error": "This session used all its moments. Start over."}, 429)
+            return JSONResponse({"error": USED}, 429)
 
     async def event(request, session):
         """The same events the real home sends. What happens next is Muse's to decide."""
@@ -116,7 +117,7 @@ def app(model=None, media=None):
         try:
             return JSONResponse({"id": await session.event(body["type"], payload)}, 202)
         except Full:
-            return JSONResponse({"error": "This session used all its moments. Start over."}, 429)
+            return JSONResponse({"error": USED}, 429)
 
     async def set_home(request, session):
         """Changes the home without waking anyone, as when a device moved before this moment."""
@@ -132,6 +133,10 @@ def app(model=None, media=None):
         minutes = body.get("minutes")
         if minutes not in (60, 360):
             return JSONResponse({"error": "The clock moves 60 or 360 minutes."}, 400)
+        try:
+            session.count()  # a wake it fires can call Muse
+        except Full:
+            return JSONResponse({"error": USED}, 429)
         await session.advance(session.moment + datetime.timedelta(minutes=minutes))
         return JSONResponse(await session.state())
 
@@ -141,6 +146,10 @@ def app(model=None, media=None):
 
     async def reset(request, session):
         chosen = session.lang
+        try:
+            sessions.opened.take(client_of(request))
+        except Full:
+            return JSONResponse({"error": USED}, 429)
         await sessions.drop(session.token)
         try:
             fresh = await sessions.create(client_of(request), chosen)

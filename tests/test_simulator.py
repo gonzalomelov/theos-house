@@ -16,6 +16,7 @@ try:
 
     from parenting_agent.core.runtime import Core
     from parenting_agent.simulator import gateway
+    from parenting_agent.simulator import sessions as sessions_mod
     READY = bool(os.environ.get("PA_DB_URL"))
 except ImportError:
     READY = False
@@ -154,6 +155,17 @@ class Visitors(unittest.TestCase):
             visitor.post("/api/scene", json={"id": "humid"})
             self.done(app, visitor)
             self.assertEqual(visitor.get("/api/state").json()["home"]["devices"][DEHUMIDIFIER]["state"], "on")
+
+    def test_one_address_has_an_hourly_allowance_across_its_sessions(self):
+        now = [0.0]
+        allowance = sessions_mod.Allowance(2, clock=lambda: now[0])
+        allowance.take("a")
+        allowance.take("a")
+        allowance.take("b")
+        with self.assertRaises(sessions_mod.Full):
+            allowance.take("a")
+        now[0] = sessions_mod.HOUR_S + 1
+        allowance.take("a")
 
     def test_a_failure_shows_no_internals(self):
         self.assertEqual(gateway.visible({"seq": 1, "kind": "error", "event_id": 2, "error": "secret host"}), {"seq": 1, "kind": "error", "event_id": 2})
