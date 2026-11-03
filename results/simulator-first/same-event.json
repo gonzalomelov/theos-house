@@ -1,0 +1,146 @@
+[
+ {
+  "plug_off": {
+   "plug": "on",
+   "moves": [
+    "HassTurnOn"
+   ],
+   "tools": [
+    "GetLiveContext",
+    "GetLiveContext",
+    "HassTurnOn"
+   ]
+  },
+  "plug_already_on": {
+   "plug": "on",
+   "moves": [],
+   "tools": [
+    "GetLiveContext",
+    "GetLiveContext"
+   ]
+  },
+  "low_humidity": {
+   "plug": "off",
+   "moves": [],
+   "tools": []
+  },
+  "passed": true
+ },
+ {
+  "plug_off": {
+   "plug": "on",
+   "moves": [
+    "HassTurnOn"
+   ],
+   "tools": [
+    "GetLiveContext",
+    "GetLiveContext",
+    "GetLiveContext",
+    "HassTurnOn"
+   ]
+  },
+  "plug_already_on": {
+   "plug": "on",
+   "moves": [],
+   "tools": [
+    "GetLiveContext",
+    "GetLiveContext",
+    "GetLiveContext"
+   ]
+  },
+  "low_humidity": {
+   "plug": "off",
+   "moves": [],
+   "tools": []
+  },
+  "passed": true
+ },
+ {
+  "plug_off": {
+   "plug": "on",
+   "moves": [
+    "HassTurnOn"
+   ],
+   "tools": [
+    "GetLiveContext",
+    "HassTurnOn",
+    "GetLiveContext",
+    "HassTurnOn"
+   ]
+  },
+  "plug_already_on": {
+   "plug": "on",
+   "moves": [],
+   "tools": [
+    "GetLiveContext",
+    "GetLiveContext",
+    "GetLiveContext"
+   ]
+  },
+  "low_humidity": {
+   "plug": "off",
+   "moves": [],
+   "tools": []
+  },
+  "passed": true
+ },
+ {
+  "plug_off": {
+   "plug": "on",
+   "moves": [
+    "HassTurnOn"
+   ],
+   "tools": [
+    "GetLiveContext",
+    "GetLiveContext",
+    "GetLiveContext",
+    "HassTurnOn"
+   ]
+  },
+  "plug_already_on": {
+   "plug": "on",
+   "moves": [],
+   "tools": [
+    "GetLiveContext",
+    "GetLiveContext",
+    "GetLiveContext"
+   ]
+  },
+  "low_humidity": {
+   "plug": "off",
+   "moves": [],
+   "tools": []
+  },
+  "passed": true
+ },
+ {
+  "plug_off": {
+   "plug": "on",
+   "moves": [
+    "HassTurnOn"
+   ],
+   "tools": [
+    "GetLiveContext",
+    "GetLiveContext",
+    "GetLiveContext",
+    "HassTurnOn"
+   ]
+  },
+  "plug_already_on": {
+   "plug": "on",
+   "moves": [],
+   "tools": [
+    "GetLiveContext",
+    "GetLiveContext",
+    "GetLiveContext",
+    "GetLiveContext"
+   ]
+  },
+  "low_humidity": {
+   "plug": "off",
+   "moves": [],
+   "tools": []
+  },
+  "passed": true
+ }
+]

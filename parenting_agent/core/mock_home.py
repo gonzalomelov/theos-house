@@ -12,12 +12,12 @@ from mcp.server.fastmcp import FastMCP
 
 START = {
     "Nursery climate humidity": {"domain": "sensor", "entity_id": "sensor.nursery_climate_humidity", "state": "52.0",
-                                 "unit": "%", "device_class": "humidity", "area": "Nursery"},
+                                 "unit": "%", "device_class": "humidity", "area": "Theo's room"},
     "Nursery climate temperature": {"domain": "sensor", "entity_id": "sensor.nursery_climate_temperature", "state": "21.5",
-                                    "unit": "°C", "device_class": "temperature", "area": "Nursery"},
-    "Tapo P110 - Dehumidifier": {"domain": "switch", "entity_id": "switch.study_tapo_p110_dehumidifier", "state": "off", "area": "Study"},
+                                    "unit": "°C", "device_class": "temperature", "area": "Theo's room"},
+    "Tapo P110 - Dehumidifier": {"domain": "switch", "entity_id": "switch.study_tapo_p110_dehumidifier", "state": "off", "area": "Theo's room"},
     "Tapo P110 - Bottle Warmer": {"domain": "switch", "entity_id": "switch.study_tapo_p110_bottle_warmer", "state": "off", "area": "Kitchen"},
-    "Study light": {"domain": "light", "entity_id": "light.study", "state": "off", "area": "Study"},
+    "Desk light": {"domain": "light", "entity_id": "light.desk", "state": "off", "area": "Theo's room"},
     "Kitchen Echo": {"domain": "media_player", "entity_id": "media_player.echo", "state": "idle", "area": "Kitchen"},
     "Robot vacuum": {"domain": "vacuum", "entity_id": "vacuum.robot", "state": "docked", "area": "Living room"},
 }

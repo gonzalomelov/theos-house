@@ -6,7 +6,7 @@ run for months. What must last longer goes through the remember tool.
 import os
 
 from langchain.agents import create_agent
-from langchain.agents.middleware import before_model
+from langchain.agents.middleware import before_model, wrap_model_call
 from langchain_core.messages import RemoveMessage, ToolMessage, trim_messages
 from langchain_core.messages.utils import count_tokens_approximately
 from langchain_openai import ChatOpenAI
@@ -15,14 +15,17 @@ from langgraph.graph.message import REMOVE_ALL_MESSAGES
 from .settings import BASE_URL, MODEL
 
 MAX_HISTORY_TOKENS = 16000
+EMPTY_RETRIES = 2
 PROMPT = """You are the persistent agent of one family's home. You run all the time, across days. You are not a chatbot: nobody
 is reading your answers. Events reach you one at a time, and you act only through your tools.
 
-The family: Gonza and Ceci, first-time parents, and their baby Theo. You look after them and the house, including the air in the
-room where Theo sleeps. Parents read Rioplatense Spanish unless they write to you in another language.
+The family: Gonza and Ceci, first-time parents, their baby Theo, and Grandma, who helps and asks you things out loud through the
+kitchen Echo. Answer her on the Echo, plainly. You look after them and the house, including the air in
+Theo's room. Parents read Rioplatense Spanish unless they write to you in another language.
 
-The house: the nursery climate sensors read the room where Theo sleeps. The plug named Dehumidifier powers the dehumidifier in that
-room, and the plug named Bottle Warmer powers the bottle warmer.
+The house: Theo's room, the nursery and the study are one room, with the desk in it, even where a device's name or area says otherwise.
+The nursery climate sensors read that room and the plug named Dehumidifier powers the dehumidifier in it. The plug named Bottle Warmer
+powers the bottle warmer.
 
 For each event, look at what you need with your tools, decide what is worth doing, and do it. If nothing is needed, do nothing and
 send nothing: a message that is not needed costs a tired parent their sleep or their attention. You choose who hears what, on which
@@ -30,9 +33,10 @@ channel, and in your own words, written for that moment. Short, warm, plain, no 
 with notify, so when a parent writes to you, answer them with notify.
 
 - At night a sound or a need wakes one parent, the one on duty, and never the other. Both only for an emergency.
+- The evening check is when both parents learn who is on tonight, each in a line written for them. The morning check tells each what they need from the night.
 - When a parent changes the plan, you work out what follows, keep the new plan with remember, and tell whoever it affects.
 - Check a device's state before you switch it, and don't switch it again if it is already right.
-- Log what parents tell you in the baby log. Never invent an entry.
+- Log what parents tell you in the baby log, with ts set to the time they name, as an ISO time with the date. Never invent an entry.
 - A parent who tells you something gets one short line back, so they know you have it.
 - In the morning each parent gets one short message from you, only what is theirs: how the night went from the log, whose night is next.
 - In the evening look at the feeding rhythm. When a feed will likely fall in the night, ask to be woken a little before it, so the
@@ -61,12 +65,25 @@ def trim_history(state, runtime):
     return {"messages": [RemoveMessage(id=REMOVE_ALL_MESSAGES), *kept]}
 
 
+@wrap_model_call
+async def retry_empty(request, handler):
+    """Muse sometimes answers with nothing at all, no words and no tool call (Nov 3, 3 of 50 moments), which would read as choosing
+    to do nothing. Ask again."""
+    response = await handler(request)
+    for _ in range(EMPTY_RETRIES):
+        message = response.result[-1]
+        if message.tool_calls or message.content:
+            break
+        response = await handler(request)
+    return response
+
+
 def muse():
     return ChatOpenAI(model=MODEL, base_url=BASE_URL, api_key=os.environ.get("BASETEN_API_KEY", "missing"), max_tokens=6000, timeout=90, reasoning_effort="low")
 
 
 def build(model, tools, saver, store):
-    return create_agent(model, tools, system_prompt=PROMPT, middleware=[trim_history], checkpointer=saver, store=store)
+    return create_agent(model, tools, system_prompt=PROMPT, middleware=[trim_history, retry_empty], checkpointer=saver, store=store)
 
 
 async def repair(agent, config):

@@ -1,0 +1,99 @@
+# The judge simulator on the Vostro, for https://simulator.baby.bygmv.com. Not deployed until Gonza says so.
+#
+#   docker network create --internal --ipv6=false \
+#     -o com.docker.network.bridge.gateway_mode_ipv4=isolated pa-sim-internal
+#   docker compose --env-file ~/apps/pa-sim.env -f deploy/simulator/compose.yml up -d --build
+#   sh deploy/simulator/check-wall.sh homeassistant:8123 babybuddy:8000
+#
+# The wall: `sim` and its PostgreSQL sit only on an internal network with no gateway and no host address. They reach the egress
+# proxy and the edge, nothing else: not the host, not Home Assistant, not Baby Buddy, not the LAN, not the family agent. The proxy
+# allows HTTPS CONNECT only to the brain host. The env file holds one line, BASETEN_API_KEY. No host networking, ever.
+# PostgreSQL lives in memory: a visitor's home is deleted when the session ends, and nothing outlives a restart.
+name: pa-sim
+
+x-hardened: &hardened
+  restart: unless-stopped
+  read_only: true
+  cap_drop: [ALL]
+  security_opt: ["no-new-privileges:true"]
+  logging:
+    driver: json-file
+    options: { max-size: 10m, max-file: "3" }
+
+services:
+  sim:
+    <<: *hardened
+    image: pa-sim:${APP_TAG:-latest}
+    build:
+      context: ../..
+      dockerfile: deploy/simulator/Dockerfile
+    container_name: pa-sim
+    networks: [internal]
+    depends_on: [egress, db]
+    environment:
+      BASETEN_API_KEY: ${BASETEN_API_KEY:?set BASETEN_API_KEY in the env file}
+      PA_DB_URL: postgresql://agent@db:5432/agent
+      PA_SIM_CLIENT_HEADER: CF-Connecting-IP
+      PA_SIM_SECURE_COOKIE: "1"
+      HTTPS_PROXY: http://egress:8888
+      NO_PROXY: localhost,127.0.0.1,db
+    volumes:
+      # The car seat clip, cut by scripts/simulator_media.py. It stays out of git.
+      - ${PA_SIM_MEDIA_DIR:-${HOME}/apps/pa-sim-media}:/media:ro
+    tmpfs: ["/tmp:rw,size=128m"]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8781/health', timeout=3)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    mem_limit: 1g
+    memswap_limit: 1g
+    cpus: 1
+    pids_limit: 256
+
+  db:
+    <<: *hardened
+    # postgres:17-alpine pinned by digest (2026-11-03). Bump deliberately.
+    image: postgres@sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b
+    container_name: pa-sim-db
+    networks: [internal]
+    cap_add: [CHOWN, DAC_OVERRIDE, FOWNER, SETGID, SETUID]
+    environment:
+      POSTGRES_USER: agent
+      POSTGRES_DB: agent
+      # Only `sim` can reach it, and it holds nothing but simulated homes.
+      POSTGRES_HOST_AUTH_METHOD: trust
+    tmpfs: ["/var/lib/postgresql/data:rw,size=256m", "/var/run/postgresql:rw,size=1m", "/tmp:rw,size=16m"]
+    mem_limit: 512m
+    pids_limit: 128
+
+  egress:
+    <<: *hardened
+    image: pa-sim-egress:${APP_TAG:-latest}
+    build: { context: ../demo/egress }
+    container_name: pa-sim-egress
+    networks: [internal, egress]
+    tmpfs: ["/tmp:rw,size=8m", "/run/tinyproxy:rw,size=1m,uid=100,gid=101"]
+    mem_limit: 64m
+    pids_limit: 64
+
+  edge:
+    <<: *hardened
+    # A tiny TCP relay so the internal network never gets a published port. The same pinned image as the demo's edge.
+    image: alpine/socat@sha256:a6be4c0262b339c53ddad723cdd178a1a13271e1137c65e27f90a08c16de02b8
+    container_name: pa-sim-edge
+    command: ["TCP-LISTEN:8080,fork,reuseaddr", "TCP:pa-sim:8781"]
+    networks: [internal, edge]
+    ports: ["127.0.0.1:${PA_SIM_EDGE_PORT:-4821}:8080"]
+    mem_limit: 32m
+    pids_limit: 64
+
+networks:
+  internal:
+    external: true
+    name: pa-sim-internal
+  egress:
+    driver: bridge
+  edge:
+    driver: bridge

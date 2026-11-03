@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Theo's House Simulator</title>
+<meta name="description" content="The real agent and Muse Spark Open, deciding live on a simulated home.">
+<link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,750&display=swap">
+<link rel="stylesheet" href="/static/page.css">
+</head>
+<body data-sky="night">
+<header class="top">
+  <div class="clock" aria-live="polite">
+    <div class="time" id="time">21:00</div>
+    <div class="date"><span id="date"></span><span class="tag" id="simTag"></span></div>
+  </div>
+  <p class="lead" id="lead"></p>
+  <div class="tools">
+    <button type="button" class="ghost" id="lang" lang="es">Español</button>
+    <button type="button" class="ghost" id="reset"></button>
+  </div>
+</header>
+
+<nav class="rail" aria-labelledby="rail-t">
+  <h2 id="rail-t" class="sr"></h2>
+  <ol id="rail"></ol>
+</nav>
+<p class="status" id="status" role="status"></p>
+
+<main class="stage">
+  <section class="phone" id="phone-gonza" aria-labelledby="ph-g">
+    <h2 id="ph-g"></h2>
+    <div class="screen"><ol class="chat"></ol><p class="asleep"></p></div>
+    <form class="say"><input aria-label="" maxlength="280" autocomplete="off"><button type="submit"></button></form>
+  </section>
+
+  <section class="house" aria-labelledby="house-title">
+    <h2 id="house-title" class="sr"></h2>
+    <svg viewBox="0 0 640 500" role="img" id="plan" aria-labelledby="house-title">
+      <g class="rooms">
+        <rect id="r-parents" class="room" x="8" y="8" width="292" height="192"/>
+        <rect id="r-theo" class="room" x="300" y="8" width="332" height="362"/>
+        <rect id="r-kitchen" class="room" x="8" y="200" width="292" height="170"/>
+        <rect id="r-living" class="room" x="8" y="370" width="624" height="122"/>
+      </g>
+      <g class="labels">
+        <text x="24" y="36" data-t="parents"></text><text x="316" y="36" data-t="theo"></text>
+        <text x="24" y="228" data-t="kitchen"></text><text x="24" y="398" data-t="living"></text>
+      </g>
+      <!-- Parents' room: the bed, and Theo's crib beside it -->
+      <g class="thing"><rect x="28" y="62" width="140" height="112" rx="10"/><rect x="40" y="72" width="52" height="26" rx="7"/><rect x="104" y="72" width="52" height="26" rx="7"/></g>
+      <g class="thing crib"><rect x="192" y="84" width="84" height="66" rx="12"/><path d="M206 84v66M220 84v66M234 84v66M248 84v66M262 84v66"/></g>
+      <g id="cry"><circle cx="234" cy="117" r="30"/><circle cx="234" cy="117" r="30"/><circle cx="234" cy="117" r="30"/></g>
+      <!-- Theo's room: sensor and dehumidifier -->
+      <g class="reading"><text id="hum" x="316" y="92"></text><text class="dlabel" x="316" y="114" data-t="humidityWord"></text><text id="temp" x="316" y="146"></text></g>
+      <g id="dehum" class="device"><rect x="538" y="78" width="66" height="92" rx="10"/><path d="M552 96h38M552 108h38M552 120h38"/><text x="571" y="154" id="dehum-s"></text>
+        <g class="air"><path d="M530 92c-14 6-14 18-28 22"/><path d="M530 116c-14 6-14 18-28 22"/></g></g>
+      <text class="dlabel" x="622" y="192" text-anchor="end" data-t="dehum"></text>
+      <!-- Kitchen: Echo and bottle warmer -->
+      <g id="echo" class="device"><circle cx="66" cy="296" r="26"/><circle cx="66" cy="296" r="12"/></g>
+      <text class="dlabel" x="66" y="344" text-anchor="middle" data-t="echo"></text>
+      <g id="warmer" class="device"><rect x="164" y="266" width="56" height="60" rx="10"/><path d="M180 266v-16h24v16"/><text x="192" y="302" id="warmer-s"></text></g>
+      <text class="dlabel" x="192" y="344" text-anchor="middle" data-t="warmer"></text>
+      <!-- Theo's room: the desk and its light -->
+      <g class="thing"><rect x="340" y="290" width="200" height="50" rx="6"/></g>
+      <g id="lamp" class="device"><path d="M470 290v-34l-26-12"/><path d="M424 256l34-22 14 22z"/></g>
+      <text class="dlabel" x="440" y="360" text-anchor="middle" data-t="light"></text>
+      <!-- Living room: the vacuum on its dock -->
+      <g id="vacuum" class="device"><circle cx="330" cy="442" r="26"/><circle cx="330" cy="442" r="8"/></g>
+      <text class="dlabel" x="376" y="448" data-t="vacuum"></text>
+    </svg>
+    <div class="bubble" id="echo-bubble" hidden></div>
+    <div class="recording" id="recording" hidden>
+      <div class="rec-head"><strong id="rec-title"></strong><button type="button" class="ghost" id="rec-close"></button></div>
+      <video id="rec-video" controls playsinline preload="none" src="/media/carseat.mp4">
+        <track id="rec-en" kind="subtitles" srclang="en" label="English" src="/static/carseat.en.vtt">
+        <track id="rec-es" kind="subtitles" srclang="es" label="Español" src="/static/carseat.es.vtt">
+      </video>
+      <p id="rec-note"></p>
+    </div>
+  </section>
+
+  <section class="phone" id="phone-ceci" aria-labelledby="ph-c">
+    <h2 id="ph-c"></h2>
+    <div class="screen"><ol class="chat"></ol><p class="asleep"></p></div>
+    <form class="say"><input aria-label="" maxlength="280" autocomplete="off"><button type="submit"></button></form>
+  </section>
+
+  <section class="controls" aria-labelledby="ct-t">
+    <h2 id="ct-t"></h2>
+    <div class="sliders">
+      <label><span id="l-hum"></span> <output id="v-hum"></output><input type="range" id="c-hum" min="20" max="90" step="0.5"></label>
+      <label><span id="l-temp"></span> <output id="v-temp"></output><input type="range" id="c-temp" min="10" max="35" step="0.5"></label>
+    </div>
+    <div class="sends">
+      <button type="button" class="ghost" data-event="sound" data-kind="baby crying" id="b-cry"></button>
+      <button type="button" class="ghost" data-event="sound" data-kind="dog barking" id="b-dog"></button>
+      <button type="button" class="ghost" data-event="switch" data-entity="switch.study_tapo_p110_dehumidifier" data-device="Tapo P110 - Dehumidifier" id="b-dehum"></button>
+      <button type="button" class="ghost" data-event="switch" data-entity="switch.study_tapo_p110_bottle_warmer" data-device="Tapo P110 - Bottle Warmer" id="b-warm"></button>
+      <button type="button" class="ghost" data-event="schedule" data-name="morning" id="b-am"></button>
+      <button type="button" class="ghost" data-event="schedule" data-name="evening" id="b-pm"></button>
+      <button type="button" class="ghost" data-clock="60" id="b-1h"></button>
+      <button type="button" class="ghost" data-clock="360" id="b-6h"></button>
+    </div>
+  </section>
+
+  <section class="trace" aria-labelledby="tr-t">
+    <h2 id="tr-t"></h2>
+    <ol id="trace" aria-live="polite"></ol>
+  </section>
+
+  <section class="memory" aria-labelledby="me-t">
+    <h2 id="me-t"></h2>
+    <dl id="facts"></dl>
+    <h3 id="log-t"></h3>
+    <ul id="log"></ul>
+  </section>
+</main>
+
+<footer id="foot"></footer>
+<script src="/static/page.js"></script>
+</body>
+</html>

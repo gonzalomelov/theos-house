@@ -30,4 +30,5 @@ class Settings:
     lang: str = field(default_factory=lambda: os.environ.get("PA_LANG", "es"))
     mock_port: int = field(default_factory=lambda: int(os.environ.get("PA_MOCK_PORT", "18124")))
     devices: tuple = field(default_factory=lambda: tuple(filter(None, os.environ.get("PA_ALLOWED_DEVICES", "").split("|"))) or DEVICES)
+    pool_max: int = field(default_factory=lambda: int(os.environ.get("PA_DB_POOL", "6")))
     data_dir: str = field(default_factory=lambda: os.environ.get("PA_DATA_DIR", "data-core"))

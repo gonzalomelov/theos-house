@@ -81,7 +81,7 @@ class CoreTest(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(kinds, ["event", "tool_call", "tool_result", "decision", "done"])
 
     async def test_a_device_off_the_list_is_refused(self):
-        core = await self.run_core(scripted(call("HassTurnOn", name="Study light"), call("HassTurnOn", area="Study"), AIMessage("ok")))
+        core = await self.run_core(scripted(call("HassTurnOn", name="Desk light"), call("HassTurnOn", area="Study"), AIMessage("ok")))
         await self.event(core, "sound", {"kind": "cry"})
         self.assertEqual(core.mock.snapshot()["moves"], [])
         results = [a["result"] for a in await core.actions() if a["tool"] == "HassTurnOn"]

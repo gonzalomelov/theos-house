@@ -66,9 +66,10 @@ def describe(event, moment, facts):
 
 
 class Core:
-    def __init__(self, settings=None, model=None):
+    def __init__(self, settings=None, model=None, channel=None, log=None):
         self.settings = settings or Settings()
         self.model = model
+        self.given_channel, self.given_log = channel, log
         self.queue = asyncio.Queue()
         self.subscribers = set()
         self.recent = collections.deque(maxlen=500)
@@ -84,7 +85,7 @@ class Core:
 
     async def __aenter__(self):
         s = self.settings
-        self.pool = AsyncConnectionPool(s.db_url, min_size=1, max_size=6, open=False,
+        self.pool = AsyncConnectionPool(s.db_url, min_size=1, max_size=s.pool_max, open=False,
                                         kwargs={"autocommit": True, "row_factory": dict_row, "prepare_threshold": 0})
         await self.pool.open()
         saver, self.store = AsyncPostgresSaver(self.pool), AsyncPostgresStore(self.pool)
@@ -95,11 +96,12 @@ class Core:
                 await db.execute(statement)
         if part("home") != "real":
             self.mock = MockHome(s.mock_port).start()
-        self.channel = tools_mod.RealChannel(s) if part("channel") == "real" else tools_mod.MockChannel()
-        memory, self.log = tools_mod.baby_log(s, self.now)
+        self.channel = self.given_channel or (tools_mod.RealChannel(s) if part("channel") == "real" else tools_mod.MockChannel())
+        memory, self.log = self.given_log or tools_mod.baby_log(s, self.now)
         self.tools = [*await tools_mod.home_tools(s, self.mock), *tools_mod.channel_tools(self.channel, s, self.log, lambda: self.heard),
                       *tools_mod.log_tools(self.log, memory), *tools_mod.memory_tools(self.store, s.home),
                       *tools_mod.next_feed_tool(self.log, self.now), *tools_mod.coach_tool(), *tools_mod.wake_tool(self)]
+        self.saver = saver
         self.agent = agent_mod.build(self.model or agent_mod.muse(), self.tools, saver, self.store)
         self.config = {"configurable": {"thread_id": f"home-{s.home}"}, "recursion_limit": 24}
         self.worker = asyncio.create_task(self.work())
@@ -110,6 +112,17 @@ class Core:
         if self.mock:
             self.mock.stop()
         await self.pool.close()
+
+    async def forget(self):
+        """Removes this home from PostgreSQL: its events, actions, thread and facts."""
+        home = self.settings.home
+        await self.saver.adelete_thread(self.config["configurable"]["thread_id"])
+        for item in await self.store.asearch((*tools_mod.FACTS, home), limit=1000):
+            await self.store.adelete(item.namespace, item.key)
+        async with self.pool.connection() as db:
+            await db.execute("delete from actions where event_id in (select id from events where home = %s)", (home,))
+            await db.execute("delete from events where home = %s", (home,))
+            await db.execute("delete from wakes where home = %s", (home,))
 
     def publish(self, kind, **fields):
         self.seq += 1
