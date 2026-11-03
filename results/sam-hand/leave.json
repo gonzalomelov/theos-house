@@ -1,0 +1,83 @@
+[
+ {
+  "id": "bath-handoff-01",
+  "group": "leave",
+  "scene": "bath",
+  "kind": "hover",
+  "what": "bath-handoff",
+  "latency_s": 0.297,
+  "voices": 1,
+  "voices_before_cue": 0,
+  "reasons": [
+   "sam3"
+  ],
+  "looks": 1,
+  "look_s_median": 4.279,
+  "frames": 121,
+  "errors": 0
+ },
+ {
+  "id": "table-handsoff-01",
+  "group": "leave",
+  "scene": "changing_table",
+  "kind": "hover",
+  "what": "table-handsoff",
+  "latency_s": 0.872,
+  "voices": 1,
+  "voices_before_cue": 0,
+  "reasons": [
+   "hold"
+  ],
+  "looks": 2,
+  "look_s_median": 2.491,
+  "frames": 143,
+  "errors": 0
+ },
+ {
+  "id": "table-handsoff-02",
+  "group": "leave",
+  "scene": "changing_table",
+  "kind": "hover",
+  "what": "table-handsoff",
+  "latency_s": 3.14,
+  "voices": 1,
+  "voices_before_cue": 0,
+  "reasons": [
+   "sam3"
+  ],
+  "looks": 2,
+  "look_s_median": 2.834,
+  "frames": 145,
+  "errors": 0
+ },
+ {
+  "id": "table-handsoff-03",
+  "group": "leave",
+  "scene": "changing_table",
+  "kind": "hover",
+  "what": "table-handsoff",
+  "latency_s": null,
+  "voices": 0,
+  "voices_before_cue": 0,
+  "reasons": [],
+  "looks": 2,
+  "look_s_median": 3.025,
+  "frames": 145,
+  "errors": 0
+ },
+ {
+  "id": "table-onehand-01",
+  "group": "leave",
+  "scene": "changing_table",
+  "kind": "touch",
+  "what": "table-onehand",
+  "latency_s": null,
+  "voices": 0,
+  "voices_before_cue": 0,
+  "reasons": [],
+  "looks": 2,
+  "look_s_median": 3.017,
+  "frames": 144,
+  "errors": 0
+ }
+]
