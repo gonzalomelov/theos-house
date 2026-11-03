@@ -11,6 +11,7 @@ import os
 import re
 import time
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 from langchain_core.tools import StructuredTool
 from langchain_mcp_adapters.client import MultiServerMCPClient
@@ -61,6 +62,11 @@ class MockChannel:
         self.sent.append({"to": "echo", "text": text, "at": time.time()})
 
 
+def rehearsal_night(now=None):
+    hour = (now or datetime.datetime.now(ZoneInfo("America/Montevideo"))).hour
+    return hour >= 22 or hour < 7
+
+
 class RealChannel:
     hold = None
 
@@ -73,6 +79,14 @@ class RealChannel:
         self.telegram.send(os.environ[PARENTS[parent]], text, quiet)
 
     def send(self, parent, text, quiet=False):
+        """While Theo is simulated (PA_REHEARSAL=1), every real message says so and Ceci isn't reached at night."""
+        if os.environ.get("PA_REHEARSAL") != "1":
+            return self.deliver(parent, text, quiet)
+        if parent == "ceci" and rehearsal_night():
+            return "Rehearsal: kept from Ceci at night, nothing was sent."
+        return self.deliver(parent, f"Ensayo: {text}", quiet)
+
+    def deliver(self, parent, text, quiet=False):
         """WhatsApp when it can carry the words, Telegram when it can't. What happened comes back for the record. A quiet one
         makes no sound, and only Telegram can do that."""
         if quiet or not self.whatsapp or parent not in self.whatsapp.numbers:
@@ -89,6 +103,8 @@ class RealChannel:
     def echo(self, text):
         if self.hold is not None:
             self.hold.append(text)
+            return
+        if os.environ.get("PA_REHEARSAL") == "1" and rehearsal_night():
             return
         self.ha.service("media_player.volume_set", ECHO_PLAYER, {"volume_level": min(0.2, MAX_ANNOUNCE_VOLUME)})
         self.ha.service("notify.send_message", ECHO_ANNOUNCE, {"message": text[:300]})

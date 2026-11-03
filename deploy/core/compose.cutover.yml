@@ -12,6 +12,7 @@ services:
       PA_CHANNEL: real
       PA_LOG: real
       PA_TELEGRAM_POLL: "1"
+      PA_REHEARSAL: ${PA_REHEARSAL:-1}
       PA_SIM_THEO: "1"
       PA_ECHO_PORT: "8767"
       PA_VOICE_SERVICE: http://pa-voice-family:8800

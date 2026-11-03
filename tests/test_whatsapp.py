@@ -1,10 +1,12 @@
 """WhatsApp, with Meta faked: the 24 hour window, the template, the fall back to Telegram, the webhook's checks."""
+import datetime
 import hashlib
 import hmac
 import json
 import os
 import tempfile
 import unittest
+from unittest import mock
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -125,7 +127,7 @@ class Channel(Base):
     def channel(self):
         out = tools.RealChannel.__new__(tools.RealChannel)
         out.whatsapp, out.sent = self.wa, []
-        out.by_telegram = lambda parent, text: out.sent.append((parent, text))
+        out.by_telegram = lambda parent, text, quiet=False: out.sent.append((parent, text))
         return out
 
     def test_inside_the_window_only_whatsapp_carries_it(self):
@@ -212,6 +214,37 @@ class Webhook(Base):
         self.post({"statuses": [{"id": "wamid.1", "status": "failed", "errors": [{"code": OUTSIDE_WINDOW}]}]})
         self.assertEqual(self.telegram, [("gonza", "a")])
         self.assertIn(str(OUTSIDE_WINDOW), self.errors[0]["error"])
+
+
+
+@unittest.skipUnless(READY, "needs requirements-core.txt")
+class RehearsalTest(unittest.TestCase):
+    def channel(self):
+        out = tools.RealChannel.__new__(tools.RealChannel)
+        out.sent = []
+        out.deliver = lambda parent, text, quiet=False: out.sent.append((parent, text))
+        return out
+
+    def test_every_message_says_ensayo_and_ceci_sleeps(self):
+        out = self.channel()
+        with mock.patch.dict(os.environ, {"PA_REHEARSAL": "1"}), mock.patch.object(tools, "rehearsal_night", return_value=False):
+            out.send("ceci", "Hola")
+        self.assertEqual(out.sent, [("ceci", "Ensayo: Hola")])
+        out = self.channel()
+        with mock.patch.dict(os.environ, {"PA_REHEARSAL": "1"}), mock.patch.object(tools, "rehearsal_night", return_value=True):
+            self.assertIn("kept from Ceci", out.send("ceci", "Hola"))
+            out.send("gonza", "Hola")
+        self.assertEqual(out.sent, [("gonza", "Ensayo: Hola")])
+
+    def test_off_means_plain_messages(self):
+        out = self.channel()
+        with mock.patch.dict(os.environ, {"PA_REHEARSAL": "0"}):
+            out.send("ceci", "Hola")
+        self.assertEqual(out.sent, [("ceci", "Hola")])
+
+    def test_night_is_ten_to_seven(self):
+        for hour, night in ((21, False), (22, True), (3, True), (7, False)):
+            self.assertEqual(tools.rehearsal_night(datetime.datetime(2026, 11, 3, hour)), night)
 
 
 if __name__ == "__main__":
