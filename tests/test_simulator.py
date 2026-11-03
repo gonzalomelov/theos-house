@@ -206,6 +206,17 @@ class Visitors(unittest.TestCase):
             for name in ("cry.m4a", "hands-off-mask.jpg"):
                 self.assertEqual(visitor.get("/static/senses/" + name).status_code, 200)
 
+    def test_a_new_deploy_cant_be_served_an_old_script(self):
+        app = gateway.app(scripted(AIMessage("ok")))
+        with served(app) as url:
+            client = httpx.Client(base_url=url, trust_env=False, timeout=30)
+            self.addCleanup(client.close)
+            page, script = client.get("/"), client.get("/static/page.js")
+        self.assertEqual(page.headers["cache-control"], "no-cache")
+        self.assertRegex(page.text, r"/static/page\.js\?v=[0-9a-f]{12}")
+        self.assertRegex(page.text, r"/static/page\.css\?v=[0-9a-f]{12}")
+        self.assertEqual(script.headers["cache-control"], "no-cache")
+
     def test_the_clock_runs_the_checks_it_passes_and_ends_the_warmer(self):
         app = gateway.app(scripted(*[AIMessage("Nothing yet.") for _ in range(9)]))
         with served(app) as url:

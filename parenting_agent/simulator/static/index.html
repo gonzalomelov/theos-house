@@ -24,24 +24,10 @@
   <button type="button" class="play" id="play"></button>
   <h2 id="rail-t"></h2>
   <ol id="rail"></ol>
-  <a class="to-senses" id="to-senses" href="#senses"></a>
+  <a class="to-senses" id="to-senses" href="#meta"></a>
   <p class="status" id="status" role="status"></p>
 </nav>
 
-<section class="meta" id="meta" aria-labelledby="meta-t">
-  <div class="meta-head"><h2 id="meta-t"></h2><a id="arch-link" href="/static/architecture.svg" target="_blank" rel="noopener"></a></div>
-  <p id="meta-lead"></p>
-  <details id="meta-more" open><summary id="meta-sum"></summary>
-  <div class="meta-cards">
-    <article class="m-card live" id="m-muse"><h3></h3><span class="how"></span><p class="say-it"></p></article>
-    <article class="m-card" id="m-pe"><h3></h3><span class="how"></span><audio controls preload="none" src="/static/senses/cry.m4a"></audio><p class="say-it"></p></article>
-    <article class="m-card" id="m-sam"><h3></h3><span class="how"></span><img src="/static/senses/hands-on-mask.jpg" alt="SAM 3.1 masks on a generated clip" width="640" height="352" loading="lazy"><p class="say-it"></p></article>
-    <article class="m-card" id="m-gadget"><h3></h3><span class="how"></span><p class="say-it"></p></article>
-    <article class="m-card" id="m-tts"><h3></h3><span class="how"></span><audio id="mms" controls preload="none" src="/static/senses/mms-coach-en.m4a"></audio><p class="say-it"></p></article>
-  </div>
-  <p class="meta-where" id="meta-where"></p>
-  </details>
-</section>
 
 <main class="stage">
   <div class="ptabs" id="ptabs"><button type="button" id="tab-gonza" data-phone="gonza" aria-pressed="true"></button><button type="button" id="tab-ceci" data-phone="ceci" aria-pressed="false"></button></div>
@@ -128,11 +114,26 @@
   </section>
 </main>
 
+<section class="meta" id="meta" aria-labelledby="meta-t">
+  <div class="meta-head"><h2 id="meta-t"></h2><a id="arch-link" href="/static/architecture.svg" target="_blank" rel="noopener"></a></div>
+  <p id="meta-lead"></p>
+  <details id="meta-more"><summary id="meta-sum"></summary>
+  <div class="meta-cards">
+    <article class="m-card live" id="m-muse"><h3></h3><span class="how"></span><p class="say-it"></p></article>
+    <article class="m-card" id="m-pe"><h3></h3><span class="how"></span><audio controls preload="none" src="/static/senses/cry.m4a"></audio><p class="say-it"></p></article>
+    <article class="m-card" id="m-sam"><h3></h3><span class="how"></span><img src="/static/senses/hands-on-mask.jpg" alt="SAM 3.1 masks on a generated clip" width="640" height="352" loading="lazy"><p class="say-it"></p></article>
+    <article class="m-card" id="m-gadget"><h3></h3><span class="how"></span><p class="say-it"></p></article>
+    <article class="m-card" id="m-tts"><h3></h3><span class="how"></span><audio id="mms" controls preload="none" src="/static/senses/mms-coach-en.m4a"></audio><p class="say-it"></p></article>
+  </div>
+  <p class="meta-where" id="meta-where"></p>
 <section class="senses" id="senses" aria-labelledby="se-t" hidden>
   <h2 id="se-t"></h2>
   <p id="se-note"></p>
   <div class="se-cards" id="se-cards"></div>
 </section>
+  </details>
+</section>
+
 
 <div class="recording" id="recording" hidden role="dialog" aria-modal="true" aria-labelledby="rec-title">
   <div class="rec-box">

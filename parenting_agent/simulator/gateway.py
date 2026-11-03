@@ -2,6 +2,7 @@
 import asyncio
 import contextlib
 import datetime
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -10,7 +11,7 @@ from sse_starlette.sse import EventSourceResponse
 from starlette.applications import Starlette
 from starlette.middleware import Middleware
 from starlette.middleware.base import BaseHTTPMiddleware
-from starlette.responses import FileResponse, JSONResponse
+from starlette.responses import HTMLResponse, JSONResponse
 from starlette.routing import Mount, Route
 from starlette.staticfiles import StaticFiles
 
@@ -23,6 +24,7 @@ CLIENT_HEADER = os.environ.get("PA_SIM_CLIENT_HEADER", "")
 SECURE = os.environ.get("PA_SIM_SECURE_COOKIE") == "1"
 CSP = ("default-src 'none'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self'; "
        "media-src 'self'; connect-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'")
+FRESH = {"Cache-Control": "no-cache"}
 BUSY = "All the simulated homes are in use right now. One frees up within two minutes, and this page keeps trying."
 STARTS_USED = "This address started many homes this hour. Please try again in a while."
 USED = "This session reached its limit. Start over, or try again in an hour."
@@ -36,6 +38,24 @@ class Headers(BaseHTTPMiddleware):
         response = await call_next(request)
         response.headers.update({"Content-Security-Policy": CSP, "X-Content-Type-Options": "nosniff", "Referrer-Policy": "no-referrer"})
         return response
+
+
+class Revalidated(StaticFiles):
+    """Cloudflare keeps static files for hours by default, and an old page.js on a new page breaks the page. It must ask first."""
+
+    def file_response(self, *args, **kwargs):
+        response = super().file_response(*args, **kwargs)
+        response.headers.update(FRESH)
+        return response
+
+
+def page_html():
+    """The page, with each script and style named by its content, so a new deploy can't be served an old copy."""
+    html = (STATIC / "index.html").read_text()
+    for name in ("page.css", "page.js"):
+        version = hashlib.sha256((STATIC / name).read_bytes()).hexdigest()[:12]
+        html = html.replace(f"/static/{name}", f"/static/{name}?v={version}")
+    return html
 
 
 def visible(item):
@@ -69,7 +89,7 @@ def app(model=None, media=None):
         return response
 
     async def page(request):
-        return FileResponse(STATIC / "index.html")
+        return HTMLResponse(page_html(), headers=FRESH)
 
     async def open_session(request):
         session = current(request)
@@ -220,6 +240,6 @@ def app(model=None, media=None):
         Route("/api/sense", session_only(one_at_a_time(sense)), methods=["POST"]), Route("/api/write", session_only(one_at_a_time(write)), methods=["POST"]), Route("/api/events", session_only(one_at_a_time(event)), methods=["POST"]),
         Route("/api/home", session_only(set_home), methods=["POST"]), Route("/api/clock", session_only(clock), methods=["POST"]), Route("/api/lang", session_only(lang), methods=["POST"]), Route("/api/feeds", session_only(feeds), methods=["POST"]),
         Route("/api/reset", session_only(reset), methods=["POST"]), Route("/api/stream", session_only(stream)),
-        Mount("/media", StaticFiles(directory=media, check_dir=False)), Mount("/static", StaticFiles(directory=STATIC))])
+        Mount("/media", StaticFiles(directory=media, check_dir=False)), Mount("/static", Revalidated(directory=STATIC))])
     built.state.sessions = sessions
     return built

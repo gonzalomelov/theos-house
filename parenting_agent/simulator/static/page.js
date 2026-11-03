@@ -13,7 +13,7 @@ const SCENES = [
 ];
 const NIGHT = ["evening", "sleep", "cry", "feed", "morning"], DAY = ["grandma", "humid", "dry", "carseat", "evening2"], ORDER = [...NIGHT, ...DAY];
 const T = {
-  en: {locale: "en-US", simulated: "Simulated", lead: "A home agent for two new parents in Uruguay. Gonza and Ceci are first-time parents and Theo is their newborn, simulated here. Meta's Muse Spark Open decides live what the home does and who gets told, and nothing here reaches a real house.",
+  en: {locale: "en-US", simulated: "Simulated", lead: "Gonza and Ceci are about to be first-time parents. Press Play and watch their home agent get them through one night with baby Theo, who is simulated here. Muse, Meta's AI, decides live, and nothing here reaches a real house.",
     play: "Play one night", playDay: "Play the next day", stop: "Stop", playing: (i, n, s) => `${i} of ${n}: ${s}`, nightDone: "That was one night, and every step was decided live. Next: Play the next day, with Grandma, the humidity and the car seat. Or send any home event below, or write from a phone.", dayDone: "That was the next day, decided live too. Send any home event, write from a phone, or try the models below.", restarted: "Started over, in a new home.", langNow: "New messages will be in English. Earlier ones stay as they were written.", deep: "See how it thinks", plain: "Back to plain", empty: "Nothing yet. The agent writes first.",
     send2: "Send a home event", humLabel: "Nursery humidity", tempLabel: "Nursery temperature", cry: "Crying heard", dog: "Barking heard", plug: (n, s) => `${n} plug ${s}`, am: "Morning check", pm: "Evening check", h1: "Clock +1 hour", h6: "Clock +6 hours", sent: "Event sent", reset: "Start over", phoneG: "Gonza's phone", phoneC: "Ceci's phone", writeG: "Write as Gonza", writeC: "Write as Ceci", send: "Send", asleep: "Nothing sent to this phone", house: "Theo's house, simulated",
     parents: "Parents' room", theo: "Theo's room", kitchen: "Kitchen", living: "Living room", dehum: "Dehumidifier", echo: "Echo", warmer: "Bottle warmer", light: "Desk light", vacuum: "Robot vacuum",
@@ -29,7 +29,7 @@ const T = {
     feedsOff: "Stop Theo's simulated feeds", feedsOn: "Resume Theo's simulated feeds", feedsNote: "Nobody logs a feed now. Move the clock, and see what the home does.", feedsSim: "simulated", endedTitle: {warmer_off_at: "The bottle warmer turned itself off", vacuum_off_at: "The vacuum finished"}, gapTitle: "No feed in the log for a long time", fixed: "Fixed line from code", fixedTo: "to", result: "What came back", metaT: "What Meta's models do here", metaSum: "Each model and its proof", metaLead: "Only Muse runs live on this page. The others ran earlier, on our own machines, and each result here says how it was made.", muse: ["Muse Spark Open", "Live", "Decides every step in this page and in our home, through tools. Every step shows under What Muse is doing."], pe: ["Perception Encoder Audio", "Computed earlier", "On this recording, through the camera's audio channel: a baby crying, at 99.9%. At home, on Nov 3, it heard a cry played in the room through a real Tapo microphone. That's one test, not a rate."], sam: ["SAM 3.1", "Computed earlier", "Honey shows the hands, teal the baby. The hand alarm at the changing table, on 80 recordings: 33 of 51 caught within 2.5 s, 42 within 5 s, and no false alarms in 29. The bath isn't claimed: it missed too many. A generated clip, no real baby."], gadget: ["Muse Gadget SDK", "Real, at home", "The humidity and temperature sensor in Theo's room runs on Gadget SDK firmware and reports to Home Assistant. In our home, Muse read it and switched a real plug. Here the readings are simulated."], tts: ["MMS-TTS", "Computed earlier", "Meta's voice model says the coach's lines. This one was generated on our server, nothing is added to it."], archLink: "See the architecture", where: "In Uruguay, where this home is, the emergency number is 911.",
     now: "now", refused: "Stopped by a check in code, not sent", wait: "Muse is deciding. The buttons come back when it finishes.", left: (n, s) => `${n} events left in this home.${s === null ? "" : ` Start over makes a new one, ${s} more this hour.`}`, night2: (d, m) => `On duty, ${m} ${d}`, months: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"], finished: "Finished. Close it to go on.",
     toSenses: "Try Meta's models on real recordings", seT: "Meta's models on real recordings", seNote: "Perception Encoder Audio and SAM 3.1 are too heavy for this page, so they ran earlier on our Mac, on these recordings. Sending a result puts it in as the event the home would send, and Muse decides live what to do and what to remember.", seBy: {audio: "Computed earlier by Perception Encoder Audio", frame: "Computed earlier by SAM 3.1"}, seSend: "Send to Muse", seNone: "Nothing reached its threshold, so this wakes nobody.", heardAs: {cry: "a baby crying", dog: "a dog barking", doorbell: "a doorbell", splash: "water"}, seHeard: (what, p) => `It heard ${what}, at ${p}%.`, seFrame: {"hands-on": "Hands on the baby", "hands-off": "Hands leave the baby"}, seAudio: {cry: "A newborn crying", dog: "A dog barking", doorbell: "A doorbell", kitchen: "A kitchen"}, seSaw: {on: "Its verdict: a hand is on the baby.", off: "Its verdict: no hand is on the baby.", unsure: "Its verdict: it can't tell."}, seMasks: n => `Honey shows ${n} hand masks, teal shows the baby. Original on the left.`, seGen: "A generated clip, no real baby.", computed: "This result was computed earlier by Meta's model on a recording. Muse's decision below is live.", camera: p => `SAM 3.1 at ${p.camera}: ${p.saw}`,},
-  es: {locale: "es-UY", simulated: "Simulado", lead: "Un agente del hogar para dos padres primerizos en Uruguay. Gonza y Ceci son padres por primera vez y Theo es su recién nacido, simulado acá. Muse Spark Open de Meta decide en vivo qué hace la casa y a quién le avisa, y nada de esto llega a una casa real.",
+  es: {locale: "es-UY", simulated: "Simulado", lead: "Gonza y Ceci van a ser padres primerizos. Apretá Play y mirá cómo el agente de su casa los ayuda a pasar una noche con Theo, un bebé simulado acá. Muse, la IA de Meta, decide en vivo, y nada de esto llega a una casa real.",
     play: "Reproducir una noche", playDay: "Reproducir el día siguiente", stop: "Parar", playing: (i, n, s) => `${i} de ${n}: ${s}`, nightDone: "Esa fue una noche, y cada paso se decidió en vivo. Sigue: Reproducir el día siguiente, con la abuela, la humedad y la silla del auto. O enviá cualquier evento de la casa, o escribí desde un teléfono.", dayDone: "Ese fue el día siguiente, también decidido en vivo. Enviá cualquier evento, escribí desde un teléfono o probá los modelos de abajo.", restarted: "Empezó de nuevo, en otra casa.", langNow: "Los mensajes nuevos van en español. Los anteriores quedan como se escribieron.", deep: "Ver cómo piensa", plain: "Volver a lo simple", empty: "Nada todavía. El agente escribe primero.",
     send2: "Enviar un evento de la casa", humLabel: "Humedad del cuarto", tempLabel: "Temperatura del cuarto", cry: "Se oye llanto", dog: "Se oyen ladridos", plug: (n, s) => `Enchufe ${n} ${s}`, am: "Revisión de la mañana", pm: "Revisión de la noche", h1: "Reloj +1 hora", h6: "Reloj +6 horas", sent: "Evento enviado", reset: "Empezar de nuevo", phoneG: "Teléfono de Gonza", phoneC: "Teléfono de Ceci", writeG: "Escribir como Gonza", writeC: "Escribir como Ceci", send: "Enviar", asleep: "No llegó nada a este teléfono", house: "La casa de Theo, simulada",
     parents: "Dormitorio", theo: "Cuarto de Theo", kitchen: "Cocina", living: "Living", dehum: "Deshumidificador", echo: "Echo", warmer: "Mamaderas", light: "Luz del escritorio", vacuum: "Aspiradora",
@@ -132,6 +132,7 @@ function drawControls() {
 
 function drawPhones(fresh) {
   if (!state) { document.querySelectorAll(".chat").forEach(c => { c.textContent = ""; c.append(el("li", t().busy, "none")); }); return; }
+  const lit = [];
   for (const p of ["gonza", "ceci"]) {
     const list = [];
     state.sent.filter(m => m.to === p).forEach((m, i) => list.push({at: m.at, text: m.text, key: i}));
@@ -146,10 +147,11 @@ function drawPhones(fresh) {
       if (fresh && !m.mine && m.key >= seen[p]) li.classList.add("fresh");
       li.append(el("small", (m.voice ? t().voice + ", " : "") + clockOf(m.at).hm)); chat.append(li);
     });
-    if (fresh && got > seen[p]) { box.classList.remove("lit"); void box.offsetWidth; box.classList.add("lit"); unread[p] = true; showPhone(p); }
+    if (fresh && got > seen[p]) { box.classList.remove("lit"); void box.offsetWidth; box.classList.add("lit"); unread[p] = true; lit.push(p); }
     seen[p] = got;
     const screen = box.querySelector(".screen"); screen.scrollTop = screen.scrollHeight;
   }
+  if (lit.length) showPhone(lit.includes(phone) ? phone : lit[0]);  // whoever is reading keeps their phone when both light up
 }
 
 function showPhone(p) {
@@ -243,7 +245,7 @@ function drawTrace() {
       item.append(det); steps.append(item);
     });
     li.append(steps);
-    if (run.gated) li.append(el("p", w.gateDeep, "decision by"));
+    if (run.gated) li.append(el("p", w.gateDeep, "decision by only-deep"));
     if (run.failed) li.append(el("p", w.failed, "decision"));
     if (run.done && !run.gated && !run.failed && !run.steps.some(s => s.tool !== "GetLiveContext" && !s.refused)) li.append(el("p", w.nothing, "decision"));
     if (run.text) { const p = el("p", undefined, "decision only-deep"); p.append(el("em", `${w.decided}: `), document.createTextNode(run.text)); li.append(p); }
@@ -275,7 +277,8 @@ function titleOf(e) {
     return share ? `Perception Encoder Audio: ${w.heard[what] || what}, ${share[1]}%` : w.heard[what] || what;
   }
   if (e.type === "schedule") return w.checks[p.name] || p.name;
-  return `${WHO[p.from] || p.from} ${w.wrote}: "${p.text}"`;
+  if (e.type === "message" && p.from) return `${WHO[p.from] || p.from} ${w.wrote}: "${p.text}"`;
+  return w.checks[e.type] || e.type.replaceAll("_", " ");
 }
 async function refresh(fresh) { try { state = await api("/api/state"); draw(fresh); } catch (err) { if (err.status === 410) { busy = false; say(t().ended, true); } } }
 
@@ -445,7 +448,7 @@ for (const p of ["gonza", "ceci"]) {
   });
 }
 async function boot() {
-  if (matchMedia("(max-width:640px)").matches) $("meta-more").open = false;  // on a phone the story comes first
+  $("to-senses").addEventListener("click", () => { $("meta-more").open = true; });
   try { const s = localStorage.getItem("pa-sim-lang"); if (s === "es" || s === "en") lang = s; } catch (e) { /* defaults to English */ }
   showPhone(phone); words(); say(t().busy);
   try {

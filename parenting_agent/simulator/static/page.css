@@ -167,7 +167,7 @@ footer p{margin:0 0 6px}
   .stage{padding:8px 16px;height:auto;grid-template-rows:none;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-areas:"gonza ceci" "house house" "trace trace" "controls controls" "memory memory"}
   #trace{max-height:420px}
   .phone{scroll-margin-top:150px}
-  .screen{flex:none;height:300px;min-height:0;border-width:5px;border-radius:22px;padding:10px 7px}
+  .screen{flex:none;height:min(440px,62vh);min-height:0;border-width:5px;border-radius:22px;padding:10px 7px}
   #plan{max-height:none}
   .rail{position:sticky;top:0;z-index:6;background:var(--sky);margin:0;width:100%;max-width:none;padding:8px 16px 4px}
   .rail h2{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
@@ -187,7 +187,7 @@ footer p{margin:0 0 6px}
   #phone-gonza,#phone-ceci{grid-area:phone}
   .phone>h2{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
   body[data-phone=gonza] #phone-ceci,body[data-phone=ceci] #phone-gonza{display:none}
-  .screen{height:320px}
+  .screen{height:min(440px,60vh)}
   .chat li{font-size:16px}
   .play{flex:1 1 100%;min-width:0}
   #rail{flex:1 1 100%}
@@ -202,7 +202,7 @@ footer p{margin:0 0 6px}
 }
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}#cry.on circle{opacity:.8}}
 
-.meta{margin:0 auto 18px;max-width:1500px;padding:0 16px}
+.meta{margin:8px auto 18px;max-width:1500px;padding:0 24px}
 .meta-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px}
 .meta h2{margin:0}
 .meta>p{margin:4px 0 10px;color:var(--soft);font-size:14px}
@@ -217,4 +217,6 @@ footer p{margin:0 0 6px}
 .stage{scroll-margin-top:6px}
 .meta-where{font-size:13px}
 .meta a{color:var(--honey)}
-#meta-more summary{cursor:pointer;font-weight:700;margin-bottom:8px}
+#meta-more summary{cursor:pointer;font-weight:700;padding:10px 12px;background:var(--panel);border-radius:10px;margin-bottom:8px}
+.meta .senses{padding:0;margin-top:14px}
+.m-card img,.se-card img{max-width:100%}
