@@ -377,6 +377,18 @@ class PiecesTest(unittest.TestCase):
         out = await self.event(core, "state_changed", {"entity_id": "sensor.nursery_climate_humidity", "state": "55"}, at=at.isoformat())
         self.assertEqual(out["status"], "done")
         self.assertEqual(len(model.calls), 1)
+        self.assertNotIn("Last feed in the log", str(model.calls[0]))
+
+    def test_the_simulated_theo_writes_when_due_and_only_then(self):
+        import random
+        from parenting_agent.agent.memory import LocalBabyLog, Memory
+        from parenting_agent.core import sim_theo
+        with tempfile.TemporaryDirectory() as folder:
+            log = LocalBabyLog(Memory(os.path.join(folder, "log.sqlite")))
+            now = datetime.datetime.now(sim_theo.TZ)
+            self.assertEqual(sim_theo.step(log, now - datetime.timedelta(hours=9), random.Random(1)), ["feeding", "diaper"])
+            self.assertEqual(sim_theo.step(log, now - datetime.timedelta(hours=8), random.Random(1)), [])
+            self.assertEqual(sim_theo.step(log, now - datetime.timedelta(hours=5), random.Random(1)), ["sleep", "feeding", "diaper"])
 
     async def test_a_duty_change_lasts_its_night_and_a_small_hours_one_waits_for_morning(self):
         night = next(datetime.datetime.fromisoformat(f"2026-11-{d:02d}T03:20:00-03:00") for d in range(4, 9) if on_duty(datetime.datetime.fromisoformat(f"2026-11-{d:02d}T03:20:00-03:00")) == "ceci")

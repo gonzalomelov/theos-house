@@ -5,7 +5,7 @@ import os
 
 import uvicorn
 
-from . import server, sources
+from . import server, sim_theo, sources
 from .runtime import Core
 from .settings import part
 
@@ -15,6 +15,8 @@ async def main(port):
         jobs = [asyncio.create_task(sources.forever(core, "schedule", sources.schedule)), asyncio.create_task(sources.forever(core, "wakes", sources.wakes))] if os.environ.get("PA_SCHEDULE", "1") == "1" else []
         if part("home") == "real":
             jobs.append(asyncio.create_task(sources.forever(core, "home_assistant", sources.home_assistant)))
+        if os.environ.get("PA_SIM_THEO") == "1":
+            jobs.append(asyncio.create_task(sources.forever(core, "sim_theo", sim_theo.run)))
         if os.environ.get("PA_TELEGRAM_POLL") == "1":
             jobs.append(asyncio.create_task(sources.forever(core, "telegram", sources.telegram)))
         if os.environ.get("PA_ECHO_PORT"):  # Home Assistant's one way in, through the relay, only /ask and /health

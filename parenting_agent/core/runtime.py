@@ -474,6 +474,8 @@ class Core:
         moment = event["moment"]
         facts = await self.tidy_facts(moment)
         self.feed = await asyncio.to_thread(self.last_feed, moment)
+        if self.feed and (moment - self.feed).total_seconds() / 3600 >= safety.STALE_LOG_H:  # a log nobody writes to says nothing about Theo (Nov 3, a false alarm to both parents)
+            self.feed = None
         self.warm_until = datetime.datetime.fromisoformat(facts["warmer_off_at"]) if "warmer_off_at" in facts else None
         text = describe(event, moment, facts, self.feed, self.settings.lang)
         if event.get("again"):
