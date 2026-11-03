@@ -1,0 +1,383 @@
+{
+ "morning": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Buen día, Ceci. Esta noche, que fue la tuya, Theo tomó 2 mamaderas: a las 00:00 y a las 03:00 (90 ml cada una). Hubo 1 cambio de pañal. Esta noche le toca a Gonza. ¡Descansá cuando puedas!",
+      "at": 1793719304.0835671
+     },
+     {
+      "to": "gonza",
+      "text": "Buen día, Gonza. Anoche, con Ceci de guardia, Theo tomó 2 mamaderas: a las 00:00 y a las 03:00 (90 ml cada una). Hubo 1 pañal. Esta noche te toca a vos.",
+      "at": 1793719304.0839229
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Buen día Ceci ☀️ Anoche Theo tomó 2 veces (180 ml, última a las 3:00) y 1 pañal. Esta noche estás vos de guardia de nuevo. ¡Buen día!",
+      "at": 1793719309.460116
+     },
+     {
+      "to": "gonza",
+      "text": "Buen día Gonza ☀️ Anoche Theo tomó 2 veces (180 ml, última a las 3:00) y 1 pañal. Esta noche está Ceci de guardia. ¡Buen día!",
+      "at": 1793719309.46112
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Buen día Ceci. Esta noche hiciste guardia: 2 tomas de 90 ml (00:00 y 03:00) y 1 pañal. Gracias por la noche. Esta noche le toca a Gonza.",
+      "at": 1793719315.531918
+     },
+     {
+      "to": "gonza",
+      "text": "Buen día Gonza. Anoche estuvo Ceci de guardia: 2 tomas de 90 ml y 1 pañal. Esta noche te toca a vos.",
+      "at": 1793719315.532609
+     }
+    ]
+   }
+  ]
+ },
+ "voice note": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "feeds": [
+     {
+      "ts": "2026-11-05T03:00:00-03:00",
+      "kind": "feeding",
+      "details": {
+       "amount_ml": 90,
+       "method": "bottle"
+      }
+     }
+    ],
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Anotado: mamadera 90 ml a las 3.",
+      "at": 1793719321.153677
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "feeds": [
+     {
+      "ts": "2026-11-05T03:00:00-03:00",
+      "kind": "feeding",
+      "details": {
+       "amount_ml": 90,
+       "method": "bottle"
+      }
+     }
+    ],
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Anotado: 90 ml a las 3.",
+      "at": 1793719326.802322
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "feeds": [
+     {
+      "ts": "2026-11-05T03:00:00-03:00",
+      "kind": "feeding",
+      "details": {
+       "amount_ml": 90,
+       "method": "bottle"
+      }
+     }
+    ],
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Anotado: 90 ml de mamadera a las 3.",
+      "at": 1793719332.5343978
+     }
+    ]
+   }
+  ]
+ },
+ "echo question": {
+  "passed": 2,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "said": [
+     "Theo comió a las 10 y 55, 90 mililitros de mamadera."
+    ],
+    "sent": [
+     {
+      "to": "echo",
+      "text": "Theo comió a las 10 y 55, 90 mililitros de mamadera.",
+      "at": 1793719339.609896
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "said": [
+     "Theo tomó su mamadera de 90 mililitros a las 10 y 55, hace unos minutos."
+    ],
+    "sent": [
+     {
+      "to": "echo",
+      "text": "Theo tomó su mamadera de 90 mililitros a las 10 y 55, hace unos minutos.",
+      "at": 1793719344.105355
+     }
+    ]
+   },
+   {
+    "passed": false,
+    "said": [
+     "Theo comió a las diez y cincuenta y cinco, noventa mililitros de mamadera."
+    ],
+    "sent": [
+     {
+      "to": "echo",
+      "text": "Theo comió a las diez y cincuenta y cinco, noventa mililitros de mamadera.",
+      "at": 1793719349.203959
+     }
+    ]
+   }
+  ]
+ },
+ "car seat": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "calls": [
+     {
+      "lang": "es",
+      "parent": "gonza"
+     }
+    ],
+    "sent": []
+   },
+   {
+    "passed": true,
+    "calls": [
+     {
+      "lang": "es",
+      "parent": "gonza"
+     }
+    ],
+    "sent": []
+   },
+   {
+    "passed": true,
+    "calls": [
+     {
+      "lang": "es",
+      "parent": "gonza"
+     }
+    ],
+    "sent": []
+   }
+  ]
+ },
+ "warmer cry due": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "warmer": "on",
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Theo te necesita, Gonza. Ya prendí el calientamamaderas por si le toca comer.",
+      "at": 1793719370.442244
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "warmer": "on",
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Theo está llorando. Ya prendí el calienta mamaderas.",
+      "at": 1793719378.728346
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "warmer": "on",
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Theo está llorando — es hora de la toma más o menos. Ya prendí el calienta mamaderas.",
+      "at": 1793719386.850467
+     }
+    ]
+   }
+  ]
+ },
+ "warmer just fed": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "warmer": "off",
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Theo está llorando — te toca a vos. Son las 3:12 de la mañana.",
+      "at": 1793719391.409515
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "warmer": "off",
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Theo está llorando. Te necesita 🤍",
+      "at": 1793719396.80398
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "warmer": "off",
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Theo está llorando, te toca a vos. Son las 3:12.",
+      "at": 1793719403.646823
+     }
+    ]
+   }
+  ]
+ },
+ "evening plans prewarm": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "wakes": [
+     [
+      "2026-11-04T23:45:00-03:00",
+      "turn on bottle warmer before expected night feed at 00:00"
+     ]
+    ],
+    "sent": []
+   },
+   {
+    "passed": true,
+    "wakes": [
+     [
+      "2026-11-04T23:45:00-03:00",
+      "pre-warm bottle warmer for expected 00:00 feed"
+     ]
+    ],
+    "sent": []
+   },
+   {
+    "passed": true,
+    "wakes": [
+     [
+      "2026-11-04T23:45:00-03:00",
+      "preheat bottle warmer for expected night feed around midnight"
+     ]
+    ],
+    "sent": []
+   }
+  ]
+ },
+ "wake prewarms": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "warmer": "on",
+    "sent": []
+   },
+   {
+    "passed": true,
+    "warmer": "on",
+    "sent": []
+   },
+   {
+    "passed": true,
+    "warmer": "on",
+    "sent": []
+   }
+  ]
+ },
+ "recipe": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "shopping": [
+     "calabaza",
+     "manteca"
+    ],
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "La abuela mandó la receta de Puré de calabaza, ya la guardé en Cookidoo y agregué calabaza y manteca a la lista de compras.",
+      "at": 1793719442.428921
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "shopping": [
+     "calabaza",
+     "manteca"
+    ],
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "La abuela compartió la receta de Puré de calabaza — ya agregué calabaza y manteca a la lista de compras. Está guardada en Cookidoo.",
+      "at": 1793719448.080066
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "shopping": [
+     "calabaza",
+     "manteca"
+    ],
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "La abuela compartió Puré de calabaza — ya agregué calabaza y manteca a la lista de compras. Guardarlo en la Thermomix lo hacen a mano.",
+      "at": 1793719452.881276
+     }
+    ]
+   }
+  ]
+ }
+}

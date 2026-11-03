@@ -10,11 +10,13 @@ import urllib.request
 import uuid
 
 try:
+    import httpx
     import uvicorn
     from langchain_core.language_models.fake_chat_models import GenericFakeChatModel
     from langchain_core.messages import AIMessage
 
     from parenting_agent.core import agent as agent_mod, safety, server, sources
+    from parenting_agent.core import tools as tools_mod
     from parenting_agent.core.mock_home import MockHome
     from parenting_agent.core.runtime import Core, describe, on_duty
     from parenting_agent.core.settings import Settings
@@ -162,6 +164,71 @@ class CoreTest(unittest.IsolatedAsyncioTestCase):
         writer.close()
         http.should_exit = True
         await task
+
+    async def test_a_wake_fires_once_when_it_is_due(self):
+        core = await self.run_core(scripted(call("wake_me_at", at="2026-11-04T00:40:00-03:00", why="warm the bottle"), AIMessage("Asked."), AIMessage("Nothing needed.")))
+        await self.event(core, "schedule", {"name": "evening"}, "2026-11-03T21:30:00-03:00")
+        self.assertEqual([w["why"] for w in await core.wakes()], ["warm the bottle"])
+        early = datetime.datetime.fromisoformat("2026-11-04T00:00:00-03:00")
+        self.assertEqual(await core.fire_wakes(early), [])
+        fired = await core.fire_wakes(early + datetime.timedelta(hours=1))
+        self.assertEqual(len(fired), 1)
+        await fired[0][1]
+        self.assertEqual(await core.wakes(), [])
+        self.assertEqual(await core.fire_wakes(early + datetime.timedelta(hours=2)), [])
+
+    async def test_the_next_feed_comes_from_the_gaps_in_the_log(self):
+        core = await self.run_core(scripted(AIMessage("Nothing needed.")))
+        tool = next(t for t in core.tools if t.name == "next_feed")
+        self.assertIn("Not enough", tool.invoke({}))
+        core.moment = datetime.datetime.fromisoformat("2026-11-03T15:00:00-03:00")
+        for hour in (6, 9, 12):
+            core.log.add("feeding", {"amount_ml": 90}, core.moment.replace(hour=hour).isoformat())
+        self.assertIn("2026-11-03T15:00", tool.invoke({}))
+
+    async def test_what_is_said_at_the_echo_comes_back_for_home_assistant_to_speak(self):
+        os.environ["PARENTING_AGENT_VOICE_TOKEN"] = "t" * 32
+        self.addCleanup(os.environ.pop, "PARENTING_AGENT_VOICE_TOKEN")
+        core = await self.run_core(scripted(call("say_on_echo", text="Comió a las 10."), AIMessage("Answered.")))
+        client = httpx.AsyncClient(transport=httpx.ASGITransport(app=server.echo_app(core)), base_url="http://echo")
+        self.addAsyncCleanup(client.aclose)
+        self.assertEqual((await client.post("/ask", json={"text": "agente cuando comió"})).status_code, 401)
+        answer = await client.post("/ask", json={"text": "agente cuando comió", "source": "echo"}, headers={"Authorization": "Bearer " + "t" * 32}, timeout=30)
+        self.assertEqual(answer.json()["reply"], "Comió a las 10.")
+        self.assertEqual((await client.get("/events")).status_code, 404)
+
+    def test_a_real_echo_answer_is_held_while_someone_waits_and_announced_otherwise(self):
+        channel = tools_mod.RealChannel.__new__(tools_mod.RealChannel)
+        calls = []
+        channel.ha = type("HA", (), {"service": lambda self, name, target, data=None: calls.append(name)})()
+        channel.hold = []
+        channel.echo("uno")
+        self.assertEqual((channel.hold, calls), (["uno"], []))
+        channel.hold = None
+        channel.echo("dos")
+        self.assertIn("notify.send_message", calls)
+
+    async def test_a_voice_note_becomes_the_parents_words_or_is_never_guessed(self):
+        item = type("Item", (), {"voice_file_id": "f"})()
+        bot = type("Bot", (), {"download": lambda self, file_id: b"ogg"})()
+        ear = lambda words: type("Ear", (), {"seconds": 3.0, "hear": lambda self, data: words})()
+        self.assertEqual(await sources.heard(bot, ear("le di 90 ml a las 3"), item, "gonza"),
+                         ("message", {"from": "gonza", "channel": "a voice note", "text": "le di 90 ml a las 3"}))
+        self.assertEqual((await sources.heard(bot, ear(""), item, "ceci"))[0], "voice_note_not_heard")
+        self.assertEqual((await sources.heard(bot, None, item, "ceci"))[0], "voice_note_not_heard")
+
+    async def test_tools_with_no_device_name_stay_off_the_real_home_until_named(self):
+        home = MockHome().start()
+        self.addCleanup(home.stop)
+        os.environ["PA_HOME"] = "real"
+        self.addCleanup(os.environ.pop, "PA_HOME")
+        base = f"http://127.0.0.1:{home.port}"
+        names = [t.name for t in await tools_mod.home_tools(Settings(ha_url=base, ha_token="t", devices=("none",)), None)]
+        self.assertEqual(set(names), {"GetLiveContext", "HassTurnOn", "HassTurnOff"})
+        names = [t.name for t in await tools_mod.home_tools(Settings(ha_url=base, ha_token="t", devices=("vacuum", "shopping")), None)]
+        self.assertIn("HassListAddItem", names)
+        self.assertIn("HassVacuumStart", names)
+
 
 
 @unittest.skipUnless(READY, "needs requirements-core.txt and PA_DB_URL")

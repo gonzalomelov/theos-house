@@ -9,16 +9,42 @@ POST /reset         back to the starting home and outbox (mock only)
 GET  /health
 """
 import asyncio
+import hmac
 import json
+import os
 
 from sse_starlette.sse import EventSourceResponse
 from starlette.applications import Starlette
 from starlette.responses import JSONResponse
 from starlette.routing import Route
 
+from ..voice_bridge import spoken, strip_wake
+
 
 def clean(row):
     return {k: (v.isoformat() if hasattr(v, "isoformat") else v) for k, v in dict(row).items()}
+
+
+def echo_app(core):
+    """POST /ask {"text", "source", "person"} -> {"reply", "replies"}: what the old voice bridge answers, so Home Assistant's
+    automations stay as they are. It waits for Muse, and what Muse says with say_on_echo comes back for Home Assistant to speak."""
+    token = os.environ.get("PARENTING_AGENT_VOICE_TOKEN", "")
+
+    async def ask(request):
+        if not token or not hmac.compare_digest(request.headers.get("authorization", ""), f"Bearer {token}"):
+            return JSONResponse({"error": "unauthorized"}, 401)
+        body = await request.json()
+        words = strip_wake(body.get("text", ""))[:500]
+        if not words:
+            return JSONResponse({"reply": "Decí agente, y después lo que querés saber.", "replies": []})
+        who = str(body.get("person") or "someone in the kitchen, you can't tell who")[:32]
+        _, done = await core.dispatch("message", {"from": who, "channel": "the kitchen Echo", "text": words}, source=str(body.get("source", "echo"))[:16], ask=True)
+        said = (await done).get("said", [])
+        return JSONResponse({"reply": spoken(" ".join(said)), "replies": said})
+
+    async def health(request):
+        return JSONResponse({"ok": True})
+    return Starlette(routes=[Route("/ask", ask, methods=["POST"]), Route("/health", health)])
 
 
 def app(core):
@@ -65,6 +91,13 @@ def app(core):
             return await handler(request)
         return run
 
+    def mock_channel(handler):
+        async def run(request):
+            if not hasattr(core.channel, "sent"):
+                return JSONResponse({"error": "the real channel keeps no outbox here"}, 409)
+            return await handler(request)
+        return run
+
     async def get_home(request):
         return JSONResponse(core.mock.snapshot())
 
@@ -74,10 +107,11 @@ def app(core):
         return JSONResponse(core.mock.snapshot(), 200 if ok else 404)
 
     async def messages(request):
-        return JSONResponse(getattr(core.channel, "sent", []))
+        return JSONResponse(core.channel.sent)
 
     async def reset(request):
         core.mock.reset()
+        core.moment = None
         core.channel.sent.clear()
         return JSONResponse({"ok": True})
 
@@ -87,4 +121,4 @@ def app(core):
     return Starlette(routes=[
         Route("/events", post_event, methods=["POST"]), Route("/events", events), Route("/stream", stream), Route("/actions", actions),
         Route("/home", mock_only(get_home)), Route("/home", mock_only(set_home), methods=["POST"]),
-        Route("/messages", mock_only(messages)), Route("/reset", mock_only(reset), methods=["POST"]), Route("/health", health)])
+        Route("/messages", mock_channel(messages)), Route("/reset", mock_only(reset), methods=["POST"]), Route("/health", health)])

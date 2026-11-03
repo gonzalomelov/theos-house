@@ -8,6 +8,8 @@
 #   sh deploy/core.sh stop        stop it, the old agent is not touched
 #
 # PA_ALLOWED_DEVICES, PA_WATCH_DELTA and PA_HOME_ID in front of deploy are passed on. Secrets are never printed and never in git.
+# CUTOVER=1 in front of deploy makes Telegram, the Echo and the baby log real (deploy/core/compose.cutover.yml). It refuses while the
+# old agent runs, since only one process can poll the bot. Without it the core can't message anyone.
 set -eu
 HOST="${VOSTRO_HOST:-vostro}"
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -15,7 +17,7 @@ REMOTE='
 set -eu
 DIR="$HOME/apps/parenting-core"
 ENV_FILE="$HOME/apps/parenting-core.env"
-compose() { docker compose --env-file "$ENV_FILE" -f "$DIR/deploy/core/compose.yml" "$@"; }
+compose() { docker compose --env-file "$ENV_FILE" -f "$DIR/deploy/core/compose.yml" ${CUTOVER:+-f "$DIR/deploy/core/compose.cutover.yml"} "$@"; }
 '
 
 deploy() {
@@ -24,13 +26,18 @@ deploy() {
   SHA="$(git rev-parse --short=12 HEAD)"
   git archive --format=tar HEAD .dockerignore deploy parenting_agent config requirements-core.txt | ssh "$HOST" \
     'set -eu; rm -rf ~/apps/parenting-core.incoming ~/apps/parenting-core; mkdir -p ~/apps/parenting-core.incoming; tar -xf - -C ~/apps/parenting-core.incoming; mv ~/apps/parenting-core.incoming ~/apps/parenting-core'
-  ssh "$HOST" "SHA=$SHA PA_ALLOWED_DEVICES='${PA_ALLOWED_DEVICES:-none}' PA_WATCH_DELTA='${PA_WATCH_DELTA:-}' PA_HOME_ID='${PA_HOME_ID:-alongside}' sh -s" <<REMOTE_END
+  ssh "$HOST" "SHA=$SHA CUTOVER='${CUTOVER:-}' PA_ALLOWED_DEVICES='${PA_ALLOWED_DEVICES:-none}' PA_WATCH_DELTA='${PA_WATCH_DELTA:-}' PA_HOME_ID='${PA_HOME_ID:-alongside}' sh -s" <<REMOTE_END
 $REMOTE
 umask 077
+[ -z "\$CUTOVER" ] || [ "\$(docker inspect parenting-agent --format '{{.State.Running}}' 2>/dev/null)" != true ] || { echo "the old agent is running: stop it first" >&2; exit 1; }
 # Only these two come from the old agent's env file: no Telegram token in here. The database password is made once.
 OLD="\$HOME/apps/parenting-agent.env"
 PASS="\$(grep -E '^POSTGRES_PASSWORD=' "\$ENV_FILE" 2>/dev/null || echo "POSTGRES_PASSWORD=\$(od -An -tx1 -N24 /dev/urandom | tr -d ' \n')")"
-{ grep -E '^(HA_MCP_TOKEN|BASETEN_API_KEY)=' "\$OLD"; echo "\$PASS"; } > "\$ENV_FILE.tmp"
+{ grep -E '^(HA_MCP_TOKEN|BASETEN_API_KEY)=' "\$OLD"; echo "\$PASS"
+  if [ -n "\$CUTOVER" ]; then
+    grep -E '^(BABYBUDDY_TOKEN|TELEGRAM_BOT_TOKEN|TELEGRAM_CHAT_ID|TELEGRAM_CECI_CHAT_ID)=' "\$OLD"
+    echo "PARENTING_AGENT_VOICE_TOKEN=\$(cat "\$HOME/apps/parenting-agent-data/voice-bridge-token")"
+  fi; } > "\$ENV_FILE.tmp"
 mv "\$ENV_FILE.tmp" "\$ENV_FILE"
 export APP_TAG="\$SHA"
 compose build --quiet

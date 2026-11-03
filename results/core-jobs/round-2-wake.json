@@ -1,0 +1,23 @@
+{
+ "wake prewarms": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "warmer": "on",
+    "sent": []
+   },
+   {
+    "passed": true,
+    "warmer": "on",
+    "sent": []
+   },
+   {
+    "passed": true,
+    "warmer": "on",
+    "sent": []
+   }
+  ]
+ }
+}

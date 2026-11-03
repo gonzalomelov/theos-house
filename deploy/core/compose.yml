@@ -36,7 +36,7 @@ services:
       HA_URL: http://parenting-agent-relay:8123
       HTTPS_PROXY: http://parenting-agent-egress:8888
       HTTP_PROXY: http://parenting-agent-egress:8888
-      NO_PROXY: parenting-agent-relay,parenting-core-db,localhost,127.0.0.1
+      NO_PROXY: parenting-agent-relay,pa-voice-family,parenting-core-db,localhost,127.0.0.1
       PA_WORLD: mock
       PA_HOME: real
       PA_CHANNEL: mock

@@ -34,10 +34,11 @@ class MockHome:
         with self.lock:
             self.devices = {name: dict(spec) for name, spec in START.items()}
             self.moves = []
+            self.shopping = []
 
     def snapshot(self):
         with self.lock:
-            return {"devices": {name: dict(spec) for name, spec in self.devices.items()}, "moves": list(self.moves)}
+            return {"devices": {name: dict(spec) for name, spec in self.devices.items()}, "moves": list(self.moves), "shopping": list(self.shopping)}
 
     def set_state(self, entity_id, state):
         """Set a device by entity id, as the world would. The simulator's way to change a reading."""
@@ -101,6 +102,12 @@ class MockHome:
         @mcp.tool(name="vacuum__HassVacuumReturnToBase", description="Returns a vacuum to base.")
         def vacuum_home(name: str = None, area: str = None, floor: str = None) -> str:
             return json.dumps(self.move("HassVacuumReturnToBase", name or "Robot vacuum", "docked"))
+
+        @mcp.tool(name="todo__HassListAddItem", description="Add an item to a todo list.")
+        def add_item(item: str, name: str = "Shopping List") -> str:
+            with self.lock:
+                self.shopping.append(item)
+            return json.dumps({"speech": {}, "response_type": "action_done", "data": {"success": [{"name": name, "type": "entity"}], "failed": []}})
 
         return mcp
 

@@ -1,0 +1,212 @@
+{
+ "morning": {
+  "passed": 0,
+  "of": 2,
+  "runs": [
+   {
+    "passed": false,
+    "sent": []
+   },
+   {
+    "passed": false,
+    "sent": []
+   }
+  ]
+ },
+ "voice note": {
+  "passed": 0,
+  "of": 2,
+  "runs": [
+   {
+    "passed": false,
+    "feeds": [
+     {
+      "ts": "2026-11-05T03:00:00-03:00",
+      "kind": "feeding",
+      "details": {
+       "amount_ml": 90,
+       "method": "bottle"
+      }
+     }
+    ],
+    "sent": []
+   },
+   {
+    "passed": false,
+    "feeds": [
+     {
+      "ts": "2026-11-05T03:00:00-03:00",
+      "kind": "feeding",
+      "details": {
+       "amount_ml": 90,
+       "method": "bottle"
+      }
+     }
+    ],
+    "sent": []
+   }
+  ]
+ },
+ "echo question": {
+  "passed": 1,
+  "of": 2,
+  "runs": [
+   {
+    "passed": false,
+    "said": [
+     "Theo tomó su mamadera hace unos minutos, a las 10 y 55, 90 mililitros."
+    ],
+    "sent": [
+     {
+      "to": "echo",
+      "text": "Theo tomó su mamadera hace unos minutos, a las 10 y 55, 90 mililitros.",
+      "at": 1793719239.721824
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "said": [
+     "Theo comió por última vez hoy a las 10:55, 90 ml en mamadera."
+    ],
+    "sent": [
+     {
+      "to": "echo",
+      "text": "Theo comió por última vez hoy a las 10:55, 90 ml en mamadera.",
+      "at": 1793719244.9363809
+     }
+    ]
+   }
+  ]
+ },
+ "car seat": {
+  "passed": 2,
+  "of": 2,
+  "runs": [
+   {
+    "passed": true,
+    "calls": [
+     {
+      "lang": "es",
+      "parent": "gonza"
+     }
+    ],
+    "sent": []
+   },
+   {
+    "passed": true,
+    "calls": [
+     {
+      "lang": "es",
+      "parent": "gonza"
+     }
+    ],
+    "sent": []
+   }
+  ]
+ },
+ "warmer cry due": {
+  "passed": 0,
+  "of": 2,
+  "runs": [
+   {
+    "passed": false,
+    "warmer": "off",
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Theo está llorando, te toca a vos. Estoy acá si necesitás algo.",
+      "at": 1793719254.2126231
+     }
+    ]
+   },
+   {
+    "passed": false,
+    "warmer": "off",
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Theo se despertó llorando. Te necesita.",
+      "at": 1793719256.911329
+     }
+    ]
+   }
+  ]
+ },
+ "warmer just fed": {
+  "passed": 2,
+  "of": 2,
+  "runs": [
+   {
+    "passed": true,
+    "warmer": "off",
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Theo está llorando, te necesita 🤍",
+      "at": 1793719259.1236548
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "warmer": "off",
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Theo está llorando, te necesita. Cuando puedas, fijate en él 🤍",
+      "at": 1793719261.903931
+     }
+    ]
+   }
+  ]
+ },
+ "evening plans prewarm": {
+  "passed": 0,
+  "of": 2,
+  "runs": [
+   {
+    "passed": false,
+    "wakes": [],
+    "sent": []
+   },
+   {
+    "passed": false,
+    "wakes": [],
+    "sent": []
+   }
+  ]
+ },
+ "wake prewarms": {
+  "passed": 2,
+  "of": 2,
+  "runs": [
+   {
+    "passed": true,
+    "warmer": "on",
+    "sent": []
+   },
+   {
+    "passed": true,
+    "warmer": "on",
+    "sent": []
+   }
+  ]
+ },
+ "recipe": {
+  "passed": 0,
+  "of": 2,
+  "runs": [
+   {
+    "passed": false,
+    "shopping": [],
+    "sent": []
+   },
+   {
+    "passed": false,
+    "shopping": [],
+    "sent": []
+   }
+  ]
+ }
+}

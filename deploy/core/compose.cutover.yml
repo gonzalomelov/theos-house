@@ -1,0 +1,23 @@
+# Cutover, Gonza's call: the core takes over from the old agent. Laid over compose.yml by CUTOVER=1 sh deploy/core.sh deploy, which
+# refuses while the old agent runs. Telegram, the Echo and the baby log become real, and PA_ALLOWED_DEVICES then says which plugs move.
+# The alias is how Home Assistant's one way in keeps working: the relay forwards 8767 to the name parenting-agent, and only the core
+# answers to it once the old agent is stopped.
+services:
+  core:
+    networks:
+      walled:
+        aliases: [parenting-agent]
+      db: {}
+    environment:
+      PA_CHANNEL: real
+      PA_LOG: real
+      PA_TELEGRAM_POLL: "1"
+      PA_ECHO_PORT: "8767"
+      PA_VOICE_SERVICE: http://pa-voice-family:8800
+      PA_BABY_CHILD: ${PA_BABY_CHILD:-test-baby}
+      BABYBUDDY_URL: http://parenting-agent-relay:8790
+      BABYBUDDY_TOKEN: ${BABYBUDDY_TOKEN}
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
+      TELEGRAM_CHAT_ID: ${TELEGRAM_CHAT_ID}
+      TELEGRAM_CECI_CHAT_ID: ${TELEGRAM_CECI_CHAT_ID}
+      PARENTING_AGENT_VOICE_TOKEN: ${PARENTING_AGENT_VOICE_TOKEN}
