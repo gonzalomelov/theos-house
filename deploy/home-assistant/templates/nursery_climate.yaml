@@ -1,0 +1,29 @@
+# Theo's room: reads the Gadget SDK board (nursery-climate) on the LAN once a minute. Read only.
+# Goes in /config/templates/. install_nursery_climate.sh also adds the shell command it calls.
+- triggers:
+    - trigger: time_pattern
+      minutes: "/1"
+    - trigger: homeassistant
+      event: start
+    - trigger: event
+      event_type: event_template_reloaded
+  actions:
+    - action: shell_command.nursery_climate_read
+      response_variable: reading
+  sensor:
+    - name: "Nursery climate temperature"
+      unique_id: nursery_climate_temperature
+      device_class: temperature
+      state_class: measurement
+      unit_of_measurement: "°C"
+      state: >
+        {% set r = (reading.stdout | from_json(default={})).payload | default({}, true) %}
+        {{ r.temperature.value if r.temperature else 'unavailable' }}
+    - name: "Nursery climate humidity"
+      unique_id: nursery_climate_humidity
+      device_class: humidity
+      state_class: measurement
+      unit_of_measurement: "%"
+      state: >
+        {% set r = (reading.stdout | from_json(default={})).payload | default({}, true) %}
+        {{ r.humidity.value if r.humidity else 'unavailable' }}
