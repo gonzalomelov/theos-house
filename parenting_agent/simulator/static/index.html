@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Theo's House Simulator</title>
-<meta name="description" content="The real agent and Muse Spark Open, deciding live on a simulated home.">
+<meta name="description" content="An agent that runs a home for two new parents, with Muse Spark Open deciding live on a simulated home.">
 <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,750&display=swap">
@@ -14,22 +14,21 @@
 <header class="top">
   <div class="clock" aria-live="polite">
     <div class="time" id="time">21:00</div>
-    <div class="date"><span id="date"></span><span class="tag" id="simTag"></span></div>
+    <div class="date"><span id="date"></span><span class="tag" id="simTag"></span><button type="button" class="ghost mini" id="lang" lang="es">Español</button></div>
   </div>
   <p class="lead" id="lead"></p>
-  <div class="tools">
-    <button type="button" class="ghost" id="lang" lang="es">Español</button>
-    <button type="button" class="ghost" id="reset"></button>
-  </div>
+  <div class="tools"><button type="button" class="ghost" id="reset"></button></div>
 </header>
 
 <nav class="rail" aria-labelledby="rail-t">
+  <button type="button" class="play" id="play"></button>
   <h2 id="rail-t"></h2>
   <ol id="rail"></ol>
+  <p class="status" id="status" role="status"></p>
 </nav>
-<p class="status" id="status" role="status"></p>
 
 <main class="stage">
+  <div class="ptabs" id="ptabs"><button type="button" id="tab-gonza" data-phone="gonza" aria-pressed="true"></button><button type="button" id="tab-ceci" data-phone="ceci" aria-pressed="false"></button></div>
   <section class="phone" id="phone-gonza" aria-labelledby="ph-g">
     <h2 id="ph-g"></h2>
     <div class="screen"><ol class="chat"></ol><p class="asleep"></p></div>
@@ -72,14 +71,6 @@
       <text class="dlabel" x="376" y="448" data-t="vacuum"></text>
     </svg>
     <div class="bubble" id="echo-bubble" hidden></div>
-    <div class="recording" id="recording" hidden>
-      <div class="rec-head"><strong id="rec-title"></strong><button type="button" class="ghost" id="rec-close"></button></div>
-      <video id="rec-video" controls playsinline preload="none" src="/media/carseat.mp4">
-        <track id="rec-en" kind="subtitles" srclang="en" label="English" src="/static/carseat.en.vtt">
-        <track id="rec-es" kind="subtitles" srclang="es" label="Español" src="/static/carseat.es.vtt">
-      </video>
-      <p id="rec-note"></p>
-    </div>
   </section>
 
   <section class="phone" id="phone-ceci" aria-labelledby="ph-c">
@@ -107,7 +98,7 @@
   </section>
 
   <section class="trace" aria-labelledby="tr-t">
-    <h2 id="tr-t"></h2>
+    <div class="tr-head"><h2 id="tr-t"></h2><button type="button" class="ghost mini" id="deep" aria-pressed="false"></button></div>
     <ol id="trace" aria-live="polite"></ol>
   </section>
 
@@ -119,7 +110,19 @@
   </section>
 </main>
 
-<footer id="foot"></footer>
+<div class="recording" id="recording" hidden role="dialog" aria-modal="true" aria-labelledby="rec-title">
+  <div class="rec-box">
+    <div class="rec-head"><strong id="rec-title"></strong><button type="button" class="ghost" id="rec-close"></button></div>
+    <video id="rec-video" controls playsinline preload="none" src="/media/carseat.mp4">
+      <track id="rec-en" kind="metadata" srclang="en" label="English" src="/static/carseat.en.vtt">
+      <track id="rec-es" kind="metadata" srclang="es" label="Español" src="/static/carseat.es.vtt">
+    </video>
+    <p class="rec-cap" id="rec-cap" aria-live="polite"></p>
+    <p id="rec-note"></p>
+  </div>
+</div>
+
+<footer><p id="foot"></p><p id="models"></p></footer>
 <script src="/static/page.js"></script>
 </body>
 </html>

@@ -25,6 +25,7 @@ CSP = ("default-src 'none'; script-src 'self'; style-src 'self' https://fonts.go
        "media-src 'self'; connect-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'")
 BUSY = "The simulator is full. Try again in a few minutes."
 USED = "This session reached its limit. Start over, or try again in an hour."
+ONE_AT_A_TIME = "Muse is still on the last one."
 STREAMED = {"event", "tool_call", "tool_result", "gate", "decision", "done", "error"}
 PARENTS = ("gonza", "ceci")
 
@@ -83,6 +84,14 @@ def app(model=None, media=None):
             session = current(request)
             if session is None:
                 return JSONResponse({"error": "This session ended. Start over."}, 410)
+            return await handler(request, session)
+        return run
+
+    def one_at_a_time(handler):
+        """Rapid presses don't queue up Muse calls: one may wait behind the one running."""
+        async def run(request, session):
+            if session.core.queue.qsize() > 0:
+                return JSONResponse({"error": ONE_AT_A_TIME}, 409)
             return await handler(request, session)
         return run
 
@@ -180,7 +189,7 @@ def app(model=None, media=None):
         return EventSourceResponse(items(), ping=15)
 
     async def health(request):
-        return JSONResponse({"ok": True, "sessions": len(sessions.live)})
+        return JSONResponse({"ok": True})
 
     @contextlib.asynccontextmanager
     async def lifespan(_):
@@ -193,8 +202,8 @@ def app(model=None, media=None):
 
     built = Starlette(lifespan=lifespan, middleware=[Middleware(Headers)], routes=[
         Route("/", page), Route("/health", health), Route("/api/session", open_session, methods=["POST"]),
-        Route("/api/state", session_only(state)), Route("/api/scene", session_only(scene), methods=["POST"]),
-        Route("/api/write", session_only(write), methods=["POST"]), Route("/api/events", session_only(event), methods=["POST"]),
+        Route("/api/state", session_only(state)), Route("/api/scene", session_only(one_at_a_time(scene)), methods=["POST"]),
+        Route("/api/write", session_only(one_at_a_time(write)), methods=["POST"]), Route("/api/events", session_only(one_at_a_time(event)), methods=["POST"]),
         Route("/api/home", session_only(set_home), methods=["POST"]), Route("/api/clock", session_only(clock), methods=["POST"]), Route("/api/lang", session_only(lang), methods=["POST"]),
         Route("/api/reset", session_only(reset), methods=["POST"]), Route("/api/stream", session_only(stream)),
         Mount("/media", StaticFiles(directory=media, check_dir=False)), Mount("/static", StaticFiles(directory=STATIC))])

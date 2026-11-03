@@ -88,6 +88,21 @@ class Visitors(unittest.TestCase):
             self.assertEqual(theirs["home"]["devices"]["Nursery climate humidity"]["state"], "52.0")
             self.assertEqual(theirs["played"], [])
 
+    def test_rapid_presses_wait_for_muse(self):
+        app = gateway.app(scripted(AIMessage("Nothing needed.")))
+        with served(app) as url:
+            visitor = self.visitor(url)
+            session = app.state.sessions.get(visitor.cookies["pa_sim"])
+            session.core.queue.qsize = lambda: 1
+            for path, body in (("/api/scene", {"id": "humid"}), ("/api/write", {"as": "ceci", "text": "hola"}),
+                               ("/api/events", {"type": "schedule", "payload": {"name": "morning"}})):
+                self.assertEqual(visitor.post(path, json=body).status_code, 409)
+            self.assertEqual(visitor.get("/api/state").json()["said"], [])
+
+    def test_the_public_health_check_says_nothing_about_visitors(self):
+        with served(gateway.app(scripted())) as url:
+            self.assertEqual(httpx.get(url + "/health", trust_env=False).json(), {"ok": True})
+
     def test_start_over_leaves_nothing_behind(self):
         app = gateway.app(scripted(AIMessage("Nothing needed.")))
         with served(app) as url:
