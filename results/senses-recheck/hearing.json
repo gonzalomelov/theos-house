@@ -1,0 +1,57 @@
+{
+ "at": "2026-11-03T14:23:39-03:00",
+ "window_s": {
+  "median": 0.067,
+  "p95": 0.183
+ },
+ "load_s": 6.25,
+ "wall_s": 471.3,
+ "tally": {
+  "cry": {
+   "items": 348,
+   "hits": 339,
+   "misses": 9,
+   "false_alarms": 1,
+   "negatives": 51,
+   "false_alarms_from": [
+    "cough-06 (none)"
+   ],
+   "hits_hearing": "2 of 2",
+   "hits_donateacry": "337 of 346"
+  },
+  "doorbell": {
+   "items": 4,
+   "hits": 3,
+   "misses": 1,
+   "false_alarms": 3,
+   "negatives": 395,
+   "false_alarms_from": [
+    "donateacry:0F4B1065-4012-47C8-88B7-ACE11B1A536E (cry)",
+    "donateacry:1abb2260-a652-4ba7-bd98-7d463312730f (cry)",
+    "donateacry:50DC5FBC-AC95-44F2-B55F-E4E5FB03AC96 (cry)"
+   ]
+  },
+  "dog": {
+   "items": 3,
+   "hits": 3,
+   "misses": 0,
+   "false_alarms": 3,
+   "negatives": 396,
+   "false_alarms_from": [
+    "donateacry:5C2F730C-9721-40B7-A2D8-C257DB518978 (cry)",
+    "donateacry:653bf718-94bd-40d0-af7c-8fe44e07640c (cry)",
+    "donateacry:e1e640e2-78cb-4cb7-9ccc-93813bfc251c (cry)"
+   ]
+  },
+  "splash": {
+   "items": 3,
+   "hits": 3,
+   "misses": 0,
+   "false_alarms": 1,
+   "negatives": 396,
+   "false_alarms_from": [
+    "negative-02 (none)"
+   ]
+  }
+ }
+}

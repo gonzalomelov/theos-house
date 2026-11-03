@@ -1,0 +1,359 @@
+{
+ "near_ratio": 0.5,
+ "channels": {
+  "source": "the image as it is",
+  "hd": [
+   "1920:1080",
+   "2M",
+   false
+  ],
+  "sd": [
+   "640:360",
+   "400k",
+   false
+  ],
+  "night": [
+   "640:360",
+   "400k",
+   true
+  ]
+ },
+ "results": {
+  "source": {
+   "score": {
+    "near": 20,
+    "caught": 15,
+    "missed": 5,
+    "not_near": 49,
+    "false_alerts": 0,
+    "by_label": {
+     "no_baby": {
+      "n": 24,
+      "alerts": 0
+     },
+     "near": {
+      "n": 20,
+      "alerts": 15
+     },
+     "far": {
+      "n": 13,
+      "alerts": 0
+     },
+     "no_dog": {
+      "n": 12,
+      "alerts": 0
+     }
+    }
+   },
+   "latency": {
+    "sam_median_s": 2.664,
+    "sam_p90_s": 3.028,
+    "total_median_s": 2.685,
+    "total_p90_s": 3.039,
+    "total_max_s": 3.365
+   },
+   "photos": {
+    "near": 8,
+    "caught": 3,
+    "missed": 5,
+    "not_near": 29,
+    "false_alerts": 0,
+    "by_label": {
+     "no_baby": {
+      "n": 20,
+      "alerts": 0
+     },
+     "near": {
+      "n": 8,
+      "alerts": 3
+     },
+     "far": {
+      "n": 1,
+      "alerts": 0
+     },
+     "no_dog": {
+      "n": 8,
+      "alerts": 0
+     }
+    }
+   },
+   "composites": {
+    "near": 12,
+    "caught": 12,
+    "missed": 0,
+    "not_near": 20,
+    "false_alerts": 0,
+    "by_label": {
+     "near": {
+      "n": 12,
+      "alerts": 12
+     },
+     "far": {
+      "n": 12,
+      "alerts": 0
+     },
+     "no_baby": {
+      "n": 4,
+      "alerts": 0
+     },
+     "no_dog": {
+      "n": 4,
+      "alerts": 0
+     }
+    }
+   }
+  },
+  "hd": {
+   "score": {
+    "near": 20,
+    "caught": 16,
+    "missed": 4,
+    "not_near": 49,
+    "false_alerts": 0,
+    "by_label": {
+     "no_baby": {
+      "n": 24,
+      "alerts": 0
+     },
+     "near": {
+      "n": 20,
+      "alerts": 16
+     },
+     "far": {
+      "n": 13,
+      "alerts": 0
+     },
+     "no_dog": {
+      "n": 12,
+      "alerts": 0
+     }
+    }
+   },
+   "latency": {
+    "sam_median_s": 3.242,
+    "sam_p90_s": 4.001,
+    "total_median_s": 3.271,
+    "total_p90_s": 4.035,
+    "total_max_s": 4.954
+   },
+   "photos": {
+    "near": 8,
+    "caught": 4,
+    "missed": 4,
+    "not_near": 29,
+    "false_alerts": 0,
+    "by_label": {
+     "no_baby": {
+      "n": 20,
+      "alerts": 0
+     },
+     "near": {
+      "n": 8,
+      "alerts": 4
+     },
+     "far": {
+      "n": 1,
+      "alerts": 0
+     },
+     "no_dog": {
+      "n": 8,
+      "alerts": 0
+     }
+    }
+   },
+   "composites": {
+    "near": 12,
+    "caught": 12,
+    "missed": 0,
+    "not_near": 20,
+    "false_alerts": 0,
+    "by_label": {
+     "near": {
+      "n": 12,
+      "alerts": 12
+     },
+     "far": {
+      "n": 12,
+      "alerts": 0
+     },
+     "no_baby": {
+      "n": 4,
+      "alerts": 0
+     },
+     "no_dog": {
+      "n": 4,
+      "alerts": 0
+     }
+    }
+   }
+  },
+  "sd": {
+   "score": {
+    "near": 20,
+    "caught": 14,
+    "missed": 6,
+    "not_near": 49,
+    "false_alerts": 0,
+    "by_label": {
+     "no_baby": {
+      "n": 24,
+      "alerts": 0
+     },
+     "near": {
+      "n": 20,
+      "alerts": 14
+     },
+     "far": {
+      "n": 13,
+      "alerts": 0
+     },
+     "no_dog": {
+      "n": 12,
+      "alerts": 0
+     }
+    }
+   },
+   "latency": {
+    "sam_median_s": 3.094,
+    "sam_p90_s": 3.786,
+    "total_median_s": 3.099,
+    "total_p90_s": 3.791,
+    "total_max_s": 4.712
+   },
+   "photos": {
+    "near": 8,
+    "caught": 3,
+    "missed": 5,
+    "not_near": 29,
+    "false_alerts": 0,
+    "by_label": {
+     "no_baby": {
+      "n": 20,
+      "alerts": 0
+     },
+     "near": {
+      "n": 8,
+      "alerts": 3
+     },
+     "far": {
+      "n": 1,
+      "alerts": 0
+     },
+     "no_dog": {
+      "n": 8,
+      "alerts": 0
+     }
+    }
+   },
+   "composites": {
+    "near": 12,
+    "caught": 11,
+    "missed": 1,
+    "not_near": 20,
+    "false_alerts": 0,
+    "by_label": {
+     "near": {
+      "n": 12,
+      "alerts": 11
+     },
+     "far": {
+      "n": 12,
+      "alerts": 0
+     },
+     "no_baby": {
+      "n": 4,
+      "alerts": 0
+     },
+     "no_dog": {
+      "n": 4,
+      "alerts": 0
+     }
+    }
+   }
+  },
+  "night": {
+   "score": {
+    "near": 20,
+    "caught": 15,
+    "missed": 5,
+    "not_near": 49,
+    "false_alerts": 0,
+    "by_label": {
+     "no_baby": {
+      "n": 24,
+      "alerts": 0
+     },
+     "near": {
+      "n": 20,
+      "alerts": 15
+     },
+     "far": {
+      "n": 13,
+      "alerts": 0
+     },
+     "no_dog": {
+      "n": 12,
+      "alerts": 0
+     }
+    }
+   },
+   "latency": {
+    "sam_median_s": 3.087,
+    "sam_p90_s": 3.533,
+    "total_median_s": 3.09,
+    "total_p90_s": 3.539,
+    "total_max_s": 4.368
+   },
+   "photos": {
+    "near": 8,
+    "caught": 6,
+    "missed": 2,
+    "not_near": 29,
+    "false_alerts": 0,
+    "by_label": {
+     "no_baby": {
+      "n": 20,
+      "alerts": 0
+     },
+     "near": {
+      "n": 8,
+      "alerts": 6
+     },
+     "far": {
+      "n": 1,
+      "alerts": 0
+     },
+     "no_dog": {
+      "n": 8,
+      "alerts": 0
+     }
+    }
+   },
+   "composites": {
+    "near": 12,
+    "caught": 9,
+    "missed": 3,
+    "not_near": 20,
+    "false_alerts": 0,
+    "by_label": {
+     "near": {
+      "n": 12,
+      "alerts": 9
+     },
+     "far": {
+      "n": 12,
+      "alerts": 0
+     },
+     "no_baby": {
+      "n": 4,
+      "alerts": 0
+     },
+     "no_dog": {
+      "n": 4,
+      "alerts": 0
+     }
+    }
+   }
+  }
+ }
+}
