@@ -13,7 +13,7 @@ from ..agent.memory import LOG_KINDS, LocalBabyLog, Memory, parse_time
 from ..core import tools as tools_mod
 from ..core.runtime import Core
 from ..core.settings import Settings
-from .scenes import BY_ID, FACTS, LOG, START, event
+from .scenes import BY_ID, FACTS, LOG, START, event, sense_event
 
 IDLE_S = int(os.environ.get("PA_SIM_IDLE_S", "1200"))
 MAX_SESSIONS = int(os.environ.get("PA_SIM_MAX_SESSIONS", "12"))
@@ -46,6 +46,10 @@ class Allowance:
             self.used[address] = recent
             raise Full("address")
         self.used[address] = [*recent, now]
+
+    def left(self, address):
+        now = self.clock()
+        return max(0, self.limit - sum(1 for at in self.used.get(address, ()) if now - at < HOUR_S))
 
 
 class SimLog(LocalBabyLog):
@@ -85,8 +89,9 @@ class SimChannel(tools_mod.MockChannel):
 
 
 class Session:
-    def __init__(self, client, model=None, lang="en", allowance=None):
+    def __init__(self, client, model=None, lang="en", allowance=None, opened=None):
         self.allowance = allowance
+        self.opened = opened
         self.token = secrets.token_urlsafe(24)
         self.client = client
         self.lang = lang
@@ -132,11 +137,12 @@ class Session:
             self.memory.db.close()
             shutil.rmtree(self.dir, ignore_errors=True)
 
-    async def advance(self, moment):
-        """The clock moves. Any wake Muse asked for on the way fires, and the daily checks it passed, as they would at home."""
+    async def advance(self, moment, daily=True):
+        """The clock moves. Any wake Muse asked for on the way fires, and the daily checks it passed, as they would at home.
+        A moment from the story skips the checks on the way: a judge pressed one thing, and sees that thing."""
         passed = []
         day = self.moment.date()
-        while day <= moment.date():
+        while daily and day <= moment.date():
             passed += [(self.moment.replace(year=day.year, month=day.month, day=day.day, hour=h, minute=m, second=0, microsecond=0), name) for (h, m), name in DAILY]
             day += datetime.timedelta(days=1)
         for at, name in sorted(p for p in passed if self.moment < p[0] < moment):
@@ -156,11 +162,19 @@ class Session:
         if scene_id not in self.played:
             self.played.append(scene_id)
         kind, payload = event(scene, self.lang)
-        return await self.send(kind, payload, datetime.datetime.fromisoformat(scene["at"]))
+        return await self.send(kind, payload, datetime.datetime.fromisoformat(scene["at"]), daily=False)
 
-    async def send(self, kind, payload, at=None):
+    async def sense(self, sense_id):
+        """What Meta's model made of a recording, computed earlier, as the event the home would send. None if it wakes nobody."""
+        found = sense_event(sense_id, self.lang)
+        if found is None:
+            return None
+        self.count()
+        return await self.send(*found)
+
+    async def send(self, kind, payload, at=None, daily=True):
         """One event down the real path. The clock only moves forward."""
-        await self.advance(max(self.moment + datetime.timedelta(minutes=1), at or self.moment))
+        await self.advance(max(self.moment + datetime.timedelta(minutes=1), at or self.moment), daily)
         event_id, _ = await self.core.dispatch(kind, payload, "simulator", self.moment.isoformat())
         if kind == "message" and event_id != self.last_said:
             self.last_said = event_id
@@ -185,6 +199,7 @@ class Session:
     async def state(self):
         facts = await tools_mod.facts(self.core.store, self.settings.home)
         return {"clock": self.moment.isoformat(), "lang": self.lang, "played": self.played, "events_left": MAX_EVENTS - self.events_used,
+                "starts_left": self.opened.left(self.client) if self.opened else None,
                 "home": self.core.mock.snapshot(), "sent": list(self.channel.sent), "said": self.said,
                 "facts": {k: v for k, v in facts.items() if k not in HIDDEN_FACTS},
                 "log": self.log.entries(limit=8), "seq": self.core.seq}
@@ -212,7 +227,7 @@ class Sessions:
             if len(self.live) >= MAX_SESSIONS:
                 raise Full("sessions")
             self.opened.take(client)
-            session = await Session(client, self.model, lang, self.events).start()
+            session = await Session(client, self.model, lang, self.events, self.opened).start()
             self.live[session.token] = session
             return session
 

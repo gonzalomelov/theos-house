@@ -107,6 +107,16 @@ def app(model=None, media=None):
             return JSONResponse({"error": "There is no such moment."}, 404)
         return JSONResponse({"id": event_id}, 202)
 
+    async def sense(request, session):
+        """A saved result from Meta's model goes in as an event, and Muse decides live."""
+        try:
+            event_id = await session.sense(str((await body_of(request)).get("id")))
+        except Full:
+            return JSONResponse({"error": USED}, 429)
+        if event_id is None:
+            return JSONResponse({"error": "That recording wakes nobody."}, 404)
+        return JSONResponse({"id": event_id}, 202)
+
     async def write(request, session):
         body = await body_of(request)
         text = str(body.get("text", "")).strip()
@@ -203,7 +213,7 @@ def app(model=None, media=None):
     built = Starlette(lifespan=lifespan, middleware=[Middleware(Headers)], routes=[
         Route("/", page), Route("/health", health), Route("/api/session", open_session, methods=["POST"]),
         Route("/api/state", session_only(state)), Route("/api/scene", session_only(one_at_a_time(scene)), methods=["POST"]),
-        Route("/api/write", session_only(one_at_a_time(write)), methods=["POST"]), Route("/api/events", session_only(one_at_a_time(event)), methods=["POST"]),
+        Route("/api/sense", session_only(one_at_a_time(sense)), methods=["POST"]), Route("/api/write", session_only(one_at_a_time(write)), methods=["POST"]), Route("/api/events", session_only(one_at_a_time(event)), methods=["POST"]),
         Route("/api/home", session_only(set_home), methods=["POST"]), Route("/api/clock", session_only(clock), methods=["POST"]), Route("/api/lang", session_only(lang), methods=["POST"]),
         Route("/api/reset", session_only(reset), methods=["POST"]), Route("/api/stream", session_only(stream)),
         Mount("/media", StaticFiles(directory=media, check_dir=False)), Mount("/static", StaticFiles(directory=STATIC))])

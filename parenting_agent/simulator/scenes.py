@@ -4,6 +4,9 @@ decides what follows: nothing here holds an outcome. A parent's words are input,
 The night of Dec 15 is Ceci's on the rota, so when she asks to sleep, the plan really has to change.
 """
 
+import json
+from pathlib import Path
+
 HUMIDITY = "sensor.nursery_climate_humidity"
 CRY_ROOM = {"en": "parents' bedroom, in Theo's crib beside their bed", "es": "dormitorio de los padres, en la cunita de Theo al lado de la cama"}
 
@@ -71,3 +74,25 @@ def event(scene, lang):
     if "room" in scene:
         payload["room"] = scene["room"][lang]
     return scene["type"], payload
+
+
+# What Meta's models made of real recordings, computed on the Mac by scripts/sim_senses.py. This container runs neither model.
+SENSES_FILE = Path(__file__).parent / "static/senses/senses.json"
+SENSES = json.loads(SENSES_FILE.read_text()) if SENSES_FILE.is_file() else {"audio": [], "frames": []}
+HEARD = {"cry": "baby crying", "dog": "dog barking", "doorbell": "doorbell ringing", "splash": "water splashing"}
+SAW = {"on": {"en": "a hand is on the baby", "es": "hay una mano sobre el bebé"},
+       "off": {"en": "no hand is on the baby", "es": "ninguna mano está sobre el bebé"},
+       "unsure": {"en": "it can't tell if a hand is on the baby", "es": "no puede saber si hay una mano sobre el bebé"}}
+TABLE = {"en": "the changing table camera", "es": "la cámara del cambiador"}
+
+
+def sense_event(sense_id, lang):
+    """The event a saved result makes, with which model said so. None when there is no such result, or it would wake nobody."""
+    for clip in SENSES["audio"]:
+        if clip["id"] == sense_id and clip["heard"]:
+            share = min(99.9, int(clip["scores"][clip["heard"]]["probability"] * 1000) / 10)
+            return "sound", {"kind": f"{HEARD[clip['heard']]}, heard by Perception Encoder Audio at {share}%, computed earlier on a recording", "room": CRY_ROOM[lang]}
+    for frame in SENSES["frames"]:
+        if frame["id"] == sense_id:
+            return "camera", {"camera": TABLE[lang], "model": "SAM 3.1", "saw": SAW[frame["verdict"]][lang], "hand_masks": frame["hands"], "note": "computed earlier on a generated clip"}
+    return None

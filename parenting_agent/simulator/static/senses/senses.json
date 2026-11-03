@@ -1,0 +1,162 @@
+{
+ "audio": [
+  {
+   "id": "cry",
+   "file": "cry.m4a",
+   "title": "Crying newborn baby",
+   "license": "CC0",
+   "page": "https://commons.wikimedia.org/wiki/File:Crying_newborn_baby.ogg",
+   "scores": {
+    "cry": {
+     "probability": 0.9999,
+     "logit": 9.01,
+     "threshold": 4.43,
+     "fired": true
+    },
+    "dog": {
+     "probability": 0.9812,
+     "logit": 3.96,
+     "threshold": 6.4588,
+     "fired": false
+    },
+    "doorbell": {
+     "probability": 0.8815,
+     "logit": 2.01,
+     "threshold": 8.3168,
+     "fired": false
+    },
+    "splash": {
+     "probability": 0.6098,
+     "logit": 0.45,
+     "threshold": 7.6583,
+     "fired": false
+    }
+   },
+   "heard": "cry"
+  },
+  {
+   "id": "dog",
+   "file": "dog.m4a",
+   "title": "Barking dog in Rome",
+   "license": "CC BY-SA 3.0",
+   "page": "https://commons.wikimedia.org/wiki/File:Barking_dog_in_Rome.ogg",
+   "scores": {
+    "cry": {
+     "probability": 0.882,
+     "logit": 2.01,
+     "threshold": 4.43,
+     "fired": false
+    },
+    "dog": {
+     "probability": 0.9999,
+     "logit": 9.59,
+     "threshold": 6.4588,
+     "fired": true
+    },
+    "doorbell": {
+     "probability": 0.2941,
+     "logit": -0.88,
+     "threshold": 8.3168,
+     "fired": false
+    },
+    "splash": {
+     "probability": 0.5978,
+     "logit": 0.4,
+     "threshold": 7.6583,
+     "fired": false
+    }
+   },
+   "heard": "dog"
+  },
+  {
+   "id": "doorbell",
+   "file": "doorbell.m4a",
+   "title": "Electronic doorbell",
+   "license": "CC0",
+   "page": "https://commons.wikimedia.org/wiki/File:Electronic_doorbell.ogg",
+   "scores": {
+    "cry": {
+     "probability": 0.3666,
+     "logit": -0.55,
+     "threshold": 4.43,
+     "fired": false
+    },
+    "dog": {
+     "probability": 0.0774,
+     "logit": -2.48,
+     "threshold": 6.4588,
+     "fired": false
+    },
+    "doorbell": {
+     "probability": 1.0,
+     "logit": 11.6,
+     "threshold": 8.3168,
+     "fired": true
+    },
+    "splash": {
+     "probability": 0.442,
+     "logit": -0.23,
+     "threshold": 7.6583,
+     "fired": false
+    }
+   },
+   "heard": "doorbell"
+  },
+  {
+   "id": "kitchen",
+   "file": "kitchen.m4a",
+   "title": "Ambient Kitchen Sounds",
+   "license": "CC0",
+   "page": "https://commons.wikimedia.org/wiki/File:Ambient_Kitchen_Sounds.wav",
+   "scores": {
+    "cry": {
+     "probability": 0.2054,
+     "logit": -1.35,
+     "threshold": 4.43,
+     "fired": false
+    },
+    "dog": {
+     "probability": 0.7704,
+     "logit": 1.21,
+     "threshold": 6.4588,
+     "fired": false
+    },
+    "doorbell": {
+     "probability": 0.8013,
+     "logit": 1.39,
+     "threshold": 8.3168,
+     "fired": false
+    },
+    "splash": {
+     "probability": 0.8891,
+     "logit": 2.08,
+     "threshold": 7.6583,
+     "fired": false
+    }
+   },
+   "heard": null
+  }
+ ],
+ "frames": [
+  {
+   "id": "hands-on",
+   "file": "hands-on.jpg",
+   "mask": "hands-on-mask.jpg",
+   "hands": 3,
+   "baby": true,
+   "verdict": "on",
+   "at_s": 1.0
+  },
+  {
+   "id": "hands-off",
+   "file": "hands-off.jpg",
+   "mask": "hands-off-mask.jpg",
+   "hands": 2,
+   "baby": true,
+   "verdict": "off",
+   "at_s": 5.0
+  }
+ ],
+ "audio_model": "facebook/pe-a-frame-small, through the Tapo audio channel, 2 s windows, thresholds from results/sounds/meta-hearing/tune.json",
+ "frame_model": "SAM 3.1 hand and baby masks, on a generated clip with no real baby"
+}

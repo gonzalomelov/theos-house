@@ -154,18 +154,45 @@ class Visitors(unittest.TestCase):
             self.assertEqual(httpx.get(url + "/api/state", trust_env=False).status_code, 410)
 
     def test_the_coach_plays_the_recording_and_the_log_lives_in_december(self):
-        # The evening and morning checks the clock passes on the way run first, with their second asks.
-        passed = [AIMessage("Nothing yet.") for _ in range(5)]
-        app = gateway.app(scripted(*passed, call("start_car_seat_coach", parent="gonza"), AIMessage("Coach started."),
+        app = gateway.app(scripted(call("start_car_seat_coach", parent="gonza"), AIMessage("Coach started."),
                                    call("log_baby_event", kind="feeding", details={"amount_ml": 90, "method": "bottle"}), AIMessage("Logged.")))
         with served(app) as url:
             visitor = self.visitor(url)
             visitor.post("/api/scene", json={"id": "carseat"})
-            session = self.done(app, visitor, 3)
+            session = self.done(app, visitor, 1)
             self.assertTrue(any(item["kind"] == "tool_call" and item["tool"] == "start_car_seat_coach" for item in session.core.recent))
             visitor.post("/api/write", json={"as": "gonza", "text": "le di 90 ml"})
-            self.done(app, visitor, 4)
+            self.done(app, visitor, 2)
             self.assertTrue(visitor.get("/api/state").json()["log"][-1]["ts"].startswith("2026-12-16T18:11"))
+
+    def test_a_moment_runs_only_itself_and_the_page_is_told_what_is_left(self):
+        app = gateway.app(scripted(AIMessage("Nothing needed.")))
+        with served(app) as url:
+            visitor = self.visitor(url)
+            before = visitor.get("/api/state").json()
+            visitor.post("/api/scene", json={"id": "evening2"})
+            session = self.done(app, visitor, 1)
+            events = [item for item in session.core.recent if item["kind"] == "event"]
+            self.assertEqual([e["happened_at"] for e in events], ["2026-12-16T21:30:00-03:00"])
+            after = visitor.get("/api/state").json()
+            self.assertEqual(after["events_left"], before["events_left"] - 1)
+            self.assertLess(after["starts_left"], 12)
+
+    def test_a_saved_result_from_metas_model_goes_in_as_an_event(self):
+        app = gateway.app(scripted(AIMessage("Nothing needed."), AIMessage("Nothing needed."), AIMessage("Nothing needed.")))
+        with served(app) as url:
+            visitor = self.visitor(url)
+            self.assertEqual(visitor.post("/api/sense", json={"id": "kitchen"}).status_code, 404)
+            self.assertEqual(visitor.post("/api/sense", json={"id": "nope"}).status_code, 404)
+            self.assertEqual(visitor.post("/api/sense", json={"id": "dog"}).status_code, 202)
+            session = self.done(app, visitor, 1)
+            self.assertEqual(visitor.post("/api/sense", json={"id": "hands-off"}).status_code, 202)
+            self.done(app, visitor, 2)
+            events = [item for item in session.core.recent if item["kind"] == "event"]
+            self.assertIn("Perception Encoder Audio", events[0]["payload"]["kind"])
+            self.assertEqual((events[1]["type"], events[1]["payload"]["model"]), ("camera", "SAM 3.1"))
+            for name in ("cry.m4a", "hands-off-mask.jpg"):
+                self.assertEqual(visitor.get("/static/senses/" + name).status_code, 200)
 
     def test_the_clock_runs_the_checks_it_passes_and_ends_the_warmer(self):
         app = gateway.app(scripted(*[AIMessage("Nothing yet.") for _ in range(9)]))

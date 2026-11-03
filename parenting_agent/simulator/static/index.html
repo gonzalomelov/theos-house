@@ -24,6 +24,7 @@
   <button type="button" class="play" id="play"></button>
   <h2 id="rail-t"></h2>
   <ol id="rail"></ol>
+  <a class="to-senses" id="to-senses" href="#senses"></a>
   <p class="status" id="status" role="status"></p>
 </nav>
 
@@ -81,6 +82,7 @@
 
   <section class="controls" aria-labelledby="ct-t">
     <h2 id="ct-t"></h2>
+    <p class="left" id="left"></p>
     <div class="sliders">
       <label><span id="l-hum"></span> <output id="v-hum"></output><input type="range" id="c-hum" min="20" max="90" step="0.5"></label>
       <label><span id="l-temp"></span> <output id="v-temp"></output><input type="range" id="c-temp" min="10" max="35" step="0.5"></label>
@@ -109,6 +111,12 @@
     <ul id="log"></ul>
   </section>
 </main>
+
+<section class="senses" id="senses" aria-labelledby="se-t" hidden>
+  <h2 id="se-t"></h2>
+  <p id="se-note"></p>
+  <div class="se-cards" id="se-cards"></div>
+</section>
 
 <div class="recording" id="recording" hidden role="dialog" aria-modal="true" aria-labelledby="rec-title">
   <div class="rec-box">

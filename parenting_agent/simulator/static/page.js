@@ -20,12 +20,14 @@ const T = {
     on: "On", off: "Off", humidityWord: "humidity", wet: "wet", dirty: "dirty", trace: "What Muse is doing", traceEmpty: "Press Play one night, or send any home event. What Muse chooses shows up here as it happens.",
     memory: "What Muse remembers", memoryEmpty: "Nothing yet. Plans it keeps will stay here across days.", log: "Theo's log", rail: "Moments from the story", thinking: "Muse is deciding", failed: "Muse didn't answer this one. Press another moment, or start over.",
     took: (s, t) => `${s} s, ${t} tokens`, by: "Decided by Muse Spark Open", byIn: s => `Decided by Muse Spark Open in ${s} s`, nothing: "Muse looked and chose to do nothing.", decided: "Muse's note", woke: "Muse woke itself up, as it had planned", gate: "Fixed safety reply from code. No model was asked.",
-    humid: v => `Nursery humidity reads ${v}%`, heat: v => `Nursery temperature reads ${v} °C`, plugSet: (n, v) => `Someone switched the ${n} plug ${v}`, heard: {"baby crying": "Crying heard", "dog barking": "Barking heard"}, checks: {morning: "Morning check", evening: "Evening check"}, atHome: {sound: "At home, this event comes from Perception Encoder Audio on the microphone. Here you sent it.", sensor: "At home, this event comes from the sensor built on Meta's Muse Gadget SDK. Here you sent it."}, coachBy: "In the recording: SAM 3.1 watches and MMS-TTS speaks", duty: "On duty",
-    foot: "Simulated: Theo, the sounds, the sensors, the plugs and the phones. Typed here: Gonza's voice note. Recorded: the car seat session on Meta's glasses kit simulator, with a rendered car seat. Live: what the agent does, chosen by Muse Spark Open each time. Fixed safety replies come from code, before Muse is asked. Not medical advice.",
-    models: "Meta models. Live on this page: Muse Spark Open. In the car seat recording: SAM 3.1, MMS-TTS and the glasses kit. At home only: Perception Encoder Audio and the sensor on the Muse Gadget SDK.",
-    rec: "Recorded on Meta's glasses kit simulator", recNote: "A rendered car seat, shortened from a real session. SAM 3.1 checks each step on camera, and the coach speaks through MMS-TTS. It never says the seat is safe. The glasses display is in Spanish.", close: "Close", end: "That's the story. Keep sending events, write from a phone, or start over.", busy: "Setting up your own simulated home", voice: "Voice note, typed here", wrote: "wrote", ended: "This session ended. Press Start over.",
+    humid: v => `Nursery humidity reads ${v}%`, heat: v => `Nursery temperature reads ${v} °C`, plugSet: (n, v) => `Someone switched the ${n} plug ${v}`, heard: {"baby crying": "Crying heard", "dog barking": "Barking heard", "doorbell ringing": "Doorbell heard"}, checks: {morning: "Morning check", evening: "Evening check"}, atHome: {sound: "At home, this event comes from Perception Encoder Audio on the microphone. Here you sent it.", sensor: "At home, this event comes from the sensor built on Meta's Muse Gadget SDK. Here you sent it."}, coachBy: "In the recording: SAM 3.1 watches and MMS-TTS speaks", duty: "On duty",
+    foot: "Simulated: Theo, the sounds, the sensors, the plugs and the phones. Typed here: Gonza's voice note. Computed earlier: Perception Encoder Audio and SAM 3.1 on the recordings below. Recorded: the car seat session on Meta's glasses kit simulator, with a rendered car seat. Live: what the agent does, chosen by Muse Spark Open each time. Fixed safety replies come from code, before Muse is asked. Not medical advice.",
+    models: "Meta models. Live on this page: Muse Spark Open. Computed earlier, results here: Perception Encoder Audio and SAM 3.1. In the car seat recording: SAM 3.1, MMS-TTS and the glasses kit. At home only: the sensor on the Muse Gadget SDK.",
+    rec: "Recorded on Meta's glasses kit simulator", recNote: "A rendered car seat, shortened from a real session. SAM 3.1 checks each step on camera, and the coach speaks through MMS-TTS. It never says the seat is safe. The voice and the glasses display are in Spanish, and the English is under the video.", close: "Close", end: "That's the story. Keep sending events, write from a phone, or start over.", busy: "Setting up your own simulated home", voice: "Voice note, typed here", wrote: "wrote", ended: "This session ended. Press Start over.",
     tools: {GetLiveContext: "Looked at the home", HassTurnOn: "Turned on", HassTurnOff: "Turned off", HassVacuumStart: "Started the vacuum", HassVacuumReturnToBase: "Sent the vacuum home", notify: "Messaged", say_on_echo: "Spoke on the Echo", log_baby_event: "Wrote in Theo's log", read_baby_log: "Read Theo's log", baby_summary: "Read Theo's totals", remember: "Remembered", forget: "Forgot", start_car_seat_coach: "Started the car seat coach", wake_me_at: "Asked to be woken later", next_feed: "Worked out the next feed", HassListAddItem: "Added to the list", set_on_duty: "Changed who is on duty"},
-    kinds: {feeding: "Feed", diaper: "Diaper", sleep: "Sleep", bath: "Bath", note: "Note"},},
+    kinds: {feeding: "Feed", diaper: "Diaper", sleep: "Sleep", bath: "Bath", note: "Note"},
+    now: "now", refused: "Stopped by a check in code, not sent", wait: "Muse is deciding. The buttons come back when it finishes.", left: (n, s) => `${n} events left in this home.${s === null ? "" : ` Start over makes a new one, ${s} more this hour.`}`, night2: (d, m) => `On duty, ${m} ${d}`, months: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"], finished: "Finished. Close it to go on.",
+    toSenses: "Try Meta's models on real recordings", seT: "Meta's models on real recordings", seNote: "Perception Encoder Audio and SAM 3.1 are too heavy for this page, so they ran earlier on our Mac, on these recordings. Sending a result puts it in as the event the home would send, and Muse decides live what to do and what to remember.", seBy: {audio: "Computed earlier by Perception Encoder Audio", frame: "Computed earlier by SAM 3.1"}, seSend: "Send to Muse", seNone: "Nothing reached its threshold, so this wakes nobody.", heardAs: {cry: "a baby crying", dog: "a dog barking", doorbell: "a doorbell", splash: "water"}, seHeard: (what, p) => `It heard ${what}, at ${p}%.`, seFrame: {"hands-on": "Hands on the baby", "hands-off": "Hands leave the baby"}, seAudio: {cry: "A newborn crying", dog: "A dog barking", doorbell: "A doorbell", kitchen: "A kitchen"}, seSaw: {on: "Its verdict: a hand is on the baby.", off: "Its verdict: no hand is on the baby.", unsure: "Its verdict: it can't tell."}, seMasks: n => `Honey shows ${n} hand masks, teal shows the baby. Original on the left.`, seGen: "A generated clip, no real baby.", computed: "This result was computed earlier by Meta's model on a recording. Muse's decision below is live.", camera: p => `SAM 3.1 at ${p.camera}: ${p.saw}`,},
   es: {locale: "es-UY", simulated: "Simulado", lead: "Un agente del hogar para dos padres primerizos. Gonza y Ceci son padres por primera vez y Theo es su recién nacido, simulado acá. Muse Spark Open de Meta decide en vivo qué hace la casa y a quién le avisa, y nada de esto llega a una casa real.",
     play: "Reproducir una noche", stop: "Parar", playing: (i, n, s) => `${i} de ${n}: ${s}`, nightDone: "Esa fue una noche, y cada paso se decidió en vivo. Enviá cualquier evento de la casa abajo, o escribí desde un teléfono.", sure: "Tocá de nuevo para reiniciar", restarted: "Empezó de nuevo en español.", deep: "Ver cómo piensa", plain: "Volver a lo simple", empty: "Nada todavía. El agente escribe primero.",
     send2: "Enviar un evento de la casa", humLabel: "Humedad del cuarto", tempLabel: "Temperatura del cuarto", cry: "Se oye llanto", dog: "Se oyen ladridos", plug: (n, s) => `Enchufe ${n} ${s}`, am: "Revisión de la mañana", pm: "Revisión de la noche", h1: "Reloj +1 hora", h6: "Reloj +6 horas", sent: "Evento enviado", reset: "Empezar de nuevo", phoneG: "Teléfono de Gonza", phoneC: "Teléfono de Ceci", writeG: "Escribir como Gonza", writeC: "Escribir como Ceci", send: "Enviar", asleep: "No llegó nada a este teléfono", house: "La casa de Theo, simulada",
@@ -33,16 +35,19 @@ const T = {
     on: "On", off: "Off", humidityWord: "humedad", wet: "pis", dirty: "caca", trace: "Lo que está haciendo Muse", traceEmpty: "Tocá Reproducir una noche, o enviá cualquier evento de la casa. Lo que elige Muse aparece acá a medida que ocurre.",
     memory: "Lo que Muse recuerda", memoryEmpty: "Nada todavía. Los planes que guarde quedan acá de un día para otro.", log: "Registro de Theo", rail: "Momentos de la historia", thinking: "Muse está decidiendo", failed: "Muse no respondió a este. Tocá otro momento o empezá de nuevo.",
     took: (s, t) => `${s} s, ${t} tokens`, by: "Lo decidió Muse Spark Open", byIn: s => `Lo decidió Muse Spark Open en ${s} s`, nothing: "Muse miró y eligió no hacer nada.", decided: "Nota de Muse, escrita en inglés", woke: "Muse se despertó sola, como había planeado", gate: "Respuesta fija de seguridad, desde el código. No se le preguntó a ningún modelo.",
-    humid: v => `La humedad del cuarto marca ${v}%`, heat: v => `La temperatura del cuarto marca ${v} °C`, plugSet: (n, v) => `Alguien puso el enchufe ${n} en ${v}`, heard: {"baby crying": "Se oye llanto", "dog barking": "Se oyen ladridos"}, checks: {morning: "Revisión de la mañana", evening: "Revisión de la noche"}, atHome: {sound: "En casa, este evento viene de Perception Encoder Audio en el micrófono. Acá lo enviaste vos.", sensor: "En casa, este evento viene del sensor hecho con el Muse Gadget SDK de Meta. Acá lo enviaste vos."}, coachBy: "En la grabación: SAM 3.1 mira y MMS-TTS habla", duty: "De turno",
-    foot: "Simulado: Theo, los sonidos, los sensores, los enchufes y los teléfonos. Escrita acá: la nota de voz de Gonza. Grabado: la sesión de la silla del auto en el simulador del kit de lentes de Meta, con una silla renderizada. En vivo: lo que hace el agente, elegido por Muse Spark Open cada vez. Las respuestas fijas de seguridad vienen del código, antes de preguntarle a Muse. No es consejo médico.",
-    models: "Modelos de Meta. En vivo en esta página: Muse Spark Open. En la grabación de la silla: SAM 3.1, MMS-TTS y el kit de lentes. Solo en casa: Perception Encoder Audio y el sensor con el Muse Gadget SDK.",
+    humid: v => `La humedad del cuarto marca ${v}%`, heat: v => `La temperatura del cuarto marca ${v} °C`, plugSet: (n, v) => `Alguien puso el enchufe ${n} en ${v}`, heard: {"baby crying": "Se oye llanto", "dog barking": "Se oyen ladridos", "doorbell ringing": "Se oye el timbre"}, checks: {morning: "Revisión de la mañana", evening: "Revisión de la noche"}, atHome: {sound: "En casa, este evento viene de Perception Encoder Audio en el micrófono. Acá lo enviaste vos.", sensor: "En casa, este evento viene del sensor hecho con el Muse Gadget SDK de Meta. Acá lo enviaste vos."}, coachBy: "En la grabación: SAM 3.1 mira y MMS-TTS habla", duty: "De turno",
+    foot: "Simulado: Theo, los sonidos, los sensores, los enchufes y los teléfonos. Escrita acá: la nota de voz de Gonza. Calculado antes: Perception Encoder Audio y SAM 3.1 con las grabaciones de abajo. Grabado: la sesión de la silla del auto en el simulador del kit de lentes de Meta, con una silla renderizada. En vivo: lo que hace el agente, elegido por Muse Spark Open cada vez. Las respuestas fijas de seguridad vienen del código, antes de preguntarle a Muse. No es consejo médico.",
+    models: "Modelos de Meta. En vivo en esta página: Muse Spark Open. Calculados antes, con el resultado acá: Perception Encoder Audio y SAM 3.1. En la grabación de la silla: SAM 3.1, MMS-TTS y el kit de lentes. Solo en casa: el sensor con el Muse Gadget SDK.",
     rec: "Grabado en el simulador del kit de lentes de Meta", recNote: "Una silla renderizada, acortado de una sesión real. SAM 3.1 revisa cada paso con la cámara y el coach habla con MMS-TTS. Nunca dice que la silla es segura.", close: "Cerrar", end: "Esa es la historia. Seguí enviando eventos, escribí desde un teléfono o empezá de nuevo.", busy: "Preparando tu propia casa simulada", voice: "Nota de voz, escrita acá", wrote: "escribió", ended: "Esta sesión terminó. Tocá Empezar de nuevo.",
     tools: {GetLiveContext: "Miró la casa", HassTurnOn: "Prendió", HassTurnOff: "Apagó", HassVacuumStart: "Arrancó la aspiradora", HassVacuumReturnToBase: "Mandó la aspiradora a la base", notify: "Le escribió a", say_on_echo: "Habló por el Echo", log_baby_event: "Anotó en el registro de Theo", read_baby_log: "Leyó el registro de Theo", baby_summary: "Leyó los totales de Theo", remember: "Guardó", forget: "Olvidó", start_car_seat_coach: "Arrancó el coach de la silla", wake_me_at: "Pidió que la despierten más tarde", next_feed: "Calculó la próxima comida", HassListAddItem: "Agregó a la lista", set_on_duty: "Cambió quién está de turno"},
-    kinds: {feeding: "Comida", diaper: "Pañal", sleep: "Sueño", bath: "Baño", note: "Nota"},},
+    kinds: {feeding: "Comida", diaper: "Pañal", sleep: "Sueño", bath: "Baño", note: "Nota"},
+    now: "ahora", refused: "Lo frenó una revisión en el código, no se envió", wait: "Muse está decidiendo. Los botones vuelven cuando termina.", left: (n, s) => `Quedan ${n} eventos en esta casa.${s === null ? "" : ` Empezar de nuevo crea otra, ${s} más esta hora.`}`, night2: (d, m) => `De turno, ${d} ${m}`, months: ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "set", "oct", "nov", "dic"], finished: "Terminó. Cerralo para seguir.",
+    toSenses: "Probá los modelos de Meta con grabaciones reales", seT: "Los modelos de Meta con grabaciones reales", seNote: "Perception Encoder Audio y SAM 3.1 son muy pesados para esta página, así que corrieron antes en nuestra Mac, con estas grabaciones. Al enviar un resultado entra como el evento que mandaría la casa, y Muse decide en vivo qué hacer y qué recordar.", seBy: {audio: "Calculado antes por Perception Encoder Audio", frame: "Calculado antes por SAM 3.1"}, seSend: "Enviar a Muse", seNone: "Nada llegó a su umbral, así que esto no despierta a nadie.", heardAs: {cry: "un bebé llorando", dog: "un perro ladrando", doorbell: "un timbre", splash: "agua"}, seHeard: (what, p) => `Oyó ${what}, con ${p}%.`, seFrame: {"hands-on": "Manos sobre el bebé", "hands-off": "Las manos dejan al bebé"}, seAudio: {cry: "Un recién nacido llorando", dog: "Un perro ladrando", doorbell: "Un timbre", kitchen: "Una cocina"}, seSaw: {on: "Su veredicto: hay una mano sobre el bebé.", off: "Su veredicto: ninguna mano está sobre el bebé.", unsure: "Su veredicto: no puede saberlo."}, seMasks: n => `Miel marca ${n} máscaras de manos, verde marca al bebé. El original a la izquierda.`, seGen: "Un clip generado, sin un bebé real.", computed: "Este resultado lo calculó antes el modelo de Meta con una grabación. La decisión de Muse de abajo es en vivo.", camera: p => `SAM 3.1 en ${p.camera}: ${p.saw}`,},
 };
 const WHO = {gonza: "Gonza", ceci: "Ceci"};
 const $ = id => document.getElementById(id);
-let lang = "en", state = null, stream = null, seq = 0, busy = false, seen = {gonza: 0, ceci: 0}, runs = new Map(), shownEcho = 0, pressed = null, pending = 0, lastId = null, night = null, nightTimer = 0, deep = false, phone = "gonza", unread = {gonza: false, ceci: false}, resetArmed = 0, editing = new Set();
+let lang = "en", state = null, stream = null, seq = 0, busy = false, seen = {gonza: 0, ceci: 0}, runs = new Map(), shownEcho = 0, pressed = null, pending = 0, lastId = null, night = null, nightTimer = 0, deep = false, phone = "gonza", unread = {gonza: false, ceci: false}, resetArmed = 0, editing = new Set(), bootSeq = 0, lastItem = 0, senses = null;
+const isoOf = s => `2026-12-${s[2] === "Tue" ? 15 : 16}T${s[1]}:00-03:00`;
 const t = () => T[lang];
 const clockOf = iso => { const [d, tm] = iso.split("T"); const [y, m, day] = d.split("-").map(Number); return {date: new Date(Date.UTC(y, m - 1, day, 12)), hm: tm.slice(0, 5), hour: Number(tm.slice(0, 2))}; };
 const el = (tag, text, cls) => { const n = document.createElement(tag); if (text !== undefined) n.textContent = text; if (cls) n.className = cls; return n; };
@@ -63,12 +68,13 @@ function words() {
   $("ph-g").textContent = w.phoneG; $("ph-c").textContent = w.phoneC; $("house-title").textContent = w.house;
   $("tr-t").textContent = w.trace; $("me-t").textContent = w.memory; $("log-t").textContent = w.log; $("rail-t").textContent = w.rail; $("foot").textContent = w.foot;
   $("rec-title").textContent = w.rec; $("rec-note").textContent = w.recNote; $("rec-close").textContent = w.close;
-  $("ct-t").textContent = w.send2; $("l-hum").textContent = w.humLabel; $("l-temp").textContent = w.tempLabel; $("b-cry").textContent = w.cry; $("b-dog").textContent = w.dog; $("b-am").textContent = w.am; $("b-pm").textContent = w.pm; $("b-1h").textContent = w.h1; $("b-6h").textContent = w.h6;
+  $("to-senses").textContent = w.toSenses; $("se-t").textContent = w.seT; $("se-note").textContent = w.seNote; $("ct-t").textContent = w.send2; $("l-hum").textContent = w.humLabel; $("l-temp").textContent = w.tempLabel; $("b-cry").textContent = w.cry; $("b-dog").textContent = w.dog; $("b-am").textContent = w.am; $("b-pm").textContent = w.pm; $("b-1h").textContent = w.h1; $("b-6h").textContent = w.h6;
   document.querySelectorAll("[data-t]").forEach(n => { n.textContent = w[n.dataset.t]; });
   for (const [id, label] of [["phone-gonza", w.writeG], ["phone-ceci", w.writeC]]) {
     const f = $(id).querySelector("form"); f.querySelector("input").placeholder = label; f.querySelector("input").setAttribute("aria-label", label); f.querySelector("button").textContent = w.send;
   }
   showTrack();
+  drawSenses();
   draw();
 }
 
@@ -80,7 +86,7 @@ function drawClock() {
 }
 
 function drawHome() {
-  if (!state) return;
+  if (!state) { for (const id of ["hum", "temp", "dehum-s", "warmer-s"]) $(id).textContent = "…"; return; }
   const d = state.home.devices, w = t();
   const hum = parseFloat(d["Nursery climate humidity"].state);
   $("hum").textContent = `${d["Nursery climate humidity"].state}%`; $("hum").classList.toggle("high", hum > 60);
@@ -92,23 +98,24 @@ function drawHome() {
 }
 
 function drawControls() {
-  if (!state) return;
-  const d = state.home.devices, w = t();
+  const d = state ? state.home.devices : null, w = t(), off = busy || !state;
   for (const [id, out, name, unit] of [["c-hum", "v-hum", "Nursery climate humidity", "%"], ["c-temp", "v-temp", "Nursery climate temperature", " °C"]]) {
-    const input = $(id), now = d[name].state;
-    if (!editing.has(id)) input.value = now;
-    $(out).textContent = input.value + unit;
+    const input = $(id);
+    if (d && !editing.has(id)) input.value = d[name].state;
+    $(out).textContent = d ? input.value + unit : "…";
+    input.disabled = off;
   }
   document.querySelectorAll("[data-event=switch]").forEach(b => {
-    const on = d[b.dataset.device].state === "on", label = b.id === "b-dehum" ? w.dehum : w.warmer;
+    const on = d ? d[b.dataset.device].state === "on" : false, label = b.id === "b-dehum" ? w.dehum : w.warmer;
     b.textContent = w.plug(label, on ? w.off : w.on); b.dataset.to = on ? "off" : "on";
   });
-  document.querySelectorAll(".sends button").forEach(b => { b.disabled = busy; });
-  $("c-hum").disabled = $("c-temp").disabled = busy;
+  document.querySelectorAll(".sends button, .say button, .se-send").forEach(b => { b.disabled = off || b.dataset.none === "1"; });
+  $("left").textContent = state ? w.left(state.events_left, state.starts_left ?? null) : "";
+  document.body.classList.toggle("busy", busy);
 }
 
 function drawPhones(fresh) {
-  if (!state) return;
+  if (!state) { document.querySelectorAll(".chat").forEach(c => { c.textContent = ""; c.append(el("li", t().busy, "none")); }); return; }
   for (const p of ["gonza", "ceci"]) {
     const list = [];
     state.sent.filter(m => m.to === p).forEach((m, i) => list.push({at: m.at, text: m.text, key: i}));
@@ -142,12 +149,20 @@ function drawEcho() {
   shownEcho = said.length;
 }
 
+// One line per fact. Muse may keep the rota under its own key too, and then its longer sentence is the one shown.
+function factLabel(k) {
+  const m = k.match(/^(?:on[ _])?duty[ _](\d{4})[-_ ](\d\d)[-_ ](\d\d)$/i), w = t();
+  if (m) return w.night2(Number(m[3]), w.months[Number(m[2]) - 1]);
+  const words_ = k.replace(/[_-]+/g, " ").trim();
+  return words_.charAt(0).toUpperCase() + words_.slice(1);
+}
 function drawMemory() {
-  if (!state) return;
   const box = $("facts"), w = t(); box.textContent = "";
-  const items = Object.entries(state.facts);
-  if (!items.length) box.append(el("dd", w.memoryEmpty, "empty"));
-  items.forEach(([k, v]) => { box.append(el("dt", k.replace(/_/g, " ").replace(/^on duty/i, w.duty))); box.append(el("dd", v)); });
+  if (!state) { box.append(el("dd", w.memoryEmpty, "empty")); $("log").textContent = ""; return; }
+  const shown = new Map();
+  Object.entries(state.facts).forEach(([k, v]) => { const label = factLabel(k), text = String(v), had = shown.get(label); shown.set(label, had && had.length > text.length ? had : (WHO[text] || text)); });
+  if (!shown.size) box.append(el("dd", w.memoryEmpty, "empty"));
+  shown.forEach((v, k) => { box.append(el("dt", k)); box.append(el("dd", v)); });
   const log = $("log"); log.textContent = "";
   state.log.slice(-6).reverse().forEach(e => {
     const {hm, date} = clockOf(e.ts), d = e.details || {};
@@ -159,9 +174,10 @@ function drawMemory() {
 function drawRail() {
   const rail = $("rail"), played = state ? state.played : [], w = t(); rail.textContent = "";
   const last = played.length ? SCENES.findIndex(s => s[0] === played[played.length - 1]) : -1, next = last + 1;
-  SCENES.forEach(([id, hm, , title], i) => {
-    const li = el("li"), b = el("button"); b.type = "button"; b.dataset.id = id;
-    b.append(el("b", hm), el("span", title[lang]));
+  SCENES.forEach((scene, i) => {
+    const [id, hm, , title] = scene, li = el("li"), b = el("button"); b.type = "button"; b.dataset.id = id;
+    // A moment whose time has passed happens now: the chip never promises a time the clock can't show.
+    b.append(el("b", state && !played.includes(id) && isoOf(scene) <= state.clock ? w.now : hm), el("span", title[lang]));
     if (played.includes(id)) b.classList.add("done");
     if (i === next) b.classList.add("next");
     b.disabled = busy || !state; b.addEventListener("click", () => play(id));
@@ -169,12 +185,13 @@ function drawRail() {
     if (i === next) requestAnimationFrame(() => { const box = rail.getBoundingClientRect(), r = b.getBoundingClientRect(); if (r.left < box.left || r.right > box.right) b.scrollIntoView({block: "nearest", inline: "center"}); });
   });
   if (state && next >= SCENES.length && !busy && !night) say(w.end);
-  $("play").textContent = night ? w.stop : w.play; $("play").disabled = !state; $("play").classList.toggle("on", !!night);
+  $("play").textContent = night ? w.stop : w.play; $("play").disabled = !state || (busy && !night); $("play").classList.toggle("on", !!night);
 }
 
 function stepWords(s) {
   const w = t(), a = s.arguments || {}, label = w.tools[s.tool] || s.tool, name = String(a.name || "").replace("Tapo P110 - ", "");
   const said = String(a.text || "").replace(/\s*—\s*/g, ", ");  // as the phone shows it
+  if (s.refused) return `${w.refused}: "${said || label}"`;
   if (s.tool === "notify") return `${label} ${WHO[a.parent] || a.parent}: "${said}"`;
   if (s.tool === "say_on_echo") return `${label}: "${said}"`;
   if (s.tool.startsWith("HassTurn")) return `${label} ${({Dehumidifier: w.dehum, "Bottle Warmer": w.warmer})[name] || name}`;
@@ -189,16 +206,17 @@ function drawTrace() {
   const box = $("trace"), w = t(); box.textContent = "";
   document.body.classList.toggle("deep", deep);
   if (!runs.size) { box.append(el("li", w.traceEmpty, "empty")); return; }
-  for (const run of [...runs.values()].reverse()) {
+  // Newest first by the moment it happened, whatever order the events finished in.
+  for (const run of [...runs.values()].sort((a, b) => b.at.localeCompare(a.at) || b.id - a.id)) {
     const li = el("li", undefined, "run"); li.append(el("b", run.title));
     li.append(el("div", clockOf(run.at).hm, "when"));
-    if (run.home) li.append(el("p", w.atHome[run.home], "source"));
+    if (run.home) li.append(el("p", run.home === "computed" ? w.computed : w.atHome[run.home], "source"));
     li.append(el("pre", JSON.stringify(run.raw), "raw only-deep"));
     const steps = el("ul", undefined, "steps");
     run.steps.forEach(s => {
       const item = el("li"), det = el("details"), sum = el("summary");
       det.open = !!s.open; det.addEventListener("toggle", () => { s.open = det.open; });
-      item.append(el("span", stepWords(s), "plain only-plain"));
+      item.append(el("span", stepWords(s), `plain only-plain${s.refused ? " refused" : ""}`));
       if (s.tool === "start_car_seat_coach") item.append(el("span", w.coachBy, "model only-plain"));
       sum.append(document.createTextNode(`${w.tools[s.tool] || s.tool}${s.target ? " " + s.target.replace("Tapo P110 - ", "") : ""} `), el("code", s.tool));
       det.append(sum, el("pre", JSON.stringify(s.arguments, null, 1)));
@@ -208,7 +226,7 @@ function drawTrace() {
     li.append(steps);
     if (run.gate) li.append(el("p", w.gate, "decision by"));
     if (run.failed) li.append(el("p", w.failed, "decision"));
-    if (run.done && !run.gate && !run.failed && !run.steps.some(s => s.tool !== "GetLiveContext")) li.append(el("p", w.nothing, "decision"));
+    if (run.done && !run.gate && !run.failed && !run.steps.some(s => s.tool !== "GetLiveContext" && !s.refused)) li.append(el("p", w.nothing, "decision"));
     if (run.text) { const p = el("p", undefined, "decision only-deep"); p.append(el("em", `${w.decided}: `), document.createTextNode(run.text)); li.append(p); }
     if (run.meta && !run.gate) li.append(el("p", w.byIn(run.meta.seconds), "meta by"));
     if (run.meta) li.append(el("p", w.took(run.meta.seconds, run.meta.tokens), "meta only-deep"));
@@ -222,13 +240,19 @@ function draw(fresh) { drawClock(); drawHome(); drawControls(); drawPhones(fresh
 function titleOf(e) {
   const p = e.payload || {}, w = t();
   if (e.type === "wake") return w.woke;
-  if (pressed) { const title = pressed; pressed = null; return title; }
+  if (e.type === "camera") return w.camera(p);
+  const scene = SCENES.find(s => isoOf(s) === e.happened_at);
+  if (scene) { if (pressed && pressed.at === e.happened_at) pressed = null; return scene[3][lang]; }
+  if (pressed && e.happened_at >= pressed.at) { const title = pressed.title; pressed = null; return title; }
   if (e.type === "state_changed") {
     if (p.entity_id.includes("humidity")) return w.humid(p.state);
     if (p.entity_id.includes("temperature")) return w.heat(p.state);
     return w.plugSet(p.entity_id.includes("dehumidifier") ? w.dehum : w.warmer, p.state === "on" ? w.on : w.off);
   }
-  if (e.type === "sound") return w.heard[p.kind] || p.kind;
+  if (e.type === "sound") {
+    const what = String(p.kind).split(",")[0], share = String(p.kind).match(/([\d.]+)%/);
+    return share ? `Perception Encoder Audio: ${w.heard[what] || what}, ${share[1]}%` : w.heard[what] || what;
+  }
   if (e.type === "schedule") return w.checks[p.name] || p.name;
   return `${WHO[p.from] || p.from} ${w.wrote}: "${p.text}"`;
 }
@@ -237,26 +261,37 @@ async function refresh(fresh) { try { state = await api("/api/state"); draw(fres
 function listen() {
   if (stream) stream.close();
   stream = new EventSource(`/api/stream?after=${seq}`);
-  const on = (kind, fn) => stream.addEventListener(kind, m => { const item = JSON.parse(m.data); seq = Math.max(seq, item.seq); fn(item); drawTrace(); });
-  on("event", e => {
-    const sensor = e.type === "state_changed" && /humidity|temperature/.test((e.payload || {}).entity_id || "");
-    runs.set(e.event_id, {title: titleOf(e), raw: {type: e.type, payload: e.payload}, at: e.happened_at, steps: [], done: false, home: e.type === "sound" ? "sound" : sensor ? "sensor" : ""});
-    closeRecording();
+  const on = (kind, fn) => stream.addEventListener(kind, m => {
+    if (!m.data) return;  // the browser's own connection error, not the agent's
+    const item = JSON.parse(m.data);
+    if (item.seq <= seq) return;
+    seq = item.seq; lastItem = Date.now(); fn(item, item.seq > bootSeq); drawTrace();
+  });
+  on("event", (e, live) => {
+    const p = e.payload || {}, sensor = e.type === "state_changed" && /humidity|temperature/.test(p.entity_id || ""), computed = e.type === "camera" || /computed earlier/.test(p.kind || "");
+    runs.set(e.event_id, {id: e.event_id, title: titleOf(e), raw: {type: e.type, payload: p}, at: e.happened_at, steps: [], done: false, home: computed ? "computed" : e.type === "sound" ? "sound" : sensor ? "sensor" : ""});
+    if (!live) return;
+    busy = true; if (!night) say(t().thinking);
     if (e.type === "sound") { const c = $("cry"); c.classList.remove("on"); void c.getBoundingClientRect(); c.classList.add("on"); setTimeout(() => c.classList.remove("on"), 7500); }
     document.querySelectorAll(".phone").forEach(x => x.classList.remove("lit"));
     document.querySelectorAll(".asleep").forEach(x => { x.textContent = ""; });
     $("echo-bubble").hidden = true;
     refresh(false);
   });
-  on("tool_call", e => { if (e.tool === "start_car_seat_coach") openRecording(); const r = runs.get(e.event_id); if (r) r.steps.push({tool: e.tool, arguments: e.arguments, target: (e.tool === "notify" ? WHO[e.arguments.parent] : (e.tool.startsWith("HassTurn") ? e.arguments.name : "")) || ""}); });
-  on("tool_result", () => refresh(true));
-  on("gate", e => { const r = runs.get(e.event_id); if (r) r.gate = true; refresh(true); });
+  on("tool_call", (e, live) => { if (live && e.tool === "start_car_seat_coach") openRecording(); const r = runs.get(e.event_id); if (r) r.steps.push({tool: e.tool, arguments: e.arguments, target: (e.tool === "notify" ? WHO[e.arguments.parent] : (e.tool.startsWith("HassTurn") ? e.arguments.name : "")) || ""}); });
+  on("tool_result", (e, live) => {
+    const r = runs.get(e.event_id), step = r && [...r.steps].reverse().find(s => s.tool === e.tool && s.result === undefined);
+    if (step) { step.result = e.result; step.refused = /^(refused|not sent)/i.test(String(e.result)); }
+    if (live) refresh(true);
+  });
+  on("gate", (e, live) => { const r = runs.get(e.event_id); if (r) r.gate = true; if (live) refresh(true); });
   on("decision", e => { const r = runs.get(e.event_id); if (r) { r.text = e.note || e.text; r.meta = {seconds: e.seconds, tokens: e.tokens}; } });
   on("error", e => { const r = runs.get(e.event_id); if (r) r.failed = true; });
-  on("done", e => {
+  on("done", (e, live) => {
     const r = runs.get(e.event_id); if (r) r.done = true;
     settle();
     drawRail(); drawControls();
+    if (!live) return;
     refresh(true).then(() => {
       if (!state) return;
       const night = clockOf(state.clock).hour < 7 || clockOf(state.clock).hour >= 22;
@@ -264,6 +299,10 @@ function listen() {
     });
   });
 }
+// A run whose ending never arrives can't keep the page locked.
+setInterval(() => {
+  if (busy && pending === 0 && Date.now() - lastItem > 120000) { runs.forEach(r => { r.done = true; }); lastId = null; settle(); drawRail(); drawControls(); drawTrace(); }
+}, 15000);
 
 function showTrack() {
   for (const track of $("rec-video").textTracks) track.mode = track.language === lang ? "hidden" : "disabled";
@@ -281,7 +320,9 @@ for (const track of $("rec-video").textTracks) track.addEventListener("cuechange
   if (track.mode !== "hidden") return;
   const cue = track.activeCues && track.activeCues[0]; $("rec-cap").textContent = cue ? cue.text.replace(/<[^>]+>/g, "") : "";
 });
-$("rec-video").addEventListener("ended", closeRecording);
+// It stays open when it ends: closing by itself let the next click land on the page behind it.
+$("rec-video").addEventListener("ended", () => { $("rec-cap").textContent = t().finished; $("rec-close").focus(); });
+document.addEventListener("keydown", ev => { if (ev.key === "Escape" && !$("recording").hidden) closeRecording(); });
 
 // Busy until the event this press sent has finished. A wake that fires on the way ends first, and doesn't count.
 function settle() {
@@ -295,14 +336,14 @@ function jumpToResult() {
   target.scrollIntoView({behavior: matchMedia("(prefers-reduced-motion:reduce)").matches ? "auto" : "smooth", block: "start"});
 }
 async function dispatch(path, body) {
-  if (busy) return;
+  if (busy) { say(t().wait); return; }
   busy = true; pending += 1; lastId = null; if (!night) say(t().thinking); drawRail(); drawControls();
   jumpToResult();
   try { const answer = await api(path, body); lastId = answer.id ?? null; pending -= 1; await refresh(false); settle(); drawRail(); drawControls(); }
   catch (err) { pending -= 1; lastId = null; stopNight(); settle(); pressed = null; say(err.message, true); drawRail(); drawControls(); }
 }
 function play(id) { stopNight(); return playScene(id); }
-function playScene(id) { pressed = SCENES.find(s => s[0] === id)[3][lang]; return dispatch("/api/scene", {id}); }
+function playScene(id) { const scene = SCENES.find(s => s[0] === id); pressed = {title: scene[3][lang], at: isoOf(scene)}; return dispatch("/api/scene", {id}); }
 function sendEvent(type, payload) { stopNight(); return dispatch("/api/events", {type, payload}); }
 
 // Play one night: the same scene events a judge can press, one at a time, each only after Muse finished the last.
@@ -334,7 +375,13 @@ for (const [id, entity] of [["c-hum", "sensor.nursery_climate_humidity"], ["c-te
 }
 document.querySelector(".sends").addEventListener("click", async ev => {
   const b = ev.target.closest("button"); if (!b) return;
-  if (b.dataset.clock) { try { state = await api("/api/clock", {minutes: Number(b.dataset.clock)}); draw(); } catch (err) { say(err.message, true); } return; }
+  if (b.dataset.clock) {
+    if (busy) return;
+    stopNight(); busy = true; pending += 1; lastId = null; drawRail(); drawControls();
+    try { state = await api("/api/clock", {minutes: Number(b.dataset.clock)}); pending -= 1; settle(); draw(); }
+    catch (err) { pending -= 1; settle(); say(err.message, true); drawRail(); drawControls(); }
+    return;
+  }
   if (b.dataset.event === "sound") sendEvent("sound", {kind: b.dataset.kind});
   if (b.dataset.event === "switch") sendEvent("state_changed", {entity_id: b.dataset.entity, state: b.dataset.to});
   if (b.dataset.event === "schedule") sendEvent("schedule", {name: b.dataset.name});
@@ -344,7 +391,7 @@ function reseed() { stopNight(); seen = {gonza: 0, ceci: 0}; shownEcho = 0; runs
 
 async function startOver() {
   say(t().busy);
-  try { state = await api("/api/reset", {}); reseed(); say(""); seq = state.seq; listen(); draw(); return true; }
+  try { state = await api("/api/reset", {}); reseed(); say(""); seq = bootSeq = state.seq; listen(); draw(); return true; }
   catch (err) { if (err.status === 410) { state = null; reseed(); await boot(); return !!state; } say(err.message, true); return false; }
 }
 // Start over takes two presses, so a stray click can't wipe a run.
@@ -384,8 +431,32 @@ async function boot() {
   try {
     state = await api("/api/session", {lang});
     if (state.lang !== lang) { await api("/api/lang", {lang}); state.lang = lang; }
-    say(""); seq = state.seq; seen = {gonza: state.sent.filter(m => m.to === "gonza").length, ceci: state.sent.filter(m => m.to === "ceci").length};
+    // A page reloaded on a session already running gets its trace back from the start, without replaying sounds or the video.
+    say(""); bootSeq = state.seq; seq = 0; seen = {gonza: state.sent.filter(m => m.to === "gonza").length, ceci: state.sent.filter(m => m.to === "ceci").length}; shownEcho = state.sent.filter(m => m.to === "echo").length;
     listen(); draw();
   } catch (err) { say(err.message, true); }
 }
+
+// Meta's models on real recordings: saved results, sent as the event the home would send. Muse decides live.
+function drawSenses() {
+  if (!senses) return;
+  const w = t(), box = $("se-cards"); box.textContent = ""; $("senses").hidden = false;
+  const send = (card, id, none) => { const b = el("button", none ? w.seNone : w.seSend, "ghost se-send"); b.type = "button"; if (none) b.dataset.none = "1"; b.addEventListener("click", () => { stopNight(); dispatch("/api/sense", {id}); }); card.append(b); };
+  senses.audio.forEach(c => {
+    const card = el("article", undefined, "se-card"), audio = el("audio"), credit = el("p", undefined, "se-credit"), link = el("a", `${c.title}, ${c.license}`);
+    card.append(el("h3", w.seAudio[c.id] || c.title)); audio.controls = true; audio.preload = "none"; audio.src = `/static/senses/${c.file}`; card.append(audio);
+    card.append(el("p", w.seBy.audio, "se-model"));
+    if (c.heard) card.append(el("p", w.seHeard(w.heardAs[c.heard], Math.min(99.9, Math.floor(c.scores[c.heard].probability * 1000) / 10))));
+    link.href = c.page; link.rel = "noopener"; link.target = "_blank"; credit.append(link); card.append(credit);
+    send(card, c.id, !c.heard); box.append(card);
+  });
+  senses.frames.forEach(f => {
+    const card = el("article", undefined, "se-card"), pics = el("div", undefined, "se-pics");
+    for (const [file, alt] of [[f.file, "original"], [f.mask, "mask"]]) { const img = el("img"); img.src = `/static/senses/${file}`; img.alt = `${w.seFrame[f.id]}, ${alt}`; img.loading = "lazy"; img.width = 640; img.height = 352; pics.append(img); }
+    card.append(el("h3", w.seFrame[f.id]), pics, el("p", w.seBy.frame, "se-model"), el("p", w.seSaw[f.verdict]), el("p", `${w.seMasks(f.hands)} ${w.seGen}`, "se-why"));
+    send(card, f.id, false); box.append(card);
+  });
+  drawControls();
+}
+fetch("/static/senses/senses.json").then(r => r.ok ? r.json() : null).then(data => { senses = data; drawSenses(); }).catch(() => {});
 boot();
