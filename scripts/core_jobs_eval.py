@@ -1108,6 +1108,32 @@ async def y_promise_at_evening_es():
         return not safety.PROMISE.search(said(core)) or any(not str(w["why"]).startswith("device_end:") for w in pending), {"sent": core.channel.sent, "wakes": [str(w["why"]) for w in pending]}
 
 
+async def z_first(reading, moment):
+    async with Core(fresh()) as core:
+        seed_feeds(core, moment.replace(hour=16, minute=17))
+        await send(core, "state_changed", {**reading, "first_after_start": True}, moment)
+        return core, list(core.channel.sent), core.mock.state(DEHUMIDIFIER)
+
+
+async def z_quiet_humid():
+    """Tuned. A restart at dinner time, room humid: the plug goes on and nobody hears about it."""
+    _, sent, plug = await z_first({"entity_id": "sensor.nursery_climate_humidity", "state": "75"}, EVENING.replace(hour=18, minute=13))
+    return not sent and plug == "on", {"sent": sent, "plug": plug}
+
+
+async def z_quiet_temperature():
+    """Tuned. The reading that told both parents good evening on Nov 3."""
+    _, sent, plug = await z_first({"entity_id": "sensor.nursery_climate_temperature", "state": "21.5"}, EVENING.replace(hour=19, minute=5))
+    return not sent, {"sent": sent, "plug": plug}
+
+
+async def z_quiet_not_on_danger():
+    """Tuned. A dangerous first reading still reaches someone."""
+    _, sent, plug = await z_first({"entity_id": "sensor.nursery_climate_temperature", "state": "35"}, EVENING.replace(hour=18, minute=13))
+    return bool(sent), {"sent": sent, "plug": plug}
+
+
+QUIET = [("z quiet humid", z_quiet_humid), ("z quiet temperature", z_quiet_temperature), ("z danger still told", z_quiet_not_on_danger)]
 THIRD = [("x three en", x_three_en), ("x three es", x_three_es), ("x scared log", x_scared_log), ("x exhausted", x_exhausted),
          ("x morning plain", x_morning_plain), ("x warmer no ready", x_warmer_no_ready), ("x no empty promise", x_no_empty_promise)]
 ROUND_7 = [("r7 half past two", y_half_past_two), ("r7 eleven same evening", y_at_eleven_same_evening), ("r7 midnight told later", y_midnight_told_later),
@@ -1144,7 +1170,7 @@ CASES = [("morning", morning), ("voice note", voice_note), ("echo question", ech
 
 async def main(n, path, only):
     results = {}
-    groups = {"held": HELD_OUT, "round3": ROUND_3, "round4": ROUND_4, "round5": ROUND_5, "round6": ROUND_6, "round7": ROUND_7, "judges": JUDGES, "second": SECOND, "third": THIRD}
+    groups = {"quiet": QUIET, "held": HELD_OUT, "round3": ROUND_3, "round4": ROUND_4, "round5": ROUND_5, "round6": ROUND_6, "round7": ROUND_7, "judges": JUDGES, "second": SECOND, "third": THIRD}
     for name, case in groups.get(only[0] if only else "", [*CASES, *JUDGES, *SECOND, *THIRD]):
         if only and only[0] not in groups and not any(w in name for w in only):
             continue

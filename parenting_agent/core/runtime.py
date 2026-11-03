@@ -339,8 +339,15 @@ class Core:
     def gap_hours(self):
         return (self.now() - self.feed).total_seconds() / 3600 if self.feed else 0
 
+    def quiet_start(self, event):
+        """The first reading after a start is for the room. A restart must never read to the parents as a check-in, unless the room is dangerous."""
+        payload = event["payload"]
+        return event["type"] == "state_changed" and bool(payload.get("first_after_start")) and safety.unsafe_room(payload) is None
+
     def claims(self, text):
         """What a message can't say, from the clock: a warm bottle with the warmer off, or calm about a long gap between feeds."""
+        if self.after_start:
+            return "Refused, nothing was sent: the agent just restarted and this is only its first reading. Handle the room and message nobody."
         if safety.JARGON.search(text):
             return "Refused, nothing was sent: write like a friend, without words such as rota or per. Say whose night it is, in plain words."
         if safety.READY_AT.search(text):
@@ -639,6 +646,12 @@ class Core:
         payload = event["payload"]
         if event["type"] != "state_changed" or not str(payload.get("entity_id", "")).startswith("sensor."):
             return []
+        if self.quiet_start(event):
+            try:
+                self.readings[payload["entity_id"]] = (float(payload.get("state")), moment)
+            except (TypeError, ValueError):
+                pass
+            return ["The agent just restarted and this is its first reading. It is not a check-in. Look after the room if it needs it, and message nobody."]
         try:
             value = float(payload.get("state"))
         except (TypeError, ValueError):
@@ -652,9 +665,11 @@ class Core:
 
     screen = None
     reminder_set = False  # for this event: a promise needs a reminder behind it
+    after_start = False  # for this event: the first reading after a restart
 
     async def decide(self, event, started):
         self.reminder_set = False
+        self.after_start = self.quiet_start(event)
         await agent_mod.repair(self.agent, self.config)
         moment = event["moment"]
         facts = await self.tidy_facts(moment)
@@ -723,6 +738,8 @@ class Core:
         """What must not stay unsaid, whatever Muse decided: each is asked for once."""
         told = any(tool == "notify" and (result or "").startswith("Sent") for tool, _, result in calls)
         asks = []
+        if self.after_start:
+            return asks
         if started(calls):
             asks.append("You started something and nobody knows. Tell the parent on duty in one short line that it is on and until when. "
                         + ("It is night and they didn't ask, so set quiet." if is_night(event["moment"]) else ""))

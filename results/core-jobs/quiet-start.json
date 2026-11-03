@@ -1,0 +1,83 @@
+{
+ "z quiet humid": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "sent": [],
+    "plug": "on"
+   },
+   {
+    "passed": true,
+    "sent": [],
+    "plug": "on"
+   },
+   {
+    "passed": true,
+    "sent": [],
+    "plug": "on"
+   }
+  ]
+ },
+ "z quiet temperature": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "sent": [],
+    "plug": "off"
+   },
+   {
+    "passed": true,
+    "sent": [],
+    "plug": "off"
+   },
+   {
+    "passed": true,
+    "sent": [],
+    "plug": "off"
+   }
+  ]
+ },
+ "z danger still told": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Gonza, el cuarto de Theo está muy caluroso: 35 °C ahora. Fijate si está el sol pegando directo, si la calefacción o el caloventor quedó prendido, y que tenga ventilación. Si podés, ventilá un poco y controlá que Theo no esté demasiado abrigado.",
+      "at": 1793744188.533392
+     }
+    ],
+    "plug": "off"
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "La nursery está muy caliente: 35 °C. Fijate si quedó el calefactor prendido, si entra mucho sol directo o si Theo está muy abrigado. Ventilá un poco y chequeá que circule el aire.",
+      "at": 1793744192.004137
+     }
+    ],
+    "plug": "off"
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Hace muchísimo calor en el cuarto de Theo: 35°. ¿Podés fijarte si quedó el sol directo, la calefacción o el acolchado de más? Ventilá un poco y controlá cómo está él. Estás de guardia esta noche.",
+      "at": 1793744196.919122
+     }
+    ],
+    "plug": "off"
+   }
+  ]
+ }
+}

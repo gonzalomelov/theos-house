@@ -101,12 +101,28 @@ class Night(unittest.IsolatedAsyncioTestCase):
         await core.add_wake(datetime.datetime.fromisoformat("2026-12-16T00:00:00-03:00"), "device_end:warmer_off_at:x")
         self.assertIn("Refused", core.claims("I'll remind you before the feed"))
 
-    async def test_the_vacuum_starts_alone_only_with_nobody_home_and_a_parent_can_ask(self):
-        core = await self.run_core(scripted(call("HassVacuumStart"), AIMessage("no"), call("HassVacuumStart"), AIMessage("started")))
-        await self.event(core, "schedule", {"name": "morning"}, at="2026-12-16T10:00:00-03:00")
+    async def test_the_vacuum_starts_alone_only_with_nobody_home(self):
+        core = await self.run_core(scripted(call("HassVacuumStart"), *[AIMessage("no") for _ in range(4)]))
+        await self.event(core, "state_changed", {"entity_id": "sensor.nursery_climate_humidity", "state": "55"}, at="2026-12-16T10:00:00-03:00")
         self.assertEqual(core.mock.state("vacuum.robot"), "docked")
+
+    async def test_a_parent_can_ask_for_the_vacuum(self):
+        core = await self.run_core(scripted(call("HassVacuumStart"), call("notify", parent="gonza", text="Started"), AIMessage("started")))
         await self.event(core, "message", {"from": "gonza", "channel": "telegram", "text": "Start the vacuum"}, at="2026-12-16T10:05:00-03:00")
         self.assertEqual(core.mock.state("vacuum.robot"), "cleaning")
+
+    async def test_the_first_reading_after_a_start_tells_nobody(self):
+        core = await self.run_core(scripted(call("notify", parent="ceci", text="Buenas tardes, esta noche estás de guardia"), call("HassTurnOn", name="Tapo P110 - Dehumidifier"), AIMessage("done")))
+        reading = {"entity_id": "sensor.nursery_climate_humidity", "state": "75", "first_after_start": True}
+        await self.event(core, "state_changed", reading, at="2026-12-16T18:13:00-03:00")
+        self.assertEqual(core.channel.sent, [])
+        self.assertEqual(core.mock.state("switch.study_tapo_p110_dehumidifier"), "on")
+
+    async def test_a_dangerous_first_reading_still_tells(self):
+        core = await self.run_core(scripted(call("notify", parent="gonza", text="El cuarto está a 35 grados"), AIMessage("told")))
+        reading = {"entity_id": "sensor.nursery_climate_temperature", "state": "35", "first_after_start": True}
+        await self.event(core, "state_changed", reading, at="2026-12-16T18:13:00-03:00")
+        self.assertTrue(core.channel.sent)
 
     async def test_the_vacuum_can_say_here_it_is_without_moving(self):
         core = await self.run_core(scripted(call("vacuum_identify"), AIMessage("done")))

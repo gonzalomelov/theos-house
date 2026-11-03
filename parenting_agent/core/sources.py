@@ -60,8 +60,9 @@ async def home_assistant(core, watch=None):
                 async for raw in ws:
                     data = json.loads(raw).get("event", {}).get("data", {})
                     entity, new = data.get("entity_id"), (data.get("new_state") or {}).get("state")
+                    first = str(entity).startswith("sensor.") and entity not in last
                     if worth_waking(entity, new, last, watch) and (entity not in HAND or core.by_hand(entity, new)):
-                        await core.dispatch("state_changed", {"entity_id": entity, "state": new}, source="home_assistant")
+                        await core.dispatch("state_changed", {"entity_id": entity, "state": new, **({"first_after_start": True} if first else {})}, source="home_assistant")
         except Exception as failure:  # the socket, or PostgreSQL under dispatch: this source can't stop for either
             core.publish("source", name="home_assistant", status=f"reconnecting after {type(failure).__name__}")
             await asyncio.sleep(10)
