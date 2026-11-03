@@ -139,6 +139,41 @@ class CoreTest(unittest.IsolatedAsyncioTestCase):
         self.assertLess(sum(len(str(m.content)) for m in model.calls[-1]), 4 * agent_mod.MAX_HISTORY_TOKENS)
         self.assertEqual(model.calls[-1][-1].type, "human")
 
+    async def test_at_night_only_the_parent_on_duty_is_woken(self):
+        at = "2026-11-04T03:00:00-03:00"
+        duty = on_duty(datetime.datetime.fromisoformat(at))
+        other = "ceci" if duty == "gonza" else "gonza"
+        core = await self.run_core(scripted(call("notify", parent=other, text="Llora"), call("notify", parent=duty, text="Llora"), AIMessage("ok")))
+        await self.event(core, "sound", {"kind": "baby crying", "room": "bedroom"}, at=at)
+        self.assertEqual([m["to"] for m in core.channel.sent], [duty])
+
+    async def test_an_emergency_wakes_both_and_set_on_duty_moves_the_night(self):
+        at = "2026-11-04T03:00:00-03:00"
+        moment = datetime.datetime.fromisoformat(at)
+        duty = on_duty(moment)
+        other = "ceci" if duty == "gonza" else "gonza"
+        core = await self.run_core(scripted(call("notify", parent=other, text="Alarma de humo", emergency=True), AIMessage("ok"),
+                                            call("set_on_duty", night=str(moment.date() - datetime.timedelta(days=1)), parent=other), call("notify", parent=other, text="Llora"),
+                                            call("notify", parent=duty, text="Llora"), AIMessage("ok")))
+        await self.event(core, "sound", {"kind": "smoke alarm", "room": "kitchen"}, at=at)
+        self.assertEqual([m["to"] for m in core.channel.sent], [other])
+        core.channel.sent.clear()
+        await self.event(core, "sound", {"kind": "baby crying", "room": "bedroom"}, at=at)
+        self.assertEqual([m["to"] for m in core.channel.sent], [other])
+
+    async def test_a_parent_who_got_no_reply_is_answered_on_the_second_ask(self):
+        model = scripted(AIMessage("Nothing needed."), call("notify", parent="gonza", text="Hola"), AIMessage("ok"))
+        core = await self.run_core(model)
+        await self.event(core, "message", {"from": "gonza", "channel": "telegram", "text": "hola"}, at="2026-11-04T15:00:00-03:00")
+        self.assertEqual([m["to"] for m in core.channel.sent], ["gonza"])
+
+    async def test_a_cry_at_night_nobody_was_told_about_gets_a_second_ask(self):
+        at = "2026-11-04T03:00:00-03:00"
+        duty = on_duty(datetime.datetime.fromisoformat(at))
+        core = await self.run_core(scripted(AIMessage("Nothing needed."), call("notify", parent=duty, text="Llora"), AIMessage("ok")))
+        await self.event(core, "sound", {"kind": "baby crying", "room": "bedroom"}, at=at)
+        self.assertEqual([m["to"] for m in core.channel.sent], [duty])
+
     async def test_the_record_comes_from_the_calls_not_from_muses_closing_line(self):
         core = await self.run_core(scripted(call("HassTurnOn", name=DEHUMIDIFIER), AIMessage("Nothing needed, turned on dehumidifier")))
         out = await self.event(core, "state_changed", {"entity_id": "sensor.nursery_climate_humidity", "state": "71"})
@@ -179,7 +214,8 @@ class CoreTest(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(len(core.channel.sent), 1)
 
     async def test_the_api_takes_an_event_and_streams_what_happened(self):
-        core = await self.run_core(scripted(call("notify", parent="gonza", text="Theo llora"), AIMessage("Told Gonza.")))
+        duty = on_duty(datetime.datetime.fromisoformat("2026-11-04T03:12:00-03:00"))
+        core = await self.run_core(scripted(call("notify", parent=duty, text="Theo llora"), AIMessage("Told them.")))
         http = uvicorn.Server(uvicorn.Config(server.app(core), host="127.0.0.1", port=0, log_level="error"))
         task = asyncio.create_task(http.serve())
         while not http.started:
@@ -192,13 +228,13 @@ class CoreTest(unittest.IsolatedAsyncioTestCase):
             body = json.dumps({"type": "sound", "payload": {"kind": "cry"}, "at": "2026-11-04T03:12:00-03:00"}).encode()
             return json.load(urllib.request.urlopen(urllib.request.Request(f"http://127.0.0.1:{port}/events?wait=1", data=body, headers={"Content-Type": "application/json"})))
         answer = await asyncio.to_thread(post)
-        self.assertEqual(answer["outcome"], "Told gonza.")
+        self.assertEqual(answer["outcome"], f"Told {duty}.")
         seen = b""
         while b"event: done" not in seen:
             seen += await asyncio.wait_for(reader.read(4096), 5)
         self.assertIn(b"event: tool_call", seen)
         get = lambda path: json.load(urllib.request.urlopen(f"http://127.0.0.1:{port}{path}"))
-        self.assertEqual((await asyncio.to_thread(get, "/messages"))[0]["to"], "gonza")
+        self.assertEqual((await asyncio.to_thread(get, "/messages"))[0]["to"], duty)
         self.assertEqual((await asyncio.to_thread(get, "/health"))["home"], "mock")
         writer.close()
         http.should_exit = True

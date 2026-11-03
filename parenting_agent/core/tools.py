@@ -105,19 +105,23 @@ async def home_tools(settings, mock):
     return [wrap(short, found[short]) for short in usable if short in found]
 
 
-def channel_tools(channel, settings, log=None, heard=lambda: ""):
+def channel_tools(channel, settings, log=None, heard=lambda: "", night_check=None):
     def checked(text):
         out, why = safety.outbound(text, settings.lang)
         return out, why or (safety.unbacked(out, lambda: log.entries(None, None, 50), heard()) if log else None)
 
-    def notify(parent: str, text: str) -> str:
-        """Send one message to one parent's phone. parent is gonza or ceci. It wakes them at night."""
+    async def notify(parent: str, text: str, emergency: bool = False) -> str:
+        """Send one message to one parent's phone. parent is gonza or ceci. It wakes them at night. emergency is only for a
+        danger to someone's life or the house, and it wakes a parent who isn't on duty."""
         if parent not in PARENTS:
             return "Refused: parent is gonza or ceci."
-        out, why = checked(text)
+        why = await night_check(parent, emergency) if night_check else None
         if why:
             return why
-        channel.send(parent, out)
+        out, why = await asyncio.to_thread(checked, text)
+        if why:
+            return why
+        await asyncio.to_thread(channel.send, parent, out)
         return f"Sent to {parent}."
 
     def say_on_echo(text: str) -> str:
@@ -127,7 +131,7 @@ def channel_tools(channel, settings, log=None, heard=lambda: ""):
             return why
         channel.echo(out)
         return "Said on the kitchen Echo."
-    return [StructuredTool.from_function(notify), StructuredTool.from_function(say_on_echo)]
+    return [StructuredTool.from_function(coroutine=notify), StructuredTool.from_function(say_on_echo)]
 
 
 # What each tool did, for the record. Tools that only read aren't here. The record comes from the calls, never from Muse's words.
@@ -135,6 +139,7 @@ DID = {"HassTurnOn": lambda a: f"Turned on {a.get('name', 'a device')}", "HassTu
        "HassVacuumStart": lambda a: "Started the vacuum", "HassVacuumReturnToBase": lambda a: "Sent the vacuum back",
        "HassListAddItem": lambda a: f"Added {a.get('item', 'an item')} to the list", "notify": lambda a: f"Told {a.get('parent', 'a parent')}",
        "say_on_echo": lambda a: "Spoke on the Echo", "log_baby_event": lambda a: f"Logged {a.get('kind', 'an entry')}",
+       "set_on_duty": lambda a: f"Put {a.get('parent', 'a parent')} on duty for the night of {a.get('night', 'a date')}",
        "remember": lambda a: f"Remembered {a.get('key', 'a fact')}", "forget": lambda a: f"Forgot {a.get('key', 'a fact')}",
        "wake_me_at": lambda a: f"Set a wake for {a.get('at', 'later')}", "start_car_seat_coach": lambda a: f"Started the car seat coach for {a.get('parent', 'a parent')}"}
 FAILED = re.compile(r'^\s*(refused|error|ask_parent|.{0,40}"error"|.{0,200}"response_type":\s*"error")', re.I | re.S)
@@ -217,6 +222,24 @@ def memory_tools(store, home):
         await store.adelete(namespace, re.sub(r"\W+", "_", key)[:60])
         return "Forgotten."
     return [StructuredTool.from_function(coroutine=remember), StructuredTool.from_function(coroutine=forget)]
+
+
+def duty_key(night):
+    return f"on_duty_{night}"
+
+
+def duty_tool(store, home):
+    async def set_on_duty(night: str, parent: str) -> str:
+        """Change who is on duty for one night. night is the date of that night's evening, YYYY-MM-DD. parent is gonza or ceci."""
+        if parent not in PARENTS:
+            return "Refused: parent is gonza or ceci."
+        try:
+            day = datetime.date.fromisoformat(night)
+        except ValueError:
+            return "Refused: night is a date, for example 2026-11-04."
+        await store.aput((*FACTS, home), duty_key(day), {"value": parent})
+        return f"{parent} is on duty the night of {day}."
+    return [StructuredTool.from_function(coroutine=set_on_duty)]
 
 
 async def facts(store, home):

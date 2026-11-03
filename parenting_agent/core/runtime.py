@@ -39,16 +39,28 @@ def on_duty(moment):
     return "gonza" if night.toordinal() % 2 == 0 else "ceci"
 
 
+def is_night(moment):
+    return moment.hour >= 22 or moment.hour < 7
+
+
+def night_of(moment):
+    return (moment - datetime.timedelta(hours=7)).date()
+
+
+def who_is_on(moment, facts):
+    """The rota, or the parent set_on_duty named for that night."""
+    return facts.get(tools_mod.duty_key(night_of(moment))) or on_duty(moment)
+
+
 def describe(event, moment, facts):
     """The event as Muse reads it. A parent's words pass through rules.parent_text so they can't pose as the system."""
     payload = event["payload"]
     when = moment.strftime("%A %Y-%m-%d %H:%M")
-    night = moment.hour >= 22 or moment.hour < 7
-    began = (moment - datetime.timedelta(hours=7)).date()
-    rota = (f"The night that belongs to this moment began on the evening of {began}. Rota for that night: {on_duty(moment)} is on duty"
-            if moment.hour < 7 or moment.hour >= 22 else
-            f"Rota: last night was {on_duty(moment - datetime.timedelta(days=1))}'s, tonight is {on_duty(moment)}'s")
-    head = f"[{when}, {'night' if night else 'day'}. {rota}, unless a plan you remember says otherwise.]"
+    night = is_night(moment)
+    rota = (f"The night that belongs to this moment began on the evening of {night_of(moment)}. On duty that night: {who_is_on(moment, facts)}"
+            if night else
+            f"On duty: last night {who_is_on(moment - datetime.timedelta(days=1), facts)}, tonight ({night_of(moment)}) {who_is_on(moment, facts)}")
+    head = f"[{when}, {'night' if night else 'day'}. {rota}.]"
     remembered = "\n".join(f"- {k}: {v}" for k, v in facts.items()) or "- nothing yet"
     if event["type"] == "message":
         body = f"{payload.get('from', 'A parent')} wrote to you on {payload.get('channel', 'the phone')}: {rules.parent_text(payload.get('text', ''))}"
@@ -65,6 +77,21 @@ def describe(event, moment, facts):
     return f"{head}\nWhat you remember:\n{remembered}\n\n{body}"
 
 
+def unanswered(event, calls):
+    """A parent wrote on a phone and no message reached them. The glasses are left out: their yes and no belong to the coach."""
+    payload = event["payload"]
+    if event["type"] != "message" or payload.get("from") not in tools_mod.PARENTS or payload.get("channel") == "the glasses":
+        return False
+    return not any(tool == "start_car_seat_coach" or (tool == "notify" and arguments.get("parent") == payload["from"] and (result or "").startswith("Sent"))
+                   for tool, arguments, result in calls)
+
+
+def unheard_cry(event, calls):
+    if event["type"] != "sound" or "cry" not in str(event["payload"].get("kind", "")).lower() or not is_night(event["moment"]):
+        return False
+    return not any(tool == "notify" and (result or "").startswith("Sent") for tool, _, result in calls)
+
+
 class Core:
     def __init__(self, settings=None, model=None, channel=None, log=None):
         self.settings = settings or Settings()
@@ -78,6 +105,7 @@ class Core:
         self.channel = None
         self.moment = None
         self.heard = ""
+        self.sender = None
 
     def now(self):
         """The moment the agent is living: the current event's, which a simulated event sets."""
@@ -98,8 +126,8 @@ class Core:
             self.mock = MockHome(s.mock_port).start()
         self.channel = self.given_channel or (tools_mod.RealChannel(s) if part("channel") == "real" else tools_mod.MockChannel())
         memory, self.log = self.given_log or tools_mod.baby_log(s, self.now)
-        self.tools = [*await tools_mod.home_tools(s, self.mock), *tools_mod.channel_tools(self.channel, s, self.log, lambda: self.heard),
-                      *tools_mod.log_tools(self.log, memory), *tools_mod.memory_tools(self.store, s.home),
+        self.tools = [*await tools_mod.home_tools(s, self.mock), *tools_mod.channel_tools(self.channel, s, self.log, lambda: self.heard, self.night_check),
+                      *tools_mod.log_tools(self.log, memory), *tools_mod.memory_tools(self.store, s.home), *tools_mod.duty_tool(self.store, s.home),
                       *tools_mod.next_feed_tool(self.log, self.now), *tools_mod.coach_tool(), *tools_mod.wake_tool(self)]
         self.saver = saver
         self.agent = agent_mod.build(self.model or agent_mod.muse(), self.tools, saver, self.store)
@@ -131,6 +159,17 @@ class Core:
         for subscriber in self.subscribers:
             subscriber.put_nowait(item)
         return item
+
+    async def night_check(self, parent, emergency):
+        """Why this message can't wake this parent, or None. At night only the parent on duty, whoever wrote to the agent, or an emergency."""
+        moment = self.now()
+        if emergency or not is_night(moment) or parent == self.sender:
+            return None
+        duty = who_is_on(moment, await tools_mod.facts(self.store, self.settings.home))
+        if parent == duty:
+            return None
+        return (f"Refused, nothing was sent: it is the night and {duty} is on duty, so {parent} sleeps. If the plan changed, call set_on_duty first. "
+                "If this is a danger to someone's life or the house, send it with emergency true.")
 
     async def add_wake(self, moment, why):
         async with self.pool.connection() as db:
@@ -189,6 +228,7 @@ class Core:
         started = time.monotonic()
         self.moment = event["moment"]
         self.heard = str(event["payload"].get("text", "")) if event["type"] == "message" else ""
+        self.sender = event["payload"].get("from") if event["type"] == "message" else None
         self.channel.hold = [] if event["ask"] else None
         try:
             if event["type"] == "message":
@@ -225,23 +265,32 @@ class Core:
     async def decide(self, event, started):
         await agent_mod.repair(self.agent, self.config)
         text = describe(event, event["moment"], await tools_mod.facts(self.store, self.settings.home))
-        pending, final, used, calls = {}, "", 0, []
-        async for update in self.agent.astream({"messages": [HumanMessage(text)]}, self.config, stream_mode="updates"):
-            for step in update.values():
-                for message in (step or {}).get("messages", []) if isinstance(step, dict) else []:
-                    if message.type == "ai":
-                        used += (message.usage_metadata or {}).get("total_tokens", 0)
-                        for call in message.tool_calls:
-                            pending[call["id"]] = call
-                            self.publish("tool_call", event_id=event["id"], tool=call["name"], arguments=call["args"])
-                        if not message.tool_calls:
-                            final = tools_mod.text_of(message.content)
-                    elif message.type == "tool":
-                        call = pending.pop(message.tool_call_id, {"name": message.name, "args": {}})
-                        result = tools_mod.text_of(message.content)
-                        calls.append((call["name"], call["args"], result))
-                        await self.record(event["id"], call["name"], call["args"], result)
-                        self.publish("tool_result", event_id=event["id"], tool=call["name"], arguments=call["args"], result=result[:600])
+        final, used, calls = "", 0, []
+
+        async def think(words):
+            nonlocal final, used
+            pending = {}
+            async for update in self.agent.astream({"messages": [HumanMessage(words)]}, self.config, stream_mode="updates"):
+                for step in update.values():
+                    for message in (step or {}).get("messages", []) if isinstance(step, dict) else []:
+                        if message.type == "ai":
+                            used += (message.usage_metadata or {}).get("total_tokens", 0)
+                            for call in message.tool_calls:
+                                pending[call["id"]] = call
+                                self.publish("tool_call", event_id=event["id"], tool=call["name"], arguments=call["args"])
+                            if not message.tool_calls:
+                                final = tools_mod.text_of(message.content)
+                        elif message.type == "tool":
+                            call = pending.pop(message.tool_call_id, {"name": message.name, "args": {}})
+                            result = tools_mod.text_of(message.content)
+                            calls.append((call["name"], call["args"], result))
+                            await self.record(event["id"], call["name"], call["args"], result)
+                            self.publish("tool_result", event_id=event["id"], tool=call["name"], arguments=call["args"], result=result[:600])
+        await think(text)
+        if unanswered(event, calls):  # Muse sometimes leaves a parent's question with no reply at all (Nov 3, 1 of 3 runs). Ask once.
+            await think(f"{self.sender} wrote to you and has received nothing from you. Answer them with notify, in one short line.")
+        elif unheard_cry(event, calls):  # the same with a cry at night: once the warmer went on and nobody was told (Nov 3)
+            await think("Theo is crying and no parent has been told. Tell the parent on duty with notify, in one short line.")
         line = tools_mod.record_line(calls)
         if final:  # Muse's own closing line can contradict what it did (Nov 3), so it is kept apart and the record is the calls
             await self.record(event["id"], "muse_note", {}, final)
