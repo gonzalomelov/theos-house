@@ -6,19 +6,22 @@ GET  /events        latest events, GET /actions?event_id=n actions of one event
 GET  /home          the simulated home's devices and moves, POST /home {"entity_id": ..., "state": ...} sets one (mock only)
 GET  /messages      what was sent to whom (mock only)
 POST /reset         back to the starting home and outbox (mock only)
+POST /whatsapp      Meta's webhook, on the Echo's port and through its own door: GET answers Meta's check, POST is signed with the app secret
 POST /coach         {"parent": ..., "text": ..., "step": ...}: a line from the car seat coach on the Mac, Muse isn't woken
 GET  /health
 """
 import asyncio
+import hashlib
 import hmac
 import json
 import os
 
 from sse_starlette.sse import EventSourceResponse
 from starlette.applications import Starlette
-from starlette.responses import JSONResponse
+from starlette.responses import JSONResponse, PlainTextResponse
 from starlette.routing import Route
 
+from ..channels.messaging import MessagingError
 from ..voice_bridge import spoken, strip_wake
 
 
@@ -45,7 +48,62 @@ def echo_app(core):
 
     async def health(request):
         return JSONResponse({"ok": True})
-    return Starlette(routes=[Route("/ask", ask, methods=["POST"]), Route("/health", health)])
+    return Starlette(routes=[Route("/ask", ask, methods=["POST"]), Route("/health", health), *whatsapp_routes(core)])
+
+
+def whatsapp_routes(core):
+    """Meta's webhook. A parent's words wake Muse, anything else is ignored. Only a body signed with the app secret counts."""
+    verify, secret = os.environ.get("WHATSAPP_VERIFY_TOKEN", ""), os.environ.get("WHATSAPP_APP_SECRET", "")
+    seen = {}
+
+    async def check(request):
+        q = request.query_params
+        if verify and q.get("hub.mode") == "subscribe" and hmac.compare_digest(q.get("hub.verify_token", ""), verify):
+            return PlainTextResponse(q.get("hub.challenge", ""))
+        return JSONResponse({"error": "forbidden"}, 403)
+
+    async def incoming(request):
+        raw = await request.body()
+        signed = "sha256=" + hmac.new(secret.encode(), raw, hashlib.sha256).hexdigest()
+        if not secret or not hmac.compare_digest(request.headers.get("x-hub-signature-256", ""), signed):
+            return JSONResponse({"error": "forbidden"}, 403)
+        whatsapp = getattr(core.channel, "whatsapp", None)
+        if whatsapp:
+            for change in (c.get("value", {}) for entry in json.loads(raw).get("entry", []) for c in entry.get("changes", [])):
+                for message in change.get("messages", []):
+                    await heard_on_whatsapp(core, whatsapp, message, seen)
+                for status in change.get("statuses", []):
+                    await refused_on_whatsapp(core, whatsapp, status)
+        return JSONResponse({"ok": True})
+    return [Route("/whatsapp", check, methods=["GET"]), Route("/whatsapp", incoming, methods=["POST"])]
+
+
+async def heard_on_whatsapp(core, whatsapp, message, seen):
+    parent = whatsapp.parents.get(message.get("from"))
+    if not parent or message.get("id") in seen:  # Meta delivers again when in doubt
+        return
+    seen[message.get("id")] = True
+    while len(seen) > 500:
+        seen.pop(next(iter(seen)))
+    try:
+        await asyncio.to_thread(whatsapp.heard, parent)
+    except MessagingError as error:
+        core.publish("error", error=f"WhatsApp couldn't send what waited for {parent}: {error}")
+    if message.get("type") == "text":
+        await core.dispatch("message", {"from": parent, "channel": "WhatsApp", "text": message.get("text", {}).get("body", "")[:2000]}, source="whatsapp")
+    elif message.get("type") in ("audio", "voice"):
+        await core.dispatch("voice_note_not_heard", {"from": parent}, source="whatsapp")
+
+
+async def refused_on_whatsapp(core, whatsapp, status):
+    """Meta said no after accepting it: the words go on Telegram, so a closed window never loses them."""
+    if status.get("status") != "failed":
+        return
+    codes = [error.get("code") for error in status.get("errors", [])]
+    lost = whatsapp.failed(status.get("id"))
+    core.publish("error", error=f"WhatsApp refused a message, codes {codes}")
+    if lost:
+        await asyncio.to_thread(core.channel.by_telegram, *lost)
 
 
 def app(core):
