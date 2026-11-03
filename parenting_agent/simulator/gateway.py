@@ -37,6 +37,8 @@ class Headers(BaseHTTPMiddleware):
     async def dispatch(self, request, call_next):
         response = await call_next(request)
         response.headers.update({"Content-Security-Policy": CSP, "X-Content-Type-Options": "nosniff", "Referrer-Policy": "no-referrer"})
+        if request.url.path.startswith("/api/"):  # a cached answer froze the page on a home that had ended
+            response.headers["Cache-Control"] = "no-store"
         return response
 
 

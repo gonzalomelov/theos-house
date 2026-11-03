@@ -216,6 +216,10 @@ class Visitors(unittest.TestCase):
         self.assertRegex(page.text, r"/static/page\.js\?v=[0-9a-f]{12}")
         self.assertRegex(page.text, r"/static/page\.css\?v=[0-9a-f]{12}")
         self.assertEqual(script.headers["cache-control"], "no-cache")
+        with served(app) as url:
+            client = httpx.Client(base_url=url, trust_env=False, timeout=30)
+            self.addCleanup(client.close)
+            self.assertEqual(client.get("/api/state").headers["cache-control"], "no-store")
 
     def test_the_clock_runs_the_checks_it_passes_and_ends_the_warmer(self):
         app = gateway.app(scripted(*[AIMessage("Nothing yet.") for _ in range(9)]))
