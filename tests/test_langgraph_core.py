@@ -73,10 +73,10 @@ class CoreTest(unittest.IsolatedAsyncioTestCase):
     async def test_a_tool_call_moves_the_mock_home_and_lands_on_record(self):
         core = await self.run_core(scripted(call("HassTurnOn", name=DEHUMIDIFIER), AIMessage("Turned it on.")))
         out = await self.event(core, "state_changed", {"entity_id": "sensor.nursery_climate_humidity", "state": "71"})
-        self.assertEqual(out, {"status": "done", "outcome": "Turned it on."})
+        self.assertEqual(out, {"status": "done", "outcome": f"Turned on {DEHUMIDIFIER}."})
         self.assertEqual(core.mock.state("switch.study_tapo_p110_dehumidifier"), "on")
         self.assertEqual(core.mock.state("sensor.nursery_climate_humidity"), "71")
-        self.assertEqual([a["tool"] for a in await core.actions()][:1], ["HassTurnOn"])
+        self.assertEqual([a["tool"] for a in await core.actions()][:2], ["muse_note", "HassTurnOn"])
         kinds = [item["kind"] for item in core.recent]
         self.assertEqual(kinds, ["event", "tool_call", "tool_result", "decision", "done"])
 
@@ -139,6 +139,33 @@ class CoreTest(unittest.IsolatedAsyncioTestCase):
         self.assertLess(sum(len(str(m.content)) for m in model.calls[-1]), 4 * agent_mod.MAX_HISTORY_TOKENS)
         self.assertEqual(model.calls[-1][-1].type, "human")
 
+    async def test_the_record_comes_from_the_calls_not_from_muses_closing_line(self):
+        core = await self.run_core(scripted(call("HassTurnOn", name=DEHUMIDIFIER), AIMessage("Nothing needed, turned on dehumidifier")))
+        out = await self.event(core, "state_changed", {"entity_id": "sensor.nursery_climate_humidity", "state": "71"})
+        self.assertEqual(out["outcome"], f"Turned on {DEHUMIDIFIER}.")
+        decision = next(i for i in core.recent if i["kind"] == "decision")
+        self.assertEqual((decision["text"], decision["note"]), (f"Turned on {DEHUMIDIFIER}.", "Nothing needed, turned on dehumidifier"))
+
+    async def test_doing_nothing_is_on_record_whatever_muse_says(self):
+        core = await self.run_core(scripted(AIMessage("I turned on the dehumidifier")))
+        out = await self.event(core, "state_changed", {"entity_id": "sensor.nursery_climate_humidity", "state": "50"})
+        self.assertEqual(out["outcome"], "Nothing done.")
+
+    async def test_a_refused_call_is_not_on_record_as_done(self):
+        core = await self.run_core(scripted(call("HassTurnOn", name="Oven"), AIMessage("Turned on the oven")))
+        out = await self.event(core, "state_changed", {"entity_id": "sensor.nursery_climate_humidity", "state": "71"})
+        self.assertEqual(out["outcome"], "Nothing done. Refused or failed: Turned on Oven.")
+
+    async def test_a_message_saying_what_the_log_does_not_is_refused(self):
+        core = await self.run_core(scripted(call("notify", parent="gonza", text="Theo durmió bien entre tomas"),
+                                            call("notify", parent="gonza", text="Theo tomó 90 ml a las 3"), AIMessage("done")))
+        core.moment = datetime.datetime.fromisoformat("2026-11-04T03:01:00-03:00")
+        core.log.add("feeding", {"amount_ml": 90, "method": "bottle"}, "2026-11-04T03:00:00-03:00")
+        await self.event(core, "schedule", {"name": "morning"})
+        self.assertEqual([m["text"] for m in core.channel.sent], ["Theo tomó 90 ml a las 3"])
+        refused = [a["result"] for a in await core.actions() if a["tool"] == "notify" and a["result"].startswith("Refused")]
+        self.assertEqual(len(refused), 1)
+
     async def test_the_api_takes_an_event_and_streams_what_happened(self):
         core = await self.run_core(scripted(call("notify", parent="gonza", text="Theo llora"), AIMessage("Told Gonza.")))
         http = uvicorn.Server(uvicorn.Config(server.app(core), host="127.0.0.1", port=0, log_level="error"))
@@ -153,7 +180,7 @@ class CoreTest(unittest.IsolatedAsyncioTestCase):
             body = json.dumps({"type": "sound", "payload": {"kind": "cry"}, "at": "2026-11-04T03:12:00-03:00"}).encode()
             return json.load(urllib.request.urlopen(urllib.request.Request(f"http://127.0.0.1:{port}/events?wait=1", data=body, headers={"Content-Type": "application/json"})))
         answer = await asyncio.to_thread(post)
-        self.assertEqual(answer["outcome"], "Told Gonza.")
+        self.assertEqual(answer["outcome"], "Told gonza.")
         seen = b""
         while b"event: done" not in seen:
             seen += await asyncio.wait_for(reader.read(4096), 5)
@@ -233,6 +260,15 @@ class CoreTest(unittest.IsolatedAsyncioTestCase):
 
 @unittest.skipUnless(READY, "needs requirements-core.txt and PA_DB_URL")
 class PiecesTest(unittest.TestCase):
+    def test_claims_need_the_log_or_the_parents_words(self):
+        feeds = lambda: [{"details": {"amount_ml": 90}}, {"details": {"amount_ml": 60}}, {"details": {}}]  # noqa: E731
+        for claim in ("durmió bien entre medio", "fue una noche tranquila", "Theo durmió muy bien", "sin problemas", "He slept well", "a quiet night", "le diste 120 ml"):
+            self.assertTrue(safety.unbacked(claim, feeds), claim)
+        for fine in ("Tomó 90 ml a las 3", "Tomó 150 ml en total", "Hubo dos tomas", "buenas noches", "Te toca esta noche", "90 mililitros"):
+            self.assertIsNone(safety.unbacked(fine, feeds), fine)
+        self.assertIsNone(safety.unbacked("Qué bueno que durmió bien", feeds, heard="durmió bien toda la tarde"))
+        self.assertIsNone(safety.unbacked("Anoté 70 ml", lambda: [], heard="le di 70 ml"))
+
     def test_the_medical_gate_lets_a_plan_through_and_stops_a_dose(self):
         self.assertIsNone(safety.gate("Esta noche necesito dormir. Se puede encargar Gonza?", NoScreen()))
         self.assertEqual(safety.gate("cuanto paracetamol le doy?", NoScreen())[0], "medical")

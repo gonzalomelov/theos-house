@@ -105,12 +105,16 @@ async def home_tools(settings, mock):
     return [wrap(short, found[short]) for short in usable if short in found]
 
 
-def channel_tools(channel, settings):
+def channel_tools(channel, settings, log=None, heard=lambda: ""):
+    def checked(text):
+        out, why = safety.outbound(text, settings.lang)
+        return out, why or (safety.unbacked(out, lambda: log.entries(None, None, 50), heard()) if log else None)
+
     def notify(parent: str, text: str) -> str:
         """Send one message to one parent's phone. parent is gonza or ceci. It wakes them at night."""
         if parent not in PARENTS:
             return "Refused: parent is gonza or ceci."
-        out, why = safety.outbound(text, settings.lang)
+        out, why = checked(text)
         if why:
             return why
         channel.send(parent, out)
@@ -118,12 +122,33 @@ def channel_tools(channel, settings):
 
     def say_on_echo(text: str) -> str:
         """Say one sentence out loud on the kitchen Echo, at low volume. Everyone in the kitchen hears it."""
-        out, why = safety.outbound(text, settings.lang)
+        out, why = checked(text)
         if why:
             return why
         channel.echo(out)
         return "Said on the kitchen Echo."
     return [StructuredTool.from_function(notify), StructuredTool.from_function(say_on_echo)]
+
+
+# What each tool did, for the record. Tools that only read aren't here. The record comes from the calls, never from Muse's words.
+DID = {"HassTurnOn": lambda a: f"Turned on {a.get('name', 'a device')}", "HassTurnOff": lambda a: f"Turned off {a.get('name', 'a device')}",
+       "HassVacuumStart": lambda a: "Started the vacuum", "HassVacuumReturnToBase": lambda a: "Sent the vacuum back",
+       "HassListAddItem": lambda a: f"Added {a.get('item', 'an item')} to the list", "notify": lambda a: f"Told {a.get('parent', 'a parent')}",
+       "say_on_echo": lambda a: "Spoke on the Echo", "log_baby_event": lambda a: f"Logged {a.get('kind', 'an entry')}",
+       "remember": lambda a: f"Remembered {a.get('key', 'a fact')}", "forget": lambda a: f"Forgot {a.get('key', 'a fact')}",
+       "wake_me_at": lambda a: f"Set a wake for {a.get('at', 'later')}", "start_car_seat_coach": lambda a: f"Started the car seat coach for {a.get('parent', 'a parent')}"}
+FAILED = re.compile(r'^\s*(refused|error|ask_parent|.{0,40}"error"|.{0,200}"response_type":\s*"error")', re.I | re.S)
+
+
+def record_line(calls):
+    """One line of what was really done, from (tool, arguments, result) of one event."""
+    done, refused = [], []
+    for tool, arguments, result in calls:
+        if tool in DID:
+            (refused if FAILED.match(result or "") else done).append(DID[tool](arguments))
+    unique = list(dict.fromkeys(done))
+    line = ". ".join(unique) + "." if unique else "Nothing done."
+    return line + (" Refused or failed: " + ", ".join(dict.fromkeys(refused)) + "." if refused else "")
 
 
 def log_tools(log, memory):

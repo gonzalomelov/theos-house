@@ -76,6 +76,7 @@ class Core:
         self.mock = None
         self.channel = None
         self.moment = None
+        self.heard = ""
 
     def now(self):
         """The moment the agent is living: the current event's, which a simulated event sets."""
@@ -96,7 +97,7 @@ class Core:
             self.mock = MockHome(s.mock_port).start()
         self.channel = tools_mod.RealChannel(s) if part("channel") == "real" else tools_mod.MockChannel()
         memory, self.log = tools_mod.baby_log(s, self.now)
-        self.tools = [*await tools_mod.home_tools(s, self.mock), *tools_mod.channel_tools(self.channel, s),
+        self.tools = [*await tools_mod.home_tools(s, self.mock), *tools_mod.channel_tools(self.channel, s, self.log, lambda: self.heard),
                       *tools_mod.log_tools(self.log, memory), *tools_mod.memory_tools(self.store, s.home),
                       *tools_mod.next_feed_tool(self.log, self.now), *tools_mod.coach_tool(), *tools_mod.wake_tool(self)]
         self.agent = agent_mod.build(self.model or agent_mod.muse(), self.tools, saver, self.store)
@@ -174,6 +175,7 @@ class Core:
     async def run(self, event):
         started = time.monotonic()
         self.moment = event["moment"]
+        self.heard = str(event["payload"].get("text", "")) if event["type"] == "message" else ""
         self.channel.hold = [] if event["ask"] else None
         try:
             if event["type"] == "message":
@@ -210,7 +212,7 @@ class Core:
     async def decide(self, event, started):
         await agent_mod.repair(self.agent, self.config)
         text = describe(event, event["moment"], await tools_mod.facts(self.store, self.settings.home))
-        pending, final, used = {}, "", 0
+        pending, final, used, calls = {}, "", 0, []
         async for update in self.agent.astream({"messages": [HumanMessage(text)]}, self.config, stream_mode="updates"):
             for step in update.values():
                 for message in (step or {}).get("messages", []) if isinstance(step, dict) else []:
@@ -224,10 +226,14 @@ class Core:
                     elif message.type == "tool":
                         call = pending.pop(message.tool_call_id, {"name": message.name, "args": {}})
                         result = tools_mod.text_of(message.content)
+                        calls.append((call["name"], call["args"], result))
                         await self.record(event["id"], call["name"], call["args"], result)
                         self.publish("tool_result", event_id=event["id"], tool=call["name"], arguments=call["args"], result=result[:600])
-        self.publish("decision", event_id=event["id"], text=final, seconds=round(time.monotonic() - started, 1), tokens=used)
-        return await self.finish(event, "done", final)
+        line = tools_mod.record_line(calls)
+        if final:  # Muse's own closing line can contradict what it did (Nov 3), so it is kept apart and the record is the calls
+            await self.record(event["id"], "muse_note", {}, final)
+        self.publish("decision", event_id=event["id"], text=line, note=final, seconds=round(time.monotonic() - started, 1), tokens=used)
+        return await self.finish(event, "done", line)
 
     async def actions(self, event_id=None, limit=200):
         async with self.pool.connection() as db:
