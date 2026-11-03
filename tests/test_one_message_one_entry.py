@@ -163,7 +163,11 @@ class SharedLoop(unittest.TestCase):
                 memory = Memory(":memory:")
                 self.addCleanup(memory.close)
                 baby_log = LocalBabyLog(memory)
+                # After the 13 to 14 nap in the note: before 14:00 a nap that has not ended is asked, never logged.
+                at = datetime.datetime(2026, 10, 29, 15, 0, tzinfo=TZ)
+                baby_log.now = lambda at=at: at
                 agent = Agent(Bus(None), memory, baby_log, core_tools(memory, baby_log, ["log_baby_event"]), ScriptedBrain(plan))
+                agent.now = lambda at=at: at
                 agent.handle({"kind": "message", "channel": "test", "text": NOTES["en"][kind]})
                 self.assertEqual(len(baby_log.entries(kind)), 1)
 
