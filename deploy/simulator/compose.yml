@@ -1,4 +1,4 @@
-# The judge simulator on the Vostro, for https://simulator.baby.bygmv.com. Not deployed until Gonza says so.
+# The judge simulator on the Vostro, public at https://simulator.bygmv.com.
 #
 #   docker network create --internal --ipv6=false \
 #     -o com.docker.network.bridge.gateway_mode_ipv4=isolated pa-sim-internal
