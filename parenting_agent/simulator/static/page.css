@@ -108,12 +108,13 @@ button{cursor:pointer}
 #log{list-style:none;margin:0;padding:0;font-size:14px;color:var(--soft)}
 #log li.new{color:var(--ink);font-weight:700}
 
-.rail{max-width:1500px;margin:auto;padding:4px 24px 0;position:sticky;top:0;z-index:3;background:var(--sky);transition:background-color 1.4s}
-#rail{list-style:none;display:flex;gap:8px;margin:0;padding:4px 2px 8px;overflow-x:auto}
-#rail button{width:132px;height:100%;min-height:76px;text-align:left;background:var(--panel);border:1.5px solid var(--line);border-radius:10px;padding:9px 10px;display:flex;flex-direction:column;gap:2px}
-#rail b{font:750 18px var(--display);font-variant-numeric:tabular-nums}
-#rail span{font-size:14px;line-height:1.25}
-#rail button.next{background:var(--honey);border-color:var(--honey);color:#172348}
+.rail{max-width:1500px;margin:auto;padding:4px 24px 0;display:flex;align-items:center;gap:12px}
+.rail h2{flex:none;margin:0;font:600 13px var(--body);opacity:.8}
+#rail{list-style:none;display:flex;gap:6px;margin:0;padding:2px 2px 6px;overflow-x:auto}
+#rail button{white-space:nowrap;min-height:32px;text-align:left;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:4px 9px;display:flex;align-items:center;gap:6px}
+#rail b{font:600 12px var(--body);font-variant-numeric:tabular-nums;opacity:.75}
+#rail span{font-size:13px;line-height:1.2}
+#rail button.next{border-color:var(--honey)}
 #rail button.done{opacity:.6}
 #rail button:disabled{cursor:default}
 .status{max-width:1500px;margin:0 auto;padding:0 24px;min-height:22px;color:var(--soft)}
@@ -129,7 +130,7 @@ footer{max-width:1500px;margin:auto;padding:6px 24px 28px;color:var(--soft);font
   .chat li{font-size:14px;max-width:96%}
   .say{flex-direction:column}
   #plan{max-height:none}
-  .rail{position:sticky;top:auto;bottom:0;margin:0;width:100%;padding:6px 16px 0;border-top:1.5px solid var(--line);order:9}
+  .rail{margin:0;width:100%;padding:6px 16px 0;flex-direction:column;align-items:stretch;gap:2px;order:9}
   body{display:flex;flex-direction:column;min-height:100vh}
   .stage,.top,footer{width:100%}
   .status{order:8;margin:0}
@@ -138,7 +139,6 @@ footer{max-width:1500px;margin:auto;padding:6px 24px 28px;color:var(--soft);font
   .tools .ghost{padding:5px 10px;min-height:36px;font-size:14px}
   #date{white-space:nowrap}
   .date{flex-wrap:wrap;gap:4px 10px}
-  #rail button{width:128px;min-height:72px}
   .status,footer{padding-left:16px;padding-right:16px}
   .recording{position:fixed;inset:10px;z-index:5}
 }
