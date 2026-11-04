@@ -98,7 +98,7 @@ class RehearsalOnWhatsApp(unittest.TestCase):
     def test_by_day_ceci_hears_on_whatsapp_and_it_says_ensayo(self):
         with self.at(15):
             self.channel.send("ceci", "hola")
-        self.assertEqual((self.posts[0]["To"], self.posts[0]["Body"]), ("whatsapp:+598922", "Ensayo: hola"))
+        self.assertEqual((self.posts[0]["To"], self.posts[0]["Body"]), ("whatsapp:+598922", "Simulated Theo: hola"))
         self.assertEqual(self.telegram, [])
 
     def test_at_night_nothing_goes_to_ceci_on_any_channel(self):
@@ -111,20 +111,20 @@ class RehearsalOnWhatsApp(unittest.TestCase):
         with self.at(2):
             self.channel.send("gonza", "hola")
         self.assertEqual(self.posts, [])
-        self.assertEqual(self.telegram, [("gonza", "Ensayo: hola", True)])
+        self.assertEqual(self.telegram, [("gonza", "Simulated Theo: hola", True)])
 
     def test_by_day_gonza_is_on_whatsapp_and_a_quiet_one_stays_on_telegram(self):
         with self.at(15):
             self.channel.send("gonza", "uno")
             self.channel.send("gonza", "dos", True)
-        self.assertEqual([p["Body"] for p in self.posts], ["Ensayo: uno"])
-        self.assertEqual(self.telegram, [("gonza", "Ensayo: dos", True)])
+        self.assertEqual([p["Body"] for p in self.posts], ["Simulated Theo: uno"])
+        self.assertEqual(self.telegram, [("gonza", "Simulated Theo: dos", True)])
 
     def test_with_no_number_for_ceci_she_stays_on_telegram(self):
         with tempfile.TemporaryDirectory() as folder, self.at(15):
             channel, posts, telegram = real_channel({"gonza": "598911"}, folder)
             channel.send("ceci", "hola")
-        self.assertEqual((posts, telegram), ([], [("ceci", "Ensayo: hola", False)]))
+        self.assertEqual((posts, telegram), ([], [("ceci", "Simulated Theo: hola", False)]))
 
     def test_a_whatsapp_failure_at_night_doesnt_reach_ceci_on_telegram(self):
         channel = tools_mod.RealChannel.__new__(tools_mod.RealChannel)
@@ -139,7 +139,7 @@ class RehearsalOnWhatsApp(unittest.TestCase):
         self.channel.whatsapp.state["last_heard"]["ceci"] = 0
         with self.at(15):
             note = self.channel.send("ceci", "hola")
-        self.assertEqual((self.posts, self.telegram), ([], [("ceci", "Ensayo: hola", False)]))
+        self.assertEqual((self.posts, self.telegram), ([], [("ceci", "Simulated Theo: hola", False)]))
         self.assertIn("window", note)
 
 

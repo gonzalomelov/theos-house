@@ -36,8 +36,8 @@ A voice note on WhatsApp goes the way one does on Telegram: the note becomes WAV
 
 | Who, and when on the real clock | `PA_REHEARSAL=1` | Otherwise |
 |---|---|---|
-| Gonza, 07:00 to 22:00 | WhatsApp, with "Ensayo: " in front. A quiet one goes on Telegram | WhatsApp. A quiet one goes on Telegram |
-| Gonza, 22:00 to 07:00 | Telegram with no sound, always, with "Ensayo: " | WhatsApp. A quiet one goes on Telegram |
+| Gonza, 07:00 to 22:00 | WhatsApp, with "Simulated Theo: " in front. A quiet one goes on Telegram | WhatsApp. A quiet one goes on Telegram |
+| Gonza, 22:00 to 07:00 | Telegram with no sound, always, with "Simulated Theo: " | WhatsApp. A quiet one goes on Telegram |
 | Ceci with `WHATSAPP_CECI` set | The same by day. 22:00 to 07:00 nothing on any channel | The same as Gonza |
 | Either, window closed or Twilio failing | Telegram carries the words, under the same rules | Telegram carries the words |
 

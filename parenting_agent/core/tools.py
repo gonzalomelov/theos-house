@@ -108,10 +108,10 @@ class RealChannel:
         if os.environ.get("PA_REHEARSAL") != "1":
             return self.deliver(parent, text, quiet)
         if not rehearsal_night():
-            return self.deliver(parent, f"Ensayo: {text}", quiet)
+            return self.deliver(parent, f"Simulated Theo: {text}", quiet)
         if parent == "ceci":
             return "Rehearsal: kept from Ceci at night, nothing was sent."
-        return self.deliver(parent, f"Ensayo: {text}", True) or "Sent silently, the rehearsal keeps the night quiet."
+        return self.deliver(parent, f"Simulated Theo: {text}", True) or "Sent silently, the rehearsal keeps the night quiet."
 
     def deliver(self, parent, text, quiet=False):
         """WhatsApp when it can carry the words, Telegram when it can't. What happened comes back for the record. A quiet one

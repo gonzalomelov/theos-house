@@ -230,12 +230,12 @@ class RehearsalTest(unittest.TestCase):
         out = self.channel()
         with mock.patch.dict(os.environ, {"PA_REHEARSAL": "1"}), mock.patch.object(tools, "rehearsal_night", return_value=False):
             out.send("ceci", "Hola")
-        self.assertEqual(out.sent, [("ceci", "Ensayo: Hola")])
+        self.assertEqual(out.sent, [("ceci", "Simulated Theo: Hola")])
         out = self.channel()
         with mock.patch.dict(os.environ, {"PA_REHEARSAL": "1"}), mock.patch.object(tools, "rehearsal_night", return_value=True):
             self.assertIn("kept from Ceci", out.send("ceci", "Hola"))
             out.send("gonza", "Hola")
-        self.assertEqual(out.sent, [("gonza", "Ensayo: Hola")])
+        self.assertEqual(out.sent, [("gonza", "Simulated Theo: Hola")])
 
     def test_at_night_gonza_goes_silently_on_telegram(self):
         out = tools.RealChannel.__new__(tools.RealChannel)
@@ -243,7 +243,7 @@ class RehearsalTest(unittest.TestCase):
         out.by_telegram = lambda parent, text, quiet=False: out.sent.append((parent, text, quiet))
         with mock.patch.dict(os.environ, {"PA_REHEARSAL": "1"}), mock.patch.object(tools, "rehearsal_night", return_value=True):
             out.send("gonza", "Hola")
-        self.assertEqual(out.sent, [("gonza", "Ensayo: Hola", True)])
+        self.assertEqual(out.sent, [("gonza", "Simulated Theo: Hola", True)])
 
     def test_the_echo_says_nothing_at_night_and_says_so(self):
         out = tools.RealChannel.__new__(tools.RealChannel)
