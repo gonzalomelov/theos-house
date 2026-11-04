@@ -478,7 +478,7 @@ $("rec-close").addEventListener("click", closeRecording);
 $("deep").addEventListener("click", () => { deep = !deep; $("deep").textContent = deep ? t().plain : t().deepOn; $("deep").setAttribute("aria-pressed", String(deep)); drawTrace(); });
 document.querySelectorAll(".to-built").forEach(a => a.addEventListener("click", ev => { ev.preventDefault(); openBuilt(); $("built").scrollIntoView({behavior: matchMedia("(prefers-reduced-motion:reduce)").matches ? "auto" : "smooth", block: "start"}); }));
 $("built-close").addEventListener("click", () => { $("built").hidden = true; });
-$("ptabs").addEventListener("click", ev => { const b = ev.target.closest("button"); if (b) showPhone(b.dataset.phone); });
+$("ptabs").addEventListener("click", ev => { const b = ev.target.closest("button"); if (!b) return; showPhone(b.dataset.phone); const screen = $("phone-" + b.dataset.phone).querySelector(".screen"); screen.scrollTop = screen.scrollHeight; });  // a screen filled while hidden opens on its newest message
 for (const p of ["gonza", "ceci"]) {
   $("phone-" + p).querySelector("form").addEventListener("submit", async ev => {
     ev.preventDefault();

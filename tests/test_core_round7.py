@@ -275,6 +275,9 @@ class ThePage(unittest.TestCase):
         self.assertIn('phone = "both"', self.JS)
         self.assertIn("fromParent: p =>", self.JS)
 
+    def test_a_tab_opens_on_its_newest_message(self):
+        self.assertIn('showPhone(b.dataset.phone); const screen = $("phone-" + b.dataset.phone).querySelector(".screen"); screen.scrollTop = screen.scrollHeight;', self.JS)
+
     def test_a_message_with_no_sound_says_so_and_doesnt_buzz(self):
         self.assertIn('quiet: "no sound"', self.JS)
         self.assertIn("mail.slice(seen[p]).some(m => !m.quiet)", self.JS)
