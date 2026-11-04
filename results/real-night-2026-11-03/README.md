@@ -4,7 +4,7 @@ The live agent on the Vostro, with a simulated Theo, 22:00 to 07:00. Nothing her
 
 | Measure | Result |
 |---|---|
-| Agent up | All night. One restart at 05:49, another build's deploy. No crash restarts, no tracebacks in the logs |
+| Agent up | All night, with deploy restarts. No crash restarts, no tracebacks in the logs |
 | Events after 22:00 | 14 sensor and plug changes, 3 of its own wakes, all done |
 | Messages sent after 22:00 | None reached a phone. Muse tried 2 to Ceci, the parent on duty, and the rehearsal rule kept both |
 | Echo, vacuum at night | Never used |
