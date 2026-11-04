@@ -193,9 +193,11 @@ class CoreTest(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(out["outcome"], "Nothing done. Refused or failed: Turned on Oven.")
 
     async def test_a_message_saying_what_the_log_does_not_is_refused(self):
-        core = await self.run_core(scripted(call("notify", parent="gonza", text="Theo durmió bien entre tomas"),
-                                            call("notify", parent="gonza", text="Theo tomó 90 ml a las 3"), AIMessage("done")))
-        core.moment = datetime.datetime.fromisoformat("2026-11-04T03:01:00-03:00")
+        moment = datetime.datetime.fromisoformat("2026-11-04T03:01:00-03:00")
+        duty = on_duty(moment)
+        core = await self.run_core(scripted(call("notify", parent=duty, text="Theo durmió bien entre tomas"),
+                                            call("notify", parent=duty, text="Theo tomó 90 ml a las 3"), AIMessage("done")))
+        core.moment = moment
         core.log.add("feeding", {"amount_ml": 90, "method": "bottle"}, "2026-11-04T03:00:00-03:00")
         await self.event(core, "schedule", {"name": "morning"})
         self.assertEqual([m["text"] for m in core.channel.sent], ["Theo tomó 90 ml a las 3"])

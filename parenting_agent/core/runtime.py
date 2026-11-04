@@ -336,17 +336,26 @@ class Core:
         until = moment + datetime.timedelta(hours=HAND_HOLD_H)
         await self.store.aput((*tools_mod.FACTS, self.settings.home), self.hand_key(name),
                               {"value": f"A person switched {name} {payload['state']} by hand at {moment:%H:%M}, held until {until.isoformat()}"})
-        event["hand"] = name
-        if "Warmer" in name and payload.get("state") == "on":  # the plug ends by itself whoever started it, and the parent hears it the same way
+        ends = ""
+        if name in STARTS and payload["state"] == "on":  # a plug a person started still ends by itself, and someone hears it
             key, _, minutes = STARTS[name]
-            ends = moment + datetime.timedelta(minutes=minutes)
-            await self.store.aput((*tools_mod.FACTS, self.settings.home), key, {"value": ends.isoformat()})
-            await self.add_wake(ends, f"device_end:{key}:{ends.isoformat()}")
-        event["note"] = (f"A person switched {name} {payload['state']} by hand just now. It stays that way for {HAND_HOLD_H} hours unless a parent asks. "
+            end = moment + datetime.timedelta(minutes=minutes)
+            await self.store.aput((*tools_mod.FACTS, self.settings.home), key, {"value": end.isoformat()})
+            if key == "warmer_off_at":
+                self.warm_until = end
+            await self.add_wake(end, f"device_end:{key}:{end.isoformat()}")
+            ends = f" It turns itself off at {end:%H:%M}."
+        elif name in STARTS:  # switched off by hand: there is no end left to announce
+            await self.store.adelete((*tools_mod.FACTS, self.settings.home), STARTS[name][0])
+        event["hand"] = name
+        event["note"] = (f"A person switched {name} {payload['state']} by hand just now.{ends} It stays that way for {HAND_HOLD_H} hours unless a parent asks. "
                          "Tell the parent on duty in one short line, or ask them. At night, set quiet.")
 
     async def held_by_hand(self, short, arguments):
         """A plug a person just switched isn't switched back by Muse on its own. The vacuum cleans by itself only with nobody home."""
+        why = tools_mod.night_refusal(short, arguments, self.sender)
+        if why:
+            return why
         if short == "HassVacuumStart" and self.sender not in tools_mod.PARENTS:
             try:
                 empty = await asyncio.to_thread(tools_mod.nobody_home, self.settings)

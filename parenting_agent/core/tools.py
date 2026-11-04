@@ -68,6 +68,26 @@ def rehearsal_night(now=None):
     return hour >= 22 or hour < 7
 
 
+def silent_night(now=None):
+    """While Theo is simulated (PA_REHEARSAL=1) nothing in the home makes noise from 22:00 to 07:00."""
+    return os.environ.get("PA_REHEARSAL") == "1" and rehearsal_night(now)
+
+
+NOISY = ("HassVacuumStart", "HassVacuumReturnToBase")
+LIGHT = "Wiz"
+
+
+def night_refusal(short, arguments, sender, now=None):
+    """Why a move can't happen tonight, or None. The vacuum never moves at night, and the light only comes on when Gonza asks."""
+    if not silent_night(now):
+        return None
+    if short in NOISY:
+        return "Refused, the vacuum stayed where it is: nothing makes noise from 22:00 to 07:00 during the rehearsal."
+    if short == "HassTurnOn" and arguments.get("name") == LIGHT and sender != "gonza":
+        return "Refused, the light stayed off: at night it only comes on when Gonza asks."
+    return None
+
+
 class RealChannel:
     hold = None
 
@@ -80,12 +100,15 @@ class RealChannel:
         self.telegram.send(os.environ[PARENTS[parent]], text, quiet)
 
     def send(self, parent, text, quiet=False):
-        """While Theo is simulated (PA_REHEARSAL=1), every real message says so and Ceci isn't reached at night."""
+        """While Theo is simulated (PA_REHEARSAL=1), every real message says so. At night Ceci isn't reached and Gonza's phone stays
+        silent, on Telegram, since WhatsApp can't send without a sound."""
         if os.environ.get("PA_REHEARSAL") != "1":
             return self.deliver(parent, text, quiet)
-        if parent == "ceci" and rehearsal_night():
+        if not rehearsal_night():
+            return self.deliver(parent, f"Ensayo: {text}", quiet)
+        if parent == "ceci":
             return "Rehearsal: kept from Ceci at night, nothing was sent."
-        return self.deliver(parent, f"Ensayo: {text}", quiet)
+        return self.deliver(parent, f"Ensayo: {text}", True) or "Sent silently, the rehearsal keeps the night quiet."
 
     def deliver(self, parent, text, quiet=False):
         """WhatsApp when it can carry the words, Telegram when it can't. What happened comes back for the record. A quiet one
@@ -105,8 +128,8 @@ class RealChannel:
         if self.hold is not None:
             self.hold.append(text)
             return
-        if os.environ.get("PA_REHEARSAL") == "1" and rehearsal_night():
-            return
+        if silent_night():
+            return "Refused, nothing was said: the Echo stays silent from 22:00 to 07:00 during the rehearsal."
         self.ha.service("media_player.volume_set", ECHO_PLAYER, {"volume_level": min(0.2, MAX_ANNOUNCE_VOLUME)})
         self.ha.service("notify.send_message", ECHO_ANNOUNCE, {"message": text[:300]})
 
@@ -189,10 +212,10 @@ def channel_tools(channel, settings, log=None, heard=lambda: "", night_check=Non
         if why:
             return why
         try:
-            channel.echo(out)
+            refused = channel.echo(out)
         except Exception as failure:
             return f"Failed, nothing was said: the Echo is not answering ({type(failure).__name__})."
-        return "Said on the kitchen Echo."
+        return refused or "Said on the kitchen Echo."
     return [StructuredTool.from_function(coroutine=notify), StructuredTool.from_function(say_on_echo)]
 
 
@@ -282,6 +305,8 @@ def vacuum_tool(settings, mock=None):
             return "The vacuum said here it is."
         if "vacuum" not in settings.devices:
             return "Refused: the vacuum isn't on the allowed list."
+        if silent_night():
+            return "Refused, the vacuum said nothing: nothing makes noise from 22:00 to 07:00 during the rehearsal."
         try:
             HomeAssistant(settings.ha_url, settings.ha_token).service("button.press", VACUUM_IDENTIFY)
         except Exception as failure:

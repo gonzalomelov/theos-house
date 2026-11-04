@@ -42,6 +42,12 @@ def worth_waking(entity, state, last, watch):
     return moved
 
 
+def remember_plug(entity, data, last):
+    """The first change of a plug after a start is still a change, so it starts from the state it had before."""
+    if entity in HAND and entity not in last and (data.get("old_state") or {}).get("state"):
+        last[entity] = data["old_state"]["state"]
+
+
 async def home_assistant(core, watch=None):
     """Stays subscribed to state changes, and reconnects. A rejected token stops it, Home Assistant bans an IP that retries."""
     url = core.settings.ha_url.replace("http", "ws", 1) + "/api/websocket"
@@ -60,6 +66,7 @@ async def home_assistant(core, watch=None):
                 async for raw in ws:
                     data = json.loads(raw).get("event", {}).get("data", {})
                     entity, new = data.get("entity_id"), (data.get("new_state") or {}).get("state")
+                    remember_plug(entity, data, last)
                     first = str(entity).startswith("sensor.") and entity not in last
                     if worth_waking(entity, new, last, watch) and (entity not in HAND or core.by_hand(entity, new)):
                         await core.dispatch("state_changed", {"entity_id": entity, "state": new, **({"first_after_start": True} if first else {})}, source="home_assistant")
