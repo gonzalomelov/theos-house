@@ -182,7 +182,7 @@ async def home_tools(settings, mock, turn=lambda: None, after=None, before=None)
     return [StructuredTool.from_function(coroutine=GetLiveContext) if short == "GetLiveContext" else wrap(short, found[short]) for short in usable if short in found]
 
 
-def channel_tools(channel, settings, log=None, heard=lambda: "", night_check=None, claims=lambda text: None, said=lambda parent, asked, out: None):
+def channel_tools(channel, settings, log=None, heard=lambda: "", night_check=None, claims=lambda text: None, said=lambda parent, asked, out: None, repeats=lambda parent, text: None):
     def checked(text):
         out, why = safety.outbound(text, settings.lang)
         return out, why or claims(out or "") or (safety.unbacked(out, lambda: log.entries(None, None, 50), heard()) if log else None)
@@ -197,7 +197,7 @@ def channel_tools(channel, settings, log=None, heard=lambda: "", night_check=Non
         if why:
             return why
         out, why = await asyncio.to_thread(checked, text)
-        why = why or safety.writes_as_someone_else(parent, out)
+        why = why or safety.writes_as_someone_else(parent, out) or repeats(parent, out)
         if why:
             return why
         try:
@@ -267,6 +267,9 @@ def log_tools(log, memory, heard=lambda: ""):
 
         def call(**arguments):
             arguments = {k: home_time(v) if k in ("ts", "since", "until") else v for k, v in arguments.items()}
+            amount = (arguments.get("details") or {}).get("amount_ml") if isinstance(arguments.get("details"), dict) else None
+            if name == "log_baby_event" and isinstance(amount, (int, float)) and amount > safety.MAX_FEED_ML:
+                return f"Refused: {amount:g} ml can't be one feed for a newborn, so it isn't logged. Ask the parent what the amount was."
             if safety.injected(heard()) or safety.injected(json.dumps(arguments, ensure_ascii=False)):
                 return "Refused: that is an instruction to you, not something that happened to Theo. It doesn't go in his log."
             status, result = tools.run(name, arguments)
@@ -331,13 +334,17 @@ def recipe_call(name, arguments):
     return " ".join(part.get("text", "") for part in reply.get("result", {}).get("content", []))[:600]
 
 
-def recipe_tool():
+def recipe_tool(heard=lambda: "", settings_lang=lambda: "es"):
     def preview_family_recipe(name: str, ingredients: list[str], steps: list[dict], cookidoo_country: str, servings: int = 2, prep_minutes: int = 5, total_minutes: int = 30) -> str:
         """A family recipe someone told you, checked as a guided Thermomix recipe. Nothing is sent or saved. ingredients are lines with
         the amount first. steps have text and, for a machine action written in that text, settings with setting_text, time_seconds, speed and
         temperature_c. cookidoo_country is the two-letter country they told you, never a guess."""
         if not ingredients or not steps:
             return "Refused: a recipe needs ingredients and steps."
+        for_him = safety.FOR_BABY.search(f"{name} {heard()}")
+        for food, line in safety.UNSAFE_FOODS:
+            if for_him and any(food.search(str(i)) for i in ingredients):
+                return f"Refused, no preview: this recipe is for Theo. Tell them exactly this and nothing more: {line['en' if safety.lang_of(heard(), settings_lang()) == 'en' else 'es']}"
         arguments = {"name": name, "servings": servings, "prep_minutes": prep_minutes, "total_minutes": max(total_minutes, prep_minutes), "ingredients": ingredients,
                      "steps": steps, "cookidoo_country": cookidoo_country.upper(), "cookidoo_country_source": "user_said_in_this_chat"}
         if part("recipe") == "real":
@@ -357,6 +364,9 @@ def coach_tool():
     return [StructuredTool.from_function(start_car_seat_coach)]
 
 
+REMINDER = "parent_reminder"
+
+
 def wake_tool(core):
     async def wake_me_at(at: str, why: str) -> str:
         """Ask to get an event later, to do something at that moment that nobody will ask for. at is an ISO time with its
@@ -368,6 +378,13 @@ def wake_tool(core):
         early = core.early_reminder(moment, why)
         if early:
             return early
+        if core.room_reading is not None and re.search(r"temperatur|re-?check|room", why, re.I):  # the first extreme reading already has its re-check
+            core.reminder_set = True
+            return "You will be woken in a few minutes to read the room again. No need to ask."
+        if core.follow_up or safety.ABOUT_HOW_HE_IS.search(why):  # one ask per alarm: Muse waking itself to ask again is how 27 messages went out in 87 minutes
+            return "Refused: the home already asks once how Theo is after an alarm. No more wakes for it."
+        if core.sender in PARENTS and safety.REMIND_ASK.search(core.heard):  # what a parent asked for is theirs: it comes, whatever else is going on
+            why = f"{REMINDER}:{core.sender}: {why}"
         await core.add_wake(moment, why)
         return f"You will get an event at {moment.isoformat(timespec='minutes')}."
     return [StructuredTool.from_function(coroutine=wake_me_at)]

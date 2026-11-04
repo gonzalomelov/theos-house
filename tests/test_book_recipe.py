@@ -34,7 +34,7 @@ def made(text, **kwargs):
 @unittest.skipUnless(READY, "needs requirements-core.txt")
 class BookTest(unittest.TestCase):
     def test_days_come_from_the_log(self):
-        self.assertEqual(book.days_of(ENTRIES)[0], {"day": "2026-12-15", "feeds": 2, "ml": 170, "diapers": 1, "sleeps": 0})
+        self.assertEqual(book.days_of(ENTRIES)[0], {"day": "2026-12-15", "feeds": 2, "ml": 170, "diapers": 1, "sleeps": 0, "moments": []})
 
     def test_muses_page_stands_when_its_numbers_are_the_days(self):
         pages = made(json.dumps({"title": "Theo", "pages": [{"day": "2026-12-15", "text": "Two bottles, 170 ml in all, and the house stayed up with him."}]}))["pages"]
@@ -42,7 +42,7 @@ class BookTest(unittest.TestCase):
 
     def test_a_number_the_log_doesnt_have_is_replaced_by_code(self):
         pages = made(json.dumps({"pages": [{"day": "2026-12-15", "text": "He drank 400 ml."}]}))["pages"]
-        self.assertEqual(pages[0], {"day": "2026-12-15", "text": "2 feeds, 170 ml in all, 1 diapers.", "by": "code"})
+        self.assertEqual(pages[0], {"day": "2026-12-15", "text": "2 feeds, 170 ml in all, 1 diaper.", "by": "code", "art": None})
 
     def test_a_number_in_words_counts_too(self):
         self.assertEqual(made(json.dumps({"pages": [{"day": "2026-12-15", "text": "Five quiet bottles."}]}))["pages"][0]["by"], "code")

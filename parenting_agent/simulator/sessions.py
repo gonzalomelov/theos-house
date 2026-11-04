@@ -259,6 +259,9 @@ class Session:
 
     async def send(self, kind, payload, at=None, daily=True):
         """One event down the real path. The clock only moves forward. A daily check runs once a day, as it does at home: 0 means it already ran."""
+        same = self.core.running.get((kind, json.dumps(payload or {}, sort_keys=True))) if kind in ("sound", "state_changed", "camera") else None
+        if same and not same[1].done():  # five presses while the first runs are one event, and nobody is told five times
+            return same[0]
         target = max(self.moment + datetime.timedelta(minutes=1), at or self.moment)
         if kind == "schedule":
             check = (target.date(), payload["name"])
@@ -284,7 +287,30 @@ class Session:
         """The first-month book so far, from this home's own log and what Muse remembers."""
         entries = self.log.entries(None, None, 2000)
         notes = await tools_mod.facts(self.core.store, self.settings.home)
-        return await book_mod.write(self.core.model or agent_mod.muse(), entries, str(notes)[:1500], self.lang)
+        return await book_mod.write(self.core.model or agent_mod.muse(), entries, str(notes)[:1500], self.lang, await self.moments())
+
+    async def moments(self):
+        """What this session lived that isn't in the baby log, from the record of what was really done: the handover, the recipe, the car seat."""
+        events = {e["id"]: e for e in await self.core.events(500)}
+        es = self.lang == "es"
+        found = []
+        for action in reversed(await self.core.actions(limit=1000)):
+            event, args = events.get(action["event_id"]), action["arguments"]
+            if not event or tools_mod.FAILED.match(action["result"] or ""):
+                continue
+            who = str(event["payload"].get("from", "")).capitalize()
+            day = event["happened_at"].astimezone(self.moment.tzinfo).date().isoformat()
+            if action["tool"] == "set_on_duty":
+                parent = str(args.get("parent", "")).capitalize()
+                text = (f"{parent} se quedó con la noche, a pedido de {who}." if es else f"{parent} took the night, at {who}'s word.") if who and who != parent else (f"{parent} se quedó con la noche." if es else f"{parent} took the night.")
+                found.append({"day": day, "kind": "handover", "text": text, "names": (parent,)})
+            elif action["tool"] == "preview_family_recipe":
+                name = str(args.get("name", "")).strip() or ("la receta" if es else "the recipe")
+                found.append({"day": day, "kind": "recipe", "text": f"Una receta de la familia quedó escrita: {name}." if es else f"A family recipe got written down: {name}.", "names": (name, "receta" if es else "recipe")})
+            elif action["tool"] == "start_car_seat_coach":
+                parent = str(args.get("parent", "")).capitalize()
+                found.append({"day": day, "kind": "coach", "text": f"{parent} instaló la silla del auto con el coach." if es else f"{parent} fitted the car seat with the coach.", "names": ("silla" if es else "car seat",)})
+        return found
 
     def count(self):
         if self.events_used >= MAX_EVENTS:
