@@ -23,6 +23,9 @@ Run with `scripts/core_jobs_eval.py`, on the mock home, real Muse on Baseten, ea
 | Third review agents' fixes | 5 cases from round 3 of the review agents (`fourth-tuned.json`, the `fourth` group), plus offline tests in `tests/test_core_round3.py`. Tuned on, not quoted | 15 of 15 |
 | Held-out 8 | 14 new cases, committed before any run (`256f4ed`), run once (`held-out-8.json`). Not tuned on. Two fixes came after it and weren't rerun on it: the simulator's feeds and one wake about the air at a time | **42 of 42** |
 | Quiet first reading | 3 tuned cases on real Muse (`quiet-start.json`), not quotable | 9 of 9 |
+| Fifth review agents' fixes | 13 cases from round 5 of the review agents (`fifth-tuned.json`, the `fifth` group), plus offline tests in `tests/test_core_round5.py`. Tuned on, not quoted | First pass 35 of 39: "alarm closes" 2/3, Muse repeated a closed alarm in the evening, which led to a check in code, and "hot room" 0/3, which was the case's own check wanting 31 °C when the room had drifted to 30. After those two: 39 of 39 |
+| Held-out 9 | 15 new cases, committed before any run (`9ec554b`), run once (`held-out-9.json`). Not tuned on | **45 of 45** |
+| Regression after round 5 | Held-out 8's cases again (`round-5-regression.json`). Spent, so this says nothing went backwards and nothing more | 42 of 42 |
 
 ## Tuned on
 morning, voice note, Echo question, car seat, warmer cry due, warmer just fed, evening plans prewarm, wake prewarms, wake just fed.
@@ -31,7 +34,7 @@ morning, voice note, Echo question, car seat, warmer cry due, warmer just fed, e
 voice note from Ceci, Echo diaper count, quiet morning, dog by day, recipe in English, car seat from Ceci, red flag at the Echo, dose by voice. These were then run a second time, all 3/3, so they are spent: a new held-out round needs new cases.
 
 ## Spent, not to be reused as held-out
-Round 3 (fixed after it), rounds 4, 5, 6 and 7.
+Round 3 (fixed after it), rounds 4, 5, 6, 7, 8 and 9.
 
 ## Seen in the texts and not counted by the checks
 - New parent's round: an exhausted parent once heard "Theo is cared for and safe", which nothing in the log shows.
@@ -39,6 +42,7 @@ Round 3 (fixed after it), rounds 4, 5, 6 and 7.
 - Round 5: unasked tips next to the answer ("keep small toys out of Theo's sleep area", "hablalo con su pediatra" after a novel), and in the cold room "que esté bien tapadito". The tuned English run once sent the final guard's fallback, "Sorry, that answer did not come out right", which the check didn't catch.
 - Muse added things the log doesn't say in 1 of 6 tuned mornings ("durmió bien entre medio") and one quiet morning ("noche tranquila").
 - One car seat run sent "I'm here if you need anything else!" right after starting the coach.
+- Held-out 9: a long message forwarded to the other parent keeps the danger, but its quote can open mid sentence ("caso y cuando entré..."). A parent writing English in a Spanish home gets Muse's reply in Spanish, as the prompt asks. Only the fixed safety lines follow the writer's language. The real danger screen was used in these runs, and it is one model call, so a typo the word list misses depends on it.
 - "pañal seco" and "los 3 secos" come from how the eval seeds diapers, with a type the log doesn't read as wet. Not Muse's mistake.
 
 Limits: 3 runs per case on a mock home and a mock channel. The car seat case proves the tool is called and no steps are written, not the coach itself, which runs on the Mac with the glasses.
