@@ -1,0 +1,89 @@
+{
+"right": {
+"door": {
+"lap_guides": {
+"result": "unseen",
+"guides": 1,
+"belt_px": 207931
+},
+"shoulder_guide": {
+"result": "unseen",
+"guides": 1
+},
+"no_twist": {
+"result": "unseen",
+"why": "the lap belt is not seen between both guides"
+},
+"level_line": {
+"result": "unseen"
+},
+"handle": {
+"result": "pass",
+"deg_from_vertical": 12.6,
+"score": 0.612
+}
+},
+"door_closeup": {
+"result": "pass",
+"coverage": 0.222,
+"guide_share": 0.012,
+"score": 0.306
+},
+"closeup_near": {
+"result": "unseen",
+"why": "no guide up close",
+"guide_share": 0.0
+},
+"closeup_far": {
+"result": "unseen",
+"why": "no guide up close",
+"guide_share": 0.0
+}
+},
+"wrong": {
+"door": {
+"lap_guides": {
+"result": "pass",
+"coverage": [
+0.368,
+0.19
+],
+"between": 1.0,
+"missed": []
+},
+"shoulder_guide": {
+"result": "fail",
+"coverage": 0.107
+},
+"no_twist": {
+"result": "pass",
+"ratio": 0.909
+},
+"level_line": {
+"result": "unseen"
+},
+"handle": {
+"result": "fail",
+"deg_from_vertical": 73.7,
+"score": 0.356
+}
+},
+"door_closeup": {
+"result": "unseen",
+"why": "no guide up close",
+"guide_share": 0.0052
+},
+"closeup_near": {
+"result": "pass",
+"coverage": 0.482,
+"guide_share": 0.0282,
+"score": 0.25
+},
+"closeup_far": {
+"result": "pass",
+"coverage": 0.184,
+"guide_share": 0.0213,
+"score": 0.657
+}
+}
+}

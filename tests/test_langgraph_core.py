@@ -200,7 +200,7 @@ class CoreTest(unittest.IsolatedAsyncioTestCase):
                                             call("notify", parent=duty, text="Theo tomó 90 ml a las 3"), AIMessage("done")))
         core.moment = moment
         core.log.add("feeding", {"amount_ml": 90, "method": "bottle"}, "2026-11-04T03:00:00-03:00")
-        await self.event(core, "schedule", {"name": "morning"})
+        await self.event(core, "schedule", {"name": "morning"}, moment.isoformat())
         self.assertEqual([m["text"] for m in core.channel.sent], ["Theo tomó 90 ml a las 3"])
         refused = [a["result"] for a in await core.actions() if a["tool"] == "notify" and a["result"].startswith("Refused")]
         self.assertEqual(len(refused), 1)

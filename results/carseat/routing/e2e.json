@@ -1,0 +1,449 @@
+{
+ "said": [
+  {
+   "who": "gonza",
+   "text": "Agente, ayudame a instalar la silla del auto"
+  },
+  {
+   "who": "coach",
+   "step": "harness_pinch",
+   "text": "Te guío con la Joie i-Snug 2 en el Tesla Model 3 (2027), instalada con el cinturón del auto y sin base. Empezamos por el arnés, con la silla todavía mirando hacia vos. Antes de llevar la silla al auto, con el muñeco o el bebé abrochado y la silla mirando hacia vos, pellizcá la correa del arnés a la altura de la clavícula. ¿Podés pellizcar correa de sobra? Decí sí si podés, no si no podés."
+  },
+  {
+   "who": "gonza",
+   "text": "no, no sobra nada"
+  },
+  {
+   "who": "coach",
+   "step": "car_position",
+   "text": "Poné la silla en un asiento de atrás, mirando hacia la parte de atrás del auto. Nunca pongas una silla mirando hacia atrás en el asiento del acompañante con el airbag prendido. ¿La silla está en un asiento de atrás, mirando hacia atrás? Decí sí o no."
+  },
+  {
+   "who": "gonza",
+   "text": "sí, atrás"
+  },
+  {
+   "who": "coach",
+   "step": "lap_guides",
+   "text": "Pasá el cinturón de cadera por las dos guías azules de los costados de la silla. Decime listo cuando termines."
+  },
+  {
+   "who": "gonza",
+   "text": "listo, ya está"
+  },
+  {
+   "who": "coach",
+   "step": "lap_guides",
+   "text": "Acercá el teléfono a la guía azul del lado de la puerta."
+  },
+  {
+   "who": "coach",
+   "step": "lap_guides",
+   "text": "Veo el cinturón en la guía azul del lado de la puerta."
+  },
+  {
+   "who": "coach",
+   "step": "lap_guides",
+   "text": "Acercá el teléfono a la guía azul del otro lado."
+  },
+  {
+   "who": "coach",
+   "step": "lap_guides",
+   "text": "Veo el cinturón en la guía azul del otro lado."
+  },
+  {
+   "who": "coach",
+   "step": "buckle",
+   "text": "Abrochá el cinturón del auto hasta que haga clic. ¿Hizo clic? Decí sí o no."
+  },
+  {
+   "who": "gonza",
+   "text": "sí, hizo clic"
+  },
+  {
+   "who": "coach",
+   "step": "shoulder_guide",
+   "text": "Pasá el cinturón de hombro por detrás de la silla y metelo en la guía azul de atrás, detrás de la cabecera. Decime listo cuando termines."
+  },
+  {
+   "who": "gonza",
+   "text": "listo, ya está"
+  },
+  {
+   "who": "coach",
+   "step": "shoulder_guide",
+   "text": "Acercá el teléfono a la guía azul de atrás."
+  },
+  {
+   "who": "coach",
+   "step": "shoulder_guide",
+   "text": "Veo el cinturón en la guía azul de atrás."
+  },
+  {
+   "who": "coach",
+   "step": "belt_routing",
+   "text": "Ahora mirá vos por dónde va el cinturón, mi cámara no lo puede confirmar. En una silla como esta lo habitual es el de cadera por arriba, sobre las piernas, por las guías azules del costado, y el de hombro por detrás. Cada silla es distinta, así que comparalo con el manual de la tuya. ¿Te quedó así? Decí sí o no."
+  },
+  {
+   "who": "gonza",
+   "text": "no, lo tengo al revés"
+  },
+  {
+   "who": "coach",
+   "step": "belt_routing",
+   "text": "Anotado. Mirá el manual de tu silla y las guías azules, corregí el recorrido y decime listo."
+  },
+  {
+   "who": "gonza",
+   "text": "listo, ya está"
+  },
+  {
+   "who": "coach",
+   "step": "belt_routing",
+   "text": "¿Ahora el de cadera va por arriba, por las guías azules, y el de hombro por detrás, como muestra tu manual? Decí sí o no."
+  },
+  {
+   "who": "gonza",
+   "text": "sí, ahora sí"
+  },
+  {
+   "who": "coach",
+   "step": "belt_routing",
+   "text": "Anotado, eso lo confirmaste vos mirando, no mi cámara."
+  },
+  {
+   "who": "coach",
+   "step": "tension",
+   "text": "Tensá primero el cinturón de cadera y después el de hombro, hasta que no quede nada flojo. ¿Quedó tenso? Decí sí o no."
+  },
+  {
+   "who": "gonza",
+   "text": "sí, quedó tenso"
+  },
+  {
+   "who": "coach",
+   "step": "no_twist",
+   "text": "Mostrame desde la puerta el cinturón de cadera sobre la silla: tiene que quedar plano, sin giros. Decime listo cuando estés."
+  },
+  {
+   "who": "gonza",
+   "text": "listo, ya está"
+  },
+  {
+   "who": "coach",
+   "step": "no_twist",
+   "text": "No pude ver bien el cinturón de cadera para revisar si está girado. Lo dejo como no revisado."
+  },
+  {
+   "who": "coach",
+   "step": "level_line",
+   "text": "Mostrame la línea de nivel al costado de la silla, con la cabeza derecha. Decime listo cuando estés."
+  },
+  {
+   "who": "gonza",
+   "text": "listo, ya está"
+  },
+  {
+   "who": "coach",
+   "step": "level_line",
+   "text": "No pude ver la línea de nivel. Lo dejo como no revisado."
+  },
+  {
+   "who": "coach",
+   "step": "handle",
+   "text": "Poné la manija hacia arriba, en la posición 1, la posición para el auto. Decime listo cuando termines."
+  },
+  {
+   "who": "gonza",
+   "text": "listo, ya está"
+  },
+  {
+   "who": "coach",
+   "step": "handle",
+   "text": "La manija está hacia arriba."
+  },
+  {
+   "who": "coach",
+   "step": "belt_path_movement",
+   "text": "Agarrá la silla donde el cinturón pasa por las guías y movela de lado a lado y de adelante hacia atrás. ¿Se mueve menos de 2,5 centímetros? Decí sí o no."
+  },
+  {
+   "who": "gonza",
+   "text": "sí, menos de dos centímetros"
+  },
+  {
+   "who": "coach",
+   "step": "summary",
+   "text": "Chequeos con cámara que pasaron: un cinturón en las dos guías laterales, un cinturón en la guía de atrás, manija hacia arriba. Chequeos con cámara que no pude ver: sin giros en el cinturón de cadera, línea de nivel nivelada. Chequeos a mano que confirmaste: sin correa de sobra en la prueba del pellizco, silla en un asiento de atrás mirando hacia atrás, cinturón abrochado con clic, el recorrido del cinturón, según tu manual, cinturón de cadera tenso, después el de hombro, menos de 2,5 centímetros de movimiento en el cinturón. Esto no es un veredicto sobre la instalación. Antes del primer viaje de verdad, reservá una revisión con un técnico certificado en sillas de auto para niños. Cybex ofrece una revisión virtual gratis, y la Fundación Gonzalo Rodríguez hace jornadas de revisión en Montevideo."
+  }
+ ],
+ "results": {
+  "harness_pinch": {
+   "kind": "hand",
+   "result": "pass",
+   "answer": "no, no sobra nada"
+  },
+  "car_position": {
+   "kind": "hand",
+   "result": "pass",
+   "answer": "sí, atrás"
+  },
+  "lap_guides": {
+   "kind": "camera",
+   "result": "pass",
+   "views": {
+    "near": {
+     "result": "pass",
+     "coverage": 0.455,
+     "guide_share": 0.0188,
+     "score": 0.539,
+     "frame_s": 4.0
+    },
+    "far": {
+     "result": "pass",
+     "coverage": 0.455,
+     "guide_share": 0.0188,
+     "score": 0.539,
+     "frame_s": 6.0
+    }
+   },
+   "step_started_s": 0.0,
+   "frame_s": null,
+   "spoken_s": 0.0
+  },
+  "buckle": {
+   "kind": "hand",
+   "result": "pass",
+   "answer": "sí, hizo clic"
+  },
+  "shoulder_guide": {
+   "kind": "camera",
+   "result": "pass",
+   "views": {
+    "rear": {
+     "result": "pass",
+     "coverage": 0.455,
+     "guide_share": 0.0188,
+     "score": 0.539,
+     "frame_s": 10.0
+    }
+   },
+   "step_started_s": 0.0,
+   "frame_s": null,
+   "spoken_s": 0.0
+  },
+  "belt_routing": {
+   "kind": "hand",
+   "result": "pass",
+   "answer": "sí, ahora sí"
+  },
+  "tension": {
+   "kind": "hand",
+   "result": "pass",
+   "answer": "sí, quedó tenso"
+  },
+  "no_twist": {
+   "kind": "camera",
+   "result": "unseen",
+   "step_started_s": 0.0,
+   "frame_s": null,
+   "spoken_s": 0.0
+  },
+  "level_line": {
+   "kind": "camera",
+   "result": "unseen",
+   "step_started_s": 0.0,
+   "frame_s": null,
+   "spoken_s": 0.0
+  },
+  "handle": {
+   "kind": "camera",
+   "result": "pass",
+   "deg_from_vertical": 13.3,
+   "score": 0.584,
+   "step_started_s": 0.0,
+   "frame_s": 91.0,
+   "spoken_s": 0.0
+  },
+  "belt_path_movement": {
+   "kind": "hand",
+   "result": "pass",
+   "answer": "sí, menos de dos centímetros"
+  }
+ },
+ "channel": [
+  {
+   "to": "gonza",
+   "text": "Te guío con la Joie i-Snug 2 en el Tesla Model 3 (2027), instalada con el cinturón del auto y sin base. Empezamos por el arnés, con la silla todavía mirando hacia vos. Antes de llevar la silla al auto, con el muñeco o el bebé abrochado y la silla mirando hacia vos, pellizcá la correa del arnés a la altura de la clavícula. ¿Podés pellizcar correa de sobra? Decí sí si podés, no si no podés.",
+   "at": 1793807389.635843
+  },
+  {
+   "to": "gonza",
+   "text": "Poné la silla en un asiento de atrás, mirando hacia la parte de atrás del auto. Nunca pongas una silla mirando hacia atrás en el asiento del acompañante con el airbag prendido. ¿La silla está en un asiento de atrás, mirando hacia atrás? Decí sí o no.",
+   "at": 1793807389.707228
+  },
+  {
+   "to": "gonza",
+   "text": "Pasá el cinturón de cadera por las dos guías azules de los costados de la silla. Decime listo cuando termines.",
+   "at": 1793807389.910888
+  },
+  {
+   "to": "gonza",
+   "text": "Acercá el teléfono a la guía azul del lado de la puerta.",
+   "at": 1793807390.113023
+  },
+  {
+   "to": "gonza",
+   "text": "Veo el cinturón en la guía azul del lado de la puerta.",
+   "at": 1793807394.932914
+  },
+  {
+   "to": "gonza",
+   "text": "Acercá el teléfono a la guía azul del otro lado.",
+   "at": 1793807394.94109
+  },
+  {
+   "to": "gonza",
+   "text": "Veo el cinturón en la guía azul del otro lado.",
+   "at": 1793807397.9746828
+  },
+  {
+   "to": "gonza",
+   "text": "Abrochá el cinturón del auto hasta que haga clic. ¿Hizo clic? Decí sí o no.",
+   "at": 1793807397.983254
+  },
+  {
+   "to": "gonza",
+   "text": "Pasá el cinturón de hombro por detrás de la silla y metelo en la guía azul de atrás, detrás de la cabecera. Decime listo cuando termines.",
+   "at": 1793807398.1778991
+  },
+  {
+   "to": "gonza",
+   "text": "Acercá el teléfono a la guía azul de atrás.",
+   "at": 1793807398.381592
+  },
+  {
+   "to": "gonza",
+   "text": "Veo el cinturón en la guía azul de atrás.",
+   "at": 1793807402.978625
+  },
+  {
+   "to": "gonza",
+   "text": "Ahora mirá vos por dónde va el cinturón, mi cámara no lo puede confirmar. En una silla como esta lo habitual es el de cadera por arriba, sobre las piernas, por las guías azules del costado, y el de hombro por detrás. Cada silla es distinta, así que comparalo con el manual de la tuya. ¿Te quedó así? Decí sí o no.",
+   "at": 1793807402.987753
+  },
+  {
+   "to": "gonza",
+   "text": "Anotado. Mirá el manual de tu silla y las guías azules, corregí el recorrido y decime listo.",
+   "at": 1793807403.01865
+  },
+  {
+   "to": "gonza",
+   "text": "¿Ahora el de cadera va por arriba, por las guías azules, y el de hombro por detrás, como muestra tu manual? Decí sí o no.",
+   "at": 1793807493.074058
+  },
+  {
+   "to": "gonza",
+   "text": "Anotado, eso lo confirmaste vos mirando, no mi cámara.",
+   "at": 1793807493.167107
+  },
+  {
+   "to": "gonza",
+   "text": "Tensá primero el cinturón de cadera y después el de hombro, hasta que no quede nada flojo. ¿Quedó tenso? Decí sí o no.",
+   "at": 1793807493.176621
+  },
+  {
+   "to": "gonza",
+   "text": "Mostrame desde la puerta el cinturón de cadera sobre la silla: tiene que quedar plano, sin giros. Decime listo cuando estés.",
+   "at": 1793807493.370749
+  },
+  {
+   "to": "gonza",
+   "text": "No pude ver bien el cinturón de cadera para revisar si está girado. Lo dejo como no revisado.",
+   "at": 1793807499.979402
+  },
+  {
+   "to": "gonza",
+   "text": "Mostrame la línea de nivel al costado de la silla, con la cabeza derecha. Decime listo cuando estés.",
+   "at": 1793807499.98751
+  },
+  {
+   "to": "gonza",
+   "text": "No pude ver la línea de nivel. Lo dejo como no revisado.",
+   "at": 1793807597.8024151
+  },
+  {
+   "to": "gonza",
+   "text": "Poné la manija hacia arriba, en la posición 1, la posición para el auto. Decime listo cuando termines.",
+   "at": 1793807597.810899
+  },
+  {
+   "to": "gonza",
+   "text": "La manija está hacia arriba.",
+   "at": 1793807600.029105
+  },
+  {
+   "to": "gonza",
+   "text": "Agarrá la silla donde el cinturón pasa por las guías y movela de lado a lado y de adelante hacia atrás. ¿Se mueve menos de 2,5 centímetros? Decí sí o no.",
+   "at": 1793807600.037017
+  },
+  {
+   "to": "gonza",
+   "text": "Chequeos con cámara que pasaron: un cinturón en las dos guías laterales, un cinturón en la guía de atrás, manija hacia arriba. Chequeos con cámara que no pude ver: sin giros en el cinturón de cadera, línea de nivel nivelada. Chequeos a mano que confirmaste: sin correa de sobra en la prueba del pellizco, silla en un asiento de atrás mirando hacia atrás, cinturón abrochado con clic, el recorrido del cinturón, según tu manual, cinturón de cadera tenso, después el de hombro, menos de 2,5 centímetros de movimiento en el cinturón. Esto no es un veredicto sobre la instalación. Antes del primer viaje de verdad, reservá una revisión con un técnico certificado en sillas de auto para niños. Cybex ofrece una revisión virtual gratis, y la Fundación Gonzalo Rodríguez hace jornadas de revisión en Montevideo.",
+   "at": 1793807600.220416
+  }
+ ],
+ "tools": [
+  {
+   "tool": "muse_note",
+   "arguments": {}
+  },
+  {
+   "tool": "muse_note",
+   "arguments": {}
+  },
+  {
+   "tool": "muse_note",
+   "arguments": {}
+  },
+  {
+   "tool": "muse_note",
+   "arguments": {}
+  },
+  {
+   "tool": "muse_note",
+   "arguments": {}
+  },
+  {
+   "tool": "muse_note",
+   "arguments": {}
+  },
+  {
+   "tool": "muse_note",
+   "arguments": {}
+  },
+  {
+   "tool": "muse_note",
+   "arguments": {}
+  },
+  {
+   "tool": "muse_note",
+   "arguments": {}
+  },
+  {
+   "tool": "muse_note",
+   "arguments": {}
+  },
+  {
+   "tool": "muse_note",
+   "arguments": {}
+  },
+  {
+   "tool": "start_car_seat_coach",
+   "arguments": {
+    "lang": "es",
+    "parent": "gonza"
+   }
+  }
+ ]
+}

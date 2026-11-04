@@ -1,0 +1,1206 @@
+{
+ "runs": 5,
+ "samples": 3,
+ "variant_runs": 2,
+ "usd": 2.1606,
+ "results": {
+  "belt_routing": {
+   "right": {
+    "base": {
+     "pass": 3,
+     "fail": 0,
+     "unseen": 2,
+     "none": 0,
+     "calls": {
+      "pass": 18,
+      "fail": 0,
+      "unseen": 7
+     }
+    },
+    "variants": {
+     "pass": 5,
+     "fail": 0,
+     "unseen": 11,
+     "none": 0,
+     "calls": {
+      "pass": 49,
+      "fail": 9,
+      "unseen": 22
+     }
+    },
+    "by_view": {
+     "crop_middle": {
+      "pass": 0,
+      "fail": 0,
+      "unseen": 2,
+      "none": 0,
+      "calls": {
+       "pass": 5,
+       "fail": 1,
+       "unseen": 4
+      }
+     },
+     "crop_left": {
+      "pass": 1,
+      "fail": 0,
+      "unseen": 1,
+      "none": 0,
+      "calls": {
+       "pass": 7,
+       "fail": 1,
+       "unseen": 2
+      }
+     },
+     "crop_right": {
+      "pass": 1,
+      "fail": 0,
+      "unseen": 1,
+      "none": 0,
+      "calls": {
+       "pass": 7,
+       "fail": 1,
+       "unseen": 2
+      }
+     },
+     "tilt_plus_8": {
+      "pass": 1,
+      "fail": 0,
+      "unseen": 1,
+      "none": 0,
+      "calls": {
+       "pass": 8,
+       "fail": 0,
+       "unseen": 2
+      }
+     },
+     "tilt_minus_8": {
+      "pass": 0,
+      "fail": 0,
+      "unseen": 2,
+      "none": 0,
+      "calls": {
+       "pass": 3,
+       "fail": 3,
+       "unseen": 4
+      }
+     },
+     "dark": {
+      "pass": 0,
+      "fail": 0,
+      "unseen": 2,
+      "none": 0,
+      "calls": {
+       "pass": 3,
+       "fail": 1,
+       "unseen": 6
+      }
+     },
+     "bright": {
+      "pass": 1,
+      "fail": 0,
+      "unseen": 1,
+      "none": 0,
+      "calls": {
+       "pass": 8,
+       "fail": 1,
+       "unseen": 1
+      }
+     },
+     "shake": {
+      "pass": 1,
+      "fail": 0,
+      "unseen": 1,
+      "none": 0,
+      "calls": {
+       "pass": 8,
+       "fail": 1,
+       "unseen": 1
+      }
+     }
+    }
+   },
+   "wrong": {
+    "base": {
+     "pass": 2,
+     "fail": 0,
+     "unseen": 3,
+     "none": 0,
+     "calls": {
+      "pass": 11,
+      "fail": 6,
+      "unseen": 8
+     }
+    },
+    "variants": {
+     "pass": 3,
+     "fail": 6,
+     "unseen": 7,
+     "none": 0,
+     "calls": {
+      "pass": 38,
+      "fail": 27,
+      "unseen": 15
+     }
+    },
+    "by_view": {
+     "crop_middle": {
+      "pass": 0,
+      "fail": 1,
+      "unseen": 1,
+      "none": 0,
+      "calls": {
+       "pass": 2,
+       "fail": 6,
+       "unseen": 2
+      }
+     },
+     "crop_left": {
+      "pass": 0,
+      "fail": 0,
+      "unseen": 2,
+      "none": 0,
+      "calls": {
+       "pass": 5,
+       "fail": 0,
+       "unseen": 5
+      }
+     },
+     "crop_right": {
+      "pass": 0,
+      "fail": 1,
+      "unseen": 1,
+      "none": 0,
+      "calls": {
+       "pass": 3,
+       "fail": 5,
+       "unseen": 2
+      }
+     },
+     "tilt_plus_8": {
+      "pass": 0,
+      "fail": 0,
+      "unseen": 2,
+      "none": 0,
+      "calls": {
+       "pass": 7,
+       "fail": 1,
+       "unseen": 2
+      }
+     },
+     "tilt_minus_8": {
+      "pass": 0,
+      "fail": 2,
+      "unseen": 0,
+      "none": 0,
+      "calls": {
+       "pass": 0,
+       "fail": 8,
+       "unseen": 2
+      }
+     },
+     "dark": {
+      "pass": 0,
+      "fail": 2,
+      "unseen": 0,
+      "none": 0,
+      "calls": {
+       "pass": 3,
+       "fail": 6,
+       "unseen": 1
+      }
+     },
+     "bright": {
+      "pass": 1,
+      "fail": 0,
+      "unseen": 1,
+      "none": 0,
+      "calls": {
+       "pass": 9,
+       "fail": 1,
+       "unseen": 0
+      }
+     },
+     "shake": {
+      "pass": 2,
+      "fail": 0,
+      "unseen": 0,
+      "none": 0,
+      "calls": {
+       "pass": 9,
+       "fail": 0,
+       "unseen": 1
+      }
+     }
+    }
+   }
+  }
+ },
+ "looks": [
+  {
+   "state": "right",
+   "check": "belt_routing",
+   "view": "base",
+   "result": "pass",
+   "samples": [
+    "unseen",
+    "pass",
+    "pass",
+    "pass",
+    "pass"
+   ],
+   "seen": [
+    "cannot_see",
+    "band_from_low_down",
+    "band_from_low_down",
+    "band_from_low_down",
+    "band_from_low_down"
+   ],
+   "seconds": 20.667,
+   "usd": 0.045045,
+   "error": null
+  },
+  {
+   "state": "right",
+   "check": "belt_routing",
+   "view": "base",
+   "result": "pass",
+   "samples": [
+    "pass",
+    "pass",
+    "pass",
+    "pass",
+    "pass"
+   ],
+   "seen": [
+    "band_from_low_down",
+    "band_from_low_down",
+    "band_from_low_down",
+    "band_from_low_down",
+    "band_from_low_down"
+   ],
+   "seconds": 20.677,
+   "usd": 0.047011,
+   "error": null
+  },
+  {
+   "state": "right",
+   "check": "belt_routing",
+   "view": "base",
+   "result": "pass",
+   "samples": [
+    "pass",
+    "pass",
+    "pass",
+    "pass",
+    "pass"
+   ],
+   "seen": [
+    "band_from_low_down",
+    "band_from_low_down",
+    "band_from_low_down",
+    "band_from_low_down",
+    "band_from_low_down"
+   ],
+   "seconds": 22.926,
+   "usd": 0.055068,
+   "error": null
+  },
+  {
+   "state": "right",
+   "check": "belt_routing",
+   "view": "base",
+   "result": "unseen",
+   "samples": [
+    "pass",
+    "unseen",
+    "unseen",
+    "pass",
+    "unseen"
+   ],
+   "seen": [
+    "band_from_low_down",
+    "cannot_see",
+    "cannot_see",
+    "band_from_low_down",
+    "cannot_see"
+   ],
+   "seconds": 20.037,
+   "usd": 0.045055,
+   "error": null
+  },
+  {
+   "state": "right",
+   "check": "belt_routing",
+   "view": "base",
+   "result": "unseen",
+   "samples": [
+    "unseen",
+    "pass",
+    "unseen",
+    "pass",
+    "unseen"
+   ],
+   "seen": [
+    "cannot_see",
+    "band_from_low_down",
+    "cannot_see",
+    "band_from_low_down",
+    "cannot_see"
+   ],
+   "seconds": 18.847,
+   "usd": 0.047397,
+   "error": null
+  },
+  {
+   "state": "right",
+   "check": "belt_routing",
+   "view": "crop_middle",
+   "result": "unseen",
+   "samples": [
+    "fail",
+    "unseen",
+    "pass",
+    "pass",
+    "unseen"
+   ],
+   "seen": [
+    "band_from_high_up",
+    "cannot_see",
+    "band_from_low_down",
+    "band_from_low_down",
+    "cannot_see"
+   ],
+   "seconds": 25.214,
+   "usd": 0.059549,
+   "error": null
+  },
+  {
+   "state": "right",
+   "check": "belt_routing",
+   "view": "crop_middle",
+   "result": "unseen",
+   "samples": [
+    "pass",
+    "pass",
+    "pass",
+    "unseen",
+    "unseen"
+   ],
+   "seen": [
+    "band_from_low_down",
+    "band_from_low_down",
+    "band_from_low_down",
+    "cannot_see",
+    "cannot_see"
+   ],
+   "seconds": 21.427,
+   "usd": 0.061585,
+   "error": null
+  },
+  {
+   "state": "right",
+   "check": "belt_routing",
+   "view": "crop_left",
+   "result": "pass",
+   "samples": [
+    "pass",
+    "pass",
+    "pass",
+    "pass",
+    "pass"
+   ],
+   "seen": [
+    "band_from_low_down",
+    "band_from_low_down",
+    "band_from_low_down",
+    "band_from_low_down",
+    "band_from_low_down"
+   ],
+   "seconds": 22.885,
+   "usd": 0.047163,
+   "error": null
+  },
+  {
+   "state": "right",
+   "check": "belt_routing",
+   "view": "crop_left",
+   "result": "unseen",
+   "samples": [
+    "pass",
+    "pass",
+    "unseen",
+    "fail",
+    "unseen"
+   ],
+   "seen": [
+    "band_from_low_down",
+    "band_from_low_down",
+    "cannot_see",
+    "band_from_high_up",
+    "cannot_see"
+   ],
+   "seconds": 17.358,
+   "usd": 0.045196,
+   "error": null
+  },
+  {
+   "state": "right",
+   "check": "belt_routing",
+   "view": "crop_right",
+   "result": "unseen",
+   "samples": [
+    "pass",
+    "pass",
+    "unseen",
+    "fail",
+    "pass"
+   ],
+   "seen": [
+    "band_from_low_down",
+    "band_from_low_down",
+    "cannot_see",
+    "band_from_high_up",
+    "band_from_low_down"
+   ],
+   "seconds": 14.434,
+   "usd": 0.038401,
+   "error": null
+  },
+  {
+   "state": "right",
+   "check": "belt_routing",
+   "view": "crop_right",
+   "result": "pass",
+   "samples": [
+    "pass",
+    "unseen",
+    "pass",
+    "pass",
+    "pass"
+   ],
+   "seen": [
+    "band_from_low_down",
+    "cannot_see",
+    "band_from_low_down",
+    "band_from_low_down",
+    "band_from_low_down"
+   ],
+   "seconds": 13.075,
+   "usd": 0.041279,
+   "error": null
+  },
+  {
+   "state": "right",
+   "check": "belt_routing",
+   "view": "tilt_plus_8",
+   "result": "unseen",
+   "samples": [
+    "pass",
+    "unseen",
+    "unseen",
+    "pass",
+    "pass"
+   ],
+   "seen": [
+    "band_from_low_down",
+    "cannot_see",
+    "cannot_see",
+    "band_from_low_down",
+    "band_from_low_down"
+   ],
+   "seconds": 23.916,
+   "usd": 0.046382,
+   "error": null
+  },
+  {
+   "state": "right",
+   "check": "belt_routing",
+   "view": "tilt_plus_8",
+   "result": "pass",
+   "samples": [
+    "pass",
+    "pass",
+    "pass",
+    "pass",
+    "pass"
+   ],
+   "seen": [
+    "band_from_low_down",
+    "band_from_low_down",
+    "band_from_low_down",
+    "band_from_low_down",
+    "band_from_low_down"
+   ],
+   "seconds": 19.557,
+   "usd": 0.048714,
+   "error": null
+  },
+  {
+   "state": "right",
+   "check": "belt_routing",
+   "view": "tilt_minus_8",
+   "result": "unseen",
+   "samples": [
+    "unseen",
+    "fail",
+    "unseen",
+    "pass",
+    "unseen"
+   ],
+   "seen": [
+    "cannot_see",
+    "band_from_high_up",
+    "cannot_see",
+    "band_from_low_down",
+    "cannot_see"
+   ],
+   "seconds": 16.306,
+   "usd": 0.052582,
+   "error": null
+  },
+  {
+   "state": "right",
+   "check": "belt_routing",
+   "view": "tilt_minus_8",
+   "result": "unseen",
+   "samples": [
+    "unseen",
+    "pass",
+    "fail",
+    "pass",
+    "fail"
+   ],
+   "seen": [
+    "cannot_see",
+    "band_from_low_down",
+    "band_from_high_up",
+    "band_from_low_down",
+    "band_from_high_up"
+   ],
+   "seconds": 18.053,
+   "usd": 0.054328,
+   "error": null
+  },
+  {
+   "state": "right",
+   "check": "belt_routing",
+   "view": "dark",
+   "result": "unseen",
+   "samples": [
+    "unseen",
+    "unseen",
+    "unseen",
+    "unseen",
+    "unseen"
+   ],
+   "seen": [
+    "cannot_see",
+    "cannot_see",
+    "cannot_see",
+    "cannot_see",
+    "cannot_see"
+   ],
+   "seconds": 23.385,
+   "usd": 0.062973,
+   "error": null
+  },
+  {
+   "state": "right",
+   "check": "belt_routing",
+   "view": "dark",
+   "result": "unseen",
+   "samples": [
+    "pass",
+    "fail",
+    "unseen",
+    "pass",
+    "pass"
+   ],
+   "seen": [
+    "band_from_low_down",
+    "band_from_high_up",
+    "cannot_see",
+    "band_from_low_down",
+    "band_from_low_down"
+   ],
+   "seconds": 21.615,
+   "usd": 0.064095,
+   "error": null
+  },
+  {
+   "state": "right",
+   "check": "belt_routing",
+   "view": "bright",
+   "result": "unseen",
+   "samples": [
+    "pass",
+    "pass",
+    "fail",
+    "pass",
+    "pass"
+   ],
+   "seen": [
+    "band_from_low_down",
+    "band_from_low_down",
+    "band_from_high_up",
+    "band_from_low_down",
+    "band_from_low_down"
+   ],
+   "seconds": 20.529,
+   "usd": 0.046584,
+   "error": null
+  },
+  {
+   "state": "right",
+   "check": "belt_routing",
+   "view": "bright",
+   "result": "pass",
+   "samples": [
+    "pass",
+    "pass",
+    "unseen",
+    "pass",
+    "pass"
+   ],
+   "seen": [
+    "band_from_low_down",
+    "band_from_low_down",
+    "cannot_see",
+    "band_from_low_down",
+    "band_from_low_down"
+   ],
+   "seconds": 21.653,
+   "usd": 0.057065,
+   "error": null
+  },
+  {
+   "state": "right",
+   "check": "belt_routing",
+   "view": "shake",
+   "result": "unseen",
+   "samples": [
+    "pass",
+    "pass",
+    "fail",
+    "pass",
+    "pass"
+   ],
+   "seen": [
+    "band_from_low_down",
+    "band_from_low_down",
+    "band_from_high_up",
+    "band_from_low_down",
+    "band_from_low_down"
+   ],
+   "seconds": 15.086,
+   "usd": 0.048241,
+   "error": null
+  },
+  {
+   "state": "right",
+   "check": "belt_routing",
+   "view": "shake",
+   "result": "pass",
+   "samples": [
+    "pass",
+    "pass",
+    "pass",
+    "pass",
+    "unseen"
+   ],
+   "seen": [
+    "band_from_low_down",
+    "band_from_low_down",
+    "band_from_low_down",
+    "band_from_low_down",
+    "cannot_see"
+   ],
+   "seconds": 20.989,
+   "usd": 0.053618,
+   "error": null
+  },
+  {
+   "state": "wrong",
+   "check": "belt_routing",
+   "view": "base",
+   "result": "unseen",
+   "samples": [
+    "unseen",
+    "fail",
+    "unseen",
+    "fail",
+    "unseen"
+   ],
+   "seen": [
+    "cannot_see",
+    "band_from_high_up",
+    "cannot_see",
+    "band_from_high_up",
+    "cannot_see"
+   ],
+   "seconds": 20.561,
+   "usd": 0.051034,
+   "error": null
+  },
+  {
+   "state": "wrong",
+   "check": "belt_routing",
+   "view": "base",
+   "result": "unseen",
+   "samples": [
+    "unseen",
+    "fail",
+    "unseen",
+    "fail",
+    "pass"
+   ],
+   "seen": [
+    "cannot_see",
+    "band_from_high_up",
+    "cannot_see",
+    "band_from_high_up",
+    "band_from_low_down"
+   ],
+   "seconds": 22.49,
+   "usd": 0.052938,
+   "error": null
+  },
+  {
+   "state": "wrong",
+   "check": "belt_routing",
+   "view": "base",
+   "result": "pass",
+   "samples": [
+    "unseen",
+    "pass",
+    "pass",
+    "pass",
+    "pass"
+   ],
+   "seen": [
+    "cannot_see",
+    "band_from_low_down",
+    "band_from_low_down",
+    "band_from_low_down",
+    "band_from_low_down"
+   ],
+   "seconds": 26.287,
+   "usd": 0.062552,
+   "error": null
+  },
+  {
+   "state": "wrong",
+   "check": "belt_routing",
+   "view": "base",
+   "result": "unseen",
+   "samples": [
+    "pass",
+    "fail",
+    "unseen",
+    "pass",
+    "fail"
+   ],
+   "seen": [
+    "band_from_low_down",
+    "band_from_high_up",
+    "cannot_see",
+    "band_from_low_down",
+    "band_from_high_up"
+   ],
+   "seconds": 35.61,
+   "usd": 0.069641,
+   "error": null
+  },
+  {
+   "state": "wrong",
+   "check": "belt_routing",
+   "view": "base",
+   "result": "pass",
+   "samples": [
+    "pass",
+    "unseen",
+    "pass",
+    "pass",
+    "pass"
+   ],
+   "seen": [
+    "band_from_low_down",
+    "cannot_see",
+    "band_from_low_down",
+    "band_from_low_down",
+    "band_from_low_down"
+   ],
+   "seconds": 17.039,
+   "usd": 0.045335,
+   "error": null
+  },
+  {
+   "state": "wrong",
+   "check": "belt_routing",
+   "view": "crop_middle",
+   "result": "fail",
+   "samples": [
+    "fail",
+    "fail",
+    "fail",
+    "fail",
+    "fail"
+   ],
+   "seen": [
+    "band_from_high_up",
+    "band_from_high_up",
+    "band_from_high_up",
+    "band_from_high_up",
+    "band_from_high_up"
+   ],
+   "seconds": 23.415,
+   "usd": 0.050495,
+   "error": null
+  },
+  {
+   "state": "wrong",
+   "check": "belt_routing",
+   "view": "crop_middle",
+   "result": "unseen",
+   "samples": [
+    "pass",
+    "unseen",
+    "fail",
+    "unseen",
+    "pass"
+   ],
+   "seen": [
+    "band_from_low_down",
+    "cannot_see",
+    "band_from_high_up",
+    "cannot_see",
+    "band_from_low_down"
+   ],
+   "seconds": 23.274,
+   "usd": 0.053928,
+   "error": null
+  },
+  {
+   "state": "wrong",
+   "check": "belt_routing",
+   "view": "crop_left",
+   "result": "unseen",
+   "samples": [
+    "unseen",
+    "pass",
+    "pass",
+    "unseen",
+    "pass"
+   ],
+   "seen": [
+    "cannot_see",
+    "band_from_low_down",
+    "band_from_low_down",
+    "cannot_see",
+    "band_from_low_down"
+   ],
+   "seconds": 14.729,
+   "usd": 0.043466,
+   "error": null
+  },
+  {
+   "state": "wrong",
+   "check": "belt_routing",
+   "view": "crop_left",
+   "result": "unseen",
+   "samples": [
+    "pass",
+    "unseen",
+    "unseen",
+    "unseen",
+    "pass"
+   ],
+   "seen": [
+    "band_from_low_down",
+    "cannot_see",
+    "cannot_see",
+    "cannot_see",
+    "band_from_low_down"
+   ],
+   "seconds": 25.736,
+   "usd": 0.061541,
+   "error": null
+  },
+  {
+   "state": "wrong",
+   "check": "belt_routing",
+   "view": "crop_right",
+   "result": "fail",
+   "samples": [
+    "fail",
+    "fail",
+    "fail",
+    "unseen",
+    "pass"
+   ],
+   "seen": [
+    "band_from_high_up",
+    "band_from_high_up",
+    "band_from_high_up",
+    "cannot_see",
+    "band_from_low_down"
+   ],
+   "seconds": 25.476,
+   "usd": 0.063522,
+   "error": null
+  },
+  {
+   "state": "wrong",
+   "check": "belt_routing",
+   "view": "crop_right",
+   "result": "unseen",
+   "samples": [
+    "fail",
+    "fail",
+    "pass",
+    "pass",
+    "unseen"
+   ],
+   "seen": [
+    "band_from_high_up",
+    "band_from_high_up",
+    "band_from_low_down",
+    "band_from_low_down",
+    "cannot_see"
+   ],
+   "seconds": 17.168,
+   "usd": 0.053696,
+   "error": null
+  },
+  {
+   "state": "wrong",
+   "check": "belt_routing",
+   "view": "tilt_plus_8",
+   "result": "unseen",
+   "samples": [
+    "pass",
+    "fail",
+    "pass",
+    "pass",
+    "pass"
+   ],
+   "seen": [
+    "band_from_low_down",
+    "band_from_high_up",
+    "band_from_low_down",
+    "band_from_low_down",
+    "band_from_low_down"
+   ],
+   "seconds": 16.934,
+   "usd": 0.0472,
+   "error": null
+  },
+  {
+   "state": "wrong",
+   "check": "belt_routing",
+   "view": "tilt_plus_8",
+   "result": "unseen",
+   "samples": [
+    "pass",
+    "unseen",
+    "pass",
+    "pass",
+    "unseen"
+   ],
+   "seen": [
+    "band_from_low_down",
+    "cannot_see",
+    "band_from_low_down",
+    "band_from_low_down",
+    "cannot_see"
+   ],
+   "seconds": 18.946,
+   "usd": 0.050341,
+   "error": null
+  },
+  {
+   "state": "wrong",
+   "check": "belt_routing",
+   "view": "tilt_minus_8",
+   "result": "fail",
+   "samples": [
+    "unseen",
+    "fail",
+    "fail",
+    "fail",
+    "fail"
+   ],
+   "seen": [
+    "cannot_see",
+    "band_from_high_up",
+    "band_from_high_up",
+    "band_from_high_up",
+    "band_from_high_up"
+   ],
+   "seconds": 16.342,
+   "usd": 0.051505,
+   "error": null
+  },
+  {
+   "state": "wrong",
+   "check": "belt_routing",
+   "view": "tilt_minus_8",
+   "result": "fail",
+   "samples": [
+    "fail",
+    "fail",
+    "fail",
+    "unseen",
+    "fail"
+   ],
+   "seen": [
+    "band_from_high_up",
+    "band_from_high_up",
+    "band_from_high_up",
+    "cannot_see",
+    "band_from_high_up"
+   ],
+   "seconds": 18.346,
+   "usd": 0.050091,
+   "error": null
+  },
+  {
+   "state": "wrong",
+   "check": "belt_routing",
+   "view": "dark",
+   "result": "fail",
+   "samples": [
+    "pass",
+    "fail",
+    "fail",
+    "fail",
+    "pass"
+   ],
+   "seen": [
+    "band_from_low_down",
+    "band_from_high_up",
+    "band_from_high_up",
+    "band_from_high_up",
+    "band_from_low_down"
+   ],
+   "seconds": 17.976,
+   "usd": 0.05185,
+   "error": null
+  },
+  {
+   "state": "wrong",
+   "check": "belt_routing",
+   "view": "dark",
+   "result": "fail",
+   "samples": [
+    "unseen",
+    "fail",
+    "fail",
+    "fail",
+    "pass"
+   ],
+   "seen": [
+    "cannot_see",
+    "band_from_high_up",
+    "band_from_high_up",
+    "band_from_high_up",
+    "band_from_low_down"
+   ],
+   "seconds": 16.905,
+   "usd": 0.053571,
+   "error": null
+  },
+  {
+   "state": "wrong",
+   "check": "belt_routing",
+   "view": "bright",
+   "result": "pass",
+   "samples": [
+    "pass",
+    "pass",
+    "pass",
+    "pass",
+    "pass"
+   ],
+   "seen": [
+    "band_from_low_down",
+    "band_from_low_down",
+    "band_from_low_down",
+    "band_from_low_down",
+    "band_from_low_down"
+   ],
+   "seconds": 20.862,
+   "usd": 0.052283,
+   "error": null
+  },
+  {
+   "state": "wrong",
+   "check": "belt_routing",
+   "view": "bright",
+   "result": "unseen",
+   "samples": [
+    "pass",
+    "fail",
+    "pass",
+    "pass",
+    "pass"
+   ],
+   "seen": [
+    "band_from_low_down",
+    "band_from_high_up",
+    "band_from_low_down",
+    "band_from_low_down",
+    "band_from_low_down"
+   ],
+   "seconds": 14.575,
+   "usd": 0.041944,
+   "error": null
+  },
+  {
+   "state": "wrong",
+   "check": "belt_routing",
+   "view": "shake",
+   "result": "pass",
+   "samples": [
+    "pass",
+    "pass",
+    "pass",
+    "pass",
+    "pass"
+   ],
+   "seen": [
+    "band_from_low_down",
+    "band_from_low_down",
+    "band_from_low_down",
+    "band_from_low_down",
+    "band_from_low_down"
+   ],
+   "seconds": 20.803,
+   "usd": 0.044046,
+   "error": null
+  },
+  {
+   "state": "wrong",
+   "check": "belt_routing",
+   "view": "shake",
+   "result": "pass",
+   "samples": [
+    "pass",
+    "unseen",
+    "pass",
+    "pass",
+    "pass"
+   ],
+   "seen": [
+    "band_from_low_down",
+    "cannot_see",
+    "band_from_low_down",
+    "band_from_low_down",
+    "band_from_low_down"
+   ],
+   "seconds": 15.671,
+   "usd": 0.042329,
+   "error": null
+  }
+ ]
+}

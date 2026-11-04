@@ -21,8 +21,8 @@ from test_one_message_one_entry import ScriptedBrain
 
 PEOPLE_ES = {"gonza": {"name": "Gonza", "rota": "Parent A", "chat_ids_env": "TELEGRAM_CHAT_ID", "lang": "es"},
              "ceci": {"name": "Ceci", "rota": "Parent B", "chat_ids_env": "TELEGRAM_CECI_CHAT_ID", "lang": "es"}}
-ANSWERS_ES = {"harness_pinch": "no", "car_position": "sí", "buckle": "sí", "tension": "sí", "belt_path_movement": "sí"}
-ANSWERS_EN = {"harness_pinch": "no", "car_position": "yes", "buckle": "yes", "tension": "yes", "belt_path_movement": "yes"}
+ANSWERS_ES = {"harness_pinch": "no", "car_position": "sí", "buckle": "sí", "belt_routing": "sí", "tension": "sí", "belt_path_movement": "sí"}
+ANSWERS_EN = {"harness_pinch": "no", "car_position": "yes", "buckle": "yes", "belt_routing": "yes", "tension": "yes", "belt_path_movement": "yes"}
 DOOR = {"closeup": False, "ready_timeout_s": 0.0}  # the rendered clips' mode: judged at once, guides from the door
 
 

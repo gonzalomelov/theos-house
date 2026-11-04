@@ -1,0 +1,676 @@
+{
+ "runs": 5,
+ "samples": 3,
+ "variant_runs": 0,
+ "usd": 0.5,
+ "results": {
+  "lap_guides": {
+   "right": {
+    "base": {
+     "pass": 4,
+     "fail": 0,
+     "unseen": 1,
+     "none": 0,
+     "calls": {
+      "pass": 9,
+      "fail": 2,
+      "unseen": 4
+     }
+    },
+    "variants": null,
+    "by_view": null
+   },
+   "wrong": {
+    "base": {
+     "pass": 4,
+     "fail": 0,
+     "unseen": 1,
+     "none": 0,
+     "calls": {
+      "pass": 9,
+      "fail": 3,
+      "unseen": 3
+     }
+    },
+    "variants": null,
+    "by_view": null
+   }
+  },
+  "shoulder_guide": {
+   "right": {
+    "base": {
+     "pass": 4,
+     "fail": 1,
+     "unseen": 0,
+     "none": 0,
+     "calls": {
+      "pass": 10,
+      "fail": 5,
+      "unseen": 0
+     }
+    },
+    "variants": null,
+    "by_view": null
+   },
+   "wrong": {
+    "base": {
+     "pass": 2,
+     "fail": 0,
+     "unseen": 3,
+     "none": 0,
+     "calls": {
+      "pass": 7,
+      "fail": 2,
+      "unseen": 6
+     }
+    },
+    "variants": null,
+    "by_view": null
+   }
+  },
+  "no_twist": {
+   "right": {
+    "base": {
+     "pass": 0,
+     "fail": 5,
+     "unseen": 0,
+     "none": 0,
+     "calls": {
+      "pass": 3,
+      "fail": 12,
+      "unseen": 0
+     }
+    },
+    "variants": null,
+    "by_view": null
+   },
+   "wrong": {
+    "base": {
+     "pass": 0,
+     "fail": 5,
+     "unseen": 0,
+     "none": 0,
+     "calls": {
+      "pass": 0,
+      "fail": 14,
+      "unseen": 1
+     }
+    },
+    "variants": null,
+    "by_view": null
+   }
+  }
+ },
+ "looks": [
+  {
+   "state": "right",
+   "check": "lap_guides",
+   "view": "base",
+   "result": "pass",
+   "samples": [
+    "pass",
+    "fail",
+    "pass"
+   ],
+   "seen": [
+    "through_both",
+    "misses_both",
+    "through_both"
+   ],
+   "seconds": 13.336,
+   "usd": 0.02203,
+   "error": null
+  },
+  {
+   "state": "right",
+   "check": "lap_guides",
+   "view": "base",
+   "result": "pass",
+   "samples": [
+    "pass",
+    "pass",
+    "unseen"
+   ],
+   "seen": [
+    "through_both",
+    "through_both",
+    "cannot_see"
+   ],
+   "seconds": 13.334,
+   "usd": 0.021567,
+   "error": null
+  },
+  {
+   "state": "right",
+   "check": "lap_guides",
+   "view": "base",
+   "result": "pass",
+   "samples": [
+    "pass",
+    "pass",
+    "fail"
+   ],
+   "seen": [
+    "through_both",
+    "through_both",
+    "misses_both"
+   ],
+   "seconds": 11.712,
+   "usd": 0.01809,
+   "error": null
+  },
+  {
+   "state": "right",
+   "check": "lap_guides",
+   "view": "base",
+   "result": "unseen",
+   "samples": [
+    "unseen",
+    "unseen",
+    "pass"
+   ],
+   "seen": [
+    "cannot_see",
+    "cannot_see",
+    "through_both"
+   ],
+   "seconds": 15.694,
+   "usd": 0.021402,
+   "error": null
+  },
+  {
+   "state": "right",
+   "check": "lap_guides",
+   "view": "base",
+   "result": "pass",
+   "samples": [
+    "unseen",
+    "pass",
+    "pass"
+   ],
+   "seen": [
+    "cannot_see",
+    "through_both",
+    "through_both"
+   ],
+   "seconds": 12.965,
+   "usd": 0.017245,
+   "error": null
+  },
+  {
+   "state": "right",
+   "check": "shoulder_guide",
+   "view": "base",
+   "result": "pass",
+   "samples": [
+    "fail",
+    "pass",
+    "pass"
+   ],
+   "seen": [
+    "clip_apart_from_belt",
+    "belt_through_clip",
+    "belt_through_clip"
+   ],
+   "seconds": 10.838,
+   "usd": 0.015363,
+   "error": null
+  },
+  {
+   "state": "right",
+   "check": "shoulder_guide",
+   "view": "base",
+   "result": "pass",
+   "samples": [
+    "pass",
+    "pass",
+    "pass"
+   ],
+   "seen": [
+    "belt_through_clip",
+    "belt_through_clip",
+    "belt_through_clip"
+   ],
+   "seconds": 11.581,
+   "usd": 0.017088,
+   "error": null
+  },
+  {
+   "state": "right",
+   "check": "shoulder_guide",
+   "view": "base",
+   "result": "pass",
+   "samples": [
+    "pass",
+    "pass",
+    "fail"
+   ],
+   "seen": [
+    "belt_through_clip",
+    "belt_through_clip",
+    "clip_apart_from_belt"
+   ],
+   "seconds": 11.694,
+   "usd": 0.015345,
+   "error": null
+  },
+  {
+   "state": "right",
+   "check": "shoulder_guide",
+   "view": "base",
+   "result": "pass",
+   "samples": [
+    "fail",
+    "pass",
+    "pass"
+   ],
+   "seen": [
+    "clip_apart_from_belt",
+    "belt_through_clip",
+    "belt_through_clip"
+   ],
+   "seconds": 11.267,
+   "usd": 0.014445,
+   "error": null
+  },
+  {
+   "state": "right",
+   "check": "shoulder_guide",
+   "view": "base",
+   "result": "fail",
+   "samples": [
+    "fail",
+    "pass",
+    "fail"
+   ],
+   "seen": [
+    "clip_apart_from_belt",
+    "belt_through_clip",
+    "clip_apart_from_belt"
+   ],
+   "seconds": 13.228,
+   "usd": 0.015656,
+   "error": null
+  },
+  {
+   "state": "right",
+   "check": "no_twist",
+   "view": "base",
+   "result": "fail",
+   "samples": [
+    "fail",
+    "fail",
+    "pass"
+   ],
+   "seen": [
+    "narrows_or_twists",
+    "narrows_or_twists",
+    "even_flat"
+   ],
+   "seconds": 10.989,
+   "usd": 0.018797,
+   "error": null
+  },
+  {
+   "state": "right",
+   "check": "no_twist",
+   "view": "base",
+   "result": "fail",
+   "samples": [
+    "fail",
+    "fail",
+    "pass"
+   ],
+   "seen": [
+    "narrows_or_twists",
+    "narrows_or_twists",
+    "even_flat"
+   ],
+   "seconds": 10.533,
+   "usd": 0.017539,
+   "error": null
+  },
+  {
+   "state": "right",
+   "check": "no_twist",
+   "view": "base",
+   "result": "fail",
+   "samples": [
+    "pass",
+    "fail",
+    "fail"
+   ],
+   "seen": [
+    "even_flat",
+    "narrows_or_twists",
+    "narrows_or_twists"
+   ],
+   "seconds": 11.779,
+   "usd": 0.01872,
+   "error": null
+  },
+  {
+   "state": "right",
+   "check": "no_twist",
+   "view": "base",
+   "result": "fail",
+   "samples": [
+    "fail",
+    "fail",
+    "fail"
+   ],
+   "seen": [
+    "narrows_or_twists",
+    "narrows_or_twists",
+    "narrows_or_twists"
+   ],
+   "seconds": 11.729,
+   "usd": 0.018185,
+   "error": null
+  },
+  {
+   "state": "right",
+   "check": "no_twist",
+   "view": "base",
+   "result": "fail",
+   "samples": [
+    "fail",
+    "fail",
+    "fail"
+   ],
+   "seen": [
+    "narrows_or_twists",
+    "narrows_or_twists",
+    "narrows_or_twists"
+   ],
+   "seconds": 10.328,
+   "usd": 0.015137,
+   "error": null
+  },
+  {
+   "state": "wrong",
+   "check": "lap_guides",
+   "view": "base",
+   "result": "pass",
+   "samples": [
+    "fail",
+    "pass",
+    "pass"
+   ],
+   "seen": [
+    "misses_both",
+    "through_both",
+    "through_both"
+   ],
+   "seconds": 13.092,
+   "usd": 0.018157,
+   "error": null
+  },
+  {
+   "state": "wrong",
+   "check": "lap_guides",
+   "view": "base",
+   "result": "pass",
+   "samples": [
+    "unseen",
+    "pass",
+    "pass"
+   ],
+   "seen": [
+    "cannot_see",
+    "through_both",
+    "through_both"
+   ],
+   "seconds": 12.849,
+   "usd": 0.020358,
+   "error": null
+  },
+  {
+   "state": "wrong",
+   "check": "lap_guides",
+   "view": "base",
+   "result": "pass",
+   "samples": [
+    "pass",
+    "fail",
+    "pass"
+   ],
+   "seen": [
+    "through_both",
+    "misses_near_clip",
+    "through_both"
+   ],
+   "seconds": 17.431,
+   "usd": 0.020711,
+   "error": null
+  },
+  {
+   "state": "wrong",
+   "check": "lap_guides",
+   "view": "base",
+   "result": "pass",
+   "samples": [
+    "unseen",
+    "pass",
+    "pass"
+   ],
+   "seen": [
+    "cannot_see",
+    "through_both",
+    "through_both"
+   ],
+   "seconds": 10.736,
+   "usd": 0.014978,
+   "error": null
+  },
+  {
+   "state": "wrong",
+   "check": "lap_guides",
+   "view": "base",
+   "result": "unseen",
+   "samples": [
+    "pass",
+    "fail",
+    "unseen"
+   ],
+   "seen": [
+    "through_both",
+    "misses_near_clip",
+    "cannot_see"
+   ],
+   "seconds": 12.285,
+   "usd": 0.017393,
+   "error": null
+  },
+  {
+   "state": "wrong",
+   "check": "shoulder_guide",
+   "view": "base",
+   "result": "pass",
+   "samples": [
+    "fail",
+    "pass",
+    "pass"
+   ],
+   "seen": [
+    "clip_apart_from_belt",
+    "belt_through_clip",
+    "belt_through_clip"
+   ],
+   "seconds": 10.256,
+   "usd": 0.013279,
+   "error": null
+  },
+  {
+   "state": "wrong",
+   "check": "shoulder_guide",
+   "view": "base",
+   "result": "pass",
+   "samples": [
+    "pass",
+    "unseen",
+    "pass"
+   ],
+   "seen": [
+    "belt_through_clip",
+    "cannot_see",
+    "belt_through_clip"
+   ],
+   "seconds": 10.853,
+   "usd": 0.016921,
+   "error": null
+  },
+  {
+   "state": "wrong",
+   "check": "shoulder_guide",
+   "view": "base",
+   "result": "unseen",
+   "samples": [
+    "pass",
+    "unseen",
+    "unseen"
+   ],
+   "seen": [
+    "belt_through_clip",
+    "cannot_see",
+    "cannot_see"
+   ],
+   "seconds": 9.312,
+   "usd": 0.013186,
+   "error": null
+  },
+  {
+   "state": "wrong",
+   "check": "shoulder_guide",
+   "view": "base",
+   "result": "unseen",
+   "samples": [
+    "pass",
+    "fail",
+    "unseen"
+   ],
+   "seen": [
+    "belt_through_clip",
+    "clip_apart_from_belt",
+    "cannot_see"
+   ],
+   "seconds": 8.908,
+   "usd": 0.01248,
+   "error": null
+  },
+  {
+   "state": "wrong",
+   "check": "shoulder_guide",
+   "view": "base",
+   "result": "unseen",
+   "samples": [
+    "pass",
+    "unseen",
+    "unseen"
+   ],
+   "seen": [
+    "belt_through_clip",
+    "cannot_see",
+    "cannot_see"
+   ],
+   "seconds": 10.045,
+   "usd": 0.015199,
+   "error": null
+  },
+  {
+   "state": "wrong",
+   "check": "no_twist",
+   "view": "base",
+   "result": "fail",
+   "samples": [
+    "fail",
+    "fail",
+    "fail"
+   ],
+   "seen": [
+    "narrows_or_twists",
+    "narrows_or_twists",
+    "narrows_or_twists"
+   ],
+   "seconds": 12.048,
+   "usd": 0.014316,
+   "error": null
+  },
+  {
+   "state": "wrong",
+   "check": "no_twist",
+   "view": "base",
+   "result": "fail",
+   "samples": [
+    "fail",
+    "fail",
+    "fail"
+   ],
+   "seen": [
+    "narrows_or_twists",
+    "narrows_or_twists",
+    "narrows_or_twists"
+   ],
+   "seconds": 12.269,
+   "usd": 0.015685,
+   "error": null
+  },
+  {
+   "state": "wrong",
+   "check": "no_twist",
+   "view": "base",
+   "result": "fail",
+   "samples": [
+    "fail",
+    "fail",
+    "fail"
+   ],
+   "seen": [
+    "narrows_or_twists",
+    "narrows_or_twists",
+    "narrows_or_twists"
+   ],
+   "seconds": 9.229,
+   "usd": 0.014039,
+   "error": null
+  },
+  {
+   "state": "wrong",
+   "check": "no_twist",
+   "view": "base",
+   "result": "fail",
+   "samples": [
+    "fail",
+    "fail",
+    "unseen"
+   ],
+   "seen": [
+    "narrows_or_twists",
+    "narrows_or_twists",
+    "cannot_see"
+   ],
+   "seconds": 8.497,
+   "usd": 0.011864,
+   "error": null
+  },
+  {
+   "state": "wrong",
+   "check": "no_twist",
+   "view": "base",
+   "result": "fail",
+   "samples": [
+    "fail",
+    "fail",
+    "fail"
+   ],
+   "seen": [
+    "narrows_or_twists",
+    "narrows_or_twists",
+    "narrows_or_twists"
+   ],
+   "seconds": 8.909,
+   "usd": 0.014796,
+   "error": null
+  }
+ ]
+}

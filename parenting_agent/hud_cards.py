@@ -80,6 +80,7 @@ CAR_SEAT = {
     "lap_guides": {"en": "Lap belt in both side guides", "es": "Cinturón de cadera en las dos guías"},
     "buckle": {"en": "Buckle until it clicks", "es": "Abrochá hasta que haga clic"},
     "shoulder_guide": {"en": "Shoulder belt in the rear guide", "es": "Cinturón de hombro en la guía de atrás"},
+    "belt_routing": {"en": "Lap belt on top, shoulder belt behind?", "es": "¿Cadera por arriba, hombro por detrás?"},
     "tension": {"en": "Tighten lap belt, then shoulder belt", "es": "Tensá cadera, después hombro"},
     "no_twist": {"en": "Belt flat, no twist", "es": "Cinturón plano, sin giros"},
     "level_line": {"en": "Show me the level line", "es": "Mostrame la línea de nivel"},

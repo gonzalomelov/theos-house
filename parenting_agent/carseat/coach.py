@@ -4,7 +4,7 @@ The steps come from the seat profile (the maker's manual) and the car profile, i
 harness first, while the carrier still faces the parent. A camera step waits for the parent to finish: a spoken "listo"
 or "ya" (ready()), or the check passing on its own, or a long fallback. Then it runs SAM 3.1 on the newest frames until a
 check passes or fails, or the view times out and is listed as not seen. The belt guides are judged only up close: the
-coach asks the parent to bring the phone to each guide. Ask steps (the seat position in the car and the hand checks a camera cannot see) are
+coach asks the parent to bring the phone to each guide. The belt's route is the parent's to look at, so it is asked. Ask steps (the seat position in the car and the hand checks a camera cannot see) are
 spoken, wait for the parent's answer and are logged. They are never skipped: an unanswered one stays open in
 the summary. The coach never calls the install safe. The summary lists which visible checks passed, which
 failed or were not seen, which hand checks remain, and suggests one check by a certified technician.
@@ -87,8 +87,12 @@ CAMERA_STEPS = {
 }
 # The order of a real belt install (Joie i-Gemm video, Nov 1, and the i-Snug 2 manual). The harness comes first: the
 # camera sees it only while the baby or doll faces the parent, before the carrier goes in the car facing back.
-ORDER = ("harness_pinch", "car_position", "lap_guides", "buckle", "shoulder_guide", "tension", "no_twist", "level_line",
-         "handle", "belt_path_movement")
+ORDER = ("harness_pinch", "car_position", "lap_guides", "buckle", "shoulder_guide", "belt_routing", "tension", "no_twist",
+         "level_line", "handle", "belt_path_movement")
+# The guide checks can't see the commonest mistake: the shoulder belt in the side guides and the lap belt round the back still
+# reads as a belt in every guide (SAM 3.1 passed both on a still of it, Nov 4). Muse couldn't tell either: it called that still
+# fine in 5 of 21 looks (results/carseat/routing/README.md). So the route is the parent's to look at, and the coach asks.
+ROUTING = "belt_routing"
 # What a parent says when a step is done ("listo", "ya"), on the glasses microphone or in the chat.
 READY = ("listo", "lista", "ya", "terminé", "termine", "done", "ready", "finished")
 LINES = {
@@ -109,6 +113,13 @@ LINES = {
            "guides": {"near": "blue guide on the door side", "far": "blue guide on the far side",
                       "rear": "blue guide at the back"},
            "ready": "OK, looking.",
+           "routing": "Now look at the belt's route yourself, my camera can't confirm it. On a carrier like this one the lap belt "
+                      "usually goes across the top, over the legs, through the blue side guides, and the shoulder belt around "
+                      "the back. Seats differ, so compare it with your seat's manual. Is yours like that? Say yes or no.",
+           "routing_fix": "Noted. Check your seat's manual and the blue guides, fix the route and say done.",
+           "routing_again": "Does the lap belt go across the top now, through the blue guides, and the shoulder belt around the back, "
+                            "as your manual shows? Say yes or no.",
+           "routing_ok": "Noted, you checked that by eye, not my camera.",
            "not_a_verdict": "This is not a verdict on the install.",
            "missing": "Not done yet"},
     "es": {"unsure": "Mis dos chequeos no coinciden acá, así que no lo cuento como bien. Mostrame otra vista, o revisalo "
@@ -128,6 +139,13 @@ LINES = {
            "guides": {"near": "guía azul del lado de la puerta", "far": "guía azul del otro lado",
                       "rear": "guía azul de atrás"},
            "ready": "Dale, miro.",
+           "routing": "Ahora mirá vos por dónde va el cinturón, mi cámara no lo puede confirmar. En una silla como esta lo "
+                      "habitual es el de cadera por arriba, sobre las piernas, por las guías azules del costado, y el de hombro "
+                      "por detrás. Cada silla es distinta, así que comparalo con el manual de la tuya. ¿Te quedó así? Decí sí o no.",
+           "routing_fix": "Anotado. Mirá el manual de tu silla y las guías azules, corregí el recorrido y decime listo.",
+           "routing_again": "¿Ahora el de cadera va por arriba, por las guías azules, y el de hombro por detrás, como muestra tu "
+                            "manual? Decí sí o no.",
+           "routing_ok": "Anotado, eso lo confirmaste vos mirando, no mi cámara.",
            "not_a_verdict": "Esto no es un veredicto sobre la instalación.",
            "missing": "Falta hacer"},
 }
@@ -144,13 +162,15 @@ SUMMARY = {
            ("hand", "open", "Chequeos a mano todavía abiertos")),
 }
 NAMES = {
-    "en": {"lap_guides": "lap belt in both side guides", "shoulder_guide": "shoulder belt in the rear guide",
+    "en": {"lap_guides": "a belt in both side guides", "shoulder_guide": "a belt in the rear guide",
+           "belt_routing": "the belt's route, against your manual",
            "no_twist": "no twist in the lap belt", "level_line": "level line level", "handle": "handle upright",
            "car_position": "carrier on a rear seat facing back",
            "belt_path_movement": "less than 2.5 centimeters of movement at the belt path",
            "harness_pinch": "no slack in the harness pinch test", "buckle": "seat belt buckled with a click",
            "tension": "lap belt tightened, then the shoulder belt"},
-    "es": {"lap_guides": "cinturón de cadera en las dos guías laterales", "shoulder_guide": "cinturón de hombro en la guía de atrás",
+    "es": {"lap_guides": "un cinturón en las dos guías laterales", "shoulder_guide": "un cinturón en la guía de atrás",
+           "belt_routing": "el recorrido del cinturón, según tu manual",
            "no_twist": "sin giros en el cinturón de cadera", "level_line": "línea de nivel nivelada",
            "handle": "manija hacia arriba", "car_position": "silla en un asiento de atrás mirando hacia atrás",
            "belt_path_movement": "menos de 2,5 centímetros de movimiento en el cinturón",
@@ -182,7 +202,7 @@ def step_ids(cfg):
     """The coach's step ids in the order it runs them: the skill's "order" exactly, else ORDER then any other hand
     check of the skill."""
     hands = [h["id"] for h in cfg.get("hand_checks", [])]
-    known = {"car_position", *CAMERA_STEPS, *hands}
+    known = {"car_position", ROUTING, *CAMERA_STEPS, *hands}
     ids = [i for i in cfg.get("order", ORDER) if i in known]
     return ids if "order" in cfg else ids + [h for h in hands if h not in ids]
 
@@ -199,6 +219,8 @@ def plan(cfg, seat, car, lang="en"):
         if step_id == "car_position":
             steps.append({"id": step_id, "kind": "ask", "say": lines["car_position"].format(rule=rule),
                           "pass_answer": "yes"})
+        elif step_id == ROUTING:
+            steps.append({"id": step_id, "kind": "routing", "say": lines["routing"], "pass_answer": "yes"})
         elif step_id in CAMERA_STEPS:
             step = CAMERA_STEPS[step_id]
             n = step["manual_step"]
@@ -316,6 +338,38 @@ class Coach:
         if self.cfg.get("closeup", True):
             return list(CAMERA_STEPS[check_id].get("closeups") or [None])
         return [None]
+
+    def _wait_ready(self, check_id):
+        """Until the parent says "listo", or ready_timeout_s."""
+        deadline = self.clock() + self.cfg.get("ready_timeout_s", 180.0)
+        self.waiting = check_id
+        with self.answer_ready:
+            while check_id not in self.readies and not self.stop_flag and self.clock() < deadline:
+                self.answer_ready.wait(timeout=0.05)
+            self.readies.discard(check_id)
+        self.waiting = None
+
+    def run_routing(self, step):
+        """The belt's route, the parent's to look at: a "no" is fixed with the manual, then asked again."""
+        check_id, reply = step["id"], None
+        asks = self.cfg.get("routing_asks", 3)
+        for attempt in range(asks):
+            if attempt:
+                self.bus.publish("carseat_step", step=check_id, step_kind=step["kind"])  # the question opens the glasses' ear again
+                self.answers.pop(check_id, None)
+            self.asking = check_id
+            self.say(step["say"] if not attempt else self.lines["routing_again"], step=check_id)
+            reply = self._wait_answer(check_id)
+            self.asking = None
+            if _yes_no(reply) != "no" or attempt == asks - 1:
+                break
+            self.say(self.lines["routing_fix"], step=check_id, result="fail")
+            self._wait_ready(check_id)
+        said = _yes_no(reply)
+        result = "open" if said is None else "pass" if said == "yes" else "fail"
+        self.results[check_id] = {"kind": "hand", "result": result, "answer": reply}
+        self.bus.publish("carseat_check", check=check_id, check_kind="hand", result=result, answer=reply)
+        self.say(self.lines[{"pass": "routing_ok", "fail": "fix", "open": "open"}[result]], step=check_id, result=result)
 
     def run_camera(self, step):
         """Say the step, wait for the parent to finish it, then judge each view of it on the newest frames.
@@ -489,7 +543,7 @@ class Coach:
             if self.stop_flag:
                 break
             self.bus.publish("carseat_step", step=step["id"], step_kind=step["kind"])
-            (self.run_camera if step["kind"] == "camera" else self.run_ask)(step)
+            {"camera": self.run_camera, "routing": self.run_routing}.get(step["kind"], self.run_ask)(step)
         text = self.summary()
         self.say(text, step="summary")
         self.bus.publish("carseat_summary", text=text, results=self.results)

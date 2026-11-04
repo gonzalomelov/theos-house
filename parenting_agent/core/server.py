@@ -202,6 +202,10 @@ async def status_from_twilio(core, whatsapp, params):
             await asyncio.to_thread(core.channel.by_telegram, *lost)
 
 
+# The coach's summary is its last line and ends with "not a verdict" and the technician: cut at 600, both were lost (Nov 4).
+COACH_LINE_MAX = 1500
+
+
 def app(core):
     async def post_event(request):
         body = await request.json()
@@ -217,7 +221,7 @@ def app(core):
 
     async def coach(request):
         body = await request.json()
-        why = await core.coach_line(body.get("parent"), str(body.get("text", ""))[:600], body.get("step"))
+        why = await core.coach_line(body.get("parent"), str(body.get("text", ""))[:COACH_LINE_MAX], body.get("step"))
         return JSONResponse({"error": why}, 400) if why else JSONResponse({"ok": True})
 
     async def stream(request):

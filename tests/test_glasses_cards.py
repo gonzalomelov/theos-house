@@ -278,7 +278,7 @@ class Routing(unittest.TestCase):
         bus.publish("voice", skill="car-seat", step="lap_guides", result="pass", text="I can see the lap belt in both side guides.")
         self.assertTrue(self.gonza.wait(lambda e: e["kind"] == "card" and e["card"].get("detail") == "Visto en cámara: bien"))
         steps = [c for c in self.gonza.cards() if c["topic"] == "car_seat"]
-        self.assertEqual([c["meta"] for c in steps], ["Paso 2 de 10", "Paso 3 de 10", "Paso 3 de 10"])
+        self.assertEqual([c["meta"] for c in steps], ["Paso 2 de 11", "Paso 3 de 11", "Paso 3 de 11"])
         self.assertEqual(steps[1]["detail"], "Decí listo cuando termines")
         self.assertEqual(steps[0]["detail"], "Decí sí o no")
         bus.publish("voice", episode=1, text="hand")  # the changing table's "hand" is not a car seat card

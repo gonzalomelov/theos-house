@@ -28,12 +28,13 @@ The order of a real belt install (a Joie i-Gemm install video, Nov 1, and the i-
 3. Lap belt through both side guides. Camera, one close-up per guide.
 4. Buckle the seat belt until it clicks. Asked.
 5. Shoulder belt round the back into the rear guide. Camera, close-up.
-6. Tighten the lap belt first, then the shoulder belt. Asked.
-7. Lap belt flat, no twist. Camera, from the door.
-8. Level line on the side of the carrier level with the ground. Camera, with the head held level.
-9. Handle upright, position 1, the car position. Camera, needs only the car seat in view.
-10. Movement at the belt path under 2.5 cm. Asked, the camera cannot feel it.
-11. Summary and one check by a certified technician.
+6. The belt's route, lap belt on top and shoulder belt around the back, against the seat's manual and the blue guides. Asked, with the parent looking: a "no" gets the fix line, a "listo", and the question again, up to three times.
+7. Tighten the lap belt first, then the shoulder belt. Asked.
+8. Lap belt flat, no twist. Camera, from the door.
+9. Level line on the side of the carrier level with the ground. Camera, with the head held level.
+10. Handle upright, position 1, the car position. Camera, needs only the car seat in view.
+11. Movement at the belt path under 2.5 cm. Asked, the camera cannot feel it.
+12. Summary and one check by a certified technician.
 
 Hand checks are never skipped. An unanswered one stays open in the summary.
 
@@ -42,6 +43,8 @@ Hand checks are never skipped. An unanswered one stays open in the summary.
 **The guides are judged up close.** After "listo" on a guide step the coach says "Acercá el teléfono a la guía azul del lado de la puerta" (then "del otro lado", or "de atrás") and judges only frames where a guide fills at least 0.8% of the view (`closeup_min_share`), for up to 30 s (`closeup_timeout_s`). A guide needs two close frames that agree, a pass and a fail with no third frame is unsure, and one close frame alone is listed as not seen (a single door-distance frame read a false fail in the Nov 1 proof run). From the door SAM 3.1 never found the guides on the real video, so a door view of a guide is never judged.
 
 Every line is in the language of the parent who started the coach: their "lang" in the people block, else Spanish for a request in Spanish, else the family's language (`LINES`, `CAMERA_STEPS`, `SUMMARY` and `NAMES` in `coach.py`, `ask_es` and `technician_es` in `skills/car-seat.json`, `text_es` for the car rule). The same words are spoken (each voice event carries its `lang`, and `say` on the Mac uses a Spanish voice for Spanish), shown on the glasses card and, when the coach was started from Telegram, sent to that parent's chat. The summary is the coach's last line and is kept in the conversation, it is never handed to the brain to say again. The coach refuses "safe", "safely", "seguro" and "segura" in either language. "Cinturón de seguridad" is the seat belt's name and is allowed.
+
+**The camera can't read the belt's route.** The guide checks see a belt in a guide, not which belt: on a still of the commonest mistake (shoulder belt in the side guides, lap belt round the back) SAM 3.1 passed both close-ups. Muse couldn't tell the two apart either, so the route is asked and the summary says "a belt in both side guides", not "the lap belt". Numbers in `results/carseat/routing/README.md`.
 
 ## Seat profile from a manual
 
@@ -120,11 +123,12 @@ For Gonza's take with the phone strapped to his head. The coach speaks each step
 3. He threads the lap belt through both blue side guides and says **"listo"**. The coach says "Acercá el teléfono a la guía azul del lado de la puerta": he leans in until the guide fills about a palm's width of the view (30 to 50 cm) and holds still 6 to 8 s, until the coach answers. Then "del otro lado": he leans over to the far guide and holds the same way.
 4. He buckles until it clicks and says **"sí"**.
 5. He takes the shoulder belt round the back into the rear blue guide and says **"listo"**. At "Acercá el teléfono a la guía azul de atrás" he leans to the head end and holds 6 to 8 s.
-6. He tightens the lap belt first, then the shoulder belt, and says **"sí"**.
-7. Back at the door, head level, the lap belt across the carrier in view: **"listo"**.
-8. Side of the carrier with the level line in view, head level: **"listo"**.
-9. Handle up to position 1, the carrier in view: **"listo"**.
-10. He shakes the carrier at the belt path and says **"sí"**. The coach ends with the summary and the technician line.
+6. The coach asks him to look at the belt's route against the manual. Belt wrong on purpose: he says **"no, lo tengo al revés"**, fixes it, says **"listo, ya está"**, and to the second question **"sí, ahora sí"**. The camera doesn't judge this step.
+7. He tightens the lap belt first, then the shoulder belt, and says **"sí"**.
+8. Back at the door, head level, the lap belt across the carrier in view: **"listo"**.
+9. Side of the carrier with the level line in view, head level: **"listo"**.
+10. Handle up to position 1, the carrier in view: **"listo"**.
+11. He shakes the carrier at the belt path and says **"sí, menos de dos centímetros"**, never "se mueve poco": said about Theo that's a red flag, and the core's gate sends the 911 line to both parents. The coach ends with the summary and the technician line.
 
 Good light, no hand covering the guide in the close-ups, one step at a time. A step he does not finish ends on its own after 3 minutes.
 

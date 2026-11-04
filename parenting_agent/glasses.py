@@ -595,8 +595,9 @@ class Glasses(Plugin):
         person = self.hub.camera_person
         if kind == "carseat_step":
             # an ask step waits for "sí" or "no", a camera step for "listo" or "ya" when the parent is done
-            self.gate.wait(person, "answer", event.get("step_kind") == "ask")
-            self.gate.wait(person, "finish", event.get("step_kind") == "camera")
+            # the belt's route is a question, and after a "no" it waits for "listo"
+            self.gate.wait(person, "answer", event.get("step_kind") in ("ask", "routing"))
+            self.gate.wait(person, "finish", event.get("step_kind") in ("camera", "routing"))
         elif kind in ("skill_closed", "carseat_summary"):
             self.gate.wait(person, "finish", False)
             if kind == "carseat_summary":

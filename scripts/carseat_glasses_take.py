@@ -64,11 +64,12 @@ PLAN = {
     "lap_guides": {"play": (504, 515), "say": DONE, "hold": (515, 524)},
     "buckle": {"play": (515, 520), "say": ("Sí, hizo clic.", "Sí, señor.")},
     "shoulder_guide": {"play": (520, 530), "say": DONE, "hold": (530, 540)},
+    "belt_routing": {"play": (530, 532), "say": ("Sí, va así.", "Sí, señor.")},
     "tension": {"play": (530, 534), "say": ("Sí, quedó tenso.", "Sí, señor.")},
     "no_twist": {"play": (532, 536), "say": ("Ya está.", "Ya está, listo."), "hold": (534, 540)},
     "level_line": {"play": (534, 538), "say": DONE, "hold": (534, 540)},
     "handle": {"play": (536, 541), "say": DONE, "hold": (538, 542)},
-    "belt_path_movement": {"play": (540, 542), "say": ("Sí, se mueve poco.", "Sí, señor.")},
+    "belt_path_movement": {"play": (540, 542), "say": ("Sí, menos de dos centímetros.", "Sí, señor.")},
 }
 RETRY_S, TRIES = 15.0, 3
 BLANKED = ("TELEGRAM_BOT_TOKEN", "TELEGRAM_FAMILIES_BOT_TOKEN", "TELEGRAM_CHAT_ID", "TELEGRAM_CECI_CHAT_ID", "HA_MCP_TOKEN",

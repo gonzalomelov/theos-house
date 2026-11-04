@@ -20,7 +20,7 @@ SEAT, CAR = load_profiles(SKILL, ROOT)
 PROMPTS = SKILL["prompts"]
 # The rendered clips' mode: the whole install filmed from the door, judged at once, guides judged from the door
 DOOR = {"closeup": False, "ready_timeout_s": 0.0}
-ANSWERS = {"harness_pinch": "no", "car_position": "yes", "buckle": "yes", "tension": "yes", "belt_path_movement": "yes"}
+ANSWERS = {"harness_pinch": "no", "car_position": "yes", "buckle": "yes", "belt_routing": "yes", "tension": "yes", "belt_path_movement": "yes"}
 
 # The English belt-install part of the Joie i-Snug 2 manual as pdftotext -raw gives it, short excerpt for the parser.
 EXCERPT = """To use this infant carrier module with vehicle belt, your child must meet the following requirements.
@@ -202,8 +202,8 @@ def run_coach(found, answers, timeout=1.0):
 class CoachRun(unittest.TestCase):
     def test_steps_follow_the_manual_and_the_car(self):
         ids = [s["id"] for s in plan(SKILL, SEAT, CAR)]
-        self.assertEqual(ids, ["harness_pinch", "car_position", "lap_guides", "buckle", "shoulder_guide", "tension",
-                               "no_twist", "level_line", "handle", "belt_path_movement"])
+        self.assertEqual(ids, ["harness_pinch", "car_position", "lap_guides", "buckle", "shoulder_guide", "belt_routing",
+                               "tension", "no_twist", "level_line", "handle", "belt_path_movement"])
         self.assertEqual(ids, step_ids(SKILL))
         steps = {s["id"]: s for s in plan(SKILL, SEAT, CAR)}
         self.assertIn("airbag", steps["car_position"]["say"])
