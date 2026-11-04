@@ -16,12 +16,15 @@ import hmac
 import json
 import os
 
+from urllib.parse import parse_qsl
+
 from sse_starlette.sse import EventSourceResponse
 from starlette.applications import Starlette
-from starlette.responses import JSONResponse, PlainTextResponse
+from starlette.responses import JSONResponse, PlainTextResponse, Response
 from starlette.routing import Route
 
 from ..channels.messaging import MessagingError
+from ..channels.twilio_whatsapp import signature as twilio_signature
 from ..voice_bridge import spoken, strip_wake
 
 
@@ -68,14 +71,41 @@ def whatsapp_routes(core):
         if not secret or not hmac.compare_digest(request.headers.get("x-hub-signature-256", ""), signed):
             return JSONResponse({"error": "forbidden"}, 403)
         whatsapp = getattr(core.channel, "whatsapp", None)
-        if whatsapp:
+        if whatsapp and whatsapp.kind == "meta":
             for change in (c.get("value", {}) for entry in json.loads(raw).get("entry", []) for c in entry.get("changes", [])):
                 for message in change.get("messages", []):
                     await heard_on_whatsapp(core, whatsapp, message, seen)
                 for status in change.get("statuses", []):
                     await refused_on_whatsapp(core, whatsapp, status)
         return JSONResponse({"ok": True})
-    return [Route("/whatsapp", check, methods=["GET"]), Route("/whatsapp", incoming, methods=["POST"])]
+
+    async def signed_form(request, whatsapp):
+        """The form Twilio sent, or None unless it's signed with the account's auth token for this exact public URL."""
+        params = dict(parse_qsl((await request.body()).decode(), keep_blank_values=True))
+        url = whatsapp.webhook + request.url.path
+        if not hmac.compare_digest(request.headers.get("x-twilio-signature", ""), twilio_signature(whatsapp.token, url, params)):
+            return None
+        return params
+
+    async def from_twilio(request):
+        whatsapp = getattr(core.channel, "whatsapp", None)
+        params = await signed_form(request, whatsapp) if whatsapp and whatsapp.kind == "twilio" else None
+        if params is None:
+            return JSONResponse({"error": "forbidden"}, 403)
+        audio = params.get("MediaContentType0", "").startswith("audio")
+        await heard_on_whatsapp(core, whatsapp, {"from": "".join(c for c in params.get("From", "") if c.isdigit()), "id": params.get("MessageSid"),
+                                                 "type": "audio" if audio else "text", "text": {"body": params.get("Body", "")}}, seen)
+        return Response("<Response/>", media_type="text/xml")
+
+    async def twilio_status(request):
+        whatsapp = getattr(core.channel, "whatsapp", None)
+        params = await signed_form(request, whatsapp) if whatsapp and whatsapp.kind == "twilio" else None
+        if params is None:
+            return JSONResponse({"error": "forbidden"}, 403)
+        await status_from_twilio(core, whatsapp, params)
+        return Response("<Response/>", media_type="text/xml")
+    return [Route("/whatsapp", check, methods=["GET"]), Route("/whatsapp", incoming, methods=["POST"]),
+            Route("/twilio", from_twilio, methods=["POST"]), Route("/twilio/status", twilio_status, methods=["POST"])]
 
 
 async def heard_on_whatsapp(core, whatsapp, message, seen):
@@ -104,6 +134,21 @@ async def refused_on_whatsapp(core, whatsapp, status):
     core.publish("error", error=f"WhatsApp refused a message, codes {codes}")
     if lost:
         await asyncio.to_thread(core.channel.by_telegram, *lost)
+
+
+async def status_from_twilio(core, whatsapp, params):
+    """What really happened to a message. Only this says delivered, and a failure sends the words on Telegram."""
+    status, sid = params.get("MessageStatus"), params.get("MessageSid")
+    if status == "delivered":
+        parent = whatsapp.confirmed(sid)
+        if parent:
+            await core.whatsapp_status(parent, "delivered")
+    elif status in ("failed", "undelivered"):
+        code, lost = params.get("ErrorCode"), whatsapp.failed(sid)
+        core.publish("error", error=f"WhatsApp through Twilio: {status}, code {code}")
+        if lost:
+            await core.whatsapp_status(lost[0], f"{status}, code {code}, Telegram carried it")
+            await asyncio.to_thread(core.channel.by_telegram, *lost)
 
 
 def app(core):

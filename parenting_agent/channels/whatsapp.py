@@ -23,6 +23,9 @@ KEEP_SENT = 200
 
 
 class WhatsApp:
+    kind = "meta"
+    closed_note = "WhatsApp's 24 hour window is closed: it got the template and this text waits for the reply. Telegram carried it now."
+
     def __init__(self, token, phone_id, numbers, path, template="hello_world", language="en_US", post=None, now=time.time):
         self.numbers = {parent: "".join(c for c in number if c.isdigit()) for parent, number in numbers.items() if number}
         self.parents = {number: parent for parent, number in self.numbers.items()}

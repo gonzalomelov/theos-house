@@ -51,9 +51,9 @@ class Base(unittest.TestCase):
 class WayIn(unittest.TestCase):
     ROOT = Path(__file__).resolve().parent.parent
 
-    def test_its_door_forwards_one_path_and_touches_nothing_else(self):
+    def test_its_door_forwards_the_webhook_paths_and_touches_nothing_else(self):
         door = (self.ROOT / "deploy/core/whatsapp-door.conf").read_text()
-        self.assertEqual(door.count("proxy_pass"), 1)
+        self.assertEqual(door.count("proxy_pass"), 2)
         self.assertIn("location = /whatsapp {", door)
         self.assertIn("set $relay parenting-agent-relay:8767;", door)
         for name in ("homeassistant", "babybuddy", ":8123", ":8790", "/ask"):
@@ -65,9 +65,9 @@ class WayIn(unittest.TestCase):
         self.assertIn("networks: [door]", door)
         self.assertIn('ports: ["127.0.0.1:4831:8080"]', door)
 
-    def test_only_meta_was_added_to_the_egress(self):
+    def test_only_meta_and_twilio_were_added_to_the_egress(self):
         hosts = (self.ROOT / "deploy/egress/filter").read_text().split()
-        self.assertEqual(hosts, ["^inference\\.baseten\\.co$", "^api\\.telegram\\.org$", "^graph\\.facebook\\.com$"])
+        self.assertEqual(hosts, ["^inference\\.baseten\\.co$", "^api\\.telegram\\.org$", "^graph\\.facebook\\.com$", "^api\\.twilio\\.com$"])
 
 
 class Window(Base):
@@ -133,7 +133,7 @@ class Channel(Base):
     def test_inside_the_window_only_whatsapp_carries_it(self):
         self.wa.heard("gonza")
         channel = self.channel()
-        self.assertEqual(channel.send("gonza", "a"), "On WhatsApp.")
+        self.assertEqual(channel.send("gonza", "a"), "Handed to WhatsApp, delivery not confirmed yet.")
         self.assertEqual(channel.sent, [])
 
     def test_outside_it_telegram_carries_the_words_and_the_record_says_so(self):

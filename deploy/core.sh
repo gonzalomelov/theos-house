@@ -35,7 +35,7 @@ OLD="\$HOME/apps/parenting-agent.env"
 PASS="\$(grep -E '^POSTGRES_PASSWORD=' "\$ENV_FILE" 2>/dev/null || echo "POSTGRES_PASSWORD=\$(od -An -tx1 -N24 /dev/urandom | tr -d ' \n')")"
 { grep -E '^(HA_MCP_TOKEN|BASETEN_API_KEY)=' "\$OLD"; echo "\$PASS"
   if [ -n "\$CUTOVER" ]; then
-    grep -E '^(BABYBUDDY_TOKEN|TELEGRAM_BOT_TOKEN|TELEGRAM_CHAT_ID|TELEGRAM_CECI_CHAT_ID|WHATSAPP_[A-Z_]+)=' "\$OLD"
+    grep -E '^(BABYBUDDY_TOKEN|TELEGRAM_BOT_TOKEN|TELEGRAM_CHAT_ID|TELEGRAM_CECI_CHAT_ID|WHATSAPP_[A-Z_]+|TWILIO_[A-Z_]+)=' "\$OLD"
     echo "PARENTING_AGENT_VOICE_TOKEN=\$(cat "\$HOME/apps/parenting-agent-data/voice-bridge-token")"
   fi; } > "\$ENV_FILE.tmp"
 mv "\$ENV_FILE.tmp" "\$ENV_FILE"

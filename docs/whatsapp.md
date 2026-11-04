@@ -18,3 +18,7 @@ WHATSAPP_CECI=           leave empty to keep her on Telegram
 ```
 
 The way in, once: rebuild the egress proxy (`graph.facebook.com` is in its filter) and recreate the relay so `/whatsapp` exists. The deploy starts its own door, `parenting-whatsapp-door`, on `127.0.0.1:4831`. Add a tunnel hostname such as `whatsapp.home.example` to that port with no Access in front, and set `https://whatsapp.home.example/whatsapp` as the callback on Meta's webhook form, subscribed to `messages`.
+
+## Twilio, while Meta's review is pending
+
+`WHATSAPP_BACKEND=twilio` sends through Twilio (`parenting_agent/channels/twilio_whatsapp.py`), with `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN` and `WHATSAPP_GONZA` in `~/apps/parenting-agent.env`. The sandbox's sender is shared, and each parent first sends its join code. Set the sandbox's "When a message comes in" to `https://whatsapp.home.example/twilio`, method POST. Both webhooks check `X-Twilio-Signature`. A message is on record as delivered only when Twilio's status callback says so, and a failed one goes on Telegram. Outside the 24 hour window nothing goes on WhatsApp and Telegram carries the words.

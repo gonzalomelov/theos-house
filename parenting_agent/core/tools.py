@@ -22,6 +22,7 @@ from ..agent.memory import LocalBabyLog, Memory
 from ..agent.tools import core_tools
 from ..channels.messaging import MessagingError
 from ..channels.telegram import TelegramMessenger
+from ..channels.twilio_whatsapp import TwilioWhatsApp
 from ..channels.whatsapp import WhatsApp
 from ..house import HomeAssistant
 from ..house_tools import ECHO_ANNOUNCE, ECHO_PLAYER, MAX_ANNOUNCE_VOLUME
@@ -73,7 +74,7 @@ class RealChannel:
     def __init__(self, settings):
         self.telegram = TelegramMessenger(os.environ.get("TELEGRAM_BOT_TOKEN"))
         self.ha = HomeAssistant(settings.ha_url, settings.ha_token)
-        self.whatsapp = WhatsApp.from_env(settings.data_dir)
+        self.whatsapp = (TwilioWhatsApp if os.environ.get("WHATSAPP_BACKEND") == "twilio" else WhatsApp).from_env(settings.data_dir)
 
     def by_telegram(self, parent, text, quiet=False):
         self.telegram.send(os.environ[PARENTS[parent]], text, quiet)
@@ -93,8 +94,8 @@ class RealChannel:
             return self.by_telegram(parent, text, quiet)
         try:
             if self.whatsapp.send(parent, text) == "text":
-                return "On WhatsApp."
-            note = "WhatsApp's 24 hour window is closed: it got the template and this text waits for the reply. Telegram carried it now."
+                return "Handed to WhatsApp, delivery not confirmed yet."
+            note = self.whatsapp.closed_note
         except MessagingError as error:
             note = f"WhatsApp failed ({error}). Telegram carried it."
         self.by_telegram(parent, text)

@@ -30,6 +30,10 @@ services:
       WHATSAPP_GONZA: ${WHATSAPP_GONZA:-}
       WHATSAPP_CECI: ${WHATSAPP_CECI:-}
       WHATSAPP_TEMPLATE: ${WHATSAPP_TEMPLATE:-}
+      WHATSAPP_BACKEND: ${WHATSAPP_BACKEND:-}
+      TWILIO_ACCOUNT_SID: ${TWILIO_ACCOUNT_SID:-}
+      TWILIO_AUTH_TOKEN: ${TWILIO_AUTH_TOKEN:-}
+      TWILIO_WHATSAPP_FROM: ${TWILIO_WHATSAPP_FROM:-}
 
   whatsapp-door:
     # The same pinned image as the relay and the Alexa skill's door. Nothing reaches it until a tunnel hostname points at the port.

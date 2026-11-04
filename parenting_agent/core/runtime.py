@@ -863,6 +863,14 @@ class Core:
         self.publish("coach_line", event_id=row["id"], parent=parent, step=step, text=out)
         return None
 
+    async def whatsapp_status(self, parent, status):
+        """What the WhatsApp provider reported about a message, on record next to the action that sent it. Muse isn't woken for it."""
+        outcome = f"WhatsApp to {parent}: {status}."
+        async with self.pool.connection() as db:
+            await db.execute("insert into events (home, happened_at, type, source, payload, status, outcome) values (%s, now(), 'whatsapp_status', 'whatsapp', %s, 'done', %s)",
+                             (self.settings.home, Jsonb({"parent": parent, "status": status}), outcome))
+        self.publish("whatsapp_status", parent=parent, status=status)
+
     async def actions(self, event_id=None, limit=200):
         async with self.pool.connection() as db:
             one = "and a.event_id = %s" if event_id else ""
