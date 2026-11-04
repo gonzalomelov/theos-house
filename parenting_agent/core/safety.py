@@ -61,6 +61,12 @@ AM_PM = re.compile(r"\b(1[0-2]|0?[1-9])(?::([0-5]\d))?\s?([ap])\.?\s?m\b\.?", re
 # Claims that only hold for a while. The warmer turns itself off, and a long gap between feeds is never fine.
 WARM_CLAIM = re.compile(r"\b(bottle|mamadera|biber[oó]n)\b[^.!?]{0,40}\b(warm|ready|caliente|tibia|lista|pronta)\b|\b(warm|caliente|tibia|lista|pronta)\b[^.!?]{0,40}\b(bottle|mamadera|biber[oó]n)\b", re.I)
 REASSURE = re.compile(r"sleep when you can|get some rest|rest up|beside you|all good|no worries|due soon|al lado tuyo|dorm[ií] tranquil\w*|descans[aá]\b|tranquil[oa]\b|todo bien|sin problema|le toca pronto", re.I)
+# Calm in the agent's own voice, which nobody can say while an alarm has no answer. Narrower than REASSURE: "his feed is due soon" is only a fact.
+CALM = re.compile(r"sleep when you can|rest when you can|get some rest|rest up|rest well|sleep well|sleep tight|sleep easy|all good|all fine|no worries|don'?t worry|nothing to worry|every(?:thing|one)(?:'s| is) (?:fine|ok|okay|good)|"
+                  r"dorm[ií] tranquil\w*|descans[aáeé]\w*|tranquil[oa]s?\b|todo (?:bien|en orden)|sin problema|no te preocupes|que duermas bien", re.I)
+# Words that say an alarm is still open. Asking how he is does too (ASKS_HOW).
+SAYS_OPEN = re.compile(r"sigue abiert\w*|sigue sin respuesta|sin respuesta|todav[ií]a nadie|nadie (?:dijo|cont[oó]|respondi[oó]|avis[oó]|me dijo)|no (?:tengo|hay) respuesta|no s[eé] c[oó]mo (?:est[aá]|sigue)|"
+                       r"still open|still no answer|no answer|nobody has (?:said|answered|told)|no one has (?:said|answered|told)|nobody (?:said|answered|told)|hasn'?t been answered|don'?t know how (?:he|theo)", re.I)
 ABOUT_THE_AIR = re.compile(r"dehumid|deshumid|humid", re.I)
 ABOUT_THE_ROOM = re.compile(r"\broom\b|temperatur|\bcuarto\b", re.I)
 GETS_READY = re.compile(r"warmer|prewarm|pre-warm|warm the|bottle|mamadera|calentador|calentar", re.I)
@@ -349,6 +355,17 @@ def says_other_on_it(text, heard):
     return bool(OTHER_ON_IT.search(text or "")) and not SAID_ON_IT.search(QUESTION.sub(" ", heard or ""))
 
 
+def reassures(text):
+    """Calm said in the agent's own voice. A parent's quoted words and a question ("¿todo bien?") aren't."""
+    unquoted = re.sub(r'"[^"]*"|“[^”]*”', " ", text or "")
+    return any(CALM.search(sentence) and "?" not in sentence and "¿" not in sentence for sentence in re.split(r"(?<=[.!?\n])\s*", unquoted))
+
+
+def only_asks(text):
+    """All a parent wrote is a question. "¿Cuánto tomó?" says nothing of how he is, so it can't answer an alarm."""
+    return "?" in (text or "") and not re.sub(r"\W+", "", QUESTION.sub(" ", text))
+
+
 def settled_line(text):
     """The sentence where a parent says an alarm ended well, in their own words, or None."""
     for sentence in re.split(r"(?<=[.!?\n])\s*", text or ""):
@@ -523,6 +540,12 @@ def topic_of(why):
     """What a wake is about, so two chains about one thing become one. None when it is about anything else."""
     why = str(why or "")
     return "air" if ABOUT_THE_AIR.search(why) else "warmer" if GETS_READY.search(why) else "room" if ABOUT_THE_ROOM.search(why) else None
+
+
+def wake_about_him(why):
+    """A wake that would ask how Theo is after an alarm. "Follow up on the humidity" is about the air, and only "follow up" named it (Nov 4)."""
+    why = str(why or "")
+    return bool(ABOUT_HOW_HE_IS.search(re.sub(r"\bfollow[- ]?up\b", " ", why, flags=re.I) if topic_of(why) else why))
 
 
 def clock24(found):

@@ -398,7 +398,7 @@ def wake_tool(core):
         if core.room_reading is not None and re.search(r"temperatur|re-?check|room", why, re.I):  # the first extreme reading already has its re-check
             core.reminder_set = True
             return "You will be woken in a few minutes to read the room again. No need to ask."
-        if core.follow_up or safety.ABOUT_HOW_HE_IS.search(why):  # one ask per alarm: Muse waking itself to ask again is how 27 messages went out in 87 minutes
+        if core.follow_up or safety.wake_about_him(why):  # one ask per alarm: Muse waking itself to ask again is how 27 messages went out in 87 minutes
             return "Refused: the home already asks once how Theo is after an alarm. No more wakes for it."
         if core.nagging(why):
             return "Refused: nobody answered the last time you checked on this, so the chain stops here. A new reading wakes you by itself."
