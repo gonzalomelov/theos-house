@@ -166,6 +166,16 @@ class Round5(unittest.IsolatedAsyncioTestCase):
         await self.event(core, "wake", {"why": f"{runtime.FOLLOW_UP}: x"}, NIGHT)
         self.assertEqual({m["to"] for m in core.channel.sent}, {"gonza", "ceci"})
 
+    async def test_a_closed_alarm_is_refused_if_a_later_check_repeats_it(self):
+        core = await self.run_core(scripted(call("notify", parent="gonza", text='A las 03:04 Ceci escribió "Theo no respira".'), AIMessage("told"), AIMessage("told"),
+                                            call("notify", parent="gonza", text='Desde el último control: "Theo no respira".'), AIMessage("told"), AIMessage("x")))
+        await self.event(core, "message", {"from": "ceci", "text": "Theo no respira"}, NIGHT)
+        morning = NIGHT.replace(hour=7, minute=30)
+        await self.event(core, "schedule", {"name": "morning"}, morning)
+        count = len(core.channel.sent)
+        await self.event(core, "schedule", {"name": "evening"}, morning.replace(hour=21))
+        self.assertFalse([m for m in core.channel.sent[count:] if "no respira" in m["text"]])
+
     async def test_a_later_message_means_the_follow_up_can_stay_quiet(self):
         core = await self.run_core(scripted(AIMessage("x"), AIMessage("x")))
         await self.event(core, "message", {"from": "ceci", "text": "Theo no respira"}, NIGHT)

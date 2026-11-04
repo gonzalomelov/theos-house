@@ -206,6 +206,7 @@ class Core:
         self.running = {}
         self.own = {}
         self.readings = {}
+        self.closed_signs = set()
 
     def now(self):
         """The moment the agent is living: the current event's, which a simulated event sets."""
@@ -406,6 +407,8 @@ class Core:
         """What a message can't say, from the clock: a warm bottle with the warmer off, or calm about a long gap between feeds."""
         if self.after_start:
             return "Refused, nothing was sent: the agent just restarted and this is only its first reading. Handle the room and message nobody."
+        if self.in_check and any(sign in text.lower() for sign in self.closed_signs):
+            return "Refused, nothing was sent: you already reported that alarm in an earlier check, so it is closed. Leave it out, or ask once how Theo is now."
         if safety.CANT_SEE.search(text):
             return "Refused, nothing was sent: you can't see Theo, so you can't check on him. Say who should go and look."
         if safety.CANT_KEEP.search(text):
@@ -573,6 +576,7 @@ class Core:
         self.channel.hold = [] if event["ask"] else None
         self.follow_up = event["type"] == "wake" and str(event["payload"].get("why", "")).startswith(FOLLOW_UP)
         self.duty_told = None
+        self.in_check = event["type"] == "schedule"
         self.said_out = {}
         self.current = event["id"]
         if self.mock:
@@ -801,6 +805,7 @@ class Core:
         return [why] if why else []
 
     screen = None
+    in_check = False  # for this event: a morning or evening check
     said_out = {}  # for this event: what really went out, by what Muse asked
     answered_since_alarm = True  # a parent has written since the last alarm
     follow_up = False  # for this event: asking how Theo is after an alarm
@@ -870,6 +875,7 @@ class Core:
         if self.duty_told and not any(tool == "notify" and arguments.get("parent") == self.duty_told and (result or "").startswith("Sent") for tool, arguments, result in calls):  # nobody gets a night without hearing it
             await self.say_fixed(event, self.duty_told, HANDED_OVER[lang].format(who=str(self.sender).capitalize()))
         if event["type"] == "schedule":  # said once in a check, an alarm is closed: it doesn't come back as new 18 hours later
+            self.closed_signs |= {found.group(1).lower() for k, v in facts.items() if k.startswith("alarm_") and (found := re.search(r'"(.+)"', str(v)))}
             for key in [k for k in facts if k.startswith("alarm_") or k == "fever_reported"]:
                 await self.store.adelete((*tools_mod.FACTS, self.settings.home), key)
         if unanswered(event, calls) or unheard_cry(event, calls):  # asked twice and still nothing: nobody is left waiting on Muse
