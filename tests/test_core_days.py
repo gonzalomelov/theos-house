@@ -59,7 +59,7 @@ class TheChecksCanFail(Case):
             original = days.tools_mod.channel_tools
             run.model.misbehave = [{"tool": "notify", "args": {"parent": "ceci", "text": "Se despertó."}}]
             await run.stop()
-            days.tools_mod.channel_tools = lambda channel, s, log=None, heard=lambda: "", night_check=None, claims=lambda text: None, said=lambda parent, asked, out: None, repeats=lambda parent, text: None: original(channel, s, log, heard, None, claims)
+            days.tools_mod.channel_tools = lambda channel, s, log=None, heard=lambda: "", night_check=None, claims=lambda text: None, said=lambda parent, asked, out: None, repeats=lambda parent, text: None, hushed=lambda: False: original(channel, s, log, heard, None, claims)
             self.addCleanup(setattr, days.tools_mod, "channel_tools", original)
             await run.start()
             await run.event(0, step)

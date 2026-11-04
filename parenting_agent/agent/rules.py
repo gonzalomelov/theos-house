@@ -332,7 +332,7 @@ FEVER_WORD = re.compile(r"\b(fever\w*|febrile|high temp\w*|fiebre|febril|calentu
                         re.I)
 # Hot to the touch, with no number: a fever word for a newborn, unless the message is about the water or the room.
 HOT_WORD = re.compile(r"\b(burning up|feels? (so |very |really |too )?hot|is (so |very |really )?hot|(he|she)'?s (so |very |really )?hot|"
-                      r"hirviendo|ardiendo|est[aá] (muy |re |bien )?caliente|lo siento caliente|la siento caliente|"
+                      r"hirviendo|ardiendo|est[aá] (muy |re |bien )?caliente|se siente (muy |re |bien )?caliente|lo siento caliente|la siento caliente|"
                       r"volando)\b", re.I)
 NO_FEVER = re.compile(r"\b(no|not|without|sin|ni|never|nunca|doesn'?t have( a)?|does not have( a)?)\s+(\w+\s+){0,2}"
                       r"(fever\w*|fiebre|febril|calentura|high temp\w*)", re.I)
@@ -347,6 +347,10 @@ BODY_HEAT = re.compile(r"\b(hot|warm|burning( up)?|temp\w*|thermometer|degrees|c
                        re.I)
 BODY_TEMP = re.compile(r"\b(temp\w*|thermometer|term[oó]metro)\b", re.I)
 # What a 38 in a message is about when it is not the baby: the bath water, the room, the bottle, the weather.
+# "He feels hot and won't take the bottle": the heat is his, and the bottle is what he refused. It needs him named in the same clause.
+HOT_CLAUSE = re.compile(r"[.!?;,\n]+|\s+(?:and|but|y|pero)\s+", re.I)
+HIM = re.compile(r"\b(he|she|he'?s|she'?s|theo|the baby|my baby|our baby|el beb[eé]|mi beb[eé]|lo siento|la siento)\b", re.I)
+HOT_AND_REFUSING = re.compile(r"\best[aá] (muy |re |bien )?caliente y no (quiere|toma|come|agarra)\b", re.I)
 NOT_BODY = re.compile(r"\b(water|bath\w*|tub|room|nursery|bottle|milk|formula|outside|weather|heater|oven|agua|ba[ñn]o|"
                       r"ba[ñn]era|tina|cuarto|habitaci[oó]n|ambiente|mamadera|biber[oó]n|leche|f[oó]rmula|afuera|calefa\w*|"
                       r"estufa|horno|d[ií]a|clima)\b", re.I)
@@ -358,6 +362,7 @@ RED_FLAG = re.compile(
     r"(vomit\w*|throw\w* up|threw up) everything|vomit\w* todo|no retiene nada|vomit\w* (hace|desde hace) horas|"
     r"weak suck\w*|(can'?t|cannot|won'?t|isn'?t able to) suck|weak cry\w*|"
     r"(won'?t|will not|isn'?t|is not|not|refus\w*( to)?) (feed|feeding|eat|eating)\b|"
+    r"\bwarm\b[^.!?]{0,30}\b(won'?t|wont|refus\w*|not) (take|taking|drink\w*)\b[^.!?]{0,20}\b(bottle|feed|milk)\b|"
     # Held-out run-3: "he hasnt fed since like 9am, wont latch at all" got no line when the meaning screen said safe.
     r"(hasn'?t|hasnt|has not|haven'?t) (fed|eaten|nursed|had a (feed|bottle))\b|(won'?t|wont|will not|can'?t|isn'?t|not) "
     r"latch\w*|no se (prende|engancha)\w*|no (come|toma|mama) (nada )?desde\b|refus\w* (every|all|each|the) (feeds?|bottles?|breast)|"
@@ -459,6 +464,8 @@ def names_fever(text):
     if FEVER_WORD.search(text) and not NO_FEVER.search(text):
         return True
     if HOT_WORD.search(text) and not NOT_BODY.search(text):
+        return True
+    if HOT_AND_REFUSING.search(text) or any(HOT_WORD.search(c) and HIM.search(c) and not NOT_BODY.search(c) for c in HOT_CLAUSE.split(text)):
         return True
     return bool(TEMP_NUMBER.search(text) and BODY_HEAT.search(text) and not NOT_BODY.search(text))
 

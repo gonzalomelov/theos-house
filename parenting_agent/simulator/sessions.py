@@ -3,6 +3,7 @@ import asyncio
 import datetime
 import json
 import os
+import re
 import secrets
 import shutil
 import tempfile
@@ -29,6 +30,7 @@ VISITOR_SESSIONS = int(os.environ.get("PA_SIM_VISITOR_SESSIONS", "12"))
 ADDRESS_EVENTS = int(os.environ.get("PA_SIM_ADDRESS_EVENTS", "400"))
 ADDRESS_SESSIONS = int(os.environ.get("PA_SIM_ADDRESS_SESSIONS", "60"))
 HIDDEN_FACTS = ("language", "warmer_off_at", "vacuum_off_at", "feed_gap_told")
+DUTY_FACT = re.compile(r"^(?:on[ _])?duty[ _](\d{4})[-_ ](\d\d)[-_ ](\d\d)$", re.I)
 DAILY = (((7, 30), "morning"), ((21, 30), "evening"))
 HUMIDITY_STEP = 5.0
 # A clock press can't outlive a browser's request behind Cloudflare, which gives up at 100 s. What's still running keeps its order.
@@ -324,8 +326,20 @@ class Session:
         return {"clock": self.moment.isoformat(), "lang": self.lang, "played": self.played, "events_left": MAX_EVENTS - self.events_used,
                 "starts_left": self.opened.left(self.visitor, self.client) if self.opened else None, "feeds_on": self.feeds_on,
                 "home": self.core.mock.snapshot(), "sent": list(self.channel.sent), "said": self.said,
-                "facts": {k: v for k, v in facts.items() if k not in HIDDEN_FACTS},
+                "facts": shown_facts(facts, self.moment),
                 "log": self.log.entries(limit=8), "seq": self.core.seq}
+
+
+def shown_facts(facts, moment):
+    """What the memory panel shows: a night's duty only until that night is over. The home keeps it a day longer, for the morning check, and the panel doesn't call it current."""
+    tonight = (moment - datetime.timedelta(hours=7)).date()
+    shown = {}
+    for key, value in facts.items():
+        night = DUTY_FACT.match(key)
+        if key in HIDDEN_FACTS or (night and datetime.date(*map(int, night.groups())) < tonight):
+            continue
+        shown[key] = value
+    return shown
 
 
 class Sessions:

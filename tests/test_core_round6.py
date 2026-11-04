@@ -329,7 +329,7 @@ class Round6(unittest.IsolatedAsyncioTestCase):
     async def test_a_recipe_is_never_called_suitable_and_cant_be_sent(self):
         suits = call("notify", parent="gonza", text="Va la receta, es ideal para Theo.")
         preview = call("preview_family_recipe", name="Puré", ingredients=["300 g zapallo"], steps=[{"text": "cocinar"}], cookidoo_country="UY")
-        core = await self.run_core(scripted(preview, suits, AIMessage("x"), call("notify", parent="gonza", text="Acá va la receta."), AIMessage("x"), AIMessage("x")))
+        core = await self.run_core(scripted(preview, suits, AIMessage("x"), call("notify", parent="gonza", text="Acá va la receta."), AIMessage("x"), AIMessage("x"), AIMessage("x"), AIMessage("x")))
         await self.event(core, "message", {"from": "gonza", "text": "Pasá este puré a receta de Thermomix"}, DAY)
         said = " ".join(m["text"] for m in core.channel.sent)
         self.assertNotIn("ideal para", said)
@@ -523,6 +523,7 @@ class Page(unittest.TestCase):
         self.assertIn('href="#senses"', self.HTML)
 
     def test_the_hero_says_one_thing(self):
-        self.assertIn("expecting their first baby in December", self.JS)
-        self.assertIn("esperan su primer bebé para diciembre", self.JS)
+        self.assertIn("Your home takes the night shift with you", self.JS)
+        self.assertIn("Tu casa hace el turno de noche con vos", self.JS)
+        self.assertIn("expecting their first baby in December", self.JS)  # the rest of the story, behind the link
         self.assertNotIn("new parents", self.HTML)
