@@ -10,7 +10,7 @@ import tempfile
 import time
 from pathlib import Path
 
-from ..agent.memory import LOG_KINDS, LocalBabyLog, Memory, parse_time
+from ..agent.memory import LOG_KINDS, EditableLocalLog, Memory, parse_time
 from ..core import agent as agent_mod
 from ..core import book as book_mod
 from ..core import tools as tools_mod
@@ -79,7 +79,7 @@ class Shared:
         return min(self.visitors.left(visitor), self.addresses.left(address))
 
 
-class SimLog(LocalBabyLog):
+class SimLog(EditableLocalLog):
     """The local baby log on the simulated clock, so a December night is not clamped to today."""
     def __init__(self, memory, clock):
         super().__init__(memory)
@@ -321,7 +321,7 @@ class Session:
             elif action["tool"] == "start_car_seat_coach":
                 parent = str(args.get("parent", "")).capitalize()
                 found.append({"day": day, "kind": "coach", "text": f"{parent} pidió ayuda con la silla del auto, y arrancó el coach." if es else f"{parent} asked for help with the car seat, and the coach started.", "names": ("silla" if es else "car seat",)})
-        return found
+        return [*found, *book_mod.endings(self.log.entries(None, None, 2000), self.said, self.lang)]
 
     def count(self):
         if self.events_used >= MAX_EVENTS:

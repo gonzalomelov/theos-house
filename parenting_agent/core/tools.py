@@ -18,7 +18,7 @@ from langchain_core.tools import StructuredTool
 from langchain_mcp_adapters.client import MultiServerMCPClient
 
 from ..agent import rules
-from ..agent.memory import LocalBabyLog, Memory
+from ..agent.memory import EditableLocalLog, Memory
 from ..agent.tools import core_tools
 from ..channels.messaging import MessagingError
 from ..channels.telegram import TelegramMessenger
@@ -34,7 +34,8 @@ HOME_TOOLS = ("GetLiveContext", "HassTurnOn", "HassTurnOff", "HassVacuumStart", 
 NAMED = ("HassTurnOn", "HassTurnOff")
 # These take no device name, so on the real home they stay out until PA_ALLOWED_DEVICES names them.
 GATED = {"HassVacuumStart": "vacuum", "HassVacuumReturnToBase": "vacuum", "HassListAddItem": "shopping"}
-LOG_TOOLS = ("log_baby_event", "read_baby_log", "baby_summary")
+LOG_TOOLS = ("log_baby_event", "edit_baby_event", "delete_baby_event", "read_baby_log", "baby_summary")
+WRITES_AMOUNT = ("log_baby_event", "edit_baby_event")
 PARENTS = {"gonza": "TELEGRAM_CHAT_ID", "ceci": "TELEGRAM_CECI_CHAT_ID"}
 FACTS = ("home", "facts")
 WHEN = re.compile(r"\b\d{4}-\d{2}-\d{2}(?:[T ]\d{1,2}:\d{2})?\b|\b\d{1,2}:\d{2}\b")
@@ -140,7 +141,7 @@ def baby_log(settings, clock):
         return None, BabyBuddyLog.from_config({"child": os.environ.get("PA_BABY_CHILD", "test-baby")})
     Path(settings.data_dir).mkdir(parents=True, exist_ok=True)
     memory = Memory(Path(settings.data_dir) / f"mock-log-{settings.home}.sqlite")
-    return memory, LocalBabyLog(memory, clock)  # the simulated log lives the simulated moment
+    return memory, EditableLocalLog(memory, clock)  # the simulated log lives the simulated moment
 
 
 async def home_tools(settings, mock, turn=lambda: None, after=None, before=None):
@@ -186,10 +187,10 @@ async def _no_cap(parent, text, why, wording):
     return why
 
 
-def channel_tools(channel, settings, log=None, heard=lambda: "", night_check=None, claims=lambda text: None, said=lambda parent, asked, out: None, repeats=lambda parent, text: None, hushed=lambda: False, loud=lambda: False, refused=_no_cap):
-    def checked(text):
+def channel_tools(channel, settings, log=None, heard=lambda: "", night_check=None, claims=lambda text, parent=None: None, said=lambda parent, asked, out: None, repeats=lambda parent, text: None, hushed=lambda: False, loud=lambda: False, refused=_no_cap):
+    def checked(text, parent=None):
         out, why = safety.outbound(text, settings.lang)
-        return out, why or claims(out or "") or (safety.unbacked(out, lambda: log.entries(None, None, 50), heard()) if log else None)
+        return out, why or claims(out or "", parent) or (safety.unbacked(out, lambda: log.entries(None, None, 50), heard()) if log else None)
 
     async def notify(parent: str, text: str, emergency: bool = False, quiet: bool = False) -> str:
         """Send one message to one parent's phone. parent is gonza or ceci. It wakes them at night. emergency is only for a
@@ -200,7 +201,7 @@ def channel_tools(channel, settings, log=None, heard=lambda: "", night_check=Non
         why = await night_check(parent, emergency) if night_check else None
         if why:
             return await refused(parent, text, why, False)
-        out, why = await asyncio.to_thread(checked, text)
+        out, why = await asyncio.to_thread(checked, text, parent)
         why = why or safety.writes_as_someone_else(parent, out)
         if why:
             return await refused(parent, text, why, True)
@@ -233,6 +234,7 @@ DID = {"HassTurnOn": lambda a: f"Turned on {a.get('name', 'a device')}", "HassTu
        "HassVacuumStart": lambda a: "Started the vacuum", "HassVacuumReturnToBase": lambda a: "Sent the vacuum back",
        "HassListAddItem": lambda a: f"Added {a.get('item', 'an item')} to the list", "notify": lambda a: f"Told {a.get('parent', 'a parent')}",
        "say_on_echo": lambda a: "Spoke on the Echo", "log_baby_event": lambda a: f"Logged {a.get('kind', 'an entry')}",
+       "edit_baby_event": lambda a: f"Corrected {a.get('kind', 'an entry')} in the log", "delete_baby_event": lambda a: f"Removed {a.get('kind', 'an entry')} from the log",
        "set_on_duty": lambda a: f"Put {a.get('parent', 'a parent')} on duty for the night of {a.get('night', 'a date')}",
        "remember": lambda a: f"Remembered {a.get('key', 'a fact')}", "forget": lambda a: f"Forgot {a.get('key', 'a fact')}",
        "wake_me_at": lambda a: f"Set a wake for {a.get('at', 'later')}", "start_car_seat_coach": lambda a: f"Started the car seat coach for {a.get('parent', 'a parent')}"}
@@ -275,15 +277,17 @@ def log_tools(log, memory, heard=lambda: ""):
 
         def call(**arguments):
             arguments = {k: home_time(v) if k in ("ts", "since", "until") else v for k, v in arguments.items()}
+            if "T" in str(arguments.get("at") or ""):  # the log finds an entry by its time on the wall, and Muse may give the whole ISO time
+                arguments["at"] = str(home_time(arguments["at"]))[11:16]
             amount = (arguments.get("details") or {}).get("amount_ml") if isinstance(arguments.get("details"), dict) else None
-            if name == "log_baby_event" and isinstance(amount, (int, float)) and amount > safety.MAX_FEED_ML:
+            if name in WRITES_AMOUNT and isinstance(amount, (int, float)) and amount > safety.MAX_FEED_ML:
                 return f"Refused: {amount:g} ml can't be one feed for a newborn, so it isn't logged. Ask the parent what the amount was."
             if safety.injected(heard()) or safety.injected(json.dumps(arguments, ensure_ascii=False)):
                 return "Refused: that is an instruction to you, not something that happened to Theo. It doesn't go in his log."
             status, result = tools.run(name, arguments)
             return str(result) if status == "ran" else f"{status}: {result}"
         return StructuredTool.from_function(func=call, name=name, description=tool.description, args_schema=tool.parameters)
-    return [wrap(name) for name in LOG_TOOLS]
+    return [wrap(name) for name in LOG_TOOLS if name in tools.items]  # a log that can't change an entry has no edit tools
 
 
 def feed_estimate(log, moment):

@@ -2,17 +2,18 @@
 the page against that day's log. A page that claims a number the log doesn't have is replaced by a plain line from code. Illustrations
 are not made here: no API for Muse's image model is open to this project, so they were made ahead of time in Meta's Muse app.
 """
+import datetime
 import json
 import re
 from collections import defaultdict
 
 from ..agent.memory import parse_time
-from .safety import plain_dates
+from .safety import plain_dates, settled_line
 
 MONTH_DAYS = 31
 RULES = """You write pages of a family's keepsake book about their newborn Theo's first month, for his parents Gonza and Ceci.
 Write one short warm page for each day you are given, in {language}, two sentences at most, three on a day with moments, in the voice of the family's home looking back.
-Use only what the day's facts say, and any note given for it. Never write a date like 2026-12-15 on a page. Say nothing about lights, rooms or what the home did unless the day's facts say so. Most pages use one fact or none, and no two pages sound alike. A day's "moments" really happened and each one must be on its page, in your words and claiming no more than it says: who took the night, the recipe, who asked for help with the car seat. Nobody knows if the seat got fitted, so never say so. A frightening moment is named as one, with the words the parent wrote, and you never say how it ended unless the facts do. Use the "totals" of each day as they are. The home watches and remembers: it never holds or touches anyone. Don't invent events, feelings of the baby, weather or visitors. Numbers can only be those in the facts.
+Use only what the day's facts say, and any note given for it. Never write a date like 2026-12-15 on a page. Say nothing about lights, rooms or what the home did unless the day's facts say so. Most pages use one fact or none, and no two pages sound alike. A day's "moments" really happened and each one must be on its page, in your words and claiming no more than it says: who took the night, the recipe, who asked for help with the car seat. Nobody knows if the seat got fitted, so never say so. A frightening moment is named as one, with the words the parent wrote, and you never say how it ended unless the facts do: when a parent's later words are in the moments, they end it, on that page. Use the "totals" of each day as they are. The home watches and remembers: it never holds or touches anyone. Don't invent events, feelings of the baby, weather or visitors. Numbers can only be those in the facts.
 No medical or health judgments, and never say how he is doing or whether something is normal. Theo's parents are Gonza and Ceci, use no other names and no surnames.
 Answer with JSON only: {{"title": "...", "pages": [{{"day": "YYYY-MM-DD", "text": "..."}}]}}"""
 LANGUAGES = {"en": "English", "es": "Spanish"}
@@ -27,17 +28,50 @@ FORBIDDEN = re.compile(r"\b(healthy|sano|normal|fever|fiebre|doctor|pediatr\w*)\
 # The coach starting is all the home knows. Whether the seat went in is the parent's to say.
 FITTED = re.compile(r"\b(?:fit|fitted|installed|mounted|put in|instal[oó]|colocó|coloc[oó]|puso|pusieron)\b[^.!?]{0,40}\b(?:seat|silla|sillita)\b|\b(?:seat|silla|sillita)\b[^.!?]{0,30}\b(?:fitted|installed|in place|instalad[ao]|colocad[ao]|quedó)\b", re.I)
 SAID_SCARED = re.compile(r"scar|fright|alarm|fear|worr|miedo|asust|alarma|susto|preocup", re.I)
+SAME_ALARM_MIN = 10
+AFTER_LINE = {"en": 'Later {who} wrote "{words}".', "es": 'Después {who} escribió "{words}".'}
 
 
 def alarms_of(entries, lang):
     """The alarms the log holds, in the words that raised them. A night with one never goes missing from the book."""
-    found = []
-    for entry in entries:
-        note = ALARM_NOTE.match(str((entry.get("details") or {}).get("text", ""))) if entry["kind"] == "note" else None
-        if note:
-            found.append({"day": parse_time(entry["ts"]).date().isoformat(), "kind": "alarm", "words": note.group(3),
-                          "text": ALARM_LINE[lang].format(at=note.group(1), who=note.group(2).capitalize(), words=note.group(3))})
+    found, last = [], {}
+    for entry, note in alarm_notes(entries):
+        at, same = parse_time(entry["ts"]), (note.group(2), note.group(3))
+        if same in last and abs(at - last[same]) <= datetime.timedelta(minutes=SAME_ALARM_MIN):  # the same words twice in a minute are one scare
+            continue
+        last[same] = at
+        found.append({"day": at.date().isoformat(), "kind": "alarm", "words": note.group(3),
+                      "text": ALARM_LINE[lang].format(at=note.group(1), who=note.group(2).capitalize(), words=note.group(3))})
     return found
+
+
+def alarm_notes(entries):
+    notes = [(entry, ALARM_NOTE.match(str((entry.get("details") or {}).get("text", "")))) for entry in entries if entry["kind"] == "note"]
+    return sorted(((entry, note) for entry, note in notes if note), key=lambda found: parse_time(found[0]["ts"]))
+
+
+def endings(entries, said, lang):
+    """How an alarm ended, only if a parent wrote it after the alarm, and in their words. The first such line for each alarm."""
+    alarms, found = [parse_time(entry["ts"]) for entry, _ in alarm_notes(entries)], []
+    closed = 0
+    for message in sorted(said, key=lambda m: parse_time(m["at"])):
+        at, words = parse_time(message["at"]), settled_line(message["text"])
+        opened = sum(1 for alarm in alarms if alarm < at)
+        if words and opened > closed:
+            closed = opened
+            found.append({"day": at.date().isoformat(), "kind": "ending", "words": words, "text": AFTER_LINE[lang].format(who=str(message["from"]).capitalize(), words=words)})
+    return found
+
+
+def once(text):
+    """A page says each sentence once: Muse wrote the same alarm twice, for two messages a minute apart."""
+    seen, kept = set(), []
+    for sentence in re.split(r"(?<=[.!?])\s+", text):
+        key = " ".join(sentence.lower().split())
+        if key not in seen:
+            seen.add(key)
+            kept.append(sentence)
+    return " ".join(kept)
 
 
 def days_of(entries, limit=MONTH_DAYS, moments=()):
@@ -129,6 +163,6 @@ async def write(model, entries, notes="", lang="en", moments=()):
         kept = bool(text) and page_is_true(text, day)
         missing = left_out(text, day) if kept else []
         kinds = [m["kind"] for m in day["moments"]]
-        pages.append({"day": day["day"], "text": " ".join([text, *missing]) if kept else plain_page(day, lang), "by": ("both" if missing else "muse") if kept else "code",
+        pages.append({"day": day["day"], "text": once(" ".join([text, *missing]) if kept else plain_page(day, lang)), "by": ("both" if missing else "muse") if kept else "code",
                       "art": next((k for k in ("alarm", "recipe", "coach") if k in kinds), None)})
     return {"title": title if page_is_true(title, days[0]) else TITLE[lang], "pages": pages, "totals": totals_line(days, lang)}

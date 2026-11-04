@@ -224,6 +224,7 @@ class BabyLog:
 class LocalBabyLog(BabyLog):
     """The baby log kept in the agent's own memory file, for offline runs and tests."""
     name = "local"
+    with_ids = False
 
     def __init__(self, memory, clock=None):
         self.memory, self.clock = memory, clock
@@ -244,13 +245,41 @@ class LocalBabyLog(BabyLog):
         return entry
 
     def entries(self, kind=None, since=None, limit=50):
-        query, args = "select ts, kind, details from baby_log where 1 = 1", []
+        query, args = "select id, ts, kind, details from baby_log where 1 = 1", []
         if kind:
             query, args = query + " and kind = ?", args + [kind]
         with self.memory.lock:
             rows = self.memory.db.execute(query + " order by id", args).fetchall()
-        items = [{"ts": ts, "kind": kind, "details": json.loads(details)} for ts, kind, details in rows]
+        items = [{**({"id": row_id} if self.with_ids else {}), "ts": ts, "kind": kind, "details": json.loads(details)} for row_id, ts, kind, details in rows]
         if since:
             items = [e for e in items if parse_time(e["ts"]) >= parse_time(since)]
         items.sort(key=lambda e: parse_time(e["ts"]))
         return items[-limit:]
+
+
+class EditableLocalLog(LocalBabyLog):
+    """The local log with a parent's corrections, like Baby Buddy's. The older agent's own runs keep the plain log, which refuses them."""
+    with_ids = True
+
+    def get(self, entry_id):
+        return next((e for e in self.entries(None, None, 100_000) if str(e["id"]) == str(entry_id)), None)
+
+    def update(self, entry_id, details=None, ts=None, kind=None):
+        """Changes one entry in place and returns it before and after, so the answer says what changed."""
+        before = self.find(entry_id)
+        changed = details or {}
+        self.check_bounds(before["kind"], {k: v for k, v in changed.items() if k in ("amount_ml", "duration_min") and v is not None}, ts)
+        current = self.now()
+        at = min(parse_time(ts, current.tzinfo), current).isoformat(timespec="seconds") if ts else before["ts"]
+        after = {**before, "ts": at, "details": {k: v for k, v in {**before["details"], **changed}.items() if v is not None}}
+        with self.memory.lock:
+            self.memory.db.execute("update baby_log set ts = ?, details = ? where id = ?", (at, json.dumps(after["details"]), before["id"]))
+            self.memory.db.commit()
+        return {"before": before, "after": after}
+
+    def delete(self, entry_id, kind=None):
+        before = self.find(entry_id)
+        with self.memory.lock:
+            self.memory.db.execute("delete from baby_log where id = ?", (before["id"],))
+            self.memory.db.commit()
+        return {"deleted": before}

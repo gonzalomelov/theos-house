@@ -106,6 +106,7 @@ class BabyBuddyLog(BabyLog):
             unsaid = [LENGTH_NOT_SAID] if not details.get("duration_min") and not details.get("start") else []
             if not details.get("type") and "breast" not in method:
                 unsaid.append(TYPE_NOT_SAID)
+            unsaid += [str(details["note"])] if details.get("note") else []
             if unsaid:
                 body["notes"] = ", ".join(unsaid)
             if details.get("amount_ml") is not None:
@@ -202,6 +203,9 @@ class BabyBuddyLog(BabyLog):
                 details["duration_min"] = None
             if TYPE_NOT_SAID in unsaid and "breast" not in str(record.get("method")):
                 details["type"] = "unknown"
+            said = [n for n in unsaid.split(", ") if n and n not in (LENGTH_NOT_SAID, TYPE_NOT_SAID)]
+            if said:
+                details["note"] = ", ".join(said)
             return {"id": record["id"], "kind": "feeding", "ts": iso(parse_time(record["end"])), "details": details, "tags": tags}
         if endpoint == "changes":
             details = {"wet": record.get("wet"), "solid": record.get("solid"), "color": record.get("color") or None}
@@ -300,7 +304,9 @@ class BabyBuddyLog(BabyLog):
                 end = at_or_before_now(ts)
             if new.get("duration_min") or ts:
                 body.update(start=iso(end - length), end=iso(end))
-            unsaid = [n for n in str(record.get("notes") or "").split(", ") if n in (LENGTH_NOT_SAID, TYPE_NOT_SAID)]
+            notes = str(record.get("notes") or "").split(", ")
+            unsaid = [n for n in notes if n in (LENGTH_NOT_SAID, TYPE_NOT_SAID)]
+            said = [str(new["note"])] if new.get("note") else [n for n in notes if n and n not in unsaid]
             if new.get("duration_min") and LENGTH_NOT_SAID in unsaid:
                 unsaid.remove(LENGTH_NOT_SAID)
             old_method = str(record.get("method") or "bottle")
@@ -321,8 +327,8 @@ class BabyBuddyLog(BabyLog):
                     unsaid.remove(TYPE_NOT_SAID)
                 if not new.get("type") and "breast" not in method:
                     unsaid.append(TYPE_NOT_SAID)  # a breast feed that was a bottle: Baby Buddy needs a type, none said
-            if new.get("duration_min") or "type" in body:
-                body["notes"] = ", ".join(unsaid)
+            if new.get("duration_min") or "type" in body or new.get("note"):
+                body["notes"] = ", ".join(unsaid + said)
             if new.get("amount_ml") is not None:
                 body["amount"] = float(new["amount_ml"])
         elif before["kind"] == "diaper":

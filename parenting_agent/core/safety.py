@@ -110,6 +110,8 @@ FEED_REPORT = re.compile(r"\b(?:gave|fed|just fed|nursed|drank|ate)\b|\bbottle (
 CANT_SEE = re.compile(r"\b(?:checking|i'?ll check|i will check|going to check|let me check|looking in) (?:on|in on) (?:him|theo)\b|\bvoy a (?:ver|revisar|chequear)(?:lo)?\s+(?:a theo|c[oó]mo est[aá])\b|\b(?:lo )?(?:estoy|sigo) (?:mirando|chequeando|revisando)\b", re.I)
 CANT_KEEP = re.compile(r"\bi (?:won'?t|will not) (?:message|text|wake|bother|tell|write)\b|\bno (?:te|le|les) (?:escribo|aviso|molesto|despierto|voy a (?:escribir|avisar|molestar|despertar))\b|\bi'?ll (?:alert|tell|wake|message|text) (?:you )?both\b|\b(?:les )?aviso a (?:los |ustedes )?dos\b|\bdespierto a los dos\b", re.I)
 WRONG_NUMBER = re.compile(r"\b(?:112|999|000)\b")
+PET = re.compile(r"\b(?:dogs?|puppy|cats?|kitten|perr[oa]s?|cachorr[oa]s?|gat[oa]s?|gatit[oa]s?)\b", re.I)
+ABOUT_HIM = re.compile(r"\b(?:theo|baby|newborn|he|him|his|son|beb[eé]|nene|hijo|[eé]l|lo|le)\b", re.I)
 # A parent's words that can justify waking the other one. A thing too hot isn't a sign in him ("this bottle feels hot"), so it is taken out first.
 HOT_THING = re.compile(r"\b(?:bottle|milk|formula|water|bath|mamadera|biber[oó]n|leche|f[oó]rmula|agua|ba[ñn]o)\b[^.!?]{0,30}\b(?:hot|warm|caliente|calent\w*|tibi\w*)\b|\b(?:hot|warm|caliente|calent\w*|tibi\w*)\b[^.!?]{0,30}\b(?:bottle|milk|formula|water|bath|mamadera|biber[oó]n|leche|f[oó]rmula|agua|ba[ñn]o)\b", re.I)
 WORTH_WAKING = re.compile(DANGER_SIGN.pattern + r"|" + SCARED.pattern + r"|\b(?:alarm\w*|smoke|humo|fire|fuego|incendi\w*|gas|emergenc\w*|urgent\w*|urgenc\w*|help|ayuda|hurt\w*|lastim\w*|burn\w*|quem\w*|scald\w*|injur\w*|accident\w*|bleed\w*|hospital|ambulanc\w*|ambulancia|911|wrong|pasa algo|algo le pasa|not moving|no se mueve|won'?t feed|won'?t drink|no toma|no come|can'?t cope|no puedo m[aá]s|swallow\w*|trag\w*|battery|pila|im[aá]n|magnet|pressed|still)\b", re.I)
@@ -163,6 +165,20 @@ ABOUT_HOW_HE_IS = re.compile(ASKS_HOW.pattern + r"|\bcheck (?:on|how) (?:theo|hi
 # A morning message isn't a ledger, and nobody owes anybody a night.
 SCOREKEEP = re.compile(r"\bcovered for\b|\bte cubri\w*\b|\bcubri\w* a\b|\btakes? it back\b|\bla retoma\b|\bretom[aá]\w*\b|\byou owe\b|\bowes you\b|\bte debe\b|\ble deb[eé]s\b|\bpay(?:s|ing)? (?:you |him |her )?back\b", re.I)
 # How a log reads, not how a person writes. A parent asking for the numbers gets them.
+QUESTION = re.compile(r"¿[^?\n]*\??|[^.!?¿\n]*\?")
+# A question that is really a request, or a tag on what they just said: "Can you turn it off?" and "Ceci has tonight, right?" are answered by "Dale".
+ASKS_TO_DO = re.compile(ERRAND.pattern + r"|\b(?:can|could|would|will) you\b|\bpod[eé]s\b|\bpodr[ií]as\b|\b(?:right|ok|okay|dale|s[ií]|no|vale)\W*$", re.I)
+WANTS_A_FACT = re.compile(r"\b(?:how|when|what|who|where|why|cu[aá]nd\w*|cu[aá]nt\w*|qué|qui[eé]n|d[oó]nde|c[oó]mo)\b", re.I)
+BARE_ACK = re.compile(r"^\W*(?:(?:ya lo tengo|lo tengo|ya est[aá]|got it|got that|i have it|i'?ve got it|i got it|noted|anotad[oa]|listo|lista|dale|ok|okay|okey|perfecto|entendido|recibido|de acuerdo|all set|done|hecho|claro|sure|thanks|thank you|gracias|gonza|ceci)\W*)+$", re.I)
+ACK_WORDS = 5
+# Nov 4: "Gonza's on duty and checking on it", when nobody had said so. Who is on duty is known, what they are doing now isn't. Asking it, or saying they aren't, is fine.
+OTHER_ON_IT = re.compile(r"\b(?:gonza|ceci)\b[^.!?\n]{0,40}?(?<![a-z]n't )(?<!\bno )\b(?:checking on (?:it|him|theo)|checking it|is checking|'s checking|looking (?:at it|into it|in on (?:him|theo))|is on it|going to check|"
+                         r"est[aá] (?:revisando|chequeando|viendo|mirando)|(?:lo|la) est[aá] (?:viendo|revisando|chequeando|mirando)|va a (?:chequear|revisar|ver|mirar)|lo va a (?:ver|revisar|chequear))\b(?![^.!\n]*\?)", re.I)
+SAID_ON_IT = re.compile(r"\bcheck\w*|\bchequ\w*|\brevis\w*|\bviendo\b|\bmirando\b|\bvoy\b|\blook\w*|\bon it\b|\bva a\b|\bgoing\b", re.I)
+# How an alarm ended, as a parent says it. A parent asking it, or saying he isn't, isn't an ending.
+SETTLED = re.compile(FALSE_ALARM.pattern + r"|\ball (?:is )?(?:fine|good|ok|okay|well)\b|\b(?:he|theo)(?:'s| is| was)(?: \w+)? (?:fine|ok|okay|better|calm|calmer|asleep|sleeping|good)\b|\btodo (?:est[aá] |anda |sigue )?(?:bien|tranquilo)\b|"
+                     r"(?:^\W*|\b(?:theo|[eé]l|ya|beb[eé]|nene)\s+)(?:est[aá]|qued[oó]|sigue|anda)(?: \w+)? (?:bien|mejor|tranquilo|dormido)\b(?!\s*,)|\bya (?:pas[oó]|est[aá] bien)\b|\bse (?:calm[oó]|durmi[oó])\b", re.I)
+NOT_SETTLED = re.compile(r"\b(?:not|isn'?t|wasn'?t|no)\s+(?:\w+\s+)?(?:fine|ok|okay|better|good|calm|asleep|sleeping|est[aá]|anda|sigue|qued[oó]|bien|mejor|tranquilo|dormido)\b", re.I)
 LOG_LIKE = re.compile(r"\b\d+\s?(?:ml|cc)\s+(?:total|in all|in total|overall|en total|en todo)\b|\b(?:total|en total)\s*[:(]?\s*\d+\s?(?:ml|cc)\b|\b\d+\s+(?:feeds?|tomas?|comidas?)\s*\(|"
                       r"\b\d+\s+(?:wet|dirty|pis|caca)\b|\bwet only\b|\bsolo pis\b|\b\d+\s+(?:diapers?|pa[ñn]ales?)\b", re.I)
 ASKS_NUMBERS = re.compile(r"\bhow (?:many|much)\b|\btotals?\b|\bsummary\b|\bcu[aá]nt[oa]s?\b|\bresumen\b|\bbaby_summary\b", re.I)
@@ -290,6 +306,29 @@ def unasked_tip(text, heard):
     return bool(UNASKED_TIP.search(text or "")) and not UNASKED_TIP.search(heard or "")
 
 
+def needs_answer(heard):
+    """Whether a parent's words ask something that "got it" doesn't answer."""
+    return any(WANTS_A_FACT.search(q) or not ASKS_TO_DO.search(q) for q in QUESTION.findall(heard or ""))
+
+
+def only_acknowledges(text, heard):
+    """A bare "Ya lo tengo." back to a parent who asked something: Ceci asked how much he took, and that is all she got."""
+    return len((text or "").split()) <= ACK_WORDS and bool(BARE_ACK.match(text or "")) and needs_answer(heard)
+
+
+def says_other_on_it(text, heard):
+    """A parent named as doing something right now, and nobody said so. A question in their words ("can you check?") isn't them saying it."""
+    return bool(OTHER_ON_IT.search(text or "")) and not SAID_ON_IT.search(QUESTION.sub(" ", heard or ""))
+
+
+def settled_line(text):
+    """The sentence where a parent says an alarm ended well, in their own words, or None."""
+    for sentence in re.split(r"(?<=[.!?\n])\s*", text or ""):
+        if SETTLED.search(sentence) and "?" not in sentence and "¿" not in sentence and not NOT_SETTLED.search(sentence) and not VITAL.search(sentence) and not INJECTION.search(sentence):
+            return sentence.strip(" ,.\n")[:SIGN_MAX]
+    return None
+
+
 def writes_as_someone_else(parent, text):
     """Why a message reads wrong to the one getting it: "does Ceci take it back?", written to Ceci. Their name opening the line is fine."""
     found = re.search(rf"\b{re.escape(str(parent))}\b", text or "", re.I)
@@ -332,10 +371,15 @@ def brief(line):
     return f"{words}\n{found.group(0)}"
 
 
+def without_pets(text):
+    """A sentence about an animal, with no word for him in it, isn't a sign in Theo. "The dog bit him" keeps its sentence."""
+    return " ".join(p for p in re.split(r"(?<=[.!?;\n])\s+", text or "") if not PET.search(p) or ABOUT_HIM.search(p)) if PET.search(text or "") else (text or "")
+
+
 def gate(text, screen=None, lang=None):
     """(kind, line) for a message that must not reach Muse, or None. kind is emergency, urgent or medical."""
     lang = lang_of(text, lang or "es")
-    text = UNRELATED.sub(" ", text or "")
+    text = without_pets(UNRELATED.sub(" ", text or ""))
     if about_a_story(text):  # a dose Muse might write is still refused on the way out
         return None
     signs = NOT_A_SIGN.sub(" ", text or "")

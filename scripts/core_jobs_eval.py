@@ -2789,6 +2789,57 @@ async def r13_scan_after_bath():
         return out["status"] == "gated" and bool(sent(core, "gonza")) and bool(sent(core, "ceci")), {"out": out, "sent": sent(core)}
 
 
+async def r14_question_with_a_rule_es():
+    """A rule and a question in one message: she gets her answer, not only "Ya lo tengo."."""
+    async with Core(fresh()) as core:
+        at = NIGHT.replace(hour=14)
+        seed_feeds(core, at - datetime.timedelta(hours=2), n=10)
+        await send(core, "message", msg("ceci", "Si llora antes de la 1 avisale a Gonza primero. ¿Cuántas tomas tuvo ayer en total?"), at)
+        said = " ".join(m["text"] for m in sent(core, "ceci"))
+        return bool(said) and not safety.only_acknowledges(said, "¿Cuántas?") and not safety.BARE_ACK.match(said), {"sent": sent(core)}
+
+
+async def r14_rule_by_day():
+    """A remembered rule about who hears first decides it, by day."""
+    async with Core(english()) as core:
+        at = EVENING.replace(hour=15)
+        await core.store.aput((*tools.FACTS, core.settings.home), "ceci_first", {"value": "Ceci wants to hear first about any dog barking at home, whoever is on duty"})
+        await send(core, "sound", {"kind": "dog barking"}, at)
+        return bool(sent(core, "ceci")), {"sent": sent(core)}
+
+
+async def r14_rule_at_night_cant_wake():
+    """The same rule at night: the off-duty parent stays asleep, and the one on duty still hears the cry."""
+    async with Core(english()) as core:
+        await core.store.aput((*tools.FACTS, core.settings.home), "ceci_first", {"value": "Wants Ceci contacted first if cry before 04:00"})
+        await send(core, "sound", {"kind": "baby crying"}, NIGHT)
+        return not sent(core, "ceci") and bool(sent(core, "gonza")), {"sent": sent(core)}
+
+
+async def r14_hold_until_a_time():
+    """A hold until 16:00 asks for a wake then, and the one who set it hears what happened."""
+    async with Core(english()) as core:
+        at = NIGHT.replace(hour=14)
+        await send(core, "message", msg("gonza", "Leave the dehumidifier off until 16:00, we're painting in there"), at)
+        wakes = await core.wakes()
+        due = [w for w in wakes if w["at"].astimezone(at.tzinfo).hour == 16]
+        before = len(sent(core, "gonza"))
+        await fired(core, at.replace(hour=16, minute=1))
+        return bool(due) and len(sent(core, "gonza")) > before, {"wakes": [str(w["at"]) for w in wakes], "sent": sent(core)}
+
+
+async def r14_good_news_reaches_the_other():
+    """By day, how Theo is after an alarm reaches the other parent in one line."""
+    async with Core(english()) as core:
+        at = NIGHT.replace(hour=10)
+        await send(core, "message", msg("ceci", "Theo has a fever of 38,5"), at)
+        before = len(sent(core, "gonza"))
+        await send(core, "message", msg("ceci", "He's fine now, it came down and he is sleeping"), at + datetime.timedelta(minutes=40))
+        return len(sent(core, "gonza")) == before + 1, {"sent": sent(core)}
+
+
+ROUND_14 = [("r14 question with a rule Spanish", r14_question_with_a_rule_es), ("r14 rule by day", r14_rule_by_day), ("r14 rule at night can't wake", r14_rule_at_night_cant_wake),
+            ("r14 hold until a time", r14_hold_until_a_time), ("r14 good news reaches the other", r14_good_news_reaches_the_other)]
 ROUND_13 = [("r13 chokes Spanish", r13_chokes_es), ("r13 cool bottle night", r13_cool_bottle_es_night), ("r13 wipes at night", r13_wipes_at_night), ("r13 dog threw up", r13_dog_threw_up),
             ("r13 sleep note", r13_sleep_note), ("r13 weight no verdict", r13_weight_no_verdict), ("r13 tea at the Echo", r13_tea_at_the_echo), ("r13 gas alarm night", r13_gas_alarm_night),
             ("r13 passes sick", r13_passes_sick_es), ("r13 cold night Ceci", r13_cold_night_ceci), ("r13 doorbell night", r13_doorbell_night), ("r13 pea soup Spanish", r13_pea_soup_es),
@@ -2824,8 +2875,8 @@ CASES = [("morning", morning), ("voice note", voice_note), ("echo question", ech
 
 async def main(n, path, only):
     results = {}
-    groups = {"round13": ROUND_13, "round12": ROUND_12, "eighth": EIGHTH, "round11": ROUND_11, "round10": ROUND_10, "seventh": SEVENTH, "sixth": SIXTH, "fifth": FIFTH, "round9": ROUND_9, "round8": ROUND_8, "fourth": FOURTH, "quiet": QUIET, "held": HELD_OUT, "round3": ROUND_3, "round4": ROUND_4, "round5": ROUND_5, "round6": ROUND_6, "round7": ROUND_7, "judges": JUDGES, "second": SECOND, "third": THIRD}
-    for name, case in groups.get(only[0] if only else "", [*CASES, *JUDGES, *SECOND, *THIRD, *FOURTH, *FIFTH, *SIXTH, *SEVENTH, *EIGHTH, *ROUND_11, *ROUND_12, *ROUND_13]):
+    groups = {"round14": ROUND_14, "round13": ROUND_13, "round12": ROUND_12, "eighth": EIGHTH, "round11": ROUND_11, "round10": ROUND_10, "seventh": SEVENTH, "sixth": SIXTH, "fifth": FIFTH, "round9": ROUND_9, "round8": ROUND_8, "fourth": FOURTH, "quiet": QUIET, "held": HELD_OUT, "round3": ROUND_3, "round4": ROUND_4, "round5": ROUND_5, "round6": ROUND_6, "round7": ROUND_7, "judges": JUDGES, "second": SECOND, "third": THIRD}
+    for name, case in groups.get(only[0] if only else "", [*CASES, *JUDGES, *SECOND, *THIRD, *FOURTH, *FIFTH, *SIXTH, *SEVENTH, *EIGHTH, *ROUND_11, *ROUND_12, *ROUND_13, *ROUND_14]):
         if only and only[0] not in groups and not any(w in name for w in only):
             continue
         runs = []
