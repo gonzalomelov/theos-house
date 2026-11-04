@@ -284,6 +284,9 @@ class ThePage(unittest.TestCase):
         self.assertNotIn("style=", svg)
         self.assertNotIn("class=", svg)
 
+    def test_nothing_is_injected_into_the_page(self):
+        self.assertIn("no-transform", (STATIC.parent / "gateway.py").read_text())
+
     def test_the_phone_with_both_has_no_asleep_line(self):
         js = (STATIC / "page.js").read_text()
         self.assertNotIn('x.querySelector(".asleep").textContent', js)
