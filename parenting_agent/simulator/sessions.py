@@ -24,16 +24,16 @@ MAX_EVENTS = int(os.environ.get("PA_SIM_MAX_EVENTS", "40"))
 MAX_TEXT = 280
 # One address, across all its sessions, so Start over can't spend Muse without end.
 HOUR_S = 3600
-ADDRESS_EVENTS = int(os.environ.get("PA_SIM_ADDRESS_EVENTS", "120"))
-ADDRESS_SESSIONS = int(os.environ.get("PA_SIM_ADDRESS_SESSIONS", "12"))
+ADDRESS_EVENTS = int(os.environ.get("PA_SIM_ADDRESS_EVENTS", "400"))
+ADDRESS_SESSIONS = int(os.environ.get("PA_SIM_ADDRESS_SESSIONS", "60"))
 HIDDEN_FACTS = ("language", "warmer_off_at", "vacuum_off_at", "feed_gap_told")
 DAILY = (((7, 30), "morning"), ((21, 30), "evening"))
 HUMIDITY_STEP = 5.0
 # A clock press can't outlive a browser's request behind Cloudflare, which gives up at 100 s. What's still running keeps its order.
 ADVANCE_WAIT_S = 75
-EVICT_IDLE_S = 120  # when every home is taken, the one nobody has touched for this long makes room
-DAY_FEED_H, NIGHT_FEED_H = 3, 7.5
-SIM_FEED = {"amount_ml": 90, "method": "bottle", "simulated": True}
+EVICT_IDLE_S = 300  # when every home is taken, the one nobody has touched for this long, with no page open on it, makes room
+OPEN_PAGE_S = 3600  # a page open on a home keeps it this long without a touch
+DAY_FEED_H, NIGHT_FEED_H = 3, 3.5
 
 
 class Full(Exception):
@@ -119,6 +119,11 @@ class Session:
                                  pool_max=int(os.environ.get("PA_DB_POOL", "3")))
         self.core = Core(self.settings, model=model, channel=self.channel, log=(self.memory, self.log))
 
+    def stale(self, after):
+        """Nobody has touched this home for that long. A page open on it counts as being there, for up to an hour."""
+        idle = time.monotonic() - self.last_seen
+        return idle > max(after, OPEN_PAGE_S) if self.core.subscribers else idle > after
+
     def living(self):
         """The moment of the event running now, which a wake can set earlier than the clock on the page."""
         return self.core.moment or self.moment
@@ -153,7 +158,8 @@ class Session:
         if not last:
             return None
         day = last + datetime.timedelta(hours=DAY_FEED_H)
-        return day if 7 <= day.hour < 22 else last + datetime.timedelta(hours=NIGHT_FEED_H)
+        step = day if 7 <= day.hour < 22 else last + datetime.timedelta(hours=NIGHT_FEED_H)
+        return step + datetime.timedelta(minutes=(last.hour * 7 + last.minute) % 21 - 10)  # a baby doesn't eat on the half hour
 
     async def next_step(self, moment, daily):
         """What happens first on the way to this moment: a daily check, a wake Muse asked for, a feed, or a step of the feed gap ladder."""
@@ -192,7 +198,7 @@ class Session:
             at, _, kind, name = step
             self.moment = max(self.moment, at)
             if kind == "feed":
-                self.seed(at.isoformat(timespec="seconds"), "feeding", SIM_FEED)
+                self.seed(at.isoformat(timespec="seconds"), "feeding", {"amount_ml": 80 + (at.hour * 7 % 4) * 5, "method": "bottle", "simulated": True})
             elif kind == "wake":
                 await self.core.fire_wakes(at)
             elif kind == "check":
@@ -294,14 +300,15 @@ class Sessions:
 
     async def create(self, client, lang="en"):
         async with self.lock:  # one at a time: PostgreSQL's setup statements must not race
-            mine = sorted((s for s in self.live.values() if s.client == client), key=lambda s: s.last_seen)
-            if len(mine) >= MAX_PER_CLIENT:
+            # A panel of judges shares one address, so one visitor's start never ends another's home in use.
+            mine = sorted((s for s in self.live.values() if s.client == client and s.stale(EVICT_IDLE_S)), key=lambda s: s.last_seen)
+            if mine and sum(1 for s in self.live.values() if s.client == client) >= MAX_PER_CLIENT:
                 await self.drop(mine[0].token)
-            if len(self.live) >= MAX_SESSIONS:  # a home nobody is touching makes room, so nobody is locked out by a tab left open
-                idle = min(self.live.values(), key=lambda s: s.last_seen)
-                if time.monotonic() - idle.last_seen < EVICT_IDLE_S:
+            if len(self.live) >= MAX_SESSIONS:  # a home nobody is using makes room, so nobody is locked out by a tab left open
+                idle = sorted((s for s in self.live.values() if s.stale(EVICT_IDLE_S)), key=lambda s: s.last_seen)
+                if not idle:
                     raise Full("sessions")
-                await self.drop(idle.token)
+                await self.drop(idle[0].token)
             self.opened.take(client)
             session = await Session(client, self.model, lang, self.events, self.opened).start()
             self.live[session.token] = session
@@ -317,7 +324,7 @@ class Sessions:
         while True:
             await asyncio.sleep(60)
             for token, session in list(self.live.items()):
-                if time.monotonic() - session.last_seen > IDLE_S:
+                if session.stale(IDLE_S):
                     await self.drop(token)
 
     async def close(self):

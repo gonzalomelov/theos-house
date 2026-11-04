@@ -22,7 +22,14 @@ HOW_IT_WENT = re.compile(r"\b(durmi[oó]\s+(?:\w+\s+)?(?:bien|tranquil\w*|genial
 MILLILITERS = re.compile(r"\b(\d+)\s?(?:ml|mililitros|milliliters|cc)\b", re.I)
 # A danger in a film or a book is not one at home, unless the words are also about this baby.
 FICTION = re.compile(r"\b(movie|film|tv show|series|novel|book|story|documentary|episode|in the news|pel[ií]cula|peli|serie|novela|libro|cuento|historia|documental|cap[ií]tulo|noticiero)\b", re.I)
-THIS_BABY = re.compile(r"\b(theo|my|our|mi|nuestro|the baby|baby is|el beb[eé]|he|his|him|[eé]l)\b", re.I)
+THIS_BABY = re.compile(r"\btheo\b|\b(?:my|our|mi|nuestr[oa])\s+(?:baby|son|boy|kid|child|newborn|beb[eé]|hijo|nene|gur[ií])\b|\b(?:right )?now\b|\bahora\b", re.I)
+# A fever in someone else isn't Theo's. "Is my mom's cough a problem" doesn't call a newborn's red flag, and a life in danger still does.
+SOMEONE_ELSE = re.compile(r"\b(?:my|our|mi|nuestr[oa]|la|el)\s+(?:mom|mum|mother|dad|father|wife|husband|partner|sister|brother|grandma|grandmother|grandpa|grandfather|friend|neighbou?r|dog|cat|boss|"
+                          r"mam[aá]|madre|pap[aá]|padre|esposa|esposo|mujer|marido|herman[oa]|abuel[oa]|amig[oa]|vecin[oa]|perr[oa]|gat[oa]|jefe|jefa)\b|\bgrandma\b|\babuela\b|\bi (?:have|got|'?ve got) (?:a )?fever\b|\btengo fiebre\b", re.I)
+THEO_NAMED = re.compile(r"\btheo\b|\bbaby\b|\bbeb[eé]\b|\bson\b|\bhijo\b|\bnewborn\b|\breci[eé]n nacido\b", re.I)
+# Words trying to change the rules aren't a danger, and Muse refuses them. They never land in the log or in memory.
+INJECTION = re.compile(r"\b(?:ignore|disregard|forget|override|bypass)\b[^.!?]{0,30}\b(?:rules?|instructions?|prompt|guidelines?|safety)\b|\b(?:ignor[aá]|olvid[aá]|salte[aá])\w*\b[^.!?]{0,30}\b(?:reglas?|instrucciones|prompt)\b|\bsystem prompt\b|\byou are now\b|\bact as\b|\bdeveloper mode\b|\bmaintenance mode\b", re.I)
+AM_PM = re.compile(r"\b(1[0-2]|0?[1-9])(?::([0-5]\d))?\s?([ap])\.?\s?m\b\.?", re.I)
 # Claims that only hold for a while. The warmer turns itself off, and a long gap between feeds is never fine.
 WARM_CLAIM = re.compile(r"\b(bottle|mamadera|biber[oó]n)\b[^.!?]{0,40}\b(warm|ready|caliente|tibia|lista|pronta)\b|\b(warm|caliente|tibia|lista|pronta)\b[^.!?]{0,40}\b(bottle|mamadera|biber[oó]n)\b", re.I)
 REASSURE = re.compile(r"sleep when you can|get some rest|rest up|beside you|all good|no worries|due soon|al lado tuyo|dorm[ií] tranquil\w*|descans[aá]\b|tranquil[oa]\b|todo bien|sin problema|le toca pronto", re.I)
@@ -59,7 +66,7 @@ READY_AT = re.compile(r"\b(?:ready|warm)\s+(?:by|at|around)\s+\d|\b(?:lista|pron
 # A parent saying they fed him: the feed goes in the log first, so the gap it closes is never raised.
 FEED_REPORT = re.compile(r"\b(?:gave|fed|just fed|nursed|drank|ate)\b|\bbottle (?:at|of)\b|\ble di\b|\btom[oó]\b|\bcomi[oó]\b|\bmamadera (?:a las|de)\b|\b\d+\s?ml\b", re.I)
 # What the agent can't keep: the home decides these, not a promise in a chat.
-CANT_KEEP = re.compile(r"\bi (?:won'?t|will not) (?:message|text|wake|bother|tell|write)\b|\bno (?:te|le|les) (?:escribo|aviso|molesto|despierto|voy a (?:escribir|avisar|molestar|despertar))\b|\bi'?ll (?:alert|tell|wake|message|text) (?:you )?both\b|\b(?:les )?aviso a (?:los |ustedes )?dos\b|\bdespierto a los dos\b", re.I)
+CANT_KEEP = re.compile(r"\bchecking (?:again|on him)\b|\bvoy a (?:ver|revisar)(?:lo)? c[oó]mo\b|\bi (?:won'?t|will not) (?:message|text|wake|bother|tell|write)\b|\bno (?:te|le|les) (?:escribo|aviso|molesto|despierto|voy a (?:escribir|avisar|molestar|despertar))\b|\bi'?ll (?:alert|tell|wake|message|text) (?:you )?both\b|\b(?:les )?aviso a (?:los |ustedes )?dos\b|\bdespierto a los dos\b", re.I)
 WRONG_NUMBER = re.compile(r"\b(?:112|999|000)\b")
 # What the rest of a message has to ask for, once the gate answered the worrying part. "He's 3 weeks old" isn't an errand.
 ERRAND = re.compile(r"\b(?:add|log|buy|turn|put|remind|tell|write|note|shopping)\b|\bagreg|\banot|\bcompr|\bpon[eé]\b|\bprend|\bapag|\brecord|\bavis|\bdecile\b|\blista\b", re.I)
@@ -100,6 +107,26 @@ def about_a_story(text):
     return bool(FICTION.search(text or "")) and not THIS_BABY.search(text or "")
 
 
+def about_someone_else(text):
+    return bool(SOMEONE_ELSE.search(text or "")) and not THEO_NAMED.search(text or "")
+
+
+def injected(text):
+    return bool(INJECTION.search(text or ""))
+
+
+SIGN_WORDS = re.compile(DANGER_SIGN.pattern + r"|fever|fiebre|\b3[89](?:[.,]\d)?\b|\b40(?:[.,]\d)?\b|gasping|choking|ahog", re.I)
+
+
+def sign_of(text):
+    """The words that raised the alarm, kept whole: the sentence with the danger in it, without the rest of the message. It is what the other parent,
+    the log and the morning check quote, so an instruction in the same message goes no further."""
+    parts = [p.strip(" ,\n") for p in re.split(r"[.!?;\n]+", text or "") if p.strip()]
+    found = [p for p in parts if SIGN_WORDS.search(p) and not INJECTION.search(p)]
+    words = ". ".join(found or [p for p in parts if not INJECTION.search(p)][:1])
+    return words[:160]
+
+
 def unsafe_room(payload):
     """The reading when a temperature event says Theo's room is far out of range, or None."""
     if "temperature" not in str(payload.get("entity_id", "")):
@@ -114,7 +141,7 @@ def unsafe_room(payload):
 def because(sender, text, line, lang):
     """The fixed line for the other parent says who wrote and why, or it reads as an alarm from nowhere."""
     words = {"es": 'escribió', "en": "wrote"}[lang]
-    return f'{str(sender).capitalize()} {words}: "{str(text)[:140]}"\n{line}'
+    return f'{str(sender).capitalize()} {words}: "{sign_of(text)}"\n{line}'
 
 
 def just_worry(text):
@@ -142,7 +169,7 @@ def brief(line):
 
 def gate(text, screen=None, lang=None):
     """(kind, line) for a message that must not reach Muse, or None. kind is emergency, urgent or medical."""
-    lang = lang or lang_of(text)
+    lang = lang_of(text, lang or "es")
     if about_a_story(text):  # a dose Muse might write is still refused on the way out
         return None
     signs = NOT_A_SIGN.sub(" ", text or "")
@@ -155,6 +182,8 @@ def gate(text, screen=None, lang=None):
         return "emergency", rules.EMERGENCY_REPLY[lang]
     if just_worry(text):
         return None
+    if about_someone_else(text) or (injected(text) and not DANGER_SIGN.search(text)):  # not about Theo: Muse answers, and a dose is still refused
+        return ("medical", rules.NO_ADVICE[lang]) if rules.asks_dose(text) else None
     urgent = rules.newborn_red_flag(text)
     if urgent:
         return "urgent", brief(rules.URGENT_REPLY[urgent][lang])
@@ -197,9 +226,14 @@ def sensor_jump(entity, value, before, minutes):
     return None
 
 
+def clock24(found):
+    hour = int(found.group(1)) % 12 + (12 if found.group(3).lower() == "p" else 0)
+    return f"{hour:02d}:{found.group(2) or '00'}"
+
+
 def plain(text):
-    """Muse writes long dashes, and nobody in this house texts with them."""
-    return re.sub(r"\s*[\u2014\u2013]\s*", ", ", text or "")
+    """Muse writes long dashes, and nobody in this house texts with them. Times read one way, on the 24 hour clock."""
+    return AM_PM.sub(clock24, re.sub(r"\s*[\u2014\u2013]\s*", ", ", text or ""))
 
 
 def outbound(text, lang="es"):

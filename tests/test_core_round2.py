@@ -92,7 +92,7 @@ class Round2(unittest.IsolatedAsyncioTestCase):
         self.assertEqual({m["to"] for m in core.channel.sent if "39" in m["text"] or "pediatr" in m["text"].lower()}, {"gonza", "ceci"})
         self.assertEqual(core.mock.snapshot()["shopping"], ["pañales"])
         self.assertIn("fever_reported", await tools_mod.facts(core.store, core.settings.home))
-        self.assertTrue(any("fever" in str(e["details"]) for e in core.log.entries("note", None, 5)))
+        self.assertTrue(any("fiebre" in str(e["details"]) for e in core.log.entries("note", None, 5)))
 
     async def test_the_ladder_rises_once_per_step_and_reaches_both_from_18_hours(self):
         core = await self.run_core(scripted(*[AIMessage("nothing") for _ in range(9)]))
@@ -146,7 +146,7 @@ class Round2(unittest.IsolatedAsyncioTestCase):
     async def test_a_room_far_out_of_range_reaches_someone_even_if_muse_stays_silent(self):
         core = await self.run_core(scripted(AIMessage("nothing"), AIMessage("nothing")))
         await self.event(core, "state_changed", {"entity_id": TEMPERATURE, "state": "36"}, AT.isoformat())
-        self.assertEqual([m["to"] for m in core.channel.sent], [runtime.who_is_on(AT, {})])
+        self.assertEqual({m["to"] for m in core.channel.sent}, {"gonza", "ceci"} if not runtime.is_night(AT) else {runtime.who_is_on(AT, {})})
 
     async def test_the_same_event_pressed_three_times_runs_once(self):
         core = await self.run_core(scripted(call("notify", parent="gonza", text="Llora"), AIMessage("ok")))
