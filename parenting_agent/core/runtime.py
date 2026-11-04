@@ -1132,7 +1132,7 @@ class Core:
         if self.reminder_for and self.reminder_for not in sent_to(calls):
             asks.append(f"{self.reminder_for.capitalize()} asked for this reminder and hasn't got it. Send it to them with notify, in one short line.")
         if self.about_recipe and any(tool == "preview_family_recipe" and not tools_mod.FAILED.match(result or "") for tool, _, result in calls) and not safety.says_cant_send(sent_words(calls)):
-            asks.append("Tell the parent plainly, in one short line, that you can't send this recipe to Cookidoo from here, and that it is done from Meta's Muse app.")
+            asks.append("Tell the parent plainly, in one short line, that you can't send this recipe to Cookidoo from here.")
         name = event["payload"].get("name")
         if event["type"] == "schedule":
             if not told and self.checked_today.get(name) != event["moment"].date():

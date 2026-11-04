@@ -33,14 +33,14 @@ IN_STORY = re.compile(r"\b(?:in|en)\s+(?:the|a|this|that|my|la|el|una|un|esta|es
 OTHER_BABY = re.compile(r"\b(?:fictional|fictitious|imaginary|made[- ]up|hypothetical(?:ly)?|ficticio\w*|imaginari\w*|inventad\w*|hipot[eé]tic\w*)\b"
                         r"|\b(?:baby|beb[eé]|newborn|reci[eé]n nacido|nene|nena)\s+(?:named|called|llamad[oa]|que se llama)\b"
                         r"|\b(?!ceci|gonza|our\b)\w+'s\s+(?:baby|son|kid|child|newborn)\b|\b(?:another|other|someone else'?s)\s+(?:baby|kid|child|newborn)\b"
-                        r"|\b(?:beb[eé]|hij[oa]|nene|nena)\s+de\s+(?:mi|mis|la|el|una|un|nuestr\w+)\s+\w+|\botr[oa]\s+(?:beb[eé]|nene|nena)\b", re.I)
+                        r"|\b(?:beb[eé]|hij[oa]|nene|nena)\s+de\s+(?:\d+\s+\w+\s+de\s+)?(?:mi|mis|la|el|una|un|nuestr\w+)\s+\w+|\botr[oa]\s+(?:beb[eé]|nene|nena)\b", re.I)
 # A fever in someone else isn't Theo's. "Is my mom's cough a problem" doesn't call a newborn's red flag, and a life in danger still does.
 SOMEONE_ELSE = re.compile(r"\b(?:my|our|mi|nuestr[oa]|la|el)\s+(?:mom|mum|mother|dad|father|wife|husband|partner|sister|brother|grandma|grandmother|grandpa|grandfather|friend|neighbou?r|nephew|niece|cousin|coworker|colleague|roommate|dog|cat|boss|aunt|uncle|nanny|mother-in-law|father-in-law|"
                           r"mam[aá]|madre|pap[aá]|padre|esposa|esposo|mujer|marido|herman[oa]|abuel[oa]|amig[oa]|vecin[oa]|perr[oa]|gat[oa]|jefe|jefa|suegr[oa]|t[ií][oa]|ni[ñn]era|sobrin[oa]|prim[oa]|compa[ñn]er[oa])\b|\bgrandma\b|\babuela\b"
                           r"|\b(?:ceci|gonza)\s+(?:has|had|got|is|tiene|ten[ií]a|est[aá])\b"
                           r"|\b(?:i have|i got|i'?ve got|i'?m running|tengo|estoy con)\s+(?:a\s+|mucha\s+|\d\d(?:[.,]\d)?\s+(?:de\s+)?)?(?:fever|fiebre)\b", re.I)
 # "Unrelated to Theo" says it isn't him, so his name there doesn't make it about him.
-UNRELATED = re.compile(r"\b(?:unrelated to|nothing to do with|not about|has nothing to do with|not related to)\s+(?:theo|our (?:baby|son)|my (?:baby|son))\b|\b(?:not|isn'?t)\s+theo\b(?!')|\bno (?:tiene )?(?:nada )?(?:que ver|relacionado) con (?:theo|nuestro (?:beb[eé]|hijo)|mi (?:beb[eé]|hijo))\b|\bno es (?:sobre |por )?theo\b", re.I)
+UNRELATED = re.compile(r"\b(?:unrelated to|nothing to do with|not about|has nothing to do with|not related to)\s+(?:theo|our (?:baby|son)|my (?:baby|son))\b|\b(?:not|isn'?t)\s+theo\b(?!')|\b(?:no (?:tiene )?)?(?:nada )?(?:que ver|relacionado) con (?:theo|nuestro (?:beb[eé]|hijo)|mi (?:beb[eé]|hijo))\b|\bno es (?:sobre |por )?theo\b", re.I)
 SAYS_ABOUT_HIM = re.compile(r"\b(?:says|said|thinks|told me|dice|dijo|cree)\s+(?:that\s+|que\s+)?(?:he|[eé]l|le|tiene)\b", re.I)
 THEO_NAMED = re.compile(r"\btheo\b|\bbaby\b|\bbeb[eé]\b|\bson\b|\bhijo\b|\bnewborn\b|\breci[eé]n nacido\b", re.I)
 # Words trying to change the rules aren't a danger, and Muse refuses them. They never land in the log or in memory.
@@ -366,4 +366,7 @@ def outbound(text, lang="es"):
     """(text to send, why it was refused). The final guard drops machinery, a dose or a drug refuses the whole message."""
     if ADVICE_OUT.search(text or ""):
         return None, "Refused, nothing was sent: never a dose, a drug or a diagnosis. Say what you saw or did instead."
-    return final_guard.apply(plain(text), lang=lang), None
+    out = final_guard.apply(plain(text), lang=lang)
+    if out in final_guard.FALLBACK.values():  # "that answer did not come out right" isn't a message to a parent (Nov 3, the recipe's line about Cookidoo)
+        return None, "Refused, nothing was sent: that couldn't go out as written. Write it again in plain words, in the language the event names, with no names of models or tools."
+    return out, None

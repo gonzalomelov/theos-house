@@ -43,7 +43,7 @@ class Words(unittest.TestCase):
 
     def test_someone_elses_child_stays_out(self):
         for text in ("my neighbor's 4 year old has a fever of 39. Unrelated to Theo", "My neighbor's kid has a fever of 39, nothing to do with Theo", "mi sobrina tiene fiebre 39, no tiene que ver con Theo",
-                     "Not about our baby: my nephew has a fever of 39"):
+                     "Not about our baby: my nephew has a fever of 39", "El hijo de 2 años de mi compañera tiene fiebre de 39, nada que ver con Theo"):
             self.assertIsNone(safety.gate(text, NoScreen()), text)
 
     def test_his_name_elsewhere_still_fires(self):
@@ -82,6 +82,11 @@ class Words(unittest.TestCase):
         for item in ("watermelon", "300 g pumpkin", "sparkling water"):
             self.assertFalse(safety.water_only(item), item)
 
+    def test_the_guards_excuse_never_reaches_a_parent(self):
+        out, why = safety.outbound("Saved in Meta's Muse app.", "es")
+        self.assertIsNone(out)
+        self.assertIn("Refused", why)
+
     def test_near_same_needs_the_same_numbers(self):
         self.assertTrue(safety.near_same("Recordatorio: llamá al pediatra a las 15:00", "Recordatorio, llamá al pediatra a las 15:00!"))
         self.assertFalse(safety.near_same("El cuarto marca 31.5 grados", "El cuarto marca 33 grados"))
@@ -119,7 +124,7 @@ class Round6(unittest.IsolatedAsyncioTestCase):
         return [w for w in await core.wakes() if w["why"].startswith(runtime.FOLLOW_UP)]
 
     async def test_the_agents_own_words_never_open_an_alarm(self):
-        ask = call("notify", parent="gonza", text="How is Theo doing now, have you reached his doctor?", emergency=True)
+        ask = call("notify", parent="gonza", text="¿Cómo sigue Theo, hablaste con el médico?", emergency=True)
         core = await self.run_core(scripted(ask, AIMessage("asked")))
         await self.event(core, "wake", {"why": f'{runtime.FOLLOW_UP}: at 14:00 gonza wrote "Theo is limp".'}, DAY)
         self.assertEqual(await core.wakes(), [])
@@ -127,7 +132,7 @@ class Round6(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(core.log.entries("note", None, 5), [])
 
     async def test_one_alarm_is_one_follow_up_with_no_loop(self):
-        ask = call("notify", parent="gonza", text="How is Theo doing now, have you reached his doctor?", emergency=True)
+        ask = call("notify", parent="gonza", text="¿Cómo sigue Theo, hablaste con el médico?", emergency=True)
         rewake = call("wake_me_at", at=(DAY + datetime.timedelta(hours=2)).isoformat(), why="ask how Theo is now")
         core = await self.run_core(scripted(ask, AIMessage("asked"), rewake, AIMessage("x"), AIMessage("x"), AIMessage("x")))
         await self.event(core, "message", {"from": "gonza", "text": "Theo is limp"}, DAY)
@@ -174,14 +179,14 @@ class Round6(unittest.IsolatedAsyncioTestCase):
     async def test_a_new_emergency_from_a_parent_still_wakes_both(self):
         duty = runtime.who_is_on(NIGHT, {})
         other = "ceci" if duty == "gonza" else "gonza"
-        core = await self.run_core(scripted(call("notify", parent=other, text="There is smoke in the kitchen", emergency=True), AIMessage("x")))
-        await self.event(core, "message", {"from": duty, "text": "There is smoke in the kitchen"}, NIGHT)
+        core = await self.run_core(scripted(call("notify", parent=other, text="Hay humo en la cocina", emergency=True), AIMessage("x")))
+        await self.event(core, "message", {"from": duty, "text": "Hay humo en la cocina"}, NIGHT)
         self.assertIn(other, [m["to"] for m in core.channel.sent])
 
     async def test_a_house_alarm_still_wakes_both_and_is_said_in_the_morning(self):
         duty = runtime.who_is_on(NIGHT, {})
         other = "ceci" if duty == "gonza" else "gonza"
-        core = await self.run_core(scripted(call("notify", parent=other, text="Smoke alarm!", emergency=True), AIMessage("x")))
+        core = await self.run_core(scripted(call("notify", parent=other, text="Suena la alarma de humo", emergency=True), AIMessage("x")))
         await self.event(core, "sound", {"kind": "smoke alarm", "room": "kitchen"}, NIGHT)
         self.assertIn(other, [m["to"] for m in core.channel.sent])
         self.assertTrue([v for k, v in (await tools_mod.facts(core.store, core.settings.home)).items() if k.startswith("alarm_") and "smoke alarm" in v])
