@@ -182,7 +182,7 @@ async def home_tools(settings, mock, turn=lambda: None, after=None, before=None)
     return [StructuredTool.from_function(coroutine=GetLiveContext) if short == "GetLiveContext" else wrap(short, found[short]) for short in usable if short in found]
 
 
-def channel_tools(channel, settings, log=None, heard=lambda: "", night_check=None, claims=lambda text: None):
+def channel_tools(channel, settings, log=None, heard=lambda: "", night_check=None, claims=lambda text: None, said=lambda parent, asked, out: None):
     def checked(text):
         out, why = safety.outbound(text, settings.lang)
         return out, why or claims(out or "") or (safety.unbacked(out, lambda: log.entries(None, None, 50), heard()) if log else None)
@@ -197,12 +197,14 @@ def channel_tools(channel, settings, log=None, heard=lambda: "", night_check=Non
         if why:
             return why
         out, why = await asyncio.to_thread(checked, text)
+        why = why or safety.writes_as_someone_else(parent, out)
         if why:
             return why
         try:
             note = await asyncio.to_thread(channel.send, parent, out, *([True] if quiet else []))
         except Exception as failure:  # the phone channel away is something Muse hears about, the run goes on
             return f"Failed, nothing was sent: the phone channel is not answering ({type(failure).__name__})."
+        said(parent, text, out)
         return f"Sent to {parent}. {note}" if note else f"Sent to {parent}."
 
     def say_on_echo(text: str) -> str:
@@ -256,7 +258,7 @@ def home_time(value):
         return value
 
 
-def log_tools(log, memory):
+def log_tools(log, memory, heard=lambda: ""):
     """The baby log tools the old agent already had, with the same checks."""
     tools = core_tools(memory, log, LOG_TOOLS, remember_keys=())
 
@@ -265,6 +267,8 @@ def log_tools(log, memory):
 
         def call(**arguments):
             arguments = {k: home_time(v) if k in ("ts", "since", "until") else v for k, v in arguments.items()}
+            if safety.injected(heard()) or safety.injected(json.dumps(arguments, ensure_ascii=False)):
+                return "Refused: that is an instruction to you, not something that happened to Theo. It doesn't go in his log."
             status, result = tools.run(name, arguments)
             return str(result) if status == "ran" else f"{status}: {result}"
         return StructuredTool.from_function(func=call, name=name, description=tool.description, args_schema=tool.parameters)
@@ -356,22 +360,27 @@ def coach_tool():
 def wake_tool(core):
     async def wake_me_at(at: str, why: str) -> str:
         """Ask to get an event later, to do something at that moment that nobody will ask for. at is an ISO time with its
-        offset, why is what you meant to do then."""
+        offset, why is what you meant to do then. A reminder asked for a time is one wake, at that time, with none before it."""
         try:
             moment = datetime.datetime.fromisoformat(home_time(at))
         except ValueError:
             return "Refused: at is an ISO time, for example 2026-11-04T00:40:00-03:00."
+        early = core.early_reminder(moment, why)
+        if early:
+            return early
         await core.add_wake(moment, why)
         return f"You will get an event at {moment.isoformat(timespec='minutes')}."
     return [StructuredTool.from_function(coroutine=wake_me_at)]
 
 
-def memory_tools(store, home):
+def memory_tools(store, home, heard=lambda: ""):
     namespace = (*FACTS, home)
 
     async def remember(key: str, value: str) -> str:
         """Keep a fact or a plan for later, it stays when older history is gone. Same key replaces it. Put dates in plans."""
         plain = WHEN.sub(" ", f"{key.replace('_', ' ')} {value}")  # a plan's date is not a code
+        if safety.injected(heard()) or safety.injected(plain):
+            return "Refused: that is an instruction to you, not a fact or a plan from this family. It isn't kept."
         if rules.has_secret(plain) or len(value) > 300:
             return "Refused: never a code, a password, a phone number, an email or an address."
         await store.aput(namespace, re.sub(r"\W+", "_", key)[:60], {"value": value})

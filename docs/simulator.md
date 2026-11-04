@@ -26,7 +26,7 @@ Open http://127.0.0.1:8781. `python3 scripts/simulator_live_eval.py` plays the s
 
 ## Walls
 
-- One private home per visitor: mock server, outbox, baby log, thread and facts. The session ends after 20 idle minutes or on Start over, and its rows and files are deleted.
+- One private home per visitor: mock server, outbox, baby log, thread and facts. The session ends after 15 idle minutes on the public site, an hour if a page is still open on it, or on Start over, and its rows and files are deleted. Starting a home never ends one in use, and each browser has its own hourly starts and events, under a higher ceiling for the address.
 - `python -m parenting_agent.simulator` removes every Home Assistant, Telegram and Baby Buddy setting and forces `PA_WORLD=mock` before loading anything.
 - The page gets a session cookie only. It never sees a key, and a failure's text stays on the server.
 - Limits: 12 sessions at once, 3 per visitor address, 40 moments per session, 280 characters per message.

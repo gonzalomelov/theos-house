@@ -188,7 +188,19 @@ class Visitors(unittest.TestCase):
             self.assertEqual([e["happened_at"] for e in events], ["2026-12-16T21:30:00-03:00"])
             after = visitor.get("/api/state").json()
             self.assertEqual(after["events_left"], before["events_left"] - 1)
-            self.assertLess(after["starts_left"], 12)
+            self.assertLess(after["starts_left"], sessions_mod.ADDRESS_SESSIONS)
+
+    def test_starting_homes_on_one_address_ends_nobody_in_use(self):
+        app = gateway.app(scripted(AIMessage("Nothing needed.")))
+        with served(app) as url:
+            first = self.visitor(url)
+            token = first.cookies["pa_sim"]
+            for _ in range(sessions_mod.MAX_PER_CLIENT + 3):
+                self.visitor(url)
+            self.assertIn(token, app.state.sessions.live)
+            answer = first.get("/api/state")
+            self.assertEqual(answer.status_code, 200)
+            self.assertEqual(answer.json()["starts_left"], sessions_mod.VISITOR_SESSIONS - 1)
 
     def test_a_saved_result_from_metas_model_goes_in_as_an_event(self):
         app = gateway.app(scripted(AIMessage("Nothing needed."), AIMessage("Nothing needed."), AIMessage("Nothing needed.")))
