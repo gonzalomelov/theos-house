@@ -78,10 +78,10 @@ def story(url):
     play("feed", lambda s, n, _: any(e["kind"] == "feeding" and e["details"].get("amount_ml") == 90 and e["ts"].startswith("2026-12-16T03:00") for e in s["log"]))
     play("morning", lambda s, n, _: n["gonza"] and n["ceci"] and n["gonza"] != n["ceci"])
     play("grandma", lambda s, n, _: n["echo"] and "3" in " ".join(n["echo"]) + "tres")
-    play("humid", lambda s, n, _: plug(s) == "on")
-    play("dry", lambda s, n, _: plug(s) == "off")
+    play("nap", lambda s, n, _: n["ceci"] and len(s["facts"]) >= 1)
+    play("humid", lambda s, n, _: plug(s) == "off" and n["ceci"])
+    play("recipe", lambda s, n, _: n["gonza"] and any(w in " ".join(n["gonza"]).lower() for w in ("pumpkin", "zapallo")))
     play("carseat", lambda s, n, steps: any(x["kind"] == "tool_call" and x["tool"] == "start_car_seat_coach" for x in steps))
-    play("evening2", lambda s, n, _: n["gonza"] or n["ceci"])
     state = v.state()
     return {"scenes": out, "facts": state["facts"], "log": state["log"], "passed": sum(s["passed"] for s in out), "of": len(out)}
 

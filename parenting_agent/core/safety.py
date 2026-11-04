@@ -33,12 +33,24 @@ IN_STORY = re.compile(r"\b(?:in|en)\s+(?:the|a|this|that|my|la|el|una|un|esta|es
 OTHER_BABY = re.compile(r"\b(?:fictional|fictitious|imaginary|made[- ]up|hypothetical(?:ly)?|ficticio\w*|imaginari\w*|inventad\w*|hipot[eé]tic\w*)\b"
                         r"|\b(?:baby|beb[eé]|newborn|reci[eé]n nacido|nene|nena)\s+(?:named|called|llamad[oa]|que se llama)\b"
                         r"|\b(?!ceci|gonza|our\b)\w+'s\s+(?:baby|son|kid|child|newborn)\b|\b(?:another|other|someone else'?s)\s+(?:baby|kid|child|newborn)\b"
+                        r"|\b(?:son|daughter|kid|child|baby)\s+of\s+(?:my|our|a|the)\b"
                         r"|\b(?:beb[eé]|hij[oa]|nene|nena)\s+de\s+(?:\d+\s+\w+\s+de\s+)?(?:mi|mis|la|el|una|un|nuestr\w+)\s+\w+|\botr[oa]\s+(?:beb[eé]|nene|nena)\b", re.I)
 # A fever in someone else isn't Theo's. "Is my mom's cough a problem" doesn't call a newborn's red flag, and a life in danger still does.
 SOMEONE_ELSE = re.compile(r"\b(?:my|our|mi|nuestr[oa]|la|el)\s+(?:mom|mum|mother|dad|father|wife|husband|partner|sister|brother|grandma|grandmother|grandpa|grandfather|friend|neighbou?r|nephew|niece|cousin|coworker|colleague|roommate|dog|cat|boss|aunt|uncle|nanny|mother-in-law|father-in-law|"
                           r"mam[aá]|madre|pap[aá]|padre|esposa|esposo|mujer|marido|herman[oa]|abuel[oa]|amig[oa]|vecin[oa]|perr[oa]|gat[oa]|jefe|jefa|suegr[oa]|t[ií][oa]|ni[ñn]era|sobrin[oa]|prim[oa]|compa[ñn]er[oa])\b|\bgrandma\b|\babuela\b"
                           r"|\b(?:ceci|gonza)\s+(?:has|had|got|is|tiene|ten[ií]a|est[aá])\b"
-                          r"|\b(?:i have|i got|i'?ve got|i'?m running|tengo|estoy con)\s+(?:a\s+|mucha\s+|\d\d(?:[.,]\d)?\s+(?:de\s+)?)?(?:fever|fiebre)\b", re.I)
+                          r"|\b(?:i have|i got|i'?ve got|i'?m running|tengo|estoy con)\s+(?:a\s+|mucha\s+|\d\d(?:[.,]\d)?\s+(?:de\s+)?)?(?:fever|fiebre)\b"
+                          # An age no newborn has: Theo isn't 3 years old.
+                          r"|\b(?:1\s*(?:year|a[nñ]o|a[nñ]ito)|(?:[2-9]|1\d)\s*(?:years?|yrs?|y/?o|a[nñ]os|a[nñ]itos))\b", re.I)
+# A child named something else, with the fever said of them. Only a name right before the verb counts, so "Tonight he has a fever" still fires.
+NOT_A_NAME = ("Theo Gonza Ceci Today Tonight Now Also Still Yesterday Again Already Apparently Probably Perhaps Maybe Just Really Seems Looks Because Since And But Who Baby Temp Temperature Fever Thermometer Reading Yes Yeah Please Help Hey "
+              "Hoy Ahora Anoche Ayer Mañana Tarde Noche Bebe Bebé Nene Nena Sigue Ya Todavía Todavia Recién Recien Creo Parece Capaz Además Ademas También Tambien Igual Aún Aun Justo Otra Esto Esta Este Eso Esa Ese Acá Aca Ahí Ahi Siempre Nunca Quizás Quizas Tal Vez "
+              "Temperatura Fiebre Termómetro Termometro Porque Pero Por Para Que Bueno Che Mira Mirá Dale Ojo Hola Ayuda Sí Si No He She It The This That Him El Ella Lo Le").split()
+NAMED_OTHER = re.compile(r"\b(?!(?:" + "|".join(NOT_A_NAME) + r")\b)[A-ZÁÉÍÓÚÑ][a-záéíóúñ]{2,}(?:,[^,.!?]{0,40},)?\s+(?i:has|had|is running|got|tiene|ten[ií]a|est[aá] con)\s+(?i:a\s+|an?\s+|una?\s+|mucha\s+|high\s+)?(?i:fever|fiebre|temp\w*|calentura|\d\d)")
+# A question about the room, with nothing said about him: Muse reads the sensor and answers.
+ROOM_WORD = re.compile(r"\b(?:room|nursery|in there|in here|cuarto|habitaci[oó]n|pieza|ac[aá] adentro|ah[ií] adentro)\b", re.I)
+ROOM_ASK = re.compile(r"\b(?:temp\w*|hot|warm|cold|humid\w*|calor|fr[ií]o|caliente|humedad)\b", re.I)
+SAID_OF_HIM = re.compile(r"\b(?:theo|he|he'?s|him|his|baby|beb[eé]|él|fiebre|fever|tiene|lo siento)\b", re.I)
 # "Unrelated to Theo" says it isn't him, so his name there doesn't make it about him.
 UNRELATED = re.compile(r"\b(?:unrelated to|nothing to do with|not about|has nothing to do with|not related to)\s+(?:theo|our (?:baby|son)|my (?:baby|son))\b|\b(?:not|isn'?t)\s+theo\b(?!')|\b(?:no (?:tiene )?)?(?:nada )?(?:que ver|relacionado) con (?:theo|nuestro (?:beb[eé]|hijo)|mi (?:beb[eé]|hijo))\b|\bno es (?:sobre |por )?theo\b", re.I)
 SAYS_ABOUT_HIM = re.compile(r"\b(?:says|said|thinks|told me|dice|dijo|cree)\s+(?:that\s+|que\s+)?(?:he|[eé]l|le|tiene)\b", re.I)
@@ -49,6 +61,9 @@ AM_PM = re.compile(r"\b(1[0-2]|0?[1-9])(?::([0-5]\d))?\s?([ap])\.?\s?m\b\.?", re
 # Claims that only hold for a while. The warmer turns itself off, and a long gap between feeds is never fine.
 WARM_CLAIM = re.compile(r"\b(bottle|mamadera|biber[oó]n)\b[^.!?]{0,40}\b(warm|ready|caliente|tibia|lista|pronta)\b|\b(warm|caliente|tibia|lista|pronta)\b[^.!?]{0,40}\b(bottle|mamadera|biber[oó]n)\b", re.I)
 REASSURE = re.compile(r"sleep when you can|get some rest|rest up|beside you|all good|no worries|due soon|al lado tuyo|dorm[ií] tranquil\w*|descans[aá]\b|tranquil[oa]\b|todo bien|sin problema|le toca pronto", re.I)
+ABOUT_THE_AIR = re.compile(r"dehumid|deshumid|humid", re.I)
+ABOUT_THE_ROOM = re.compile(r"\broom\b|temperatur|\bcuarto\b", re.I)
+GETS_READY = re.compile(r"warmer|prewarm|pre-warm|warm the|bottle|mamadera|calentador|calentar", re.I)
 HOT_ROOM, COLD_ROOM = 28.0, 14.0
 FEED_GAP_H, STALE_LOG_H = 8, 48
 # The ladder: each step is said once, from code, and from BOTH_FROM up it reaches both parents, day or night.
@@ -60,13 +75,16 @@ GAP_LINES = {"en": ("The log shows no feed for {h} hours. Did feeds go unlogged?
                     "El registro no tiene tomas hace {h} horas, y es mucho para un recién nacido. Si no quedaron tomas sin registrar, llamá a su pediatra ahora.",
                     "No hay tomas en el registro hace {h} horas. Si de verdad no comió, llamá ahora a su pediatra o a emergencias. Fijate cómo está y anotá lo que tomó.")}
 # "Not an emergency" counts, unless the words name a sign nobody can wave away.
-DENIED = re.compile(r"\b(not an emergency|no emergency|nothing urgent|not urgent|no es (?:una )?(?:emergencia|urgencia)|no es urgente|nada urgente)\b", re.I)
-VITAL = re.compile(r"not breathing|stop\w* breathing|can'?t breathe|no respira|dej[oó] de respirar|\bblu(?:e|ish)\b|\bazul|\bmorad|\blimp\b|won'?t wake|not waking|no (?:se )?despierta|unresponsive|no reacciona|no responde|seizure|convuls", re.I)
+# A false alarm says the same, and closes the alarm it is about.
+FALSE_ALARM = re.compile(r"\bfalse alarm\b|\bfalsa alarma\b|\b(?:it'?s|it was|was) nothing\b|\b(?:says|said) it'?s nothing\b|\bno (?:es|fue|era) nada\b|\bdice que no es nada\b", re.I)
+DENIED = re.compile(r"\b(not an emergency|no emergency|nothing urgent|not urgent|no es (?:una )?(?:emergencia|urgencia)|no es urgente|nada urgente)\b|" + FALSE_ALARM.pattern, re.I)
+VITAL = re.compile(r"not breathing|n'?t breathing|stop\w* breathing|can'?t breathe|no respira|dej[oó] de respirar|\bblu(?:e|ish)\b|\bazul|\bmorad|\blimp\b|won'?t wake|not waking|no (?:se )?despierta|unresponsive|no reacciona|no responde|seizure|convuls|hard to wake|dif[ií]cil de despertar|cuesta despertar", re.I)
 # "Lips not blue" is reassurance, so it is no sign.
-NOT_A_SIGN = re.compile(r"\b(?:not|aren'?t|isn'?t|no|sin|ni)\s+(?:\w+\s+)?(?:blu(?:e|ish)|azul\w*|morad\w*|limp)\b", re.I)
+NOT_A_SIGN = re.compile(r"\b(?:not|aren'?t|isn'?t|no|sin|ni)\s+(?:\w+\s+)?(?:blu(?:e|ish)|azul\w*|morad\w*|limp|gr[ae]y|gris\w*|hard to wake)\b", re.I)
 # Signs the word list misses, and how they come out typed fast at night. Everything else goes to the danger screen.
 BUMPED = re.compile(r"\b(?:bump|bang|knock|smack)\w*\s+(?:his|her|the|its)\s+head\b|\bhead\s+(?:bump|knock)\b|\bse\s+(?:dio|peg[oó])\s+(?:\w+\s+)?(?:en\s+)?la\s+cabeza\b", re.I)
-TYPED_FAST = re.compile(r"\b(?:lips?|labios?)\b[^.!?]{0,12}\b(?:blu\b|bleu\b|azul\w*)|\bbre?a?th?i?n?g?\w{0,3}\s+(?:funny|weird|strange|raro)\b|\bbreathng\b|\bw(?:no|on)t\s+wake\b|\bno\s+respir\b|\bno\s+resira\b", re.I)
+HARD_TO_WAKE = re.compile(r"\b(?:hard|difficult|tough) to wake\b|\b(?:es|est[aá]|muy|re)?\s*dif[ií]cil (?:de )?despertarl[oa]\b|\b(?:cuesta|costó|cost[oó]) (?:mucho )?despertarl[oa]\b", re.I)
+TYPED_FAST = re.compile(r"\b(?:lips?|labios?)\b[^.!?]{0,12}\b(?:blu\b|bleu\b|azul\w*|gr[ae]y\b|gris\w*)|\bbre?a?th?i?n?g?\w{0,3}\s+(?:funny|weird|strange|raro)\b|\bbreathng\b|\bw(?:no|on)t\s+wake\b|\bno\s+respir\b|\bno\s+resira\b", re.I)
 # Which language the danger is written in, when a short message has no other word to go by.
 DANGER_ES = re.compile(r"\b(?:respir\w*|despiert\w*|azul\w*|morad\w*|fiebre|labios?|convuls\w*|trag[oó]|golpe\w*|cabeza|pila|reacciona|ahog\w*|miel|leche)\b", re.I)
 DANGER_EN = re.compile(r"\b(?:breath\w*|won'?t|wake|lips?|seizure|swallow\w*|battery|bump\w*|head|fever|stopped|limp|choking|fell|honey|milk)\b", re.I)
@@ -107,6 +125,8 @@ SHOPPING = re.compile(r"\b(?:shopping|list|buy|store|lista|compr\w+|s[uú]per)\b
 RECIPE_WORDS = re.compile(r"\b(?:recipes?|recetas?|pur[eé]e?|pur[eé]|thermomix|cookidoo)\b", re.I)
 SUITS = re.compile(r"\b(?:suitable|perfect|great|ideal|good|safe|appropriate|fine|ok|okay|right)\s+(?:for|to give(?: to)?)\s+(?:theo|him|the baby|babies|a baby|a newborn|newborns|your baby|his age|little)\b|\bbaby[- ]friendly\b"
                    r"|\b(?:ideal|perfect[oa]|apt[oa]|adecuad[oa]|segur[oa]|buen[oa]|recomendad[oa])\s+para\s+(?:theo|[eé]l|el beb[eé]|beb[eé]s|un beb[eé]|su edad|reci[eé]n nacidos)\b|\b(?:suits|apt) (?:theo|him|a baby)\b", re.I)
+# "I can't say if it's right for him" is what the home asks Muse to say, so it isn't the claim. Nor is "ask his pediatrician when it's ok for him".
+HEDGED = re.compile(r"\w+n'?t\b|\b(?:not|never|cannot|whether|if|when|ask|no|ni|nunca|si|cu[aá]ndo|todav[ií]a|pregunt\w*|consult\w*|depends?|depende)\b", re.I)
 SENT_THERE = re.compile(r"\b(?:sent|saved|published|added|uploaded)\b[^.!?]{0,25}\b(?:cookidoo|thermomix)\b|\b(?:envi[eé]|mand[eé]|guard[eé]|publiqu[eé]|sub[ií])\b[^.!?]{0,25}\b(?:cookidoo|thermomix)\b", re.I)
 CANT_SEND = re.compile(r"\b(?:can'?t|cannot|can not|won'?t|not able to|unable to)\s+(?:\w+\s+)?(?:send|save|publish|upload)|\bnot sent\b|\bno\s+(?:\w+\s+)?(?:puedo|pude|podemos)\s+(?:\w+\s+)?(?:enviar|mandar|guardar|publicar|subir)|\bno se (?:puede|envi[oó]|mand[oó])", re.I)
 # Words that say a parent is answering how Theo is, against an errand that only happens to come after an alarm.
@@ -127,6 +147,12 @@ DAY_WORDS = re.compile(r"\bdaytime\b|\bdurante el d[ií]a\b|\bit'?s (?:the )?day
 NIGHT_WORDS = re.compile(r"\bnighttime\b|\bit'?s (?:the )?night\b|\bes de noche\b|\bat this hour of the night\b", re.I)
 GLITCH = re.compile(r"\bglitch\w*|\b(?:is|it's|its|just|only|probably|likely|surely)\s+(?:a |an |the )?(?:sensor\s+)(?:fault|error|problem|failure)\b|\b(?:es|ser[aá]|solo|seguro|probablemente)\s+(?:un |una |el |la )?(?:error|falla|problema)\s+del\s+sensor\b", re.I)
 CRY_SAID = re.compile(r"\bcry\w*|\bllor\w*|\bawake\b|\bup\b|despiert\w*|despert\w*", re.I)
+# An appointment gets a reminder ahead of it. The rule against early wakes is for "remind me at 3".
+APPOINTMENT = re.compile(r"\b(?:appointment|checkup|check-up|vaccin\w*|visit|consulta|cita|vacuna\w*|flight|vuelo|ecograf\w*)\b|\b(?:turno|control) (?:con|del?|en)\b|\b(?:at|to see|to the) (?:the )?(?:doctor|pediatrician|dentist)\b", re.I)
+# Who is on duty has one record, the home's. A fact of Muse's own about it is how two versions came to exist.
+DUTY_CLAIM = re.compile(r"\bon[ _]duty\b|\bde[ _]turno\b|\brota\b|\bnight[ _]shift\b|\btakes?[ _]the[ _]night\b|\bse queda con la noche\b|\b(?:te|le) toca la noche\b|\bwhose night\b", re.I)
+# Muse saying it missed what a parent wrote, which it says when the home asks again without their words.
+DIDNT_CATCH = re.compile(r"\b(?:didn'?t|did not|couldn'?t|could not)\s+(?:catch|get|see|read)\s+(?:your|that)\b|\bmissed your\b|\bno\s+(?:vi|le[ií]|entend[ií]|recib[ií]|capt[eé]|me lleg[oó])\s+tu\b|\bno te entend[ií]\b", re.I)
 REMIND_ASK = re.compile(r"\bremind\w*|\brecord[aá]\w*|\bacord[aá]\w*|\bavis[aá]me\b|\bav[ií]same\b", re.I)
 ABOUT_HOW_HE_IS = re.compile(ASKS_HOW.pattern + r"|\bcheck (?:on|how) (?:theo|him)\b|\bfollow[- ]?up\b|reached (?:his|the|a) (?:doctor|pediatrician)", re.I)
 # A morning message isn't a ledger, and nobody owes anybody a night.
@@ -194,7 +220,13 @@ def about_a_story(text):
 
 def about_someone_else(text):
     text = text or ""
-    return bool(SOMEONE_ELSE.search(text)) and not THEO_NAMED.search(text) and not SAYS_ABOUT_HIM.search(text)
+    return bool(SOMEONE_ELSE.search(text) or NAMED_OTHER.search(text)) and not THEO_NAMED.search(text) and not SAYS_ABOUT_HIM.search(text)
+
+
+def about_the_room(text):
+    """A question about the room's heat or air, and nothing about him. Muse reads the sensor."""
+    text = text or ""
+    return bool(ROOM_WORD.search(text) and ROOM_ASK.search(text)) and not SAID_OF_HIM.search(text)
 
 
 def injected(text):
@@ -296,8 +328,11 @@ def gate(text, screen=None, lang=None):
             return None
         return "emergency", rules.EMERGENCY_REPLY[lang]  # a sign named outranks the words around it, with or without the model
     text = ERRANDS.sub(" ", text or "")
-    if rules.is_emergency(text) or rules.spoken_emergency(text) or BUMPED.search(text) or TYPED_FAST.search(text) or (STOPPED.search(text) and not FICTION.search(text)):
+    signs = NOT_A_SIGN.sub(" ", text)
+    if rules.is_emergency(text) or rules.spoken_emergency(text) or BUMPED.search(text) or TYPED_FAST.search(signs) or HARD_TO_WAKE.search(signs) or (STOPPED.search(text) and not FICTION.search(text)):
         return "emergency", rules.EMERGENCY_REPLY[lang]
+    if about_the_room(text):
+        return None
     if just_worry(text):
         return None
     if about_someone_else(text):  # not about Theo: Muse answers, and a dose is still refused
@@ -345,6 +380,15 @@ def says_cant_send(text):
     return bool(CANT_SEND.search(text or "") and re.search(r"cookidoo|thermomix", text or "", re.I))
 
 
+def says_suits(text):
+    """A recipe called good for a baby, said as a fact. The same words after a no, an if or a when say the opposite."""
+    for sentence in re.split(SENTENCE, text or ""):
+        for found in SUITS.finditer(sentence):
+            if not HEDGED.search(sentence[:found.start()]):
+                return True
+    return False
+
+
 def plan_of(text):
     """The sentences of a parent's message that hold a doctor's plan, or an empty string. Not an order to the agent and nobody else's child."""
     if injected(text) or about_a_story(text) or about_someone_else(text):
@@ -385,6 +429,12 @@ def sensor_jump(entity, value, before, minutes):
                     "and to go and check the room. Never say it is a glitch or nothing. You are woken in a few minutes to read it again. Don't move a device on it until another reading agrees.")
         return f"This reading went from {before:g} to {value:g} in {minutes:.0f} minutes, which a room can't do. Suspect the sensor: say so to the parent on duty and don't move a device on it until another reading agrees."
     return None
+
+
+def topic_of(why):
+    """What a wake is about, so two chains about one thing become one. None when it is about anything else."""
+    why = str(why or "")
+    return "air" if ABOUT_THE_AIR.search(why) else "warmer" if GETS_READY.search(why) else "room" if ABOUT_THE_ROOM.search(why) else None
 
 
 def clock24(found):

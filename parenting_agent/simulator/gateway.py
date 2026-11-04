@@ -31,7 +31,7 @@ BUSY = "All the simulated homes are in use right now. This page keeps trying, an
 STARTS_USED = "You started many homes this hour. Please try again in a while."
 USED = "This session reached its limit. Start over, or try again in an hour."
 ONE_AT_A_TIME = "The home is still on the last one."
-STREAMED = {"event", "tool_call", "tool_result", "gate", "decision", "done", "error"}
+STREAMED = {"event", "tool_call", "tool_result", "gate", "decision", "done", "error", "memory_used"}
 PARENTS = ("gonza", "ceci")
 
 

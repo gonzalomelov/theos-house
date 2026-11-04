@@ -111,7 +111,7 @@ class CoreTest(unittest.IsolatedAsyncioTestCase):
 
     async def test_memory_and_facts_survive_a_restart(self):
         s = settings()
-        core = await self.run_core(scripted(call("remember", key="night plan", value="Night of 2026-11-03: Gonza on duty"), AIMessage("kept")), s)
+        core = await self.run_core(scripted(call("remember", key="night plan", value="Monday 2026-11-03: the doctor at 10"), AIMessage("kept")), s)
         await self.event(core, "message", {"from": "ceci", "text": "dejame dormir esta noche"})
         await core.__aexit__()
         model = scripted(AIMessage("nothing"))
@@ -119,7 +119,7 @@ class CoreTest(unittest.IsolatedAsyncioTestCase):
         await self.event(core, "schedule", {"name": "morning"})
         seen = " ".join(str(m.content) for m in model.calls[0])
         self.assertIn("dejame dormir", seen)
-        self.assertIn("Night of 2026-11-03: Gonza on duty", seen)
+        self.assertIn("Monday 2026-11-03: the doctor at 10", seen)
 
     async def test_a_run_cut_between_call_and_result_does_not_break_the_thread(self):
         s = settings()

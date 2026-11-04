@@ -141,7 +141,7 @@ class Round6(unittest.IsolatedAsyncioTestCase):
         for _, done in await core.fire_wakes(DAY + datetime.timedelta(minutes=41)):
             await done
         self.assertEqual(len(core.channel.sent), before + 1)
-        self.assertEqual(await core.wakes(), [])
+        self.assertEqual([w["why"] for w in await core.wakes()], [f"{runtime.UNANSWERED}:gonza: how Theo is, after an alarm"])  # one ask, then the other parent once, and no loop
 
     async def test_muse_setting_its_own_wake_to_ask_again_is_refused(self):
         rewake = call("wake_me_at", at=(DAY + datetime.timedelta(hours=1)).isoformat(), why="ask how Theo is now")
@@ -208,14 +208,14 @@ class Round6(unittest.IsolatedAsyncioTestCase):
         at = (DAY + datetime.timedelta(minutes=40)).isoformat()
         core = await self.run_core(scripted(call("wake_me_at", at=at, why="remind Gonza to call the pharmacy"), AIMessage("x"), call("notify", parent="gonza", text="Listo."), AIMessage("x"),
                                             call("notify", parent="gonza", text="¿Cómo sigue Theo?"), AIMessage("x"), call("notify", parent="gonza", text="Llamá a la farmacia."), AIMessage("x"),
-                                            call("notify", parent="ceci", text="Gonza no contestó el recordatorio de la farmacia."), AIMessage("x")))
+                                            call("notify", parent="ceci", text="Gonza no contestó el recordatorio de la farmacia."), AIMessage("x"), AIMessage("x"), AIMessage("x")))
         await self.event(core, "message", {"from": "gonza", "text": "Remind me in 40 minutes to call the pharmacy"}, DAY)
         await self.event(core, "message", {"from": "gonza", "text": "His lips are blue"}, DAY)
         for _, done in await core.fire_wakes(DAY + datetime.timedelta(minutes=40)):
             await done
         texts = [m["text"] for m in core.channel.sent]
         self.assertTrue(any("farmacia" in t or "pharmacy" in t for t in texts))
-        unanswered = [w for w in await core.wakes() if w["why"].startswith(runtime.UNANSWERED)]
+        unanswered = [w for w in await core.wakes() if w["why"].startswith(runtime.UNANSWERED) and "pharmacy" in w["why"]]
         self.assertEqual(len(unanswered), 1)
         for _, done in await core.fire_wakes(DAY + datetime.timedelta(minutes=55)):
             await done

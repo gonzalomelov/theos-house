@@ -19,10 +19,13 @@
   </div>
   <div class="hero">
     <h1 id="lead"></h1>
+    <p class="who" id="who"></p>
     <p class="hero-sub"><span class="tag" id="simTag"></span> <a class="to-built" href="#built"></a></p>
   </div>
   <div class="tools"><button type="button" class="ghost mini" id="lang" lang="es">Español</button><button type="button" class="ghost mini" id="reset"></button></div>
 </header>
+
+<div class="back" id="back"><p id="back-t" role="status"></p><button type="button" class="play" id="back-fresh"></button><button type="button" class="ghost" id="back-keep"></button></div>
 
 <div class="story">
   <div class="runbar" id="runbar">
@@ -42,12 +45,12 @@
   <div class="ptabs" id="ptabs"><button type="button" id="tab-both" data-phone="both" aria-pressed="true"></button><button type="button" id="tab-gonza" data-phone="gonza" aria-pressed="false"></button><button type="button" id="tab-ceci" data-phone="ceci" aria-pressed="false"></button></div>
   <section class="phone" id="phone-both" aria-labelledby="ph-b">
     <h2 id="ph-b"></h2>
-    <div class="screen"><ol class="chat"></ol></div>
+    <div class="screen"><ol class="chat"></ol><p class="typing" data-t="thinking"></p></div>
     <p class="both-hint" id="both-hint"></p>
   </section>
   <section class="phone" id="phone-gonza" aria-labelledby="ph-g">
     <h2 id="ph-g"></h2>
-    <div class="screen"><ol class="chat"></ol><p class="asleep"></p></div>
+    <div class="screen"><ol class="chat"></ol><p class="typing" data-t="thinking"></p><p class="asleep"></p></div>
     <form class="say"><input aria-label="" maxlength="280" autocomplete="off"><button type="submit"></button></form>
   </section>
 
@@ -91,7 +94,7 @@
 
   <section class="phone" id="phone-ceci" aria-labelledby="ph-c">
     <h2 id="ph-c"></h2>
-    <div class="screen"><ol class="chat"></ol><p class="asleep"></p></div>
+    <div class="screen"><ol class="chat"></ol><p class="typing" data-t="thinking"></p><p class="asleep"></p></div>
     <form class="say"><input aria-label="" maxlength="280" autocomplete="off"><button type="submit"></button></form>
   </section>
 

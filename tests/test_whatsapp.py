@@ -1,4 +1,5 @@
 """WhatsApp, with Meta faked: the 24 hour window, the template, the fall back to Telegram, the webhook's checks."""
+import asyncio
 import datetime
 import hashlib
 import hmac
@@ -249,7 +250,8 @@ class RehearsalTest(unittest.TestCase):
         out.ha = SimpleNamespace(service=lambda *a: self.fail("the Echo spoke at night"))
         with mock.patch.dict(os.environ, {"PA_REHEARSAL": "1"}), mock.patch.object(tools, "rehearsal_night", return_value=True):
             self.assertIn("nothing was said", out.echo("Hola"))
-            said = [t for t in tools.channel_tools(out, SimpleNamespace(lang="es")) if t.name == "say_on_echo"][0].invoke({"text": "Hola"})
+            said = [t for t in tools.channel_tools(out, SimpleNamespace(lang="es")) if t.name == "say_on_echo"][0].ainvoke({"text": "Hola"})
+            said = asyncio.run(said)
         self.assertIn("nothing was said", said)
 
     def test_nothing_noisy_moves_at_night_and_the_light_waits_for_gonza(self):

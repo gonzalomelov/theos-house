@@ -25,7 +25,7 @@ button{cursor:pointer}
 
 .stage{display:grid;gap:12px;padding:10px 24px;max-width:1500px;margin:auto;
   grid-template-columns:minmax(210px,260px) minmax(210px,260px) minmax(380px,1.2fr) minmax(300px,1fr);
-  grid-template-rows:auto auto minmax(0,1fr);grid-template-areas:"gonza ceci house trace" "gonza ceci controls trace" "gonza ceci memory trace";height:max(800px,calc(100vh - 248px))}
+  grid-template-rows:auto minmax(0,1fr) minmax(190px,26%);grid-template-areas:"gonza ceci house trace" "gonza ceci controls trace" "gonza ceci controls memory";height:max(800px,calc(100vh - 248px))}
 #phone-gonza{grid-area:gonza}#phone-ceci{grid-area:ceci}.house{grid-area:house}.trace{grid-area:trace}.memory{grid-area:memory}
 
 .phone{display:flex;flex-direction:column;min-height:0}
@@ -256,3 +256,22 @@ footer a{color:var(--ink);font-weight:700}
 #meta-more summary{cursor:pointer;font-weight:700;padding:10px 12px;background:var(--panel);border-radius:10px;margin-bottom:8px}
 .meta .senses{padding:0;margin-top:14px}
 .m-card img,.se-card img{max-width:100%}
+
+.who{margin:8px 0 0;font-size:15px;line-height:1.35;max-width:72ch}
+.back{display:none;max-width:1500px;margin:12px auto;padding:14px 24px;align-items:center;flex-wrap:wrap;gap:10px 14px}
+.back p{margin:0;font:750 18px/1.25 var(--display);flex:1 1 280px}
+body.returning .back{display:flex}
+body.returning .story,body.returning .stage,body.returning .book{display:none}
+.typing{display:none;position:sticky;bottom:0;margin:6px 0 0;padding:4px 10px;width:fit-content;border-radius:10px;background:var(--bubble);color:var(--ink);font-size:13.5px}
+.typing::after{content:"…";animation:typing 1.2s steps(3) infinite}
+@keyframes typing{0%{opacity:.25}50%{opacity:1}100%{opacity:.25}}
+body.busy .typing{display:block}
+dt.used,dd.used{color:var(--ink);font-weight:700}
+dd.used small{display:block;font-weight:700;color:var(--mind)}
+.because{font-weight:700;color:var(--mind)}
+/* A laptop window: the decision feed stays beside the phones, not under the house. */
+@media (min-width:900px) and (max-width:1279px){
+  .stage{grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1.1fr);grid-template-areas:"gonza ceci trace" "house house controls" "memory memory controls"}
+  #trace{max-height:none}
+  .trace{height:calc(min(440px,62vh) + 40px);min-height:0}
+}

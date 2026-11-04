@@ -12,7 +12,7 @@ from .safety import plain_dates
 MONTH_DAYS = 31
 RULES = """You write pages of a family's keepsake book about their newborn Theo's first month, for his parents Gonza and Ceci.
 Write one short warm page for each day you are given, in {language}, two sentences at most, three on a day with moments, in the voice of the family's home looking back.
-Use only what the day's facts say, and any note given for it. Never write a date like 2026-12-15 on a page. Say nothing about lights, rooms or what the home did unless the day's facts say so. Most pages use one fact or none, and no two pages sound alike. A day's "moments" really happened and each one must be on its page, in your words: who took the night, the recipe, the car seat. A frightening moment is named as one, with the words the parent wrote, and you never say how it ended unless the facts do. Use the "totals" of each day as they are. The home watches and remembers: it never holds or touches anyone. Don't invent events, feelings of the baby, weather or visitors. Numbers can only be those in the facts.
+Use only what the day's facts say, and any note given for it. Never write a date like 2026-12-15 on a page. Say nothing about lights, rooms or what the home did unless the day's facts say so. Most pages use one fact or none, and no two pages sound alike. A day's "moments" really happened and each one must be on its page, in your words and claiming no more than it says: who took the night, the recipe, who asked for help with the car seat. Nobody knows if the seat got fitted, so never say so. A frightening moment is named as one, with the words the parent wrote, and you never say how it ended unless the facts do. Use the "totals" of each day as they are. The home watches and remembers: it never holds or touches anyone. Don't invent events, feelings of the baby, weather or visitors. Numbers can only be those in the facts.
 No medical or health judgments, and never say how he is doing or whether something is normal. Theo's parents are Gonza and Ceci, use no other names and no surnames.
 Answer with JSON only: {{"title": "...", "pages": [{{"day": "YYYY-MM-DD", "text": "..."}}]}}"""
 LANGUAGES = {"en": "English", "es": "Spanish"}
@@ -24,6 +24,8 @@ ALARM_NOTE = re.compile(r'^Alarm at (\d\d:\d\d), (.+?): "(.*)"$')
 ALARM_LINE = {"en": 'A frightening moment: at {at} {who} wrote "{words}", and both parents were told.', "es": 'Un momento de miedo: a las {at} {who} escribió "{words}", y se les avisó a los dos.'}
 TITLE = {"en": "Theo's first days", "es": "Los primeros días de Theo"}
 FORBIDDEN = re.compile(r"\b(healthy|sano|normal|fever|fiebre|doctor|pediatr\w*)\b", re.I)
+# The coach starting is all the home knows. Whether the seat went in is the parent's to say.
+FITTED = re.compile(r"\b(?:fit|fitted|installed|mounted|put in|instal[oó]|colocó|coloc[oó]|puso|pusieron)\b[^.!?]{0,40}\b(?:seat|silla|sillita)\b|\b(?:seat|silla|sillita)\b[^.!?]{0,30}\b(?:fitted|installed|in place|instalad[ao]|colocad[ao]|quedó)\b", re.I)
 SAID_SCARED = re.compile(r"scar|fright|alarm|fear|worr|miedo|asust|alarma|susto|preocup", re.I)
 
 
@@ -99,7 +101,7 @@ def page_is_true(text, day):
     said = " ".join(m["text"] for m in day.get("moments", []))
     allowed = {str(n) for n in (day["feeds"], day["ml"], day["diapers"], day["sleeps"])} | set(re.findall(r"\d+", day["day"])) | set(re.findall(r"\d+", said))
     words = [NUMBER_WORDS[w] for w in re.findall(r"\w+", text.lower()) if w in NUMBER_WORDS and w not in ("one", "una", "un", "uno")]  # "one" is rarely a count
-    return not any(w.lower() not in said.lower() for w in FORBIDDEN.findall(text)) and all(n in allowed for n in re.findall(r"\d+", text) + words)
+    return not FITTED.search(text) and not any(w.lower() not in said.lower() for w in FORBIDDEN.findall(text)) and all(n in allowed for n in re.findall(r"\d+", text) + words)
 
 
 def clean_json(text):
