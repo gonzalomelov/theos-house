@@ -236,6 +236,45 @@ class RehearsalTest(unittest.TestCase):
             out.send("gonza", "Hola")
         self.assertEqual(out.sent, [("gonza", "Ensayo: Hola")])
 
+    def test_at_night_gonza_goes_silently_on_telegram(self):
+        out = tools.RealChannel.__new__(tools.RealChannel)
+        out.sent, out.whatsapp = [], SimpleNamespace(numbers={"gonza": "1"}, send=lambda *a: self.fail("WhatsApp can't be silent"))
+        out.by_telegram = lambda parent, text, quiet=False: out.sent.append((parent, text, quiet))
+        with mock.patch.dict(os.environ, {"PA_REHEARSAL": "1"}), mock.patch.object(tools, "rehearsal_night", return_value=True):
+            out.send("gonza", "Hola")
+        self.assertEqual(out.sent, [("gonza", "Ensayo: Hola", True)])
+
+    def test_the_echo_says_nothing_at_night_and_says_so(self):
+        out = tools.RealChannel.__new__(tools.RealChannel)
+        out.ha = SimpleNamespace(service=lambda *a: self.fail("the Echo spoke at night"))
+        with mock.patch.dict(os.environ, {"PA_REHEARSAL": "1"}), mock.patch.object(tools, "rehearsal_night", return_value=True):
+            self.assertIn("nothing was said", out.echo("Hola"))
+            said = [t for t in tools.channel_tools(out, SimpleNamespace(lang="es")) if t.name == "say_on_echo"][0].invoke({"text": "Hola"})
+        self.assertIn("nothing was said", said)
+
+    def test_nothing_noisy_moves_at_night_and_the_light_waits_for_gonza(self):
+        night = datetime.datetime(2026, 11, 3, 23)
+        day = datetime.datetime(2026, 11, 3, 12)
+        with mock.patch.dict(os.environ, {"PA_REHEARSAL": "1"}):
+            for parent in (None, "gonza", "ceci"):
+                self.assertIn("Refused", tools.night_refusal("HassVacuumStart", {}, parent, night))
+                self.assertIn("Refused", tools.night_refusal("HassVacuumReturnToBase", {}, parent, night))
+            self.assertIn("Refused", tools.night_refusal("HassTurnOn", {"name": "Wiz"}, None, night))
+            self.assertIn("Refused", tools.night_refusal("HassTurnOn", {"name": "Wiz"}, "ceci", night))
+            self.assertIsNone(tools.night_refusal("HassTurnOn", {"name": "Wiz"}, "gonza", night))
+            self.assertIsNone(tools.night_refusal("HassTurnOff", {"name": "Wiz"}, None, night))
+            self.assertIsNone(tools.night_refusal("HassTurnOn", {"name": "Tapo P110 - Dehumidifier"}, None, night))
+            self.assertIsNone(tools.night_refusal("HassVacuumStart", {}, None, day))
+        with mock.patch.dict(os.environ, {"PA_REHEARSAL": "0"}):
+            self.assertIsNone(tools.night_refusal("HassVacuumStart", {}, None, night))
+
+    def test_the_vacuum_says_nothing_at_night(self):
+        settings = SimpleNamespace(devices=("vacuum",), ha_url="", ha_token="")
+        with mock.patch.dict(os.environ, {"PA_REHEARSAL": "1", "PA_HOME": "real"}), mock.patch.object(tools, "rehearsal_night", return_value=True), \
+                mock.patch.object(tools, "HomeAssistant", side_effect=lambda *a: self.fail("the vacuum spoke at night")):
+            said = tools.vacuum_tool(settings)[0].invoke({})
+        self.assertIn("said nothing", said)
+
     def test_off_means_plain_messages(self):
         out = self.channel()
         with mock.patch.dict(os.environ, {"PA_REHEARSAL": "0"}):

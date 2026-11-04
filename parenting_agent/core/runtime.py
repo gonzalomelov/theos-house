@@ -334,6 +334,9 @@ class Core:
 
     async def held_by_hand(self, short, arguments):
         """A plug a person just switched isn't switched back by Muse on its own. The vacuum cleans by itself only with nobody home."""
+        why = tools_mod.night_refusal(short, arguments, self.sender)
+        if why:
+            return why
         if short == "HassVacuumStart" and self.sender not in tools_mod.PARENTS:
             try:
                 empty = await asyncio.to_thread(tools_mod.nobody_home, self.settings)
