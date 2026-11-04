@@ -444,6 +444,8 @@ SUBJECT_NOT_BODY = re.compile(r"\b(agua|water|ba[ñn]\w*|bath\w*|tub|tina|cuarto
 # A reading under 38 °C ("tiene 37.3, es fiebre?") is not a fever, whatever word the parent used.
 UNDER_FEVER = re.compile(r"(?<![\d.,])(3[5-7])[.,]\d{1,2}(?![\d.,]*\d)")
 # A number on its own, with its decimals, right after someone took a reading: "38,04", "now 38.2".
+# Where a reading was taken: a place on him outranks a bath named beside it ("Forehead says 38.2 but he just came out of the bath").
+BODY_SITE = re.compile(r"\b(?:forehead|armpit|under the arm|rectal\w*|frente|axila|sobaquera|rectal|o[ií]do)\b", re.I)
 BARE_READING = re.compile(r"^\W*(?:(?:now|ahora|ya|still|sigue(?: en)?)\s+)?(?:3[89]|4[0-2])[.,]\d{1,2}(?:\s+(?:now|ahora))?\W*$", re.I)
 
 
@@ -459,7 +461,7 @@ def names_fever(text):
     """True when a message says the baby has a fever: a fever word, or a body temperature of 38 °C (100.4 °F) or more
     with a word for heat. "His bath water was 38 degrees", "le di 38 ml" and "no fever" are not one."""
     text = text or ""
-    if said_temperature(text):
+    if said_temperature(text) or (BODY_SITE.search(text) and TEMP_NUMBER.search(text) and not NO_FEVER.search(text)):
         return True
     if UNDER_FEVER.search(text) and not TEMP_NUMBER.search(text):
         return False

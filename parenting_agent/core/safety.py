@@ -110,6 +110,11 @@ FEED_REPORT = re.compile(r"\b(?:gave|fed|just fed|nursed|drank|ate)\b|\bbottle (
 CANT_SEE = re.compile(r"\b(?:checking|i'?ll check|i will check|going to check|let me check|looking in) (?:on|in on) (?:him|theo)\b|\bvoy a (?:ver|revisar|chequear)(?:lo)?\s+(?:a theo|c[oó]mo est[aá])\b|\b(?:lo )?(?:estoy|sigo) (?:mirando|chequeando|revisando)\b", re.I)
 CANT_KEEP = re.compile(r"\bi (?:won'?t|will not) (?:message|text|wake|bother|tell|write)\b|\bno (?:te|le|les) (?:escribo|aviso|molesto|despierto|voy a (?:escribir|avisar|molestar|despertar))\b|\bi'?ll (?:alert|tell|wake|message|text) (?:you )?both\b|\b(?:les )?aviso a (?:los |ustedes )?dos\b|\bdespierto a los dos\b", re.I)
 WRONG_NUMBER = re.compile(r"\b(?:112|999|000)\b")
+# A parent's words that can justify waking the other one. A thing too hot isn't a sign in him ("this bottle feels hot"), so it is taken out first.
+HOT_THING = re.compile(r"\b(?:bottle|milk|formula|water|bath|mamadera|biber[oó]n|leche|f[oó]rmula|agua|ba[ñn]o)\b[^.!?]{0,30}\b(?:hot|warm|caliente|calent\w*|tibi\w*)\b|\b(?:hot|warm|caliente|calent\w*|tibi\w*)\b[^.!?]{0,30}\b(?:bottle|milk|formula|water|bath|mamadera|biber[oó]n|leche|f[oó]rmula|agua|ba[ñn]o)\b", re.I)
+WORTH_WAKING = re.compile(DANGER_SIGN.pattern + r"|" + SCARED.pattern + r"|\b(?:alarm\w*|smoke|humo|fire|fuego|incendi\w*|gas|emergenc\w*|urgent\w*|urgenc\w*|help|ayuda|hurt\w*|lastim\w*|burn\w*|quem\w*|scald\w*|injur\w*|accident\w*|bleed\w*|hospital|ambulanc\w*|ambulancia|911|wrong|pasa algo|algo le pasa|not moving|no se mueve|won'?t feed|won'?t drink|no toma|no come|can'?t cope|no puedo m[aá]s|swallow\w*|trag\w*|battery|pila|im[aá]n|magnet|pressed|still)\b", re.I)
+# A tip nobody asked for that reads as care advice. Other tips are left to the prompt's line.
+UNASKED_TIP = re.compile(r"\b(?:wrist|mu[ñn]eca)\b", re.I)
 # What the rest of a message has to ask for, once the gate answered the worrying part. "He's 3 weeks old" isn't an errand.
 ERRAND = re.compile(r"\b(?:add|log|buy|turn|put|remind|tell|write|note|shopping)\b|\bagreg|\banot|\bcompr|\bpon[eé]\b|\bprend|\bapag|\brecord|\bavis|\bdecile\b|\blista\b", re.I)
 ALARM_TOLD = re.compile(r"emergenc|\b911\b|alarm|fever|fiebre|urgent|pediatr|call|llam|wrote|escribi|respir|breath|anoche|last night|esta madrugada", re.I)
@@ -272,6 +277,17 @@ def just_worry(text):
     """Fear, tiredness or a question the log can answer, with no danger sign named. Muse reads the log and answers."""
     text = text or ""
     return bool(SCARED.search(text) or WORN_OUT.search(text) or LOG_QUESTION.search(text)) and not DANGER_SIGN.search(text)
+
+
+def worth_waking(text):
+    """Whether a parent's words name anything that could justify waking the other at night: a sign, a fear, a danger in the house. Muse setting emergency isn't enough."""
+    text = HOT_THING.sub(" ", text or "")
+    return bool(WORTH_WAKING.search(text) or rules.is_emergency(text) or rules.spoken_emergency(text) or BUMPED.search(text) or HARD_TO_WAKE.search(text) or TYPED_FAST.search(text))
+
+
+def unasked_tip(text, heard):
+    """A care step nobody asked about, like testing drops on the wrist."""
+    return bool(UNASKED_TIP.search(text or "")) and not UNASKED_TIP.search(heard or "")
 
 
 def writes_as_someone_else(parent, text):

@@ -50,6 +50,9 @@ NEAR_SAME_MIN, CRY_TOLD_MIN, SAME_WAKE_MIN = 10, 10, 5
 SAME_TOPIC_MIN = 45  # two wakes about the same thing this close are one wake
 # Muse's words refused: the first try and 2 more, or less once a parent has waited this long. Then a plain line, and Muse stops.
 MAX_REFUSED, STALL_S, MAX_REFUSALS_IN_EVENT = 3, 15, 6
+# A slow Muse with nothing refused: past this the parent who wrote hears one holding line, and Muse carries on.
+HOLD_S = 30
+HOLDING = {"es": "Sigo con esto, ya te contesto.", "en": "Still on this, I'll answer you in a moment."}
 READ_LINE = {"es": "Te leí. Ahora no tengo una buena respuesta para esto.", "en": "I read your message. I don't have a good answer for it right now."}
 DONE_LINE = {"es": "Ya lo tengo.", "en": "Got that."}
 ASK_HOW = {"es": "¿Cómo está Theo ahora?", "en": "How is Theo now?"}
@@ -253,7 +256,7 @@ def a_real_danger(event, heard):
     and never a feed nobody can drink. Muse's words aren't a new emergency."""
     if event["type"] == "sound":
         return bool(ALARM.search(str(event["payload"].get("kind", ""))))
-    return event["type"] == "message" and not safety.IMPOSSIBLE_ML.search(heard)
+    return event["type"] == "message" and not safety.IMPOSSIBLE_ML.search(heard) and safety.worth_waking(heard)
 
 
 STARTS = {"Tapo P110 - Bottle Warmer": ("warmer_off_at", "It turns itself off", 30), "vacuum": ("vacuum_off_at", "It finishes and docks", 60)}
@@ -669,6 +672,8 @@ class Core:
             return "Refused, nothing was sent: there was an alarm about his breathing or his colour. Ask how Theo is now, and leave tonight's plan for later."
         if self.about_recipe and safety.says_suits(text):
             return "Refused, nothing was sent: don't call a recipe good for Theo or a baby. Say this one is for them for now, or for later on, and that his pediatrician can say when."
+        if safety.unasked_tip(text, self.heard):
+            return "Refused, nothing was sent: nobody asked how to do that. Answer in one short line that you have it, with no tip."
         if safety.DIDNT_CATCH.search(text):
             return f'Refused, nothing was sent: you have what they wrote: "{rules.parent_text(self.heard)[:200]}". Answer that.' if self.heard else "Refused, nothing was sent: there is nothing to ask them to repeat. Say what you know."
         if safety.SENT_THERE.search(text) and not safety.CANT_SEND.search(text):
@@ -896,9 +901,28 @@ class Core:
             return await self.finish(event, "failed", f"{type(failure).__name__}: {str(failure)[:300]}")
 
     retry_waits = RETRY_WAITS
+    hold_s = HOLD_S
+
+    async def hold_line(self, event):
+        """A parent never sits in silence on a slow Muse. One line, only if nothing has reached them yet, and it answers nothing, so Muse's answer still goes."""
+        await asyncio.sleep(self.hold_s)
+        if self.sender in self.told_now:
+            return
+        line = HOLDING["en" if self.settings.lang == "en" else "es"]
+        await asyncio.to_thread(self.channel.send, self.sender, line)
+        await self.record(event["id"], "holding_line", {"parent": self.sender}, line)
+        self.publish("tool_result", event_id=event["id"], tool="notify", arguments={"parent": self.sender, "text": line}, result=f"Sent to {self.sender}.")
 
     async def attempts(self, event, started):
         """The brain can be away for a moment. It gets asked again, and if it stays away, what can't wait goes out without it."""
+        hold = asyncio.create_task(self.hold_line(event)) if event["type"] == "message" and self.sender in tools_mod.PARENTS and not event["ask"] else None
+        try:
+            return await self.brain_or_fixed(event, started)
+        finally:
+            if hold:
+                hold.cancel()
+
+    async def brain_or_fixed(self, event, started):
         for wait in (*self.retry_waits, None):
             try:
                 return await self.decide(event, started)

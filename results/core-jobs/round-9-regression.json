@@ -1,0 +1,1138 @@
+{
+ "r12 lentils Spanish": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "waited_s": 7.6,
+    "refused": 0,
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Receta lista para revisar:\n\nSopa de lentejas de la mamá\n\nIngredientes:\n- 200 g de lentejas\n- 1 cebolla\n- 500 g de agua\n\nPasos:\n1. Poner la cebolla en el vaso y trocear 5 seg / velocidad 5.\n2. Añadir las lentejas y el agua y cocinar 25 min / 100°C / velocidad 1.\n\nYa agregué lentejas y cebolla a la lista de compras (el agua no va a la lista).\n\nNo te la puedo enviar a Cookidoo desde acá, el envío real lo hacés vos desde la app de Meta con el conector de recetas.\n\nEsta es para ustedes por ahora, para más adelante Theo, y su pediatra te va a decir cuándo.\n\n¿La dejamos así?",
+      "at": 1793774169.902455
+     },
+     {
+      "to": "ceci",
+      "text": "No puedo enviarla a Cookidoo desde acá. Eso se hace desde la app Muse de Meta.",
+      "at": 1793774170.982322
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "waited_s": 8.9,
+    "refused": 1,
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Acá la tenés:\n\nSopa de lentejas de la abuela\n\nIngredientes:\n- 200 g de lentejas\n- 1 cebolla\n- 500 g de agua\n\nPasos:\n1. Colocar las lentejas, la cebolla y el agua en el vaso y cocinar 25 min/100°C/velocidad 1.\n\nYa te agregué las lentejas y la cebolla a la lista de compras.\n\nNo te la puedo enviar a Cookidoo desde acá, el envío real lo hacés vos desde la app de Meta con el Recipe Sender.\n\nEsta es para ustedes por ahora, para Theo más adelante y su pediatra te va a decir cuándo.",
+      "at": 1793774180.024178
+     },
+     {
+      "to": "ceci",
+      "text": "No puedo enviarla a Cookidoo desde acá. Eso se hace desde la app Muse de Meta.",
+      "at": 1793774181.117776
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "waited_s": 8.1,
+    "refused": 0,
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Acá tenés la vista previa de la receta para Thermomix:\n\nSopa de lentejas de la abuela\n\nIngredientes:\n- 200 g de lentejas\n- 1 cebolla\n- 500 g de agua\n\nPasos:\n1. Poner la cebolla en el vaso y picar 5 seg/vel 5.\n2. Añadir las lentejas y el agua.\n3. Cocinar 25 min/100°C/velocidad 1.\n\nYa agregué los ingredientes a la lista de compras (el agua no hace falta).\n\nNo puedo enviarla a Cookidoo desde acá, el envío real lo hacés vos desde la app de Meta con el conector de Recetas.\n\nEsta es para ustedes por ahora, para Theo será más adelante y su pediatra te va a decir cuándo.\n\nPaís Cookidoo: Uruguay (UY) - me dijiste UY, ¿está bien?",
+      "at": 1793774189.372588
+     }
+    ]
+   }
+  ]
+ },
+ "r12 carrot for the baby": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "waited_s": 8.0,
+    "refused": 0,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Carrot mash for the baby, preview:\n\nIngredients:\n- 250 g carrots\n- 80 g water\n\nSteps:\n1. Add 250 g carrots and 80 g water to the mixing bowl and cook for 18 min at 100°C on speed 1.\n2. Blend for 20 sec on speed 6.\n\nThis is for you for now, for later with Theo his pediatrician can say when.\n\nI can't send it to Cookidoo from here, a real send is yours from Meta's app through the Recipe Sender. The carrots are on your shopping list.",
+      "at": 1793774199.182666
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "waited_s": 7.8,
+    "refused": 0,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Carrot mash for the baby\n\nIngredients:\n- 250 g carrots\n- 80 g water\n\nSteps:\n1. Place carrots and water in mixing bowl and cook for 18 min at 100°C on speed 1.\n2. Blend for 20 sec on speed 6.\n\nI can't send it to Cookidoo from here, a real send is yours, from Meta's app with the Recipe Sender.\n\nThis one is for you for now, for Theo later on, his pediatrician can say when.\n\nI've added 250 g carrots to your shopping list.",
+      "at": 1793774208.089959
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "waited_s": 7.0,
+    "refused": 0,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Here's a preview of your family recipe:\n\nCarrot mash for the baby\n\nIngredients:\n- 250 g carrots\n- 80 g water\n\nSteps:\n1. Put 250 g carrots and 80 g water in the mixing bowl and cook for 18 min/100°C/speed 1.\n2. Blend for 20 sec/speed 6.\n\nThis is a preview only - I can't send it to Cookidoo from here. To publish it for real you would do that yourself from Meta's app.\n\nThis one is for you for now, or for Theo later on, and his pediatrician can say when.\n\nI added the ingredients to your shopping list.",
+      "at": 1793774216.529906
+     }
+    ]
+   }
+  ]
+ },
+ "r12 night alarm to morning": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "morning": {
+     "gonza": "Morning, at 01:30 you wrote \"He's struggling to breathe\" and we told you both. How is Theo now, did you reach his pediatrician?\n\nYou had no feeds overnight.",
+     "ceci": "Morning, at 01:30 Gonza wrote \"He's struggling to breathe\" and you were both told. How is Theo now?\n\nYou had no feeds overnight."
+    },
+    "later": "Tonight Ceci is on duty. Tonight you're on duty."
+   },
+   {
+    "passed": true,
+    "morning": {
+     "gonza": "Good morning, how is Theo doing now? At 01:30 you wrote \"He's struggling to breathe\" and you were both notified. There were no feeds logged overnight.",
+     "ceci": "Good morning, how is Theo doing now? At 01:30 Gonza wrote \"He's struggling to breathe\" and you were both notified. There were no feeds logged overnight."
+    },
+    "later": "Evening, you're off tonight, I'm on with Ceci on tonight. Evening, you're on tonight."
+   },
+   {
+    "passed": true,
+    "morning": {
+     "gonza": "How is Theo now? At 01:30 you wrote \"He's struggling to breathe\" and both of you were told. He had no feeds overnight. Tonight is Ceci's night.",
+     "ceci": "How is Theo now? At 01:30 Gonza wrote \"He's struggling to breathe\" and both of you were told. He had no feeds overnight. Tonight is your night."
+    },
+    "later": "Tonight is Ceci's night. Tonight is your night."
+   }
+  ]
+ },
+ "r12 alarm Spanish stays open": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "kept": [
+     "alarm_202611041910"
+    ],
+    "morning": "Buen día. Estuviste de guardia anoche. Anoche Theo no tuvo tomas registradas. Hoy 07:30: ayer 19:10 escribiste \"Theo vomitó verde\", ya fueron avisados los dos. ¿Cómo está Theo ahora? Esta noche sigue Ceci de guardia. Buen día. Anoche estuvo Gonza de guardia, anoche Theo no tuvo tomas registradas. Hoy 07:30: ayer 19:10 Gonza escribió \"Theo vomitó verde\", ya fueron avisados los dos. ¿Cómo está Theo ahora? Esta noche estás vos de guardia."
+   },
+   {
+    "passed": true,
+    "kept": [
+     "alarm_202611041910"
+    ],
+    "morning": "A las 19:10 escribiste \"Theo vomitó verde\". Anoche no quedó ninguna toma registrada en la noche. ¿Cómo está Theo ahora? A las 19:10 gonza escribió \"Theo vomitó verde\". Anoche no quedó ninguna toma registrada en la noche. ¿Cómo está Theo ahora? Esta noche estás vos de turno."
+   },
+   {
+    "passed": true,
+    "kept": [
+     "alarm_202611041910"
+    ],
+    "morning": "07:30, ayer a las 19:10 escribiste \"Theo vomitó verde\". A la noche no quedó registrada ninguna toma. ¿Cómo siguió Theo después del vómito? 07:30, ayer a las 19:10 Gonza escribió \"Theo vomitó verde\". A la noche no quedó registrada ninguna toma. Hoy de noche estás vos de guardia. ¿Cómo está Theo ahora?"
+   }
+  ]
+ },
+ "r12 answer closes": {
+  "passed": 2,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "follow": [],
+    "facts": [
+     "plan_202611051120"
+    ],
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Ceci escribió: \"Theo tiene 38,4\"\nPuede ser una emergencia. Llamá ya al 911 (emergencias en Uruguay) y contales lo que ves. O andá a emergencia, y avisale a su pediatra. Un bebé de menos de 3 meses con 38 °C (100,4 °F) o más de temperatura tiene que verlo un médico ya.\nhttps://www.healthychildren.org/Spanish/health-issues/conditions/fever/Paginas/When-to-Call-the-Pediatrician.aspx",
+      "at": 1793774287.1198761
+     },
+     {
+      "to": "ceci",
+      "text": "Puede ser una emergencia. Llamá ya al 911 (emergencias en Uruguay) y contales lo que ves. O andá a emergencia, y avisale a su pediatra. Un bebé de menos de 3 meses con 38 °C (100,4 °F) o más de temperatura tiene que verlo un médico ya.\nhttps://www.healthychildren.org/Spanish/health-issues/conditions/fever/Paginas/When-to-Call-the-Pediatrician.aspx",
+      "at": 1793774287.122735
+     },
+     {
+      "to": "ceci",
+      "text": "Gracias por avisar, queda anotado que estás mejor y que la pediatra los ve mañana. Me alegra que estés mejor.",
+      "at": 1793774296.0624619
+     },
+     {
+      "to": "gonza",
+      "text": "Ceci cuenta que ya estás mejor y que la pediatra los ve mañana. Queda anotado.",
+      "at": 1793774296.0624719,
+      "quiet": true
+     },
+     {
+      "to": "ceci",
+      "text": "Hoy 11:12 escribiste \"Theo tiene 38,4\" y se avisó a ambos. Esta noche estás vos de guardia.",
+      "at": 1793774300.3152
+     },
+     {
+      "to": "gonza",
+      "text": "Hoy 11:12 Ceci escribió \"Theo tiene 38,4\" y se avisó a ambos. Esta noche está Ceci de guardia.",
+      "at": 1793774300.315215
+     }
+    ]
+   },
+   {
+    "passed": false,
+    "follow": [],
+    "facts": [
+     "alarm_answered",
+     "plan_202611051120",
+     "fever_reported"
+    ],
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Ceci escribió: \"Theo tiene 38,4\"\nPuede ser una emergencia. Llamá ya al 911 (emergencias en Uruguay) y contales lo que ves. O andá a emergencia, y avisale a su pediatra. Un bebé de menos de 3 meses con 38 °C (100,4 °F) o más de temperatura tiene que verlo un médico ya.\nhttps://www.healthychildren.org/Spanish/health-issues/conditions/fever/Paginas/When-to-Call-the-Pediatrician.aspx",
+      "at": 1793774301.3939352
+     },
+     {
+      "to": "ceci",
+      "text": "Puede ser una emergencia. Llamá ya al 911 (emergencias en Uruguay) y contales lo que ves. O andá a emergencia, y avisale a su pediatra. Un bebé de menos de 3 meses con 38 °C (100,4 °F) o más de temperatura tiene que verlo un médico ya.\nhttps://www.healthychildren.org/Spanish/health-issues/conditions/fever/Paginas/When-to-Call-the-Pediatrician.aspx",
+      "at": 1793774301.39518
+     },
+     {
+      "to": "gonza",
+      "text": "Ceci cuenta que Theo ya está mejor, habló con la pediatra y los citó para mañana.",
+      "at": 1793774306.7493272
+     },
+     {
+      "to": "ceci",
+      "text": "Qué alivio. Anotado que ya está mejor y que la pediatra los ve mañana.",
+      "at": 1793774307.978963
+     },
+     {
+      "to": "ceci",
+      "text": "Buenas noches. Esta noche estás vos de guardia.",
+      "at": 1793774311.453301
+     },
+     {
+      "to": "gonza",
+      "text": "Buenas noches. Esta noche está Ceci de guardia.",
+      "at": 1793774311.453312
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "follow": [],
+    "facts": [
+     "plan_202611051120"
+    ],
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Ceci escribió: \"Theo tiene 38,4\"\nPuede ser una emergencia. Llamá ya al 911 (emergencias en Uruguay) y contales lo que ves. O andá a emergencia, y avisale a su pediatra. Un bebé de menos de 3 meses con 38 °C (100,4 °F) o más de temperatura tiene que verlo un médico ya.\nhttps://www.healthychildren.org/Spanish/health-issues/conditions/fever/Paginas/When-to-Call-the-Pediatrician.aspx",
+      "at": 1793774312.557601
+     },
+     {
+      "to": "ceci",
+      "text": "Puede ser una emergencia. Llamá ya al 911 (emergencias en Uruguay) y contales lo que ves. O andá a emergencia, y avisale a su pediatra. Un bebé de menos de 3 meses con 38 °C (100,4 °F) o más de temperatura tiene que verlo un médico ya.\nhttps://www.healthychildren.org/Spanish/health-issues/conditions/fever/Paginas/When-to-Call-the-Pediatrician.aspx",
+      "at": 1793774312.560707
+     },
+     {
+      "to": "gonza",
+      "text": "Ceci cuenta que Theo ya está mejor, habló la pediatra y los ven mañana.",
+      "at": 1793774324.204366
+     },
+     {
+      "to": "ceci",
+      "text": "Gracias por avisar. Queda registrado que ya estás mejor y que la pediatra los ve mañana.",
+      "at": 1793774325.6652758
+     },
+     {
+      "to": "ceci",
+      "text": "Buenas noches. Esta noche estás vos de guardia. Hoy a las 11:12 escribiste \"Theo tiene 38,4\".",
+      "at": 1793774332.074943
+     },
+     {
+      "to": "gonza",
+      "text": "Buenas noches. Esta noche está Ceci de guardia. Hoy a las 11:12 se escribió \"Theo tiene 38,4\".",
+      "at": 1793774332.074955
+     }
+    ]
+   }
+  ]
+ },
+ "r12 false alarm Spanish": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "back": "Entendido, queda registrado como falsa alarma.",
+    "wakes": [],
+    "later": "Esta noche está Ceci de guardia. Esta noche estás vos de guardia."
+   },
+   {
+    "passed": true,
+    "back": "Entendido, gracias por avisar.",
+    "wakes": [],
+    "later": "Esta noche queda Ceci de guardia. Esta noche estás de guardia."
+   },
+   {
+    "passed": true,
+    "back": "Gracias por avisar, quédate tranquilo que quedó registrado como falsa alarma.",
+    "wakes": [],
+    "later": "Buenas noches, esta noche está Ceci de guardia. Buenas noches, esta noche estás vos de guardia."
+   }
+  ]
+ },
+ "r12 day escalates once": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "after": [
+     {
+      "to": "ceci",
+      "text": "Ceci, how is Theo now after 11:12, and have you reached his pediatrician?",
+      "at": 1793774362.1825159
+     },
+     {
+      "to": "gonza",
+      "text": "Gonza, Ceci hasn't answered since the alarm at 11:12 about Theo. You may want to check in with her directly.",
+      "at": 1793774364.623871
+     }
+    ],
+    "wakes": []
+   },
+   {
+    "passed": true,
+    "after": [
+     {
+      "to": "ceci",
+      "text": "How is Theo now, have you reached his pediatrician or 911?",
+      "at": 1793774367.986848
+     },
+     {
+      "to": "gonza",
+      "text": "Ceci was asked how Theo is after her 11:12 note and hasn't answered yet.",
+      "at": 1793774370.390315
+     }
+    ],
+    "wakes": []
+   },
+   {
+    "passed": true,
+    "after": [
+     {
+      "to": "ceci",
+      "text": "Ceci, how is Theo now? Were you able to reach his pediatrician or 911?",
+      "at": 1793774374.682465
+     },
+     {
+      "to": "gonza",
+      "text": "Gonza, Ceci hasn't answered yet about how Theo is after the 11:12 alarm.",
+      "at": 1793774377.251693
+     }
+    ],
+    "wakes": []
+   }
+  ]
+ },
+ "r12 readings and children": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "missed": [],
+    "fired_on": []
+   },
+   {
+    "passed": true,
+    "missed": [],
+    "fired_on": []
+   },
+   {
+    "passed": true,
+    "missed": [],
+    "fired_on": []
+   }
+  ]
+ },
+ "r12 room Spanish": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "status": "done",
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "En el cuarto de Theo hay 21,5 °C ahora. No está frío para él, está dentro de lo normal. Si lo sentís fresco, fijate que no haya corriente de aire y que esté bien abrigadito.",
+      "at": 1793774381.20258
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "status": "done",
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Ceci, en el cuarto de Theo hay 21,5 °C ahora. Está fresquito pero dentro de lo normal. ¿Querés que prenda algo o lo dejamos así?",
+      "at": 1793774385.224329
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "status": "done",
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "En el cuarto de Theo ahora hay 21,5 °C con 52% de humedad. Está bien, no hace frío extremo, pero si lo sentís fresco podés abrigarlo un poquito más.",
+      "at": 1793774389.22453
+     }
+    ]
+   }
+  ]
+ },
+ "r12 code gate": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "hard to wake this morning": "emergency",
+    "Theo's lips are grey": "emergency",
+    "tiene los labios grises": "emergency",
+    "cuesta mucho despertarlo": "emergency"
+   },
+   {
+    "passed": true,
+    "hard to wake this morning": "emergency",
+    "Theo's lips are grey": "emergency",
+    "tiene los labios grises": "emergency",
+    "cuesta mucho despertarlo": "emergency"
+   },
+   {
+    "passed": true,
+    "hard to wake this morning": "emergency",
+    "Theo's lips are grey": "emergency",
+    "tiene los labios grises": "emergency",
+    "cuesta mucho despertarlo": "emergency"
+   }
+  ]
+ },
+ "r12 takeover one record": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "facts": {
+     "night_takeover_2026_11_03": "Gonza tomó la guardia de la noche del 2026-11-03 a las 02:40 para que Ceci duerma. Informar a Ceci en el check de la mañana del 2026-11-04.",
+     "duty_note_2026-11-03": "gonza took the night of 2026-11-03: tell ceci in the morning check.",
+     "on_duty_2026-11-03": "gonza"
+    },
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Anotado, quedás vos esta noche y Ceci descansa. Gracias por avisar.",
+      "at": 1793774403.218066
+     },
+     {
+      "to": "gonza",
+      "text": "Buen día! Anoche te quedaste vos de guardia a las 02:40 para que Ceci descansara. Entre las 22:00 y ahora Theo no tomó, 0 tomas en la noche. Esta noche te toca a vos según la rotación: ¿sigue igual el plan para esta noche?",
+      "at": 1793774408.198673
+     },
+     {
+      "to": "ceci",
+      "text": "Buen día! Anoche Gonza tomó la guardia a las 02:40 para que pudieras dormir. Theo no tomó entre las 22:00 y ahora, 0 tomas en la noche. Esta noche le toca a Gonza: ¿sigue igual el plan para esta noche?",
+      "at": 1793774408.1986911
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "facts": {
+     "duty_note_2026-11-03": "gonza took the night of 2026-11-03: tell ceci in the morning check.",
+     "on_duty_2026-11-03": "gonza",
+     "takeover_2026_11_03": "Gonza tomó la noche del 2026-11-03 a las 02:40, Ceci que duerma"
+    },
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Queda anotado, te quedás vos esta noche hasta la mañana y dejo que Ceci siga durmiendo. Gracias por avisar.",
+      "at": 1793774422.649662
+     },
+     {
+      "to": "gonza",
+      "text": "Buen día. Esta noche te toca a vos, ¿dejamos el plan así? Anoche no hubo tomas durante la noche.",
+      "at": 1793774434.8334699
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "facts": {
+     "night_takeover_2026_11_03": "Gonza took night of 2026-11-03 from Ceci at 02:40, inform Ceci in morning check",
+     "duty_note_2026-11-03": "gonza took the night of 2026-11-03: tell ceci in the morning check.",
+     "on_duty_2026-11-03": "gonza"
+    },
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Anotado, te quedás vos esta noche. Descansá cuando puedas.",
+      "at": 1793774444.3168828,
+      "quiet": true
+     },
+     {
+      "to": "gonza",
+      "text": "Buen día. Anoche te quedaste vos y no hubo tomas en la madrugada. ¿Sigue igual el plan para esta noche?",
+      "at": 1793774454.038259
+     },
+     {
+      "to": "ceci",
+      "text": "Buen día. Anoche Gonza se quedó a las 02:40 y no hubo tomas en la madrugada. ¿Sigue igual el plan para esta noche?",
+      "at": 1793774454.983779
+     }
+    ]
+   }
+  ]
+ },
+ "r12 checkup ahead": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "wakes": [
+     "reminder_unanswered:gonza: Theo's checkup at 16:30 - remind Gonza (45 min before)"
+    ],
+    "reminder": "Reminder: Theo's checkup is at 16:30 today, that's in 45 minutes."
+   },
+   {
+    "passed": true,
+    "wakes": [
+     "reminder_unanswered:gonza: Theo's checkup appointment at 16:30 - 45 min reminder for Gonza"
+    ],
+    "reminder": "Reminder: Theo's checkup is today at 16:30, 45 minutes from now."
+   },
+   {
+    "passed": true,
+    "wakes": [
+     "reminder_unanswered:gonza: Theo's checkup at 16:30 reminder for Gonza"
+    ],
+    "reminder": "Reminder: Theo's checkup is at 16:30 today, in 45 minutes."
+   }
+  ]
+ },
+ "r12 memory no warmer": {
+  "passed": 2,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "facts": {
+     "no_bottle_warmer_until_tomorrow": "Ceci dijo 2026-11-04 noche: da pecho, no prender calentador hasta mañana 2026-11-05"
+    },
+    "warmer": "off",
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Anotado, no prendo el calentador hasta mañana, le das el pecho.",
+      "at": 1793774495.2491431
+     },
+     {
+      "to": "gonza",
+      "text": "Theo está llorando, te necesita. Recordá que Ceci está dando pecho esta noche, sin calentador.",
+      "at": 1793774497.7519
+     }
+    ]
+   },
+   {
+    "passed": false,
+    "facts": {
+     "duty_note_2026-11-04": "ceci took the night of 2026-11-04: tell gonza in the morning check.",
+     "on_duty_2026-11-04": "ceci",
+     "no_warmer_until_tomorrow": "Ceci pidió no prender calentador de mamaderas hasta mañana 2026-11-05, noche del 2026-11-04 00:20"
+    },
+    "warmer": "off",
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Anotado, quedás de guardia esta noche y no prendo el calentador hasta mañana.",
+      "at": 1793774509.183744
+     },
+     {
+      "to": "ceci",
+      "text": "Theo está llorando, te necesita.",
+      "at": 1793774517.6746
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "facts": {
+     "no_warmer_until": "2026-11-06 - Ceci pidió no prender calentador de mamaderas hasta mañana 2026-11-06"
+    },
+    "warmer": "off",
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Anotado, no prendo el calentador hasta mañana.",
+      "at": 1793774525.422229,
+      "quiet": true
+     },
+     {
+      "to": "gonza",
+      "text": "Theo está llorando, te toca a vos.",
+      "at": 1793774528.360778
+     }
+    ]
+   }
+  ]
+ },
+ "r12 hot room stops": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "by": {
+     "gonza": 2,
+     "ceci": 2
+    },
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Theo's room is very hot, 31°C at 13:12. Please check on him, make sure he's not overdressed and the room is ventilated, and that the sensor isn't in direct sun. I'm checking again in a few minutes.",
+      "at": 1793774534.9756029
+     },
+     {
+      "to": "gonza",
+      "text": "Theo's room is very hot, 31°C at 13:12. Ceci is on duty, but please check the room is ventilated and Theo isn't overdressed if you're nearby. I'm checking again in a few minutes.",
+      "at": 1793774534.9758132
+     },
+     {
+      "to": "ceci",
+      "text": "Theo's room is still very hot, 30.8°C at 13:22. Please keep checking he’s cool enough and the room is aired.",
+      "at": 1793774538.994379
+     },
+     {
+      "to": "gonza",
+      "text": "Theo's room is still very hot, 29.8°C at 14:22. Please check on him and keep the room cool and aired.",
+      "at": 1793774543.230619
+     }
+    ],
+    "wakes": []
+   },
+   {
+    "passed": true,
+    "by": {
+     "gonza": 2,
+     "ceci": 2
+    },
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "It's 31°C in Theo's room, that's far too hot. Please check on Theo now, make sure airflow and shade are okay, and cool the room if you can. I'll check again in a few minutes.",
+      "at": 1793774550.5963478
+     },
+     {
+      "to": "gonza",
+      "text": "It's 31°C in Theo's room, that's far too hot. Ceci is on duty and checking. Please make sure airflow and shade are okay, and help cool the room if you can.",
+      "at": 1793774550.596364
+     },
+     {
+      "to": "ceci",
+      "text": "Still 30.8°C in Theo's room, still far too hot. Please recheck on Theo and keep cooling the room if you can.",
+      "at": 1793774554.894772
+     },
+     {
+      "to": "gonza",
+      "text": "Still 29.8°C in Theo's room, still far too hot. Please recheck on Theo and keep cooling the room if you can.",
+      "at": 1793774559.485028
+     }
+    ],
+    "wakes": []
+   },
+   {
+    "passed": true,
+    "by": {
+     "gonza": 1,
+     "ceci": 2
+    },
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "It's 31°C in Theo's room, that's too hot. Please check on him and the room now: make sure he's not overdressed, ventilation, shade, and that the sensor is not in direct sun. I'm here if you need me.",
+      "at": 1793774566.435039
+     },
+     {
+      "to": "gonza",
+      "text": "It's 31°C in Theo's room, that's too hot. Ceci is on duty tonight, but please check the room too if you can: ventilation, shade, clothing, and that the sensor isn't in sun.",
+      "at": 1793774566.435151
+     },
+     {
+      "to": "ceci",
+      "text": "Theo's room is still very hot, 30.8°C. Please check again that he's cool enough and the room is ventilated and shaded.",
+      "at": 1793774569.852447
+     }
+    ],
+    "wakes": []
+   }
+  ]
+ },
+ "r12 evening button": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "checks": [
+     "21:30"
+    ],
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "The log shows no feed for 18 hours, which is long for a newborn. If feeds didn't go unlogged, call your pediatrician now.",
+      "at": "2026-12-16T14:40:00-03:00"
+     },
+     {
+      "to": "ceci",
+      "text": "The log shows no feed for 18 hours, which is long for a newborn. If feeds didn't go unlogged, call your pediatrician now.",
+      "at": "2026-12-16T14:40:00-03:00"
+     },
+     {
+      "to": "gonza",
+      "text": "No feed in the log for 24 hours. If he truly hasn't eaten, call your pediatrician or emergency services now. Please check on him and log what he had.",
+      "at": "2026-12-16T20:40:00-03:00"
+     },
+     {
+      "to": "ceci",
+      "text": "No feed in the log for 24 hours. If he truly hasn't eaten, call your pediatrician or emergency services now. Please check on him and log what he had.",
+      "at": "2026-12-16T20:40:00-03:00"
+     },
+     {
+      "to": "gonza",
+      "text": "You're on tonight, from 21:30.\n\nNo feed logged since yesterday at 20:40, about 25 hours ago, if you're worried, call his pediatrician or 911 if it can't wait.",
+      "at": "2026-12-16T21:30:00-03:00"
+     },
+     {
+      "to": "ceci",
+      "text": "You're off tonight, Gonza is on from 21:30.\n\nNo feed logged since yesterday at 20:40, about 25 hours ago, if you're worried, call his pediatrician or 911 if it can't wait.",
+      "at": "2026-12-16T21:30:00-03:00"
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "checks": [
+     "21:30"
+    ],
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "The log shows no feed for 18 hours, which is long for a newborn. If feeds didn't go unlogged, call your pediatrician now.",
+      "at": "2026-12-16T14:40:00-03:00"
+     },
+     {
+      "to": "ceci",
+      "text": "The log shows no feed for 18 hours, which is long for a newborn. If feeds didn't go unlogged, call your pediatrician now.",
+      "at": "2026-12-16T14:40:00-03:00"
+     },
+     {
+      "to": "gonza",
+      "text": "No feed in the log for 24 hours. If he truly hasn't eaten, call your pediatrician or emergency services now. Please check on him and log what he had.",
+      "at": "2026-12-16T20:40:00-03:00"
+     },
+     {
+      "to": "ceci",
+      "text": "No feed in the log for 24 hours. If he truly hasn't eaten, call your pediatrician or emergency services now. Please check on him and log what he had.",
+      "at": "2026-12-16T20:40:00-03:00"
+     },
+     {
+      "to": "gonza",
+      "text": "Gonza, you're on tonight. Theo's last feed in the log was yesterday at 20:40, about 24 h 48 min ago with no feed logged since.",
+      "at": "2026-12-16T21:30:00-03:00"
+     },
+     {
+      "to": "ceci",
+      "text": "Ceci, Gonza is on tonight. Theo's last feed in the log was yesterday at 20:40, about 24 h 48 min ago with no feed logged since.",
+      "at": "2026-12-16T21:30:00-03:00"
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "checks": [
+     "21:30"
+    ],
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "The log shows no feed for 18 hours, which is long for a newborn. If feeds didn't go unlogged, call your pediatrician now.",
+      "at": "2026-12-16T14:40:00-03:00"
+     },
+     {
+      "to": "ceci",
+      "text": "The log shows no feed for 18 hours, which is long for a newborn. If feeds didn't go unlogged, call your pediatrician now.",
+      "at": "2026-12-16T14:40:00-03:00"
+     },
+     {
+      "to": "gonza",
+      "text": "No feed in the log for 24 hours. If he truly hasn't eaten, call your pediatrician or emergency services now. Please check on him and log what he had.",
+      "at": "2026-12-16T20:40:00-03:00"
+     },
+     {
+      "to": "ceci",
+      "text": "No feed in the log for 24 hours. If he truly hasn't eaten, call your pediatrician or emergency services now. Please check on him and log what he had.",
+      "at": "2026-12-16T20:40:00-03:00"
+     },
+     {
+      "to": "ceci",
+      "text": "Gonza is on tonight, 21:30. No feed has been logged since yesterday at 20:40, about 25 hours ago.",
+      "at": "2026-12-16T21:30:00-03:00"
+     },
+     {
+      "to": "gonza",
+      "text": "You're on tonight, 21:30. No feed has been logged since yesterday at 20:40, about 25 hours ago.",
+      "at": "2026-12-16T21:30:00-03:00"
+     }
+    ]
+   }
+  ]
+ },
+ "r12 story Spanish": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "total_s": 63.8,
+    "each": {
+     "evening": 6.9,
+     "sleep": 6.6,
+     "cry": 12.6,
+     "feed": 4.5,
+     "morning": 5.7,
+     "grandma": 3.4,
+     "nap": 6.9,
+     "humid": 4.1,
+     "recipe": 9.0,
+     "carseat": 4.1
+    },
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Ceci, esta noche estás vos de guardia. Descansá cuando puedas ❤️",
+      "at": "2026-12-15T21:30:00-03:00"
+     },
+     {
+      "to": "gonza",
+      "text": "Gonza, esta noche está Ceci de guardia. Que descanses.",
+      "at": "2026-12-15T21:30:00-03:00"
+     },
+     {
+      "to": "gonza",
+      "text": "Gonza, Ceci te pasó la guardia de esta noche. Si no podés, decime y lo vemos.",
+      "at": "2026-12-15T21:45:00-03:00"
+     },
+     {
+      "to": "ceci",
+      "text": "Hecho, quedás libre esta noche, Gonza se queda de guardia.",
+      "at": "2026-12-15T21:45:00-03:00"
+     },
+     {
+      "to": "gonza",
+      "text": "Prendí el calienta mamadera, se apaga solo a las 00:10.",
+      "at": "2026-12-15T23:40:00-03:00",
+      "quiet": true
+     },
+     {
+      "to": "gonza",
+      "text": "El calentador de mamaderas se apagó solo a las 00:10.",
+      "at": "2026-12-16T00:10:00-03:00",
+      "quiet": true
+     },
+     {
+      "to": "gonza",
+      "text": "Theo está llorando, prendí el calienta mamadera, se apaga solo a las 03:20.",
+      "at": "2026-12-16T02:50:00-03:00"
+     },
+     {
+      "to": "gonza",
+      "text": "El calentador de mamaderas se apagó solo a las 03:20.",
+      "at": "2026-12-16T03:20:00-03:00",
+      "quiet": true
+     },
+     {
+      "to": "gonza",
+      "text": "Anotado, 90 ml a las 03:00.",
+      "at": "2026-12-16T03:20:00-03:00"
+     },
+     {
+      "to": "gonza",
+      "text": "Buen día. Anoche tomaste la guardia y Theo tomó 3 veces, la última a las 06:20, 90 ml. ¿Sigue el plan de esta noche que te toca a vos?",
+      "at": "2026-12-16T07:30:00-03:00"
+     },
+     {
+      "to": "ceci",
+      "text": "Buen día. Anoche Theo tomó 3 veces, la última a las 06:20, 90 ml.",
+      "at": "2026-12-16T07:30:00-03:00"
+     },
+     {
+      "to": "echo",
+      "text": "Theo tomó su mamadera a las 09:30, 95 ml.",
+      "at": "2026-12-16T11:00:00-03:00"
+     },
+     {
+      "to": "ceci",
+      "text": "Ya lo tengo.",
+      "at": "2026-12-16T12:30:00-03:00"
+     },
+     {
+      "to": "ceci",
+      "text": "Ceci, la humedad en el cuarto de Theo está en 71% ahora. Como me pediste, no prendo el deshumidificador hasta las 16:00.",
+      "at": "2026-12-16T15:10:00-03:00"
+     },
+     {
+      "to": "gonza",
+      "text": "Acá tenés la receta pasada a formato Thermomix:\n\nPuré de zapallo de la abuela\n\nIngredientes:\n- 300 g de zapallo\n- 100 g de agua\n\nPasos:\n1. Poner el zapallo y el agua en el vaso y cocinar. 20 min / 100°C / velocidad 1\n2. Triturar hasta obtener un puré liso. 30 seg / velocidad 5\n\nEs una previsualización nomás, no se envió a ningún lado. No puedo enviarla a Cookidoo desde acá, el envío real lo hacen ustedes desde la app de Meta con el conector de Recetas.\n\nYa agregué los ingredientes a la lista de compras (el agua no hace falta agregarla).\n\nEsta es para ustedes por ahora, o para Theo más adelante, su pediatra les va a decir cuándo.\n\n¿La querés guardar así?",
+      "at": "2026-12-16T16:30:00-03:00"
+     }
+    ],
+    "used": [
+     "dehumidifier_paused_until_16"
+    ]
+   },
+   {
+    "passed": true,
+    "total_s": 57.5,
+    "each": {
+     "evening": 6.9,
+     "sleep": 6.1,
+     "cry": 10.6,
+     "feed": 4.6,
+     "morning": 4.9,
+     "grandma": 2.1,
+     "nap": 5.7,
+     "humid": 4.4,
+     "recipe": 6.5,
+     "carseat": 5.8
+    },
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Esta noche le toca a Ceci. Próxima toma estimada alrededor de 23:55.",
+      "at": "2026-12-15T21:30:00-03:00"
+     },
+     {
+      "to": "ceci",
+      "text": "Esta noche te toca a vos. Próxima toma estimada alrededor de 23:55.",
+      "at": "2026-12-15T21:30:00-03:00"
+     },
+     {
+      "to": "gonza",
+      "text": "Ceci te pasó la noche de hoy, ¿podés quedarte vos? Si no podés decime.",
+      "at": "2026-12-15T21:45:00-03:00"
+     },
+     {
+      "to": "ceci",
+      "text": "Listo, le pasé la noche a Gonza.",
+      "at": "2026-12-15T21:45:00-03:00"
+     },
+     {
+      "to": "gonza",
+      "text": "Prendí el calienta mamaderas, se apaga solo a las 00:10.",
+      "at": "2026-12-15T23:40:00-03:00",
+      "quiet": true
+     },
+     {
+      "to": "gonza",
+      "text": "El calentador de mamaderas se apagó solo a las 00:10.",
+      "at": "2026-12-16T00:10:00-03:00",
+      "quiet": true
+     },
+     {
+      "to": "gonza",
+      "text": "Theo está llorando, ¿podés ir a verlo?",
+      "at": "2026-12-16T02:50:00-03:00"
+     },
+     {
+      "to": "gonza",
+      "text": "Prendí el calienta mamaderas, se apaga solo a las 03:20.",
+      "at": "2026-12-16T02:50:00-03:00"
+     },
+     {
+      "to": "gonza",
+      "text": "El calentador de mamaderas se apagó solo a las 03:20.",
+      "at": "2026-12-16T03:20:00-03:00",
+      "quiet": true
+     },
+     {
+      "to": "gonza",
+      "text": "Anotado, 90 ml a las 03:00.",
+      "at": "2026-12-16T03:20:00-03:00"
+     },
+     {
+      "to": "ceci",
+      "text": "Buen día. Anoche Theo tomó 3 veces, la última a las 06:20. Esta noche le toca a Gonza, ¿sigue así?",
+      "at": "2026-12-16T07:30:00-03:00"
+     },
+     {
+      "to": "gonza",
+      "text": "Buen día. Anoche Theo tomó 3 veces, la última a las 06:20. ¿Seguís vos esta noche?",
+      "at": "2026-12-16T07:30:00-03:00"
+     },
+     {
+      "to": "echo",
+      "text": "Theo comió por última vez hoy a las 09:30.",
+      "at": "2026-12-16T11:00:00-03:00"
+     },
+     {
+      "to": "ceci",
+      "text": "Ya lo tengo.",
+      "at": "2026-12-16T12:30:00-03:00"
+     },
+     {
+      "to": "ceci",
+      "text": "Theo sigue durmiendo, lo dejo apagado como me pediste. La humedad del cuarto ahora está en 71%.",
+      "at": "2026-12-16T15:10:00-03:00"
+     },
+     {
+      "to": "gonza",
+      "text": "Acá tenés la vista previa:\n\nPuré de zapallo de la abuela\n\nIngredientes:\n300 g de zapallo\n100 g de agua\n\nPasos:\n1. Colocar el zapallo y el agua en el vaso y cocinar 20 min/100°C/velocidad 1.\n2. Triturar 30 seg/velocidad 5.\n\n¿País de Cookidoo Uruguay?\n\nNo puedo enviarla a Cookidoo desde acá, el envío real lo hacés vos desde la app de Meta con el conector Recipe Sender.\n\nTheo es recién nacido así que esta es para ustedes por ahora, y su pediatra les va a decir cuándo es el momento para él.\n\nAgregué zapallo a la lista de compras.",
+      "at": "2026-12-16T16:30:00-03:00"
+     },
+     {
+      "to": "gonza",
+      "text": "Perfecto, ya tenés el asistente de la silla en tus lentes, te va guiando paso a paso.",
+      "at": "2026-12-16T18:10:00-03:00"
+     }
+    ],
+    "used": [
+     "dehumidifier_hold_until"
+    ]
+   },
+   {
+    "passed": true,
+    "total_s": 59.6,
+    "each": {
+     "evening": 8.8,
+     "sleep": 4.7,
+     "cry": 10.1,
+     "feed": 4.5,
+     "morning": 4.4,
+     "grandma": 3.9,
+     "nap": 7.7,
+     "humid": 3.6,
+     "recipe": 8.3,
+     "carseat": 3.5
+    },
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Esta noche está Ceci de guardia.",
+      "at": "2026-12-15T21:30:00-03:00"
+     },
+     {
+      "to": "ceci",
+      "text": "Estás vos de guardia esta noche. La próxima toma caería cerca de las 23:55.",
+      "at": "2026-12-15T21:30:00-03:00"
+     },
+     {
+      "to": "gonza",
+      "text": "Ceci te pasó la noche de hoy. Quedás vos de guardia, si te sirve decile que no.",
+      "at": "2026-12-15T21:45:00-03:00"
+     },
+     {
+      "to": "ceci",
+      "text": "Listo, le pasé la noche a Gonza. Él queda de guardia hoy.",
+      "at": "2026-12-15T21:45:00-03:00"
+     },
+     {
+      "to": "gonza",
+      "text": "Prendí el calienta mamadera por la toma esperada de las 23:55. Se apaga solo a las 00:10.",
+      "at": "2026-12-15T23:40:00-03:00",
+      "quiet": true
+     },
+     {
+      "to": "gonza",
+      "text": "El calentador de mamaderas se apagó solo a las 00:10.",
+      "at": "2026-12-16T00:10:00-03:00",
+      "quiet": true
+     },
+     {
+      "to": "gonza",
+      "text": "Theo llora, prendí el calienta mamadera. Se apaga solo a las 03:20.",
+      "at": "2026-12-16T02:50:00-03:00"
+     },
+     {
+      "to": "gonza",
+      "text": "El calentador de mamaderas se apagó solo a las 03:20.",
+      "at": "2026-12-16T03:20:00-03:00",
+      "quiet": true
+     },
+     {
+      "to": "gonza",
+      "text": "Anotado: mamadera de 90 ml a las 03:00.",
+      "at": "2026-12-16T03:20:00-03:00"
+     },
+     {
+      "to": "ceci",
+      "text": "Buen día. Anoche Theo tomó a las 03:00 y a las 06:20.\n\n¿Seguimos igual esta noche? Vos estás de turno.",
+      "at": "2026-12-16T07:30:00-03:00"
+     },
+     {
+      "to": "gonza",
+      "text": "Buen día. Anoche tomó a las 03:00 y a las 06:20, las dos mamaderas de 90 ml.\n\n¿Seguimos igual esta noche? Vos estás de turno.",
+      "at": "2026-12-16T07:30:00-03:00"
+     },
+     {
+      "to": "echo",
+      "text": "Theo comió por última vez hoy a las 09:30, una mamadera de 95 mililitros.",
+      "at": "2026-12-16T11:00:00-03:00"
+     },
+     {
+      "to": "ceci",
+      "text": "Ya lo tengo.",
+      "at": "2026-12-16T12:30:00-03:00"
+     },
+     {
+      "to": "ceci",
+      "text": "Ceci, la humedad en el cuarto de Theo está en 71 %. Lo dejo apagado como me pediste hasta las 16:00.",
+      "at": "2026-12-16T15:10:00-03:00"
+     },
+     {
+      "to": "gonza",
+      "text": "Gonza, acá tenés la receta vista como receta guiada de Thermomix. No la puedo enviar a Cookidoo desde acá, el envío real lo hacés vos desde la app de Meta si querés.\n\nReceta: Puré de zapallo de la abuela\nPara: 2 porciones - Preparación 5 min - Total 30 min\n\nIngredientes:\n- 300 g de zapallo\n- 100 g de agua\n\nPasos:\n1. Colocar el zapallo y el agua en el vaso.\n2. Cocinar 20 min/100°C/velocidad 1.\n3. Triturar 30 seg/velocidad 5.\n\nYa agregué los ingredientes a la lista de compras (el agua no hace falta, va del grifo).\n\nTheo es recién nacido, así que esta es para ustedes por ahora, o para más adelante para él, su pediatra te va a decir cuándo.",
+      "at": "2026-12-16T16:30:00-03:00"
+     }
+    ],
+    "used": [
+     "dehumidifier_pause_until"
+    ]
+   }
+  ]
+ }
+}
