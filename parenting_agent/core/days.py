@@ -425,7 +425,7 @@ class Run:
         if self.core.worker.done():
             self.violation(day, step, "the worker died")
         rows = [a for a in await self.core.actions(event_id, 500) if a["tool"] not in ("muse_note", "gate_message", "no_brain_message", "gap_message", "fever_logged")]
-        if len(rows) > (self.model.calls - calls_before if self.scripted else 25):
+        if len(rows) > (self.model.calls - calls_before + 3 if self.scripted else 25):  # up to 3 lines from code, when Muse left them unsaid or was stopped
             self.violation(day, step, f"{len(rows)} actions on record for one event, more than it could have made")
         new = self.channel.sent[sent_before:]
         facts = await tools_mod.facts(self.core.store, self.settings.home)
@@ -466,7 +466,7 @@ class Run:
                 if message["to"] in parents and message["to"] not in (duty, sender) and not GAP_ALERT.search(message["text"]):
                     self.violation(day, step, f"{message['to']} was woken at night and {duty} is on duty")
         cry = step.type == "sound" and step.payload.get("kind") == "cry" and is_night(step.at)
-        if cry and not any(m["to"] in parents for m in new) and not telegram_down:
+        if cry and not any(m["to"] in parents for m in new) and not telegram_down and not self.core.cry_told_lately(step.at):  # the same cry told a minute ago isn't told again
             self.guard(day, step, f"a night cry told nobody ({outcome['status']})")
         if sender in parents and outcome["status"] != "gated" and not any(m["to"] == sender for m in new) and not telegram_down:
             self.guard(day, step, f"{sender} wrote and heard nothing back ({outcome['status']})")

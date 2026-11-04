@@ -14,7 +14,7 @@ from ..agent.memory import LOG_KINDS, LocalBabyLog, Memory, parse_time
 from ..core import agent as agent_mod
 from ..core import book as book_mod
 from ..core import tools as tools_mod
-from ..core.runtime import Core
+from ..core.runtime import Core, who_is_on
 from ..core.settings import Settings
 from .scenes import BY_ID, FACTS, LOG, START, event, sense_event
 
@@ -29,7 +29,7 @@ VISITOR_EVENTS = int(os.environ.get("PA_SIM_VISITOR_EVENTS", "120"))
 VISITOR_SESSIONS = int(os.environ.get("PA_SIM_VISITOR_SESSIONS", "12"))
 ADDRESS_EVENTS = int(os.environ.get("PA_SIM_ADDRESS_EVENTS", "400"))
 ADDRESS_SESSIONS = int(os.environ.get("PA_SIM_ADDRESS_SESSIONS", "60"))
-HIDDEN_FACTS = ("language", "warmer_off_at", "vacuum_off_at", "feed_gap_told")
+HIDDEN_FACTS = ("language", "warmer_off_at", "vacuum_off_at", "feed_gap_told", "alarm_answered")
 DUTY_FACT = re.compile(r"^(?:on[ _])?duty[ _](\d{4})[-_ ](\d\d)[-_ ](\d\d)$", re.I)
 DAILY = (((7, 30), "morning"), ((21, 30), "evening"))
 HUMIDITY_STEP = 5.0
@@ -266,6 +266,7 @@ class Session:
             return same[0]
         target = max(self.moment + datetime.timedelta(minutes=1), at or self.moment)
         if kind == "schedule":
+            target = self.next_check(payload["name"]) if at is None else target  # a check has its hour: pressed at 09:43, the clock goes to the evening, it doesn't fire at 09:43
             check = (target.date(), payload["name"])
             if check in self.checks:
                 return 0
@@ -276,6 +277,14 @@ class Session:
             self.last_said = event_id
             self.said.append({"from": payload["from"], "text": payload["text"], "channel": payload["channel"], "at": self.moment.isoformat()})
         return event_id
+
+    def next_check(self, name):
+        """The next time this daily check is due, by the clock on the page."""
+        (hour, minute), _ = next(d for d in DAILY if d[1] == name)
+        at = self.moment.replace(hour=hour, minute=minute, second=0, microsecond=0)
+        while at <= self.moment or (at.date(), name) in self.checks:
+            at += datetime.timedelta(days=1)
+        return at
 
     async def write(self, parent, text):
         self.count()
@@ -304,14 +313,14 @@ class Session:
             day = event["happened_at"].astimezone(self.moment.tzinfo).date().isoformat()
             if action["tool"] == "set_on_duty":
                 parent = str(args.get("parent", "")).capitalize()
-                text = (f"{parent} se quedó con la noche, a pedido de {who}." if es else f"{parent} took the night, at {who}'s word.") if who and who != parent else (f"{parent} se quedó con la noche." if es else f"{parent} took the night.")
+                text = (f"La noche pasó a {parent}, a pedido de {who}." if es else f"The night passed to {parent}, at {who}'s word.") if who and who != parent else (f"{parent} se quedó con la noche." if es else f"{parent} took the night.")
                 found.append({"day": day, "kind": "handover", "text": text, "names": (parent,)})
             elif action["tool"] == "preview_family_recipe":
                 name = str(args.get("name", "")).strip() or ("la receta" if es else "the recipe")
                 found.append({"day": day, "kind": "recipe", "text": f"Una receta de la familia quedó escrita: {name}." if es else f"A family recipe got written down: {name}.", "names": (name, "receta" if es else "recipe")})
             elif action["tool"] == "start_car_seat_coach":
                 parent = str(args.get("parent", "")).capitalize()
-                found.append({"day": day, "kind": "coach", "text": f"{parent} instaló la silla del auto con el coach." if es else f"{parent} fitted the car seat with the coach.", "names": ("silla" if es else "car seat",)})
+                found.append({"day": day, "kind": "coach", "text": f"{parent} pidió ayuda con la silla del auto, y arrancó el coach." if es else f"{parent} asked for help with the car seat, and the coach started.", "names": ("silla" if es else "car seat",)})
         return found
 
     def count(self):
@@ -326,7 +335,7 @@ class Session:
         return {"clock": self.moment.isoformat(), "lang": self.lang, "played": self.played, "events_left": MAX_EVENTS - self.events_used,
                 "starts_left": self.opened.left(self.visitor, self.client) if self.opened else None, "feeds_on": self.feeds_on,
                 "home": self.core.mock.snapshot(), "sent": list(self.channel.sent), "said": self.said,
-                "facts": shown_facts(facts, self.moment),
+                "facts": shown_facts(facts, self.moment), "duty": who_is_on(self.moment, facts),
                 "log": self.log.entries(limit=8), "seq": self.core.seq}
 
 

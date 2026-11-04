@@ -337,13 +337,13 @@ HOT_WORD = re.compile(r"\b(burning up|feels? (so |very |really |too )?hot|is (so
 NO_FEVER = re.compile(r"\b(no|not|without|sin|ni|never|nunca|doesn'?t have( a)?|does not have( a)?)\s+(\w+\s+){0,2}"
                       r"(fever\w*|fiebre|febril|calentura|high temp\w*)", re.I)
 # A body temperature: 38 to 42 °C, or 100.4 to 107 °F, and never a millilitre, an ounce, a minute or a weight.
-TEMP_NUMBER = re.compile(r"(?<![\d.,])(3[89]|4[0-2]|100[.,][4-9]|10[1-7])([.,]\d)?(?![\d.,]*\d)"
+TEMP_NUMBER = re.compile(r"(?<![\d.,])(3[89]|4[0-2]|100[.,][4-9]|10[1-7])([.,]\d{1,2})?(?![\d.,]*\d)"
                          r"(?!\s*(ml|cc|oz|onzas?|min\w*|h\b|hs|horas?|hours?|g\b|gr\b|gramos|kg|kilos?|cm|semanas|weeks|"
-                         r"d[ií]as|days|%|mamaderas?|bottles?|pa[ñn]ales|diapers))", re.I)
+                         r"d[ií]as|days|%|mamaderas?|bottles?|pa[ñn]ales|diapers|pages?|p[aá]ginas?))", re.I)
 LOW_TEMP_NUMBER = re.compile(r"(?<![\d.,])3[45]([.,]\d)?(?![\d.,]*\d)(?!\s*(ml|cc|oz|min\w*|g\b|gr\b|gramos|kg|cm|semanas|weeks))",
                              re.I)
 BODY_HEAT = re.compile(r"\b(hot|warm|burning( up)?|temp\w*|thermometer|degrees|caliente|calient\w*|calor|ardiendo|hirviendo|"
-                       r"term[oó]metro|grados|tibi\w*|le tom[eé]|(it|he|she) reads?|marc[aó]|tiene|has|is at|it'?s)\b|°|º",
+                       r"term[oó]metro|grados|tibi\w*|le tom[eé]|(it|he|she) reads?|marc[aó]|tiene|has|is at|it'?s|readings?|lectura|medici[oó]n|axila|under the arm|underarm|armpit|rectal)\b|°|º",
                        re.I)
 BODY_TEMP = re.compile(r"\b(temp\w*|thermometer|term[oó]metro)\b", re.I)
 # What a 38 in a message is about when it is not the baby: the bath water, the room, the bottle, the weather.
@@ -351,7 +351,7 @@ BODY_TEMP = re.compile(r"\b(temp\w*|thermometer|term[oó]metro)\b", re.I)
 HOT_CLAUSE = re.compile(r"[.!?;,\n]+|\s+(?:and|but|y|pero)\s+", re.I)
 HIM = re.compile(r"\b(he|she|he'?s|she'?s|theo|the baby|my baby|our baby|el beb[eé]|mi beb[eé]|lo siento|la siento)\b", re.I)
 HOT_AND_REFUSING = re.compile(r"\best[aá] (muy |re |bien )?caliente y no (quiere|toma|come|agarra)\b", re.I)
-NOT_BODY = re.compile(r"\b(water|bath\w*|tub|room|nursery|bottle|milk|formula|outside|weather|heater|oven|agua|ba[ñn]o|"
+NOT_BODY = re.compile(r"\b(water|bath\w*|tub|room|nursery|humidity|bottle|milk|formula|outside|weather|heater|oven|agua|humedad|ba[ñn]o|"
                       r"ba[ñn]era|tina|cuarto|habitaci[oó]n|ambiente|mamadera|biber[oó]n|leche|f[oó]rmula|afuera|calefa\w*|"
                       r"estufa|horno|d[ií]a|clima)\b", re.I)
 RED_FLAG = re.compile(
@@ -442,7 +442,9 @@ SAID_TEMP = re.compile(r"\b(tiene|ten[ií]a|has|had|is at|it'?s at|he'?s at|she'
 SUBJECT_NOT_BODY = re.compile(r"\b(agua|water|ba[ñn]\w*|bath\w*|tub|tina|cuarto|room|habitaci[oó]n|mamadera|bottle|leche|milk)"
                               r"\s+(\w+\s+){0,2}$", re.I)
 # A reading under 38 °C ("tiene 37.3, es fiebre?") is not a fever, whatever word the parent used.
-UNDER_FEVER = re.compile(r"(?<![\d.,])(3[5-7])[.,]\d(?![\d.,]*\d)")
+UNDER_FEVER = re.compile(r"(?<![\d.,])(3[5-7])[.,]\d{1,2}(?![\d.,]*\d)")
+# A number on its own, with its decimals, right after someone took a reading: "38,04", "now 38.2".
+BARE_READING = re.compile(r"^\W*(?:(?:now|ahora|ya|still|sigue(?: en)?)\s+)?(?:3[89]|4[0-2])[.,]\d{1,2}(?:\s+(?:now|ahora))?\W*$", re.I)
 
 
 def said_temperature(text):
@@ -467,7 +469,7 @@ def names_fever(text):
         return True
     if HOT_AND_REFUSING.search(text) or any(HOT_WORD.search(c) and HIM.search(c) and not NOT_BODY.search(c) for c in HOT_CLAUSE.split(text)):
         return True
-    return bool(TEMP_NUMBER.search(text) and BODY_HEAT.search(text) and not NOT_BODY.search(text))
+    return bool(BARE_READING.match(text) or (TEMP_NUMBER.search(text) and BODY_HEAT.search(text) and not NOT_BODY.search(text)))
 
 
 def names_low_temperature(text):

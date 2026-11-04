@@ -97,8 +97,21 @@ class Visitors(unittest.TestCase):
             self.done(app, visitor)
             again = visitor.post("/api/scene", json={"id": "morning"})
             self.assertEqual((again.status_code, again.json()["id"]), (202, None))
-            by_hand = visitor.post("/api/events", json={"type": "schedule", "payload": {"name": "morning"}})
-            self.assertEqual((by_hand.status_code, by_hand.json()["id"]), (202, None))
+            by_hand = visitor.post("/api/events", json={"type": "schedule", "payload": {"name": "morning"}})  # the button goes to the next one, it doesn't run this one again
+            self.assertEqual(by_hand.status_code, 202)
+            self.done(app, visitor, 2)
+            self.assertTrue(visitor.get("/api/state").json()["clock"].startswith("2026-12-17T07:30"))
+
+    def test_the_evening_message_waits_for_its_hour(self):
+        app = gateway.app(scripted(AIMessage("Morning."), AIMessage("Evening."), AIMessage("x"), AIMessage("x")))
+        with served(app) as url:
+            visitor = self.visitor(url)
+            visitor.post("/api/scene", json={"id": "morning"})
+            self.done(app, visitor)
+            visitor.post("/api/events", json={"type": "schedule", "payload": {"name": "evening"}})
+            session = self.done(app, visitor, 2)
+            checks = [e for e in session.core.recent if e["kind"] == "event" and e["type"] == "schedule"]
+            self.assertEqual([e["happened_at"][11:16] for e in checks], ["07:30", "21:30"])
 
     def test_rapid_presses_wait_for_muse(self):
         app = gateway.app(scripted(AIMessage("Nothing needed.")))
@@ -182,10 +195,10 @@ class Visitors(unittest.TestCase):
         with served(app) as url:
             visitor = self.visitor(url)
             before = visitor.get("/api/state").json()
-            visitor.post("/api/scene", json={"id": "evening2"})
+            visitor.post("/api/scene", json={"id": "carseat"})
             session = self.done(app, visitor, 1)
             events = [item for item in session.core.recent if item["kind"] == "event"]
-            self.assertEqual([e["happened_at"] for e in events], ["2026-12-16T21:30:00-03:00"])
+            self.assertEqual([e["happened_at"] for e in events], ["2026-12-16T18:10:00-03:00"])
             after = visitor.get("/api/state").json()
             self.assertEqual(after["events_left"], before["events_left"] - 1)
             self.assertLess(after["starts_left"], sessions_mod.ADDRESS_SESSIONS)

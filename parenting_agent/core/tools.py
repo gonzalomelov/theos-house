@@ -182,7 +182,11 @@ async def home_tools(settings, mock, turn=lambda: None, after=None, before=None)
     return [StructuredTool.from_function(coroutine=GetLiveContext) if short == "GetLiveContext" else wrap(short, found[short]) for short in usable if short in found]
 
 
-def channel_tools(channel, settings, log=None, heard=lambda: "", night_check=None, claims=lambda text: None, said=lambda parent, asked, out: None, repeats=lambda parent, text: None, hushed=lambda: False, loud=lambda: False):
+async def _no_cap(parent, text, why, wording):
+    return why
+
+
+def channel_tools(channel, settings, log=None, heard=lambda: "", night_check=None, claims=lambda text: None, said=lambda parent, asked, out: None, repeats=lambda parent, text: None, hushed=lambda: False, loud=lambda: False, refused=_no_cap):
     def checked(text):
         out, why = safety.outbound(text, settings.lang)
         return out, why or claims(out or "") or (safety.unbacked(out, lambda: log.entries(None, None, 50), heard()) if log else None)
@@ -195,11 +199,14 @@ def channel_tools(channel, settings, log=None, heard=lambda: "", night_check=Non
             return "Refused: parent is gonza or ceci."
         why = await night_check(parent, emergency) if night_check else None
         if why:
-            return why
+            return await refused(parent, text, why, False)
         out, why = await asyncio.to_thread(checked, text)
-        why = why or safety.writes_as_someone_else(parent, out) or repeats(parent, out)
+        why = why or safety.writes_as_someone_else(parent, out)
         if why:
-            return why
+            return await refused(parent, text, why, True)
+        why = repeats(parent, out)
+        if why:
+            return await refused(parent, text, why, False)
         quiet = (quiet or hushed()) and not emergency and not loud()
         try:
             note = await asyncio.to_thread(channel.send, parent, out, *([True] if quiet else []))
@@ -208,17 +215,17 @@ def channel_tools(channel, settings, log=None, heard=lambda: "", night_check=Non
         said(parent, text, out)
         return f"Sent to {parent}. {note}" if note else f"Sent to {parent}."
 
-    def say_on_echo(text: str) -> str:
+    async def say_on_echo(text: str) -> str:
         """Say one sentence out loud on the kitchen Echo, at low volume. Everyone in the kitchen hears it."""
-        out, why = checked(text)
+        out, why = await asyncio.to_thread(checked, text)
         if why:
-            return why
+            return await refused("echo", text, why, False)
         try:
-            refused = channel.echo(out)
+            kept = await asyncio.to_thread(channel.echo, out)
         except Exception as failure:
             return f"Failed, nothing was said: the Echo is not answering ({type(failure).__name__})."
-        return refused or "Said on the kitchen Echo."
-    return [StructuredTool.from_function(coroutine=notify), StructuredTool.from_function(say_on_echo)]
+        return kept or "Said on the kitchen Echo."
+    return [StructuredTool.from_function(coroutine=notify), StructuredTool.from_function(coroutine=say_on_echo)]
 
 
 # What each tool did, for the record. Tools that only read aren't here. The record comes from the calls, never from Muse's words.
@@ -352,9 +359,10 @@ def recipe_tool(heard=lambda: "", settings_lang=lambda: "es"):
                 return f"Refused, no preview: this recipe is for Theo. Tell them exactly this and nothing more: {line['en' if safety.lang_of(heard(), settings_lang()) == 'en' else 'es']}"
         arguments = {"name": name, "servings": servings, "prep_minutes": prep_minutes, "total_minutes": max(total_minutes, prep_minutes), "ingredients": ingredients,
                      "steps": steps, "cookidoo_country": cookidoo_country.upper(), "cookidoo_country_source": "user_said_in_this_chat"}
+        seen = " The parent sees none of this: your message to them holds the name, the ingredients and the steps."
         if part("recipe") == "real":
-            return recipe_call("preview_recipe", arguments)
-        return f"Preview of {name}: {len(ingredients)} ingredients, {len(steps)} steps. Simulated here, nothing was sent. {RECIPE_NOT_SENT}"
+            return recipe_call("preview_recipe", arguments) + seen
+        return f"Preview of {name}: {len(ingredients)} ingredients, {len(steps)} steps. Simulated here, nothing was sent. {RECIPE_NOT_SENT}{seen}"
     return [StructuredTool.from_function(preview_family_recipe)]
 
 
@@ -388,10 +396,12 @@ def wake_tool(core):
             return "You will be woken in a few minutes to read the room again. No need to ask."
         if core.follow_up or safety.ABOUT_HOW_HE_IS.search(why):  # one ask per alarm: Muse waking itself to ask again is how 27 messages went out in 87 minutes
             return "Refused: the home already asks once how Theo is after an alarm. No more wakes for it."
+        if core.nagging(why):
+            return "Refused: nobody answered the last time you checked on this, so the chain stops here. A new reading wakes you by itself."
         if core.sender in PARENTS and safety.REMIND_ASK.search(core.heard):  # what a parent asked for is theirs: it comes, whatever else is going on
             why = f"{REMINDER}:{core.sender}: {why}"
-        await core.add_wake(moment, why)
-        return f"You will get an event at {moment.isoformat(timespec='minutes')}."
+        merged = await core.add_wake(moment, why)
+        return f"You already have a wake about this at {merged:%H:%M}, so there is one, not two. Don't say it twice." if merged else f"You will get an event at {moment.isoformat(timespec='minutes')}."
     return [StructuredTool.from_function(coroutine=wake_me_at)]
 
 
@@ -401,6 +411,8 @@ def memory_tools(store, home, heard=lambda: ""):
     async def remember(key: str, value: str) -> str:
         """Keep a fact or a plan for later, it stays when older history is gone. Same key replaces it. Put dates in plans."""
         plain = WHEN.sub(" ", f"{key.replace('_', ' ')} {value}")  # a plan's date is not a code
+        if safety.DUTY_CLAIM.search(plain):
+            return "Not kept: who is on duty has one record, the home's, and each event states it. If it changed, call set_on_duty for that night."
         if safety.injected(heard()) or safety.injected(plain):
             return "Refused: that is an instruction to you, not a fact or a plan from this family. It isn't kept."
         if rules.has_secret(plain) or len(value) > 300:
