@@ -9,6 +9,8 @@ once at start.
 Per label two numbers, each the best 40 ms frame of the window:
   logit: the best prompt's frame logit (the model's own sigmoid scale)
   margin: the best prompt's logit minus the best background prompt's logit, in the same frame
+  rival_margin (cry only, when the config has a "cry_rule"): how far the cry beats its rival prompts, in the best frame where the cry's
+  logit reaches the rule's floor, -99 when no frame does
 "scores" holds the one the config names for that label ("mode"), on the logit scale, so the Ear's thresholds are the
 raw thresholds chosen on the tune set. The model's probability is its sigmoid. "raw" holds both numbers.
 
@@ -26,6 +28,7 @@ import time
 
 RATE = 16000
 MODEL_RATE = 48000
+NO_MARGIN = -99.0
 
 
 def upsample(np, samples):
@@ -35,6 +38,12 @@ def upsample(np, samples):
     out = np.zeros(3 * n // 2 + 1, np.complex128)
     out[:spectrum.size] = spectrum
     return (np.fft.irfft(out, 3 * n) * 3).astype(np.float32)
+
+
+def rival_margin(cry, rival, floor):
+    """cry and rival: per frame logits. The best cry minus rival among the frames where the cry reaches the floor."""
+    held = cry >= floor
+    return float((cry - rival)[held].max()) if held.any() else NO_MARGIN
 
 
 class Encoder:
@@ -54,7 +63,9 @@ class Encoder:
         self.prompts = cfg["prompts"]
         self.background = cfg.get("background", [])
         self.modes = cfg.get("modes", {})
-        texts = [p for label in self.prompts for p in self.prompts[label]] + list(self.background)
+        self.rule = cfg.get("cry_rule")
+        rivals = self.rule["rivals"] if self.rule else []
+        texts = [p for label in self.prompts for p in self.prompts[label]] + list(self.background) + list(rivals)
         tokens = tokenizer(texts, padding=True, return_tensors="pt").to(device)
         with torch.no_grad():
             hidden = self.model.text_model(input_ids=tokens["input_ids"], attention_mask=tokens["attention_mask"],
@@ -65,24 +76,32 @@ class Encoder:
             self.slices[label] = slice(start, start + len(prompts))
             start += len(prompts)
         self.bg = slice(start, start + len(self.background))
+        self.rivals = slice(self.bg.stop, self.bg.stop + len(rivals))
         self.scale = float(self.model.text_audio_logit_scale)
         self.bias = float(self.model.text_audio_logit_bias)
 
-    def score(self, samples):
+    def frame_logits(self, samples):
+        """Every 40 ms frame against every prompt: frames x prompts, in the order of the prompts, then the background."""
         np, torch = self.np, self.torch
-        started = time.monotonic()
         wave = upsample(np, np.asarray(samples, np.float32))
         inputs = self.features(wave, sampling_rate=MODEL_RATE, return_tensors="pt")
         with torch.no_grad():
             audio = self.model.get_audio_embeds(inputs["input_values"].to(self.device),
                                                 inputs["padding_mask"].to(self.device))
             logits = (audio[0] @ self.text.T) * self.scale + self.bias
-        logits = logits.float().cpu().numpy()
+        return logits.float().cpu().numpy()
+
+    def score(self, samples):
+        np = self.np
+        started = time.monotonic()
+        logits = self.frame_logits(samples)
         bg = logits[:, self.bg].max(axis=1) if self.background else np.zeros(logits.shape[0], np.float32)
         raw, scores = {}, {}
         for label, cols in self.slices.items():
             best = logits[:, cols].max(axis=1)
             raw[label] = {"logit": round(float(best.max()), 4), "margin": round(float((best - bg).max()), 4)}
+            if self.rule and label == "cry":
+                raw[label]["rival_margin"] = round(rival_margin(best, logits[:, self.rivals].max(axis=1), self.rule["floor"]), 4)
             scores[label] = raw[label][self.modes.get(label, "logit")]
         return {"scores": scores, "raw": raw, "seconds": round(time.monotonic() - started, 3)}
 

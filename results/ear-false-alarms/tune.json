@@ -1,0 +1,152 @@
+{
+ "rule": "maximize cries sent minus 3 x negative items sent on the tune side, the Oct 31 rule. Ties go to the stricter rule",
+ "rivals": [
+  "a radio broadcast",
+  "a person laughing",
+  "a man's voice"
+ ],
+ "separation_auc": 0.9975,
+ "chosen": {
+  "objective": 106,
+  "cries": 106,
+  "negatives": 0,
+  "floor": 5.5,
+  "margin": 5,
+  "frames": 1,
+  "min_fired_s": 1
+ },
+ "runner_ups": [
+  {
+   "objective": 106,
+   "cries": 106,
+   "negatives": 0,
+   "floor": 5,
+   "margin": 5,
+   "frames": 1,
+   "min_fired_s": 1
+  },
+  {
+   "objective": 106,
+   "cries": 106,
+   "negatives": 0,
+   "floor": 4.43,
+   "margin": 5,
+   "frames": 1,
+   "min_fired_s": 1
+  },
+  {
+   "objective": 106,
+   "cries": 106,
+   "negatives": 0,
+   "floor": 4,
+   "margin": 5,
+   "frames": 1,
+   "min_fired_s": 1
+  },
+  {
+   "objective": 106,
+   "cries": 106,
+   "negatives": 0,
+   "floor": 3.5,
+   "margin": 5,
+   "frames": 1,
+   "min_fired_s": 1
+  },
+  {
+   "objective": 106,
+   "cries": 106,
+   "negatives": 0,
+   "floor": 3,
+   "margin": 5,
+   "frames": 1,
+   "min_fired_s": 1
+  },
+  {
+   "objective": 105,
+   "cries": 105,
+   "negatives": 0,
+   "floor": 4.43,
+   "margin": 5,
+   "frames": 5,
+   "min_fired_s": 1
+  },
+  {
+   "objective": 105,
+   "cries": 105,
+   "negatives": 0,
+   "floor": 4,
+   "margin": 5,
+   "frames": 5,
+   "min_fired_s": 1
+  }
+ ],
+ "before": {
+  "cries": "112 of 113",
+  "negatives": "40 of 209",
+  "negatives_by_kind": {
+   "speech/hot": 1,
+   "laugh/plain": 3,
+   "laugh/hot": 3,
+   "sing/hot": 3,
+   "sing/plain": 1,
+   "hum/plain": 1,
+   "hum/hot": 1,
+   "sigh/hot": 2,
+   "groan/plain": 1,
+   "groan/hot": 1,
+   "cry_imitation/plain": 6,
+   "cry_imitation/hot": 5,
+   "novelty_voice/plain": 3,
+   "novelty_voice/hot": 1,
+   "speech_real/plain": 1,
+   "cough/hot": 4,
+   "cough/fit": 3
+  }
+ },
+ "after": {
+  "cries": "106 of 113",
+  "negatives": "0 of 209",
+  "negatives_by_kind": {},
+  "missed": [
+   "cry-94",
+   "cry-333",
+   "cry-418",
+   "cry-484",
+   "cry-498",
+   "cry-499",
+   "cry-500"
+  ]
+ },
+ "windows_negative_kinds": {
+  "speech/plain": 6,
+  "speech/hot": 6,
+  "shout/plain": 6,
+  "shout/hot": 6,
+  "laugh/plain": 6,
+  "laugh/hot": 6,
+  "sing/plain": 6,
+  "sing/hot": 6,
+  "hum/plain": 6,
+  "hum/hot": 6,
+  "sigh/plain": 6,
+  "sigh/hot": 6,
+  "groan/plain": 6,
+  "groan/hot": 6,
+  "cry_imitation/plain": 6,
+  "cry_imitation/hot": 6,
+  "novelty_voice/plain": 3,
+  "novelty_voice/hot": 3,
+  "speech_real/plain": 16,
+  "speech_real/hot": 16,
+  "sing_real/plain": 9,
+  "sing_real/hot": 9,
+  "room/plain": 14,
+  "room/quiet": 14,
+  "cough/hot": 5,
+  "cough/fit": 5,
+  "cough/plain": 5,
+  "dog/plain": 5,
+  "doorbell/plain": 5,
+  "splash/plain": 4
+ }
+}

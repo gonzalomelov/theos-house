@@ -69,6 +69,8 @@ Every model the Ear calls is a Meta model since Oct 31 2026. Meta's **Perception
 | Dog | 3 of 3, 104 false alarms (cries) | 3 of 3, 3 false alarms (cries) |
 | Splash | 3 of 3, 4 false alarms | 3 of 3, 1 false alarm |
 
+**The Mac's listener is stricter since Nov 4 2026.** `scripts/ear_listener.py` runs `hearing.CRY_RULE`: a frame counts as a cry only when its logit reaches 5.5 and it beats "a man's voice", "a radio broadcast" and "a person laughing" by 5. The table above is the shared default, which stays the bare logit. Held out, the rule hears 323 of 348 cries (339 before) and sends 1 of 247 other sounds (26 before), through the same real path. Most of those sounds are the Mac's `say`, so this isn't a measure of a person at the microphone (`results/ear-false-alarms/README.md`).
+
 Plain signal processing (`parenting_agent/cry_signal.py`: loudness, voicing and pitch in the 250 to 600 Hz infant cry band, no learned model) heard 283 of 348 cries with 2 false alarms, so it is an option, not the default. PANNs stays offline only, as the before baseline (`scripts/panns_baseline.py`, `scripts/panns_worker.py`, `scripts/fetch-panns.sh`).
 
 - `parenting_agent/hearing.py`: the Ear. ffmpeg decodes the Tapo RTSP audio (or a test file) to 16 kHz PCM on a pipe. Every second the last 2 s are scored. Only labels, scores, times and a cry's length, loudness and pitch go on the bus. Samples stay in numpy arrays and are dropped when the cry is reported. A test checks that nothing opens a file for writing. `hearing.default_listener` builds the listener the held-out test chose (`OWNERS`). Each listener brings its own thresholds.

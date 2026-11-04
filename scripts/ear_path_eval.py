@@ -15,7 +15,7 @@ ear_listener = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(ear_listener)
 data = json.loads((REPO / "results/sounds/meta-hearing/split.json").read_text())
 roots = {k: Path(v).expanduser() for k, v in data["roots"].items()}
-listener = hearing.default_listener({"device": "mps"})
+listener = hearing.default_listener(ear_listener.listener_config("mps"))
 rows, times = [], []
 for item in (i for i in data["items"] if i["split"] == "held_out"):
     sent = []

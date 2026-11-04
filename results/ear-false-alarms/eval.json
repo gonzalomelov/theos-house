@@ -1,0 +1,338 @@
+{
+ "set": "held_out",
+ "rule": {
+  "rivals": [
+   "a radio broadcast",
+   "a person laughing",
+   "a man's voice"
+  ],
+  "floor": 5.5,
+  "margin": 5.0
+ },
+ "report_after_s": 8,
+ "cries": {
+  "new": {
+   "sent": 323,
+   "of": 348
+  },
+  "old": {
+   "sent": 339,
+   "of": 348
+  },
+  "report_second_from_clip_start": {
+   "new": {
+    "median_s": 10,
+    "p95_s": 11,
+    "max_s": 11
+   },
+   "old": {
+    "median_s": 11,
+    "p95_s": 11,
+    "max_s": 11
+   }
+  },
+  "new_missed": [
+   "cry-125",
+   "cry-161",
+   "cry-182",
+   "cry-199",
+   "cry-207",
+   "cry-225",
+   "cry-237",
+   "cry-246",
+   "cry-289",
+   "cry-297",
+   "cry-303",
+   "cry-305",
+   "cry-318",
+   "cry-359",
+   "cry-378",
+   "cry-380",
+   "cry-388",
+   "cry-398",
+   "cry-400",
+   "cry-454",
+   "cry-470",
+   "cry-502",
+   "cry-539",
+   "cry-544",
+   "cry-548"
+  ],
+  "old_missed": [
+   "cry-161",
+   "cry-182",
+   "cry-207",
+   "cry-225",
+   "cry-246",
+   "cry-380",
+   "cry-398",
+   "cry-539",
+   "cry-548"
+  ]
+ },
+ "long_cries": [
+  {
+   "key": "longcry-cry-02",
+   "truth": "longcry",
+   "meta": "hearing",
+   "new": 9,
+   "old": 9,
+   "seconds": 48.33
+  },
+  {
+   "key": "longcry-cry-04",
+   "truth": "longcry",
+   "meta": "hearing",
+   "new": 9,
+   "old": 9,
+   "seconds": 54.0
+  }
+ ],
+ "negatives": {
+  "new": {
+   "sent": 1,
+   "of": 247
+  },
+  "old": {
+   "sent": 26,
+   "of": 247
+  },
+  "hours": 1.04,
+  "new_per_hour": 1.0,
+  "old_per_hour": 25.0,
+  "groups": {
+   "human": {
+    "new": {
+     "sent": 1,
+     "of": 157
+    },
+    "old": {
+     "sent": 26,
+     "of": 157
+    }
+   },
+   "room and house": {
+    "new": {
+     "sent": 0,
+     "of": 90
+    },
+    "old": {
+     "sent": 0,
+     "of": 90
+    }
+   }
+  },
+  "by_kind": {
+   "speech/plain": {
+    "items": 6,
+    "old": 0,
+    "new": 0,
+    "seconds": 72.0
+   },
+   "speech/hot": {
+    "items": 6,
+    "old": 1,
+    "new": 0,
+    "seconds": 72.0
+   },
+   "shout/plain": {
+    "items": 6,
+    "old": 0,
+    "new": 0,
+    "seconds": 72.0
+   },
+   "shout/hot": {
+    "items": 6,
+    "old": 1,
+    "new": 0,
+    "seconds": 72.0
+   },
+   "laugh/plain": {
+    "items": 6,
+    "old": 1,
+    "new": 0,
+    "seconds": 72.0
+   },
+   "laugh/hot": {
+    "items": 6,
+    "old": 1,
+    "new": 0,
+    "seconds": 72.0
+   },
+   "sing/plain": {
+    "items": 6,
+    "old": 0,
+    "new": 0,
+    "seconds": 72.0
+   },
+   "sing/hot": {
+    "items": 6,
+    "old": 3,
+    "new": 0,
+    "seconds": 72.0
+   },
+   "hum/plain": {
+    "items": 6,
+    "old": 1,
+    "new": 0,
+    "seconds": 72.0
+   },
+   "hum/hot": {
+    "items": 6,
+    "old": 3,
+    "new": 0,
+    "seconds": 72.0
+   },
+   "sigh/plain": {
+    "items": 6,
+    "old": 0,
+    "new": 0,
+    "seconds": 72.0
+   },
+   "sigh/hot": {
+    "items": 6,
+    "old": 1,
+    "new": 0,
+    "seconds": 72.0
+   },
+   "groan/plain": {
+    "items": 6,
+    "old": 0,
+    "new": 0,
+    "seconds": 72.0
+   },
+   "groan/hot": {
+    "items": 6,
+    "old": 2,
+    "new": 0,
+    "seconds": 72.0
+   },
+   "cry_imitation/plain": {
+    "items": 6,
+    "old": 1,
+    "new": 0,
+    "seconds": 72.0
+   },
+   "cry_imitation/hot": {
+    "items": 6,
+    "old": 2,
+    "new": 0,
+    "seconds": 72.0
+   },
+   "novelty_voice/plain": {
+    "items": 4,
+    "old": 2,
+    "new": 0,
+    "seconds": 48.0
+   },
+   "novelty_voice/hot": {
+    "items": 4,
+    "old": 0,
+    "new": 0,
+    "seconds": 48.0
+   },
+   "speech_real/plain": {
+    "items": 4,
+    "old": 0,
+    "new": 0,
+    "seconds": 71.9
+   },
+   "speech_real/hot": {
+    "items": 4,
+    "old": 0,
+    "new": 0,
+    "seconds": 71.9
+   },
+   "room/plain": {
+    "items": 40,
+    "old": 0,
+    "new": 0,
+    "seconds": 782.5
+   },
+   "room/quiet": {
+    "items": 40,
+    "old": 0,
+    "new": 0,
+    "seconds": 782.5
+   },
+   "speech_wikitts/plain": {
+    "items": 15,
+    "old": 0,
+    "new": 0,
+    "seconds": 300.0
+   },
+   "speech_wikitts/hot": {
+    "items": 15,
+    "old": 0,
+    "new": 0,
+    "seconds": 300.0
+   },
+   "cough/hot": {
+    "items": 5,
+    "old": 3,
+    "new": 0,
+    "seconds": 18.3
+   },
+   "cough/fit": {
+    "items": 5,
+    "old": 3,
+    "new": 1,
+    "seconds": 59.2
+   },
+   "cough/plain": {
+    "items": 5,
+    "old": 1,
+    "new": 0,
+    "seconds": 18.3
+   },
+   "dog/plain": {
+    "items": 3,
+    "old": 0,
+    "new": 0,
+    "seconds": 29.4
+   },
+   "doorbell/plain": {
+    "items": 4,
+    "old": 0,
+    "new": 0,
+    "seconds": 24.1
+   },
+   "splash/plain": {
+    "items": 3,
+    "old": 0,
+    "new": 0,
+    "seconds": 36.1
+   }
+  },
+  "new_sent": [
+   {
+    "kind": "cough",
+    "variant": "fit",
+    "source": "cough-06"
+   }
+  ]
+ },
+ "quieter_cries_every_4th_donateacry": {
+  "-12 dB": {
+   "new": {
+    "sent": 78,
+    "of": 87
+   },
+   "old": {
+    "sent": 82,
+    "of": 87
+   }
+  },
+  "-24 dB": {
+   "new": {
+    "sent": 79,
+    "of": 87
+   },
+   "old": {
+    "sent": 83,
+    "of": 87
+   }
+  }
+ },
+ "wall_s": 978
+}

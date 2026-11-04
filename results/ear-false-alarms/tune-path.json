@@ -1,0 +1,285 @@
+{
+ "set": "tune",
+ "rule": {
+  "rivals": [
+   "a radio broadcast",
+   "a person laughing",
+   "a man's voice"
+  ],
+  "floor": 5.5,
+  "margin": 5.0
+ },
+ "report_after_s": 8,
+ "cries": {
+  "new": {
+   "sent": 106,
+   "of": 113
+  },
+  "old": {
+   "sent": 112,
+   "of": 113
+  },
+  "report_second_from_clip_start": {
+   "new": {
+    "median_s": 10,
+    "p95_s": 11,
+    "max_s": 11
+   },
+   "old": {
+    "median_s": 11,
+    "p95_s": 11,
+    "max_s": 11
+   }
+  },
+  "new_missed": [
+   "cry-94",
+   "cry-333",
+   "cry-418",
+   "cry-484",
+   "cry-498",
+   "cry-499",
+   "cry-500"
+  ],
+  "old_missed": [
+   "cry-333"
+  ]
+ },
+ "long_cries": [
+  {
+   "key": "longcry-cry-01",
+   "truth": "longcry",
+   "meta": "hearing",
+   "new": 9,
+   "old": 9,
+   "seconds": 18.44
+  },
+  {
+   "key": "longcry-cry-03",
+   "truth": "longcry",
+   "meta": "hearing",
+   "new": 9,
+   "old": 9,
+   "seconds": 23.09
+  }
+ ],
+ "negatives": {
+  "new": {
+   "sent": 0,
+   "of": 209
+  },
+  "old": {
+   "sent": 40,
+   "of": 209
+  },
+  "hours": 0.823,
+  "new_per_hour": 0.0,
+  "old_per_hour": 48.6,
+  "groups": {
+   "human": {
+    "new": {
+     "sent": 0,
+     "of": 167
+    },
+    "old": {
+     "sent": 40,
+     "of": 167
+    }
+   },
+   "room and house": {
+    "new": {
+     "sent": 0,
+     "of": 42
+    },
+    "old": {
+     "sent": 0,
+     "of": 42
+    }
+   }
+  },
+  "by_kind": {
+   "speech/plain": {
+    "items": 6,
+    "old": 0,
+    "new": 0,
+    "seconds": 72.0
+   },
+   "speech/hot": {
+    "items": 6,
+    "old": 1,
+    "new": 0,
+    "seconds": 72.0
+   },
+   "shout/plain": {
+    "items": 6,
+    "old": 0,
+    "new": 0,
+    "seconds": 72.0
+   },
+   "shout/hot": {
+    "items": 6,
+    "old": 0,
+    "new": 0,
+    "seconds": 72.0
+   },
+   "laugh/plain": {
+    "items": 6,
+    "old": 3,
+    "new": 0,
+    "seconds": 72.0
+   },
+   "laugh/hot": {
+    "items": 6,
+    "old": 3,
+    "new": 0,
+    "seconds": 72.0
+   },
+   "sing/plain": {
+    "items": 6,
+    "old": 1,
+    "new": 0,
+    "seconds": 72.0
+   },
+   "sing/hot": {
+    "items": 6,
+    "old": 3,
+    "new": 0,
+    "seconds": 72.0
+   },
+   "hum/plain": {
+    "items": 6,
+    "old": 1,
+    "new": 0,
+    "seconds": 72.0
+   },
+   "hum/hot": {
+    "items": 6,
+    "old": 1,
+    "new": 0,
+    "seconds": 72.0
+   },
+   "sigh/plain": {
+    "items": 6,
+    "old": 0,
+    "new": 0,
+    "seconds": 72.0
+   },
+   "sigh/hot": {
+    "items": 6,
+    "old": 2,
+    "new": 0,
+    "seconds": 72.0
+   },
+   "groan/plain": {
+    "items": 6,
+    "old": 1,
+    "new": 0,
+    "seconds": 72.0
+   },
+   "groan/hot": {
+    "items": 6,
+    "old": 1,
+    "new": 0,
+    "seconds": 72.0
+   },
+   "cry_imitation/plain": {
+    "items": 6,
+    "old": 6,
+    "new": 0,
+    "seconds": 72.0
+   },
+   "cry_imitation/hot": {
+    "items": 6,
+    "old": 5,
+    "new": 0,
+    "seconds": 72.0
+   },
+   "novelty_voice/plain": {
+    "items": 3,
+    "old": 3,
+    "new": 0,
+    "seconds": 36.0
+   },
+   "novelty_voice/hot": {
+    "items": 3,
+    "old": 1,
+    "new": 0,
+    "seconds": 36.0
+   },
+   "speech_real/plain": {
+    "items": 16,
+    "old": 1,
+    "new": 0,
+    "seconds": 320.0
+   },
+   "speech_real/hot": {
+    "items": 16,
+    "old": 0,
+    "new": 0,
+    "seconds": 320.0
+   },
+   "sing_real/plain": {
+    "items": 9,
+    "old": 0,
+    "new": 0,
+    "seconds": 167.5
+   },
+   "sing_real/hot": {
+    "items": 9,
+    "old": 0,
+    "new": 0,
+    "seconds": 167.5
+   },
+   "room/plain": {
+    "items": 14,
+    "old": 0,
+    "new": 0,
+    "seconds": 265.0
+   },
+   "room/quiet": {
+    "items": 14,
+    "old": 0,
+    "new": 0,
+    "seconds": 265.0
+   },
+   "cough/hot": {
+    "items": 5,
+    "old": 4,
+    "new": 0,
+    "seconds": 4.7
+   },
+   "cough/fit": {
+    "items": 5,
+    "old": 3,
+    "new": 0,
+    "seconds": 58.9
+   },
+   "cough/plain": {
+    "items": 5,
+    "old": 0,
+    "new": 0,
+    "seconds": 4.7
+   },
+   "dog/plain": {
+    "items": 5,
+    "old": 0,
+    "new": 0,
+    "seconds": 80.3
+   },
+   "doorbell/plain": {
+    "items": 5,
+    "old": 0,
+    "new": 0,
+    "seconds": 23.4
+   },
+   "splash/plain": {
+    "items": 4,
+    "old": 0,
+    "new": 0,
+    "seconds": 61.4
+   }
+  },
+  "new_sent": []
+ },
+ "quieter_cries_every_4th_donateacry": {},
+ "wall_s": 515
+}

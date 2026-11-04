@@ -51,7 +51,13 @@ CRY_LIMITS = {"level_dbfs": -40.0, "voiced_share": 0.2, "longest_s": 0.2, "harmo
 # Which listener hears which label. The held-out test (results/sounds/meta-hearing/eval.json) gave the cry to the Meta
 # model: 339 of 348 cries with 1 false alarm, against 283 with 2 for the signal listener. Set a label to "signal" in
 # the house_sounds "listener" block ("owners") to hear cries without any model.
+# Those numbers are this shared default, with the bare logit. The Mac's listener adds CRY_RULE, with its own numbers below.
 OWNERS = {"cry": "meta", "dog": "meta", "doorbell": "meta", "splash": "meta"}
+# The Mac's listener only (scripts/ear_listener.py, results/ear-false-alarms/README.md): a frame counts as a cry when its logit reaches
+# the floor and it beats these rival prompts by the margin. Chosen on the tune side only. Ordinary voices near the microphone fired the
+# bare logit threshold, and these prompts are the ones the tune side says separate them from cries. Held out: 323 of 348 cries, 1 false
+# of 247 others, against 339 and 26 with the bare logit. Most of those others are the Mac's say, not people.
+CRY_RULE = {"rivals": ["a radio broadcast", "a person laughing", "a man's voice"], "floor": 5.5, "margin": 5.0}
 DEFAULTS = {"thresholds": THRESHOLDS, "gap_s": 2, "cry_report_s": 30, "cry_keep_s": 60}
 
 
@@ -76,8 +82,14 @@ class MetaListener:
         cfg = {"model_dir": str(model_dir), "prompts": {label: PROMPTS[label] for label in labels},
                "background": BACKGROUND, "modes": {**MODES, **config.get("modes", {})},
                "device": config.get("device") or os.environ.get("HEARING_DEVICE") or "cpu"}
+        rule = config.get("cry_rule") if "cry" in labels else None
+        if rule:
+            cfg["cry_rule"] = rule
+            cfg["modes"]["cry"] = "rival_margin"
         env = {**os.environ, "HEARING_CONFIG": json.dumps(cfg), "HF_HUB_OFFLINE": "1", "TRANSFORMERS_OFFLINE": "1"}
         self.thresholds = {label: THRESHOLDS[label] for label in labels}
+        if rule:
+            self.thresholds["cry"] = rule["margin"]
         self.process = subprocess.Popen([str(python), str(WORKER)], stdin=subprocess.PIPE, stdout=subprocess.PIPE,
                                         stderr=subprocess.DEVNULL, env=env)
         hello = json.loads(self.process.stdout.readline() or b'{"blocked": "worker exited"}')
@@ -300,7 +312,7 @@ def mask(text):
 
 
 def camera_url(env=os.environ):
-    return "rtsp://{}:{}@{}:554/{}".format(env["TAPO_USER"], env["TAPO_PASS"], env["TAPO_HOST"], env.get("TAPO_STREAM", "stream2"))
+    return "rtsp://{}:{}@{}:{}/{}".format(env["TAPO_USER"], env["TAPO_PASS"], env["TAPO_HOST"], env.get("TAPO_PORT") or 554, env.get("TAPO_STREAM", "stream2"))
 
 
 def camera_seconds(url):

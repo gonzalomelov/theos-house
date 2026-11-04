@@ -1,0 +1,4117 @@
+{
+"protocol": {
+"written": "2026-11-04, before any score was computed on any of these items or any new rule",
+"cries": "the cries keep the Oct 31 split of results/sounds/meta-hearing/split.json, the held-out 348 are not looked at until the rule is committed",
+"negatives": "every item here is not a cry. Sides share no voice, no phrase and no source recording",
+"tuning_rule": "maximize cries sent minus 3 x negative items sent on the tune side, the Oct 31 rule. Ties go to the stricter rule",
+"metric": "an item counts as sent when the listener's own sink posts at least once, through the Tapo channel and the real Ear",
+"limits": "most human items are the Mac's say, not a person. hot is a level boost and clipping, not the sound of a mouth at a microphone"
+},
+"root": "~/Engineering/gonza/meta-hackathon-2026-synthetic/ear-negatives",
+"items": [
+{
+"id": 0,
+"file": "say-speech-cb7c60b050.wav",
+"split": "tune",
+"kind": "speech",
+"variant": "plain",
+"source": "Samantha",
+"origin": "say"
+},
+{
+"id": 1,
+"file": "say-speech-cb7c60b050-hot.wav",
+"split": "tune",
+"kind": "speech",
+"variant": "hot",
+"source": "Samantha",
+"origin": "say"
+},
+{
+"id": 2,
+"file": "say-speech-3db238ec66.wav",
+"split": "tune",
+"kind": "speech",
+"variant": "plain",
+"source": "Daniel",
+"origin": "say"
+},
+{
+"id": 3,
+"file": "say-speech-3db238ec66-hot.wav",
+"split": "tune",
+"kind": "speech",
+"variant": "hot",
+"source": "Daniel",
+"origin": "say"
+},
+{
+"id": 4,
+"file": "say-speech-0544f19643.wav",
+"split": "tune",
+"kind": "speech",
+"variant": "plain",
+"source": "Grandpa (English (US))",
+"origin": "say"
+},
+{
+"id": 5,
+"file": "say-speech-0544f19643-hot.wav",
+"split": "tune",
+"kind": "speech",
+"variant": "hot",
+"source": "Grandpa (English (US))",
+"origin": "say"
+},
+{
+"id": 6,
+"file": "say-speech-8b3f066562.wav",
+"split": "tune",
+"kind": "speech",
+"variant": "plain",
+"source": "Sandy (English (US))",
+"origin": "say"
+},
+{
+"id": 7,
+"file": "say-speech-8b3f066562-hot.wav",
+"split": "tune",
+"kind": "speech",
+"variant": "hot",
+"source": "Sandy (English (US))",
+"origin": "say"
+},
+{
+"id": 8,
+"file": "say-speech-dd394830ff.wav",
+"split": "tune",
+"kind": "speech",
+"variant": "plain",
+"source": "Paulina",
+"origin": "say"
+},
+{
+"id": 9,
+"file": "say-speech-dd394830ff-hot.wav",
+"split": "tune",
+"kind": "speech",
+"variant": "hot",
+"source": "Paulina",
+"origin": "say"
+},
+{
+"id": 10,
+"file": "say-speech-aa569cc3ec.wav",
+"split": "tune",
+"kind": "speech",
+"variant": "plain",
+"source": "Eddy (Spanish (Mexico))",
+"origin": "say"
+},
+{
+"id": 11,
+"file": "say-speech-aa569cc3ec-hot.wav",
+"split": "tune",
+"kind": "speech",
+"variant": "hot",
+"source": "Eddy (Spanish (Mexico))",
+"origin": "say"
+},
+{
+"id": 12,
+"file": "say-shout-675580a63c.wav",
+"split": "tune",
+"kind": "shout",
+"variant": "plain",
+"source": "Samantha",
+"origin": "say"
+},
+{
+"id": 13,
+"file": "say-shout-675580a63c-hot.wav",
+"split": "tune",
+"kind": "shout",
+"variant": "hot",
+"source": "Samantha",
+"origin": "say"
+},
+{
+"id": 14,
+"file": "say-shout-4af7f245e5.wav",
+"split": "tune",
+"kind": "shout",
+"variant": "plain",
+"source": "Daniel",
+"origin": "say"
+},
+{
+"id": 15,
+"file": "say-shout-4af7f245e5-hot.wav",
+"split": "tune",
+"kind": "shout",
+"variant": "hot",
+"source": "Daniel",
+"origin": "say"
+},
+{
+"id": 16,
+"file": "say-shout-c2837a172b.wav",
+"split": "tune",
+"kind": "shout",
+"variant": "plain",
+"source": "Grandpa (English (US))",
+"origin": "say"
+},
+{
+"id": 17,
+"file": "say-shout-c2837a172b-hot.wav",
+"split": "tune",
+"kind": "shout",
+"variant": "hot",
+"source": "Grandpa (English (US))",
+"origin": "say"
+},
+{
+"id": 18,
+"file": "say-shout-5a7e2f95d8.wav",
+"split": "tune",
+"kind": "shout",
+"variant": "plain",
+"source": "Sandy (English (US))",
+"origin": "say"
+},
+{
+"id": 19,
+"file": "say-shout-5a7e2f95d8-hot.wav",
+"split": "tune",
+"kind": "shout",
+"variant": "hot",
+"source": "Sandy (English (US))",
+"origin": "say"
+},
+{
+"id": 20,
+"file": "say-shout-b36d864f41.wav",
+"split": "tune",
+"kind": "shout",
+"variant": "plain",
+"source": "Paulina",
+"origin": "say"
+},
+{
+"id": 21,
+"file": "say-shout-b36d864f41-hot.wav",
+"split": "tune",
+"kind": "shout",
+"variant": "hot",
+"source": "Paulina",
+"origin": "say"
+},
+{
+"id": 22,
+"file": "say-shout-b21022f573.wav",
+"split": "tune",
+"kind": "shout",
+"variant": "plain",
+"source": "Eddy (Spanish (Mexico))",
+"origin": "say"
+},
+{
+"id": 23,
+"file": "say-shout-b21022f573-hot.wav",
+"split": "tune",
+"kind": "shout",
+"variant": "hot",
+"source": "Eddy (Spanish (Mexico))",
+"origin": "say"
+},
+{
+"id": 24,
+"file": "say-laugh-f970c3d385.wav",
+"split": "tune",
+"kind": "laugh",
+"variant": "plain",
+"source": "Samantha",
+"origin": "say"
+},
+{
+"id": 25,
+"file": "say-laugh-f970c3d385-hot.wav",
+"split": "tune",
+"kind": "laugh",
+"variant": "hot",
+"source": "Samantha",
+"origin": "say"
+},
+{
+"id": 26,
+"file": "say-laugh-52c0a885ab.wav",
+"split": "tune",
+"kind": "laugh",
+"variant": "plain",
+"source": "Daniel",
+"origin": "say"
+},
+{
+"id": 27,
+"file": "say-laugh-52c0a885ab-hot.wav",
+"split": "tune",
+"kind": "laugh",
+"variant": "hot",
+"source": "Daniel",
+"origin": "say"
+},
+{
+"id": 28,
+"file": "say-laugh-fc92971f43.wav",
+"split": "tune",
+"kind": "laugh",
+"variant": "plain",
+"source": "Grandpa (English (US))",
+"origin": "say"
+},
+{
+"id": 29,
+"file": "say-laugh-fc92971f43-hot.wav",
+"split": "tune",
+"kind": "laugh",
+"variant": "hot",
+"source": "Grandpa (English (US))",
+"origin": "say"
+},
+{
+"id": 30,
+"file": "say-laugh-35df84b4f7.wav",
+"split": "tune",
+"kind": "laugh",
+"variant": "plain",
+"source": "Sandy (English (US))",
+"origin": "say"
+},
+{
+"id": 31,
+"file": "say-laugh-35df84b4f7-hot.wav",
+"split": "tune",
+"kind": "laugh",
+"variant": "hot",
+"source": "Sandy (English (US))",
+"origin": "say"
+},
+{
+"id": 32,
+"file": "say-laugh-9206205a5c.wav",
+"split": "tune",
+"kind": "laugh",
+"variant": "plain",
+"source": "Paulina",
+"origin": "say"
+},
+{
+"id": 33,
+"file": "say-laugh-9206205a5c-hot.wav",
+"split": "tune",
+"kind": "laugh",
+"variant": "hot",
+"source": "Paulina",
+"origin": "say"
+},
+{
+"id": 34,
+"file": "say-laugh-1090175f4a.wav",
+"split": "tune",
+"kind": "laugh",
+"variant": "plain",
+"source": "Eddy (Spanish (Mexico))",
+"origin": "say"
+},
+{
+"id": 35,
+"file": "say-laugh-1090175f4a-hot.wav",
+"split": "tune",
+"kind": "laugh",
+"variant": "hot",
+"source": "Eddy (Spanish (Mexico))",
+"origin": "say"
+},
+{
+"id": 36,
+"file": "say-sing-723d813017.wav",
+"split": "tune",
+"kind": "sing",
+"variant": "plain",
+"source": "Samantha",
+"origin": "say"
+},
+{
+"id": 37,
+"file": "say-sing-723d813017-hot.wav",
+"split": "tune",
+"kind": "sing",
+"variant": "hot",
+"source": "Samantha",
+"origin": "say"
+},
+{
+"id": 38,
+"file": "say-sing-c44908df87.wav",
+"split": "tune",
+"kind": "sing",
+"variant": "plain",
+"source": "Daniel",
+"origin": "say"
+},
+{
+"id": 39,
+"file": "say-sing-c44908df87-hot.wav",
+"split": "tune",
+"kind": "sing",
+"variant": "hot",
+"source": "Daniel",
+"origin": "say"
+},
+{
+"id": 40,
+"file": "say-sing-91c759c250.wav",
+"split": "tune",
+"kind": "sing",
+"variant": "plain",
+"source": "Grandpa (English (US))",
+"origin": "say"
+},
+{
+"id": 41,
+"file": "say-sing-91c759c250-hot.wav",
+"split": "tune",
+"kind": "sing",
+"variant": "hot",
+"source": "Grandpa (English (US))",
+"origin": "say"
+},
+{
+"id": 42,
+"file": "say-sing-00eb2210f8.wav",
+"split": "tune",
+"kind": "sing",
+"variant": "plain",
+"source": "Sandy (English (US))",
+"origin": "say"
+},
+{
+"id": 43,
+"file": "say-sing-00eb2210f8-hot.wav",
+"split": "tune",
+"kind": "sing",
+"variant": "hot",
+"source": "Sandy (English (US))",
+"origin": "say"
+},
+{
+"id": 44,
+"file": "say-sing-03c81b1a33.wav",
+"split": "tune",
+"kind": "sing",
+"variant": "plain",
+"source": "Paulina",
+"origin": "say"
+},
+{
+"id": 45,
+"file": "say-sing-03c81b1a33-hot.wav",
+"split": "tune",
+"kind": "sing",
+"variant": "hot",
+"source": "Paulina",
+"origin": "say"
+},
+{
+"id": 46,
+"file": "say-sing-a88af10487.wav",
+"split": "tune",
+"kind": "sing",
+"variant": "plain",
+"source": "Eddy (Spanish (Mexico))",
+"origin": "say"
+},
+{
+"id": 47,
+"file": "say-sing-a88af10487-hot.wav",
+"split": "tune",
+"kind": "sing",
+"variant": "hot",
+"source": "Eddy (Spanish (Mexico))",
+"origin": "say"
+},
+{
+"id": 48,
+"file": "say-hum-37df1474e3.wav",
+"split": "tune",
+"kind": "hum",
+"variant": "plain",
+"source": "Samantha",
+"origin": "say"
+},
+{
+"id": 49,
+"file": "say-hum-37df1474e3-hot.wav",
+"split": "tune",
+"kind": "hum",
+"variant": "hot",
+"source": "Samantha",
+"origin": "say"
+},
+{
+"id": 50,
+"file": "say-hum-7cf88e75ca.wav",
+"split": "tune",
+"kind": "hum",
+"variant": "plain",
+"source": "Daniel",
+"origin": "say"
+},
+{
+"id": 51,
+"file": "say-hum-7cf88e75ca-hot.wav",
+"split": "tune",
+"kind": "hum",
+"variant": "hot",
+"source": "Daniel",
+"origin": "say"
+},
+{
+"id": 52,
+"file": "say-hum-df24bdf446.wav",
+"split": "tune",
+"kind": "hum",
+"variant": "plain",
+"source": "Grandpa (English (US))",
+"origin": "say"
+},
+{
+"id": 53,
+"file": "say-hum-df24bdf446-hot.wav",
+"split": "tune",
+"kind": "hum",
+"variant": "hot",
+"source": "Grandpa (English (US))",
+"origin": "say"
+},
+{
+"id": 54,
+"file": "say-hum-a7e2b62053.wav",
+"split": "tune",
+"kind": "hum",
+"variant": "plain",
+"source": "Sandy (English (US))",
+"origin": "say"
+},
+{
+"id": 55,
+"file": "say-hum-a7e2b62053-hot.wav",
+"split": "tune",
+"kind": "hum",
+"variant": "hot",
+"source": "Sandy (English (US))",
+"origin": "say"
+},
+{
+"id": 56,
+"file": "say-hum-6112eca899.wav",
+"split": "tune",
+"kind": "hum",
+"variant": "plain",
+"source": "Paulina",
+"origin": "say"
+},
+{
+"id": 57,
+"file": "say-hum-6112eca899-hot.wav",
+"split": "tune",
+"kind": "hum",
+"variant": "hot",
+"source": "Paulina",
+"origin": "say"
+},
+{
+"id": 58,
+"file": "say-hum-7cf895e8b1.wav",
+"split": "tune",
+"kind": "hum",
+"variant": "plain",
+"source": "Eddy (Spanish (Mexico))",
+"origin": "say"
+},
+{
+"id": 59,
+"file": "say-hum-7cf895e8b1-hot.wav",
+"split": "tune",
+"kind": "hum",
+"variant": "hot",
+"source": "Eddy (Spanish (Mexico))",
+"origin": "say"
+},
+{
+"id": 60,
+"file": "say-sigh-d3f564fe53.wav",
+"split": "tune",
+"kind": "sigh",
+"variant": "plain",
+"source": "Samantha",
+"origin": "say"
+},
+{
+"id": 61,
+"file": "say-sigh-d3f564fe53-hot.wav",
+"split": "tune",
+"kind": "sigh",
+"variant": "hot",
+"source": "Samantha",
+"origin": "say"
+},
+{
+"id": 62,
+"file": "say-sigh-952ce1762b.wav",
+"split": "tune",
+"kind": "sigh",
+"variant": "plain",
+"source": "Daniel",
+"origin": "say"
+},
+{
+"id": 63,
+"file": "say-sigh-952ce1762b-hot.wav",
+"split": "tune",
+"kind": "sigh",
+"variant": "hot",
+"source": "Daniel",
+"origin": "say"
+},
+{
+"id": 64,
+"file": "say-sigh-6c08c21c47.wav",
+"split": "tune",
+"kind": "sigh",
+"variant": "plain",
+"source": "Grandpa (English (US))",
+"origin": "say"
+},
+{
+"id": 65,
+"file": "say-sigh-6c08c21c47-hot.wav",
+"split": "tune",
+"kind": "sigh",
+"variant": "hot",
+"source": "Grandpa (English (US))",
+"origin": "say"
+},
+{
+"id": 66,
+"file": "say-sigh-827650439a.wav",
+"split": "tune",
+"kind": "sigh",
+"variant": "plain",
+"source": "Sandy (English (US))",
+"origin": "say"
+},
+{
+"id": 67,
+"file": "say-sigh-827650439a-hot.wav",
+"split": "tune",
+"kind": "sigh",
+"variant": "hot",
+"source": "Sandy (English (US))",
+"origin": "say"
+},
+{
+"id": 68,
+"file": "say-sigh-b37a0fc0f9.wav",
+"split": "tune",
+"kind": "sigh",
+"variant": "plain",
+"source": "Paulina",
+"origin": "say"
+},
+{
+"id": 69,
+"file": "say-sigh-b37a0fc0f9-hot.wav",
+"split": "tune",
+"kind": "sigh",
+"variant": "hot",
+"source": "Paulina",
+"origin": "say"
+},
+{
+"id": 70,
+"file": "say-sigh-cec3686689.wav",
+"split": "tune",
+"kind": "sigh",
+"variant": "plain",
+"source": "Eddy (Spanish (Mexico))",
+"origin": "say"
+},
+{
+"id": 71,
+"file": "say-sigh-cec3686689-hot.wav",
+"split": "tune",
+"kind": "sigh",
+"variant": "hot",
+"source": "Eddy (Spanish (Mexico))",
+"origin": "say"
+},
+{
+"id": 72,
+"file": "say-groan-0164f4a7db.wav",
+"split": "tune",
+"kind": "groan",
+"variant": "plain",
+"source": "Samantha",
+"origin": "say"
+},
+{
+"id": 73,
+"file": "say-groan-0164f4a7db-hot.wav",
+"split": "tune",
+"kind": "groan",
+"variant": "hot",
+"source": "Samantha",
+"origin": "say"
+},
+{
+"id": 74,
+"file": "say-groan-620f3c51a5.wav",
+"split": "tune",
+"kind": "groan",
+"variant": "plain",
+"source": "Daniel",
+"origin": "say"
+},
+{
+"id": 75,
+"file": "say-groan-620f3c51a5-hot.wav",
+"split": "tune",
+"kind": "groan",
+"variant": "hot",
+"source": "Daniel",
+"origin": "say"
+},
+{
+"id": 76,
+"file": "say-groan-5d594fe409.wav",
+"split": "tune",
+"kind": "groan",
+"variant": "plain",
+"source": "Grandpa (English (US))",
+"origin": "say"
+},
+{
+"id": 77,
+"file": "say-groan-5d594fe409-hot.wav",
+"split": "tune",
+"kind": "groan",
+"variant": "hot",
+"source": "Grandpa (English (US))",
+"origin": "say"
+},
+{
+"id": 78,
+"file": "say-groan-e079aca48c.wav",
+"split": "tune",
+"kind": "groan",
+"variant": "plain",
+"source": "Sandy (English (US))",
+"origin": "say"
+},
+{
+"id": 79,
+"file": "say-groan-e079aca48c-hot.wav",
+"split": "tune",
+"kind": "groan",
+"variant": "hot",
+"source": "Sandy (English (US))",
+"origin": "say"
+},
+{
+"id": 80,
+"file": "say-groan-62c5e2d156.wav",
+"split": "tune",
+"kind": "groan",
+"variant": "plain",
+"source": "Paulina",
+"origin": "say"
+},
+{
+"id": 81,
+"file": "say-groan-62c5e2d156-hot.wav",
+"split": "tune",
+"kind": "groan",
+"variant": "hot",
+"source": "Paulina",
+"origin": "say"
+},
+{
+"id": 82,
+"file": "say-groan-7ac07f5bcc.wav",
+"split": "tune",
+"kind": "groan",
+"variant": "plain",
+"source": "Eddy (Spanish (Mexico))",
+"origin": "say"
+},
+{
+"id": 83,
+"file": "say-groan-7ac07f5bcc-hot.wav",
+"split": "tune",
+"kind": "groan",
+"variant": "hot",
+"source": "Eddy (Spanish (Mexico))",
+"origin": "say"
+},
+{
+"id": 84,
+"file": "say-cry_imitation-e3532d7001.wav",
+"split": "tune",
+"kind": "cry_imitation",
+"variant": "plain",
+"source": "Samantha",
+"origin": "say"
+},
+{
+"id": 85,
+"file": "say-cry_imitation-e3532d7001-hot.wav",
+"split": "tune",
+"kind": "cry_imitation",
+"variant": "hot",
+"source": "Samantha",
+"origin": "say"
+},
+{
+"id": 86,
+"file": "say-cry_imitation-e8904d7010.wav",
+"split": "tune",
+"kind": "cry_imitation",
+"variant": "plain",
+"source": "Daniel",
+"origin": "say"
+},
+{
+"id": 87,
+"file": "say-cry_imitation-e8904d7010-hot.wav",
+"split": "tune",
+"kind": "cry_imitation",
+"variant": "hot",
+"source": "Daniel",
+"origin": "say"
+},
+{
+"id": 88,
+"file": "say-cry_imitation-f6cfd75597.wav",
+"split": "tune",
+"kind": "cry_imitation",
+"variant": "plain",
+"source": "Grandpa (English (US))",
+"origin": "say"
+},
+{
+"id": 89,
+"file": "say-cry_imitation-f6cfd75597-hot.wav",
+"split": "tune",
+"kind": "cry_imitation",
+"variant": "hot",
+"source": "Grandpa (English (US))",
+"origin": "say"
+},
+{
+"id": 90,
+"file": "say-cry_imitation-c9e367b8cf.wav",
+"split": "tune",
+"kind": "cry_imitation",
+"variant": "plain",
+"source": "Sandy (English (US))",
+"origin": "say"
+},
+{
+"id": 91,
+"file": "say-cry_imitation-c9e367b8cf-hot.wav",
+"split": "tune",
+"kind": "cry_imitation",
+"variant": "hot",
+"source": "Sandy (English (US))",
+"origin": "say"
+},
+{
+"id": 92,
+"file": "say-cry_imitation-901f0868bf.wav",
+"split": "tune",
+"kind": "cry_imitation",
+"variant": "plain",
+"source": "Paulina",
+"origin": "say"
+},
+{
+"id": 93,
+"file": "say-cry_imitation-901f0868bf-hot.wav",
+"split": "tune",
+"kind": "cry_imitation",
+"variant": "hot",
+"source": "Paulina",
+"origin": "say"
+},
+{
+"id": 94,
+"file": "say-cry_imitation-f5323c6c72.wav",
+"split": "tune",
+"kind": "cry_imitation",
+"variant": "plain",
+"source": "Eddy (Spanish (Mexico))",
+"origin": "say"
+},
+{
+"id": 95,
+"file": "say-cry_imitation-f5323c6c72-hot.wav",
+"split": "tune",
+"kind": "cry_imitation",
+"variant": "hot",
+"source": "Eddy (Spanish (Mexico))",
+"origin": "say"
+},
+{
+"id": 96,
+"file": "say-novelty-b636704d76.wav",
+"split": "tune",
+"kind": "novelty_voice",
+"variant": "plain",
+"source": "Bahh",
+"origin": "say"
+},
+{
+"id": 97,
+"file": "say-novelty-b636704d76-hot.wav",
+"split": "tune",
+"kind": "novelty_voice",
+"variant": "hot",
+"source": "Bahh",
+"origin": "say"
+},
+{
+"id": 98,
+"file": "say-novelty-c5ea2d06cb.wav",
+"split": "tune",
+"kind": "novelty_voice",
+"variant": "plain",
+"source": "Cellos",
+"origin": "say"
+},
+{
+"id": 99,
+"file": "say-novelty-c5ea2d06cb-hot.wav",
+"split": "tune",
+"kind": "novelty_voice",
+"variant": "hot",
+"source": "Cellos",
+"origin": "say"
+},
+{
+"id": 100,
+"file": "say-novelty-e9ac33ac9a.wav",
+"split": "tune",
+"kind": "novelty_voice",
+"variant": "plain",
+"source": "Good News",
+"origin": "say"
+},
+{
+"id": 101,
+"file": "say-novelty-e9ac33ac9a-hot.wav",
+"split": "tune",
+"kind": "novelty_voice",
+"variant": "hot",
+"source": "Good News",
+"origin": "say"
+},
+{
+"id": 102,
+"file": "real-29c731b135-0.wav",
+"split": "tune",
+"kind": "speech_real",
+"variant": "plain",
+"source": "audio2/raw/Radio Oranje 22-nov.-1944 AIRCHECK RADIO ORANJE.wav",
+"origin": "commons"
+},
+{
+"id": 103,
+"file": "real-29c731b135-0-hot.wav",
+"split": "tune",
+"kind": "speech_real",
+"variant": "hot",
+"source": "audio2/raw/Radio Oranje 22-nov.-1944 AIRCHECK RADIO ORANJE.wav",
+"origin": "commons"
+},
+{
+"id": 104,
+"file": "real-29c731b135-1.wav",
+"split": "tune",
+"kind": "speech_real",
+"variant": "plain",
+"source": "audio2/raw/Radio Oranje 22-nov.-1944 AIRCHECK RADIO ORANJE.wav",
+"origin": "commons"
+},
+{
+"id": 105,
+"file": "real-29c731b135-1-hot.wav",
+"split": "tune",
+"kind": "speech_real",
+"variant": "hot",
+"source": "audio2/raw/Radio Oranje 22-nov.-1944 AIRCHECK RADIO ORANJE.wav",
+"origin": "commons"
+},
+{
+"id": 106,
+"file": "real-29c731b135-2.wav",
+"split": "tune",
+"kind": "speech_real",
+"variant": "plain",
+"source": "audio2/raw/Radio Oranje 22-nov.-1944 AIRCHECK RADIO ORANJE.wav",
+"origin": "commons"
+},
+{
+"id": 107,
+"file": "real-29c731b135-2-hot.wav",
+"split": "tune",
+"kind": "speech_real",
+"variant": "hot",
+"source": "audio2/raw/Radio Oranje 22-nov.-1944 AIRCHECK RADIO ORANJE.wav",
+"origin": "commons"
+},
+{
+"id": 108,
+"file": "real-29c731b135-3.wav",
+"split": "tune",
+"kind": "speech_real",
+"variant": "plain",
+"source": "audio2/raw/Radio Oranje 22-nov.-1944 AIRCHECK RADIO ORANJE.wav",
+"origin": "commons"
+},
+{
+"id": 109,
+"file": "real-29c731b135-3-hot.wav",
+"split": "tune",
+"kind": "speech_real",
+"variant": "hot",
+"source": "audio2/raw/Radio Oranje 22-nov.-1944 AIRCHECK RADIO ORANJE.wav",
+"origin": "commons"
+},
+{
+"id": 110,
+"file": "real-29c731b135-4.wav",
+"split": "tune",
+"kind": "speech_real",
+"variant": "plain",
+"source": "audio2/raw/Radio Oranje 22-nov.-1944 AIRCHECK RADIO ORANJE.wav",
+"origin": "commons"
+},
+{
+"id": 111,
+"file": "real-29c731b135-4-hot.wav",
+"split": "tune",
+"kind": "speech_real",
+"variant": "hot",
+"source": "audio2/raw/Radio Oranje 22-nov.-1944 AIRCHECK RADIO ORANJE.wav",
+"origin": "commons"
+},
+{
+"id": 112,
+"file": "real-29c731b135-5.wav",
+"split": "tune",
+"kind": "speech_real",
+"variant": "plain",
+"source": "audio2/raw/Radio Oranje 22-nov.-1944 AIRCHECK RADIO ORANJE.wav",
+"origin": "commons"
+},
+{
+"id": 113,
+"file": "real-29c731b135-5-hot.wav",
+"split": "tune",
+"kind": "speech_real",
+"variant": "hot",
+"source": "audio2/raw/Radio Oranje 22-nov.-1944 AIRCHECK RADIO ORANJE.wav",
+"origin": "commons"
+},
+{
+"id": 114,
+"file": "real-29c731b135-6.wav",
+"split": "tune",
+"kind": "speech_real",
+"variant": "plain",
+"source": "audio2/raw/Radio Oranje 22-nov.-1944 AIRCHECK RADIO ORANJE.wav",
+"origin": "commons"
+},
+{
+"id": 115,
+"file": "real-29c731b135-6-hot.wav",
+"split": "tune",
+"kind": "speech_real",
+"variant": "hot",
+"source": "audio2/raw/Radio Oranje 22-nov.-1944 AIRCHECK RADIO ORANJE.wav",
+"origin": "commons"
+},
+{
+"id": 116,
+"file": "real-29c731b135-7.wav",
+"split": "tune",
+"kind": "speech_real",
+"variant": "plain",
+"source": "audio2/raw/Radio Oranje 22-nov.-1944 AIRCHECK RADIO ORANJE.wav",
+"origin": "commons"
+},
+{
+"id": 117,
+"file": "real-29c731b135-7-hot.wav",
+"split": "tune",
+"kind": "speech_real",
+"variant": "hot",
+"source": "audio2/raw/Radio Oranje 22-nov.-1944 AIRCHECK RADIO ORANJE.wav",
+"origin": "commons"
+},
+{
+"id": 118,
+"file": "real-29c731b135-8.wav",
+"split": "tune",
+"kind": "speech_real",
+"variant": "plain",
+"source": "audio2/raw/Radio Oranje 22-nov.-1944 AIRCHECK RADIO ORANJE.wav",
+"origin": "commons"
+},
+{
+"id": 119,
+"file": "real-29c731b135-8-hot.wav",
+"split": "tune",
+"kind": "speech_real",
+"variant": "hot",
+"source": "audio2/raw/Radio Oranje 22-nov.-1944 AIRCHECK RADIO ORANJE.wav",
+"origin": "commons"
+},
+{
+"id": 120,
+"file": "real-29c731b135-9.wav",
+"split": "tune",
+"kind": "speech_real",
+"variant": "plain",
+"source": "audio2/raw/Radio Oranje 22-nov.-1944 AIRCHECK RADIO ORANJE.wav",
+"origin": "commons"
+},
+{
+"id": 121,
+"file": "real-29c731b135-9-hot.wav",
+"split": "tune",
+"kind": "speech_real",
+"variant": "hot",
+"source": "audio2/raw/Radio Oranje 22-nov.-1944 AIRCHECK RADIO ORANJE.wav",
+"origin": "commons"
+},
+{
+"id": 122,
+"file": "real-29c731b135-10.wav",
+"split": "tune",
+"kind": "speech_real",
+"variant": "plain",
+"source": "audio2/raw/Radio Oranje 22-nov.-1944 AIRCHECK RADIO ORANJE.wav",
+"origin": "commons"
+},
+{
+"id": 123,
+"file": "real-29c731b135-10-hot.wav",
+"split": "tune",
+"kind": "speech_real",
+"variant": "hot",
+"source": "audio2/raw/Radio Oranje 22-nov.-1944 AIRCHECK RADIO ORANJE.wav",
+"origin": "commons"
+},
+{
+"id": 124,
+"file": "real-29c731b135-11.wav",
+"split": "tune",
+"kind": "speech_real",
+"variant": "plain",
+"source": "audio2/raw/Radio Oranje 22-nov.-1944 AIRCHECK RADIO ORANJE.wav",
+"origin": "commons"
+},
+{
+"id": 125,
+"file": "real-29c731b135-11-hot.wav",
+"split": "tune",
+"kind": "speech_real",
+"variant": "hot",
+"source": "audio2/raw/Radio Oranje 22-nov.-1944 AIRCHECK RADIO ORANJE.wav",
+"origin": "commons"
+},
+{
+"id": 126,
+"file": "real-29c731b135-12.wav",
+"split": "tune",
+"kind": "speech_real",
+"variant": "plain",
+"source": "audio2/raw/Radio Oranje 22-nov.-1944 AIRCHECK RADIO ORANJE.wav",
+"origin": "commons"
+},
+{
+"id": 127,
+"file": "real-29c731b135-12-hot.wav",
+"split": "tune",
+"kind": "speech_real",
+"variant": "hot",
+"source": "audio2/raw/Radio Oranje 22-nov.-1944 AIRCHECK RADIO ORANJE.wav",
+"origin": "commons"
+},
+{
+"id": 128,
+"file": "real-29c731b135-13.wav",
+"split": "tune",
+"kind": "speech_real",
+"variant": "plain",
+"source": "audio2/raw/Radio Oranje 22-nov.-1944 AIRCHECK RADIO ORANJE.wav",
+"origin": "commons"
+},
+{
+"id": 129,
+"file": "real-29c731b135-13-hot.wav",
+"split": "tune",
+"kind": "speech_real",
+"variant": "hot",
+"source": "audio2/raw/Radio Oranje 22-nov.-1944 AIRCHECK RADIO ORANJE.wav",
+"origin": "commons"
+},
+{
+"id": 130,
+"file": "real-29c731b135-14.wav",
+"split": "tune",
+"kind": "speech_real",
+"variant": "plain",
+"source": "audio2/raw/Radio Oranje 22-nov.-1944 AIRCHECK RADIO ORANJE.wav",
+"origin": "commons"
+},
+{
+"id": 131,
+"file": "real-29c731b135-14-hot.wav",
+"split": "tune",
+"kind": "speech_real",
+"variant": "hot",
+"source": "audio2/raw/Radio Oranje 22-nov.-1944 AIRCHECK RADIO ORANJE.wav",
+"origin": "commons"
+},
+{
+"id": 132,
+"file": "real-29c731b135-15.wav",
+"split": "tune",
+"kind": "speech_real",
+"variant": "plain",
+"source": "audio2/raw/Radio Oranje 22-nov.-1944 AIRCHECK RADIO ORANJE.wav",
+"origin": "commons"
+},
+{
+"id": 133,
+"file": "real-29c731b135-15-hot.wav",
+"split": "tune",
+"kind": "speech_real",
+"variant": "hot",
+"source": "audio2/raw/Radio Oranje 22-nov.-1944 AIRCHECK RADIO ORANJE.wav",
+"origin": "commons"
+},
+{
+"id": 134,
+"file": "real-2632c8bf6d-0.wav",
+"split": "tune",
+"kind": "sing_real",
+"variant": "plain",
+"source": "audio2/raw/\"Cry-Baby\" (1918), by Tom Brown & Ernie Erdman.opus",
+"origin": "commons"
+},
+{
+"id": 135,
+"file": "real-2632c8bf6d-0-hot.wav",
+"split": "tune",
+"kind": "sing_real",
+"variant": "hot",
+"source": "audio2/raw/\"Cry-Baby\" (1918), by Tom Brown & Ernie Erdman.opus",
+"origin": "commons"
+},
+{
+"id": 136,
+"file": "real-2632c8bf6d-1.wav",
+"split": "tune",
+"kind": "sing_real",
+"variant": "plain",
+"source": "audio2/raw/\"Cry-Baby\" (1918), by Tom Brown & Ernie Erdman.opus",
+"origin": "commons"
+},
+{
+"id": 137,
+"file": "real-2632c8bf6d-1-hot.wav",
+"split": "tune",
+"kind": "sing_real",
+"variant": "hot",
+"source": "audio2/raw/\"Cry-Baby\" (1918), by Tom Brown & Ernie Erdman.opus",
+"origin": "commons"
+},
+{
+"id": 138,
+"file": "real-2632c8bf6d-2.wav",
+"split": "tune",
+"kind": "sing_real",
+"variant": "plain",
+"source": "audio2/raw/\"Cry-Baby\" (1918), by Tom Brown & Ernie Erdman.opus",
+"origin": "commons"
+},
+{
+"id": 139,
+"file": "real-2632c8bf6d-2-hot.wav",
+"split": "tune",
+"kind": "sing_real",
+"variant": "hot",
+"source": "audio2/raw/\"Cry-Baby\" (1918), by Tom Brown & Ernie Erdman.opus",
+"origin": "commons"
+},
+{
+"id": 140,
+"file": "real-2632c8bf6d-3.wav",
+"split": "tune",
+"kind": "sing_real",
+"variant": "plain",
+"source": "audio2/raw/\"Cry-Baby\" (1918), by Tom Brown & Ernie Erdman.opus",
+"origin": "commons"
+},
+{
+"id": 141,
+"file": "real-2632c8bf6d-3-hot.wav",
+"split": "tune",
+"kind": "sing_real",
+"variant": "hot",
+"source": "audio2/raw/\"Cry-Baby\" (1918), by Tom Brown & Ernie Erdman.opus",
+"origin": "commons"
+},
+{
+"id": 142,
+"file": "real-2632c8bf6d-4.wav",
+"split": "tune",
+"kind": "sing_real",
+"variant": "plain",
+"source": "audio2/raw/\"Cry-Baby\" (1918), by Tom Brown & Ernie Erdman.opus",
+"origin": "commons"
+},
+{
+"id": 143,
+"file": "real-2632c8bf6d-4-hot.wav",
+"split": "tune",
+"kind": "sing_real",
+"variant": "hot",
+"source": "audio2/raw/\"Cry-Baby\" (1918), by Tom Brown & Ernie Erdman.opus",
+"origin": "commons"
+},
+{
+"id": 144,
+"file": "real-2632c8bf6d-5.wav",
+"split": "tune",
+"kind": "sing_real",
+"variant": "plain",
+"source": "audio2/raw/\"Cry-Baby\" (1918), by Tom Brown & Ernie Erdman.opus",
+"origin": "commons"
+},
+{
+"id": 145,
+"file": "real-2632c8bf6d-5-hot.wav",
+"split": "tune",
+"kind": "sing_real",
+"variant": "hot",
+"source": "audio2/raw/\"Cry-Baby\" (1918), by Tom Brown & Ernie Erdman.opus",
+"origin": "commons"
+},
+{
+"id": 146,
+"file": "real-2632c8bf6d-6.wav",
+"split": "tune",
+"kind": "sing_real",
+"variant": "plain",
+"source": "audio2/raw/\"Cry-Baby\" (1918), by Tom Brown & Ernie Erdman.opus",
+"origin": "commons"
+},
+{
+"id": 147,
+"file": "real-2632c8bf6d-6-hot.wav",
+"split": "tune",
+"kind": "sing_real",
+"variant": "hot",
+"source": "audio2/raw/\"Cry-Baby\" (1918), by Tom Brown & Ernie Erdman.opus",
+"origin": "commons"
+},
+{
+"id": 148,
+"file": "real-2632c8bf6d-7.wav",
+"split": "tune",
+"kind": "sing_real",
+"variant": "plain",
+"source": "audio2/raw/\"Cry-Baby\" (1918), by Tom Brown & Ernie Erdman.opus",
+"origin": "commons"
+},
+{
+"id": 149,
+"file": "real-2632c8bf6d-7-hot.wav",
+"split": "tune",
+"kind": "sing_real",
+"variant": "hot",
+"source": "audio2/raw/\"Cry-Baby\" (1918), by Tom Brown & Ernie Erdman.opus",
+"origin": "commons"
+},
+{
+"id": 150,
+"file": "real-2632c8bf6d-8.wav",
+"split": "tune",
+"kind": "sing_real",
+"variant": "plain",
+"source": "audio2/raw/\"Cry-Baby\" (1918), by Tom Brown & Ernie Erdman.opus",
+"origin": "commons"
+},
+{
+"id": 151,
+"file": "real-2632c8bf6d-8-hot.wav",
+"split": "tune",
+"kind": "sing_real",
+"variant": "hot",
+"source": "audio2/raw/\"Cry-Baby\" (1918), by Tom Brown & Ernie Erdman.opus",
+"origin": "commons"
+},
+{
+"id": 152,
+"file": "room-980797b3f9-0.wav",
+"split": "tune",
+"kind": "room",
+"variant": "plain",
+"source": "audio2/raw/Kitchen tidy up.ogg",
+"origin": "commons"
+},
+{
+"id": 153,
+"file": "room-980797b3f9-0-quiet.wav",
+"split": "tune",
+"kind": "room",
+"variant": "quiet",
+"source": "audio2/raw/Kitchen tidy up.ogg",
+"origin": "commons"
+},
+{
+"id": 154,
+"file": "room-980797b3f9-1.wav",
+"split": "tune",
+"kind": "room",
+"variant": "plain",
+"source": "audio2/raw/Kitchen tidy up.ogg",
+"origin": "commons"
+},
+{
+"id": 155,
+"file": "room-980797b3f9-1-quiet.wav",
+"split": "tune",
+"kind": "room",
+"variant": "quiet",
+"source": "audio2/raw/Kitchen tidy up.ogg",
+"origin": "commons"
+},
+{
+"id": 156,
+"file": "room-980797b3f9-2.wav",
+"split": "tune",
+"kind": "room",
+"variant": "plain",
+"source": "audio2/raw/Kitchen tidy up.ogg",
+"origin": "commons"
+},
+{
+"id": 157,
+"file": "room-980797b3f9-2-quiet.wav",
+"split": "tune",
+"kind": "room",
+"variant": "quiet",
+"source": "audio2/raw/Kitchen tidy up.ogg",
+"origin": "commons"
+},
+{
+"id": 158,
+"file": "room-685c255f79-0.wav",
+"split": "tune",
+"kind": "room",
+"variant": "plain",
+"source": "audio2/raw/Electric kettle and a gastherme.ogg",
+"origin": "commons"
+},
+{
+"id": 159,
+"file": "room-685c255f79-0-quiet.wav",
+"split": "tune",
+"kind": "room",
+"variant": "quiet",
+"source": "audio2/raw/Electric kettle and a gastherme.ogg",
+"origin": "commons"
+},
+{
+"id": 160,
+"file": "room-685c255f79-1.wav",
+"split": "tune",
+"kind": "room",
+"variant": "plain",
+"source": "audio2/raw/Electric kettle and a gastherme.ogg",
+"origin": "commons"
+},
+{
+"id": 161,
+"file": "room-685c255f79-1-quiet.wav",
+"split": "tune",
+"kind": "room",
+"variant": "quiet",
+"source": "audio2/raw/Electric kettle and a gastherme.ogg",
+"origin": "commons"
+},
+{
+"id": 162,
+"file": "room-685c255f79-2.wav",
+"split": "tune",
+"kind": "room",
+"variant": "plain",
+"source": "audio2/raw/Electric kettle and a gastherme.ogg",
+"origin": "commons"
+},
+{
+"id": 163,
+"file": "room-685c255f79-2-quiet.wav",
+"split": "tune",
+"kind": "room",
+"variant": "quiet",
+"source": "audio2/raw/Electric kettle and a gastherme.ogg",
+"origin": "commons"
+},
+{
+"id": 164,
+"file": "room-685c255f79-3.wav",
+"split": "tune",
+"kind": "room",
+"variant": "plain",
+"source": "audio2/raw/Electric kettle and a gastherme.ogg",
+"origin": "commons"
+},
+{
+"id": 165,
+"file": "room-685c255f79-3-quiet.wav",
+"split": "tune",
+"kind": "room",
+"variant": "quiet",
+"source": "audio2/raw/Electric kettle and a gastherme.ogg",
+"origin": "commons"
+},
+{
+"id": 166,
+"file": "room-685c255f79-4.wav",
+"split": "tune",
+"kind": "room",
+"variant": "plain",
+"source": "audio2/raw/Electric kettle and a gastherme.ogg",
+"origin": "commons"
+},
+{
+"id": 167,
+"file": "room-685c255f79-4-quiet.wav",
+"split": "tune",
+"kind": "room",
+"variant": "quiet",
+"source": "audio2/raw/Electric kettle and a gastherme.ogg",
+"origin": "commons"
+},
+{
+"id": 168,
+"file": "room-685c255f79-5.wav",
+"split": "tune",
+"kind": "room",
+"variant": "plain",
+"source": "audio2/raw/Electric kettle and a gastherme.ogg",
+"origin": "commons"
+},
+{
+"id": 169,
+"file": "room-685c255f79-5-quiet.wav",
+"split": "tune",
+"kind": "room",
+"variant": "quiet",
+"source": "audio2/raw/Electric kettle and a gastherme.ogg",
+"origin": "commons"
+},
+{
+"id": 170,
+"file": "room-685c255f79-6.wav",
+"split": "tune",
+"kind": "room",
+"variant": "plain",
+"source": "audio2/raw/Electric kettle and a gastherme.ogg",
+"origin": "commons"
+},
+{
+"id": 171,
+"file": "room-685c255f79-6-quiet.wav",
+"split": "tune",
+"kind": "room",
+"variant": "quiet",
+"source": "audio2/raw/Electric kettle and a gastherme.ogg",
+"origin": "commons"
+},
+{
+"id": 172,
+"file": "room-685c255f79-7.wav",
+"split": "tune",
+"kind": "room",
+"variant": "plain",
+"source": "audio2/raw/Electric kettle and a gastherme.ogg",
+"origin": "commons"
+},
+{
+"id": 173,
+"file": "room-685c255f79-7-quiet.wav",
+"split": "tune",
+"kind": "room",
+"variant": "quiet",
+"source": "audio2/raw/Electric kettle and a gastherme.ogg",
+"origin": "commons"
+},
+{
+"id": 174,
+"file": "room-685c255f79-8.wav",
+"split": "tune",
+"kind": "room",
+"variant": "plain",
+"source": "audio2/raw/Electric kettle and a gastherme.ogg",
+"origin": "commons"
+},
+{
+"id": 175,
+"file": "room-685c255f79-8-quiet.wav",
+"split": "tune",
+"kind": "room",
+"variant": "quiet",
+"source": "audio2/raw/Electric kettle and a gastherme.ogg",
+"origin": "commons"
+},
+{
+"id": 176,
+"file": "room-685c255f79-9.wav",
+"split": "tune",
+"kind": "room",
+"variant": "plain",
+"source": "audio2/raw/Electric kettle and a gastherme.ogg",
+"origin": "commons"
+},
+{
+"id": 177,
+"file": "room-685c255f79-9-quiet.wav",
+"split": "tune",
+"kind": "room",
+"variant": "quiet",
+"source": "audio2/raw/Electric kettle and a gastherme.ogg",
+"origin": "commons"
+},
+{
+"id": 178,
+"file": "room-88bc024a7e-0.wav",
+"split": "tune",
+"kind": "room",
+"variant": "plain",
+"source": "audio2/raw/Cooker hood.ogg",
+"origin": "commons"
+},
+{
+"id": 179,
+"file": "room-88bc024a7e-0-quiet.wav",
+"split": "tune",
+"kind": "room",
+"variant": "quiet",
+"source": "audio2/raw/Cooker hood.ogg",
+"origin": "commons"
+},
+{
+"id": 180,
+"file": "say-speech-762d7cab2b.wav",
+"split": "held_out",
+"kind": "speech",
+"variant": "plain",
+"source": "Karen",
+"origin": "say"
+},
+{
+"id": 181,
+"file": "say-speech-762d7cab2b-hot.wav",
+"split": "held_out",
+"kind": "speech",
+"variant": "hot",
+"source": "Karen",
+"origin": "say"
+},
+{
+"id": 182,
+"file": "say-speech-83b9507b56.wav",
+"split": "held_out",
+"kind": "speech",
+"variant": "plain",
+"source": "Moira",
+"origin": "say"
+},
+{
+"id": 183,
+"file": "say-speech-83b9507b56-hot.wav",
+"split": "held_out",
+"kind": "speech",
+"variant": "hot",
+"source": "Moira",
+"origin": "say"
+},
+{
+"id": 184,
+"file": "say-speech-b6c5676b10.wav",
+"split": "held_out",
+"kind": "speech",
+"variant": "plain",
+"source": "Reed (English (US))",
+"origin": "say"
+},
+{
+"id": 185,
+"file": "say-speech-b6c5676b10-hot.wav",
+"split": "held_out",
+"kind": "speech",
+"variant": "hot",
+"source": "Reed (English (US))",
+"origin": "say"
+},
+{
+"id": 186,
+"file": "say-speech-67711e8e76.wav",
+"split": "held_out",
+"kind": "speech",
+"variant": "plain",
+"source": "Shelley (English (UK))",
+"origin": "say"
+},
+{
+"id": 187,
+"file": "say-speech-67711e8e76-hot.wav",
+"split": "held_out",
+"kind": "speech",
+"variant": "hot",
+"source": "Shelley (English (UK))",
+"origin": "say"
+},
+{
+"id": 188,
+"file": "say-speech-e2a065151c.wav",
+"split": "held_out",
+"kind": "speech",
+"variant": "plain",
+"source": "Flo (Spanish (Spain))",
+"origin": "say"
+},
+{
+"id": 189,
+"file": "say-speech-e2a065151c-hot.wav",
+"split": "held_out",
+"kind": "speech",
+"variant": "hot",
+"source": "Flo (Spanish (Spain))",
+"origin": "say"
+},
+{
+"id": 190,
+"file": "say-speech-278fb5e154.wav",
+"split": "held_out",
+"kind": "speech",
+"variant": "plain",
+"source": "Rocko (Spanish (Spain))",
+"origin": "say"
+},
+{
+"id": 191,
+"file": "say-speech-278fb5e154-hot.wav",
+"split": "held_out",
+"kind": "speech",
+"variant": "hot",
+"source": "Rocko (Spanish (Spain))",
+"origin": "say"
+},
+{
+"id": 192,
+"file": "say-shout-b11cb0330e.wav",
+"split": "held_out",
+"kind": "shout",
+"variant": "plain",
+"source": "Karen",
+"origin": "say"
+},
+{
+"id": 193,
+"file": "say-shout-b11cb0330e-hot.wav",
+"split": "held_out",
+"kind": "shout",
+"variant": "hot",
+"source": "Karen",
+"origin": "say"
+},
+{
+"id": 194,
+"file": "say-shout-140689a880.wav",
+"split": "held_out",
+"kind": "shout",
+"variant": "plain",
+"source": "Moira",
+"origin": "say"
+},
+{
+"id": 195,
+"file": "say-shout-140689a880-hot.wav",
+"split": "held_out",
+"kind": "shout",
+"variant": "hot",
+"source": "Moira",
+"origin": "say"
+},
+{
+"id": 196,
+"file": "say-shout-bbc0711737.wav",
+"split": "held_out",
+"kind": "shout",
+"variant": "plain",
+"source": "Reed (English (US))",
+"origin": "say"
+},
+{
+"id": 197,
+"file": "say-shout-bbc0711737-hot.wav",
+"split": "held_out",
+"kind": "shout",
+"variant": "hot",
+"source": "Reed (English (US))",
+"origin": "say"
+},
+{
+"id": 198,
+"file": "say-shout-dac2e7fe7c.wav",
+"split": "held_out",
+"kind": "shout",
+"variant": "plain",
+"source": "Shelley (English (UK))",
+"origin": "say"
+},
+{
+"id": 199,
+"file": "say-shout-dac2e7fe7c-hot.wav",
+"split": "held_out",
+"kind": "shout",
+"variant": "hot",
+"source": "Shelley (English (UK))",
+"origin": "say"
+},
+{
+"id": 200,
+"file": "say-shout-5dfd58bf59.wav",
+"split": "held_out",
+"kind": "shout",
+"variant": "plain",
+"source": "Flo (Spanish (Spain))",
+"origin": "say"
+},
+{
+"id": 201,
+"file": "say-shout-5dfd58bf59-hot.wav",
+"split": "held_out",
+"kind": "shout",
+"variant": "hot",
+"source": "Flo (Spanish (Spain))",
+"origin": "say"
+},
+{
+"id": 202,
+"file": "say-shout-6a284fd6f8.wav",
+"split": "held_out",
+"kind": "shout",
+"variant": "plain",
+"source": "Rocko (Spanish (Spain))",
+"origin": "say"
+},
+{
+"id": 203,
+"file": "say-shout-6a284fd6f8-hot.wav",
+"split": "held_out",
+"kind": "shout",
+"variant": "hot",
+"source": "Rocko (Spanish (Spain))",
+"origin": "say"
+},
+{
+"id": 204,
+"file": "say-laugh-afd516b744.wav",
+"split": "held_out",
+"kind": "laugh",
+"variant": "plain",
+"source": "Karen",
+"origin": "say"
+},
+{
+"id": 205,
+"file": "say-laugh-afd516b744-hot.wav",
+"split": "held_out",
+"kind": "laugh",
+"variant": "hot",
+"source": "Karen",
+"origin": "say"
+},
+{
+"id": 206,
+"file": "say-laugh-65ccba630c.wav",
+"split": "held_out",
+"kind": "laugh",
+"variant": "plain",
+"source": "Moira",
+"origin": "say"
+},
+{
+"id": 207,
+"file": "say-laugh-65ccba630c-hot.wav",
+"split": "held_out",
+"kind": "laugh",
+"variant": "hot",
+"source": "Moira",
+"origin": "say"
+},
+{
+"id": 208,
+"file": "say-laugh-8f4a5e2382.wav",
+"split": "held_out",
+"kind": "laugh",
+"variant": "plain",
+"source": "Reed (English (US))",
+"origin": "say"
+},
+{
+"id": 209,
+"file": "say-laugh-8f4a5e2382-hot.wav",
+"split": "held_out",
+"kind": "laugh",
+"variant": "hot",
+"source": "Reed (English (US))",
+"origin": "say"
+},
+{
+"id": 210,
+"file": "say-laugh-73eece30f4.wav",
+"split": "held_out",
+"kind": "laugh",
+"variant": "plain",
+"source": "Shelley (English (UK))",
+"origin": "say"
+},
+{
+"id": 211,
+"file": "say-laugh-73eece30f4-hot.wav",
+"split": "held_out",
+"kind": "laugh",
+"variant": "hot",
+"source": "Shelley (English (UK))",
+"origin": "say"
+},
+{
+"id": 212,
+"file": "say-laugh-a753ff858d.wav",
+"split": "held_out",
+"kind": "laugh",
+"variant": "plain",
+"source": "Flo (Spanish (Spain))",
+"origin": "say"
+},
+{
+"id": 213,
+"file": "say-laugh-a753ff858d-hot.wav",
+"split": "held_out",
+"kind": "laugh",
+"variant": "hot",
+"source": "Flo (Spanish (Spain))",
+"origin": "say"
+},
+{
+"id": 214,
+"file": "say-laugh-7becca03b2.wav",
+"split": "held_out",
+"kind": "laugh",
+"variant": "plain",
+"source": "Rocko (Spanish (Spain))",
+"origin": "say"
+},
+{
+"id": 215,
+"file": "say-laugh-7becca03b2-hot.wav",
+"split": "held_out",
+"kind": "laugh",
+"variant": "hot",
+"source": "Rocko (Spanish (Spain))",
+"origin": "say"
+},
+{
+"id": 216,
+"file": "say-sing-80c90f7c9a.wav",
+"split": "held_out",
+"kind": "sing",
+"variant": "plain",
+"source": "Karen",
+"origin": "say"
+},
+{
+"id": 217,
+"file": "say-sing-80c90f7c9a-hot.wav",
+"split": "held_out",
+"kind": "sing",
+"variant": "hot",
+"source": "Karen",
+"origin": "say"
+},
+{
+"id": 218,
+"file": "say-sing-5e20d5e7de.wav",
+"split": "held_out",
+"kind": "sing",
+"variant": "plain",
+"source": "Moira",
+"origin": "say"
+},
+{
+"id": 219,
+"file": "say-sing-5e20d5e7de-hot.wav",
+"split": "held_out",
+"kind": "sing",
+"variant": "hot",
+"source": "Moira",
+"origin": "say"
+},
+{
+"id": 220,
+"file": "say-sing-752321d043.wav",
+"split": "held_out",
+"kind": "sing",
+"variant": "plain",
+"source": "Reed (English (US))",
+"origin": "say"
+},
+{
+"id": 221,
+"file": "say-sing-752321d043-hot.wav",
+"split": "held_out",
+"kind": "sing",
+"variant": "hot",
+"source": "Reed (English (US))",
+"origin": "say"
+},
+{
+"id": 222,
+"file": "say-sing-c35a2e1ceb.wav",
+"split": "held_out",
+"kind": "sing",
+"variant": "plain",
+"source": "Shelley (English (UK))",
+"origin": "say"
+},
+{
+"id": 223,
+"file": "say-sing-c35a2e1ceb-hot.wav",
+"split": "held_out",
+"kind": "sing",
+"variant": "hot",
+"source": "Shelley (English (UK))",
+"origin": "say"
+},
+{
+"id": 224,
+"file": "say-sing-d56f0d39f8.wav",
+"split": "held_out",
+"kind": "sing",
+"variant": "plain",
+"source": "Flo (Spanish (Spain))",
+"origin": "say"
+},
+{
+"id": 225,
+"file": "say-sing-d56f0d39f8-hot.wav",
+"split": "held_out",
+"kind": "sing",
+"variant": "hot",
+"source": "Flo (Spanish (Spain))",
+"origin": "say"
+},
+{
+"id": 226,
+"file": "say-sing-988d0b1576.wav",
+"split": "held_out",
+"kind": "sing",
+"variant": "plain",
+"source": "Rocko (Spanish (Spain))",
+"origin": "say"
+},
+{
+"id": 227,
+"file": "say-sing-988d0b1576-hot.wav",
+"split": "held_out",
+"kind": "sing",
+"variant": "hot",
+"source": "Rocko (Spanish (Spain))",
+"origin": "say"
+},
+{
+"id": 228,
+"file": "say-hum-6fd951b283.wav",
+"split": "held_out",
+"kind": "hum",
+"variant": "plain",
+"source": "Karen",
+"origin": "say"
+},
+{
+"id": 229,
+"file": "say-hum-6fd951b283-hot.wav",
+"split": "held_out",
+"kind": "hum",
+"variant": "hot",
+"source": "Karen",
+"origin": "say"
+},
+{
+"id": 230,
+"file": "say-hum-49f8fd8101.wav",
+"split": "held_out",
+"kind": "hum",
+"variant": "plain",
+"source": "Moira",
+"origin": "say"
+},
+{
+"id": 231,
+"file": "say-hum-49f8fd8101-hot.wav",
+"split": "held_out",
+"kind": "hum",
+"variant": "hot",
+"source": "Moira",
+"origin": "say"
+},
+{
+"id": 232,
+"file": "say-hum-1ec8df9779.wav",
+"split": "held_out",
+"kind": "hum",
+"variant": "plain",
+"source": "Reed (English (US))",
+"origin": "say"
+},
+{
+"id": 233,
+"file": "say-hum-1ec8df9779-hot.wav",
+"split": "held_out",
+"kind": "hum",
+"variant": "hot",
+"source": "Reed (English (US))",
+"origin": "say"
+},
+{
+"id": 234,
+"file": "say-hum-1a24ca6cba.wav",
+"split": "held_out",
+"kind": "hum",
+"variant": "plain",
+"source": "Shelley (English (UK))",
+"origin": "say"
+},
+{
+"id": 235,
+"file": "say-hum-1a24ca6cba-hot.wav",
+"split": "held_out",
+"kind": "hum",
+"variant": "hot",
+"source": "Shelley (English (UK))",
+"origin": "say"
+},
+{
+"id": 236,
+"file": "say-hum-c105193c7a.wav",
+"split": "held_out",
+"kind": "hum",
+"variant": "plain",
+"source": "Flo (Spanish (Spain))",
+"origin": "say"
+},
+{
+"id": 237,
+"file": "say-hum-c105193c7a-hot.wav",
+"split": "held_out",
+"kind": "hum",
+"variant": "hot",
+"source": "Flo (Spanish (Spain))",
+"origin": "say"
+},
+{
+"id": 238,
+"file": "say-hum-dbf5db5466.wav",
+"split": "held_out",
+"kind": "hum",
+"variant": "plain",
+"source": "Rocko (Spanish (Spain))",
+"origin": "say"
+},
+{
+"id": 239,
+"file": "say-hum-dbf5db5466-hot.wav",
+"split": "held_out",
+"kind": "hum",
+"variant": "hot",
+"source": "Rocko (Spanish (Spain))",
+"origin": "say"
+},
+{
+"id": 240,
+"file": "say-sigh-b18c2f8d28.wav",
+"split": "held_out",
+"kind": "sigh",
+"variant": "plain",
+"source": "Karen",
+"origin": "say"
+},
+{
+"id": 241,
+"file": "say-sigh-b18c2f8d28-hot.wav",
+"split": "held_out",
+"kind": "sigh",
+"variant": "hot",
+"source": "Karen",
+"origin": "say"
+},
+{
+"id": 242,
+"file": "say-sigh-f4de6f1f04.wav",
+"split": "held_out",
+"kind": "sigh",
+"variant": "plain",
+"source": "Moira",
+"origin": "say"
+},
+{
+"id": 243,
+"file": "say-sigh-f4de6f1f04-hot.wav",
+"split": "held_out",
+"kind": "sigh",
+"variant": "hot",
+"source": "Moira",
+"origin": "say"
+},
+{
+"id": 244,
+"file": "say-sigh-ff674d4fef.wav",
+"split": "held_out",
+"kind": "sigh",
+"variant": "plain",
+"source": "Reed (English (US))",
+"origin": "say"
+},
+{
+"id": 245,
+"file": "say-sigh-ff674d4fef-hot.wav",
+"split": "held_out",
+"kind": "sigh",
+"variant": "hot",
+"source": "Reed (English (US))",
+"origin": "say"
+},
+{
+"id": 246,
+"file": "say-sigh-07eb30c223.wav",
+"split": "held_out",
+"kind": "sigh",
+"variant": "plain",
+"source": "Shelley (English (UK))",
+"origin": "say"
+},
+{
+"id": 247,
+"file": "say-sigh-07eb30c223-hot.wav",
+"split": "held_out",
+"kind": "sigh",
+"variant": "hot",
+"source": "Shelley (English (UK))",
+"origin": "say"
+},
+{
+"id": 248,
+"file": "say-sigh-470abdadc6.wav",
+"split": "held_out",
+"kind": "sigh",
+"variant": "plain",
+"source": "Flo (Spanish (Spain))",
+"origin": "say"
+},
+{
+"id": 249,
+"file": "say-sigh-470abdadc6-hot.wav",
+"split": "held_out",
+"kind": "sigh",
+"variant": "hot",
+"source": "Flo (Spanish (Spain))",
+"origin": "say"
+},
+{
+"id": 250,
+"file": "say-sigh-4d717f69ef.wav",
+"split": "held_out",
+"kind": "sigh",
+"variant": "plain",
+"source": "Rocko (Spanish (Spain))",
+"origin": "say"
+},
+{
+"id": 251,
+"file": "say-sigh-4d717f69ef-hot.wav",
+"split": "held_out",
+"kind": "sigh",
+"variant": "hot",
+"source": "Rocko (Spanish (Spain))",
+"origin": "say"
+},
+{
+"id": 252,
+"file": "say-groan-43e27c1687.wav",
+"split": "held_out",
+"kind": "groan",
+"variant": "plain",
+"source": "Karen",
+"origin": "say"
+},
+{
+"id": 253,
+"file": "say-groan-43e27c1687-hot.wav",
+"split": "held_out",
+"kind": "groan",
+"variant": "hot",
+"source": "Karen",
+"origin": "say"
+},
+{
+"id": 254,
+"file": "say-groan-791c866fa2.wav",
+"split": "held_out",
+"kind": "groan",
+"variant": "plain",
+"source": "Moira",
+"origin": "say"
+},
+{
+"id": 255,
+"file": "say-groan-791c866fa2-hot.wav",
+"split": "held_out",
+"kind": "groan",
+"variant": "hot",
+"source": "Moira",
+"origin": "say"
+},
+{
+"id": 256,
+"file": "say-groan-1aa6a46b44.wav",
+"split": "held_out",
+"kind": "groan",
+"variant": "plain",
+"source": "Reed (English (US))",
+"origin": "say"
+},
+{
+"id": 257,
+"file": "say-groan-1aa6a46b44-hot.wav",
+"split": "held_out",
+"kind": "groan",
+"variant": "hot",
+"source": "Reed (English (US))",
+"origin": "say"
+},
+{
+"id": 258,
+"file": "say-groan-110df75c11.wav",
+"split": "held_out",
+"kind": "groan",
+"variant": "plain",
+"source": "Shelley (English (UK))",
+"origin": "say"
+},
+{
+"id": 259,
+"file": "say-groan-110df75c11-hot.wav",
+"split": "held_out",
+"kind": "groan",
+"variant": "hot",
+"source": "Shelley (English (UK))",
+"origin": "say"
+},
+{
+"id": 260,
+"file": "say-groan-10070d5391.wav",
+"split": "held_out",
+"kind": "groan",
+"variant": "plain",
+"source": "Flo (Spanish (Spain))",
+"origin": "say"
+},
+{
+"id": 261,
+"file": "say-groan-10070d5391-hot.wav",
+"split": "held_out",
+"kind": "groan",
+"variant": "hot",
+"source": "Flo (Spanish (Spain))",
+"origin": "say"
+},
+{
+"id": 262,
+"file": "say-groan-23c252bc52.wav",
+"split": "held_out",
+"kind": "groan",
+"variant": "plain",
+"source": "Rocko (Spanish (Spain))",
+"origin": "say"
+},
+{
+"id": 263,
+"file": "say-groan-23c252bc52-hot.wav",
+"split": "held_out",
+"kind": "groan",
+"variant": "hot",
+"source": "Rocko (Spanish (Spain))",
+"origin": "say"
+},
+{
+"id": 264,
+"file": "say-cry_imitation-bd74195d8c.wav",
+"split": "held_out",
+"kind": "cry_imitation",
+"variant": "plain",
+"source": "Karen",
+"origin": "say"
+},
+{
+"id": 265,
+"file": "say-cry_imitation-bd74195d8c-hot.wav",
+"split": "held_out",
+"kind": "cry_imitation",
+"variant": "hot",
+"source": "Karen",
+"origin": "say"
+},
+{
+"id": 266,
+"file": "say-cry_imitation-22a8225ba1.wav",
+"split": "held_out",
+"kind": "cry_imitation",
+"variant": "plain",
+"source": "Moira",
+"origin": "say"
+},
+{
+"id": 267,
+"file": "say-cry_imitation-22a8225ba1-hot.wav",
+"split": "held_out",
+"kind": "cry_imitation",
+"variant": "hot",
+"source": "Moira",
+"origin": "say"
+},
+{
+"id": 268,
+"file": "say-cry_imitation-7151419122.wav",
+"split": "held_out",
+"kind": "cry_imitation",
+"variant": "plain",
+"source": "Reed (English (US))",
+"origin": "say"
+},
+{
+"id": 269,
+"file": "say-cry_imitation-7151419122-hot.wav",
+"split": "held_out",
+"kind": "cry_imitation",
+"variant": "hot",
+"source": "Reed (English (US))",
+"origin": "say"
+},
+{
+"id": 270,
+"file": "say-cry_imitation-256ae3083b.wav",
+"split": "held_out",
+"kind": "cry_imitation",
+"variant": "plain",
+"source": "Shelley (English (UK))",
+"origin": "say"
+},
+{
+"id": 271,
+"file": "say-cry_imitation-256ae3083b-hot.wav",
+"split": "held_out",
+"kind": "cry_imitation",
+"variant": "hot",
+"source": "Shelley (English (UK))",
+"origin": "say"
+},
+{
+"id": 272,
+"file": "say-cry_imitation-49fdbd70de.wav",
+"split": "held_out",
+"kind": "cry_imitation",
+"variant": "plain",
+"source": "Flo (Spanish (Spain))",
+"origin": "say"
+},
+{
+"id": 273,
+"file": "say-cry_imitation-49fdbd70de-hot.wav",
+"split": "held_out",
+"kind": "cry_imitation",
+"variant": "hot",
+"source": "Flo (Spanish (Spain))",
+"origin": "say"
+},
+{
+"id": 274,
+"file": "say-cry_imitation-407e47aca9.wav",
+"split": "held_out",
+"kind": "cry_imitation",
+"variant": "plain",
+"source": "Rocko (Spanish (Spain))",
+"origin": "say"
+},
+{
+"id": 275,
+"file": "say-cry_imitation-407e47aca9-hot.wav",
+"split": "held_out",
+"kind": "cry_imitation",
+"variant": "hot",
+"source": "Rocko (Spanish (Spain))",
+"origin": "say"
+},
+{
+"id": 276,
+"file": "say-novelty-4ad8d1291a.wav",
+"split": "held_out",
+"kind": "novelty_voice",
+"variant": "plain",
+"source": "Wobble",
+"origin": "say"
+},
+{
+"id": 277,
+"file": "say-novelty-4ad8d1291a-hot.wav",
+"split": "held_out",
+"kind": "novelty_voice",
+"variant": "hot",
+"source": "Wobble",
+"origin": "say"
+},
+{
+"id": 278,
+"file": "say-novelty-4b6059547d.wav",
+"split": "held_out",
+"kind": "novelty_voice",
+"variant": "plain",
+"source": "Bad News",
+"origin": "say"
+},
+{
+"id": 279,
+"file": "say-novelty-4b6059547d-hot.wav",
+"split": "held_out",
+"kind": "novelty_voice",
+"variant": "hot",
+"source": "Bad News",
+"origin": "say"
+},
+{
+"id": 280,
+"file": "say-novelty-650749789a.wav",
+"split": "held_out",
+"kind": "novelty_voice",
+"variant": "plain",
+"source": "Bells",
+"origin": "say"
+},
+{
+"id": 281,
+"file": "say-novelty-650749789a-hot.wav",
+"split": "held_out",
+"kind": "novelty_voice",
+"variant": "hot",
+"source": "Bells",
+"origin": "say"
+},
+{
+"id": 282,
+"file": "say-novelty-d816380078.wav",
+"split": "held_out",
+"kind": "novelty_voice",
+"variant": "plain",
+"source": "Trinoids",
+"origin": "say"
+},
+{
+"id": 283,
+"file": "say-novelty-d816380078-hot.wav",
+"split": "held_out",
+"kind": "novelty_voice",
+"variant": "hot",
+"source": "Trinoids",
+"origin": "say"
+},
+{
+"id": 284,
+"file": "real-e6c27988d0-0.wav",
+"split": "held_out",
+"kind": "speech_real",
+"variant": "plain",
+"source": "audio2/raw/The beginning of wikipedia Read aloud.wav",
+"origin": "commons"
+},
+{
+"id": 285,
+"file": "real-e6c27988d0-0-hot.wav",
+"split": "held_out",
+"kind": "speech_real",
+"variant": "hot",
+"source": "audio2/raw/The beginning of wikipedia Read aloud.wav",
+"origin": "commons"
+},
+{
+"id": 286,
+"file": "real-e6c27988d0-1.wav",
+"split": "held_out",
+"kind": "speech_real",
+"variant": "plain",
+"source": "audio2/raw/The beginning of wikipedia Read aloud.wav",
+"origin": "commons"
+},
+{
+"id": 287,
+"file": "real-e6c27988d0-1-hot.wav",
+"split": "held_out",
+"kind": "speech_real",
+"variant": "hot",
+"source": "audio2/raw/The beginning of wikipedia Read aloud.wav",
+"origin": "commons"
+},
+{
+"id": 288,
+"file": "real-e6c27988d0-2.wav",
+"split": "held_out",
+"kind": "speech_real",
+"variant": "plain",
+"source": "audio2/raw/The beginning of wikipedia Read aloud.wav",
+"origin": "commons"
+},
+{
+"id": 289,
+"file": "real-e6c27988d0-2-hot.wav",
+"split": "held_out",
+"kind": "speech_real",
+"variant": "hot",
+"source": "audio2/raw/The beginning of wikipedia Read aloud.wav",
+"origin": "commons"
+},
+{
+"id": 290,
+"file": "real-e6c27988d0-3.wav",
+"split": "held_out",
+"kind": "speech_real",
+"variant": "plain",
+"source": "audio2/raw/The beginning of wikipedia Read aloud.wav",
+"origin": "commons"
+},
+{
+"id": 291,
+"file": "real-e6c27988d0-3-hot.wav",
+"split": "held_out",
+"kind": "speech_real",
+"variant": "hot",
+"source": "audio2/raw/The beginning of wikipedia Read aloud.wav",
+"origin": "commons"
+},
+{
+"id": 292,
+"file": "room-a4732daf05-0.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "plain",
+"source": "audio2/raw/Ambient Kitchen Sounds.wav",
+"origin": "commons"
+},
+{
+"id": 293,
+"file": "room-a4732daf05-0-quiet.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "quiet",
+"source": "audio2/raw/Ambient Kitchen Sounds.wav",
+"origin": "commons"
+},
+{
+"id": 294,
+"file": "room-a4732daf05-1.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "plain",
+"source": "audio2/raw/Ambient Kitchen Sounds.wav",
+"origin": "commons"
+},
+{
+"id": 295,
+"file": "room-a4732daf05-1-quiet.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "quiet",
+"source": "audio2/raw/Ambient Kitchen Sounds.wav",
+"origin": "commons"
+},
+{
+"id": 296,
+"file": "room-a4732daf05-2.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "plain",
+"source": "audio2/raw/Ambient Kitchen Sounds.wav",
+"origin": "commons"
+},
+{
+"id": 297,
+"file": "room-a4732daf05-2-quiet.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "quiet",
+"source": "audio2/raw/Ambient Kitchen Sounds.wav",
+"origin": "commons"
+},
+{
+"id": 298,
+"file": "room-a4732daf05-3.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "plain",
+"source": "audio2/raw/Ambient Kitchen Sounds.wav",
+"origin": "commons"
+},
+{
+"id": 299,
+"file": "room-a4732daf05-3-quiet.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "quiet",
+"source": "audio2/raw/Ambient Kitchen Sounds.wav",
+"origin": "commons"
+},
+{
+"id": 300,
+"file": "room-a4732daf05-4.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "plain",
+"source": "audio2/raw/Ambient Kitchen Sounds.wav",
+"origin": "commons"
+},
+{
+"id": 301,
+"file": "room-a4732daf05-4-quiet.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "quiet",
+"source": "audio2/raw/Ambient Kitchen Sounds.wav",
+"origin": "commons"
+},
+{
+"id": 302,
+"file": "room-a4732daf05-5.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "plain",
+"source": "audio2/raw/Ambient Kitchen Sounds.wav",
+"origin": "commons"
+},
+{
+"id": 303,
+"file": "room-a4732daf05-5-quiet.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "quiet",
+"source": "audio2/raw/Ambient Kitchen Sounds.wav",
+"origin": "commons"
+},
+{
+"id": 304,
+"file": "room-a4732daf05-6.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "plain",
+"source": "audio2/raw/Ambient Kitchen Sounds.wav",
+"origin": "commons"
+},
+{
+"id": 305,
+"file": "room-a4732daf05-6-quiet.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "quiet",
+"source": "audio2/raw/Ambient Kitchen Sounds.wav",
+"origin": "commons"
+},
+{
+"id": 306,
+"file": "room-a4732daf05-7.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "plain",
+"source": "audio2/raw/Ambient Kitchen Sounds.wav",
+"origin": "commons"
+},
+{
+"id": 307,
+"file": "room-a4732daf05-7-quiet.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "quiet",
+"source": "audio2/raw/Ambient Kitchen Sounds.wav",
+"origin": "commons"
+},
+{
+"id": 308,
+"file": "room-a4732daf05-8.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "plain",
+"source": "audio2/raw/Ambient Kitchen Sounds.wav",
+"origin": "commons"
+},
+{
+"id": 309,
+"file": "room-a4732daf05-8-quiet.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "quiet",
+"source": "audio2/raw/Ambient Kitchen Sounds.wav",
+"origin": "commons"
+},
+{
+"id": 310,
+"file": "room-a4732daf05-9.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "plain",
+"source": "audio2/raw/Ambient Kitchen Sounds.wav",
+"origin": "commons"
+},
+{
+"id": 311,
+"file": "room-a4732daf05-9-quiet.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "quiet",
+"source": "audio2/raw/Ambient Kitchen Sounds.wav",
+"origin": "commons"
+},
+{
+"id": 312,
+"file": "room-a4732daf05-10.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "plain",
+"source": "audio2/raw/Ambient Kitchen Sounds.wav",
+"origin": "commons"
+},
+{
+"id": 313,
+"file": "room-a4732daf05-10-quiet.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "quiet",
+"source": "audio2/raw/Ambient Kitchen Sounds.wav",
+"origin": "commons"
+},
+{
+"id": 314,
+"file": "room-a4732daf05-11.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "plain",
+"source": "audio2/raw/Ambient Kitchen Sounds.wav",
+"origin": "commons"
+},
+{
+"id": 315,
+"file": "room-a4732daf05-11-quiet.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "quiet",
+"source": "audio2/raw/Ambient Kitchen Sounds.wav",
+"origin": "commons"
+},
+{
+"id": 316,
+"file": "room-a4732daf05-12.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "plain",
+"source": "audio2/raw/Ambient Kitchen Sounds.wav",
+"origin": "commons"
+},
+{
+"id": 317,
+"file": "room-a4732daf05-12-quiet.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "quiet",
+"source": "audio2/raw/Ambient Kitchen Sounds.wav",
+"origin": "commons"
+},
+{
+"id": 318,
+"file": "room-a4732daf05-13.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "plain",
+"source": "audio2/raw/Ambient Kitchen Sounds.wav",
+"origin": "commons"
+},
+{
+"id": 319,
+"file": "room-a4732daf05-13-quiet.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "quiet",
+"source": "audio2/raw/Ambient Kitchen Sounds.wav",
+"origin": "commons"
+},
+{
+"id": 320,
+"file": "room-a4732daf05-14.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "plain",
+"source": "audio2/raw/Ambient Kitchen Sounds.wav",
+"origin": "commons"
+},
+{
+"id": 321,
+"file": "room-a4732daf05-14-quiet.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "quiet",
+"source": "audio2/raw/Ambient Kitchen Sounds.wav",
+"origin": "commons"
+},
+{
+"id": 322,
+"file": "room-a4732daf05-15.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "plain",
+"source": "audio2/raw/Ambient Kitchen Sounds.wav",
+"origin": "commons"
+},
+{
+"id": 323,
+"file": "room-a4732daf05-15-quiet.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "quiet",
+"source": "audio2/raw/Ambient Kitchen Sounds.wav",
+"origin": "commons"
+},
+{
+"id": 324,
+"file": "room-e00ce12099-0.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "plain",
+"source": "audio2/raw/Kitchen sounds recorded while cooking.ogg",
+"origin": "commons"
+},
+{
+"id": 325,
+"file": "room-e00ce12099-0-quiet.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "quiet",
+"source": "audio2/raw/Kitchen sounds recorded while cooking.ogg",
+"origin": "commons"
+},
+{
+"id": 326,
+"file": "room-e00ce12099-1.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "plain",
+"source": "audio2/raw/Kitchen sounds recorded while cooking.ogg",
+"origin": "commons"
+},
+{
+"id": 327,
+"file": "room-e00ce12099-1-quiet.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "quiet",
+"source": "audio2/raw/Kitchen sounds recorded while cooking.ogg",
+"origin": "commons"
+},
+{
+"id": 328,
+"file": "room-e00ce12099-2.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "plain",
+"source": "audio2/raw/Kitchen sounds recorded while cooking.ogg",
+"origin": "commons"
+},
+{
+"id": 329,
+"file": "room-e00ce12099-2-quiet.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "quiet",
+"source": "audio2/raw/Kitchen sounds recorded while cooking.ogg",
+"origin": "commons"
+},
+{
+"id": 330,
+"file": "room-e00ce12099-3.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "plain",
+"source": "audio2/raw/Kitchen sounds recorded while cooking.ogg",
+"origin": "commons"
+},
+{
+"id": 331,
+"file": "room-e00ce12099-3-quiet.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "quiet",
+"source": "audio2/raw/Kitchen sounds recorded while cooking.ogg",
+"origin": "commons"
+},
+{
+"id": 332,
+"file": "room-e00ce12099-4.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "plain",
+"source": "audio2/raw/Kitchen sounds recorded while cooking.ogg",
+"origin": "commons"
+},
+{
+"id": 333,
+"file": "room-e00ce12099-4-quiet.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "quiet",
+"source": "audio2/raw/Kitchen sounds recorded while cooking.ogg",
+"origin": "commons"
+},
+{
+"id": 334,
+"file": "room-e00ce12099-5.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "plain",
+"source": "audio2/raw/Kitchen sounds recorded while cooking.ogg",
+"origin": "commons"
+},
+{
+"id": 335,
+"file": "room-e00ce12099-5-quiet.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "quiet",
+"source": "audio2/raw/Kitchen sounds recorded while cooking.ogg",
+"origin": "commons"
+},
+{
+"id": 336,
+"file": "room-e00ce12099-6.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "plain",
+"source": "audio2/raw/Kitchen sounds recorded while cooking.ogg",
+"origin": "commons"
+},
+{
+"id": 337,
+"file": "room-e00ce12099-6-quiet.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "quiet",
+"source": "audio2/raw/Kitchen sounds recorded while cooking.ogg",
+"origin": "commons"
+},
+{
+"id": 338,
+"file": "room-e00ce12099-7.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "plain",
+"source": "audio2/raw/Kitchen sounds recorded while cooking.ogg",
+"origin": "commons"
+},
+{
+"id": 339,
+"file": "room-e00ce12099-7-quiet.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "quiet",
+"source": "audio2/raw/Kitchen sounds recorded while cooking.ogg",
+"origin": "commons"
+},
+{
+"id": 340,
+"file": "room-e00ce12099-8.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "plain",
+"source": "audio2/raw/Kitchen sounds recorded while cooking.ogg",
+"origin": "commons"
+},
+{
+"id": 341,
+"file": "room-e00ce12099-8-quiet.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "quiet",
+"source": "audio2/raw/Kitchen sounds recorded while cooking.ogg",
+"origin": "commons"
+},
+{
+"id": 342,
+"file": "room-e00ce12099-9.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "plain",
+"source": "audio2/raw/Kitchen sounds recorded while cooking.ogg",
+"origin": "commons"
+},
+{
+"id": 343,
+"file": "room-e00ce12099-9-quiet.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "quiet",
+"source": "audio2/raw/Kitchen sounds recorded while cooking.ogg",
+"origin": "commons"
+},
+{
+"id": 344,
+"file": "room-f21c9febdf-0.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "plain",
+"source": "audio2/raw/Dishwasher end droning hissing humming.ogg",
+"origin": "commons"
+},
+{
+"id": 345,
+"file": "room-f21c9febdf-0-quiet.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "quiet",
+"source": "audio2/raw/Dishwasher end droning hissing humming.ogg",
+"origin": "commons"
+},
+{
+"id": 346,
+"file": "room-f21c9febdf-1.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "plain",
+"source": "audio2/raw/Dishwasher end droning hissing humming.ogg",
+"origin": "commons"
+},
+{
+"id": 347,
+"file": "room-f21c9febdf-1-quiet.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "quiet",
+"source": "audio2/raw/Dishwasher end droning hissing humming.ogg",
+"origin": "commons"
+},
+{
+"id": 348,
+"file": "room-f21c9febdf-2.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "plain",
+"source": "audio2/raw/Dishwasher end droning hissing humming.ogg",
+"origin": "commons"
+},
+{
+"id": 349,
+"file": "room-f21c9febdf-2-quiet.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "quiet",
+"source": "audio2/raw/Dishwasher end droning hissing humming.ogg",
+"origin": "commons"
+},
+{
+"id": 350,
+"file": "room-f21c9febdf-3.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "plain",
+"source": "audio2/raw/Dishwasher end droning hissing humming.ogg",
+"origin": "commons"
+},
+{
+"id": 351,
+"file": "room-f21c9febdf-3-quiet.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "quiet",
+"source": "audio2/raw/Dishwasher end droning hissing humming.ogg",
+"origin": "commons"
+},
+{
+"id": 352,
+"file": "room-f21c9febdf-4.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "plain",
+"source": "audio2/raw/Dishwasher end droning hissing humming.ogg",
+"origin": "commons"
+},
+{
+"id": 353,
+"file": "room-f21c9febdf-4-quiet.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "quiet",
+"source": "audio2/raw/Dishwasher end droning hissing humming.ogg",
+"origin": "commons"
+},
+{
+"id": 354,
+"file": "room-f21c9febdf-5.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "plain",
+"source": "audio2/raw/Dishwasher end droning hissing humming.ogg",
+"origin": "commons"
+},
+{
+"id": 355,
+"file": "room-f21c9febdf-5-quiet.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "quiet",
+"source": "audio2/raw/Dishwasher end droning hissing humming.ogg",
+"origin": "commons"
+},
+{
+"id": 356,
+"file": "room-f21c9febdf-6.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "plain",
+"source": "audio2/raw/Dishwasher end droning hissing humming.ogg",
+"origin": "commons"
+},
+{
+"id": 357,
+"file": "room-f21c9febdf-6-quiet.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "quiet",
+"source": "audio2/raw/Dishwasher end droning hissing humming.ogg",
+"origin": "commons"
+},
+{
+"id": 358,
+"file": "room-f21c9febdf-7.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "plain",
+"source": "audio2/raw/Dishwasher end droning hissing humming.ogg",
+"origin": "commons"
+},
+{
+"id": 359,
+"file": "room-f21c9febdf-7-quiet.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "quiet",
+"source": "audio2/raw/Dishwasher end droning hissing humming.ogg",
+"origin": "commons"
+},
+{
+"id": 360,
+"file": "room-f21c9febdf-8.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "plain",
+"source": "audio2/raw/Dishwasher end droning hissing humming.ogg",
+"origin": "commons"
+},
+{
+"id": 361,
+"file": "room-f21c9febdf-8-quiet.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "quiet",
+"source": "audio2/raw/Dishwasher end droning hissing humming.ogg",
+"origin": "commons"
+},
+{
+"id": 362,
+"file": "room-f21c9febdf-9.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "plain",
+"source": "audio2/raw/Dishwasher end droning hissing humming.ogg",
+"origin": "commons"
+},
+{
+"id": 363,
+"file": "room-f21c9febdf-9-quiet.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "quiet",
+"source": "audio2/raw/Dishwasher end droning hissing humming.ogg",
+"origin": "commons"
+},
+{
+"id": 364,
+"file": "room-f21c9febdf-10.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "plain",
+"source": "audio2/raw/Dishwasher end droning hissing humming.ogg",
+"origin": "commons"
+},
+{
+"id": 365,
+"file": "room-f21c9febdf-10-quiet.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "quiet",
+"source": "audio2/raw/Dishwasher end droning hissing humming.ogg",
+"origin": "commons"
+},
+{
+"id": 366,
+"file": "room-f21c9febdf-11.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "plain",
+"source": "audio2/raw/Dishwasher end droning hissing humming.ogg",
+"origin": "commons"
+},
+{
+"id": 367,
+"file": "room-f21c9febdf-11-quiet.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "quiet",
+"source": "audio2/raw/Dishwasher end droning hissing humming.ogg",
+"origin": "commons"
+},
+{
+"id": 368,
+"file": "room-f21c9febdf-12.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "plain",
+"source": "audio2/raw/Dishwasher end droning hissing humming.ogg",
+"origin": "commons"
+},
+{
+"id": 369,
+"file": "room-f21c9febdf-12-quiet.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "quiet",
+"source": "audio2/raw/Dishwasher end droning hissing humming.ogg",
+"origin": "commons"
+},
+{
+"id": 370,
+"file": "room-f21c9febdf-13.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "plain",
+"source": "audio2/raw/Dishwasher end droning hissing humming.ogg",
+"origin": "commons"
+},
+{
+"id": 371,
+"file": "room-f21c9febdf-13-quiet.wav",
+"split": "held_out",
+"kind": "room",
+"variant": "quiet",
+"source": "audio2/raw/Dishwasher end droning hissing humming.ogg",
+"origin": "commons"
+},
+{
+"id": 372,
+"file": "wikitts-7aaaa3d85d-0.wav",
+"split": "held_out",
+"kind": "speech_wikitts",
+"variant": "plain",
+"source": "audio2/raw/WikiTTS Canada Wikipedia article.oga",
+"origin": "commons"
+},
+{
+"id": 373,
+"file": "wikitts-7aaaa3d85d-0-hot.wav",
+"split": "held_out",
+"kind": "speech_wikitts",
+"variant": "hot",
+"source": "audio2/raw/WikiTTS Canada Wikipedia article.oga",
+"origin": "commons"
+},
+{
+"id": 374,
+"file": "wikitts-7aaaa3d85d-1.wav",
+"split": "held_out",
+"kind": "speech_wikitts",
+"variant": "plain",
+"source": "audio2/raw/WikiTTS Canada Wikipedia article.oga",
+"origin": "commons"
+},
+{
+"id": 375,
+"file": "wikitts-7aaaa3d85d-1-hot.wav",
+"split": "held_out",
+"kind": "speech_wikitts",
+"variant": "hot",
+"source": "audio2/raw/WikiTTS Canada Wikipedia article.oga",
+"origin": "commons"
+},
+{
+"id": 376,
+"file": "wikitts-7aaaa3d85d-2.wav",
+"split": "held_out",
+"kind": "speech_wikitts",
+"variant": "plain",
+"source": "audio2/raw/WikiTTS Canada Wikipedia article.oga",
+"origin": "commons"
+},
+{
+"id": 377,
+"file": "wikitts-7aaaa3d85d-2-hot.wav",
+"split": "held_out",
+"kind": "speech_wikitts",
+"variant": "hot",
+"source": "audio2/raw/WikiTTS Canada Wikipedia article.oga",
+"origin": "commons"
+},
+{
+"id": 378,
+"file": "wikitts-7aaaa3d85d-3.wav",
+"split": "held_out",
+"kind": "speech_wikitts",
+"variant": "plain",
+"source": "audio2/raw/WikiTTS Canada Wikipedia article.oga",
+"origin": "commons"
+},
+{
+"id": 379,
+"file": "wikitts-7aaaa3d85d-3-hot.wav",
+"split": "held_out",
+"kind": "speech_wikitts",
+"variant": "hot",
+"source": "audio2/raw/WikiTTS Canada Wikipedia article.oga",
+"origin": "commons"
+},
+{
+"id": 380,
+"file": "wikitts-7aaaa3d85d-4.wav",
+"split": "held_out",
+"kind": "speech_wikitts",
+"variant": "plain",
+"source": "audio2/raw/WikiTTS Canada Wikipedia article.oga",
+"origin": "commons"
+},
+{
+"id": 381,
+"file": "wikitts-7aaaa3d85d-4-hot.wav",
+"split": "held_out",
+"kind": "speech_wikitts",
+"variant": "hot",
+"source": "audio2/raw/WikiTTS Canada Wikipedia article.oga",
+"origin": "commons"
+},
+{
+"id": 382,
+"file": "wikitts-7aaaa3d85d-5.wav",
+"split": "held_out",
+"kind": "speech_wikitts",
+"variant": "plain",
+"source": "audio2/raw/WikiTTS Canada Wikipedia article.oga",
+"origin": "commons"
+},
+{
+"id": 383,
+"file": "wikitts-7aaaa3d85d-5-hot.wav",
+"split": "held_out",
+"kind": "speech_wikitts",
+"variant": "hot",
+"source": "audio2/raw/WikiTTS Canada Wikipedia article.oga",
+"origin": "commons"
+},
+{
+"id": 384,
+"file": "wikitts-7aaaa3d85d-6.wav",
+"split": "held_out",
+"kind": "speech_wikitts",
+"variant": "plain",
+"source": "audio2/raw/WikiTTS Canada Wikipedia article.oga",
+"origin": "commons"
+},
+{
+"id": 385,
+"file": "wikitts-7aaaa3d85d-6-hot.wav",
+"split": "held_out",
+"kind": "speech_wikitts",
+"variant": "hot",
+"source": "audio2/raw/WikiTTS Canada Wikipedia article.oga",
+"origin": "commons"
+},
+{
+"id": 386,
+"file": "wikitts-7aaaa3d85d-7.wav",
+"split": "held_out",
+"kind": "speech_wikitts",
+"variant": "plain",
+"source": "audio2/raw/WikiTTS Canada Wikipedia article.oga",
+"origin": "commons"
+},
+{
+"id": 387,
+"file": "wikitts-7aaaa3d85d-7-hot.wav",
+"split": "held_out",
+"kind": "speech_wikitts",
+"variant": "hot",
+"source": "audio2/raw/WikiTTS Canada Wikipedia article.oga",
+"origin": "commons"
+},
+{
+"id": 388,
+"file": "wikitts-7aaaa3d85d-8.wav",
+"split": "held_out",
+"kind": "speech_wikitts",
+"variant": "plain",
+"source": "audio2/raw/WikiTTS Canada Wikipedia article.oga",
+"origin": "commons"
+},
+{
+"id": 389,
+"file": "wikitts-7aaaa3d85d-8-hot.wav",
+"split": "held_out",
+"kind": "speech_wikitts",
+"variant": "hot",
+"source": "audio2/raw/WikiTTS Canada Wikipedia article.oga",
+"origin": "commons"
+},
+{
+"id": 390,
+"file": "wikitts-7aaaa3d85d-9.wav",
+"split": "held_out",
+"kind": "speech_wikitts",
+"variant": "plain",
+"source": "audio2/raw/WikiTTS Canada Wikipedia article.oga",
+"origin": "commons"
+},
+{
+"id": 391,
+"file": "wikitts-7aaaa3d85d-9-hot.wav",
+"split": "held_out",
+"kind": "speech_wikitts",
+"variant": "hot",
+"source": "audio2/raw/WikiTTS Canada Wikipedia article.oga",
+"origin": "commons"
+},
+{
+"id": 392,
+"file": "wikitts-7aaaa3d85d-10.wav",
+"split": "held_out",
+"kind": "speech_wikitts",
+"variant": "plain",
+"source": "audio2/raw/WikiTTS Canada Wikipedia article.oga",
+"origin": "commons"
+},
+{
+"id": 393,
+"file": "wikitts-7aaaa3d85d-10-hot.wav",
+"split": "held_out",
+"kind": "speech_wikitts",
+"variant": "hot",
+"source": "audio2/raw/WikiTTS Canada Wikipedia article.oga",
+"origin": "commons"
+},
+{
+"id": 394,
+"file": "wikitts-7aaaa3d85d-11.wav",
+"split": "held_out",
+"kind": "speech_wikitts",
+"variant": "plain",
+"source": "audio2/raw/WikiTTS Canada Wikipedia article.oga",
+"origin": "commons"
+},
+{
+"id": 395,
+"file": "wikitts-7aaaa3d85d-11-hot.wav",
+"split": "held_out",
+"kind": "speech_wikitts",
+"variant": "hot",
+"source": "audio2/raw/WikiTTS Canada Wikipedia article.oga",
+"origin": "commons"
+},
+{
+"id": 396,
+"file": "wikitts-7aaaa3d85d-12.wav",
+"split": "held_out",
+"kind": "speech_wikitts",
+"variant": "plain",
+"source": "audio2/raw/WikiTTS Canada Wikipedia article.oga",
+"origin": "commons"
+},
+{
+"id": 397,
+"file": "wikitts-7aaaa3d85d-12-hot.wav",
+"split": "held_out",
+"kind": "speech_wikitts",
+"variant": "hot",
+"source": "audio2/raw/WikiTTS Canada Wikipedia article.oga",
+"origin": "commons"
+},
+{
+"id": 398,
+"file": "wikitts-7aaaa3d85d-13.wav",
+"split": "held_out",
+"kind": "speech_wikitts",
+"variant": "plain",
+"source": "audio2/raw/WikiTTS Canada Wikipedia article.oga",
+"origin": "commons"
+},
+{
+"id": 399,
+"file": "wikitts-7aaaa3d85d-13-hot.wav",
+"split": "held_out",
+"kind": "speech_wikitts",
+"variant": "hot",
+"source": "audio2/raw/WikiTTS Canada Wikipedia article.oga",
+"origin": "commons"
+},
+{
+"id": 400,
+"file": "wikitts-7aaaa3d85d-14.wav",
+"split": "held_out",
+"kind": "speech_wikitts",
+"variant": "plain",
+"source": "audio2/raw/WikiTTS Canada Wikipedia article.oga",
+"origin": "commons"
+},
+{
+"id": 401,
+"file": "wikitts-7aaaa3d85d-14-hot.wav",
+"split": "held_out",
+"kind": "speech_wikitts",
+"variant": "hot",
+"source": "audio2/raw/WikiTTS Canada Wikipedia article.oga",
+"origin": "commons"
+},
+{
+"id": 402,
+"file": "set-cough-01-hot.wav",
+"split": "tune",
+"kind": "cough",
+"variant": "hot",
+"source": "cough-01",
+"origin": "commons"
+},
+{
+"id": 403,
+"file": "set-cough-01-fit.wav",
+"split": "tune",
+"kind": "cough",
+"variant": "fit",
+"source": "cough-01",
+"origin": "commons"
+},
+{
+"id": 404,
+"file": "set-cough-01.wav",
+"split": "tune",
+"kind": "cough",
+"variant": "plain",
+"source": "cough-01",
+"origin": "commons"
+},
+{
+"id": 405,
+"file": "set-cough-02-hot.wav",
+"split": "held_out",
+"kind": "cough",
+"variant": "hot",
+"source": "cough-02",
+"origin": "commons"
+},
+{
+"id": 406,
+"file": "set-cough-02-fit.wav",
+"split": "held_out",
+"kind": "cough",
+"variant": "fit",
+"source": "cough-02",
+"origin": "commons"
+},
+{
+"id": 407,
+"file": "set-cough-02.wav",
+"split": "held_out",
+"kind": "cough",
+"variant": "plain",
+"source": "cough-02",
+"origin": "commons"
+},
+{
+"id": 408,
+"file": "set-cough-03-hot.wav",
+"split": "tune",
+"kind": "cough",
+"variant": "hot",
+"source": "cough-03",
+"origin": "commons"
+},
+{
+"id": 409,
+"file": "set-cough-03-fit.wav",
+"split": "tune",
+"kind": "cough",
+"variant": "fit",
+"source": "cough-03",
+"origin": "commons"
+},
+{
+"id": 410,
+"file": "set-cough-03.wav",
+"split": "tune",
+"kind": "cough",
+"variant": "plain",
+"source": "cough-03",
+"origin": "commons"
+},
+{
+"id": 411,
+"file": "set-dog-01.wav",
+"split": "tune",
+"kind": "dog",
+"variant": "plain",
+"source": "dog-01",
+"origin": "commons"
+},
+{
+"id": 412,
+"file": "set-dog-02.wav",
+"split": "held_out",
+"kind": "dog",
+"variant": "plain",
+"source": "dog-02",
+"origin": "commons"
+},
+{
+"id": 413,
+"file": "set-dog-03.wav",
+"split": "tune",
+"kind": "dog",
+"variant": "plain",
+"source": "dog-03",
+"origin": "commons"
+},
+{
+"id": 414,
+"file": "set-dog-04.wav",
+"split": "held_out",
+"kind": "dog",
+"variant": "plain",
+"source": "dog-04",
+"origin": "commons"
+},
+{
+"id": 415,
+"file": "set-doorbell-01.wav",
+"split": "held_out",
+"kind": "doorbell",
+"variant": "plain",
+"source": "doorbell-01",
+"origin": "commons"
+},
+{
+"id": 416,
+"file": "set-doorbell-02.wav",
+"split": "tune",
+"kind": "doorbell",
+"variant": "plain",
+"source": "doorbell-02",
+"origin": "commons"
+},
+{
+"id": 417,
+"file": "set-doorbell-03.wav",
+"split": "held_out",
+"kind": "doorbell",
+"variant": "plain",
+"source": "doorbell-03",
+"origin": "commons"
+},
+{
+"id": 418,
+"file": "set-doorbell-04.wav",
+"split": "held_out",
+"kind": "doorbell",
+"variant": "plain",
+"source": "doorbell-04",
+"origin": "commons"
+},
+{
+"id": 419,
+"file": "set-splash-01.wav",
+"split": "tune",
+"kind": "splash",
+"variant": "plain",
+"source": "splash-01",
+"origin": "commons"
+},
+{
+"id": 420,
+"file": "set-splash-02.wav",
+"split": "tune",
+"kind": "splash",
+"variant": "plain",
+"source": "splash-02",
+"origin": "commons"
+},
+{
+"id": 421,
+"file": "set-cough-04-hot.wav",
+"split": "held_out",
+"kind": "cough",
+"variant": "hot",
+"source": "cough-04",
+"origin": "commons"
+},
+{
+"id": 422,
+"file": "set-cough-04-fit.wav",
+"split": "held_out",
+"kind": "cough",
+"variant": "fit",
+"source": "cough-04",
+"origin": "commons"
+},
+{
+"id": 423,
+"file": "set-cough-04.wav",
+"split": "held_out",
+"kind": "cough",
+"variant": "plain",
+"source": "cough-04",
+"origin": "commons"
+},
+{
+"id": 424,
+"file": "set-cough-05-hot.wav",
+"split": "tune",
+"kind": "cough",
+"variant": "hot",
+"source": "cough-05",
+"origin": "commons"
+},
+{
+"id": 425,
+"file": "set-cough-05-fit.wav",
+"split": "tune",
+"kind": "cough",
+"variant": "fit",
+"source": "cough-05",
+"origin": "commons"
+},
+{
+"id": 426,
+"file": "set-cough-05.wav",
+"split": "tune",
+"kind": "cough",
+"variant": "plain",
+"source": "cough-05",
+"origin": "commons"
+},
+{
+"id": 427,
+"file": "set-cough-06-hot.wav",
+"split": "held_out",
+"kind": "cough",
+"variant": "hot",
+"source": "cough-06",
+"origin": "commons"
+},
+{
+"id": 428,
+"file": "set-cough-06-fit.wav",
+"split": "held_out",
+"kind": "cough",
+"variant": "fit",
+"source": "cough-06",
+"origin": "commons"
+},
+{
+"id": 429,
+"file": "set-cough-06.wav",
+"split": "held_out",
+"kind": "cough",
+"variant": "plain",
+"source": "cough-06",
+"origin": "commons"
+},
+{
+"id": 430,
+"file": "set-cough-07-hot.wav",
+"split": "tune",
+"kind": "cough",
+"variant": "hot",
+"source": "cough-07",
+"origin": "commons"
+},
+{
+"id": 431,
+"file": "set-cough-07-fit.wav",
+"split": "tune",
+"kind": "cough",
+"variant": "fit",
+"source": "cough-07",
+"origin": "commons"
+},
+{
+"id": 432,
+"file": "set-cough-07.wav",
+"split": "tune",
+"kind": "cough",
+"variant": "plain",
+"source": "cough-07",
+"origin": "commons"
+},
+{
+"id": 433,
+"file": "set-cough-08-hot.wav",
+"split": "held_out",
+"kind": "cough",
+"variant": "hot",
+"source": "cough-08",
+"origin": "commons"
+},
+{
+"id": 434,
+"file": "set-cough-08-fit.wav",
+"split": "held_out",
+"kind": "cough",
+"variant": "fit",
+"source": "cough-08",
+"origin": "commons"
+},
+{
+"id": 435,
+"file": "set-cough-08.wav",
+"split": "held_out",
+"kind": "cough",
+"variant": "plain",
+"source": "cough-08",
+"origin": "commons"
+},
+{
+"id": 436,
+"file": "set-cough-09-hot.wav",
+"split": "tune",
+"kind": "cough",
+"variant": "hot",
+"source": "cough-09",
+"origin": "commons"
+},
+{
+"id": 437,
+"file": "set-cough-09-fit.wav",
+"split": "tune",
+"kind": "cough",
+"variant": "fit",
+"source": "cough-09",
+"origin": "commons"
+},
+{
+"id": 438,
+"file": "set-cough-09.wav",
+"split": "tune",
+"kind": "cough",
+"variant": "plain",
+"source": "cough-09",
+"origin": "commons"
+},
+{
+"id": 439,
+"file": "set-cough-10-hot.wav",
+"split": "held_out",
+"kind": "cough",
+"variant": "hot",
+"source": "cough-10",
+"origin": "commons"
+},
+{
+"id": 440,
+"file": "set-cough-10-fit.wav",
+"split": "held_out",
+"kind": "cough",
+"variant": "fit",
+"source": "cough-10",
+"origin": "commons"
+},
+{
+"id": 441,
+"file": "set-cough-10.wav",
+"split": "held_out",
+"kind": "cough",
+"variant": "plain",
+"source": "cough-10",
+"origin": "commons"
+},
+{
+"id": 442,
+"file": "set-dog-05.wav",
+"split": "held_out",
+"kind": "dog",
+"variant": "plain",
+"source": "dog-05",
+"origin": "commons"
+},
+{
+"id": 443,
+"file": "set-dog-06.wav",
+"split": "tune",
+"kind": "dog",
+"variant": "plain",
+"source": "dog-06",
+"origin": "commons"
+},
+{
+"id": 444,
+"file": "set-dog-07.wav",
+"split": "tune",
+"kind": "dog",
+"variant": "plain",
+"source": "dog-07",
+"origin": "commons"
+},
+{
+"id": 445,
+"file": "set-dog-08.wav",
+"split": "tune",
+"kind": "dog",
+"variant": "plain",
+"source": "dog-08",
+"origin": "commons"
+},
+{
+"id": 446,
+"file": "set-doorbell-05.wav",
+"split": "tune",
+"kind": "doorbell",
+"variant": "plain",
+"source": "doorbell-05",
+"origin": "commons"
+},
+{
+"id": 447,
+"file": "set-doorbell-06.wav",
+"split": "held_out",
+"kind": "doorbell",
+"variant": "plain",
+"source": "doorbell-06",
+"origin": "commons"
+},
+{
+"id": 448,
+"file": "set-doorbell-07.wav",
+"split": "tune",
+"kind": "doorbell",
+"variant": "plain",
+"source": "doorbell-07",
+"origin": "commons"
+},
+{
+"id": 449,
+"file": "set-doorbell-08.wav",
+"split": "tune",
+"kind": "doorbell",
+"variant": "plain",
+"source": "doorbell-08",
+"origin": "commons"
+},
+{
+"id": 450,
+"file": "set-doorbell-09.wav",
+"split": "tune",
+"kind": "doorbell",
+"variant": "plain",
+"source": "doorbell-09",
+"origin": "commons"
+},
+{
+"id": 451,
+"file": "set-splash-03.wav",
+"split": "tune",
+"kind": "splash",
+"variant": "plain",
+"source": "splash-03",
+"origin": "commons"
+},
+{
+"id": 452,
+"file": "set-splash-04.wav",
+"split": "tune",
+"kind": "splash",
+"variant": "plain",
+"source": "splash-04",
+"origin": "commons"
+},
+{
+"id": 453,
+"file": "set-splash-05.wav",
+"split": "held_out",
+"kind": "splash",
+"variant": "plain",
+"source": "splash-05",
+"origin": "commons"
+},
+{
+"id": 454,
+"file": "set-splash-06.wav",
+"split": "held_out",
+"kind": "splash",
+"variant": "plain",
+"source": "splash-06",
+"origin": "commons"
+},
+{
+"id": 455,
+"file": "set-splash-07.wav",
+"split": "held_out",
+"kind": "splash",
+"variant": "plain",
+"source": "splash-07",
+"origin": "commons"
+}
+]
+}

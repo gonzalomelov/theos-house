@@ -2,7 +2,8 @@
 only the label reaches the core on the Vostro, as a sound event. The audio stays in memory on this Mac, as parenting_agent/hearing.py
 says, and nothing writes it to disk.
 
-    TAPO_* in the environment; python scripts/ear_listener.py --ssh vostro                 the real microphone, the real core
+    TAPO_* in the environment, TAPO_PORT for a relay (554 without it)
+    python scripts/ear_listener.py --ssh vostro                                            the real microphone, the real core
     python scripts/ear_listener.py --dry-run                                               the real microphone, prints what it would send
     python scripts/ear_listener.py --dry-run --file clip.wav                               a recording, through the Tapo channel
 
@@ -55,6 +56,10 @@ class ToCore:
         return event
 
 
+def listener_config(device):
+    return {"device": device, "cry_rule": hearing.CRY_RULE}
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--ssh", default="vostro")
@@ -75,7 +80,7 @@ def main():
         if real:
             real(event)
     sink = ToCore(post, args.room, args.labels.split(","), args.cooldown)
-    listener = hearing.default_listener({"device": args.device})
+    listener = hearing.default_listener(listener_config(args.device))
     settings = {"cry_report_s": args.report_after}
     if args.file:
         hearing.play(hearing.Ear(listener, sink, settings, args.room), hearing.from_file(args.file))
