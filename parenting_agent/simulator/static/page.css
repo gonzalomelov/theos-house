@@ -128,9 +128,9 @@ body.deep .only-plain{display:none}
 .story{max-width:1500px;margin:auto;padding:4px 24px 0;display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px}
 .runbar{display:flex;align-items:center;gap:10px;flex:none;max-width:100%}
 .bar-time{display:none;font:750 17px var(--display);font-variant-numeric:tabular-nums}
-.runbar .status{flex:0 1 240px;font-size:14px;line-height:1.2;min-height:0;overflow:hidden;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2}
-.rail{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;flex:1 1 400px;min-width:0}
-#rec-open{border-color:var(--honey);font-weight:700}
+.runbar .status{flex:0 0 240px;font-size:14px;line-height:1.2;min-height:0;overflow:hidden;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2}
+.rail{display:flex;align-items:center;gap:6px 12px;flex:1 1 400px;min-width:0}
+#rec-open{border-color:var(--honey);font-weight:700;white-space:nowrap;flex:none}
 .play{flex:none;min-height:44px;padding:8px 18px;border:0;border-radius:10px;background:var(--honey);color:#172348;font:750 16px var(--display);min-width:150px}
 .play.on{background:none;color:var(--ink);box-shadow:inset 0 0 0 2px var(--honey)}
 .play:disabled{opacity:.5;cursor:default}
@@ -196,7 +196,7 @@ footer a{color:var(--ink);font-weight:700}
   .screen{flex:none;height:min(440px,62vh);min-height:0;border-width:5px;border-radius:22px;padding:10px 7px}
   #plan{max-height:none}
   .rail h2{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
-  #rail{flex-wrap:nowrap;overflow-x:auto;flex:1 1 300px;min-width:0;padding-bottom:6px}
+  #rail{flex-wrap:nowrap;overflow-x:auto;flex:1 1 300px;min-width:0;padding-bottom:6px;scrollbar-width:none}
   #rail button{min-height:40px}
   .date{flex-wrap:wrap;gap:4px 10px}
   #date{white-space:nowrap}
@@ -224,7 +224,7 @@ footer a{color:var(--ink);font-weight:700}
   .top .time{font-size:34px}
   .date{font-size:13px;margin-top:2px}
   .tools .ghost{min-height:36px}
-  #rail{flex:1 1 100%}
+  #rail{flex:1 1 0}
   .sends{grid-template-columns:repeat(2,minmax(0,1fr))}
   .sliders{grid-template-columns:minmax(0,1fr)}
   .sliders input{min-height:44px}

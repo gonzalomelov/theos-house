@@ -1,0 +1,703 @@
+{
+ "r11 hot Spanish night": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Puede ser una emergencia. Llamá ya al 911 (emergencias en Uruguay) y contales lo que ves. O andá a emergencia, y avisale a su pediatra. Un bebé de menos de 3 meses con 38 °C (100,4 °F) o más de temperatura tiene que verlo un médico ya.\nhttps://www.healthychildren.org/Spanish/health-issues/conditions/fever/Paginas/When-to-Call-the-Pediatrician.aspx",
+      "at": 1793765175.718791
+     },
+     {
+      "to": "ceci",
+      "text": "Gonza escribió: \"Theo se siente caliente y no toma la mamadera\"\nPuede ser una emergencia. Llamá ya al 911 (emergencias en Uruguay) y contales lo que ves. O andá a emergencia, y avisale a su pediatra. Un bebé de menos de 3 meses con 38 °C (100,4 °F) o más de temperatura tiene que verlo un médico ya.\nhttps://www.healthychildren.org/Spanish/health-issues/conditions/fever/Paginas/When-to-Call-the-Pediatrician.aspx",
+      "at": 1793765175.7201269
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Puede ser una emergencia. Llamá ya al 911 (emergencias en Uruguay) y contales lo que ves. O andá a emergencia, y avisale a su pediatra. Un bebé de menos de 3 meses con 38 °C (100,4 °F) o más de temperatura tiene que verlo un médico ya.\nhttps://www.healthychildren.org/Spanish/health-issues/conditions/fever/Paginas/When-to-Call-the-Pediatrician.aspx",
+      "at": 1793765175.827622
+     },
+     {
+      "to": "ceci",
+      "text": "Gonza escribió: \"Theo se siente caliente y no toma la mamadera\"\nPuede ser una emergencia. Llamá ya al 911 (emergencias en Uruguay) y contales lo que ves. O andá a emergencia, y avisale a su pediatra. Un bebé de menos de 3 meses con 38 °C (100,4 °F) o más de temperatura tiene que verlo un médico ya.\nhttps://www.healthychildren.org/Spanish/health-issues/conditions/fever/Paginas/When-to-Call-the-Pediatrician.aspx",
+      "at": 1793765175.829011
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Puede ser una emergencia. Llamá ya al 911 (emergencias en Uruguay) y contales lo que ves. O andá a emergencia, y avisale a su pediatra. Un bebé de menos de 3 meses con 38 °C (100,4 °F) o más de temperatura tiene que verlo un médico ya.\nhttps://www.healthychildren.org/Spanish/health-issues/conditions/fever/Paginas/When-to-Call-the-Pediatrician.aspx",
+      "at": 1793765175.94322
+     },
+     {
+      "to": "ceci",
+      "text": "Gonza escribió: \"Theo se siente caliente y no toma la mamadera\"\nPuede ser una emergencia. Llamá ya al 911 (emergencias en Uruguay) y contales lo que ves. O andá a emergencia, y avisale a su pediatra. Un bebé de menos de 3 meses con 38 °C (100,4 °F) o más de temperatura tiene que verlo un médico ya.\nhttps://www.healthychildren.org/Spanish/health-issues/conditions/fever/Paginas/When-to-Call-the-Pediatrician.aspx",
+      "at": 1793765175.944502
+     }
+    ]
+   }
+  ]
+ },
+ "r11 warm no milk day": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Ceci wrote: \"She says he feels warm and won't drink his bottle\"\nThis may be an emergency. Call emergency services now: 911 in Uruguay, or your local emergency number. Or go to the emergency room, and tell your pediatrician. That is on the list of newborn signs to act on right away.\nhttps://www.healthychildren.org/English/tips-tools/symptom-checker/Pages/symptomviewer.aspx?symptom=Newborn+Illness+-+How+to+Recognize",
+      "at": 1793765176.059816
+     },
+     {
+      "to": "ceci",
+      "text": "This may be an emergency. Call emergency services now: 911 in Uruguay, or your local emergency number. Or go to the emergency room, and tell your pediatrician. That is on the list of newborn signs to act on right away.\nhttps://www.healthychildren.org/English/tips-tools/symptom-checker/Pages/symptomviewer.aspx?symptom=Newborn+Illness+-+How+to+Recognize",
+      "at": 1793765176.060832
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Ceci wrote: \"She says he feels warm and won't drink his bottle\"\nThis may be an emergency. Call emergency services now: 911 in Uruguay, or your local emergency number. Or go to the emergency room, and tell your pediatrician. That is on the list of newborn signs to act on right away.\nhttps://www.healthychildren.org/English/tips-tools/symptom-checker/Pages/symptomviewer.aspx?symptom=Newborn+Illness+-+How+to+Recognize",
+      "at": 1793765176.166286
+     },
+     {
+      "to": "ceci",
+      "text": "This may be an emergency. Call emergency services now: 911 in Uruguay, or your local emergency number. Or go to the emergency room, and tell your pediatrician. That is on the list of newborn signs to act on right away.\nhttps://www.healthychildren.org/English/tips-tools/symptom-checker/Pages/symptomviewer.aspx?symptom=Newborn+Illness+-+How+to+Recognize",
+      "at": 1793765176.167306
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Ceci wrote: \"She says he feels warm and won't drink his bottle\"\nThis may be an emergency. Call emergency services now: 911 in Uruguay, or your local emergency number. Or go to the emergency room, and tell your pediatrician. That is on the list of newborn signs to act on right away.\nhttps://www.healthychildren.org/English/tips-tools/symptom-checker/Pages/symptomviewer.aspx?symptom=Newborn+Illness+-+How+to+Recognize",
+      "at": 1793765176.3188748
+     },
+     {
+      "to": "ceci",
+      "text": "This may be an emergency. Call emergency services now: 911 in Uruguay, or your local emergency number. Or go to the emergency room, and tell your pediatrician. That is on the list of newborn signs to act on right away.\nhttps://www.healthychildren.org/English/tips-tools/symptom-checker/Pages/symptomviewer.aspx?symptom=Newborn+Illness+-+How+to+Recognize",
+      "at": 1793765176.3201432
+     }
+    ]
+   }
+  ]
+ },
+ "r11 scared Spanish": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Ceci, si lo ves raro a Theo llamá ya a su pediatra. Si no podés esperar o empeora, llamá al 911.",
+      "at": 1793765180.212329
+     },
+     {
+      "to": "gonza",
+      "text": "Si Theo se ve raro, llamá a su pediatra o al 911 si no puede esperar. Ceci dice que lo ve raro a Theo y está asustada.",
+      "at": 1793765185.461268
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Ceci, llama ahora a su pediatra, y si lo ves muy mal o que no respira bien llama al 911. Estoy acá con vos.",
+      "at": 1793765189.879044
+     },
+     {
+      "to": "gonza",
+      "text": "Llama a su pediatra, o al 911 si no puede esperar: Ceci está asustada, dice que ve raro a Theo.",
+      "at": 1793765196.5004349
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Ceci, llamá ya a su pediatra, o al 911 si sentís que no puede esperar. Que lo vea alguien ahora.",
+      "at": 1793765201.470874
+     },
+     {
+      "to": "gonza",
+      "text": "Llamá a su pediatra, o al 911 si no puede esperar, Ceci me escribió asustada porque ve raro a Theo.",
+      "at": 1793765207.6445282
+     }
+    ]
+   }
+  ]
+ },
+ "r11 hot bottle no alarm": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Thanks for catching that. Let it cool down and test a few drops on the inside of your wrist, it should feel lukewarm, not hot, before feeding. If you're worried at all, call his pediatrician. Let me know when you feed him.",
+      "at": 1793765214.409794
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Got it, thanks for letting it cool and checking the temp before offering it.",
+      "at": 1793765221.510272
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "I lost my connection and couldn't do what you asked. Please try again in a while.",
+      "at": 1793765227.8210711
+     }
+    ]
+   }
+  ]
+ },
+ "r11 humid night Ceci": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "sent": []
+   },
+   {
+    "passed": true,
+    "sent": []
+   },
+   {
+    "passed": true,
+    "sent": []
+   }
+  ]
+ },
+ "r11 warmer by hand night": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Veo que prendiste el calienta mamaderas, queda prendido hasta las 02:20 y se apaga solo.",
+      "at": 1793765247.639287,
+      "quiet": true
+     },
+     {
+      "to": "gonza",
+      "text": "El calentador de mamaderas se apagó solo a las 02:20.",
+      "at": 1793765249.3483992,
+      "quiet": true
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Prendieron el calienta mamaderas a mano, lo dejo prendido hasta las 02:20 que se apaga solo.",
+      "at": 1793765252.445947,
+      "quiet": true
+     },
+     {
+      "to": "gonza",
+      "text": "El calentador de mamaderas se apagó solo a las 02:20.",
+      "at": 1793765253.5241878,
+      "quiet": true
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Encendiste el calienta mamaderas a mano, queda prendido hasta las 02:20 y se apaga solo.",
+      "at": 1793765256.740038,
+      "quiet": true
+     },
+     {
+      "to": "gonza",
+      "text": "El calentador de mamaderas se apagó solo a las 02:20.",
+      "at": 1793765257.923222,
+      "quiet": true
+     }
+    ]
+   }
+  ]
+ },
+ "r11 cry Ceci warmer": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Se escuchó a Theo llorando ahora, 02:40. Le toca comer, la última fue a las 23:40.",
+      "at": 1793765268.223063
+     },
+     {
+      "to": "ceci",
+      "text": "Prendí el calienta mamadera, se apaga solo a las 03:10.",
+      "at": 1793765268.223072
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Theo está llorando. Son las 02:40 y pasaron 3 horas desde la toma de las 23:40, puede ser hambre. Prendí el calientamamaderas, se apaga solo a las 03:10.",
+      "at": 1793765278.93101
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Theo está llorando, son las 02:40. Prendí el calienta mamaderas, se apaga solo a las 03:10.",
+      "at": 1793765286.386678
+     }
+    ]
+   }
+  ]
+ },
+ "r11 warmer asked day": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Bottle warmer is on, it’ll turn itself off at 15:42.",
+      "at": 1793765295.955904
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Bottle warmer is on until 15:42, it turns off by itself.",
+      "at": 1793765304.080605
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Bottle warmer is on, it turns itself off at 15:42.",
+      "at": 1793765313.558601
+     }
+    ]
+   }
+  ]
+ },
+ "r11 prewarm too early": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "sent": []
+   },
+   {
+    "passed": true,
+    "sent": []
+   },
+   {
+    "passed": true,
+    "sent": []
+   }
+  ]
+ },
+ "r11 morning Spanish swapped": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Buen día, estuviste de guardia anoche, Theo tomó a las 23:10, 02:10 y 05:10. Esta noche te toca a vos, que ya había sido cambiada a mano anoche. ¿Sigue igual el plan para esta noche?",
+      "at": 1793765342.502107
+     },
+     {
+      "to": "gonza",
+      "text": "Buen día, anoche estuvo de guardia Ceci, Theo tomó a las 23:10, 02:10 y 05:10. Esta noche le toca a ella. ¿Sigue igual el plan?",
+      "at": 1793765342.502313
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Buen día. Anoche estuvo Ceci de guardia, Theo tomó a las 23:10, 02:10 y 05:10. Hoy a la noche le toca a Ceci según la rotación, anoche fue cambio solo por esa noche. ¿Sigue igual el plan para hoy?",
+      "at": 1793765351.969546
+     },
+     {
+      "to": "ceci",
+      "text": "Buen día. Anoche estuviste de guardia, Theo tomó a las 23:10, 02:10 y 05:10, la última de 90 ml. Un pañal mojado a las 05:11. Hoy a la noche te toca a vos según la rotación, anoche fue cambio solo por esa noche. ¿Sigue igual el plan para hoy?",
+      "at": 1793765351.969703
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Buen día. Anoche estuvo Ceci de guardia, Theo tomó a las 23:10, 02:10 y 05:10. Esta noche le toca a ella, ¿dejan el plan así?",
+      "at": 1793765361.7317271
+     },
+     {
+      "to": "ceci",
+      "text": "Buen día. Anoche estuviste vos de guardia, Theo tomó a las 23:10, 02:10 y 05:10, y el pañal de las 05:11. Hoy arrancó a las 05:10 con 90 ml. Esta noche te toca a vos según la rotación, ¿dejamos el plan así?",
+      "at": 1793765361.7330828
+     }
+    ]
+   }
+  ]
+ },
+ "r11 evening Spanish plain": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Esta noche está Gonza de guardia.",
+      "at": 1793765367.301017
+     },
+     {
+      "to": "gonza",
+      "text": "Esta noche estás vos de guardia.",
+      "at": 1793765368.609279
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Buenas noches, esta noche estás de guardia vos.",
+      "at": 1793765377.1086552
+     },
+     {
+      "to": "ceci",
+      "text": "Buenas noches, esta noche está de guardia Gonza.",
+      "at": 1793765377.1086762
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Buenas noches, esta noche estás vos de guardia. La próxima toma sería cerca de las 23:40, te aviso yo un ratito antes. Descansá cuando puedas.",
+      "at": 1793765387.201319
+     },
+     {
+      "to": "ceci",
+      "text": "Buenas noches, esta noche está Gonza de guardia. La próxima toma sería cerca de las 23:40. Que descanses.",
+      "at": 1793765387.2015748
+     }
+    ]
+   }
+  ]
+ },
+ "r11 total asked Spanish": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Hoy tomó 270 ml en total, en 3 tomas. La última fue a las 15:12, 90 ml con mamadera.",
+      "at": 1793765392.068918
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Hoy tomó 270 ml en total, en 3 tomas. La última fue a las 15:12 con 90 ml.",
+      "at": 1793765397.999722
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Hoy tomó 270 ml en total, en 3 tomas. La última fue a las 15:12, 90 ml.",
+      "at": 1793765403.899198
+     }
+    ]
+   }
+  ]
+ },
+ "r11 handover Spanish": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Gonza te pasó la noche de hoy, 04/11, quedás vos de guardia. Si no podés, decime y lo cambiamos.",
+      "at": 1793765408.250923
+     },
+     {
+      "to": "gonza",
+      "text": "Listo, le pasé la noche de hoy a Ceci y ya le avisé.",
+      "at": 1793765408.2510011
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Gonza te pasó la noche de hoy, te toca a vos. Si no podés avisame y lo cambiamos.",
+      "at": 1793765414.199221
+     },
+     {
+      "to": "gonza",
+      "text": "Hecho, le pasé la noche de hoy a Ceci.",
+      "at": 1793765414.199229
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Gonza te pasó la noche de hoy, quedás vos de guardia. Si no podés avisame y lo cambiamos.",
+      "at": 1793765419.853866
+     },
+     {
+      "to": "gonza",
+      "text": "Hecho, le pasé la noche de hoy a Ceci y ya le avisé.",
+      "at": 1793765419.853885
+     }
+    ]
+   }
+  ]
+ },
+ "r11 hands off Spanish": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "echo",
+      "text": "Atención en el cambiador, ninguna mano sobre el bebé, por favor una mano sobre él",
+      "at": 1793765422.887014
+     },
+     {
+      "to": "ceci",
+      "text": "La cámara del cambiador no ve una mano sobre Theo, poné una manito sobre él porfa",
+      "at": 1793765422.8873868
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "echo",
+      "text": "En el cambiador, ninguna mano sobre el bebé, una mano sobre Theo por favor",
+      "at": 1793765426.415532
+     },
+     {
+      "to": "ceci",
+      "text": "Ceci, la cámara del cambiador no ve una mano sobre Theo, una mano sobre él por favor",
+      "at": 1793765426.415924
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "echo",
+      "text": "En el cambiador, ninguna mano sobre el bebé, una mano sobre él por favor.",
+      "at": 1793765429.713685
+     },
+     {
+      "to": "ceci",
+      "text": "Ceci, la cámara del cambiador no ve una mano sobre Theo, una manito sobre él por favor.",
+      "at": 1793765429.714101
+     }
+    ]
+   }
+  ]
+ },
+ "r11 soup recipe": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Here's your recipe as a Thermomix preview, nothing was sent yet:\n\nYour lentil soup (2 servings, 30 min total)\n\nIngredients:\n- 200 g lentils\n- 1 onion\n- 500 g water\n\nSteps:\n1. Cook 25 min/100°C/speed 1.\n\nCountry: Uruguay (UY)\n\nI added lentils and onion to your Shopping List. Water stays off, it comes from the tap.\n\nThis one is for you and Gonza for now, and for Theo later on, his pediatrician can say when.",
+      "at": 1793765440.804641
+     },
+     {
+      "to": "ceci",
+      "text": "I can't send this recipe to Cookidoo from here.",
+      "at": 1793765443.7693021
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Here's your Thermomix recipe preview for your lentil soup:\n\nIngredients:\n- 200 g lentils\n- 1 onion\n- 500 g water\n\nSteps:\n1. Cook lentils, onion and water for 25 minutes. 25 min/100°C/speed 1\n\nI've added lentils and onion to your Shopping List.\n\nSaving it to the Thermomix is done by hand.\n\nThis one is for you for now, for Theo later on, and his pediatrician can say when.",
+      "at": 1793765454.7640178
+     },
+     {
+      "to": "ceci",
+      "text": "I can't send this recipe to Cookidoo from here.",
+      "at": 1793765457.229782
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Here's your lentil soup as a Thermomix preview:\n\nIngredients:\n- 200 g lentils\n- 1 onion\n- 500 g water\n\nSteps:\n1. Add lentils, onion and water to mixing bowl\n2. Cook 25 min/100°C/speed 1\n\nI've added the lentils and onion to your Shopping List (water stays off the list).\n\nThis one is for you for now, for Theo later on, his pediatrician can say when.",
+      "at": 1793765467.9555662
+     },
+     {
+      "to": "ceci",
+      "text": "I can't send this recipe to Cookidoo from here.",
+      "at": 1793765470.353792
+     }
+    ]
+   }
+  ]
+ },
+ "r11 book Spanish": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "book": {
+     "title": "El primer mes de Theo",
+     "pages": [
+      {
+       "day": "2026-12-15",
+       "text": "Ese día en casa quedaron cuatro tomas de Theo. Gonza y Ceci lo acompañaron.",
+       "by": "muse",
+       "art": null
+      }
+     ],
+     "totals": "En esta sesión: 4 tomas, 335 ml en total, 2 pañales."
+    }
+   },
+   {
+    "passed": true,
+    "book": {
+     "title": "El primer mes de Theo",
+     "pages": [
+      {
+       "day": "2026-12-15",
+       "text": "Ese día fueron cuatro tomas. Guardo el recuerdo de Gonza y Ceci acompañando a Theo con dedicación.",
+       "by": "muse",
+       "art": null
+      }
+     ],
+     "totals": "En esta sesión: 4 tomas, 335 ml en total, 2 pañales."
+    }
+   },
+   {
+    "passed": true,
+    "book": {
+     "title": "El primer mes de Theo",
+     "pages": [
+      {
+       "day": "2026-12-15",
+       "text": "En esta casa queda el eco suave de ese día con Theo. Gonza y Ceci lo acompañaron en sus 4 tomas.",
+       "by": "muse",
+       "art": null
+      }
+     ],
+     "totals": "En esta sesión: 4 tomas, 335 ml en total, 2 pañales."
+    }
+   }
+  ]
+ }
+}

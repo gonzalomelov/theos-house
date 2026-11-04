@@ -125,7 +125,9 @@ def rota_note(event, moment, facts):
     if event["type"] != "schedule" or tools_mod.duty_key(last_night) not in facts or vital_alarm(facts):
         return None
     last, usual = facts[tools_mod.duty_key(last_night)], on_duty(moment - datetime.timedelta(days=1))
-    said = f"Last night {last} was on duty" + (", changed by hand for that night only" if last != usual else "")
+    said = f"Last night {last} was on duty" + (", for that night only" if last != usual else "")
+    if event["payload"].get("name") == "evening":  # the evening is about tonight: last night said again read as a ledger, and "changed to you" went to the wrong parent (Nov 4)
+        said = "Tonight's plan"
     if tools_mod.duty_key(night_of(moment)) in facts:
         return f"{said}. Tonight {who_is_on(moment, facts)} is on, a parent already said so: don't ask again."
     return f"{said}. The rota alone gives tonight to {who_is_on(moment, facts)}: ask simply if the plan for tonight stays."

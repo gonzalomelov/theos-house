@@ -283,14 +283,14 @@
     "passed": true,
     "sent": [
      {
-      "to": "gonza",
-      "text": "Good morning! Theo had 2 feeds overnight at 00:00 and 03:00 while Ceci was on duty. Tonight Ceci is on again, same plan tonight?",
-      "at": 1793764819.4111412
+      "to": "ceci",
+      "text": "Good morning, you were on last night, 2 feeds in the night, last at 03:00. You're up for tonight too, same plan tonight?",
+      "at": 1793766125.817783
      },
      {
-      "to": "ceci",
-      "text": "Good morning! Theo had 2 feeds overnight with you on duty, at 00:00 and 03:00. Tonight you're on, same plan tonight?",
-      "at": 1793764820.446102
+      "to": "gonza",
+      "text": "Good morning, Ceci was on last night, 2 feeds in the night, last at 03:00. She's up for tonight.",
+      "at": 1793766125.817796
      }
     ]
    },
@@ -299,13 +299,13 @@
     "sent": [
      {
       "to": "ceci",
-      "text": "Morning, Theo had 2 feeds last night, last at 03:00. You were on duty last night. Tonight is down as you, same plan tonight?",
-      "at": 1793764826.710614
+      "text": "Morning, you were on last night, Theo fed at 00:00 and 03:00. You're on again tonight, same plan tonight?",
+      "at": 1793766133.160718
      },
      {
       "to": "gonza",
-      "text": "Morning, Theo had 2 feeds last night, last at 03:00. Ceci was on last night. Tonight is down as Ceci, same plan tonight?",
-      "at": 1793764826.710628
+      "text": "Morning, Ceci was on last night, Theo fed at 00:00 and 03:00. Ceci is on tonight.",
+      "at": 1793766133.160989
      }
     ]
    },
@@ -314,13 +314,13 @@
     "sent": [
      {
       "to": "ceci",
-      "text": "Good morning, you were on last night, Theo ate at 00:00 and 03:00. Tonight is your night, same plan tonight?",
-      "at": 1793764839.1686678
+      "text": "Good morning, you were on last night, Theo had 2 feeds in the night, last at 03:00. Same plan tonight with you on again?",
+      "at": 1793766141.1664371
      },
      {
       "to": "gonza",
-      "text": "Good morning, Ceci was on last night, Theo ate at 00:00 and 03:00. Tonight Ceci is on, same plan tonight?",
-      "at": 1793764839.16868
+      "text": "Good morning, Ceci was on last night, Theo had 2 feeds in the night, last at 03:00. Same plan tonight with Ceci on?",
+      "at": 1793766141.166466
      }
     ]
    }
@@ -334,29 +334,14 @@
     "passed": true,
     "sent": [
      {
-      "to": "gonza",
-      "text": "You're on tonight, 21:30 now. Next feed likely around 00:00, I'll prep the warmer a little before if needed.",
-      "at": 1793764847.403776
-     },
-     {
       "to": "ceci",
-      "text": "You're off tonight, 21:30 now. Rest easy.",
-      "at": 1793764847.4038012
-     }
-    ]
-   },
-   {
-    "passed": true,
-    "sent": [
-     {
-      "to": "ceci",
-      "text": "Gonza's on tonight.",
-      "at": 1793764860.025901
+      "text": "Gonza's on tonight, 21:30. Rest up.",
+      "at": 1793766147.853803
      },
      {
       "to": "gonza",
-      "text": "You're on tonight.",
-      "at": 1793764860.860477
+      "text": "You're on tonight, 21:30. I'll get the bottle warmer warming a little before the next feed.",
+      "at": 1793766149.837138
      }
     ]
    },
@@ -365,13 +350,28 @@
     "sent": [
      {
       "to": "gonza",
-      "text": "You're on tonight, I'll get the warmer going quietly at 23:45 ahead of the feed around 00:00.",
-      "at": 1793764869.242149
+      "text": "You're on tonight, 21:30.",
+      "at": 1793766163.951788
      },
      {
       "to": "ceci",
-      "text": "I'm looking after things tonight, rest easy.",
-      "at": 1793764869.242167
+      "text": "You're off tonight, 21:30, hope you can rest.",
+      "at": 1793766163.951947
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "You're on tonight, from now until morning it's you.",
+      "at": 1793766172.1504698
+     },
+     {
+      "to": "ceci",
+      "text": "Tonight Gonza is on, you can rest, he's got Theo.",
+      "at": 1793766172.150483
      }
     ]
    }

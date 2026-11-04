@@ -24,6 +24,10 @@ Open http://127.0.0.1:8781. `python3 scripts/simulator_live_eval.py` plays the s
 | Theo, sounds, sensors | Events sent down the same path as real ones |
 | Car seat coach | A recording from Meta's glasses kit simulator with a rendered car seat. Muse decides to start it |
 
+## What a visitor reads first
+
+One plain line, the two phones and Play. A phone-width visitor gets one thread with both parents, or a switch to each. Model names, tool names and the real-versus-simulated table live behind "How it's built, for the curious", with the honest "Simulated" label always on the first screen. A rule for page changes: anything naming a model goes in the `built` section or under `only-deep`.
+
 ## Walls
 
 - One private home per visitor: mock server, outbox, baby log, thread and facts. The session ends after 15 idle minutes on the public site, an hour if a page is still open on it, or on Start over, and its rows and files are deleted. Starting a home never ends one in use, and each browser has its own hourly starts and events, under a higher ceiling for the address.

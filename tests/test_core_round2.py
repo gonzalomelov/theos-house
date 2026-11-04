@@ -44,7 +44,7 @@ class Words(unittest.TestCase):
         usual = runtime.on_duty(morning - datetime.timedelta(days=1))
         cover = "ceci" if usual == "gonza" else "gonza"
         note = runtime.rota_note({"type": "schedule", "payload": {}}, morning, {tools_mod.duty_key(last): cover})
-        self.assertIn(f"Last night {cover} was on duty, changed by hand", note)
+        self.assertIn(f"Last night {cover} was on duty, for that night only", note)
         self.assertNotIn("in place of", note)
         self.assertIn("ask simply if the plan for tonight stays", note)
         done = runtime.rota_note({"type": "schedule", "payload": {}}, morning, {tools_mod.duty_key(last): cover, tools_mod.duty_key(runtime.night_of(morning)): usual})
