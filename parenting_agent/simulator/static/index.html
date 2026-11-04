@@ -9,6 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,750&display=swap">
 <link rel="stylesheet" href="/static/page.css">
+<link rel="stylesheet" href="/static/book.css">
 </head>
 <body data-sky="night">
 <header class="top">
@@ -147,7 +148,16 @@
   </div>
 </div>
 
+<section class="book" id="book" aria-labelledby="book-t">
+  <h2 id="book-t"></h2>
+  <p id="book-lead"></p>
+  <button type="button" class="ghost" id="book-make"></button>
+  <p class="status" id="book-status" role="status"></p>
+  <div id="book-pages"></div>
+</section>
+
 <footer><p id="foot"></p><p id="models"></p></footer>
 <script src="/static/page.js"></script>
+<script src="/static/book.js"></script>
 </body>
 </html>

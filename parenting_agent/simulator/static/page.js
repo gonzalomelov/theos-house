@@ -7,11 +7,12 @@ const SCENES = [
   ["morning", "07:30", "Wed", {en: "Morning", es: "La mañana"}],
   ["grandma", "11:00", "Wed", {en: "Grandma asks the Echo", es: "La abuela le pregunta al Echo"}],
   ["humid", "15:10", "Wed", {en: "Humidity rises to 71%", es: "La humedad sube a 71%"}],
+  ["recipe", "16:30", "Wed", {en: "Grandma's recipe", es: "La receta de la abuela"}],
   ["dry", "17:40", "Wed", {en: "Humidity falls to 49.5%", es: "La humedad baja a 49,5%"}],
   ["carseat", "18:10", "Wed", {en: "Help with the car seat", es: "Ayuda con la silla del auto"}],
   ["evening2", "21:30", "Wed", {en: "The next evening", es: "La noche siguiente"}],
 ];
-const NIGHT = ["evening", "sleep", "cry", "feed", "morning"], DAY = ["grandma", "humid", "dry", "carseat", "evening2"], ORDER = [...NIGHT, ...DAY];
+const NIGHT = ["evening", "sleep", "cry", "feed", "morning"], DAY = ["grandma", "humid", "recipe", "dry", "carseat", "evening2"], ORDER = [...NIGHT, ...DAY];
 const T = {
   en: {locale: "en-US", simulated: "Simulated", lead: "Gonza and Ceci are about to be first-time parents. Press Play and watch their home agent get them through one night with baby Theo, who is simulated here. Muse, Meta's AI, decides live, and nothing here reaches a real house.",
     play: "Play one night", playDay: "Play the next day", stop: "Stop", playing: (i, n, s) => `${i} of ${n}: ${s}`, nightDone: "That was one night, and every step was decided live. Next: Play the next day, with Grandma, the humidity and the car seat. Or send any home event below, or write from a phone.", dayDone: "That was the next day, decided live too. Send any home event, write from a phone, or try the models below.", restarted: "Started over, in a new home.", langNow: "New messages will be in English. Earlier ones stay as they were written.", deep: "See how it thinks", plain: "Back to plain", empty: "Nothing yet. The agent writes first.",

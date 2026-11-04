@@ -1,0 +1,1 @@
+Illustrations made on Nov 3, 2026 in Meta's Muse app (muse.ai), which said they were made with Muse Image. Made by hand ahead of time, not by the agent, because no API for that image model is open to this project.

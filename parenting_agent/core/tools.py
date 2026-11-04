@@ -10,6 +10,7 @@ import json
 import os
 import re
 import time
+import urllib.request
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
@@ -283,6 +284,36 @@ def vacuum_tool(settings, mock=None):
             return f"Error: the home is not answering ({type(failure).__name__})."
         return "The vacuum said here it is."
     return [StructuredTool.from_function(vacuum_identify)]
+
+
+RECIPE_URL = "https://cook.bygmv.com/mcp"
+RECIPE_NOT_SENT = "Not sent. This home only shows the recipe. A real send happens from Meta's Muse app, through the Recipe Sender connector, after the person says yes there."
+
+
+def recipe_call(name, arguments):
+    body = json.dumps({"jsonrpc": "2.0", "id": 1, "method": "tools/call", "params": {"name": name, "arguments": arguments}}).encode()
+    request = urllib.request.Request(RECIPE_URL, data=body, headers={"content-type": "application/json", "accept": "application/json, text/event-stream",
+                                                                    "user-agent": "bygmv-muse-connector/1.0"})
+    with urllib.request.urlopen(request, timeout=30) as answer:
+        reply = json.loads(answer.read())
+    if "error" in reply:
+        return f"Refused: {reply['error'].get('message', 'the recipe was refused')}"
+    return " ".join(part.get("text", "") for part in reply.get("result", {}).get("content", []))[:600]
+
+
+def recipe_tool():
+    def preview_family_recipe(name: str, ingredients: list[str], steps: list[dict], cookidoo_country: str, servings: int = 2, prep_minutes: int = 5, total_minutes: int = 30) -> str:
+        """A family recipe someone told you, checked as a guided Thermomix recipe. Nothing is sent or saved. ingredients are lines with
+        the amount first. steps have text and, for a machine action written in that text, settings with setting_text, time_seconds, speed and
+        temperature_c. cookidoo_country is the two-letter country they told you, never a guess."""
+        if not ingredients or not steps:
+            return "Refused: a recipe needs ingredients and steps."
+        arguments = {"name": name, "servings": servings, "prep_minutes": prep_minutes, "total_minutes": max(total_minutes, prep_minutes), "ingredients": ingredients,
+                     "steps": steps, "cookidoo_country": cookidoo_country.upper(), "cookidoo_country_source": "user_said_in_this_chat"}
+        if part("recipe") == "real":
+            return recipe_call("preview_recipe", arguments)
+        return f"Preview of {name}: {len(ingredients)} ingredients, {len(steps)} steps. Simulated here, nothing was sent. {RECIPE_NOT_SENT}"
+    return [StructuredTool.from_function(preview_family_recipe)]
 
 
 def coach_tool():

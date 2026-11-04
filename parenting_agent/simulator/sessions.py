@@ -10,6 +10,8 @@ import time
 from pathlib import Path
 
 from ..agent.memory import LOG_KINDS, LocalBabyLog, Memory, parse_time
+from ..core import agent as agent_mod
+from ..core import book as book_mod
 from ..core import tools as tools_mod
 from ..core.runtime import Core
 from ..core.settings import Settings
@@ -253,6 +255,12 @@ class Session:
     async def event(self, kind, payload):
         self.count()
         return await self.send(kind, payload)
+
+    async def book(self):
+        """The first-month book so far, from this home's own log and what Muse remembers."""
+        entries = self.log.entries(None, None, 2000)
+        notes = await tools_mod.facts(self.core.store, self.settings.home)
+        return await book_mod.write(self.core.model or agent_mod.muse(), entries, str(notes)[:1500], self.lang)
 
     def count(self):
         if self.events_used >= MAX_EVENTS:

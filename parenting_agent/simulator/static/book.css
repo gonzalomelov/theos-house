@@ -1,0 +1,8 @@
+.book{max-width:1200px;margin:32px auto;padding:0 16px;display:grid;gap:10px}
+.book h2{margin:0}
+.book p{margin:0}
+#book-pages{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr))}
+.book-page{border:1px solid currentColor;border-radius:10px;overflow:hidden;display:grid}
+.book-page img{display:block;width:100%;aspect-ratio:3/2;object-fit:cover}
+.book-page figcaption{padding:10px 12px;display:grid;gap:4px}
+.book-page small{opacity:.75}

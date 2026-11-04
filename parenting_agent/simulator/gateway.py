@@ -54,7 +54,7 @@ class Revalidated(StaticFiles):
 def page_html():
     """The page, with each script and style named by its content, so a new deploy can't be served an old copy."""
     html = (STATIC / "index.html").read_text()
-    for name in ("page.css", "page.js"):
+    for name in ("page.css", "page.js", "book.css", "book.js"):
         version = hashlib.sha256((STATIC / name).read_bytes()).hexdigest()[:12]
         html = html.replace(f"/static/{name}", f"/static/{name}?v={version}")
     return html
@@ -187,6 +187,14 @@ def app(model=None, media=None):
         session.feeds_on = bool((await body_of(request)).get("on"))
         return JSONResponse(await session.state())
 
+    async def book(request, session):
+        """Muse writes the book from this session's own log. Nothing here is prewritten, and it is one Muse call."""
+        try:
+            session.count()
+        except Full:
+            return JSONResponse({"error": USED}, 429)
+        return JSONResponse(await session.book())
+
     async def lang(request, session):
         await session.set_lang("es" if (await body_of(request)).get("lang") == "es" else "en")
         return JSONResponse({"lang": session.lang})
@@ -241,7 +249,7 @@ def app(model=None, media=None):
         Route("/api/state", session_only(state)), Route("/api/scene", session_only(one_at_a_time(scene)), methods=["POST"]),
         Route("/api/sense", session_only(one_at_a_time(sense)), methods=["POST"]), Route("/api/write", session_only(one_at_a_time(write)), methods=["POST"]), Route("/api/events", session_only(one_at_a_time(event)), methods=["POST"]),
         Route("/api/home", session_only(set_home), methods=["POST"]), Route("/api/clock", session_only(clock), methods=["POST"]), Route("/api/lang", session_only(lang), methods=["POST"]), Route("/api/feeds", session_only(feeds), methods=["POST"]),
-        Route("/api/reset", session_only(reset), methods=["POST"]), Route("/api/stream", session_only(stream)),
+        Route("/api/book", session_only(book), methods=["POST"]), Route("/api/reset", session_only(reset), methods=["POST"]), Route("/api/stream", session_only(stream)),
         Mount("/media", StaticFiles(directory=media, check_dir=False)), Mount("/static", Revalidated(directory=STATIC))])
     built.state.sessions = sessions
     return built
