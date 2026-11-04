@@ -54,9 +54,9 @@ class Revalidated(StaticFiles):
 
 
 def page_html():
-    """The page, with each script and style named by its content, so a new deploy can't be served an old copy."""
+    """The page, with each script, style and the architecture image named by its content, so a new deploy can't be served an old copy. Cloudflare answers static files with max-age=14400 whatever this server says."""
     html = (STATIC / "index.html").read_text()
-    for name in ("page.css", "page.js", "book.css", "book.js"):
+    for name in ("page.css", "page.js", "book.css", "book.js", "architecture.svg"):
         version = hashlib.sha256((STATIC / name).read_bytes()).hexdigest()[:12]
         html = html.replace(f"/static/{name}", f"/static/{name}?v={version}")
     return html
