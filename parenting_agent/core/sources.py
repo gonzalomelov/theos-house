@@ -107,11 +107,16 @@ async def schedule(core, times=SCHEDULE):
         await core.dispatch("schedule", {"name": name}, source="schedule")
 
 
+def voice_ears():
+    """What hears a voice note, or None with voice off. One for each note on WhatsApp, where two can overlap: it keeps the note's length."""
+    return voice_client.build({"service": os.environ["PA_VOICE_SERVICE"]}) if os.environ.get("PA_VOICE_SERVICE") else None
+
+
 async def telegram(core):
     """Parents' text messages. Only one process can poll the bot, so this stays off while the old agent runs."""
     bot = TelegramMessenger(os.environ.get("TELEGRAM_BOT_TOKEN"))
     who = {os.environ[env]: parent for parent, env in PARENTS.items() if os.environ.get(env)}
-    ears = voice_client.build({"service": os.environ["PA_VOICE_SERVICE"]}) if os.environ.get("PA_VOICE_SERVICE") else None
+    ears = voice_ears()
     offset = None
     while True:
         try:
@@ -130,13 +135,14 @@ async def telegram(core):
                 await core.dispatch(*await heard(bot, ears, item, who[item.chat_id]), source="telegram")
 
 
-async def heard(bot, ears, item, parent):
-    """The event for a voice note. Words the ear can't vouch for are never the parent's words, Muse is told it wasn't heard."""
+async def heard(bot, ears, item, parent, why=lambda reason: None):
+    """The event for a voice note. Words the ear can't vouch for are never the parent's words, the home tells them it wasn't heard. why hears the reason."""
     try:
         words = await asyncio.to_thread(lambda: ears.hear(bot.download(item.voice_file_id))) if ears else ""
-        fine = words and voice_screen.screen(words, getattr(ears, "seconds", None))[0] == "ok"
-    except (MessagingError, voice_client.VoiceError):
-        fine = False
-    if fine:
+        verdict = voice_screen.screen(words, getattr(ears, "seconds", None))[0] if words else "nothing heard"
+    except (MessagingError, voice_client.VoiceError) as failure:
+        verdict = str(failure)
+    if verdict == "ok":
         return "message", {"from": parent, "channel": "a voice note", "text": words}
+    why(verdict if ears else "voice is off")
     return "voice_note_not_heard", {"from": parent}

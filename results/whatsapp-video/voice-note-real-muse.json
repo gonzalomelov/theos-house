@@ -1,0 +1,165 @@
+{
+ "es01 bottle at three": [
+  {
+   "name": "es01 bottle at three",
+   "webhook": 200,
+   "events": [
+    {
+     "type": "message",
+     "status": "done",
+     "payload": {
+      "from": "gonza",
+      "text": "Le di 90 mililitros de mamadera a las 3",
+      "channel": "a voice note"
+     },
+     "outcome": "Logged feeding. Told gonza. Refused or failed: Told gonza."
+    }
+   ],
+   "feeds": [
+    {
+     "id": 1,
+     "ts": "2026-11-04T03:00:00-03:00",
+     "kind": "feeding",
+     "details": {
+      "amount_ml": 90,
+      "method": "bottle"
+     }
+    }
+   ],
+   "sent": [
+    {
+     "to": "gonza",
+     "text": "Anotado: 90 ml de mamadera a las 03:00."
+    }
+   ],
+   "auth_stopped_at_api": true,
+   "passed": true
+  }
+ ],
+ "es07 bottle of 120": [
+  {
+   "name": "es07 bottle of 120",
+   "webhook": 200,
+   "events": [
+    {
+     "type": "message",
+     "status": "done",
+     "payload": {
+      "from": "gonza",
+      "text": "Tomó una mamadera de 120",
+      "channel": "a voice note"
+     },
+     "outcome": "Logged feeding. Told gonza. Refused or failed: Told gonza."
+    }
+   ],
+   "feeds": [
+    {
+     "id": 1,
+     "ts": "2026-11-04T09:00:30-03:00",
+     "kind": "feeding",
+     "details": {
+      "amount_ml": 120,
+      "method": "bottle"
+     }
+    }
+   ],
+   "sent": [
+    {
+     "to": "gonza",
+     "text": "Anotado: mamadera de 120 ml a las 09:00."
+    }
+   ],
+   "auth_stopped_at_api": true,
+   "passed": true
+  }
+ ],
+ "en07 bottle English": [
+  {
+   "name": "en07 bottle English",
+   "webhook": 200,
+   "events": [
+    {
+     "type": "message",
+     "status": "done",
+     "payload": {
+      "from": "gonza",
+      "text": "Bottle, 150 milliliters",
+      "channel": "a voice note"
+     },
+     "outcome": "Logged feeding. Told gonza. Refused or failed: Told gonza."
+    }
+   ],
+   "feeds": [
+    {
+     "id": 1,
+     "ts": "2026-11-04T09:00:00-03:00",
+     "kind": "feeding",
+     "details": {
+      "amount_ml": 150,
+      "method": "bottle"
+     }
+    }
+   ],
+   "sent": [
+    {
+     "to": "gonza",
+     "text": "Anotado: mamadera de 150 ml a las 09:00."
+    }
+   ],
+   "auth_stopped_at_api": true,
+   "passed": true
+  }
+ ],
+ "a tone with no words": [
+  {
+   "name": "a tone with no words",
+   "webhook": 200,
+   "events": [
+    {
+     "type": "voice_note_not_heard",
+     "status": "done",
+     "payload": {
+      "why": "nothing heard",
+      "from": "gonza"
+     },
+     "outcome": "Told gonza it wasn't heard."
+    }
+   ],
+   "feeds": [],
+   "sent": [
+    {
+     "to": "gonza",
+     "text": "No pude escuchar ese audio. ¿Me lo mandás de nuevo o me lo escribís?"
+    }
+   ],
+   "auth_stopped_at_api": true,
+   "passed": true
+  }
+ ],
+ "bytes that aren't audio": [
+  {
+   "name": "bytes that aren't audio",
+   "webhook": 200,
+   "events": [
+    {
+     "type": "voice_note_not_heard",
+     "status": "done",
+     "payload": {
+      "why": "AudioError",
+      "from": "gonza"
+     },
+     "outcome": "Told gonza it wasn't heard."
+    }
+   ],
+   "feeds": [],
+   "sent": [
+    {
+     "to": "gonza",
+     "text": "No pude escuchar ese audio. ¿Me lo mandás de nuevo o me lo escribís?"
+    }
+   ],
+   "auth_stopped_at_api": true,
+   "passed": true
+  }
+ ]
+}

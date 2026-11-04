@@ -24,8 +24,11 @@ from starlette.responses import JSONResponse, PlainTextResponse, Response
 from starlette.routing import Route
 
 from ..channels.messaging import MessagingError
-from ..channels.twilio_whatsapp import signature as twilio_signature
+from ..channels.twilio_whatsapp import signature as twilio_signature, takes_voice
 from ..voice_bridge import spoken, strip_wake
+from . import sources
+
+HEAR_NOTE_S = 120  # the ear retries by itself, so this is only for a voice service or a Muse that never answers
 
 
 def clean(row):
@@ -58,6 +61,7 @@ def whatsapp_routes(core):
     """Meta's webhook. A parent's words wake Muse, anything else is ignored. Only a body signed with the app secret counts."""
     verify, secret = os.environ.get("WHATSAPP_VERIFY_TOKEN", ""), os.environ.get("WHATSAPP_APP_SECRET", "")
     seen = {}
+    hearing = set()  # the running voice notes: Twilio waits 15 seconds at most, and hearing one can take longer
 
     async def check(request):
         q = request.query_params
@@ -74,7 +78,7 @@ def whatsapp_routes(core):
         if whatsapp and whatsapp.kind == "meta":
             for change in (c.get("value", {}) for entry in json.loads(raw).get("entry", []) for c in entry.get("changes", [])):
                 for message in change.get("messages", []):
-                    await heard_on_whatsapp(core, whatsapp, message, seen)
+                    await heard_on_whatsapp(core, whatsapp, message, seen, hearing)
                 for status in change.get("statuses", []):
                     await refused_on_whatsapp(core, whatsapp, status)
         return JSONResponse({"ok": True})
@@ -92,9 +96,8 @@ def whatsapp_routes(core):
         params = await signed_form(request, whatsapp) if whatsapp and whatsapp.kind == "twilio" else None
         if params is None:
             return JSONResponse({"error": "forbidden"}, 403)
-        audio = params.get("MediaContentType0", "").startswith("audio")
-        await heard_on_whatsapp(core, whatsapp, {"from": "".join(c for c in params.get("From", "") if c.isdigit()), "id": params.get("MessageSid"),
-                                                 "type": "audio" if audio else "text", "text": {"body": params.get("Body", "")}}, seen)
+        await heard_on_whatsapp(core, whatsapp, {"from": "".join(c for c in params.get("From", "") if c.isdigit()), "id": params.get("MessageSid"), "media": params.get("MediaUrl0"),
+                                                 "type": twilio_kind(params), "text": {"body": params.get("Body", "")}}, seen, hearing)
         return Response("<Response/>", media_type="text/xml")
 
     async def twilio_status(request):
@@ -108,7 +111,30 @@ def whatsapp_routes(core):
             Route("/twilio", from_twilio, methods=["POST"]), Route("/twilio/status", twilio_status, methods=["POST"])]
 
 
-async def heard_on_whatsapp(core, whatsapp, message, seen):
+def twilio_kind(params):
+    """What Twilio's form holds. Words sent with a photo are still words. Audio Muse's ear can't take is a voice note it can't hear."""
+    kind = params.get("MediaContentType0", "")
+    if kind.startswith("audio"):
+        return "audio" if takes_voice(kind) and params.get("MediaUrl0") else "unheard"
+    return "text" if params.get("Body", "").strip() else "other_media"
+
+
+async def hear_note(core, whatsapp, parent, message):
+    """A voice note goes the way one does on Telegram: its words become the parent's message, or the parent hears it wasn't heard. Never silence."""
+    reasons = []
+    try:
+        item = type("Note", (), {"voice_file_id": message["media"]})()
+        kind, payload = await asyncio.wait_for(sources.heard(whatsapp, sources.voice_ears(), item, parent, reasons.append), HEAR_NOTE_S)
+    except Exception as failure:  # whatever it was, the parent still gets an answer
+        kind, payload = "voice_note_not_heard", {"from": parent}
+        reasons.append(type(failure).__name__)
+    if reasons:
+        core.publish("error", error=f"WhatsApp voice note from {parent}: {reasons[0][:200]}")
+        payload = {**payload, "why": reasons[0][:200]}
+    await core.dispatch(kind, payload, source="whatsapp")
+
+
+async def heard_on_whatsapp(core, whatsapp, message, seen, hearing=None):
     parent = whatsapp.parents.get(message.get("from"))
     if not parent or message.get("id") in seen:  # Meta delivers again when in doubt
         return
@@ -121,8 +147,14 @@ async def heard_on_whatsapp(core, whatsapp, message, seen):
         core.publish("error", error=f"WhatsApp couldn't send what waited for {parent}: {error}")
     if message.get("type") == "text":
         await core.dispatch("message", {"from": parent, "channel": "WhatsApp", "text": message.get("text", {}).get("body", "")[:2000]}, source="whatsapp")
-    elif message.get("type") in ("audio", "voice"):
+    elif message.get("type") == "audio" and message.get("media"):
+        task = asyncio.create_task(hear_note(core, whatsapp, parent, message))
+        hearing.add(task)
+        task.add_done_callback(hearing.discard)
+    elif message.get("type") in ("audio", "voice", "unheard"):
         await core.dispatch("voice_note_not_heard", {"from": parent}, source="whatsapp")
+    elif message.get("type") == "other_media":
+        await core.dispatch("media_not_read", {"from": parent}, source="whatsapp")
 
 
 async def refused_on_whatsapp(core, whatsapp, status):

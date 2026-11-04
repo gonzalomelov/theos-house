@@ -98,6 +98,8 @@ class RealChannel:
         self.whatsapp = (TwilioWhatsApp if os.environ.get("WHATSAPP_BACKEND") == "twilio" else WhatsApp).from_env(settings.data_dir)
 
     def by_telegram(self, parent, text, quiet=False):
+        if parent == "ceci" and silent_night():  # a WhatsApp message that failed after 22:00 comes back here, past send()'s rule
+            return "Rehearsal: kept from Ceci at night, nothing was sent."
         self.telegram.send(os.environ[PARENTS[parent]], text, quiet)
 
     def send(self, parent, text, quiet=False):

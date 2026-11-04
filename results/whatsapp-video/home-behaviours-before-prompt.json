@@ -1,0 +1,555 @@
+{
+ "correct an amount": [
+  {
+   "before": [
+    {
+     "id": 1,
+     "kind": "feeding",
+     "ts": "2026-11-04T03:34:00-03:00",
+     "details": {
+      "amount_ml": 90.0,
+      "type": "unknown",
+      "method": "bottle",
+      "start": "2026-11-04T03:19:00-03:00",
+      "duration_min": null
+     },
+     "tags": [
+      "agent"
+     ]
+    },
+    {
+     "id": 2,
+     "kind": "feeding",
+     "ts": "2026-11-04T06:34:00-03:00",
+     "details": {
+      "amount_ml": 90.0,
+      "type": "unknown",
+      "method": "bottle",
+      "start": "2026-11-04T06:19:00-03:00",
+      "duration_min": null
+     },
+     "tags": [
+      "agent"
+     ]
+    }
+   ],
+   "after": [
+    {
+     "id": 1,
+     "kind": "feeding",
+     "ts": "2026-11-04T03:34:00-03:00",
+     "details": {
+      "amount_ml": 90.0,
+      "type": "unknown",
+      "method": "bottle",
+      "start": "2026-11-04T03:19:00-03:00",
+      "duration_min": null
+     },
+     "tags": [
+      "agent"
+     ]
+    },
+    {
+     "id": 2,
+     "kind": "feeding",
+     "ts": "2026-11-04T06:34:00-03:00",
+     "details": {
+      "amount_ml": 110.0,
+      "type": "unknown",
+      "method": "bottle",
+      "start": "2026-11-04T06:19:00-03:00",
+      "duration_min": null
+     },
+     "tags": [
+      "agent"
+     ]
+    }
+   ],
+   "sent": [
+    {
+     "to": "gonza",
+     "text": "Ya estaba corregido, quedó en 110 ml a las 06:34."
+    }
+   ],
+   "passed": true
+  },
+  {
+   "before": [
+    {
+     "id": 1,
+     "kind": "feeding",
+     "ts": "2026-11-04T03:34:00-03:00",
+     "details": {
+      "amount_ml": 90.0,
+      "type": "unknown",
+      "method": "bottle",
+      "start": "2026-11-04T03:19:00-03:00",
+      "duration_min": null
+     },
+     "tags": [
+      "agent"
+     ]
+    },
+    {
+     "id": 2,
+     "kind": "feeding",
+     "ts": "2026-11-04T06:34:00-03:00",
+     "details": {
+      "amount_ml": 90.0,
+      "type": "unknown",
+      "method": "bottle",
+      "start": "2026-11-04T06:19:00-03:00",
+      "duration_min": null
+     },
+     "tags": [
+      "agent"
+     ]
+    }
+   ],
+   "after": [
+    {
+     "id": 1,
+     "kind": "feeding",
+     "ts": "2026-11-04T03:34:00-03:00",
+     "details": {
+      "amount_ml": 90.0,
+      "type": "unknown",
+      "method": "bottle",
+      "start": "2026-11-04T03:19:00-03:00",
+      "duration_min": null
+     },
+     "tags": [
+      "agent"
+     ]
+    },
+    {
+     "id": 2,
+     "kind": "feeding",
+     "ts": "2026-11-04T06:34:00-03:00",
+     "details": {
+      "amount_ml": 110.0,
+      "type": "unknown",
+      "method": "bottle",
+      "start": "2026-11-04T06:19:00-03:00",
+      "duration_min": null
+     },
+     "tags": [
+      "agent"
+     ]
+    }
+   ],
+   "sent": [
+    {
+     "to": "gonza",
+     "text": "Ya estaba corregida, la de las 06:34 quedó en 110 ml."
+    }
+   ],
+   "passed": true
+  },
+  {
+   "before": [
+    {
+     "id": 1,
+     "kind": "feeding",
+     "ts": "2026-11-04T03:34:00-03:00",
+     "details": {
+      "amount_ml": 90.0,
+      "type": "unknown",
+      "method": "bottle",
+      "start": "2026-11-04T03:19:00-03:00",
+      "duration_min": null
+     },
+     "tags": [
+      "agent"
+     ]
+    },
+    {
+     "id": 2,
+     "kind": "feeding",
+     "ts": "2026-11-04T06:34:00-03:00",
+     "details": {
+      "amount_ml": 90.0,
+      "type": "unknown",
+      "method": "bottle",
+      "start": "2026-11-04T06:19:00-03:00",
+      "duration_min": null
+     },
+     "tags": [
+      "agent"
+     ]
+    }
+   ],
+   "after": [
+    {
+     "id": 1,
+     "kind": "feeding",
+     "ts": "2026-11-04T03:34:00-03:00",
+     "details": {
+      "amount_ml": 90.0,
+      "type": "unknown",
+      "method": "bottle",
+      "start": "2026-11-04T03:19:00-03:00",
+      "duration_min": null
+     },
+     "tags": [
+      "agent"
+     ]
+    },
+    {
+     "id": 2,
+     "kind": "feeding",
+     "ts": "2026-11-04T06:34:00-03:00",
+     "details": {
+      "amount_ml": 110.0,
+      "type": "unknown",
+      "method": "bottle",
+      "start": "2026-11-04T06:19:00-03:00",
+      "duration_min": null
+     },
+     "tags": [
+      "agent"
+     ]
+    }
+   ],
+   "sent": [
+    {
+     "to": "gonza",
+     "text": "Corregido: la toma de las 06:34 quedó en 110 ml."
+    }
+   ],
+   "passed": true
+  }
+ ],
+ "remove an entry": [
+  {
+   "before": [
+    {
+     "id": 1,
+     "kind": "feeding",
+     "ts": "2026-11-04T03:34:00-03:00",
+     "details": {
+      "amount_ml": 90.0,
+      "type": "unknown",
+      "method": "bottle",
+      "start": "2026-11-04T03:19:00-03:00",
+      "duration_min": null
+     },
+     "tags": [
+      "agent"
+     ]
+    },
+    {
+     "id": 2,
+     "kind": "feeding",
+     "ts": "2026-11-04T06:34:00-03:00",
+     "details": {
+      "amount_ml": 90.0,
+      "type": "unknown",
+      "method": "bottle",
+      "start": "2026-11-04T06:19:00-03:00",
+      "duration_min": null
+     },
+     "tags": [
+      "agent"
+     ]
+    }
+   ],
+   "after": [
+    {
+     "id": 1,
+     "kind": "feeding",
+     "ts": "2026-11-04T03:34:00-03:00",
+     "details": {
+      "amount_ml": 90.0,
+      "type": "unknown",
+      "method": "bottle",
+      "start": "2026-11-04T03:19:00-03:00",
+      "duration_min": null
+     },
+     "tags": [
+      "agent"
+     ]
+    }
+   ],
+   "sent": [
+    {
+     "to": "gonza",
+     "text": "Listo, borré la de las 06:34. Quedó como última la de las 03:34."
+    }
+   ],
+   "passed": true
+  },
+  {
+   "before": [
+    {
+     "id": 1,
+     "kind": "feeding",
+     "ts": "2026-11-04T03:34:00-03:00",
+     "details": {
+      "amount_ml": 90.0,
+      "type": "unknown",
+      "method": "bottle",
+      "start": "2026-11-04T03:19:00-03:00",
+      "duration_min": null
+     },
+     "tags": [
+      "agent"
+     ]
+    },
+    {
+     "id": 2,
+     "kind": "feeding",
+     "ts": "2026-11-04T06:34:00-03:00",
+     "details": {
+      "amount_ml": 90.0,
+      "type": "unknown",
+      "method": "bottle",
+      "start": "2026-11-04T06:19:00-03:00",
+      "duration_min": null
+     },
+     "tags": [
+      "agent"
+     ]
+    }
+   ],
+   "after": [
+    {
+     "id": 1,
+     "kind": "feeding",
+     "ts": "2026-11-04T03:34:00-03:00",
+     "details": {
+      "amount_ml": 90.0,
+      "type": "unknown",
+      "method": "bottle",
+      "start": "2026-11-04T03:19:00-03:00",
+      "duration_min": null
+     },
+     "tags": [
+      "agent"
+     ]
+    }
+   ],
+   "sent": [
+    {
+     "to": "gonza",
+     "text": "Listo, borré la toma de las 06:34 del registro."
+    }
+   ],
+   "passed": true
+  },
+  {
+   "before": [
+    {
+     "id": 1,
+     "kind": "feeding",
+     "ts": "2026-11-04T03:34:00-03:00",
+     "details": {
+      "amount_ml": 90.0,
+      "type": "unknown",
+      "method": "bottle",
+      "start": "2026-11-04T03:19:00-03:00",
+      "duration_min": null
+     },
+     "tags": [
+      "agent"
+     ]
+    },
+    {
+     "id": 2,
+     "kind": "feeding",
+     "ts": "2026-11-04T06:34:00-03:00",
+     "details": {
+      "amount_ml": 90.0,
+      "type": "unknown",
+      "method": "bottle",
+      "start": "2026-11-04T06:19:00-03:00",
+      "duration_min": null
+     },
+     "tags": [
+      "agent"
+     ]
+    }
+   ],
+   "after": [
+    {
+     "id": 1,
+     "kind": "feeding",
+     "ts": "2026-11-04T03:34:00-03:00",
+     "details": {
+      "amount_ml": 90.0,
+      "type": "unknown",
+      "method": "bottle",
+      "start": "2026-11-04T03:19:00-03:00",
+      "duration_min": null
+     },
+     "tags": [
+      "agent"
+     ]
+    }
+   ],
+   "sent": [
+    {
+     "to": "gonza",
+     "text": "Listo, borré la de las 06:34 del registro."
+    }
+   ],
+   "passed": true
+  }
+ ],
+ "false alarm by day": [
+  {
+   "alarm": "gated",
+   "sent_after": [
+    {
+     "to": "ceci",
+     "text": "Gonza escribió: \"Falsa alarma, ya está bien, era un moco\""
+    },
+    {
+     "to": "gonza",
+     "text": "Gracias por avisar, quedó cerrado."
+    }
+   ],
+   "facts": {},
+   "wakes": [],
+   "passed": true
+  },
+  {
+   "alarm": "gated",
+   "sent_after": [
+    {
+     "to": "ceci",
+     "text": "Gonza escribió: \"Falsa alarma, ya está bien, era un moco\""
+    },
+    {
+     "to": "gonza",
+     "text": "Perfecto, gracias por avisar."
+    }
+   ],
+   "facts": {},
+   "wakes": [],
+   "passed": true
+  },
+  {
+   "alarm": "gated",
+   "sent_after": [
+    {
+     "to": "ceci",
+     "text": "Gonza escribió: \"Falsa alarma, ya está bien, era un moco\""
+    },
+    {
+     "to": "gonza",
+     "text": "Entendido, queda cerrado. Gracias por avisar."
+    }
+   ],
+   "facts": {},
+   "wakes": [],
+   "passed": true
+  }
+ ],
+ "false alarm at night": [
+  {
+   "alarm": "gated",
+   "sent_after": [
+    {
+     "to": "ceci",
+     "text": "Gonza escribió: \"Falsa alarma, ya está bien, era un moco\"",
+     "quiet": true
+    },
+    {
+     "to": "gonza",
+     "text": "Entendido, queda cerrado. Gracias por avisar."
+    }
+   ],
+   "facts": {},
+   "wakes": [],
+   "passed": true
+  },
+  {
+   "alarm": "gated",
+   "sent_after": [
+    {
+     "to": "ceci",
+     "text": "Gonza escribió: \"Falsa alarma, ya está bien, era un moco\"",
+     "quiet": true
+    },
+    {
+     "to": "gonza",
+     "text": "Entendido, gracias por avisar, queda cerrado."
+    }
+   ],
+   "facts": {},
+   "wakes": [],
+   "passed": true
+  },
+  {
+   "alarm": "gated",
+   "sent_after": [
+    {
+     "to": "ceci",
+     "text": "Gonza escribió: \"Falsa alarma, ya está bien, era un moco\"",
+     "quiet": true
+    },
+    {
+     "to": "gonza",
+     "text": "Gracias por avisar, queda anotado que ya está bien."
+    }
+   ],
+   "facts": {},
+   "wakes": [],
+   "passed": true
+  }
+ ],
+ "open alarm in the morning": [
+  {
+   "alarm": "gated",
+   "morning": [
+    {
+     "to": "gonza",
+     "text": "Buen día. A las 03:10 escribiste \"Tiene los labios azules\". Nadie respondió todavía cómo está Theo, ¿cómo está ahora? Anoche tiene 1 toma registrada, la última hoy a la 01:10."
+    },
+    {
+     "to": "ceci",
+     "text": "Buen día. A las 03:10 Gonza escribió \"Tiene los labios azules\". Nadie respondió todavía cómo está Theo, ¿cómo está ahora? Anoche tiene 1 toma registrada, la última hoy a la 01:10."
+    }
+   ],
+   "kept_open": [
+    "open_alarm_202612160310"
+   ],
+   "passed": true
+  },
+  {
+   "alarm": "gated",
+   "morning": [
+    {
+     "to": "gonza",
+     "text": "Buen día. A las 03:10 escribiste \"Tiene los labios azules\" y ambos fueron avisados. Nadie respondió todavía cómo está Theo, ¿cómo está ahora? Anoche comió 1 vez, la última a las 01:10. Esta noche estás vos de guardia (16/12)."
+    },
+    {
+     "to": "ceci",
+     "text": "Buen día. A las 03:10 Gonza escribió \"Tiene los labios azules\" y ambos fueron avisados. Nadie respondió todavía cómo está Theo, ¿cómo está ahora? Anoche comió 1 vez, la última a las 01:10. Esta noche está Gonza de guardia (16/12)."
+    }
+   ],
+   "kept_open": [
+    "open_alarm_202612160310"
+   ],
+   "passed": true
+  },
+  {
+   "alarm": "gated",
+   "morning": [
+    {
+     "to": "gonza",
+     "text": "Buen día. A las 03:10 escribiste \"Tiene los labios azules\" y ambos fueron avisados. Nadie contestó todavía cómo está Theo, ¿cómo está ahora? Esta noche hubo una toma a la 01:10."
+    },
+    {
+     "to": "ceci",
+     "text": "Buen día. A las 03:10 escribiste \"Tiene los labios azules\" y ambos fueron avisados, corrijo, a las 03:10 vos no, fue Gonza quien escribió \"Tiene los labios azules\" y ambos fueron avisados. Nadie contestó todavía cómo está Theo, ¿cómo está ahora? Esta noche hubo una toma a la 01:10."
+    }
+   ],
+   "kept_open": [
+    "open_alarm_202612160310"
+   ],
+   "passed": true
+  }
+ ]
+}

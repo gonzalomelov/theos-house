@@ -2,3 +2,5 @@
 ^api\.telegram\.org$
 ^graph\.facebook\.com$
 ^api\.twilio\.com$
+^mms\.twiliocdn\.com$
+^media\.twiliocdn\.com$

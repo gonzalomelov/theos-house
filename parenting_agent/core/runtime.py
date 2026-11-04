@@ -19,6 +19,7 @@ from psycopg.types.json import Jsonb
 from psycopg_pool import AsyncConnectionPool
 
 from ..agent import rules
+from ..channels.messaging import NOT_HEARD
 from . import agent as agent_mod
 from . import safety, tools as tools_mod
 from .mock_home import MockHome
@@ -56,6 +57,8 @@ HOLD_S = 30
 HOLDING = {"es": "Sigo con esto, ya te contesto.", "en": "Still on this, I'll answer you in a moment."}
 READ_LINE = {"es": "Te leí. Ahora no tengo una buena respuesta para esto.", "en": "I read your message. I don't have a good answer for it right now."}
 DONE_LINE = {"es": "Ya lo tengo.", "en": "Got that."}
+NOT_READ = {"es": "Por ahora acá leo texto y audios, nada más. ¿Me lo escribís?", "en": "For now I only read text and voice notes here. Could you type it?"}
+NO_WORDS = {"voice_note_not_heard": NOT_HEARD, "media_not_read": NOT_READ}
 ASK_HOW = {"es": "¿Cómo está Theo ahora?", "en": "How is Theo now?"}
 CALL_FIRST = {"es": "Llamá a su pediatra, o al 911 si no puede esperar.", "en": "Please call his pediatrician, or 911 if it can't wait."}
 TONIGHT_YOU = {"es": "Esta noche te toca a vos.", "en": "You're on tonight."}
@@ -924,6 +927,8 @@ class Core:
                 return await self.ended(event)
             if event["type"] == "gap_check":
                 return await self.gap_only(event)
+            if event["type"] in NO_WORDS:
+                return await self.no_words(event)
             if event["type"] == "state_changed":
                 await self.note_hand(event)
                 await self.note_room(event["payload"].get("entity_id"), event["payload"].get("state"), event["moment"])
@@ -1209,6 +1214,14 @@ class Core:
         at = self.gap_due(feed, facts, moment - datetime.timedelta(seconds=1), moment)
         return await self.dispatch("gap_check", {}, source="clock", at=moment.isoformat()) if at else None
 
+    async def no_words(self, event):
+        """A parent sent something nobody could read. Muse has no words to go on and might say nothing, so the home answers, and asks for it again."""
+        parent = event["payload"].get("from")
+        if parent not in tools_mod.PARENTS:
+            return await self.finish(event, "done", "Nothing done.")
+        await self.say_fixed(event, parent, NO_WORDS[event["type"]]["en" if self.settings.lang == "en" else "es"])
+        return await self.finish(event, "done", f"Told {parent} it wasn't heard.")
+
     async def gap_only(self, event):
         moment = event["moment"]
         facts = await self.tidy_facts(moment)
@@ -1314,6 +1327,8 @@ class Core:
         if event["type"] == "message" and safety.reports_feed(self.heard):  # the feed goes in the log first: it may close the gap, and no alarm goes out over it
             self.feed = None
             extra.append("This parent is telling you about a feed. Log it first, then answer from what the log shows. If it corrects an entry already in the log, change that entry instead.")
+        if self.a_cry and not self.feed:
+            extra.append("The log has no feed to name.")
         extra += await self.raise_gap(event, moment, facts)
         extra += self.log_note(event, moment)
         extra += await self.room_note(event, moment)

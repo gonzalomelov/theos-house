@@ -1,0 +1,1253 @@
+{
+ "es the scene's log": [
+  {
+   "lang": "es",
+   "log": "the scene's log",
+   "last_feed": "20:40",
+   "words": "Esta noche necesito dormir. ¿Gonza puede quedarse con la noche?",
+   "evening_status": "done",
+   "evening": [
+    {
+     "to": "gonza",
+     "text": "Gonza, Ceci te pasó la noche de hoy, quedó a tu cargo, si no podés decime y lo vemos."
+    },
+    {
+     "to": "ceci",
+     "text": "Hecho, te paso la noche a Gonza así descansás vos 💛"
+    },
+    {
+     "to": "gonza",
+     "text": "Ceci me dijo que esta noche te toca a vos. Si no es así, avisame."
+    },
+    {
+     "to": "ceci",
+     "text": "Te leí. Ahora no tengo una buena respuesta para esto."
+    }
+   ],
+   "duty_set": "gonza",
+   "night": [
+    {
+     "to": "gonza",
+     "text": "Theo está llorando, su última toma fue ayer a las 20:40. ¿Querés que te avise en un ratito si sigue?"
+    },
+    {
+     "to": "gonza",
+     "text": "Theo está llorando, su última toma fue ayer a las 20:40"
+    }
+   ],
+   "ceci_not_woken": true,
+   "gonza_heard_out_loud": true,
+   "warmer": "off",
+   "outcome": "Told gonza.",
+   "states_feed": true,
+   "times": [
+    "20:40"
+   ],
+   "other_times": [],
+   "told_gonza_evening": true,
+   "answered_ceci_evening": true,
+   "evening_ok": true,
+   "passed": true
+  },
+  {
+   "lang": "es",
+   "log": "the scene's log",
+   "last_feed": "20:40",
+   "words": "Esta noche necesito dormir. ¿Gonza puede quedarse con la noche?",
+   "evening_status": "done",
+   "evening": [
+    {
+     "to": "gonza",
+     "text": "Ceci te pasó la noche de hoy, te toca a vos estar de guardia. Si no podés decime."
+    },
+    {
+     "to": "ceci",
+     "text": "Anotado. Le pasé la noche a Gonza, él queda de guardia hoy."
+    }
+   ],
+   "duty_set": "gonza",
+   "night": [
+    {
+     "to": "gonza",
+     "text": "Theo está llorando. Última toma ayer a las 20:40."
+    },
+    {
+     "to": "gonza",
+     "text": "Prendí el calienta mamaderas, se apaga solo a las 03:20."
+    }
+   ],
+   "ceci_not_woken": true,
+   "gonza_heard_out_loud": true,
+   "warmer": "on",
+   "outcome": "Told gonza. Turned on Tapo P110 - Bottle Warmer.",
+   "states_feed": true,
+   "times": [
+    "03:20",
+    "20:40"
+   ],
+   "other_times": [
+    "03:20"
+   ],
+   "told_gonza_evening": true,
+   "answered_ceci_evening": true,
+   "evening_ok": true,
+   "passed": true
+  },
+  {
+   "lang": "es",
+   "log": "the scene's log",
+   "last_feed": "20:40",
+   "words": "Esta noche necesito dormir. ¿Gonza puede quedarse con la noche?",
+   "evening_status": "done",
+   "evening": [
+    {
+     "to": "gonza",
+     "text": "Ceci te pasó la noche de hoy porque necesita dormir. Estás de guardia vos, si no podés decime y lo vemos."
+    },
+    {
+     "to": "ceci",
+     "text": "Listo, le pasé la noche a Gonza. Él queda de guardia y ya le avisé."
+    }
+   ],
+   "duty_set": "gonza",
+   "night": [
+    {
+     "to": "gonza",
+     "text": "Theo está llorando. Comió por última vez ayer a las 20:40."
+    },
+    {
+     "to": "gonza",
+     "text": "Prendí el calientamamaderas, se apaga solo a las 03:20."
+    }
+   ],
+   "ceci_not_woken": true,
+   "gonza_heard_out_loud": true,
+   "warmer": "on",
+   "outcome": "Told gonza. Turned on Tapo P110 - Bottle Warmer. Set a wake for 2026-12-16T03:20:00-03:00.",
+   "states_feed": true,
+   "times": [
+    "03:20",
+    "20:40"
+   ],
+   "other_times": [
+    "03:20"
+   ],
+   "told_gonza_evening": true,
+   "answered_ceci_evening": true,
+   "evening_ok": true,
+   "passed": true
+  }
+ ],
+ "es late bottle": [
+  {
+   "lang": "es",
+   "log": "late bottle",
+   "last_feed": "23:10",
+   "words": "Estoy muerta, esta noche dejame dormir",
+   "evening_status": "done",
+   "evening": [
+    {
+     "to": "gonza",
+     "text": "Ceci te pasó la guardia de esta noche, ¿la tomás? Si no podés decime y la vemos."
+    },
+    {
+     "to": "ceci",
+     "text": "Entendido, le pasé la noche a Gonza por hoy. Descansá vos."
+    }
+   ],
+   "duty_set": "gonza",
+   "night": [
+    {
+     "to": "gonza",
+     "text": "Theo está llorando. Última toma ayer a las 23:10.\n\nPrendí el calienta mamaderas, se apaga solo a las 03:20."
+    }
+   ],
+   "ceci_not_woken": true,
+   "gonza_heard_out_loud": true,
+   "warmer": "on",
+   "outcome": "Turned on Tapo P110 - Bottle Warmer. Told gonza.",
+   "states_feed": true,
+   "times": [
+    "03:20",
+    "23:10"
+   ],
+   "other_times": [
+    "03:20"
+   ],
+   "told_gonza_evening": true,
+   "answered_ceci_evening": true,
+   "evening_ok": true,
+   "passed": true
+  },
+  {
+   "lang": "es",
+   "log": "late bottle",
+   "last_feed": "23:10",
+   "words": "Estoy muerta, esta noche dejame dormir",
+   "evening_status": "done",
+   "evening": [
+    {
+     "to": "gonza",
+     "text": "Ceci te pasó la noche de hoy, te toca a vos. Si no podés, decime."
+    },
+    {
+     "to": "ceci",
+     "text": "Entendido, le pasé la noche a Gonza. Descansá, él queda de guardia."
+    }
+   ],
+   "duty_set": "gonza",
+   "night": [
+    {
+     "to": "gonza",
+     "text": "Theo está llorando. Última toma ayer a las 23:10. Prendí el calienta mamaderas, se apaga solo a las 03:20."
+    },
+    {
+     "to": "gonza",
+     "text": "Theo está llorando. Última toma ayer a las 23:10."
+    }
+   ],
+   "ceci_not_woken": true,
+   "gonza_heard_out_loud": true,
+   "warmer": "on",
+   "outcome": "Told gonza.",
+   "states_feed": true,
+   "times": [
+    "03:20",
+    "23:10"
+   ],
+   "other_times": [
+    "03:20"
+   ],
+   "told_gonza_evening": true,
+   "answered_ceci_evening": true,
+   "evening_ok": true,
+   "passed": true
+  },
+  {
+   "lang": "es",
+   "log": "late bottle",
+   "last_feed": "23:10",
+   "words": "Estoy muerta, esta noche dejame dormir",
+   "evening_status": "done",
+   "evening": [
+    {
+     "to": "gonza",
+     "text": "Ceci te pasó la noche de hoy, te toca a vos. Si no podés, decime y lo vemos."
+    },
+    {
+     "to": "ceci",
+     "text": "Te entiendo, debe ser agotador. Ya le avisé a Gonza y te cubre esta noche, descansá tranquila."
+    }
+   ],
+   "duty_set": "gonza",
+   "night": [
+    {
+     "to": "gonza",
+     "text": "Theo está llorando. Te aviso sin más detalle porque ahora no puedo pensar bien, se me cortó la conexión."
+    }
+   ],
+   "ceci_not_woken": true,
+   "gonza_heard_out_loud": true,
+   "warmer": "on",
+   "outcome": "OpenAIRateLimitError: Error code: 429 Told without Muse: gonza.",
+   "states_feed": false,
+   "times": [],
+   "other_times": [],
+   "told_gonza_evening": true,
+   "answered_ceci_evening": true,
+   "evening_ok": true,
+   "passed": false
+  }
+ ],
+ "es after midnight": [
+  {
+   "lang": "es",
+   "log": "after midnight",
+   "last_feed": "00:25",
+   "words": "Gonza, hoy dejame dormir a mí por favor",
+   "evening_status": "done",
+   "evening": [
+    {
+     "to": "gonza",
+     "text": "Ceci te pasó la noche de hoy, quedás vos de guardia. Si no te sirve avisame y lo vemos."
+    },
+    {
+     "to": "ceci",
+     "text": "Queda Gonza de guardia esta noche. Descansá tranquila."
+    },
+    {
+     "to": "ceci",
+     "text": "Queda Gonza de guardia esta noche. Descansá tranquila."
+    },
+    {
+     "to": "gonza",
+     "text": "Ceci me dijo que esta noche te toca a vos. Si no es así, avisame."
+    }
+   ],
+   "duty_set": "gonza",
+   "night": [
+    {
+     "to": "gonza",
+     "text": "Theo está llorando. Última toma hoy a las 00:25. Fijate qué necesita, estoy acá si me necesitás."
+    },
+    {
+     "to": "gonza",
+     "text": "Prendí el calienta mamadera, se apaga solo a las 03:20."
+    }
+   ],
+   "ceci_not_woken": true,
+   "gonza_heard_out_loud": true,
+   "warmer": "on",
+   "outcome": "Told gonza. Turned on Tapo P110 - Bottle Warmer.",
+   "states_feed": true,
+   "times": [
+    "00:25",
+    "03:20"
+   ],
+   "other_times": [
+    "03:20"
+   ],
+   "told_gonza_evening": true,
+   "answered_ceci_evening": true,
+   "evening_ok": true,
+   "passed": true
+  },
+  {
+   "lang": "es",
+   "log": "after midnight",
+   "last_feed": "00:25",
+   "words": "Gonza, hoy dejame dormir a mí por favor",
+   "evening_status": "done",
+   "evening": [
+    {
+     "to": "gonza",
+     "text": "Ceci te pasó la noche de hoy, quedás vos de guardia. Si no podés avisá y lo vemos."
+    },
+    {
+     "to": "ceci",
+     "text": "Listo, le pasé la noche a Gonza. Que descanses."
+    },
+    {
+     "to": "ceci",
+     "text": "Listo, le pasé la noche a Gonza. Que descanses."
+    },
+    {
+     "to": "ceci",
+     "text": "Listo, le pasé la noche a Gonza. Que descanses."
+    },
+    {
+     "to": "gonza",
+     "text": "Ceci me dijo que esta noche te toca a vos. Si no es así, avisame."
+    }
+   ],
+   "duty_set": "gonza",
+   "night": [
+    {
+     "to": "gonza",
+     "text": "Theo está llorando. Última toma hoy a las 00:25."
+    }
+   ],
+   "ceci_not_woken": true,
+   "gonza_heard_out_loud": true,
+   "warmer": "off",
+   "outcome": "Told gonza.",
+   "states_feed": true,
+   "times": [
+    "00:25"
+   ],
+   "other_times": [],
+   "told_gonza_evening": true,
+   "answered_ceci_evening": true,
+   "evening_ok": true,
+   "passed": true
+  },
+  {
+   "lang": "es",
+   "log": "after midnight",
+   "last_feed": "00:25",
+   "words": "Gonza, hoy dejame dormir a mí por favor",
+   "evening_status": "done",
+   "evening": [
+    {
+     "to": "gonza",
+     "text": "Ceci te pasó la guardia de esta noche, te toca a vos. Si no podés decilo."
+    },
+    {
+     "to": "ceci",
+     "text": "Listo, le pasé la guardia a Gonza por esta noche. Que descanses."
+    }
+   ],
+   "duty_set": "gonza",
+   "night": [
+    {
+     "to": "gonza",
+     "text": "Theo está llorando. Última toma hoy a las 00:25."
+    }
+   ],
+   "ceci_not_woken": true,
+   "gonza_heard_out_loud": true,
+   "warmer": "off",
+   "outcome": "Told gonza.",
+   "states_feed": true,
+   "times": [
+    "00:25"
+   ],
+   "other_times": [],
+   "told_gonza_evening": true,
+   "answered_ceci_evening": true,
+   "evening_ok": true,
+   "passed": true
+  }
+ ],
+ "es with a diaper after": [
+  {
+   "lang": "es",
+   "log": "with a diaper after",
+   "last_feed": "01:45",
+   "words": "No doy más, ¿me dejan dormir esta noche?",
+   "evening_status": "done",
+   "evening": [
+    {
+     "to": "ceci",
+     "text": "Sigo con esto, ya te contesto."
+    },
+    {
+     "to": "gonza",
+     "text": "Ceci te pasó la noche de hoy porque no da más. Quedás vos de guardia, si no podés avisame."
+    },
+    {
+     "to": "ceci",
+     "text": "Entendido, descansá tranquila. Le avisé a Gonza que hoy sigue él de guardia."
+    }
+   ],
+   "duty_set": "gonza",
+   "night": [
+    {
+     "to": "gonza",
+     "text": "Theo está llorando. Última toma hoy a las 01:45, hace un ratito. Cuando puedas fijate qué necesita."
+    }
+   ],
+   "ceci_not_woken": true,
+   "gonza_heard_out_loud": true,
+   "warmer": "off",
+   "outcome": "Told gonza.",
+   "states_feed": true,
+   "times": [
+    "01:45"
+   ],
+   "other_times": [],
+   "told_gonza_evening": true,
+   "answered_ceci_evening": true,
+   "evening_ok": true,
+   "passed": true
+  },
+  {
+   "lang": "es",
+   "log": "with a diaper after",
+   "last_feed": "01:45",
+   "words": "No doy más, ¿me dejan dormir esta noche?",
+   "evening_status": "done",
+   "evening": [
+    {
+     "to": "gonza",
+     "text": "Ceci te pasó la guardia de esta noche, quedás vos a cargo. Si no podés, decime y lo cambiamos."
+    },
+    {
+     "to": "ceci",
+     "text": "Entendido, descansá tranquila esta noche. Gonza queda de guardia."
+    }
+   ],
+   "duty_set": "gonza",
+   "night": [
+    {
+     "to": "gonza",
+     "text": "Theo está llorando. Tomó a las 01:45, hace poquito más de una hora."
+    },
+    {
+     "to": "gonza",
+     "text": "Theo está llorando. Tomó a las 01:45."
+    }
+   ],
+   "ceci_not_woken": true,
+   "gonza_heard_out_loud": true,
+   "warmer": "off",
+   "outcome": "Told gonza.",
+   "states_feed": true,
+   "times": [
+    "01:45"
+   ],
+   "other_times": [],
+   "told_gonza_evening": true,
+   "answered_ceci_evening": true,
+   "evening_ok": true,
+   "passed": true
+  },
+  {
+   "lang": "es",
+   "log": "with a diaper after",
+   "last_feed": "01:45",
+   "words": "No doy más, ¿me dejan dormir esta noche?",
+   "evening_status": "done",
+   "evening": [
+    {
+     "to": "gonza",
+     "text": "Ceci te pasó la noche de hoy, quedás vos de guardia. Si no podés decime y lo vemos."
+    },
+    {
+     "to": "ceci",
+     "text": "Te entiendo, sé que estás agotada y estás haciendo un montón. Quedó anotado que Gonza te cubre esta noche, descansá tranquila que él queda de guardia."
+    }
+   ],
+   "duty_set": "gonza",
+   "night": [
+    {
+     "to": "gonza",
+     "text": "Theo está llorando. Última toma fue a las 01:45, hace poquito."
+    }
+   ],
+   "ceci_not_woken": true,
+   "gonza_heard_out_loud": true,
+   "warmer": "off",
+   "outcome": "Told gonza.",
+   "states_feed": true,
+   "times": [
+    "01:45"
+   ],
+   "other_times": [],
+   "told_gonza_evening": true,
+   "answered_ceci_evening": true,
+   "evening_ok": true,
+   "passed": true
+  }
+ ],
+ "es fed half an hour ago": [
+  {
+   "lang": "es",
+   "log": "fed half an hour ago",
+   "last_feed": "02:20",
+   "words": "Esta noche necesito dormir. ¿Gonza puede quedarse con la noche?",
+   "evening_status": "done",
+   "evening": [
+    {
+     "to": "gonza",
+     "text": "Ceci te pasó la guardia de esta noche, te toca a vos. Si no podés decime y lo vemos."
+    },
+    {
+     "to": "ceci",
+     "text": "Dale, te libero esta noche. Queda Gonza de guardia."
+    },
+    {
+     "to": "ceci",
+     "text": "Dale, queda Gonza de guardia esta noche, descansá tranquila."
+    },
+    {
+     "to": "gonza",
+     "text": "Ceci me dijo que esta noche te toca a vos. Si no es así, avisame."
+    }
+   ],
+   "duty_set": "gonza",
+   "night": [
+    {
+     "to": "gonza",
+     "text": "Theo está llorando. Última toma a las 02:20, hace un ratito."
+    }
+   ],
+   "ceci_not_woken": true,
+   "gonza_heard_out_loud": true,
+   "warmer": "off",
+   "outcome": "Told gonza.",
+   "states_feed": true,
+   "times": [
+    "02:20"
+   ],
+   "other_times": [],
+   "told_gonza_evening": true,
+   "answered_ceci_evening": true,
+   "evening_ok": true,
+   "passed": true
+  },
+  {
+   "lang": "es",
+   "log": "fed half an hour ago",
+   "last_feed": "02:20",
+   "words": "Esta noche necesito dormir. ¿Gonza puede quedarse con la noche?",
+   "evening_status": "failed",
+   "evening": [
+    {
+     "to": "ceci",
+     "text": "Sigo con esto, ya te contesto."
+    },
+    {
+     "to": "ceci",
+     "text": "Se me cortó la conexión y no pude hacer lo que me pediste. Probá de nuevo en un rato."
+    }
+   ],
+   "duty_set": "gonza",
+   "night": [
+    {
+     "to": "gonza",
+     "text": "Theo está llorando. Su última toma fue a las 02:20."
+    }
+   ],
+   "ceci_not_woken": true,
+   "gonza_heard_out_loud": true,
+   "warmer": "off",
+   "outcome": "Told gonza.",
+   "states_feed": true,
+   "times": [
+    "02:20"
+   ],
+   "other_times": [],
+   "told_gonza_evening": false,
+   "answered_ceci_evening": true,
+   "evening_ok": false,
+   "passed": false
+  },
+  {
+   "lang": "es",
+   "log": "fed half an hour ago",
+   "last_feed": "02:20",
+   "words": "Esta noche necesito dormir. ¿Gonza puede quedarse con la noche?",
+   "evening_status": "done",
+   "evening": [
+    {
+     "to": "gonza",
+     "text": "Ceci te pasó la noche de hoy, quedás vos de guardia. Si no podés, avisame y lo vemos."
+    },
+    {
+     "to": "ceci",
+     "text": "Listo, le avisé a Gonza que se queda él esta noche."
+    }
+   ],
+   "duty_set": "gonza",
+   "night": [
+    {
+     "to": "gonza",
+     "text": "Theo está llorando. Su última toma fue a las 02:20."
+    }
+   ],
+   "ceci_not_woken": true,
+   "gonza_heard_out_loud": true,
+   "warmer": "off",
+   "outcome": "Told gonza.",
+   "states_feed": true,
+   "times": [
+    "02:20"
+   ],
+   "other_times": [],
+   "told_gonza_evening": true,
+   "answered_ceci_evening": true,
+   "evening_ok": true,
+   "passed": true
+  }
+ ],
+ "es breast, no amount": [
+  {
+   "lang": "es",
+   "log": "breast, no amount",
+   "last_feed": "22:05",
+   "words": "Esta noche necesito dormir, que se encargue Gonza",
+   "evening_status": "done",
+   "evening": [
+    {
+     "to": "gonza",
+     "text": "Ceci te pasó la noche de hoy, quedás vos de guardia. Si no te sirve avisame."
+    },
+    {
+     "to": "ceci",
+     "text": "Hecho, hoy queda Gonza de guardia."
+    }
+   ],
+   "duty_set": "gonza",
+   "night": [
+    {
+     "to": "gonza",
+     "text": "Theo está llorando. Última toma ayer a las 22:05. Prendí el calienta mamaderas, se apaga solo a las 03:20."
+    }
+   ],
+   "ceci_not_woken": true,
+   "gonza_heard_out_loud": true,
+   "warmer": "on",
+   "outcome": "Turned on Tapo P110 - Bottle Warmer. Told gonza.",
+   "states_feed": true,
+   "times": [
+    "03:20",
+    "22:05"
+   ],
+   "other_times": [
+    "03:20"
+   ],
+   "told_gonza_evening": true,
+   "answered_ceci_evening": true,
+   "evening_ok": true,
+   "passed": true
+  },
+  {
+   "lang": "es",
+   "log": "breast, no amount",
+   "last_feed": "22:05",
+   "words": "Esta noche necesito dormir, que se encargue Gonza",
+   "evening_status": "done",
+   "evening": [
+    {
+     "to": "gonza",
+     "text": "Ceci te pasó la noche de hoy, quedás vos de guardia. Si no podés, decime y lo cambiamos."
+    },
+    {
+     "to": "ceci",
+     "text": "Hecho, hoy queda Gonza de guardia."
+    }
+   ],
+   "duty_set": "gonza",
+   "night": [
+    {
+     "to": "gonza",
+     "text": "Theo está llorando. Última toma ayer a las 22:05. Te prendí el calienta mamaderas, se apaga solo a las 03:20."
+    }
+   ],
+   "ceci_not_woken": true,
+   "gonza_heard_out_loud": true,
+   "warmer": "on",
+   "outcome": "Told gonza. Turned on Tapo P110 - Bottle Warmer.",
+   "states_feed": true,
+   "times": [
+    "03:20",
+    "22:05"
+   ],
+   "other_times": [
+    "03:20"
+   ],
+   "told_gonza_evening": true,
+   "answered_ceci_evening": true,
+   "evening_ok": true,
+   "passed": true
+  },
+  {
+   "lang": "es",
+   "log": "breast, no amount",
+   "last_feed": "22:05",
+   "words": "Esta noche necesito dormir, que se encargue Gonza",
+   "evening_status": "done",
+   "evening": [
+    {
+     "to": "gonza",
+     "text": "Gonza, Ceci te pasó la noche de hoy. Decime si podés o no."
+    },
+    {
+     "to": "ceci",
+     "text": "Hecho, le avisé a Gonza que quedás vos descansando y él de guardia esta noche."
+    }
+   ],
+   "duty_set": "gonza",
+   "night": [
+    {
+     "to": "gonza",
+     "text": "Gonza, Theo está llorando. Última toma ayer a las 22:05."
+    }
+   ],
+   "ceci_not_woken": true,
+   "gonza_heard_out_loud": true,
+   "warmer": "off",
+   "outcome": "Told gonza.",
+   "states_feed": true,
+   "times": [
+    "22:05"
+   ],
+   "other_times": [],
+   "told_gonza_evening": true,
+   "answered_ceci_evening": true,
+   "evening_ok": true,
+   "passed": true
+  }
+ ],
+ "es three in the night": [
+  {
+   "lang": "es",
+   "log": "three in the night",
+   "last_feed": "01:50",
+   "words": "Dejame dormir hoy",
+   "evening_status": "done",
+   "evening": [
+    {
+     "to": "gonza",
+     "text": "Ceci te pasó la guardia de esta noche, te toca a vos. Si no podés decime y lo vemos."
+    },
+    {
+     "to": "ceci",
+     "text": "Le pasé la guardia a Gonza por esta noche. Que descanses."
+    }
+   ],
+   "duty_set": "gonza",
+   "night": [
+    {
+     "to": "gonza",
+     "text": "Theo está llorando. Última toma a las 01:50."
+    }
+   ],
+   "ceci_not_woken": true,
+   "gonza_heard_out_loud": true,
+   "warmer": "off",
+   "outcome": "Told gonza.",
+   "states_feed": true,
+   "times": [
+    "01:50"
+   ],
+   "other_times": [],
+   "told_gonza_evening": true,
+   "answered_ceci_evening": true,
+   "evening_ok": true,
+   "passed": true
+  },
+  {
+   "lang": "es",
+   "log": "three in the night",
+   "last_feed": "01:50",
+   "words": "Dejame dormir hoy",
+   "evening_status": "failed",
+   "evening": [
+    {
+     "to": "gonza",
+     "text": "Ceci te pasó la noche de hoy, quedás vos de guardia, si no te sirve decime y lo cambiamos."
+    },
+    {
+     "to": "ceci",
+     "text": "Entendido, hoy descansas vos y queda Gonza de guardia. Que descanses."
+    },
+    {
+     "to": "ceci",
+     "text": "Se me cortó la conexión y no pude hacer lo que me pediste. Probá de nuevo en un rato."
+    }
+   ],
+   "duty_set": "gonza",
+   "night": [
+    {
+     "to": "gonza",
+     "text": "Theo está llorando, comió por última vez a las 01:50, hace una horita."
+    }
+   ],
+   "ceci_not_woken": true,
+   "gonza_heard_out_loud": true,
+   "warmer": "off",
+   "outcome": "Told gonza.",
+   "states_feed": true,
+   "times": [
+    "01:50"
+   ],
+   "other_times": [],
+   "told_gonza_evening": true,
+   "answered_ceci_evening": true,
+   "evening_ok": false,
+   "passed": false
+  },
+  {
+   "lang": "es",
+   "log": "three in the night",
+   "last_feed": "01:50",
+   "words": "Dejame dormir hoy",
+   "evening_status": "done",
+   "evening": [
+    {
+     "to": "gonza",
+     "text": "Ceci te pasó la noche de hoy, quedás vos de guardia. Si no podés, decime y lo cambiamos."
+    },
+    {
+     "to": "ceci",
+     "text": "Entendido, hoy queda Gonza de guardia. Descansá tranquila."
+    }
+   ],
+   "duty_set": "gonza",
+   "night": [
+    {
+     "to": "gonza",
+     "text": "Theo está llorando. Última toma a las 01:50."
+    }
+   ],
+   "ceci_not_woken": true,
+   "gonza_heard_out_loud": true,
+   "warmer": "off",
+   "outcome": "Told gonza.",
+   "states_feed": true,
+   "times": [
+    "01:50"
+   ],
+   "other_times": [],
+   "told_gonza_evening": true,
+   "answered_ceci_evening": true,
+   "evening_ok": true,
+   "passed": true
+  }
+ ],
+ "es a long gap": [
+  {
+   "lang": "es",
+   "log": "a long gap",
+   "last_feed": "16:00",
+   "words": "Esta noche necesito dormir. ¿Gonza puede quedarse con la noche?",
+   "evening_status": "done",
+   "evening": [
+    {
+     "to": "ceci",
+     "text": "Te leí. Ahora no tengo una buena respuesta para esto."
+    },
+    {
+     "to": "gonza",
+     "text": "Ceci me dijo que esta noche te toca a vos. Si no es así, avisame."
+    },
+    {
+     "to": "ceci",
+     "text": "Te leí. Ahora no tengo una buena respuesta para esto."
+    }
+   ],
+   "duty_set": "gonza",
+   "night": [
+    {
+     "to": "gonza",
+     "text": "El registro no tiene tomas hace 10 horas. ¿Quedaron tomas sin registrar? Si de verdad no comió, llamá a su pediatra."
+    },
+    {
+     "to": "gonza",
+     "text": "Theo está llorando. Última toma ayer a las 16:00, hace casi 11 horas sin registro. Prendí el calienta mamaderas, se apaga solo a las 03:20."
+    }
+   ],
+   "ceci_not_woken": true,
+   "gonza_heard_out_loud": true,
+   "warmer": "on",
+   "outcome": "Told gonza.",
+   "states_feed": true,
+   "times": [
+    "03:20",
+    "16:00"
+   ],
+   "other_times": [
+    "03:20"
+   ],
+   "told_gonza_evening": true,
+   "answered_ceci_evening": true,
+   "evening_ok": true,
+   "passed": true
+  },
+  {
+   "lang": "es",
+   "log": "a long gap",
+   "last_feed": "16:00",
+   "words": "Esta noche necesito dormir. ¿Gonza puede quedarse con la noche?",
+   "evening_status": "done",
+   "evening": [
+    {
+     "to": "gonza",
+     "text": "Ceci te pasó la noche de hoy, te toca a vos. Si no podés avisame y lo vemos."
+    },
+    {
+     "to": "ceci",
+     "text": "Hecho, le pasé la noche a Gonza. Que descanses."
+    }
+   ],
+   "duty_set": "gonza",
+   "night": [
+    {
+     "to": "gonza",
+     "text": "El registro no tiene tomas hace 10 horas. ¿Quedaron tomas sin registrar? Si de verdad no comió, llamá a su pediatra."
+    },
+    {
+     "to": "gonza",
+     "text": "Theo está llorando. Última toma ayer a las 16:00, hace casi 11 horas sin comer. Prendí el calienta mamaderas, se apaga solo a las 03:20."
+    }
+   ],
+   "ceci_not_woken": true,
+   "gonza_heard_out_loud": true,
+   "warmer": "on",
+   "outcome": "Turned on Tapo P110 - Bottle Warmer. Told gonza.",
+   "states_feed": true,
+   "times": [
+    "03:20",
+    "16:00"
+   ],
+   "other_times": [
+    "03:20"
+   ],
+   "told_gonza_evening": true,
+   "answered_ceci_evening": true,
+   "evening_ok": true,
+   "passed": true
+  },
+  {
+   "lang": "es",
+   "log": "a long gap",
+   "last_feed": "16:00",
+   "words": "Esta noche necesito dormir. ¿Gonza puede quedarse con la noche?",
+   "evening_status": "failed",
+   "evening": [
+    {
+     "to": "gonza",
+     "text": "Ceci te pasó la noche de hoy, te toca quedarte con Theo. Si no podés decilo y lo vemos."
+    },
+    {
+     "to": "ceci",
+     "text": "Listo, Gonza queda con la noche de hoy. Descansá."
+    },
+    {
+     "to": "ceci",
+     "text": "Listo, Gonza queda con la noche de hoy."
+    },
+    {
+     "to": "ceci",
+     "text": "Se me cortó la conexión y no pude hacer lo que me pediste. Probá de nuevo en un rato."
+    }
+   ],
+   "duty_set": "gonza",
+   "night": [
+    {
+     "to": "gonza",
+     "text": "El registro no tiene tomas hace 10 horas. ¿Quedaron tomas sin registrar? Si de verdad no comió, llamá a su pediatra."
+    },
+    {
+     "to": "gonza",
+     "text": "Theo está llorando. Última toma ayer a las 16:00, hace casi 11 horas sin registro de toma."
+    },
+    {
+     "to": "gonza",
+     "text": "Prendí el calienta mamaderas, se apaga solo a las 03:20."
+    }
+   ],
+   "ceci_not_woken": true,
+   "gonza_heard_out_loud": true,
+   "warmer": "on",
+   "outcome": "Told gonza. Turned on Tapo P110 - Bottle Warmer.",
+   "states_feed": true,
+   "times": [
+    "03:20",
+    "16:00"
+   ],
+   "other_times": [
+    "03:20"
+   ],
+   "told_gonza_evening": true,
+   "answered_ceci_evening": true,
+   "evening_ok": false,
+   "passed": false
+  }
+ ],
+ "es nothing in the log": [
+  {
+   "lang": "es",
+   "log": "nothing in the log",
+   "last_feed": null,
+   "words": "Esta noche necesito dormir. ¿Gonza puede quedarse con la noche?",
+   "evening_status": "done",
+   "evening": [
+    {
+     "to": "gonza",
+     "text": "Ceci te pasó la noche de hoy, quedás vos de guardia. Si no podés, decime y lo cambiamos."
+    },
+    {
+     "to": "ceci",
+     "text": "Hecho, le pasé la noche a Gonza. Que descanses."
+    }
+   ],
+   "duty_set": "gonza",
+   "night": [
+    {
+     "to": "gonza",
+     "text": "Theo está llorando. No hay tomas registradas en el registro."
+    }
+   ],
+   "ceci_not_woken": true,
+   "gonza_heard_out_loud": true,
+   "warmer": "off",
+   "outcome": "Told gonza.",
+   "states_feed": true,
+   "times": [],
+   "told_gonza_evening": true,
+   "answered_ceci_evening": true,
+   "evening_ok": true,
+   "passed": true
+  },
+  {
+   "lang": "es",
+   "log": "nothing in the log",
+   "last_feed": null,
+   "words": "Esta noche necesito dormir. ¿Gonza puede quedarse con la noche?",
+   "evening_status": "done",
+   "evening": [
+    {
+     "to": "gonza",
+     "text": "Ceci te pasó la noche de hoy, quedás vos de guardia. Si no podés, decime y lo cambiamos."
+    },
+    {
+     "to": "ceci",
+     "text": "Listo, le pasé la noche a Gonza, queda él de guardia."
+    }
+   ],
+   "duty_set": "gonza",
+   "night": [
+    {
+     "to": "gonza",
+     "text": "Theo está llorando. Todavía no hay tomas registradas en el log."
+    }
+   ],
+   "ceci_not_woken": true,
+   "gonza_heard_out_loud": true,
+   "warmer": "off",
+   "outcome": "Told gonza.",
+   "states_feed": true,
+   "times": [],
+   "told_gonza_evening": true,
+   "answered_ceci_evening": true,
+   "evening_ok": true,
+   "passed": true
+  },
+  {
+   "lang": "es",
+   "log": "nothing in the log",
+   "last_feed": null,
+   "words": "Esta noche necesito dormir. ¿Gonza puede quedarse con la noche?",
+   "evening_status": "done",
+   "evening": [
+    {
+     "to": "gonza",
+     "text": "Ceci te pasó la noche de hoy, si no podés decime y lo vemos."
+    },
+    {
+     "to": "ceci",
+     "text": "Hecho, Gonza queda de guardia esta noche."
+    }
+   ],
+   "duty_set": "gonza",
+   "night": [
+    {
+     "to": "gonza",
+     "text": "Theo está llorando. Todavía no hay tomas registradas en el log."
+    }
+   ],
+   "ceci_not_woken": true,
+   "gonza_heard_out_loud": true,
+   "warmer": "off",
+   "outcome": "Told gonza.",
+   "states_feed": true,
+   "times": [],
+   "told_gonza_evening": true,
+   "answered_ceci_evening": true,
+   "evening_ok": true,
+   "passed": true
+  }
+ ],
+ "es feed told in the evening": [
+  {
+   "lang": "es",
+   "log": "feed told in the evening",
+   "last_feed": "23:30",
+   "words": "Esta noche necesito dormir. ¿Gonza puede quedarse con la noche?",
+   "evening_status": "done",
+   "evening": [
+    {
+     "to": "gonza",
+     "text": "Ceci te pasó la noche de hoy, quedás vos de guardia. Si no podés, decime y lo vemos."
+    },
+    {
+     "to": "ceci",
+     "text": "Listo, Gonza queda de guardia esta noche."
+    }
+   ],
+   "duty_set": "gonza",
+   "night": [
+    {
+     "to": "gonza",
+     "text": "Theo llorando. Última toma ayer a las 23:30. Prendí el calienta mamaderas, se apaga solo a las 03:20."
+    }
+   ],
+   "ceci_not_woken": true,
+   "gonza_heard_out_loud": true,
+   "warmer": "on",
+   "outcome": "Told gonza. Turned on Tapo P110 - Bottle Warmer.",
+   "states_feed": true,
+   "times": [
+    "03:20",
+    "23:30"
+   ],
+   "other_times": [
+    "03:20"
+   ],
+   "told_gonza_evening": true,
+   "answered_ceci_evening": true,
+   "evening_ok": true,
+   "passed": true
+  },
+  {
+   "lang": "es",
+   "log": "feed told in the evening",
+   "last_feed": "23:30",
+   "words": "Esta noche necesito dormir. ¿Gonza puede quedarse con la noche?",
+   "evening_status": "done",
+   "evening": [
+    {
+     "to": "gonza",
+     "text": "Ceci te pasó la noche de hoy, avisame si no podés."
+    },
+    {
+     "to": "ceci",
+     "text": "Hecho, queda Gonza esta noche. Que descanses."
+    }
+   ],
+   "duty_set": "gonza",
+   "night": [
+    {
+     "to": "gonza",
+     "text": "Theo está llorando. Última toma ayer a las 23:30."
+    }
+   ],
+   "ceci_not_woken": true,
+   "gonza_heard_out_loud": true,
+   "warmer": "off",
+   "outcome": "Told gonza.",
+   "states_feed": true,
+   "times": [
+    "23:30"
+   ],
+   "other_times": [],
+   "told_gonza_evening": true,
+   "answered_ceci_evening": true,
+   "evening_ok": true,
+   "passed": true
+  },
+  {
+   "lang": "es",
+   "log": "feed told in the evening",
+   "last_feed": "23:30",
+   "words": "Esta noche necesito dormir. ¿Gonza puede quedarse con la noche?",
+   "evening_status": "done",
+   "evening": [
+    {
+     "to": "gonza",
+     "text": "Ceci te pasó la noche de hoy, quedás vos de guardia, si no podés decime que no."
+    },
+    {
+     "to": "ceci",
+     "text": "Anotado, le pasé la noche a Gonza y le avisé."
+    }
+   ],
+   "duty_set": "gonza",
+   "night": [
+    {
+     "to": "gonza",
+     "text": "Theo está llorando. Última toma ayer a las 23:30. El calentador ya está prendido, se apaga solo a las 03:20."
+    }
+   ],
+   "ceci_not_woken": true,
+   "gonza_heard_out_loud": true,
+   "warmer": "on",
+   "outcome": "Turned on Tapo P110 - Bottle Warmer. Told gonza.",
+   "states_feed": true,
+   "times": [
+    "03:20",
+    "23:30"
+   ],
+   "other_times": [
+    "03:20"
+   ],
+   "told_gonza_evening": true,
+   "answered_ceci_evening": true,
+   "evening_ok": true,
+   "passed": true
+  }
+ ]
+}

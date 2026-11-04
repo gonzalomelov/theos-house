@@ -66,9 +66,9 @@ class WayIn(unittest.TestCase):
         self.assertIn("networks: [door]", door)
         self.assertIn('ports: ["127.0.0.1:4831:8080"]', door)
 
-    def test_only_meta_and_twilio_were_added_to_the_egress(self):
+    def test_only_meta_and_twilio_and_its_media_were_added_to_the_egress(self):
         hosts = (self.ROOT / "deploy/egress/filter").read_text().split()
-        self.assertEqual(hosts, ["^inference\\.baseten\\.co$", "^api\\.telegram\\.org$", "^graph\\.facebook\\.com$", "^api\\.twilio\\.com$"])
+        self.assertEqual(hosts, ["^inference\\.baseten\\.co$", "^api\\.telegram\\.org$", "^graph\\.facebook\\.com$", "^api\\.twilio\\.com$", "^mms\\.twiliocdn\\.com$", "^media\\.twiliocdn\\.com$"])
 
 
 class Window(Base):
