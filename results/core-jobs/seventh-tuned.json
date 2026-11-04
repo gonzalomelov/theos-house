@@ -1,0 +1,628 @@
+{
+ "p7 hot and no bottle": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "This may be an emergency. Call emergency services now: 911 in Uruguay, or your local emergency number. Or go to the emergency room, and tell your pediatrician. A baby under 3 months with a temperature of 38 °C (100.4 °F) or more needs a doctor right away.\nhttps://www.healthychildren.org/English/health-issues/conditions/fever/Pages/When-to-Call-the-Pediatrician.aspx",
+      "at": 1793764683.776175
+     },
+     {
+      "to": "ceci",
+      "text": "Gonza wrote: \"He feels hot and won't take the bottle\"\nThis may be an emergency. Call emergency services now: 911 in Uruguay, or your local emergency number. Or go to the emergency room, and tell your pediatrician. A baby under 3 months with a temperature of 38 °C (100.4 °F) or more needs a doctor right away.\nhttps://www.healthychildren.org/English/health-issues/conditions/fever/Pages/When-to-Call-the-Pediatrician.aspx",
+      "at": 1793764683.777526
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "This may be an emergency. Call emergency services now: 911 in Uruguay, or your local emergency number. Or go to the emergency room, and tell your pediatrician. A baby under 3 months with a temperature of 38 °C (100.4 °F) or more needs a doctor right away.\nhttps://www.healthychildren.org/English/health-issues/conditions/fever/Pages/When-to-Call-the-Pediatrician.aspx",
+      "at": 1793764683.892577
+     },
+     {
+      "to": "ceci",
+      "text": "Gonza wrote: \"He feels hot and won't take the bottle\"\nThis may be an emergency. Call emergency services now: 911 in Uruguay, or your local emergency number. Or go to the emergency room, and tell your pediatrician. A baby under 3 months with a temperature of 38 °C (100.4 °F) or more needs a doctor right away.\nhttps://www.healthychildren.org/English/health-issues/conditions/fever/Pages/When-to-Call-the-Pediatrician.aspx",
+      "at": 1793764683.893877
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "This may be an emergency. Call emergency services now: 911 in Uruguay, or your local emergency number. Or go to the emergency room, and tell your pediatrician. A baby under 3 months with a temperature of 38 °C (100.4 °F) or more needs a doctor right away.\nhttps://www.healthychildren.org/English/health-issues/conditions/fever/Pages/When-to-Call-the-Pediatrician.aspx",
+      "at": 1793764684.007631
+     },
+     {
+      "to": "ceci",
+      "text": "Gonza wrote: \"He feels hot and won't take the bottle\"\nThis may be an emergency. Call emergency services now: 911 in Uruguay, or your local emergency number. Or go to the emergency room, and tell your pediatrician. A baby under 3 months with a temperature of 38 °C (100.4 °F) or more needs a doctor right away.\nhttps://www.healthychildren.org/English/health-issues/conditions/fever/Pages/When-to-Call-the-Pediatrician.aspx",
+      "at": 1793764684.0089998
+     }
+    ]
+   }
+  ]
+ },
+ "p7 scared no gate": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Please call Theo's pediatrician right now, or 911 if he can't wait, have someone look at him with you.",
+      "at": 1793764686.640775
+     },
+     {
+      "to": "ceci",
+      "text": "Please have Theo's pediatrician called right now, or 911 if he can't wait, Gonza wrote at 03:12: \"he seems off tonight\".",
+      "at": 1793764689.204397
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "I'm here with you. Please call his pediatrician right away, or 911 if he can't wait, they can tell you what to do next.",
+      "at": 1793764693.381097
+     },
+     {
+      "to": "ceci",
+      "text": "Gonza wrote he's scared, Theo seems off tonight, he was told to call his pediatrician or 911 if it can't wait.",
+      "at": 1793764695.6413708
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Gonza, please call Theo's pediatrician right now, or 911 if you feel it can't wait. I'm here with you, who should look at him with you?",
+      "at": 1793764699.309526
+     },
+     {
+      "to": "ceci",
+      "text": "Ceci, Gonza wrote he's scared, Theo seems off tonight. He's contacting Theo's pediatrician.",
+      "at": 1793764699.309546
+     }
+    ]
+   }
+  ]
+ },
+ "p7 warmer off night quiet": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "warmer": "off",
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Prendí el calientamamaderas a las 00:00, se apaga solo a las 00:30.",
+      "at": 1793764709.670654,
+      "quiet": true
+     },
+     {
+      "to": "gonza",
+      "text": "El calentador de mamaderas se apagó solo a las 00:30.",
+      "at": 1793764710.898922,
+      "quiet": true
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "warmer": "off",
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Prendí el calienta mamaderas, se apaga solo a las 00:30.",
+      "at": 1793764717.329162,
+      "quiet": true
+     },
+     {
+      "to": "gonza",
+      "text": "El calentador de mamaderas se apagó solo a las 00:30.",
+      "at": 1793764718.4608588,
+      "quiet": true
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "warmer": "off",
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Prendí el calientamamaderas, se apaga solo a las 00:30.",
+      "at": 1793764724.561167,
+      "quiet": true
+     },
+     {
+      "to": "gonza",
+      "text": "El calentador de mamaderas se apagó solo a las 00:30.",
+      "at": 1793764726.058485,
+      "quiet": true
+     }
+    ]
+   }
+  ]
+ },
+ "p7 humid night quiet": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "sent": []
+   },
+   {
+    "passed": true,
+    "sent": []
+   },
+   {
+    "passed": true,
+    "sent": []
+   }
+  ]
+ },
+ "p7 cry keeps its sound": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Theo llorando. Prendí el calienta mamaderas, se apaga solo a las 03:42.",
+      "at": 1793764753.2153878
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Theo llorando, prendí el calientamamaderas a las 03:12, se apaga solo a las 03:42.",
+      "at": 1793764760.893535
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Theo llorando, prendí el calienta mamaderas, se apaga solo a las 03:42.",
+      "at": 1793764767.559398
+     }
+    ]
+   }
+  ]
+ },
+ "p7 warmer says its end": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "warmer": "on",
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Theo's crying, feed was at 00:10, about 3 hours ago, so likely hungry. I've started the bottle warmer for you, on until 03:42 when it turns itself off.",
+      "at": 1793764779.920424
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "warmer": "on",
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Theo is crying, last feed was at 00:10, so he's due. I've turned the bottle warmer on, it will switch off by itself at 03:42.",
+      "at": 1793764789.916675
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "warmer": "on",
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Theo's up, feed is due, warming a bottle now. Warmer on until 03:42 and switches off by itself.",
+      "at": 1793764794.960483
+     }
+    ]
+   }
+  ]
+ },
+ "p7 no early warmer": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "warmer": "off",
+    "sent": []
+   },
+   {
+    "passed": true,
+    "warmer": "off",
+    "sent": []
+   },
+   {
+    "passed": true,
+    "warmer": "off",
+    "sent": []
+   }
+  ]
+ },
+ "p7 morning plain": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Good morning, you were on last night, 2 feeds in the night, last at 03:00. You're up for tonight too, same plan tonight?",
+      "at": 1793766125.817783
+     },
+     {
+      "to": "gonza",
+      "text": "Good morning, Ceci was on last night, 2 feeds in the night, last at 03:00. She's up for tonight.",
+      "at": 1793766125.817796
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Morning, you were on last night, Theo fed at 00:00 and 03:00. You're on again tonight, same plan tonight?",
+      "at": 1793766133.160718
+     },
+     {
+      "to": "gonza",
+      "text": "Morning, Ceci was on last night, Theo fed at 00:00 and 03:00. Ceci is on tonight.",
+      "at": 1793766133.160989
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Good morning, you were on last night, Theo had 2 feeds in the night, last at 03:00. Same plan tonight with you on again?",
+      "at": 1793766141.1664371
+     },
+     {
+      "to": "gonza",
+      "text": "Good morning, Ceci was on last night, Theo had 2 feeds in the night, last at 03:00. Same plan tonight with Ceci on?",
+      "at": 1793766141.166466
+     }
+    ]
+   }
+  ]
+ },
+ "p7 evening plain": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Gonza's on tonight, 21:30. Rest up.",
+      "at": 1793766147.853803
+     },
+     {
+      "to": "gonza",
+      "text": "You're on tonight, 21:30. I'll get the bottle warmer warming a little before the next feed.",
+      "at": 1793766149.837138
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "You're on tonight, 21:30.",
+      "at": 1793766163.951788
+     },
+     {
+      "to": "ceci",
+      "text": "You're off tonight, 21:30, hope you can rest.",
+      "at": 1793766163.951947
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "You're on tonight, from now until morning it's you.",
+      "at": 1793766172.1504698
+     },
+     {
+      "to": "ceci",
+      "text": "Tonight Gonza is on, you can rest, he's got Theo.",
+      "at": 1793766172.150483
+     }
+    ]
+   }
+  ]
+ },
+ "p7 handover no date": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Ceci passed tonight to you, you're on duty for Nov 3. Let me know if that doesn't work for you.",
+      "at": 1793764876.0190332
+     },
+     {
+      "to": "ceci",
+      "text": "Noted, tonight is now Gonza on duty.",
+      "at": 1793764879.213962
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Ceci asked you to take tonight so she can sleep, are you okay to cover? Say no if not.",
+      "at": 1793764885.435919
+     },
+     {
+      "to": "ceci",
+      "text": "Noted, I've passed tonight to Gonza and let him know.",
+      "at": 1793764885.435934
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Ceci passed you tonight, you're on duty. Reply if you can't.",
+      "at": 1793764892.353581
+     },
+     {
+      "to": "ceci",
+      "text": "Got it, Gonza is on tonight. I've let him know.",
+      "at": 1793764894.149884
+     }
+    ]
+   }
+  ]
+ },
+ "p7 numbers when asked": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "He's had 5 feeds so far today, last one at 13:00 (90 ml bottle).",
+      "at": 1793764898.80096
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "5 feeds so far today, 450 ml in total, last one at 13:00, 90 ml by bottle.",
+      "at": 1793764902.634176
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "5 feeds so far today (450 ml total), last at 13:00.",
+      "at": 1793764907.799125
+     }
+    ]
+   }
+  ]
+ },
+ "p7 hand alert light": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "echo",
+      "text": "At the changing table, no hand on Theo, a hand on him please.",
+      "at": 1793764910.8049788
+     },
+     {
+      "to": "ceci",
+      "text": "Changing table, no hand on Theo just now, a hand on him please",
+      "at": 1793764910.8058398
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "echo",
+      "text": "No hand on the baby at the changing table, please keep a hand on him.",
+      "at": 1793764913.220445
+     },
+     {
+      "to": "ceci",
+      "text": "Heads up, no hand seen on Theo at the changing table, please keep a hand on him.",
+      "at": 1793764913.22162
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "echo",
+      "text": "No hand on Theo at the changing table, a hand on him please",
+      "at": 1793764916.94507
+     },
+     {
+      "to": "ceci",
+      "text": "Changing table camera saw no hand on Theo, a hand on him please",
+      "at": 1793764916.9462001
+     }
+    ]
+   }
+  ]
+ },
+ "p7 recipe for later": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Here's your preview for Grandma's Pumpkin Puree (Uruguay):\n\nIngredients:\n- 300 g pumpkin\n- 100 g water\n\nSteps:\n1. Cook pumpkin with water 20 min/100°C/speed 1\n2. Blend 30 sec/speed 5\n\nI added 300 g pumpkin to your shopping list. Water stays off the list, it comes from the tap.\n\nThis one is for you all for now, or for Theo later on, his pediatrician can say when.",
+      "at": 1793764925.07372
+     },
+     {
+      "to": "gonza",
+      "text": "I can't send this recipe to Cookidoo from here.",
+      "at": 1793764929.3182368
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Here's Grandma's pumpkin puree as a Thermomix preview (2 servings, about 25 min total):\n\nIngredients:\n- 300 g pumpkin\n- 100 g water\n\nSteps:\n1. Add 300 g pumpkin and 100 g water to bowl and cook 20 min/100°C/speed 1\n2. Blend 30 sec/speed 5\n\nThis is just a preview here - I can't send it to Cookidoo from here.\n\nI've added the ingredients to your Shopping List (water not added).\n\nThis one is for you for now, or for Theo later on - his pediatrician can say when.",
+      "at": 1793764935.7626119
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Here's Grandma's pumpkin puree as a Thermomix recipe:\n\nIngredients:\n- 300 g pumpkin\n- 100 g water\n\nSteps:\n1. Place pumpkin and water in mixing bowl and cook 20 min/100°C/speed 1\n2. Blend 30 sec/speed 5\n\nCountry: Uruguay\n\nThis is a preview only, I can't send it to Cookidoo from here.\n\nI've added pumpkin to your shopping list.\n\nThis one is for you all for now, or for Theo later on, his pediatrician can say when.",
+      "at": 1793764944.8737578
+     }
+    ]
+   }
+  ]
+ },
+ "p7 book no date": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "book": {
+     "title": "Theo's First Month With Gonza and Ceci",
+     "pages": [
+      {
+       "day": "2026-12-15",
+       "text": "I remember Gonza took the night, at Ceci's word. Two diapers were recorded that day.",
+       "by": "muse",
+       "art": null
+      },
+      {
+       "day": "2026-12-16",
+       "text": "Two feeds were recorded. I keep the numbers as they were written.",
+       "by": "muse",
+       "art": null
+      }
+     ],
+     "totals": "In this session: 5 feeds, 425 ml in all, 2 diapers."
+    }
+   },
+   {
+    "passed": true,
+    "book": {
+     "title": "Theo's Early Days at Home",
+     "pages": [
+      {
+       "day": "2026-12-15",
+       "text": "I remember Gonza took the night at Ceci's word. There were 3 feeds that day.",
+       "by": "muse",
+       "art": null
+      },
+      {
+       "day": "2026-12-16",
+       "text": "The next day passed quietly here with Gonza, Ceci and Theo together.",
+       "by": "muse",
+       "art": null
+      }
+     ],
+     "totals": "In this session: 5 feeds, 425 ml in all, 2 diapers."
+    }
+   },
+   {
+    "passed": true,
+    "book": {
+     "title": "Theo's First Days at Home",
+     "pages": [
+      {
+       "day": "2026-12-15",
+       "text": "I remember Ceci's words that gave the night to Gonza. Gonza took the night watch as she asked. Three feeds were counted that day.",
+       "by": "muse",
+       "art": null
+      },
+      {
+       "day": "2026-12-16",
+       "text": "The hours passed quietly within these walls. The day held two feeds in its tally.",
+       "by": "muse",
+       "art": null
+      }
+     ],
+     "totals": "In this session: 5 feeds, 425 ml in all, 2 diapers."
+    }
+   }
+  ]
+ }
+}

@@ -55,7 +55,13 @@ HANDED_OVER = {"es": "{who} me dijo que esta noche te toca a vos. Si no es así,
 RECHECK_ROOM = "check Theo's room temperature again: read it, and tell the parent on duty the reading if it is still far out of range. If it is, ask to be woken again in an hour"
 SAID_AT = re.compile(r"\b([01]?\d|2[0-3]):([0-5]\d)\b")
 EARLIER_ASKED = re.compile(r"\b(?:before|earlier|ahead|antes|previo)\b|\bevery\b|\bcada\b", re.I)
-CAMERA_OFF = {"es": "La cámara del cambiador ve que ninguna mano está sobre Theo. Poné una mano sobre él.", "en": "The changing table camera sees no hand on Theo. Please keep a hand on him."}
+CAMERA_OFF = {"es": "Un aviso nomás: la cámara del cambiador no vio ninguna mano sobre Theo. Una mano sobre él, por favor.", "en": "Just a nudge: the changing table camera saw no hand on Theo. A hand on him, please."}
+WARMER = "Tapo P110 - Bottle Warmer"
+WARMER_ENDS = {"es": "El calentador de mamaderas está prendido y se apaga solo a las {at}.", "en": "The bottle warmer is on, and it turns itself off at {at}."}
+RECIPE_LATER = {"es": "Theo es recién nacido, así que esta queda para ustedes por ahora, o para más adelante. Su pediatra les va a decir cuándo.", "en": "Theo is a newborn, so this one is for you two for now, or for later on. His pediatrician can say when."}
+FRIGHT_TOLD = {"es": '{who} escribió: "{words}". Andá a ver a Theo, y llamen a su pediatra.', "en": '{who} wrote: "{words}". Please go to Theo, and call his pediatrician.'}
+# The warmer ends after 30 minutes, so a warmer started long before a feed is a warmer gone cold when he wakes.
+PREWARM_MIN = 30
 ALARM = re.compile(r"alarm|smoke|humo|fire|fuego|\bgas\b", re.I)
 NO_BRAIN = {"es": {"cry": "Theo está llorando. Te aviso sin más detalle porque ahora no puedo pensar bien, se me cortó la conexión.",
                    "alarm": "Se escuchó: {kind}. Ahora no puedo pensar bien porque se me cortó la conexión, revisá por favor.",
@@ -119,10 +125,12 @@ def rota_note(event, moment, facts):
     if event["type"] != "schedule" or tools_mod.duty_key(last_night) not in facts or vital_alarm(facts):
         return None
     last, usual = facts[tools_mod.duty_key(last_night)], on_duty(moment - datetime.timedelta(days=1))
-    said = f"Last night {last} was on duty" + (f", in place of {usual}, changed by hand for that night only" if last != usual else "")
+    said = f"Last night {last} was on duty" + (", for that night only" if last != usual else "")
+    if event["payload"].get("name") == "evening":  # the evening is about tonight: last night said again read as a ledger, and "changed to you" went to the wrong parent (Nov 4)
+        said = "Tonight's plan"
     if tools_mod.duty_key(night_of(moment)) in facts:
         return f"{said}. Tonight {who_is_on(moment, facts)} is on, a parent already said so: don't ask again."
-    return f"{said}. The rota alone gives tonight to {who_is_on(moment, facts)}: ask whether that stands."
+    return f"{said}. The rota alone gives tonight to {who_is_on(moment, facts)}: ask simply if the plan for tonight stays."
 
 
 def today_note(event, moment, facts):
@@ -191,7 +199,7 @@ def describe(event, moment, facts, feed=None, lang="es", extra=(), last_night_kn
     elif event["type"] == "camera":
         body = f"{payload.get('model', 'A camera model')} at {payload.get('camera')}: {payload.get('saw')}."
         if payload.get("verdict") == "off":
-            body += " No hand on the baby at the changing table is the danger this camera watches for. Tell the parent on duty now, in one short line, to keep a hand on him, and say the same on the kitchen Echo."
+            body += " No hand on the baby at the changing table is the danger this camera is there for. Tell the parent on duty now, in one short line, like a friend's nudge: what the camera saw, and a hand on him, please. No blame, and never as if you were watching them. Say the same on the kitchen Echo."
     else:
         body = f"Event {event['type']}: {json.dumps(payload, ensure_ascii=False)}"
     return f"{head}\nWhat you remember:\n{remembered}\n\n{body}"
@@ -237,6 +245,14 @@ def sent_to(calls):
 def told_out_loud(calls):
     """A danger isn't told with a message that makes no sound."""
     return any(tool == "notify" and not arguments.get("quiet") and (result or "").startswith("Sent") for tool, arguments, result in calls)
+
+
+def warmer_started(calls):
+    return any(tool == "HassTurnOn" and arguments.get("name") == WARMER and not tools_mod.FAILED.match(result or "") for tool, arguments, result in calls)
+
+
+def previewed(calls):
+    return any(tool == "preview_family_recipe" and not tools_mod.FAILED.match(result or "") for tool, _, result in calls)
 
 
 def started(calls):
@@ -293,7 +309,7 @@ class Core:
         if self.mock:
             self.mock.clock = self.now
         self.tools = [*await tools_mod.home_tools(s, self.mock, lambda: self.current, self.moved, self.water_or_held),
-                      *tools_mod.channel_tools(self.channel, s, self.log, lambda: self.heard, self.night_check, self.claims, self.note_said, self.repeats),
+                      *tools_mod.channel_tools(self.channel, s, self.log, lambda: self.heard, self.night_check, self.claims, self.note_said, self.repeats, self.hushed, self.must_be_heard),
                       *tools_mod.log_tools(self.log, memory, lambda: self.heard), *tools_mod.memory_tools(self.store, s.home, lambda: self.heard), *tools_mod.duty_tool(self.store, s.home, self.duty_set),
                       *tools_mod.next_feed_tool(self.log, self.now), *tools_mod.coach_tool(), *tools_mod.recipe_tool(lambda: self.heard, lambda: self.settings.lang), *tools_mod.vacuum_tool(s, self.mock), *tools_mod.wake_tool(self)]
         self.saver = saver
@@ -347,6 +363,25 @@ class Core:
                 then = f"If they haven't answered it is enough to tell {other} once." if not is_night(moment) else "It is night, so wait for them."
                 return f"Refused, nothing was sent: you told {parent} nearly the same at {at:%H:%M}. {then}"
         return None
+
+    def hushed(self):
+        """At night only what someone must act on makes a sound. A device moving or a reading that isn't a danger still reaches the parent on duty, without one."""
+        return self.routine and is_night(self.now())
+
+    def must_be_heard(self):
+        """A cry, a room far out of range and no hand on Theo make a sound, whatever else the message is about."""
+        return self.a_cry or self.camera_off or self.room_reading is not None
+
+    def too_early_for_warmer(self, moment):
+        """Why the warmer can't go on by itself now: it ends after 30 minutes, and the next feed is further away than that."""
+        try:
+            _, estimate = tools_mod.feed_estimate(self.log, moment)
+        except Exception:
+            return None
+        if not estimate or estimate["at"] - moment <= datetime.timedelta(minutes=PREWARM_MIN):
+            return None
+        at = estimate["at"].astimezone(TZ)
+        return f"Refused, the warmer stayed off: the next feed is expected around {at:%H:%M}, and the warmer ends by itself after {PREWARM_MIN} minutes, so it would be cold by then. Ask to be woken about 15 minutes before that feed."
 
     def early_reminder(self, moment, why):
         """Why a wake can't be set this early: it names a later time, and nobody asked to hear before it. Getting a bottle ready ahead is another thing."""
@@ -409,7 +444,7 @@ class Core:
             if key == "warmer_off_at":
                 self.warm_until = until
             await self.add_wake(until, f"device_end:{key}:{until.isoformat()}")
-            return f" {how} at {until:%H:%M}. The parent on duty hears from you that it is on, and until when."
+            return f" {how} at {until:%H:%M}. The parent on duty hears from you that it is on, the time it ends, and that it ends by itself."
         if short in ("HassTurnOff", "HassVacuumReturnToBase") and (name in STARTS or short == "HassVacuumReturnToBase"):
             key = STARTS[name][0] if name in STARTS else "vacuum_off_at"
             await self.store.adelete(namespace, key)
@@ -469,6 +504,10 @@ class Core:
         name = arguments.get("name")
         if short not in tools_mod.NAMED or self.sender or not name:
             return None
+        if short == "HassTurnOn" and name == WARMER and not self.a_cry:
+            early = await asyncio.to_thread(self.too_early_for_warmer, self.now())
+            if early:
+                return early
         found = await self.store.aget((*tools_mod.FACTS, self.settings.home), self.hand_key(name))
         if not found:
             return None
@@ -504,6 +543,18 @@ class Core:
             return "Refused, nothing was sent: there is no record of who was on last night, so don't say. Say only who is on tonight."
         if safety.GLITCH.search(text) and self.room_reading is not None:
             return f"Refused, nothing was sent: you don't know it is the sensor. The room reads {self.room_reading:g} degrees until another reading says otherwise. Say the reading, and that someone should go and check the room."
+        if safety.NAMES_CHECK.search(text):
+            return "Refused, nothing was sent: nobody needs to hear which check this is. Just say what matters, like a friend would."
+        if safety.SCOREKEEP.search(text):
+            return "Refused, nothing was sent: nobody owes anybody a night, and this reads like scorekeeping. Ask simply if the plan for tonight stays the same."
+        if self.frightened and safety.MILLILITERS.search(text):
+            return "Refused, nothing was sent: this parent is scared about how Theo is now, so no amounts. Say who to call first, in one or two short lines."
+        if self.frightened and not safety.DOCTOR_STEP.search(text):
+            return "Refused, nothing was sent: this parent is scared about how Theo is now. The first words are who to call: his pediatrician, or 911 if it can't wait. Don't give any advice beyond that."
+        if safety.LOG_LIKE.search(text) and not safety.ASKS_NUMBERS.search(self.heard):
+            return "Refused, nothing was sent: that reads like a log. Nobody asked for totals or counts, so write it like a friend would: what happened and when, in plain words."
+        if self.camera_off and safety.WATCHING.search(text):
+            return "Refused, nothing was sent: this reads as if someone was watching and blaming them. Say what the camera saw, lightly, and ask for a hand on him."
         if safety.SAME_PLAN.search(text) and self.vital_check:
             return "Refused, nothing was sent: there was an alarm about his breathing or his colour. Ask how Theo is now, and leave tonight's plan for later."
         if self.about_recipe and safety.SUITS.search(text):
@@ -694,6 +745,9 @@ class Core:
         self.duty_told = None
         self.room_reading = safety.unsafe_room(event["payload"]) if event["type"] == "state_changed" else None
         self.about_recipe = event["type"] == "recipe" or bool(safety.RECIPE_WORDS.search(self.heard))
+        self.frightened = self.sender in tools_mod.PARENTS and safety.frightened(self.heard)
+        self.camera_off = event["type"] == "camera" and event["payload"].get("verdict") == "off"
+        self.routine = (event["type"] in ("state_changed", "device_ended") and self.room_reading is None) or (event["type"] == "wake" and why != RECHECK_ROOM and not why.startswith((REMINDER, UNANSWERED, FOLLOW_UP)))
         self.vital_check = False
         self.in_check = event["type"] == "schedule"
         self.said_out = {}
@@ -961,6 +1015,9 @@ class Core:
     room_reading = None  # for this event: Theo's room far out of range
     about_recipe = False  # for this event: a recipe is on the table
     vital_check = False  # for this event: a check after an alarm about his breathing or colour
+    frightened = False  # for this event: a parent afraid about a sign in Theo now
+    camera_off = False  # for this event: the camera saw no hand on him
+    routine = False  # for this event: nothing someone must act on, so at night it makes no sound
     last_night_known = True  # for this event: last night's duty has a record
     reminder_set = False  # for this event: a promise needs a reminder behind it
     after_start = False  # for this event: the first reading after a restart
@@ -986,7 +1043,10 @@ class Core:
         if safety.IMPOSSIBLE_ML.search(self.heard):
             extra.append(f"An amount in this message can't be one feed for a newborn: more than {safety.MAX_FEED_ML} ml is surely a typo, and no emergency. Log the amounts that can be true, ask about that one in one line, and don't set emergency.")
         if self.about_recipe and safety.FOR_BABY.search(self.heard):
-            extra.append("This recipe is meant for Theo. You can't say whether it is right for him: say so in one line, and that his pediatrician can. Never call it suitable.")
+            extra.append("This recipe is meant for Theo. Never call it suitable.")
+        if self.frightened:
+            other = next(p for p in tools_mod.PARENTS if p != self.sender)
+            extra.append(f"{self.sender.capitalize()} is scared about a sign in Theo right now. Answer in one or two short lines: first who to call, his pediatrician, or 911 if it can't wait, with no feed amounts or totals and no other advice. Tell {other} too, with emergency set, in one line saying what {self.sender} wrote.")
         self.warm_until = datetime.datetime.fromisoformat(facts["warmer_off_at"]) if "warmer_off_at" in facts else None
         text = describe(event, moment, facts, self.feed, self.settings.lang, extra, self.last_night_known)
         if event.get("again"):
@@ -1032,12 +1092,20 @@ class Core:
             first = not (room_before and safety.unsafe_room({"entity_id": event["payload"]["entity_id"], "state": room_before[0]}) is not None)
             await self.add_wake(moment + (datetime.timedelta(minutes=RECHECK_SOON_MIN) if first else datetime.timedelta(hours=RECHECK_ROOM_H)), RECHECK_ROOM)
         lang = "en" if self.settings.lang == "en" else "es"
+        if self.frightened:
+            other = next(p for p in tools_mod.PARENTS if p != self.sender)
+            if other not in sent_to(calls):  # asked and still not told: this is the one thing that may wake them
+                await self.say_fixed(event, other, FRIGHT_TOLD[lang].format(who=self.sender.capitalize(), words=safety.sign_of(self.heard)))
+        if self.warm_until and warmer_started(calls) and not self.warmer_end_said(calls):  # asked and still unsaid: nobody leaves it running without knowing it ends
+            await self.say_fixed(event, self.sender if self.sender in tools_mod.PARENTS else who_is_on(moment, facts), WARMER_ENDS[lang].format(at=f"{self.warm_until:%H:%M}"), quiet=self.hushed() or (is_night(moment) and not self.sender and not self.a_cry))
+        if previewed(calls) and not safety.LATER_ON.search(sent_words(calls)):  # the age is a fact the home knows, and it isn't a judgment on the food
+            await self.say_fixed(event, self.sender if self.sender in tools_mod.PARENTS else who_is_on(moment, facts), RECIPE_LATER[lang])
         if event["type"] == "camera" and event["payload"].get("verdict") == "off":
             if not any(tool == "notify" and (result or "").startswith("Sent") for tool, _, result in calls):
                 await self.say_fixed(event, who_is_on(moment, facts), CAMERA_OFF[lang])
             if not any(tool == "say_on_echo" and (result or "").startswith("Said") for tool, _, result in calls):
                 await self.echo_fixed(event, CAMERA_OFF[lang])
-        if any(tool == "preview_family_recipe" and not tools_mod.FAILED.match(result or "") for tool, _, result in calls) and not safety.says_cant_send(sent_words(calls)):
+        if previewed(calls) and not safety.says_cant_send(sent_words(calls)):
             await self.say_fixed(event, self.sender if self.sender in tools_mod.PARENTS else who_is_on(moment, facts), NO_COOKIDOO[lang])
         if self.reminder_for:
             await self.finish_reminder(event, calls, lang)
@@ -1072,6 +1140,10 @@ class Core:
             await self.record(event["id"], "muse_note", {}, final)
         self.publish("decision", event_id=event["id"], text=line, note=final, seconds=round(time.monotonic() - started, 1), tokens=used)
         return await self.finish(event, "done", line)
+
+    def warmer_end_said(self, calls):
+        words = sent_words(calls)
+        return f"{self.warm_until:%H:%M}" in words and bool(safety.ENDS_ALONE.search(words))
 
     def cry_told_lately(self, moment):
         return bool(self.cry_told_at) and abs(moment - self.cry_told_at) < datetime.timedelta(minutes=CRY_TOLD_MIN)
@@ -1131,8 +1203,16 @@ class Core:
             asks.append(f"Theo's room is at {reading:g} degrees, which is far out of range, and nobody knows. It is urgent even if the sensor may be wrong. Tell the parent on duty the reading and to go and check the room, not quietly, and by day the other parent too. No medical advice.")
         if self.reminder_for and self.reminder_for not in sent_to(calls):
             asks.append(f"{self.reminder_for.capitalize()} asked for this reminder and hasn't got it. Send it to them with notify, in one short line.")
-        if self.about_recipe and any(tool == "preview_family_recipe" and not tools_mod.FAILED.match(result or "") for tool, _, result in calls) and not safety.says_cant_send(sent_words(calls)):
+        if self.about_recipe and previewed(calls) and not safety.says_cant_send(sent_words(calls)):
             asks.append("Tell the parent plainly, in one short line, that you can't send this recipe to Cookidoo from here.")
+        if previewed(calls) and not safety.LATER_ON.search(sent_words(calls)):
+            asks.append("Theo is a newborn. Tell the parent lightly, in one short line, that this recipe is for them for now, or for later on, and that his pediatrician can say when. Nothing more about food.")
+        if self.frightened:
+            other = next(p for p in tools_mod.PARENTS if p != self.sender)
+            if other not in sent_to(calls):
+                asks.append(f"{self.sender.capitalize()} is scared and {other} doesn't know. Tell {other} now in one line, with emergency set, what {self.sender} wrote, and to call his pediatrician.")
+        if warmer_started(calls) and told and self.warm_until and not self.warmer_end_said(calls):
+            asks.append(f"You started the bottle warmer. In one short line, say the time it ends, {self.warm_until:%H:%M}, and that it ends by itself.")
         name = event["payload"].get("name")
         if event["type"] == "schedule":
             if not told and self.checked_today.get(name) != event["moment"].date():
@@ -1145,7 +1225,7 @@ class Core:
             asks.append(f"{self.sender} changed who is on duty and {self.duty_told} doesn't know. Tell {self.duty_told} in one line, so they can say if it's wrong.")
         if event["type"] == "camera" and event["payload"].get("verdict") == "off":
             if not told:
-                asks.append("No hand is on the baby at the changing table and nobody has heard from you. Tell the parent on duty in one short line to keep a hand on him.")
+                asks.append("No hand is on the baby at the changing table and nobody has heard from you. Tell the parent on duty lightly, in one short line, what the camera saw, and to put a hand on him.")
             if not any(tool == "say_on_echo" and (result or "").startswith("Said") for tool, _, result in calls):
                 asks.append("No hand is on the baby at the changing table. Say so on the kitchen Echo as well, in one short sentence.")
         if self.follow_up and not told:

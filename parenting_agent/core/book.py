@@ -7,11 +7,12 @@ import re
 from collections import defaultdict
 
 from ..agent.memory import parse_time
+from .safety import plain_dates
 
 MONTH_DAYS = 31
 RULES = """You write pages of a family's keepsake book about their newborn Theo's first month, for his parents Gonza and Ceci.
 Write one short warm page for each day you are given, in {language}, two sentences at most, three on a day with moments, in the voice of the family's home looking back.
-Use only what the day's facts say, and any note given for it. Most pages use one fact or none, and no two pages sound alike. A day's "moments" really happened and each one must be on its page, in your words: who took the night, the recipe, the car seat. A frightening moment is named as one, with the words the parent wrote, and you never say how it ended unless the facts do. Use the "totals" of each day as they are. The home watches and remembers: it never holds or touches anyone. Don't invent events, feelings of the baby, weather or visitors. Numbers can only be those in the facts.
+Use only what the day's facts say, and any note given for it. Never write a date like 2026-12-15 on a page. Say nothing about lights, rooms or what the home did unless the day's facts say so. Most pages use one fact or none, and no two pages sound alike. A day's "moments" really happened and each one must be on its page, in your words: who took the night, the recipe, the car seat. A frightening moment is named as one, with the words the parent wrote, and you never say how it ended unless the facts do. Use the "totals" of each day as they are. The home watches and remembers: it never holds or touches anyone. Don't invent events, feelings of the baby, weather or visitors. Numbers can only be those in the facts.
 No medical or health judgments, and never say how he is doing or whether something is normal. Theo's parents are Gonza and Ceci, use no other names and no surnames.
 Answer with JSON only: {{"title": "...", "pages": [{{"day": "YYYY-MM-DD", "text": "..."}}]}}"""
 LANGUAGES = {"en": "English", "es": "Spanish"}
@@ -122,7 +123,7 @@ async def write(model, entries, notes="", lang="en", moments=()):
         written, title = {}, TITLE[lang]
     pages = []
     for day in days:
-        text = written.get(day["day"], "")
+        text = plain_dates(written.get(day["day"], ""), lang)
         kept = bool(text) and page_is_true(text, day)
         missing = left_out(text, day) if kept else []
         kinds = [m["kind"] for m in day["moments"]]

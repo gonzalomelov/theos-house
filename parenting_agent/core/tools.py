@@ -182,7 +182,7 @@ async def home_tools(settings, mock, turn=lambda: None, after=None, before=None)
     return [StructuredTool.from_function(coroutine=GetLiveContext) if short == "GetLiveContext" else wrap(short, found[short]) for short in usable if short in found]
 
 
-def channel_tools(channel, settings, log=None, heard=lambda: "", night_check=None, claims=lambda text: None, said=lambda parent, asked, out: None, repeats=lambda parent, text: None):
+def channel_tools(channel, settings, log=None, heard=lambda: "", night_check=None, claims=lambda text: None, said=lambda parent, asked, out: None, repeats=lambda parent, text: None, hushed=lambda: False, loud=lambda: False):
     def checked(text):
         out, why = safety.outbound(text, settings.lang)
         return out, why or claims(out or "") or (safety.unbacked(out, lambda: log.entries(None, None, 50), heard()) if log else None)
@@ -200,6 +200,7 @@ def channel_tools(channel, settings, log=None, heard=lambda: "", night_check=Non
         why = why or safety.writes_as_someone_else(parent, out) or repeats(parent, out)
         if why:
             return why
+        quiet = (quiet or hushed()) and not emergency and not loud()
         try:
             note = await asyncio.to_thread(channel.send, parent, out, *([True] if quiet else []))
         except Exception as failure:  # the phone channel away is something Muse hears about, the run goes on
@@ -278,12 +279,16 @@ def log_tools(log, memory, heard=lambda: ""):
     return [wrap(name) for name in LOG_TOOLS]
 
 
+def feed_estimate(log, moment):
+    rows = [{**e, "ref": i, "time": e["ts"]} for i, e in enumerate(log.entries("feeding", None, 50))]
+    return rows, patterns.next_feed(rows, moment)
+
+
 def next_feed_tool(log, clock):
     def next_feed() -> str:
         """When the next feed is expected, from the gaps between the last feeds in the baby log. An estimate that can be
         more than an hour off, for getting things ready, never to wake anyone."""
-        rows = [{**e, "ref": i, "time": e["ts"]} for i, e in enumerate(log.entries("feeding", None, 50))]
-        estimate = patterns.next_feed(rows, clock())
+        rows, estimate = feed_estimate(log, clock())
         if not estimate:
             return "Not enough feeds in the log to estimate."
         return json.dumps({"expected_at": estimate["at"].isoformat(timespec="minutes"), "usual_gap_min": estimate["gap_min"], "last_feed": rows[-1]["ts"]})

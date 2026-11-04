@@ -9,12 +9,14 @@ import sys
 CROP = "crop=384:384:170:314,fps=24,setsar=1"
 # video start, audio start, seconds. The twist card comes before its spoken line in the take, so the middle part pairs them.
 PARTS = ((7.2, 7.2, 3.4), (85.0, 103.7, 8.9), (165.4, 165.4, 7.6))
+# The first card's second line is the only English on the glasses display in this clip, so it is covered: its words are never heard in the clip.
+FIRST_CARD = ",drawbox=x=8:y=331:w=330:h=44:color=0x232629:t=fill"
 
 
 def main(source, out):
     chain, labels = [], ""
     for i, (video, audio, seconds) in enumerate(PARTS):
-        chain.append(f"[0:v]trim=start={video}:duration={seconds},setpts=PTS-STARTPTS,{CROP}[v{i}]")
+        chain.append(f"[0:v]trim=start={video}:duration={seconds},setpts=PTS-STARTPTS,{CROP}{'' if i else FIRST_CARD}[v{i}]")
         chain.append(f"[0:a]atrim=start={audio}:duration={seconds},asetpts=PTS-STARTPTS[a{i}]")
         labels += f"[v{i}][a{i}]"
     chain.append(f"{labels}concat=n={len(PARTS)}:v=1:a=1[v][a]")

@@ -15,24 +15,36 @@
 <header class="top">
   <div class="clock" aria-live="polite">
     <div class="time" id="time">21:00</div>
-    <div class="date"><span id="date"></span><span class="tag" id="simTag"></span><button type="button" class="ghost mini" id="lang" lang="es">Español</button></div>
+    <div class="date" id="date"></div>
   </div>
-  <p class="lead" id="lead"></p>
-  <div class="tools"><button type="button" class="ghost" id="reset"></button></div>
+  <div class="hero">
+    <h1 id="lead"></h1>
+    <p class="hero-sub"><span class="tag" id="simTag"></span> <a class="to-built" href="#built"></a></p>
+  </div>
+  <div class="tools"><button type="button" class="ghost mini" id="lang" lang="es">Español</button><button type="button" class="ghost mini" id="reset"></button></div>
 </header>
 
-<nav class="rail" aria-labelledby="rail-t">
-  <button type="button" class="play" id="play"></button>
-  <h2 id="rail-t"></h2>
-  <ol id="rail"></ol>
-  <a class="to-senses" id="to-senses" href="#senses"></a>
-  <button type="button" class="ghost mini" id="rec-open" hidden></button>
-  <p class="status" id="status" role="status"></p>
-</nav>
+<div class="story">
+  <div class="runbar" id="runbar">
+    <button type="button" class="play" id="play"></button>
+    <span class="bar-time" id="bar-time" aria-hidden="true"></span>
+    <p class="status" id="status" role="status"></p>
+  </div>
+  <nav class="rail" aria-labelledby="rail-t">
+    <h2 id="rail-t"></h2>
+    <ol id="rail"></ol>
+    <button type="button" class="ghost mini" id="rec-open" hidden></button>
+  </nav>
+</div>
 
 
 <main class="stage">
-  <div class="ptabs" id="ptabs"><button type="button" id="tab-gonza" data-phone="gonza" aria-pressed="true"></button><button type="button" id="tab-ceci" data-phone="ceci" aria-pressed="false"></button></div>
+  <div class="ptabs" id="ptabs"><button type="button" id="tab-both" data-phone="both" aria-pressed="true"></button><button type="button" id="tab-gonza" data-phone="gonza" aria-pressed="false"></button><button type="button" id="tab-ceci" data-phone="ceci" aria-pressed="false"></button></div>
+  <section class="phone" id="phone-both" aria-labelledby="ph-b">
+    <h2 id="ph-b"></h2>
+    <div class="screen"><ol class="chat"></ol></div>
+    <p class="both-hint" id="both-hint"></p>
+  </section>
   <section class="phone" id="phone-gonza" aria-labelledby="ph-g">
     <h2 id="ph-g"></h2>
     <div class="screen"><ol class="chat"></ol><p class="asleep"></p></div>
@@ -105,7 +117,7 @@
   </section>
 
   <section class="trace" aria-labelledby="tr-t">
-    <div class="tr-head"><h2 id="tr-t"></h2><button type="button" class="ghost mini" id="deep" aria-pressed="false"></button></div>
+    <div class="tr-head"><h2 id="tr-t"></h2></div>
     <ol id="trace" aria-live="polite"></ol>
   </section>
 
@@ -117,10 +129,34 @@
   </section>
 </main>
 
-<section class="meta" id="meta" aria-labelledby="meta-t">
-  <div class="meta-head"><h2 id="meta-t"></h2><a id="arch-link" href="/static/architecture.svg" target="_blank" rel="noopener"></a></div>
+<section class="book" id="book" aria-labelledby="book-t">
+  <h2 id="book-t"></h2>
+  <p id="book-lead"></p>
+  <button type="button" class="ghost" id="book-make"></button>
+  <p class="status" id="book-status" role="status"></p>
+  <div id="book-pages"></div>
+</section>
+
+<footer>
+  <p id="foot"></p>
+  <p id="privacy"></p>
+  <p id="at-home"></p>
+  <p><a class="to-built" href="#built"></a></p>
+</footer>
+
+<section class="built" id="built" hidden aria-labelledby="built-t">
+  <div class="built-head"><h2 id="built-t"></h2><button type="button" class="ghost mini" id="built-close"></button></div>
+  <p id="built-story"></p>
+  <p id="built-live"></p>
+  <p><button type="button" class="ghost mini" id="deep" aria-pressed="false"></button></p>
+  <p id="built-privacy"></p>
+  <p id="built-labels"></p>
+  <p id="built-foot"></p>
+  <p id="models"></p>
+<div class="meta" id="meta" aria-labelledby="meta-t">
+  <div class="meta-head"><h3 id="meta-t"></h3><a id="arch-link" href="/static/architecture.svg" target="_blank" rel="noopener"></a></div>
   <p id="meta-lead"></p>
-  <details id="meta-more"><summary id="meta-sum"></summary>
+  <details id="meta-more" open><summary id="meta-sum"></summary>
   <div class="meta-cards">
     <article class="m-card live" id="m-muse"><h3></h3><span class="how"></span><p class="say-it"></p></article>
     <article class="m-card" id="m-pe"><h3></h3><span class="how"></span><audio controls preload="none" src="/static/senses/cry.m4a"></audio><p class="say-it"></p></article>
@@ -130,11 +166,13 @@
   </div>
   <p class="meta-where" id="meta-where"></p>
 <section class="senses" id="senses" aria-labelledby="se-t" hidden>
-  <h2 id="se-t"></h2>
+  <h3 id="se-t"></h3>
   <p id="se-note"></p>
   <div class="se-cards" id="se-cards"></div>
 </section>
   </details>
+  <p><a id="to-senses" href="#senses"></a></p>
+</div>
 </section>
 
 
@@ -145,20 +183,12 @@
       <track id="rec-en" kind="metadata" srclang="en" label="English" src="/static/carseat.en.vtt">
       <track id="rec-es" kind="metadata" srclang="es" label="Español" src="/static/carseat.es.vtt">
     </video>
+    <p class="rec-lang" id="rec-lang"></p>
     <p class="rec-cap" id="rec-cap" aria-live="polite"></p>
     <p id="rec-note"></p>
   </div>
 </div>
 
-<section class="book" id="book" aria-labelledby="book-t">
-  <h2 id="book-t"></h2>
-  <p id="book-lead"></p>
-  <button type="button" class="ghost" id="book-make"></button>
-  <p class="status" id="book-status" role="status"></p>
-  <div id="book-pages"></div>
-</section>
-
-<footer><p id="foot"></p><p id="models"></p></footer>
 <script src="/static/page.js"></script>
 <script src="/static/book.js"></script>
 </body>

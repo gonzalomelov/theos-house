@@ -129,6 +129,24 @@ GLITCH = re.compile(r"\bglitch\w*|\b(?:is|it's|its|just|only|probably|likely|sur
 CRY_SAID = re.compile(r"\bcry\w*|\bllor\w*|\bawake\b|\bup\b|despiert\w*|despert\w*", re.I)
 REMIND_ASK = re.compile(r"\bremind\w*|\brecord[aá]\w*|\bacord[aá]\w*|\bavis[aá]me\b|\bav[ií]same\b", re.I)
 ABOUT_HOW_HE_IS = re.compile(ASKS_HOW.pattern + r"|\bcheck (?:on|how) (?:theo|him)\b|\bfollow[- ]?up\b|reached (?:his|the|a) (?:doctor|pediatrician)", re.I)
+# A morning message isn't a ledger, and nobody owes anybody a night.
+SCOREKEEP = re.compile(r"\bcovered for\b|\bte cubri\w*\b|\bcubri\w* a\b|\btakes? it back\b|\bla retoma\b|\bretom[aá]\w*\b|\byou owe\b|\bowes you\b|\bte debe\b|\ble deb[eé]s\b|\bpay(?:s|ing)? (?:you |him |her )?back\b", re.I)
+# How a log reads, not how a person writes. A parent asking for the numbers gets them.
+LOG_LIKE = re.compile(r"\b\d+\s?(?:ml|cc)\s+(?:total|in all|in total|overall|en total|en todo)\b|\b(?:total|en total)\s*[:(]?\s*\d+\s?(?:ml|cc)\b|\b\d+\s+(?:feeds?|tomas?|comidas?)\s*\(|"
+                      r"\b\d+\s+(?:wet|dirty|pis|caca)\b|\bwet only\b|\bsolo pis\b|\b\d+\s+(?:diapers?|pa[ñn]ales?)\b", re.I)
+ASKS_NUMBERS = re.compile(r"\bhow (?:many|much)\b|\btotals?\b|\bsummary\b|\bcu[aá]nt[oa]s?\b|\bresumen\b|\bbaby_summary\b", re.I)
+# A camera that speaks like a friend's nudge, never like someone watching them.
+WATCHING = re.compile(r"\bi(?:'m| am) (?:watching|monitoring|keeping an eye)\b|\bi (?:saw|see|caught) you\b|\byou (?:left|took|let go|removed|forgot)\b|\bmonitor\w*|\bsurveil\w*|\bcaught\b|\bwarning\b"
+                      r"|\bte (?:vi|veo|estoy (?:viendo|mirando))\b|\bsacaste\b|\bdejaste\b|\bte olvidaste\b|\bvigil\w*|\bmonitore\w*", re.I)
+ENDS_ALONE = re.compile(r"\bby itself\b|\bon its own\b|\bitself\b|\bautomatically\b|\bsolo\b|\bsola\b|\bsolito\b|\bautom[aá]tic\w*", re.I)
+# What a recipe is for, with a newborn in the house. Theo's age is a fact. It says nothing of what any food does.
+LATER_ON = re.compile(r"\blater\b|\bfor you\b|\bfor now\b|\bnot yet\b|\bgrown[- ]?ups?\b|\bpara ustedes\b|\bpor ahora\b|\bm[aá]s adelante\b|\btodav[ií]a no\b|\bm[aá]s grande\b|\blos grandes\b", re.I)
+DOCTOR_STEP = re.compile(r"\bpediatr\w*|\bdoctor\w*|\bm[eé]dic\w*|\b911\b", re.I)
+# "Evening check, ..." is the home talking to itself.
+NAMES_CHECK = re.compile(r"\b(?:evening|morning|nightly|daily) check\b|\brevisi[oó]n de la (?:noche|ma[ñn]ana)\b|\bchequeo de la (?:noche|ma[ñn]ana)\b", re.I)
+SHORT_DATE = re.compile(r"\s*\(\s*(?:\d{1,2}\s+(?:de\s+)?(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec|ene|abr|ago|set|dic)[a-z]*\.?|(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s+\d{1,2})\s*\)", re.I)
+ISO_DATE = re.compile(r"\b(\d{4})-(\d{2})-(\d{2})(?:T(\d{2}:\d{2})(?::\d{2})?(?:[+-]\d{2}:?\d{2}|Z)?)?\b")
+MONTHS = {"en": "Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split(), "es": "ene feb mar abr may jun jul ago set oct nov dic".split()}
 JARGON = re.compile(r"\brota\b|\bper the\b|\bas per\b|\bper (?:ceci|gonza)\b|\bdoes that (?:still )?stand\b|\bsince 22:00\b|\bdesde las 22\b", re.I)
 
 
@@ -230,6 +248,23 @@ def writes_as_someone_else(parent, text):
     if found and found.start() > 3:
         return f"Refused, nothing was sent: this goes to {parent}, so write to them as you, not about {str(parent).capitalize()}. Say what you need from them."
     return None
+
+
+def frightened(text):
+    """A parent afraid about a sign in Theo right now, which the gate didn't call a danger. The other parent should know, and the first words are who to call."""
+    text = text or ""
+    return bool(SCARED.search(text) and DANGER_SIGN.search(text)) and not about_a_story(text) and not about_someone_else(text) and not injected(text)
+
+
+def plain_dates(text, lang="es"):
+    """Nobody writes (2026-12-15) to a person, in a message or in the book. Dropped when it only repeats tonight, and said as a date when it is the only date there."""
+    text = SHORT_DATE.sub("", re.sub(r"\s*\(\s*\d{4}-\d{2}-\d{2}\s*\)", "", text or ""))
+
+    def said(found):
+        month, day = MONTHS["en" if lang == "en" else "es"][int(found.group(2)) - 1], int(found.group(3))
+        date = f"{month} {day}" if lang == "en" else f"{day} de {month}"
+        return f"{date} {found.group(4)}" if found.group(4) else date
+    return ISO_DATE.sub(said, text)
 
 
 def reports_feed(text):
@@ -359,14 +394,14 @@ def clock24(found):
 
 def plain(text):
     """Muse writes long dashes, and nobody in this house texts with them. Times read one way, on the 24 hour clock."""
-    return AM_PM.sub(clock24, re.sub(r"\s*[\u2014\u2013]\s*", ", ", text or ""))
+    return AM_PM.sub(clock24, re.sub(r"\s*[\u2014\u2013]\s*", ", ", (text or "").replace("**", "")))
 
 
 def outbound(text, lang="es"):
     """(text to send, why it was refused). The final guard drops machinery, a dose or a drug refuses the whole message."""
     if ADVICE_OUT.search(text or ""):
         return None, "Refused, nothing was sent: never a dose, a drug or a diagnosis. Say what you saw or did instead."
-    out = final_guard.apply(plain(text), lang=lang)
+    out = final_guard.apply(plain(plain_dates(text, lang)), lang=lang)
     if out in final_guard.FALLBACK.values():  # "that answer did not come out right" isn't a message to a parent (Nov 3, the recipe's line about Cookidoo)
         return None, "Refused, nothing was sent: that couldn't go out as written. Write it again in plain words, in the language the event names, with no names of models or tools."
     return out, None
