@@ -13,7 +13,7 @@ if READY:
     import httpx
     from langchain_core.messages import AIMessage
     from parenting_agent.core import server, tools as tools_mod
-    from parenting_agent.core.runtime import Core
+    from parenting_agent.core.runtime import Core, recipe_shown
     from parenting_agent.core.settings import Settings
 
 TOKEN, SKILL = "t" * 32, "s" * 32
@@ -116,6 +116,67 @@ class AtTheEcho(unittest.IsolatedAsyncioTestCase):
                 return
             await asyncio.sleep(0.05)
         raise TimeoutError
+
+
+@unittest.skipUnless(READY, "needs requirements-core.txt and PA_DB_URL")
+class OneCryMessage(unittest.IsolatedAsyncioTestCase):
+    async def first_prompt(self, *feeds):
+        model = scripted(AIMessage("ok"), AIMessage("ok"))
+        async with Core(Settings(home="t-" + uuid.uuid4().hex[:10], mock_port=0, data_dir=tempfile.mkdtemp()), model) as core:
+            core.screen = NoScreen()
+            core.moment = datetime.datetime.fromisoformat("2026-12-16T02:00:00-03:00")
+            for feed in feeds:
+                core.log.add("feeding", {"amount_ml": 90}, feed)
+            _, done = await core.dispatch("sound", {"kind": "baby crying"}, at="2026-12-16T02:50:00-03:00")
+            await done
+            await core.forget()
+        return str(model.calls[0])
+
+    async def test_a_feed_due_gives_the_warmer_end_before_the_switch_so_one_message_can_carry_it(self):
+        self.assertIn("it turns itself off at 03:20", await self.first_prompt("2026-12-15T20:40:00-03:00"))
+
+    async def test_just_fed_the_cry_is_told_the_warmer_stays_off(self):
+        words = await self.first_prompt("2026-12-15T17:20:00-03:00", "2026-12-15T20:20:00-03:00", "2026-12-15T23:20:00-03:00", "2026-12-16T02:20:00-03:00")
+        self.assertIn("The warmer stays off for this cry", words)
+        self.assertNotIn("it turns itself off", words)
+
+
+@unittest.skipUnless(READY, "needs requirements-core.txt and PA_DB_URL")
+class EmptyIsntZero(unittest.IsolatedAsyncioTestCase):
+    async def test_the_echo_cant_say_zero_minutes_for_nothing_written_down(self):
+        model = scripted(call("say_on_echo", text="Hoy no hay sueño anotado, cero minutos."), call("say_on_echo", text="Hoy no hay sueño anotado."), AIMessage("Done."))
+        async with Core(Settings(home="t-" + uuid.uuid4().hex[:10], mock_port=0, data_dir=tempfile.mkdtemp()), model) as core:
+            core.screen = NoScreen()
+            _, done = await core.dispatch("message", {"from": "someone in the kitchen, you can't tell who", "channel": "the kitchen Echo", "text": "cuánto durmió"}, at="2026-12-15T16:00:00-03:00", ask=True)
+            out = await done
+            await core.forget()
+        self.assertEqual(out["said"], ["Hoy no hay sueño anotado."])
+
+
+@unittest.skipUnless(READY, "needs requirements-core.txt and PA_DB_URL")
+class RecipeWithNoPreview(unittest.IsolatedAsyncioTestCase):
+    async def test_a_recipe_with_amounts_and_no_preview_is_asked_for_it_once(self):
+        model = scripted(call("notify", parent="ceci", text="Anotado."), AIMessage("Done."), AIMessage("Done."), AIMessage("Done."))
+        async with Core(Settings(home="t-" + uuid.uuid4().hex[:10], mock_port=0, data_dir=tempfile.mkdtemp()), model) as core:
+            core.screen = NoScreen()
+            _, done = await core.dispatch("message", {"from": "ceci", "channel": "WhatsApp", "text": "Mi receta de sopa: 500 g de boniato, 18 min/100°C/vel 1"}, at="2026-12-15T16:00:00-03:00")
+            await done
+            await core.forget()
+        self.assertTrue(any("preview_family_recipe. Call it now" in str(c) for c in model.calls))
+
+    def test_naming_the_soup_doesnt_show_the_recipe(self):
+        preview = {"ingredients": ["500 g sweet potato", "300 g stock"], "steps": [{"text": "Cook sweet potato with stock 18 min/100°C"}, {"text": "Blend sweet potato 30 sec/speed 8"}]}
+        self.assertFalse(recipe_shown(preview, "Got your neighbour's sweet potato soup as a Thermomix recipe, I can't send it to Cookidoo."))
+        self.assertTrue(recipe_shown(preview, "Soup\n500 g sweet potato\n300 g stock\nCook sweet potato with stock 18 min/100°C\nBlend sweet potato 30 sec/speed 8"))
+
+    async def test_a_recipe_named_with_no_amounts_isnt_pushed(self):
+        model = scripted(call("notify", parent="ceci", text="¿Cuál?"), AIMessage("Done."), AIMessage("Done."))
+        async with Core(Settings(home="t-" + uuid.uuid4().hex[:10], mock_port=0, data_dir=tempfile.mkdtemp()), model) as core:
+            core.screen = NoScreen()
+            _, done = await core.dispatch("message", {"from": "ceci", "channel": "WhatsApp", "text": "¿Tenés alguna receta para hoy?"}, at="2026-12-15T16:00:00-03:00")
+            await done
+            await core.forget()
+        self.assertFalse(any("preview_family_recipe. Call it now" in str(c) for c in model.calls))
 
 
 if __name__ == "__main__":

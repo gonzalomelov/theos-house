@@ -1,0 +1,80 @@
+{
+ "h14 soup English": {
+  "passed": 6,
+  "of": 6,
+  "runs": [
+   {
+    "passed": true,
+    "waited_s": 5.4,
+    "refused": 0,
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Sweet potato soup\n\nIngredients:\n500 g sweet potato\n300 g stock\n\nSteps:\nCook 500 g sweet potato with 300 g stock for 18 min at 100°C on speed 1.\nBlend for 30 sec on speed 8.\n\nI can't send it to Cookidoo from here, a real send is yours from Meta's app. I've added the ingredients to your shopping list.\n\nThis one is for you for now, for later for Theo, and his pediatrician can say when.",
+      "at": 1793800042.877623
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "waited_s": 6.2,
+    "refused": 0,
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Sweet Potato Soup\n\nIngredients:\n500 g sweet potato\n300 g stock\n\nSteps:\nCook sweet potato and stock for 18 min at 100°C on speed 1.\nBlend for 30 seconds on speed 8.\n\nI added the ingredients to your Shopping List.\n\nI can't send it to Cookidoo from here, a real send is yours to do from Meta's app when you're ready there.\n\nTheo is a newborn, so this one is for you for now, and his pediatrician can say when it's right to share.\n",
+      "at": 1793800052.017456
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "waited_s": 6.1,
+    "refused": 0,
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Sweet potato soup\n\nIngredients:\n500 g sweet potato\n300 g stock\n\nSteps:\nCook sweet potato and stock, 18 min/100°C/speed 1\nBlend until smooth, 30 sec/speed 8\n\nIngredients added to your shopping list.\n\nI can't send it to Cookidoo from here, a real send is yours from Meta's app. This preview is not sent.\n\nTheo is newborn, so this one is for you for now, for later for him, and his pediatrician can say when.",
+      "at": 1793800059.2861598
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "waited_s": 8.2,
+    "refused": 0,
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Sweet Potato Soup\n\nIngredients:\n500 g sweet potato\n300 g stock\n\nSteps:\nCook 500 g sweet potato with 300 g stock for 18 min/100°C/speed 1\nBlend for 30 sec/speed 8\n\nI added the ingredients to your shopping list.\n\nI can't send it to Cookidoo from here, the real send is yours, from Meta's app.\n\nThis one is for you for now, for Theo later on, and his pediatrician can say when.",
+      "at": 1793800068.650793
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "waited_s": 4.8,
+    "refused": 0,
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Sweet potato soup\n\nIngredients:\n500 g sweet potato\n300 g stock\n\nSteps:\nCook for 18 min at 100°C on speed 1\nBlend for 30 sec on speed 8\n\nI've added the ingredients to your shopping list.\n\nI can't send it to Cookidoo from here - a real send is yours, from Meta's app.\n\nThis one is for you for now, for later for Theo, and his pediatrician can say when.",
+      "at": 1793800074.7096379
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "waited_s": 6.5,
+    "refused": 0,
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Here is your recipe preview for Sweet potato soup (2 servings):\n\nIngredients:\n500 g sweet potato\n300 g stock\n\nSteps:\nCook sweet potato with stock for 18 min at 100°C on speed 1\nBlend for 30 seconds on speed 8\n\nI can't send it to Cookidoo from here, a real send is yours, from Meta's app.\n\nThis one is for you for now, Theo's pediatrician can say when he can have soups like this.\n\nShopping list updated with the ingredients.",
+      "at": 1793800083.100081
+     }
+    ]
+   }
+  ]
+ }
+}

@@ -1,0 +1,1192 @@
+{
+ "en the scene's log": [
+  {
+   "lang": "en",
+   "log": "the scene's log",
+   "last_feed": "20:40",
+   "words": "Tonight I need to sleep. Can Gonza take the night?",
+   "evening_status": "done",
+   "evening": [
+    {
+     "to": "gonza",
+     "text": "Gonza, Ceci asked at the Echo to pass tonight to you, you're on for the night, say no if not right."
+    },
+    {
+     "to": "ceci",
+     "text": "Noted, Gonza's on for tonight, rest well."
+    }
+   ],
+   "duty_set": "gonza",
+   "night": [
+    {
+     "to": "gonza",
+     "text": "Theo's crying, last feed was yesterday at 20:40. I've started the bottle warmer, it will be on until 03:20 and turns off by itself."
+    }
+   ],
+   "ceci_not_woken": true,
+   "gonza_heard_out_loud": true,
+   "warmer": "on",
+   "outcome": "Told gonza. Turned on Tapo P110 - Bottle Warmer.",
+   "states_feed": true,
+   "times": [
+    "03:20",
+    "20:40"
+   ],
+   "other_times": [
+    "03:20"
+   ],
+   "told_gonza_evening": true,
+   "answered_ceci_evening": true,
+   "evening_ok": true,
+   "passed": true
+  },
+  {
+   "lang": "en",
+   "log": "the scene's log",
+   "last_feed": "20:40",
+   "words": "Tonight I need to sleep. Can Gonza take the night?",
+   "evening_status": "done",
+   "evening": [
+    {
+     "to": "gonza",
+     "text": "Ceci asked if you can take tonight, you're on now, so 23:40 and any cries will come to you. You can say no and we'll switch back."
+    },
+    {
+     "to": "ceci",
+     "text": "Noted, Gonza is on tonight now. Rest well."
+    }
+   ],
+   "duty_set": "gonza",
+   "night": [
+    {
+     "to": "gonza",
+     "text": "Theo is crying, last feed was yesterday at 20:40. I've started the bottle warmer, it will be off at 03:20 by itself."
+    }
+   ],
+   "ceci_not_woken": true,
+   "gonza_heard_out_loud": true,
+   "warmer": "on",
+   "outcome": "Told gonza. Turned on Tapo P110 - Bottle Warmer.",
+   "states_feed": true,
+   "times": [
+    "03:20",
+    "20:40"
+   ],
+   "other_times": [
+    "03:20"
+   ],
+   "told_gonza_evening": true,
+   "answered_ceci_evening": true,
+   "evening_ok": true,
+   "passed": true
+  },
+  {
+   "lang": "en",
+   "log": "the scene's log",
+   "last_feed": "20:40",
+   "words": "Tonight I need to sleep. Can Gonza take the night?",
+   "evening_status": "done",
+   "evening": [
+    {
+     "to": "gonza",
+     "text": "Ceci asked you to take tonight, 21:45, you're now on duty, you can say no if you can't."
+    },
+    {
+     "to": "ceci",
+     "text": "Noted, Gonza has tonight, 21:45. Rest well."
+    }
+   ],
+   "duty_set": "gonza",
+   "night": [
+    {
+     "to": "gonza",
+     "text": "Theo is crying, last feed was at 20:40. I've started the bottle warmer, it will be off by 03:20 by itself."
+    }
+   ],
+   "ceci_not_woken": true,
+   "gonza_heard_out_loud": true,
+   "warmer": "on",
+   "outcome": "Told gonza. Turned on Tapo P110 - Bottle Warmer.",
+   "states_feed": true,
+   "times": [
+    "03:20",
+    "20:40"
+   ],
+   "other_times": [
+    "03:20"
+   ],
+   "told_gonza_evening": true,
+   "answered_ceci_evening": true,
+   "evening_ok": true,
+   "passed": true
+  }
+ ],
+ "en late bottle": [
+  {
+   "lang": "en",
+   "log": "late bottle",
+   "last_feed": "23:10",
+   "words": "I'm wiped, let me sleep tonight",
+   "evening_status": "done",
+   "evening": [
+    {
+     "to": "gonza",
+     "text": "Ceci asked to be let off tonight so you are on, you can say no if needed."
+    },
+    {
+     "to": "ceci",
+     "text": "Noted, Gonza is on tonight, you can sleep. I'm here if you need anything."
+    }
+   ],
+   "duty_set": "gonza",
+   "night": [
+    {
+     "to": "gonza",
+     "text": "Theo is crying, he last ate at 23:10. I've started the bottle warmer, it will be off by 03:20 by itself."
+    }
+   ],
+   "ceci_not_woken": true,
+   "gonza_heard_out_loud": true,
+   "warmer": "on",
+   "outcome": "Told gonza. Turned on Tapo P110 - Bottle Warmer.",
+   "states_feed": true,
+   "times": [
+    "03:20",
+    "23:10"
+   ],
+   "other_times": [
+    "03:20"
+   ],
+   "told_gonza_evening": true,
+   "answered_ceci_evening": true,
+   "evening_ok": true,
+   "passed": true
+  },
+  {
+   "lang": "en",
+   "log": "late bottle",
+   "last_feed": "23:10",
+   "words": "I'm wiped, let me sleep tonight",
+   "evening_status": "done",
+   "evening": [
+    {
+     "to": "gonza",
+     "text": "Ceci asked to be let off tonight and passed it to you, you're on duty tonight, you can say no if needed."
+    },
+    {
+     "to": "ceci",
+     "text": "So tired, I hear you, I've passed tonight to Gonza and let him know he can say no if needed. Rest well."
+    }
+   ],
+   "duty_set": "gonza",
+   "night": [
+    {
+     "to": "gonza",
+     "text": "Theo is crying, last feed was at 23:10. I've turned the bottle warmer on, it will be off at 03:20 and ends by itself."
+    }
+   ],
+   "ceci_not_woken": true,
+   "gonza_heard_out_loud": true,
+   "warmer": "on",
+   "outcome": "Turned on Tapo P110 - Bottle Warmer. Told gonza.",
+   "states_feed": true,
+   "times": [
+    "03:20",
+    "23:10"
+   ],
+   "other_times": [
+    "03:20"
+   ],
+   "told_gonza_evening": true,
+   "answered_ceci_evening": true,
+   "evening_ok": true,
+   "passed": true
+  },
+  {
+   "lang": "en",
+   "log": "late bottle",
+   "last_feed": "23:10",
+   "words": "I'm wiped, let me sleep tonight",
+   "evening_status": "done",
+   "evening": [
+    {
+     "to": "gonza",
+     "text": "Ceci asked to pass tonight to you, you're on tonight, you can say no if needed."
+    },
+    {
+     "to": "ceci",
+     "text": "Got that."
+    }
+   ],
+   "duty_set": "gonza",
+   "night": [
+    {
+     "to": "gonza",
+     "text": "Theo is crying, last feed was yesterday at 23:10. I've started the bottle warmer, it will turn itself off at 03:20."
+    }
+   ],
+   "ceci_not_woken": true,
+   "gonza_heard_out_loud": true,
+   "warmer": "on",
+   "outcome": "Told gonza. Turned on Tapo P110 - Bottle Warmer.",
+   "states_feed": true,
+   "times": [
+    "03:20",
+    "23:10"
+   ],
+   "other_times": [
+    "03:20"
+   ],
+   "told_gonza_evening": true,
+   "answered_ceci_evening": true,
+   "evening_ok": true,
+   "passed": true
+  }
+ ],
+ "en after midnight": [
+  {
+   "lang": "en",
+   "log": "after midnight",
+   "last_feed": "00:25",
+   "words": "Gonza, let me sleep tonight please",
+   "evening_status": "done",
+   "evening": [
+    {
+     "to": "gonza",
+     "text": "Ceci asked you to take tonight so she can sleep, you're now on. Say no if it doesn't work."
+    },
+    {
+     "to": "ceci",
+     "text": "Noted, I've passed tonight to Gonza, 21:45. Rest well, he'll be woken if Theo needs anything."
+    }
+   ],
+   "duty_set": "gonza",
+   "night": [
+    {
+     "to": "gonza",
+     "text": "Theo is crying, 02:50. He last ate at 00:25."
+    }
+   ],
+   "ceci_not_woken": true,
+   "gonza_heard_out_loud": true,
+   "warmer": "off",
+   "outcome": "Told gonza.",
+   "states_feed": true,
+   "times": [
+    "00:25",
+    "02:50"
+   ],
+   "other_times": [],
+   "told_gonza_evening": true,
+   "answered_ceci_evening": true,
+   "evening_ok": true,
+   "passed": true
+  },
+  {
+   "lang": "en",
+   "log": "after midnight",
+   "last_feed": "00:25",
+   "words": "Gonza, let me sleep tonight please",
+   "evening_status": "done",
+   "evening": [
+    {
+     "to": "gonza",
+     "text": "Ceci asked you to take tonight, 21:45 now, you can say no if it doesn't work."
+    },
+    {
+     "to": "ceci",
+     "text": "Done, Gonza is on tonight. Sleep well!"
+    }
+   ],
+   "duty_set": "gonza",
+   "night": [
+    {
+     "to": "gonza",
+     "text": "Theo is crying, last feed was at 00:25."
+    }
+   ],
+   "ceci_not_woken": true,
+   "gonza_heard_out_loud": true,
+   "warmer": "off",
+   "outcome": "Told gonza.",
+   "states_feed": true,
+   "times": [
+    "00:25"
+   ],
+   "other_times": [],
+   "told_gonza_evening": true,
+   "answered_ceci_evening": true,
+   "evening_ok": true,
+   "passed": true
+  },
+  {
+   "lang": "en",
+   "log": "after midnight",
+   "last_feed": "00:25",
+   "words": "Gonza, let me sleep tonight please",
+   "evening_status": "done",
+   "evening": [
+    {
+     "to": "gonza",
+     "text": "Gonza, Ceci passed you tonight at 21:45, you're on duty, you can say no if needed."
+    },
+    {
+     "to": "ceci",
+     "text": "Noted, Gonza's on tonight, you can rest."
+    }
+   ],
+   "duty_set": "gonza",
+   "night": [
+    {
+     "to": "gonza",
+     "text": "Theo's crying, last feed was at 00:25."
+    }
+   ],
+   "ceci_not_woken": true,
+   "gonza_heard_out_loud": true,
+   "warmer": "off",
+   "outcome": "Told gonza.",
+   "states_feed": true,
+   "times": [
+    "00:25"
+   ],
+   "other_times": [],
+   "told_gonza_evening": true,
+   "answered_ceci_evening": true,
+   "evening_ok": true,
+   "passed": true
+  }
+ ],
+ "en with a diaper after": [
+  {
+   "lang": "en",
+   "log": "with a diaper after",
+   "last_feed": "01:45",
+   "words": "I can't anymore, can I sleep through tonight?",
+   "evening_status": "done",
+   "evening": [
+    {
+     "to": "gonza",
+     "text": "Ceci asked to pass tonight to you, it's yours now if you're okay with it, you can say no."
+    },
+    {
+     "to": "ceci",
+     "text": "Noted you're off tonight, Gonza's on unless he says no. Try to rest."
+    }
+   ],
+   "duty_set": "gonza",
+   "night": [
+    {
+     "to": "gonza",
+     "text": "Theo's crying, last feed was at 01:45, about an hour ago."
+    }
+   ],
+   "ceci_not_woken": true,
+   "gonza_heard_out_loud": true,
+   "warmer": "off",
+   "outcome": "Told gonza.",
+   "states_feed": true,
+   "times": [
+    "01:45"
+   ],
+   "other_times": [],
+   "told_gonza_evening": true,
+   "answered_ceci_evening": true,
+   "evening_ok": true,
+   "passed": true
+  },
+  {
+   "lang": "en",
+   "log": "with a diaper after",
+   "last_feed": "01:45",
+   "words": "I can't anymore, can I sleep through tonight?",
+   "evening_status": "done",
+   "evening": [
+    {
+     "to": "gonza",
+     "text": "Ceci asked to pass tonight to you (21:45), you're on now, you can say no if needed."
+    },
+    {
+     "to": "ceci",
+     "text": "Noted, Gonza is on tonight so you can rest."
+    }
+   ],
+   "duty_set": "gonza",
+   "night": [
+    {
+     "to": "gonza",
+     "text": "Theo is crying, last feed was at 01:45."
+    }
+   ],
+   "ceci_not_woken": true,
+   "gonza_heard_out_loud": true,
+   "warmer": "off",
+   "outcome": "Told gonza.",
+   "states_feed": true,
+   "times": [
+    "01:45"
+   ],
+   "other_times": [],
+   "told_gonza_evening": true,
+   "answered_ceci_evening": true,
+   "evening_ok": true,
+   "passed": true
+  },
+  {
+   "lang": "en",
+   "log": "with a diaper after",
+   "last_feed": "01:45",
+   "words": "I can't anymore, can I sleep through tonight?",
+   "evening_status": "done",
+   "evening": [
+    {
+     "to": "gonza",
+     "text": "Ceci passed you tonight (21:45), you're on for Theo. You can say no if needed."
+    },
+    {
+     "to": "ceci",
+     "text": "Got you, Gonza is on tonight, you can sleep through. Rest well."
+    }
+   ],
+   "duty_set": "gonza",
+   "night": [
+    {
+     "to": "gonza",
+     "text": "Theo is crying, last feed was at 01:45."
+    }
+   ],
+   "ceci_not_woken": true,
+   "gonza_heard_out_loud": true,
+   "warmer": "off",
+   "outcome": "Told gonza.",
+   "states_feed": true,
+   "times": [
+    "01:45"
+   ],
+   "other_times": [],
+   "told_gonza_evening": true,
+   "answered_ceci_evening": true,
+   "evening_ok": true,
+   "passed": true
+  }
+ ],
+ "en fed half an hour ago": [
+  {
+   "lang": "en",
+   "log": "fed half an hour ago",
+   "last_feed": "02:20",
+   "words": "Tonight I need to sleep. Can Gonza take the night?",
+   "evening_status": "done",
+   "evening": [
+    {
+     "to": "ceci",
+     "text": "Got it, Gonza will take tonight, you can rest."
+    },
+    {
+     "to": "gonza",
+     "text": "You have tonight, it was passed to you, you can say no if it doesn't work."
+    }
+   ],
+   "duty_set": "gonza",
+   "night": [
+    {
+     "to": "gonza",
+     "text": "Theo is crying, last feed was at 02:20."
+    }
+   ],
+   "ceci_not_woken": true,
+   "gonza_heard_out_loud": true,
+   "warmer": "off",
+   "outcome": "Told gonza.",
+   "states_feed": true,
+   "times": [
+    "02:20"
+   ],
+   "other_times": [],
+   "told_gonza_evening": true,
+   "answered_ceci_evening": true,
+   "evening_ok": true,
+   "passed": true
+  },
+  {
+   "lang": "en",
+   "log": "fed half an hour ago",
+   "last_feed": "02:20",
+   "words": "Tonight I need to sleep. Can Gonza take the night?",
+   "evening_status": "done",
+   "evening": [
+    {
+     "to": "gonza",
+     "text": "Gonza, Ceci said on WhatsApp at 21:45 that she needs to sleep tonight, so you're on for Dec 15, you can say no if needed."
+    },
+    {
+     "to": "ceci",
+     "text": "Got it, Gonza is on tonight as you asked at 21:45. He can say no if needed, otherwise you can sleep. Rest well."
+    }
+   ],
+   "duty_set": "gonza",
+   "night": [
+    {
+     "to": "gonza",
+     "text": "Gonza, Theo is crying at 02:50. He last ate at 02:20."
+    }
+   ],
+   "ceci_not_woken": true,
+   "gonza_heard_out_loud": true,
+   "warmer": "off",
+   "outcome": "Told gonza.",
+   "states_feed": true,
+   "times": [
+    "02:20",
+    "02:50"
+   ],
+   "other_times": [],
+   "told_gonza_evening": true,
+   "answered_ceci_evening": true,
+   "evening_ok": true,
+   "passed": true
+  },
+  {
+   "lang": "en",
+   "log": "fed half an hour ago",
+   "last_feed": "02:20",
+   "words": "Tonight I need to sleep. Can Gonza take the night?",
+   "evening_status": "done",
+   "evening": [
+    {
+     "to": "gonza",
+     "text": "Ceci asked you to take tonight, you’re now on duty. You can say no if that doesn’t work."
+    },
+    {
+     "to": "ceci",
+     "text": "Noted, I’ve put Gonza on tonight so you can sleep. He can say no if needed."
+    }
+   ],
+   "duty_set": "gonza",
+   "night": [
+    {
+     "to": "gonza",
+     "text": "Theo is crying, 02:50. He last ate at 02:20."
+    }
+   ],
+   "ceci_not_woken": true,
+   "gonza_heard_out_loud": true,
+   "warmer": "off",
+   "outcome": "Told gonza.",
+   "states_feed": true,
+   "times": [
+    "02:20",
+    "02:50"
+   ],
+   "other_times": [],
+   "told_gonza_evening": true,
+   "answered_ceci_evening": true,
+   "evening_ok": true,
+   "passed": true
+  }
+ ],
+ "en breast, no amount": [
+  {
+   "lang": "en",
+   "log": "breast, no amount",
+   "last_feed": "22:05",
+   "words": "I need to sleep tonight, Gonza takes it",
+   "evening_status": "done",
+   "evening": [
+    {
+     "to": "gonza",
+     "text": "Ceci passed you tonight, you're on duty. You can say no if it doesn't work."
+    },
+    {
+     "to": "ceci",
+     "text": "Got it, Gonza's on tonight, you can rest."
+    }
+   ],
+   "duty_set": "gonza",
+   "night": [
+    {
+     "to": "gonza",
+     "text": "Theo's crying, last feed was yesterday at 22:05. I've started the bottle warmer, it'll be off at 03:20 by itself."
+    }
+   ],
+   "ceci_not_woken": true,
+   "gonza_heard_out_loud": true,
+   "warmer": "on",
+   "outcome": "Told gonza. Turned on Tapo P110 - Bottle Warmer.",
+   "states_feed": true,
+   "times": [
+    "03:20",
+    "22:05"
+   ],
+   "other_times": [
+    "03:20"
+   ],
+   "told_gonza_evening": true,
+   "answered_ceci_evening": true,
+   "evening_ok": true,
+   "passed": true
+  },
+  {
+   "lang": "en",
+   "log": "breast, no amount",
+   "last_feed": "22:05",
+   "words": "I need to sleep tonight, Gonza takes it",
+   "evening_status": "done",
+   "evening": [
+    {
+     "to": "gonza",
+     "text": "Ceci passed you tonight, you're on duty now, say no if that doesn't work."
+    },
+    {
+     "to": "ceci",
+     "text": "Got it, Gonza's on tonight, you can rest."
+    }
+   ],
+   "duty_set": "gonza",
+   "night": [
+    {
+     "to": "gonza",
+     "text": "Theo's crying, last feed was at 22:05. Warmer is on, off by itself at 03:20."
+    }
+   ],
+   "ceci_not_woken": true,
+   "gonza_heard_out_loud": true,
+   "warmer": "on",
+   "outcome": "Told gonza. Turned on Tapo P110 - Bottle Warmer.",
+   "states_feed": true,
+   "times": [
+    "03:20",
+    "22:05"
+   ],
+   "other_times": [
+    "03:20"
+   ],
+   "told_gonza_evening": true,
+   "answered_ceci_evening": true,
+   "evening_ok": true,
+   "passed": true
+  },
+  {
+   "lang": "en",
+   "log": "breast, no amount",
+   "last_feed": "22:05",
+   "words": "I need to sleep tonight, Gonza takes it",
+   "evening_status": "done",
+   "evening": [
+    {
+     "to": "gonza",
+     "text": "Ceci passed you tonight, you're on. If that doesn't work, just say."
+    },
+    {
+     "to": "ceci",
+     "text": "Got it, Gonza is on tonight."
+    }
+   ],
+   "duty_set": "gonza",
+   "night": [
+    {
+     "to": "gonza",
+     "text": "Theo is crying, last feed was at 22:05. Bottle warmer is on, it will be off by 03:20 by itself."
+    }
+   ],
+   "ceci_not_woken": true,
+   "gonza_heard_out_loud": true,
+   "warmer": "on",
+   "outcome": "Told gonza. Turned on Tapo P110 - Bottle Warmer.",
+   "states_feed": true,
+   "times": [
+    "03:20",
+    "22:05"
+   ],
+   "other_times": [
+    "03:20"
+   ],
+   "told_gonza_evening": true,
+   "answered_ceci_evening": true,
+   "evening_ok": true,
+   "passed": true
+  }
+ ],
+ "en three in the night": [
+  {
+   "lang": "en",
+   "log": "three in the night",
+   "last_feed": "01:50",
+   "words": "Let me sleep tonight",
+   "evening_status": "done",
+   "evening": [
+    {
+     "to": "gonza",
+     "text": "Ceci asked to sleep tonight, you're on for Dec 15, you can say no if needed."
+    },
+    {
+     "to": "ceci",
+     "text": "Got it, Gonza's on tonight."
+    }
+   ],
+   "duty_set": "gonza",
+   "night": [
+    {
+     "to": "gonza",
+     "text": "Theo is crying, last feed was at 01:50."
+    }
+   ],
+   "ceci_not_woken": true,
+   "gonza_heard_out_loud": true,
+   "warmer": "off",
+   "outcome": "Told gonza.",
+   "states_feed": true,
+   "times": [
+    "01:50"
+   ],
+   "other_times": [],
+   "told_gonza_evening": true,
+   "answered_ceci_evening": true,
+   "evening_ok": true,
+   "passed": true
+  },
+  {
+   "lang": "en",
+   "log": "three in the night",
+   "last_feed": "01:50",
+   "words": "Let me sleep tonight",
+   "evening_status": "done",
+   "evening": [
+    {
+     "to": "gonza",
+     "text": "Ceci passed you tonight, you're on for the night, you can say no if needed."
+    },
+    {
+     "to": "ceci",
+     "text": "Noted, Gonza's on tonight, you get some sleep."
+    }
+   ],
+   "duty_set": "gonza",
+   "night": [
+    {
+     "to": "gonza",
+     "text": "Theo is crying, last feed was at 01:50."
+    }
+   ],
+   "ceci_not_woken": true,
+   "gonza_heard_out_loud": true,
+   "warmer": "off",
+   "outcome": "Told gonza.",
+   "states_feed": true,
+   "times": [
+    "01:50"
+   ],
+   "other_times": [],
+   "told_gonza_evening": true,
+   "answered_ceci_evening": true,
+   "evening_ok": true,
+   "passed": true
+  },
+  {
+   "lang": "en",
+   "log": "three in the night",
+   "last_feed": "01:50",
+   "words": "Let me sleep tonight",
+   "evening_status": "done",
+   "evening": [
+    {
+     "to": "gonza",
+     "text": "Ceci asked to pass tonight to you, you're on for Dec 15, you can say no if needed."
+    },
+    {
+     "to": "ceci",
+     "text": "Noted, Gonza is on tonight, you can rest."
+    }
+   ],
+   "duty_set": "gonza",
+   "night": [
+    {
+     "to": "gonza",
+     "text": "Theo is crying, last feed was at 01:50."
+    }
+   ],
+   "ceci_not_woken": true,
+   "gonza_heard_out_loud": true,
+   "warmer": "off",
+   "outcome": "Told gonza.",
+   "states_feed": true,
+   "times": [
+    "01:50"
+   ],
+   "other_times": [],
+   "told_gonza_evening": true,
+   "answered_ceci_evening": true,
+   "evening_ok": true,
+   "passed": true
+  }
+ ],
+ "en a long gap": [
+  {
+   "lang": "en",
+   "log": "a long gap",
+   "last_feed": "16:00",
+   "words": "Tonight I need to sleep. Can Gonza take the night?",
+   "evening_status": "done",
+   "evening": [
+    {
+     "to": "gonza",
+     "text": "Ceci asked you to take tonight, you're on for Theo tonight, you can say no if needed."
+    },
+    {
+     "to": "ceci",
+     "text": "Noted, Gonza is on tonight."
+    }
+   ],
+   "duty_set": "gonza",
+   "night": [
+    {
+     "to": "gonza",
+     "text": "The log shows no feed for 10 hours. Did feeds go unlogged? If he truly hasn't eaten, call your pediatrician."
+    },
+    {
+     "to": "gonza",
+     "text": "Theo is crying, last feed was yesterday at 16:00, about 11 hours ago. Bottle warmer is on until 03:20 and turns off by itself."
+    }
+   ],
+   "ceci_not_woken": true,
+   "gonza_heard_out_loud": true,
+   "warmer": "on",
+   "outcome": "Turned on Tapo P110 - Bottle Warmer. Told gonza.",
+   "states_feed": true,
+   "times": [
+    "03:20",
+    "16:00"
+   ],
+   "other_times": [
+    "03:20"
+   ],
+   "told_gonza_evening": true,
+   "answered_ceci_evening": true,
+   "evening_ok": true,
+   "passed": true
+  },
+  {
+   "lang": "en",
+   "log": "a long gap",
+   "last_feed": "16:00",
+   "words": "Tonight I need to sleep. Can Gonza take the night?",
+   "evening_status": "done",
+   "evening": [
+    {
+     "to": "gonza",
+     "text": "Ceci asked you to take tonight, you're now on duty. You can say no if needed."
+    },
+    {
+     "to": "ceci",
+     "text": "Got it, Gonza is on tonight."
+    }
+   ],
+   "duty_set": "gonza",
+   "night": [
+    {
+     "to": "gonza",
+     "text": "The log shows no feed for 10 hours. Did feeds go unlogged? If he truly hasn't eaten, call your pediatrician."
+    },
+    {
+     "to": "gonza",
+     "text": "Theo is crying, last feed was yesterday at 16:00, about 11 hours ago with no feed logged since. I've started the bottle warmer, it will be off by 03:20 by itself."
+    }
+   ],
+   "ceci_not_woken": true,
+   "gonza_heard_out_loud": true,
+   "warmer": "on",
+   "outcome": "Told gonza. Turned on Tapo P110 - Bottle Warmer.",
+   "states_feed": true,
+   "times": [
+    "03:20",
+    "16:00"
+   ],
+   "other_times": [
+    "03:20"
+   ],
+   "told_gonza_evening": true,
+   "answered_ceci_evening": true,
+   "evening_ok": true,
+   "passed": true
+  },
+  {
+   "lang": "en",
+   "log": "a long gap",
+   "last_feed": "16:00",
+   "words": "Tonight I need to sleep. Can Gonza take the night?",
+   "evening_status": "done",
+   "evening": [
+    {
+     "to": "gonza",
+     "text": "Ceci asked you to take tonight, 21:45. You're on for Theo now, you can say no if needed."
+    },
+    {
+     "to": "ceci",
+     "text": "Noted, Gonza is on tonight now. Rest well."
+    }
+   ],
+   "duty_set": "gonza",
+   "night": [
+    {
+     "to": "gonza",
+     "text": "The log shows no feed for 10 hours. Did feeds go unlogged? If he truly hasn't eaten, call your pediatrician."
+    },
+    {
+     "to": "gonza",
+     "text": "Theo is crying, 02:50. Last feed was yesterday at 16:00, about 11 hours ago. Bottle warmer is on, it will turn itself off at 03:20."
+    }
+   ],
+   "ceci_not_woken": true,
+   "gonza_heard_out_loud": true,
+   "warmer": "on",
+   "outcome": "Told gonza. Turned on Tapo P110 - Bottle Warmer.",
+   "states_feed": true,
+   "times": [
+    "02:50",
+    "03:20",
+    "16:00"
+   ],
+   "other_times": [
+    "03:20"
+   ],
+   "told_gonza_evening": true,
+   "answered_ceci_evening": true,
+   "evening_ok": true,
+   "passed": true
+  }
+ ],
+ "en nothing in the log": [
+  {
+   "lang": "en",
+   "log": "nothing in the log",
+   "last_feed": null,
+   "words": "Tonight I need to sleep. Can Gonza take the night?",
+   "evening_status": "done",
+   "evening": [
+    {
+     "to": "gonza",
+     "text": "Ceci passed you tonight, you're on for Theo. Say no if you can't."
+    },
+    {
+     "to": "ceci",
+     "text": "Noted, Gonza's on tonight, you can rest."
+    }
+   ],
+   "duty_set": "gonza",
+   "night": [
+    {
+     "to": "gonza",
+     "text": "Theo is crying, nothing is written down about when he last ate."
+    }
+   ],
+   "ceci_not_woken": true,
+   "gonza_heard_out_loud": true,
+   "warmer": "off",
+   "outcome": "Told gonza.",
+   "states_feed": true,
+   "times": [],
+   "told_gonza_evening": true,
+   "answered_ceci_evening": true,
+   "evening_ok": true,
+   "passed": true
+  },
+  {
+   "lang": "en",
+   "log": "nothing in the log",
+   "last_feed": null,
+   "words": "Tonight I need to sleep. Can Gonza take the night?",
+   "evening_status": "done",
+   "evening": [
+    {
+     "to": "gonza",
+     "text": "Ceci asked you to take tonight, you're on for the night, let me know if that doesn't work."
+    },
+    {
+     "to": "ceci",
+     "text": "Noted, Gonza is on tonight, get some sleep."
+    },
+    {
+     "to": "ceci",
+     "text": "Noted, Gonza is on tonight, get some sleep."
+    },
+    {
+     "to": "gonza",
+     "text": "Ceci told me you're on tonight. If that's not right, tell me."
+    }
+   ],
+   "duty_set": "gonza",
+   "night": [
+    {
+     "to": "gonza",
+     "text": "Theo is crying, nothing is written down about when he last ate, you might want to check on him."
+    }
+   ],
+   "ceci_not_woken": true,
+   "gonza_heard_out_loud": true,
+   "warmer": "off",
+   "outcome": "Told gonza.",
+   "states_feed": true,
+   "times": [],
+   "told_gonza_evening": true,
+   "answered_ceci_evening": true,
+   "evening_ok": true,
+   "passed": true
+  },
+  {
+   "lang": "en",
+   "log": "nothing in the log",
+   "last_feed": null,
+   "words": "Tonight I need to sleep. Can Gonza take the night?",
+   "evening_status": "done",
+   "evening": [
+    {
+     "to": "gonza",
+     "text": "Ceci asked you to take tonight, you're now on duty, you can say no if it doesn't work."
+    },
+    {
+     "to": "ceci",
+     "text": "Noted, Gonza is now on duty tonight, he'll hear about it now."
+    }
+   ],
+   "duty_set": "gonza",
+   "night": [
+    {
+     "to": "gonza",
+     "text": "Theo is crying, nothing is written down about his last feed yet."
+    }
+   ],
+   "ceci_not_woken": true,
+   "gonza_heard_out_loud": true,
+   "warmer": "off",
+   "outcome": "Told gonza.",
+   "states_feed": true,
+   "times": [],
+   "told_gonza_evening": true,
+   "answered_ceci_evening": true,
+   "evening_ok": true,
+   "passed": true
+  }
+ ],
+ "en feed told in the evening": [
+  {
+   "lang": "en",
+   "log": "feed told in the evening",
+   "last_feed": "23:30",
+   "words": "Tonight I need to sleep. Can Gonza take the night?",
+   "evening_status": "done",
+   "evening": [
+    {
+     "to": "gonza",
+     "text": "Ceci passed you tonight, you're on duty. You can say no if needed."
+    },
+    {
+     "to": "ceci",
+     "text": "Noted, Gonza is on tonight, you can rest. Gonza was told he can say no if needed."
+    }
+   ],
+   "duty_set": "gonza",
+   "night": [
+    {
+     "to": "gonza",
+     "text": "Theo is crying, last feed was yesterday at 23:30. Bottle warmer is on, it will turn itself off at 03:20."
+    }
+   ],
+   "ceci_not_woken": true,
+   "gonza_heard_out_loud": true,
+   "warmer": "on",
+   "outcome": "Told gonza. Turned on Tapo P110 - Bottle Warmer.",
+   "states_feed": true,
+   "times": [
+    "03:20",
+    "23:30"
+   ],
+   "other_times": [
+    "03:20"
+   ],
+   "told_gonza_evening": true,
+   "answered_ceci_evening": true,
+   "evening_ok": true,
+   "passed": true
+  },
+  {
+   "lang": "en",
+   "log": "feed told in the evening",
+   "last_feed": "23:30",
+   "words": "Tonight I need to sleep. Can Gonza take the night?",
+   "evening_status": "done",
+   "evening": [
+    {
+     "to": "gonza",
+     "text": "Ceci asked you to take tonight, you can say no if needed."
+    },
+    {
+     "to": "ceci",
+     "text": "Noted, Gonza is now on for tonight."
+    }
+   ],
+   "duty_set": "gonza",
+   "night": [
+    {
+     "to": "gonza",
+     "text": "Theo is crying, last feed was at 23:30. The bottle warmer is on now and will turn itself off at 03:20."
+    }
+   ],
+   "ceci_not_woken": true,
+   "gonza_heard_out_loud": true,
+   "warmer": "on",
+   "outcome": "Told gonza. Turned on Tapo P110 - Bottle Warmer.",
+   "states_feed": true,
+   "times": [
+    "03:20",
+    "23:30"
+   ],
+   "other_times": [
+    "03:20"
+   ],
+   "told_gonza_evening": true,
+   "answered_ceci_evening": true,
+   "evening_ok": true,
+   "passed": true
+  },
+  {
+   "lang": "en",
+   "log": "feed told in the evening",
+   "last_feed": "23:30",
+   "words": "Tonight I need to sleep. Can Gonza take the night?",
+   "evening_status": "done",
+   "evening": [
+    {
+     "to": "gonza",
+     "text": "Ceci passed you tonight, you're on now. You can say no if needed."
+    },
+    {
+     "to": "ceci",
+     "text": "Noted, Gonza's on tonight. Hope you get some rest."
+    }
+   ],
+   "duty_set": "gonza",
+   "night": [
+    {
+     "to": "gonza",
+     "text": "Theo's crying, last feed was at 23:30. Warmer is on, ends at 03:20 by itself."
+    }
+   ],
+   "ceci_not_woken": true,
+   "gonza_heard_out_loud": true,
+   "warmer": "on",
+   "outcome": "Turned on Tapo P110 - Bottle Warmer. Told gonza.",
+   "states_feed": true,
+   "times": [
+    "03:20",
+    "23:30"
+   ],
+   "other_times": [
+    "03:20"
+   ],
+   "told_gonza_evening": true,
+   "answered_ceci_evening": true,
+   "evening_ok": true,
+   "passed": true
+  }
+ ]
+}

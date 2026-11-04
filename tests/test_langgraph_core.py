@@ -1,5 +1,6 @@
 """The persistent agent's own machinery, with a scripted model and no network. Needs requirements-core.txt and PostgreSQL
-at PA_DB_URL, and skips without them. Real Muse runs in scripts/core_live_eval.py."""
+at PA_DB_URL, and skips without them. Real Muse runs in scripts/core_live_eval.py. The database has to be UTF8: `initdb --locale=C`
+alone makes SQL_ASCII, which refuses accents in the record's JSON, so add `-E UTF8`."""
 import asyncio
 import datetime
 import json

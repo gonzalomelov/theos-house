@@ -321,14 +321,15 @@ def preview_of(calls):
 
 
 def recipe_shown(arguments, words):
-    """The phone has the recipe when most of its ingredients and most of its steps are in what went out. "Your sweet potato soup is ready" names an ingredient and shows nothing (Nov 4)."""
+    """The phone has the recipe when most of its ingredients and most of its steps are in what went out. "Your sweet potato soup is ready" names an ingredient and shows nothing (Nov 4, twice)."""
     words = words.lower()
 
     def most(parts):
         found = [re.findall(r"[^\W\d_]{4,}", str(part).lower()) for part in parts]
         return sum(any(w in words for w in part) for part in found) * 2 >= len(found)
     steps = [step.get("text", step) if isinstance(step, dict) else step for step in arguments.get("steps") or []]
-    return most(arguments.get("ingredients") or []) and most(steps)
+    numbers = re.findall(r"\d+", f"{arguments.get('ingredients')} {steps}")  # a step with the soup's name in it is shown by naming the soup, so an amount or a time has to be there too
+    return most(arguments.get("ingredients") or []) and most(steps) and (not numbers or any(n in words for n in numbers))
 
 
 def recipe_card(arguments, lang):
@@ -696,6 +697,8 @@ class Core:
             return "Refused, nothing was sent: the agent just restarted and this is only its first reading. Handle the room and message nobody."
         if self.in_check and any(sign in text.lower() for sign in self.closed_signs - self.open_now):
             return "Refused, nothing was sent: you already reported that alarm in an earlier check, so it is closed. Leave it out, or ask once how Theo is now."
+        if safety.ZERO_TIME.search(text):
+            return "Refused, nothing was sent: nothing written down isn't zero. Say that nothing is written down about it."
         if safety.WAITS_FOR_YES.search(text):
             return "Refused, nothing was sent: nothing waits for a yes here. A night passed is set at once, and the other parent can say no. Say that."
         if safety.SAID_DUTY.search(text) and not self.last_night_known:
@@ -1351,6 +1354,9 @@ class Core:
             other = next(p for p in tools_mod.PARENTS if p != self.sender)
             extra.append(f"{self.sender.capitalize()} is scared about a sign in Theo right now. Answer in one or two short lines: first who to call, his pediatrician, or 911 if it can't wait, with no feed amounts or totals and no other advice. Tell {other} too, with emergency set, in one line saying what {self.sender} wrote.")
         self.warm_until = datetime.datetime.fromisoformat(facts["warmer_off_at"]) if "warmer_off_at" in facts else None
+        if self.a_cry and not self.warm_until:  # the end time is known before the switch, so one message can carry it
+            extra.append("The warmer stays off for this cry: the next feed isn't close." if await asyncio.to_thread(self.too_early_for_warmer, moment)
+                         else f"If the warmer goes on now, it turns itself off at {moment + datetime.timedelta(minutes=PREWARM_MIN):%H:%M}.")
         text = describe(event, moment, facts, self.feed, self.settings.lang, extra, self.last_night_known)
         if event.get("again"):
             text += "\n\nAn earlier try at this event was cut off. Some of it may already be done, so check before repeating anything."
@@ -1603,6 +1609,8 @@ class Core:
             asks.append(f"{'Someone at the kitchen Echo' if self.duty_off else self.sender} changed who is on duty and {self.duty_told} doesn't know. Tell {self.duty_told} in one line, so they can say if it's wrong.")
         if self.duty_off and self.duty_off not in said_to:
             asks.append(f"What was said at the kitchen Echo took {self.duty_off} off duty and {self.duty_off} doesn't know. Tell {self.duty_off} in one line, so they can say if it's wrong.")
+        if self.sender in tools_mod.PARENTS and self.about_recipe and safety.RECIPE_AMOUNTS.search(self.heard) and not preview_of(calls):  # "your soup is ready" with no steps left the phone with nothing (Nov 4, 1 of 3)
+            asks.append("A parent told you a recipe with its amounts, and you didn't call preview_family_recipe. Call it now with their words, then show them the recipe in one message.")
         if event["ask"] and not self.channel.hold:
             asks.append("Someone is waiting at the kitchen Echo and has heard nothing from you. Answer them with say_on_echo, in one short spoken sentence.")
         if event["type"] == "camera" and event["payload"].get("verdict") == "off":

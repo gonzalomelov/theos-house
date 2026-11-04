@@ -149,6 +149,8 @@ UNSAFE_FOODS = ((re.compile(r"\bhoney\b|\bmiel\b", re.I), {"en": "Honey is not f
 FOR_BABY = re.compile(r"\btheo\b|\b(?:baby|newborn|infant|him|his|beb[eé]|reci[eé]n nacido)\b|\ble\s+(?:di|doy|damos|dimos|puedo|podemos|pongo|ponemos|paso|untamos)\b|\bpara [eé]l\b|\bdarle\b|\bponerle\b", re.I)
 FOR_BABY_ASKED = re.compile(r"\b(?:for|to|give|feed)\s+(?:theo|him|the baby)\b|\bpara (?:theo|[eé]l|el beb[eé])\b|\ba theo\b", re.I)
 SHOPPING = re.compile(r"\b(?:shopping|list|buy|store|lista|compr\w+|s[uú]per)\b", re.I)
+ZERO_TIME = re.compile(r"\b(?:cero|zero|0)\s+(?:minutos?|horas?|minutes?|hours?)\b", re.I)  # a log with nothing in it doesn't know, which isn't none
+RECIPE_AMOUNTS = re.compile(r"\b\d+\s?(?:g|gr|ml|min|seg|sec)\b", re.I)
 RECIPE_WORDS = re.compile(r"\b(?:recipes?|recetas?|pur[eé]e?|pur[eé]|thermomix|cookidoo)\b", re.I)
 SUITS = re.compile(r"\b(?:suitable|perfect|great|ideal|good|safe|appropriate|fine|ok|okay|right)\s+(?:for|to give(?: to)?)\s+(?:theo|him|the baby|babies|a baby|a newborn|newborns|your baby|his age|little)\b|\bbaby[- ]friendly\b"
                    r"|\b(?:ideal|perfect[oa]|apt[oa]|adecuad[oa]|segur[oa]|buen[oa]|recomendad[oa])\s+para\s+(?:theo|[eé]l|el beb[eé]|beb[eé]s|un beb[eé]|su edad|reci[eé]n nacidos)\b|\b(?:suits|apt) (?:theo|him|a baby)\b", re.I)
