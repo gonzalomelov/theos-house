@@ -77,6 +77,15 @@ flowchart LR
 | Alexa skill | `apps/alexa/` |
 | Recipe connector brief for Muse | `apps/recipe-connector/` |
 | Nursery sensor on Meta's Muse Gadgets SDK | `deploy/nursery-firmware/`, `deploy/nursery-mcp/` |
+| Skills for the changing table, the bath and the car seat. The bath's results aren't claimed | `skills/` |
+| Hand alarm and car seat vision on SAM 3.1 | `parenting_agent/sam3_worker.py`, `parenting_agent/sam_hands.py`, `parenting_agent/carseat/` |
+| Cry and house sounds on Perception Encoder Audio | `parenting_agent/hearing.py`, `parenting_agent/hearing_worker.py` |
+| One parent, one language helper, on recorded clips | `parenting_agent/opol.py`, `results/opol/` |
+| First-month book, a labelled sample of 30 simulated days | `parenting_agent/core/book.py`, `results/book-sample/` |
+| Dog near the baby watch | `parenting_agent/dog_watch.py`, `results/dog-near-baby/` |
+| White noise, simulated device | `parenting_agent/white_noise.py` |
+| Daily laundry, simulated plug | `parenting_agent/laundry.py`, `results/laundry/` |
+| Before-birth lists | `parenting_agent/prep/` |
 | Test results | `results/` |
 
 ## Meta models
