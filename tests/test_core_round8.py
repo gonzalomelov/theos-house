@@ -37,7 +37,7 @@ class Words(unittest.TestCase):
         self.assertIsNone(safety.outbound("A real send is theirs, from Meta's app.", "en")[1])
 
     def test_a_reading_about_him_counts_without_the_word_fever(self):
-        for text in ("Took his temp, 38,04 under the arm", "second reading now 38,04", "Tomé la temperatura, 38,2 en la axila", "38,04", "now 38.5", "He's at 38.04"):
+        for text in ("Took his temp, 38,04 under the arm", "second reading now 38,04", "Tomé la temperatura, 38,2 en la axila", "38,04", "now 38.5", "He's at 38.04", "Just measured him, 38.3", "his forehead scan says 38,4"):
             self.assertEqual(self.gate(text)[0], "urgent", text)
         self.assertTrue(rules.names_fever("Le tomé la temperatura: 38,04"))
 
@@ -83,6 +83,7 @@ class Words(unittest.TestCase):
         self.assertEqual(safety.topic_of("check the dehumidifier is working: read the humidity"), "air")
         self.assertEqual(safety.topic_of(runtime.RECHECK_ROOM), "room")
         self.assertEqual(safety.topic_of("prewarm the bottle"), "warmer")
+        self.assertEqual(safety.topic_of("see if the room is still warm"), "room")
         self.assertIsNone(safety.topic_of("ask about the shopping"))
 
     def test_the_book_doesnt_claim_the_seat_was_fitted(self):
@@ -177,6 +178,7 @@ class Round8(unittest.IsolatedAsyncioTestCase):
         said = self.to(core, "ceci")[-1]
         self.assertIn("Theo no respira", said)
         facts = await self.facts(core)
+        self.assertNotIn(runtime.OPEN_ALARM, runtime.describe({"type": "schedule", "payload": {"name": "evening"}}, DAY, facts))  # known to the panel and to an answer, and no check asks again
         self.assertFalse([k for k in facts if k.startswith("alarm_")])
         self.assertTrue([k for k in facts if k.startswith(runtime.OPEN_ALARM)])
         before = len(core.channel.sent)

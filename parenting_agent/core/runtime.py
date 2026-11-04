@@ -199,7 +199,7 @@ def describe(event, moment, facts, feed=None, lang="es", extra=(), last_night_kn
     night = is_night(moment)
     notes = [f"Write for people in {'English' if lang == 'en' else 'Rioplatense Spanish'}.", *timed_lines(moment, facts), feed_line(moment, feed), rota_note(event, moment, facts), today_note(event, moment, facts), alarm_note(event, facts), plan_note(event, facts), *extra]
     rota = duty_line(moment, facts, last_night_known)
-    facts = {k: v for k, v in facts.items() if k not in ("warmer_off_at", "vacuum_off_at", "feed_gap_told", "language", ANSWERED) and not k.startswith(("hand_", "plan_", "on_duty_"))}
+    facts = {k: v for k, v in facts.items() if k not in ("warmer_off_at", "vacuum_off_at", "feed_gap_told", "language", ANSWERED) and not k.startswith(("hand_", "plan_", "on_duty_", OPEN_ALARM))}
     head = f"[{when}, {'night' if night else 'day'}. {rota}.]\n" + " ".join(n for n in notes if n)
     remembered = "\n".join(f"- {k}: {v}" for k, v in facts.items()) or "- nothing yet"
     if event["type"] == "message":

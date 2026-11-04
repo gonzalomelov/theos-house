@@ -2684,7 +2684,7 @@ CASES = [("morning", morning), ("voice note", voice_note), ("echo question", ech
 async def main(n, path, only):
     results = {}
     groups = {"round12": ROUND_12, "eighth": EIGHTH, "round11": ROUND_11, "round10": ROUND_10, "seventh": SEVENTH, "sixth": SIXTH, "fifth": FIFTH, "round9": ROUND_9, "round8": ROUND_8, "fourth": FOURTH, "quiet": QUIET, "held": HELD_OUT, "round3": ROUND_3, "round4": ROUND_4, "round5": ROUND_5, "round6": ROUND_6, "round7": ROUND_7, "judges": JUDGES, "second": SECOND, "third": THIRD}
-    for name, case in groups.get(only[0] if only else "", [*CASES, *JUDGES, *SECOND, *THIRD, *FOURTH, *FIFTH, *SIXTH, *SEVENTH, *EIGHTH]):
+    for name, case in groups.get(only[0] if only else "", [*CASES, *JUDGES, *SECOND, *THIRD, *FOURTH, *FIFTH, *SIXTH, *SEVENTH, *EIGHTH, *ROUND_12]):
         if only and only[0] not in groups and not any(w in name for w in only):
             continue
         runs = []

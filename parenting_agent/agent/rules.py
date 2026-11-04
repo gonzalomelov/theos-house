@@ -343,7 +343,7 @@ TEMP_NUMBER = re.compile(r"(?<![\d.,])(3[89]|4[0-2]|100[.,][4-9]|10[1-7])([.,]\d
 LOW_TEMP_NUMBER = re.compile(r"(?<![\d.,])3[45]([.,]\d)?(?![\d.,]*\d)(?!\s*(ml|cc|oz|min\w*|g\b|gr\b|gramos|kg|cm|semanas|weeks))",
                              re.I)
 BODY_HEAT = re.compile(r"\b(hot|warm|burning( up)?|temp\w*|thermometer|degrees|caliente|calient\w*|calor|ardiendo|hirviendo|"
-                       r"term[oó]metro|grados|tibi\w*|le tom[eé]|(it|he|she) reads?|marc[aó]|tiene|has|is at|it'?s|readings?|lectura|medici[oó]n|axila|under the arm|underarm|armpit|rectal)\b|°|º",
+                       r"term[oó]metro|grados|tibi\w*|le tom[eé]|(it|he|she) reads?|marc[aó]|tiene|has|is at|it'?s|readings?|lectura|medici[oó]n|axila|under the arm|underarm|armpit|rectal|measur\w*|scan\w*|mid[ií]\w*)\b|°|º",
                        re.I)
 BODY_TEMP = re.compile(r"\b(temp\w*|thermometer|term[oó]metro)\b", re.I)
 # What a 38 in a message is about when it is not the baby: the bath water, the room, the bottle, the weather.

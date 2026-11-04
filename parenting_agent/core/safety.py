@@ -63,7 +63,7 @@ WARM_CLAIM = re.compile(r"\b(bottle|mamadera|biber[oó]n)\b[^.!?]{0,40}\b(warm|r
 REASSURE = re.compile(r"sleep when you can|get some rest|rest up|beside you|all good|no worries|due soon|al lado tuyo|dorm[ií] tranquil\w*|descans[aá]\b|tranquil[oa]\b|todo bien|sin problema|le toca pronto", re.I)
 ABOUT_THE_AIR = re.compile(r"dehumid|deshumid|humid", re.I)
 ABOUT_THE_ROOM = re.compile(r"\broom\b|temperatur|\bcuarto\b", re.I)
-GETS_READY = re.compile(r"warm|bottle|mamadera|calent", re.I)
+GETS_READY = re.compile(r"warmer|prewarm|pre-warm|warm the|bottle|mamadera|calentador|calentar", re.I)
 HOT_ROOM, COLD_ROOM = 28.0, 14.0
 FEED_GAP_H, STALE_LOG_H = 8, 48
 # The ladder: each step is said once, from code, and from BOTH_FROM up it reaches both parents, day or night.
