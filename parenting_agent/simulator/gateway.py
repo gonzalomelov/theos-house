@@ -98,7 +98,7 @@ def app(model=None, media=None):
         return response
 
     async def page(request):
-        return HTMLResponse(page_html(), headers=FRESH)
+        return HTMLResponse(page_html(), headers={"Cache-Control": "no-cache, no-transform"})  # Cloudflare's beacon, which the CSP blocks, was the page's one console error: no-transform keeps it from being injected
 
     async def open_session(request):
         session = current(request)
