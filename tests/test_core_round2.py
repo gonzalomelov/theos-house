@@ -141,8 +141,8 @@ class Round2(unittest.IsolatedAsyncioTestCase):
         await self.event(core, "state_changed", {"entity_id": WARMER, "state": "on"}, AT.isoformat())
         facts = await tools_mod.facts(core.store, core.settings.home)
         self.assertIn("warmer_off_at", facts)
-        core.now = lambda: AT + datetime.timedelta(minutes=30)
-        self.assertFalse(core.by_hand(WARMER, "off"))
+        self.assertTrue(core.by_hand(WARMER, "off", AT + datetime.timedelta(minutes=5)))  # a person, while it still runs
+        self.assertFalse(core.by_hand(WARMER, "off", AT + datetime.timedelta(minutes=30)))  # its own end, whatever the last event's moment
 
     def test_the_first_plug_change_after_a_start_is_a_change(self):
         last, watch = {}, {WARMER: 0.0}

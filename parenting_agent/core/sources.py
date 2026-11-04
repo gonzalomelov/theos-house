@@ -68,7 +68,7 @@ async def home_assistant(core, watch=None):
                     entity, new = data.get("entity_id"), (data.get("new_state") or {}).get("state")
                     remember_plug(entity, data, last)
                     first = str(entity).startswith("sensor.") and entity not in last
-                    if worth_waking(entity, new, last, watch) and (entity not in HAND or core.by_hand(entity, new)):
+                    if worth_waking(entity, new, last, watch) and (entity not in HAND or core.by_hand(entity, new, datetime.datetime.now(TZ))):
                         await core.dispatch("state_changed", {"entity_id": entity, "state": new, **({"first_after_start": True} if first else {})}, source="home_assistant")
         except Exception as failure:  # the socket, or PostgreSQL under dispatch: this source can't stop for either
             core.publish("source", name="home_assistant", status=f"reconnecting after {type(failure).__name__}")

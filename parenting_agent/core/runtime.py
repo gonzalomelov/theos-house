@@ -335,12 +335,13 @@ class Core:
                 self.warm_until = None
         return ""
 
-    def by_hand(self, entity, state):
-        """A plug that changed with no call from the agent, and not because it ended by itself."""
+    def by_hand(self, entity, state, moment=None):
+        """A plug that changed with no call from the agent, and not because it ended by itself. A source asks with the clock on the wall,
+        since self.moment is still the last event's."""
         name = HAND.get(entity)
         if not name or state not in ("on", "off") or time.monotonic() - self.own.get(name, -OWN_MOVE_S * 2) < OWN_MOVE_S:
             return False
-        ended = "Warmer" in name and state == "off" and self.warm_until and self.now() >= self.warm_until - datetime.timedelta(minutes=2)
+        ended = "Warmer" in name and state == "off" and self.warm_until and (moment or self.now()) >= self.warm_until - datetime.timedelta(minutes=2)
         return not ended
 
     @staticmethod
@@ -350,7 +351,7 @@ class Core:
     async def note_hand(self, event):
         """Someone switched a plug: it is held for a while, and Muse hears it as a person's choice."""
         payload, moment = event["payload"], event["moment"]
-        if not self.by_hand(payload.get("entity_id"), payload.get("state")):
+        if not self.by_hand(payload.get("entity_id"), payload.get("state"), moment):
             return
         name = HAND[payload["entity_id"]]
         until = moment + datetime.timedelta(hours=HAND_HOLD_H)
