@@ -20,7 +20,7 @@ Each clip was posted as a WAV to `/hear` on this Mac with the pairing token, the
 
 | Run | Code | Red flags on the 911 line | Everyday lines on the 911 line |
 |---|---|---|---|
-| `before.json`, clean | origin/main f498576 | **11 of 34** (all 11 with the wake word, 0 of 23 without) | 0 of 34 |
+| `before.json`, clean | origin/main 6911f67 | **11 of 34** (all 11 with the wake word, 0 of 23 without) | 0 of 34 |
 | `after.json`, clean | this PR | **34 of 34** | **0 of 34** |
 | `noise.json`, pink noise about 15 dB under the speech | this PR | **34 of 34** (the old path on the same words: 11) | **0 of 34** |
 

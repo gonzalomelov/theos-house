@@ -2,13 +2,13 @@
 
 45 new tired-parent messages over 3 simulated nights, written by an agent that changed no code and read the earlier sets only to avoid overlap (closest normalized similarity 0.733). The hash in `steps.sha256` was recorded before the run and matches `steps.json`.
 
-Scored once on main at 1417505 (PR #105), after every families fix of the night, with Muse Spark Open as the brain, 0 fallbacks, 0.48 USD.
+Scored once on main at 2eb896c (PR #105), after every families fix of the night, with Muse Spark Open as the brain, 0 fallbacks, 0.48 USD.
 
 | Blind set | Code | Wrong log states | Reply problems |
 |---|---|---|---|
-| First (`heldout/`) | ee4c401 | 8 of 45 | 1 |
-| Second (`heldout2/`) | 24bd72b | 8 of 45 | 5 |
-| Third (this folder) | 1417505 | 5 of 45 | 3 |
+| First (`heldout/`) | 58bce86 | 8 of 45 | 1 |
+| Second (`heldout2/`) | 86d7c0e | 8 of 45 | 5 |
+| Third (this folder) | 2eb896c | 5 of 45 | 3 |
 
 Each wrong state is in `run-1.md` under WRONG LOG STATE, with the expected and actual entries.
 
@@ -30,5 +30,5 @@ Step 42, "mire el pañal y esta seco, no la cambie", has no wrong state (nothing
 
 All three (steps 11, 19 and 45) were English replies to English messages ("how much did she drink overnight?", "sorry 85 not 75", "wet diaper at noon"). The product rule since PR #89 is that a reply follows the language of the parent's message, so these were scorer errors, not agent errors. The scorer now flags a reply whose language differs from the message's, with the family's Spanish for a message that says neither. With that rule it would have caught one real problem it missed: step 18, "took 75ml of formula", was answered in Spanish because none of its words were on the English list. Cause language: "took", "of", "with" and a few more now mark English.
 
-Every cause has a test in `tests/test_heldout3_misses.py`. Each test fails on 1417505 and passes with the fix.
+Every cause has a test in `tests/test_heldout3_misses.py`. Each test fails on 2eb896c and passes with the fix.
 

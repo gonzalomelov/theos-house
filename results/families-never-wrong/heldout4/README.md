@@ -2,14 +2,14 @@
 
 45 new tired-parent messages over 3 simulated nights (days 29 to 31), written by a separate agent that changed no code and did not read the code, the tests or the earlier classifications. Closest normalized similarity to any earlier message 0.737 (difflib ratio, against the old set), no health content, 7 English messages. The hash in `steps.sha256` was committed in PR #107 before the run and matches `steps.json`. The agent that fixed the third set never opened `steps.json` before the run.
 
-Scored once on main at `78febfc` (PR #107, after every fix of the third set), Muse Spark Open as the brain, 0 fallbacks, 0.48 USD.
+Scored once on main at `8ab6568` (PR #107, after every fix of the third set), Muse Spark Open as the brain, 0 fallbacks, 0.48 USD.
 
 | Blind set | Code | Wrong log states | Reply problems |
 |---|---|---|---|
-| First (`heldout/`) | ee4c401 | 8 of 45 | 1 |
-| Second (`heldout2/`) | 24bd72b | 8 of 45 | 5 |
-| Third (`heldout3/`) | 1417505 | 5 of 45 | 3 |
-| Fourth (this folder) | 78febfc | **11 of 45** | 1 |
+| First (`heldout/`) | 58bce86 | 8 of 45 | 1 |
+| Second (`heldout2/`) | 86d7c0e | 8 of 45 | 5 |
+| Third (`heldout3/`) | 2eb896c | 5 of 45 | 3 |
+| Fourth (this folder) | 8ab6568 | **11 of 45** | 1 |
 
 The fixes from the third set did not carry over. This is the worst blind number of the four. The scorer changed between the third and fourth runs (a reply in the language of the parent's message is no longer a problem), so reply problems are not comparable across rows.
 

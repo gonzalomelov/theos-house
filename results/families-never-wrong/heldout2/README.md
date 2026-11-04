@@ -1,7 +1,7 @@
 # Second blind set, scored after every fix
 
 45 new tired-parent messages over 3 simulated nights, written by an agent that changed no code and never saw the
-fixes. Scored once, blind, on Oct 29 2026 on parenting-agent main at `24bd72b` (after PRs #101 and #103, every families
+fixes. Scored once, blind, on Oct 29 2026 on parenting-agent main at `86d7c0e` (after PRs #101 and #103, every families
 fix of the night), brain Muse Spark Open (`meta-models/muse-spark-open-1026` on Baseten), with
 `scripts/families_never_wrong_run.py --steps-file steps-oct.json`.
 

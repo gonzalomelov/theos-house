@@ -66,7 +66,7 @@ The same command, three more takes, on the code of the held object PR (`held-fix
 
 ## The first hover after arming, through the glasses
 
-The 2.5 cm hover clip alone, looped, 5 runs each, `first-hover/`. "main" is origin/main at 9092ad0 plus logging only (a Unix time on each event, an event when a lift anchor is sent).
+The 2.5 cm hover clip alone, looped, 5 runs each, `first-hover/`. "main" is origin/main at 1653ba3 plus logging only (a Unix time on each event, an event when a lift anchor is sent).
 
 | | "changing time" to watching | First hover after watching starts | Every later hover |
 |---|---|---|---|

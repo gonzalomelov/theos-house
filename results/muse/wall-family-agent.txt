@@ -1,8 +1,8 @@
-== send commit 396ed0b8b431 to vostro:~/apps/parenting-agent
- Image parenting-agent-egress:396ed0b8b431 Building 
- Image parenting-agent:396ed0b8b431 Building 
- Image parenting-agent-egress:396ed0b8b431 Built 
- Image parenting-agent:396ed0b8b431 Built 
+== send commit 686981069baf to vostro:~/apps/parenting-agent
+ Image parenting-agent-egress:686981069baf Building 
+ Image parenting-agent:686981069baf Building 
+ Image parenting-agent-egress:686981069baf Built 
+ Image parenting-agent:686981069baf Built 
  Container parenting-agent-egress Recreate 
  Container parenting-agent-relay Recreate 
  Container parenting-agent-egress Recreated 
@@ -191,4 +191,4 @@ PASS  192.0.2.10:8790, direct                              blocked (OSError: [Er
 PASS  192.0.2.10:8123, through the egress proxy            blocked (refused by the egress proxy, HTTP 403)
 PASS  192.0.2.10:443, through the egress proxy             blocked (URLError: Tunnel connection failed: 403 Filtered)
 wall holds
-deployed 396ed0b8b431
+deployed 686981069baf

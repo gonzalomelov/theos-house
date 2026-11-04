@@ -2,7 +2,7 @@
 
 DEVICES maps each useful Home Assistant device to the entities the agent uses and its jobs. Each job names the
 routine in parenting_agent/day_engine.py that runs it (or "read" when the job only feeds a routine or a brief) and the
-policy it runs under, the same three lists as docs/home-assistant-inventory.md:
+policy it runs under, the same three lists as docs/house-policy.md:
 
 - alone: runs on the engine's word, in dry run until house.live is on
 - ask: waits for Gonza's yes

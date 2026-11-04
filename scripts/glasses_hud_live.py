@@ -337,7 +337,7 @@ def main():
     parser.add_argument("--out-dir", default="results/glasses-live")
     parser.add_argument("--name", default="run")
     parser.add_argument("--video", help="where the muxed screen recording goes")
-    parser.add_argument("--hands", choices=("auto", "mediapipe", "sam3_only"), help="the hand detector, default the config's")
+    parser.add_argument("--hands", choices=("auto", "sam3_only"), help="the hand detector, default the config's")
     args = parser.parse_args()
     if args.build_feed:
         plan = timeline()

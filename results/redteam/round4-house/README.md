@@ -2,7 +2,7 @@
 
 On Oct 29 2026 red-team pass 4 landed seven attacks. The honesty guard that erased safety answers was closed in PR #123. This change closes the other six, the house ones. Each is now a test in `tests/test_redteam_r4.py` that replays the red-team harness input (live.py, h_demo.py, h_floor2.py, h_brain.py) with a scripted brain or a fake Muse, no network.
 
-**Before** is the test file run on origin/main at 8fccb95. **After** is this branch. Run on Oct 29 2026: 14 of 16 tests fail before and pass after. The other 2 are controls that pass on both (a plugin's "Reply yes" still reaches the brain, and a plan with two boosts and one quiet door window still stands). The full suite, 983 tests, passes.
+**Before** is the test file run on origin/main at 5f7935a. **After** is this branch. Run on Oct 29 2026: 14 of 16 tests fail before and pass after. The other 2 are controls that pass on both (a plugin's "Reply yes" still reaches the brain, and a plan with two boosts and one quiet door window still stands). The full suite, 983 tests, passes.
 
 ```bash
 python -m unittest discover -s tests -p test_redteam_r4.py -v

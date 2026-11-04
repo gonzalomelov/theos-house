@@ -1,4 +1,4 @@
-"""Home Assistant tools for the agent (issue #9), behind the action policy in docs/home-assistant-inventory.md.
+"""Home Assistant tools for the agent (issue #9), behind the action policy in docs/house-policy.md.
 
 Three lists, kept in code:
 - Alone: the tools in ALONE. Add them to the agent's allowed_tools and they run on the brain's word.

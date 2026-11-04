@@ -33,7 +33,7 @@ from ..agent import rules
 from ..agent.plugins import Plugin
 from ..house import HomeAssistant
 
-# From the action policy in docs/home-assistant-inventory.md: announce or speak on the Echo Dot, low volume.
+# From the action policy in docs/house-policy.md: announce or speak on the Echo Dot, low volume.
 ALLOWED_SPEAKERS = {"notify.gonza_s_echo_dot_announce", "notify.gonza_s_echo_dot_speak"}
 MAX_VOLUME = 0.3
 CHANNELS = ("ear", "home_speaker", "telegram", "partner")

@@ -1,4 +1,4 @@
-"""The second blind set (Oct 29, 45 tired-parent messages, Muse, scored on main at 24bd72b): six of its eight misses had
+"""The second blind set (Oct 29, 45 tired-parent messages, Muse, scored on main at 86d7c0e): six of its eight misses had
 one cause. The guards that keep the brain honest decided what the parent said from fixed word and number lists, so a
 detail said in another form ("3 onzitas", "110 y sobraron 20", "caquita", "desde las 2 y 10", "de materna", "fue con
 formula") was thrown away or never applied. Each test replays a step with the brain doing what Muse did."""

@@ -1,6 +1,6 @@
 # The agent on the Vostro, always on
 
-The family's private agent runs 24/7 on the Vostro, next to Baby Buddy and Home Assistant, so it keeps working when the Mac is closed. Deployed on Oct 28 2026 during the hackathon (issue #15). Heavy vision (MediaPipe, SAM 3.1) stays on the Mac.
+The family's private agent runs 24/7 on the Vostro, next to Baby Buddy and Home Assistant, so it keeps working when the Mac is closed. Deployed on Oct 28 2026 during the hackathon (issue #15). Heavy vision (SAM 3.1) stays on the Mac.
 
 ## How it runs
 
@@ -54,7 +54,7 @@ The internal network is created with `--internal` and the isolated gateway mode 
 
 ## House actions: three live, the rest dry
 
-The house layer (`parenting_agent/house.py`) acts only when `HA_TOKEN` is set. The Vostro env file carries the Home Assistant token as `HA_MCP_TOKEN`, so the agent can read Home Assistant. The deploy refuses an env file that sets `HA_TOKEN`. Since Oct 30 `config/agent.vostro.json` lists three live actions in `house.live_actions`: the night feed's study light, nap mode's vacuum pause and return to base, and adding an item to the shopping list when a supply runs low or a parent asks (`parenting_agent/house_live.py`, the table in `docs/home-assistant-inventory.md`). Every other house action stays a dry run. These need Home Assistant reachable, so deploy without `NO_HA` for them to write.
+The house layer (`parenting_agent/house.py`) acts only when `HA_TOKEN` is set. The Vostro env file carries the Home Assistant token as `HA_MCP_TOKEN`, so the agent can read Home Assistant. The deploy refuses an env file that sets `HA_TOKEN`. Since Oct 30 `config/agent.vostro.json` lists three live actions in `house.live_actions`: the night feed's study light, nap mode's vacuum pause and return to base, and adding an item to the shopping list when a supply runs low or a parent asks (`parenting_agent/house_live.py`, the table in `docs/house-policy.md`). Every other house action stays a dry run. These need Home Assistant reachable, so deploy without `NO_HA` for them to write.
 
 ## Home Assistant bans after failed logins
 

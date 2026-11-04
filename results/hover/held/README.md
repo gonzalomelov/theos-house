@@ -7,7 +7,7 @@ Measured on Oct 29 2026 between 18:47 and 20:08 Montevideo, during the Meta hack
 | Fresh blind held set (`blind2`, 24 hovers, 12 touches) | Hovers spoken within 2.5 s | False "hand" on touches | Load | File |
 |---|---|---|---|---|
 | Target | at least 20 | at most 1 | | |
-| Before, origin/main 18160b5 (scored 20:03) | 6 (5 strict) | 10 | 6.0 | `blind2/before.json` |
+| Before, origin/main 7b76ee9 (scored 20:03) | 6 (5 strict) | 10 | 6.0 | `blind2/before.json` |
 | **After, v3 (scored once, 19:52)** | **19** | **1** | 6.1 | `blind2/after.json` |
 
 **The hover target is missed by one: 19 of 24, not 20. The false voice target is met: 1 of 12. But the chime sounded on 9 of the 12 touch moments (11 chimes in all, `touch_chimes` in `blind2/after.json`), so a parent holding a wipe on the baby still hears the tone most of the time. Before, on main: chimes on 11 of 12.** The 5 missed hovers were all spoken, but late, 2.59 to 3.33 s after the cue: the SAM 3.1 look took 2.3 to 3.3 s, and the lift is read only once its anchor lands. The one false voice (`table-a-hold-touch-wipe-both-s0`) came after the followed region was lost while the hand still rested and MediaPipe flickered in and out: a new alarm was raised, and SAM 3.1 read that frame as off.
@@ -85,7 +85,7 @@ Each moment streams in real time through the changing-table skill on this Mac (M
 |---|---|---|
 | Reflex sees the hand while it rests (20 moments) | 8 of 12 | 0 of 8 |
 | Reflex loses the hand behind the object (34 moments) | 0 of 24 | 10 of 10 |
-| All, before (origin/main 2d61d85) | 8 of 36 | 10 of 18 |
+| All, before (origin/main c7cc3d5) | 8 of 36 | 10 of 18 |
 
 So of the three suspects (landmark occlusion, hand scale, the contact rule), the one that decides is **occlusion of the hand landmarks by the object**. When MediaPipe still finds the hand, the lift check works on a hand holding an object, up to 15 cm: it measured lifts of 5.9 to 14.2 cm and spoke on 8 of 12 hovers with 0 false voices. When the object covers the palm, MediaPipe finds no hand at all from the first frame, reads off, and every touch raises a false alarm while every hover is spoken during the rest, before anything lifts. Hand scale did not show up as a cause: the 15 cm lifts (1.5 times bigger) that MediaPipe found were measured.
 
@@ -118,7 +118,7 @@ Scored between 04:32 and 04:40, once per configuration, after v2 was committed (
 
 | Blind, 36 moments | Hovers spoken (of 24) | Strict | Arrivals spoken (of 8) | False voices on touches (of 12) | SAM 3.1 confirm s, median and p90 | File |
 |---|---|---|---|---|---|---|
-| Before (origin/main 2d61d85) | 5 | 3 | 1 | **7** | 1.75, 2.74 | `blind/before.json` |
+| Before (origin/main c7cc3d5) | 5 | 3 | 1 | **7** | 1.75, 2.74 | `blind/before.json` |
 | After (v2) | 5 | 3 | 1 | **10** | 1.60, 2.16 | `blind/after.json` |
 
 | Blind, split by what MediaPipe saw while the hand rested | Before | After |
@@ -164,4 +164,4 @@ python scripts/hover_ablation.py --set $S/hover/held-dev --split dev --confirm s
 python scripts/hover_ablation.py --set $S/hover/held-blind --split test --confirm sam3_local --out blind/after.json
 rmdir /tmp/pa-gpu.lock
 ```
-The "before" rows ran the same harness on a checkout of origin/main at 2d61d85.
+The "before" rows ran the same harness on a checkout of origin/main at c7cc3d5.

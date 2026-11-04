@@ -11,7 +11,7 @@ fallbacks to Claude in every run. Total spend 6.45 USD of the 8 USD budget.
 
 | Variant | What decides the log |
 |---|---|
-| `main` | Main at `7fa94a8`: Muse calls the log tools, and the rule guards in `loop.py` and `rules.py` (said_only, addendum, amount_said, time parsing, claims guards and the rest) check, change or hold each call |
+| `main` | Main at `9ad0571`: Muse calls the log tools, and the rule guards in `loop.py` and `rules.py` (said_only, addendum, amount_said, time parsing, claims guards and the rest) check, change or hold each call |
 | `safety` | The same loop with every guard that judges Muse switched off. Only safety stays: the emergency and newborn red flag lines, the health refusal, codes kept out of replies and the bounds on amounts, lengths and times. The prompt asks about double sends because the agent no longer does |
 | `ops-verify` | Muse gets the log as it stands with ids, the open sleep, today's and yesterday's totals, the rhythm line and the last 12 messages with their times, and returns the log operations as data (`log_ops`). A second Muse call checks them against the message and the log and can keep, correct or drop them |
 | `ops` | The same as `ops-verify` with one call and no check |
@@ -30,8 +30,8 @@ are tuned numbers. Main's first three sets were tuned too (fixes after each blin
 | ops-verify | 0 / 0 | 0 / 0 | 0 / 1 | 0 / 0 | **0** | 1 | 3.2 | 0.0091 |
 | ops | 0 / 0 | 0 / 0 | 0 / 0 | 0 / 1 | **0** | 1 | 1.7 | 0.0047 |
 
-Main's set 4 row is the blind run of `../families-never-wrong/heldout4/run-1.json` on `78febfc`, the same code as
-`7fa94a8` (PR #108 changed only results). Its seconds are not in that file, so main's seconds come from sets 1 to 3.
+Main's set 4 row is the blind run of `../families-never-wrong/heldout4/run-1.json` on `8ab6568`, the same code as
+`9ad0571` (PR #108 changed only results). Its seconds are not in that file, so main's seconds come from sets 1 to 3.
 Files: `<variant>-heldout<n>.json` and `.md`, every step with its reply, tool calls and diff.
 
 What the table says:

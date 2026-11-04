@@ -1,0 +1,434 @@
+[
+ {
+  "file": "audio/cry-01.wav",
+  "label": "cry",
+  "title": "File:Baby long wanting cry.ogg",
+  "license": "Public domain",
+  "page": "https://commons.wikimedia.org/wiki/File:Baby_long_wanting_cry.ogg",
+  "id": "cry-01",
+  "split": "dev"
+ },
+ {
+  "file": "audio/cry-02.wav",
+  "label": "cry",
+  "title": "File:Babys disappointed crying.oga",
+  "license": "Public domain",
+  "page": "https://commons.wikimedia.org/wiki/File:Babys_disappointed_crying.oga",
+  "id": "cry-02",
+  "split": "test"
+ },
+ {
+  "file": "audio/cry-03.wav",
+  "label": "cry",
+  "title": "File:Crying newborn baby.ogg",
+  "license": "CC0",
+  "page": "https://commons.wikimedia.org/wiki/File:Crying_newborn_baby.ogg",
+  "id": "cry-03",
+  "split": "dev"
+ },
+ {
+  "file": "audio/cry-04.wav",
+  "label": "cry",
+  "title": "File:Newborn baby crying sounds 20190831 061900.wav",
+  "license": "CC BY-SA 4.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Newborn_baby_crying_sounds_20190831_061900.wav",
+  "id": "cry-04",
+  "split": "test"
+ },
+ {
+  "file": "audio/cough-01.wav",
+  "label": "cough",
+  "title": "File:The-description-of-cough-sounds-by-healthcare-professionals-1745-9974-2-1-S1.ogg",
+  "license": "CC BY 2.0",
+  "page": "https://commons.wikimedia.org/wiki/File:The-description-of-cough-sounds-by-healthcare-professionals-1745-9974-2-1-S1.ogg",
+  "id": "cough-01",
+  "split": "dev"
+ },
+ {
+  "file": "audio/cough-02.wav",
+  "label": "cough",
+  "title": "File:The-description-of-cough-sounds-by-healthcare-professionals-1745-9974-2-1-S2.ogg",
+  "license": "CC BY 2.0",
+  "page": "https://commons.wikimedia.org/wiki/File:The-description-of-cough-sounds-by-healthcare-professionals-1745-9974-2-1-S2.ogg",
+  "id": "cough-02",
+  "split": "test"
+ },
+ {
+  "file": "audio/cough-03.wav",
+  "label": "cough",
+  "title": "File:The-description-of-cough-sounds-by-healthcare-professionals-1745-9974-2-1-S3.ogg",
+  "license": "CC BY 2.0",
+  "page": "https://commons.wikimedia.org/wiki/File:The-description-of-cough-sounds-by-healthcare-professionals-1745-9974-2-1-S3.ogg",
+  "id": "cough-03",
+  "split": "dev"
+ },
+ {
+  "file": "audio/dog-01.wav",
+  "label": "dog",
+  "title": "File:Barking dog in Rome.ogg",
+  "license": "CC BY-SA 3.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Barking_dog_in_Rome.ogg",
+  "id": "dog-01",
+  "split": "dev"
+ },
+ {
+  "file": "audio/dog-02.wav",
+  "label": "dog",
+  "title": "File:Barking of a dog 2.ogg",
+  "license": "CC BY-SA 3.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Barking_of_a_dog_2.ogg",
+  "id": "dog-02",
+  "split": "test"
+ },
+ {
+  "file": "audio/dog-03.wav",
+  "label": "dog",
+  "title": "File:Barking of a dog.ogg",
+  "license": "CC BY-SA 3.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Barking_of_a_dog.ogg",
+  "id": "dog-03",
+  "split": "dev"
+ },
+ {
+  "file": "audio/dog-04.wav",
+  "label": "dog",
+  "title": "File:Perro ladrando.ogg",
+  "license": "CC BY-SA 4.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Perro_ladrando.ogg",
+  "id": "dog-04",
+  "split": "test"
+ },
+ {
+  "file": "audio/doorbell-01.wav",
+  "label": "doorbell",
+  "title": "File:Doorbell-cheap-dingdong.ogg",
+  "license": "Public domain",
+  "page": "https://commons.wikimedia.org/wiki/File:Doorbell-cheap-dingdong.ogg",
+  "id": "doorbell-01",
+  "split": "test"
+ },
+ {
+  "file": "audio/doorbell-02.wav",
+  "label": "doorbell",
+  "title": "File:Doorbell-classic-dingdong.ogg",
+  "license": "Public domain",
+  "page": "https://commons.wikimedia.org/wiki/File:Doorbell-classic-dingdong.ogg",
+  "id": "doorbell-02",
+  "split": "dev"
+ },
+ {
+  "file": "audio/doorbell-03.wav",
+  "label": "doorbell",
+  "title": "File:Doorbell-old-tring.ogg",
+  "license": "Public domain",
+  "page": "https://commons.wikimedia.org/wiki/File:Doorbell-old-tring.ogg",
+  "id": "doorbell-03",
+  "split": "test"
+ },
+ {
+  "file": "audio/doorbell-04.wav",
+  "label": "doorbell",
+  "title": "File:Electronic doorbell.ogg",
+  "license": "CC0",
+  "page": "https://commons.wikimedia.org/wiki/File:Electronic_doorbell.ogg",
+  "id": "doorbell-04",
+  "split": "test"
+ },
+ {
+  "file": "audio/splash-01.wav",
+  "label": "splash",
+  "title": "File:Bathtub water splashes.ogg",
+  "license": "Public domain",
+  "page": "https://commons.wikimedia.org/wiki/File:Bathtub_water_splashes.ogg",
+  "id": "splash-01",
+  "split": "dev"
+ },
+ {
+  "file": "audio/splash-02.wav",
+  "label": "splash",
+  "title": "File:Faucet water into sink.ogg",
+  "license": "Public domain",
+  "page": "https://commons.wikimedia.org/wiki/File:Faucet_water_into_sink.ogg",
+  "id": "splash-02",
+  "split": "dev"
+ },
+ {
+  "file": "audio2/raw/The-description-of-cough-sounds-by-healthcare-professionals-1745-9974-2-1-S4.ogg",
+  "label": "cough",
+  "title": "File:The-description-of-cough-sounds-by-healthcare-professionals-1745-9974-2-1-S4.ogg",
+  "license": "CC BY 2.0",
+  "page": "https://commons.wikimedia.org/wiki/File:The-description-of-cough-sounds-by-healthcare-professionals-1745-9974-2-1-S4.ogg",
+  "id": "cough-04",
+  "split": "test"
+ },
+ {
+  "file": "audio2/raw/The-description-of-cough-sounds-by-healthcare-professionals-1745-9974-2-1-S5.ogg",
+  "label": "cough",
+  "title": "File:The-description-of-cough-sounds-by-healthcare-professionals-1745-9974-2-1-S5.ogg",
+  "license": "CC BY 2.0",
+  "page": "https://commons.wikimedia.org/wiki/File:The-description-of-cough-sounds-by-healthcare-professionals-1745-9974-2-1-S5.ogg",
+  "id": "cough-05",
+  "split": "dev"
+ },
+ {
+  "file": "audio2/raw/The-description-of-cough-sounds-by-healthcare-professionals-1745-9974-2-1-S6.ogg",
+  "label": "cough",
+  "title": "File:The-description-of-cough-sounds-by-healthcare-professionals-1745-9974-2-1-S6.ogg",
+  "license": "CC BY 2.0",
+  "page": "https://commons.wikimedia.org/wiki/File:The-description-of-cough-sounds-by-healthcare-professionals-1745-9974-2-1-S6.ogg",
+  "id": "cough-06",
+  "split": "test"
+ },
+ {
+  "file": "audio2/raw/The-description-of-cough-sounds-by-healthcare-professionals-1745-9974-2-1-S7.ogg",
+  "label": "cough",
+  "title": "File:The-description-of-cough-sounds-by-healthcare-professionals-1745-9974-2-1-S7.ogg",
+  "license": "CC BY 2.0",
+  "page": "https://commons.wikimedia.org/wiki/File:The-description-of-cough-sounds-by-healthcare-professionals-1745-9974-2-1-S7.ogg",
+  "id": "cough-07",
+  "split": "dev"
+ },
+ {
+  "file": "audio2/raw/The-description-of-cough-sounds-by-healthcare-professionals-1745-9974-2-1-S8.ogg",
+  "label": "cough",
+  "title": "File:The-description-of-cough-sounds-by-healthcare-professionals-1745-9974-2-1-S8.ogg",
+  "license": "CC BY 2.0",
+  "page": "https://commons.wikimedia.org/wiki/File:The-description-of-cough-sounds-by-healthcare-professionals-1745-9974-2-1-S8.ogg",
+  "id": "cough-08",
+  "split": "test"
+ },
+ {
+  "file": "audio2/raw/The-description-of-cough-sounds-by-healthcare-professionals-1745-9974-2-1-S9.ogg",
+  "label": "cough",
+  "title": "File:The-description-of-cough-sounds-by-healthcare-professionals-1745-9974-2-1-S9.ogg",
+  "license": "CC BY 2.0",
+  "page": "https://commons.wikimedia.org/wiki/File:The-description-of-cough-sounds-by-healthcare-professionals-1745-9974-2-1-S9.ogg",
+  "id": "cough-09",
+  "split": "dev"
+ },
+ {
+  "file": "audio2/raw/Validation-of-an-Automated-Cough-Detection-Algorithm-for-Tracking-Recovery-of-Pulmonary-pone.0046229.s002.ogg",
+  "label": "cough",
+  "title": "File:Validation-of-an-Automated-Cough-Detection-Algorithm-for-Tracking-Recovery-of-Pulmonary-pone.0046229.s002.ogg",
+  "license": "CC BY 2.5",
+  "page": "https://commons.wikimedia.org/wiki/File:Validation-of-an-Automated-Cough-Detection-Algorithm-for-Tracking-Recovery-of-Pulmonary-pone.0046229.s002.ogg",
+  "id": "cough-10",
+  "split": "test"
+ },
+ {
+  "file": "audio2/raw/Dog barking.webm",
+  "label": "dog",
+  "title": "File:Dog barking.webm",
+  "license": "CC BY-SA 4.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Dog_barking.webm",
+  "id": "dog-05",
+  "split": "test"
+ },
+ {
+  "file": "audio2/raw/Rottweiler Barking.oga",
+  "label": "dog",
+  "title": "File:Rottweiler Barking.oga",
+  "license": "CC BY-SA 4.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Rottweiler_Barking.oga",
+  "id": "dog-06",
+  "split": "dev"
+ },
+ {
+  "file": "audio2/raw/Paisaje sonoro de lluvia con ladrido de perro.wav",
+  "label": "dog",
+  "title": "File:Paisaje sonoro de lluvia con ladrido de perro.wav",
+  "license": "CC BY-SA 4.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Paisaje_sonoro_de_lluvia_con_ladrido_de_perro.wav",
+  "id": "dog-07",
+  "split": "dev"
+ },
+ {
+  "file": "audio2/raw/Paisaje sonoro de lluvia con ladrido de perro - 2.wav",
+  "label": "dog",
+  "title": "File:Paisaje sonoro de lluvia con ladrido de perro - 2.wav",
+  "license": "CC BY-SA 4.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Paisaje_sonoro_de_lluvia_con_ladrido_de_perro_-_2.wav",
+  "id": "dog-08",
+  "split": "dev"
+ },
+ {
+  "file": "audio2/raw/Doorbell.wav",
+  "label": "doorbell",
+  "title": "File:Doorbell.wav",
+  "license": "CC BY 4.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Doorbell.wav",
+  "id": "doorbell-05",
+  "split": "dev"
+ },
+ {
+  "file": "audio2/raw/Mechanical doorbel.ogg",
+  "label": "doorbell",
+  "title": "File:Mechanical doorbel.ogg",
+  "license": "CC0",
+  "page": "https://commons.wikimedia.org/wiki/File:Mechanical_doorbel.ogg",
+  "id": "doorbell-06",
+  "split": "test"
+ },
+ {
+  "file": "audio2/raw/Ladenklingel.ogg",
+  "label": "doorbell",
+  "title": "File:Ladenklingel.ogg",
+  "license": "CC BY-SA 3.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Ladenklingel.ogg",
+  "id": "doorbell-07",
+  "split": "dev"
+ },
+ {
+  "file": "audio2/raw/De-Haust\u00fcrklingel.ogg",
+  "label": "doorbell",
+  "title": "File:De-Haust\u00fcrklingel.ogg",
+  "license": "CC BY-SA 4.0",
+  "page": "https://commons.wikimedia.org/wiki/File:De-Haust%C3%BCrklingel.ogg",
+  "id": "doorbell-08",
+  "split": "dev"
+ },
+ {
+  "file": "audio2/raw/OER 5200 Chime Door open and close.ogg",
+  "label": "doorbell",
+  "title": "File:OER 5200 Chime Door open and close.ogg",
+  "license": "Public domain",
+  "page": "https://commons.wikimedia.org/wiki/File:OER_5200_Chime_Door_open_and_close.ogg",
+  "id": "doorbell-09",
+  "split": "dev"
+ },
+ {
+  "file": "audio2/raw/Wav splash.wav",
+  "label": "splash",
+  "title": "File:Wav splash.wav",
+  "license": "CC BY-SA 4.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Wav_splash.wav",
+  "id": "splash-03",
+  "split": "dev"
+ },
+ {
+  "file": "audio2/raw/Wasser Einlassen.ogg",
+  "label": "splash",
+  "title": "File:Wasser Einlassen.ogg",
+  "license": "CC BY-SA 3.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Wasser_Einlassen.ogg",
+  "id": "splash-04",
+  "split": "dev"
+ },
+ {
+  "file": "audio2/raw/Water flowing pouring trickling.ogg",
+  "label": "splash",
+  "title": "File:Water flowing pouring trickling.ogg",
+  "license": "Public domain",
+  "page": "https://commons.wikimedia.org/wiki/File:Water_flowing_pouring_trickling.ogg",
+  "id": "splash-05",
+  "split": "test"
+ },
+ {
+  "file": "audio2/raw/Emptying syringe in water slow.ogg",
+  "label": "splash",
+  "title": "File:Emptying syringe in water slow.ogg",
+  "license": "Public domain",
+  "page": "https://commons.wikimedia.org/wiki/File:Emptying_syringe_in_water_slow.ogg",
+  "id": "splash-06",
+  "split": "test"
+ },
+ {
+  "file": "audio2/raw/Washing hands in sink.ogg",
+  "label": "splash",
+  "title": "File:Washing hands in sink.ogg",
+  "license": "Public domain",
+  "page": "https://commons.wikimedia.org/wiki/File:Washing_hands_in_sink.ogg",
+  "id": "splash-07",
+  "split": "test"
+ },
+ {
+  "file": "audio2/raw/Ambient Kitchen Sounds.wav",
+  "label": "negative",
+  "title": "File:Ambient Kitchen Sounds.wav",
+  "license": "CC0",
+  "page": "https://commons.wikimedia.org/wiki/File:Ambient_Kitchen_Sounds.wav",
+  "id": "negative-01",
+  "split": "test"
+ },
+ {
+  "file": "audio2/raw/Kitchen sounds recorded while cooking.ogg",
+  "label": "negative",
+  "title": "File:Kitchen sounds recorded while cooking.ogg",
+  "license": "CC BY-SA 4.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Kitchen_sounds_recorded_while_cooking.ogg",
+  "id": "negative-02",
+  "split": "test"
+ },
+ {
+  "file": "audio2/raw/Kitchen tidy up.ogg",
+  "label": "negative",
+  "title": "File:Kitchen tidy up.ogg",
+  "license": "Public domain",
+  "page": "https://commons.wikimedia.org/wiki/File:Kitchen_tidy_up.ogg",
+  "id": "negative-03",
+  "split": "dev"
+ },
+ {
+  "file": "audio2/raw/Dishwasher end droning hissing humming.ogg",
+  "label": "negative",
+  "title": "File:Dishwasher end droning hissing humming.ogg",
+  "license": "Public domain",
+  "page": "https://commons.wikimedia.org/wiki/File:Dishwasher_end_droning_hissing_humming.ogg",
+  "id": "negative-04",
+  "split": "test"
+ },
+ {
+  "file": "audio2/raw/Electric kettle and a gastherme.ogg",
+  "label": "negative",
+  "title": "File:Electric kettle and a gastherme.ogg",
+  "license": "Public domain",
+  "page": "https://commons.wikimedia.org/wiki/File:Electric_kettle_and_a_gastherme.ogg",
+  "id": "negative-05",
+  "split": "dev"
+ },
+ {
+  "file": "audio2/raw/Cooker hood.ogg",
+  "label": "negative",
+  "title": "File:Cooker hood.ogg",
+  "license": "Public domain",
+  "page": "https://commons.wikimedia.org/wiki/File:Cooker_hood.ogg",
+  "id": "negative-06",
+  "split": "dev"
+ },
+ {
+  "file": "audio2/raw/\"Cry-Baby\" (1918), by Tom Brown & Ernie Erdman.opus",
+  "label": "negative",
+  "title": "File:\"Cry-Baby\" (1918), by Tom Brown & Ernie Erdman.opus",
+  "license": "Public domain",
+  "page": "https://commons.wikimedia.org/wiki/File:%22Cry-Baby%22_(1918),_by_Tom_Brown_%26_Ernie_Erdman.opus",
+  "id": "negative-07",
+  "split": "dev"
+ },
+ {
+  "file": "audio2/raw/Radio Oranje 22-nov.-1944 AIRCHECK RADIO ORANJE.wav",
+  "label": "negative",
+  "title": "File:Radio Oranje 22-nov.-1944 AIRCHECK RADIO ORANJE.wav",
+  "license": "Public domain",
+  "page": "https://commons.wikimedia.org/wiki/File:Radio_Oranje_22-nov.-1944_AIRCHECK_RADIO_ORANJE.wav",
+  "id": "negative-08",
+  "split": "test"
+ },
+ {
+  "file": "audio2/raw/WikiTTS Canada Wikipedia article.oga",
+  "label": "speech",
+  "title": "File:WikiTTS Canada Wikipedia article.oga",
+  "license": "CC BY 4.0",
+  "page": "https://commons.wikimedia.org/wiki/File:WikiTTS_Canada_Wikipedia_article.oga",
+  "id": "wikitts",
+  "split": "test"
+ },
+ {
+  "file": "audio2/raw/The beginning of wikipedia Read aloud.wav",
+  "label": "speech",
+  "title": "File:The beginning of wikipedia Read aloud.wav",
+  "license": "Public domain",
+  "page": "https://commons.wikimedia.org/wiki/File:The_beginning_of_wikipedia_Read_aloud.wav",
+  "id": "read",
+  "split": "test"
+ }
+]

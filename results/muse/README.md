@@ -28,7 +28,7 @@ Run inside each running container with its own config, through its own egress pr
 
 | Agent | File | Brain calls on Muse | Fallbacks |
 |---|---|---|---|
-| Family agent, commit 1cd6b36 | `vostro-family-agent-turn.jsonl` | 4, to inference.baseten.co | 0 |
+| Family agent, commit 496ec7f | `vostro-family-agent-turn.jsonl` | 4, to inference.baseten.co | 0 |
 | Families bot, Spanish, test family in a temp folder | `vostro-families-turn.jsonl` | 4 | 0 |
 | Demo, internal visitor in a temp folder | `vostro-demo-turn.jsonl` | 4 | 0 |
 

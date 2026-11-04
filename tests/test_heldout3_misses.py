@@ -1,4 +1,4 @@
-"""The third blind set (Oct 29, 45 tired-parent messages, Muse, scored once on main at 1417505) and the two open steps of
+"""The third blind set (Oct 29, 45 tired-parent messages, Muse, scored once on main at 2eb896c) and the two open steps of
 the second. Each test replays a step with the brain doing what Muse did, and names the cause it covers:
 
 - clock: a time said in a form the one time parser did not know ("4 y 55", "at noon") was never applied.

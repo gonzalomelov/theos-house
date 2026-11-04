@@ -18,7 +18,7 @@ Review round 4 ran 36 new messages three times and found five problems. All runs
 
 ## Regression tests
 
-`tests/test_babylog_r4.py`, 22 tests built from the review's exact messages. 19 of the 22 fail on origin/main `ad22532` and all pass on this branch. The full suite passes: 1005 tests, 4 skipped.
+`tests/test_babylog_r4.py`, 22 tests built from the review's exact messages. 19 of the 22 fail on origin/main `076ce5a` and all pass on this branch. The full suite passes: 1005 tests, 4 skipped.
 
 ## The review's own messages on this branch
 
@@ -32,7 +32,7 @@ One thing this run shows that is not fixed here: the same 20:00 push says "la ú
 
 | Run | Right | Spanish replies | Fallbacks | Spend |
 |---|---|---|---|---|
-| origin/main `ad22532` (`main-1.md`) | 29 of 36 | 36 of 36 | 0 | 0.1428 USD |
+| origin/main `076ce5a` (`main-1.md`) | 29 of 36 | 36 of 36 | 0 | 0.1428 USD |
 | this branch (`branch-1.md`) | **36 of 36** | 36 of 36 | 0 | 0.1707 USD |
 
 The 7 misses on main: three symptom-with-feed messages stored as notes only (80, 120 and 60 ml lost) with the unasked tail, "tomo 40 y vomito todo" with the red flag line and the 40 ml lost, "vomitó un poco, nada más" with the unasked tail, and two total questions whose answers were wrong because of those lost feeds ("cuanto tomo hoy en total?" said 90 ml for 210, "cuanto tomo ayer de mamadera?" said 190 for 370).

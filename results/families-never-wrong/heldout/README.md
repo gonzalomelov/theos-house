@@ -1,7 +1,7 @@
 # Held-out set, the first and only blind score
 
 45 tired-parent messages over 3 simulated nights (`heldout-steps.json`), written after the fixes of PR #101 and never
-used to tune anything. Scored once, blind, on Oct 29 2026 on parenting-agent main at `ee4c401`, brain Muse Spark Open
+used to tune anything. Scored once, blind, on Oct 29 2026 on parenting-agent main at `58bce86`, brain Muse Spark Open
 (`meta-models/muse-spark-open-1026` on Baseten), with `scripts/families_never_wrong_run.py --steps-file`.
 
 **Blind result: 8 of 45 messages left a wrong log state, 1 reply problem, 0 fallbacks, 0.53 USD.**

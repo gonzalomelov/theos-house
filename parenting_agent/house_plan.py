@@ -1,7 +1,7 @@
 """The daily house plan (issue #29, with the white noise from #32): vacuum, shopping list and dinner around the baby.
 
 Everything is decided from the baby log the way the daily rhythm reads it, and every house write goes through
-HouseWriter, which only knows the writes the action policy allows (docs/home-assistant-inventory.md):
+HouseWriter, which only knows the writes the action policy allows (docs/house-policy.md):
 
 | Write | When |
 |---|---|

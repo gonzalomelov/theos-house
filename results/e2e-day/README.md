@@ -55,7 +55,7 @@ The three after runs, in order, all scored by the final scorer: 30 of 34 with no
 
 ## Before: current main and the Vostro config as deployed (`before/`)
 
-Commit 4a5af73, `before/timeline.md`. Brain spend 0.57 USD (95 Muse calls).
+Commit 06687bb, `before/timeline.md`. Brain spend 0.57 USD (95 Muse calls).
 
 | Number | Before |
 |---|---|
@@ -102,7 +102,7 @@ Still open, not scored: the brain named the grandmother "Mamá de Ceci" in the d
 
 ## Final guard, the coach in Spanish, and blind round 1 (Oct 30 to 31, issue #165)
 
-The same harness, before and after the changes of issue #165, on the same day. Before is origin/main at 3f27109 run from a clean worktree, after is the PR branch. Both with `--set baby.born=true`, the after day of #148. The glasses day scenes are the 11 scenes of `scripts/glasses_hud_day.py` with no simulator and no SAM 3.1 (`scripts/glasses_day_noise.py`): both parents' glasses are event-stream listeners and the car seat coach looks at the unit tests' fixed picture of a correct install, so its camera steps pass without a heavy model. Every text that reached a parent counts: Telegram, glasses cards, glasses replies and the coach's spoken lines.
+The same harness, before and after the changes of issue #165, on the same day. Before is origin/main at e69636a run from a clean worktree, after is the PR branch. Both with `--set baby.born=true`, the after day of #148. The glasses day scenes are the 11 scenes of `scripts/glasses_hud_day.py` with no simulator and no SAM 3.1 (`scripts/glasses_day_noise.py`): both parents' glasses are event-stream listeners and the car seat coach looks at the unit tests' fixed picture of a correct install, so its camera steps pass without a heavy model. Every text that reached a parent counts: Telegram, glasses cards, glasses replies and the coach's spoken lines.
 
 Two scores. "Scorer noise" is `parenting_agent/e2e/score.py` as it was: English to a Spanish parent or its internal words. "Strict noise" adds what the scorer misses: any sentence the final guard would remove for a Spanish parent, and any "0.0 h".
 
@@ -137,18 +137,18 @@ The same after day (`--set baby.born=true`) on E2E Baby, from a clean worktree.
 
 | Run | Things to get | Noise | Log right | Muse |
 |---|---|---|---|---|
-| main at a0e4a87 (`nov1/`) | 29 of 34 | 2 of 62 | 25 of 25, 0 extra | 0.59 USD |
-| main at da87075, after PR #200 (`nov1-fix/`) | 30 of 34 | 0 of 60 | 25 of 25, 0 extra | 0.60 USD |
+| main at 8dc3330 (`nov1/`) | 29 of 34 | 2 of 62 | 25 of 25, 0 extra | 0.59 USD |
+| main at e77a50a, after PR #200 (`nov1-fix/`) | 30 of 34 | 0 of 60 | 25 of 25, 0 extra | 0.60 USD |
 
 The regression: Ceci got "Cambió el plan" at 22:05 and 01:46 after she asked to sleep. Round b5 gave Muse a Spanish why for a re-plan, so a Spanish family now reads it, and a re-plan was a shared push. Since PR #200 a re-plan at night goes to the parent on duty only. The 4 misses are the same as before (two first feeds and the 06:15 feed without a reminder, no diapers low push at 2.4 days). The 02:50 cry push reached Gonza only, with the side bed line.
 
 ## Rerun after PR #202 (Nov 2)
 
-The same after day on E2E Baby, from a clean worktree at main 27e2635, the family agent deployed with it.
+The same after day on E2E Baby, from a clean worktree at main b3e611b, the family agent deployed with it.
 
 | Run | Things to get | Noise | Log right | Muse |
 |---|---|---|---|---|
-| main at 27e2635, after PR #202 (`nov2-fix/`) | 34 of 34 | 0 of 65 | 24 of 25, 1 extra | 0.60 USD |
+| main at b3e611b, after PR #202 (`nov2-fix/`) | 34 of 34 | 0 of 65 | 24 of 25, 1 extra | 0.60 USD |
 
 The 4 misses are gone. The next feed median skipped the history's 19 h and 29 h log holes, so reminders came at 08:10 and 10:02, before the 08:15 and 10:40 feeds. The 06:15 feed, expected at 05:30, got its reminder at 05:10 to Gonza only, on duty after Ceci asked to sleep, and the 20:25 reminder went to Gonza only too. Diapers low reached both parents once at 16:01 in Spanish, 22 left at 8 a day (2.75 days, under the new 3 day line), before Gonza asked for the shopping list at 16:10. The one log miss is not from #202: at 03:30 "Se durmió" got "Sigue dormido desde las 22:55", so the 22:55 sleep was never closed, and at 06:05 "Se despertó" wrote a sleep from 03:00 to 06:05 instead of ending the 03:30 one.
 
@@ -168,7 +168,7 @@ the feed by design, and the scorer counts any entry nobody asked for.
 
 ## Rerun after the blind round b6 fixes (Nov 2, `nov2-b6/`)
 
-The same after day on E2E Baby, from a clean worktree at main 518d8dd (PRs #206 and #207), the family agent deployed with it.
+The same after day on E2E Baby, from a clean worktree at main 5cb8e42 (PRs #206 and #207), the family agent deployed with it.
 
 | Run | Things to get | Noise | Log right | Muse |
 |---|---|---|---|---|

@@ -2,7 +2,7 @@
 
 **Log ops: a tie, 0 wrong log states for both models in every run. House planner: Muse passed 3 of 4 adaptation cases in both runs, Haiku 2 of 4 in both runs. Haiku costs about 11 to 15 times less per call.**
 
-Review round 4 asked for a non-Meta arm on the two jobs where Muse was said to matter. All runs below are from Oct 30 2026, one process at a time, on this branch (origin/main `d52f121` plus the runner flags listed at the end).
+Review round 4 asked for a non-Meta arm on the two jobs where Muse was said to matter. All runs below are from Oct 30 2026, one process at a time, on this branch (origin/main `78597f7` plus the runner flags listed at the end).
 
 - Muse: Muse Spark Open, `meta-models/muse-spark-open-1026` on Baseten, reasoning effort low, as shipped.
 - Haiku: Claude Haiku 5.5, `claude-haiku-5-5`, the model the agent's Anthropic fallback calls (`config/agent.json`), thinking off as the agent's Claude brain runs it.

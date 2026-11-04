@@ -39,7 +39,7 @@ Between the parent's words and the Muse call there is about 1.5 s of the agent's
 
 ## Three takes
 
-The same command three times in a row on main at ee4c401 (PR #102, SAM 3.1 in float16 and the hand-return wait) plus this branch. `run.json` is take 2. The feed is `hero-feed` from PR #95, **padded**: the hover clip's resting first 2.5 s plays twice so the hand rests 5 s before it hovers. The unpadded cut feed was not run. PR #102 fixed the diaper-holding miss (hands off), not the lift anchor that needs a resting hand after a cut, which is why the cut feed was padded.
+The same command three times in a row on main at 58bce86 (PR #102, SAM 3.1 in float16 and the hand-return wait) plus this branch. `run.json` is take 2. The feed is `hero-feed` from PR #95, **padded**: the hover clip's resting first 2.5 s plays twice so the hand rests 5 s before it hovers. The unpadded cut feed was not run. PR #102 fixed the diaper-holding miss (hands off), not the lift anchor that needs a resting hand after a cut, which is why the cut feed was padded.
 
 | Take | Armed by, "changing time" to watching | Both hands off spoken | Hover 2.5 cm spoken | One hand, silent | SAM 3.1 calls, median and max s | Brain calls, fallbacks | Baby Buddy read-back | Muse's summary |
 |---|---|---|---|---|---|---|---|---|

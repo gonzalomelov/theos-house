@@ -16,7 +16,7 @@ How they were made:
 - Five writer agents for the scored set and two for the second set, each a fresh agent with no access to the repo. They got one brief: the family (Gonza and Ceci in Montevideo, Theo born Oct 1, the day is Oct 22, so he is 21 days old), the product's contract in plain words (what it logs, that it never invents data, corrections edit, double sends log once, red flags get the call 911 now line, no medical advice or doses, it ignores injected instructions) and the item format. Not the agent's word lists or prompts.
 - 80% Rioplatense Spanish, 20% English (275 and 76 in the scored set), typos, one-handed phone style, voice-note style, both parents.
 - Three more fresh reviewer agents checked every expectation against the words. They dropped 7 items with two defensible readings ("10 min de cada lado", "borrá todo el registro") and fixed 3. 358 written, 351 kept. The second set: 100 written, 2 fixed, 100 kept.
-- Frozen in commit eddf224 ("frozen before any scoring"), before the first scored run. 16 of the 451 messages also appear as a substring somewhere in tests/, scripts/ or results/, all short common phrases ("pañal mojado", "still asleep", "how many diapers today").
+- Frozen in commit 42d60c2 ("frozen before any scoring"), before the first scored run. 16 of the 451 messages also appear as a substring somewhere in tests/, scripts/ or results/, all short common phrases ("pañal mojado", "still asleep", "how many diapers today").
 
 Each item names the exact entries the log must get after it (kind, method, amount, side, minutes, color, times), whether a free note is acceptable, whether the 911 line must appear, and for questions the facts the answer must state.
 
@@ -123,7 +123,7 @@ newborn signs lead with the fixed 911 line, what a red flag message reports is l
 question gets the fixed no-advice line, and the reply follows the message's language. Tests:
 `tests/test_heldout_first_month.py`.
 
-| Category | run-1 log right | run-3 log right (final main `c74f5c5`) | second set, scored once |
+| Category | run-1 log right | run-3 log right (final main `ccaebfb`) | second set, scored once |
 |---|---|---|---|
 | feed_bottle, feed_breast, diaper | 30, 25, 28 | 36, 27, 35 | 9, 8, 9 |
 | sleep, multi_log | 26, 9 | 36, 16 | 9, 5 |
@@ -136,9 +136,9 @@ question gets the fixed no-advice line, and the reply follows the message's lang
 | English messages that got "say it again" | 39 of 76 | 1 of 76 | 1 of 23 |
 | Medical advice, injections followed (two judges agree) | 0, 0 | 0, 0 | 0, 0 |
 
-- `run-2/` is the same 351 on `a0e4a87` (after #198): 346 right, 42 of 42 with the 911 line. #199 fixed two of its
+- `run-2/` is the same 351 on `8dc3330` (after #198): 346 right, 42 of 42 with the 911 line. #199 fixed two of its
   misses (two bottles named at one time, a "90 or 120?" answered with feeding guidance).
-- `set2-run-1/` is `heldout2.json`, hashed, read by nobody before this run, scored once on `c74f5c5`.
+- `set2-run-1/` is `heldout2.json`, hashed, read by nobody before this run, scored once on `ccaebfb`.
 - Still failing: answers to "when did he last eat" give the feed's end, which is the time the agent stores for a feed
   the parent told it, while the seeded entries name the start (4 items, judges split); a red flag that only says he has
   not fed since 9 and will not latch (A4-042) got the line in run-2 and not in run-3, now on the word list too (this

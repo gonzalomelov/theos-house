@@ -11,10 +11,10 @@ Four sets of 45 messages were written by agents that changed no code, and each w
 
 | Blind set | Code | Wrong log states | Reply problems | Files |
 |---|---|---|---|---|
-| First | main at `ee4c401`, before the fixes of PR #103 | **8 of 45** | 1 | [heldout/](heldout/README.md) |
-| Second | main at `24bd72b`, after every families fix of Oct 29 | **8 of 45** | 5 (4 are English replies to English messages) | [heldout2/](heldout2/README.md) |
-| Third | main at `1417505`, after the meaning based guards of PR #105 | **5 of 45** | 3 (all English replies to English messages) | [heldout3/](heldout3/README.md) |
-| Fourth | main at `78febfc`, after the third set's fixes (PR #107) | **11 of 45** | 1 | [heldout4/](heldout4/README.md) |
+| First | main at `58bce86`, before the fixes of PR #103 | **8 of 45** | 1 | [heldout/](heldout/README.md) |
+| Second | main at `86d7c0e`, after every families fix of Oct 29 | **8 of 45** | 5 (4 are English replies to English messages) | [heldout2/](heldout2/README.md) |
+| Third | main at `2eb896c`, after the meaning based guards of PR #105 | **5 of 45** | 3 (all English replies to English messages) | [heldout3/](heldout3/README.md) |
+| Fourth | main at `8ab6568`, after the third set's fixes (PR #107) | **11 of 45** | 1 | [heldout4/](heldout4/README.md) |
 
 The fixes after the first set did not carry over to new phrasings. Six of the 8 second-set misses have one cause, the
 guards decide what the parent said from fixed word lists, and that is what the next fix targets. Everything below this
@@ -70,14 +70,14 @@ The final change after these runs only adds the no-advice line to a note the bra
 
 ## Rerun on main after PRs #78 to #86 (Oct 29)
 
-The runs above were on the #85 branch before it was rebased onto #78 to #84. On main at `5af5300` (#86 merged) the eval ran 3 times and the 29-check script once. The four ran in parallel, so Baseten answered some calls with HTTP 429 and those turns fell back to Claude Haiku. The per-step brain is not recorded, so a miss cannot be put on one brain.
+The runs above were on the #85 branch before it was rebased onto #78 to #84. On main at `779e4d0` (#86 merged) the eval ran 3 times and the 29-check script once. The four ran in parallel, so Baseten answered some calls with HTTP 429 and those turns fell back to Claude Haiku. The per-step brain is not recorded, so a miss cannot be put on one brain.
 
 | Run | Code | Wrong log states | Reply problems | Fallbacks to Haiku | Spend |
 |---|---|---|---|---|---|
-| `main-1` | `5af5300` | **1** | 0 | 9 | 0.571 USD |
-| `main-2` | `5af5300` | 0 | 0 | 12 | 0.550 USD |
-| `main-3` | `5af5300` | 0 | 0 | 6 | 0.539 USD |
-| `fix-1` | `5af5300` plus the wake-up fix, run alone | **0** | 0 | **0** | 0.545 USD |
+| `main-1` | `779e4d0` | **1** | 0 | 9 | 0.571 USD |
+| `main-2` | `779e4d0` | 0 | 0 | 12 | 0.550 USD |
+| `main-3` | `779e4d0` | 0 | 0 | 6 | 0.539 USD |
+| `fix-1` | `779e4d0` plus the wake-up fix, run alone | **0** | 0 | **0** | 0.545 USD |
 
 The miss in `main-1`, step 31, "se desperto a las 5" while a sleep from 03:20 was open: the brain called a sleep `start` at 05:00, which replaced the open 03:20 start, then an `end` at 05:00, which failed because a sleep must end after it starts. It read the log twice, ran out of steps and answered in English "I stopped after too many steps". The 03:20 to 05:00 sleep was never logged. Fix: a message that says the baby woke up and says nothing about falling asleep never starts a sleep. The call is held and the brain is told to log the wake-up as the end of the open sleep (`tests/test_log_edit.py`, `WakeUp`, fails without the fix). In `fix-1` Muse called only `end` on that message, so the guard did not fire in the live run. The unit test is what shows it holds.
 
@@ -94,7 +94,7 @@ On this code the 29-check script passed 29 of 29 with 0 fallbacks (0.246 USD, `r
 
 ## Final: 3 runs in a row on main with #87 and #89 (Oct 29)
 
-Run one at a time on `9c26c9e` plus this PR's change (fixed agent texts in the reply language), Muse Spark Open. The script now records which brain answered every call of every step (`steps` and `fallback_steps` in the JSON, a `brain:` line in the transcript), and counts an English reply to these Spanish parents as a reply problem.
+Run one at a time on `fbbd7ce` plus this PR's change (fixed agent texts in the reply language), Muse Spark Open. The script now records which brain answered every call of every step (`steps` and `fallback_steps` in the JSON, a `brain:` line in the transcript), and counts an English reply to these Spanish parents as a reply problem.
 
 | Run | Wrong log states | Reply problems | Steps with a fallback | Spend |
 |---|---|---|---|---|

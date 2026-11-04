@@ -11,7 +11,7 @@ Before the fixes both brains failed "when is the next feed?" in substance: the d
 
 A leak is any reply with `<think`, "we need to", "the user says" or similar. Muse returns its reasoning apart, in `reasoning_content`, and the brain never reads it.
 
-The deployed demo (baby.bygmv.com, commit f650139) answered two real turns on Muse on the Vostro: `results/muse/vostro-demo-turn.jsonl`.
+The deployed demo (baby.bygmv.com, commit 6defd3d) answered two real turns on Muse on the Vostro: `results/muse/vostro-demo-turn.jsonl`.
 
 `demo-390x844.png` is the page at phone size, prior work from Oct 28 before Muse.
 

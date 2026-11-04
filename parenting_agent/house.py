@@ -19,7 +19,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 
-# The "never" list from docs/home-assistant-inventory.md. No config, tool or brain answer can run a service on these.
+# The "never" list from docs/house-policy.md. No config, tool or brain answer can run a service on these.
 NEVER_ENTITIES = {"switch.shellyplusplugit_bathroom": "the bathroom Shelly plug has its own safety cut automation"}
 NEVER_PATTERNS = (
     (r"^siren\.", "sirens"),

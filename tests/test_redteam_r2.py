@@ -1,7 +1,7 @@
 """Every attack and code-only finding red-team pass 2 landed (Oct 29 2026), as a test.
 
 Each test replays the attack with a scripted brain and fakes, no network, the way the red-team harnesses did
-(h_family.py, h_demo.py, h_voice.py, h_glasses.py). Each one fails on the code before the fix (4436ccd and 742cf35)
+(h_family.py, h_demo.py, h_voice.py, h_glasses.py). Each one fails on the code before the fix (b6f8f8b and eb33406)
 and passes after it. Results and the before and after table: results/redteam/README.md. The clock is fixed, so the
 tests pass at any hour.
 """

@@ -8,7 +8,7 @@ __pycache__/
 data/
 data-*/
 
-# Secrets and private data, never committed (checked before going public, docs/going-public.md)
+# Secrets and private data, never committed (checked before going public)
 .env.*
 !.env.example
 *.secret

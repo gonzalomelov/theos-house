@@ -6,7 +6,7 @@ What a run checks: the night moves to Gonza, both parents get a message, the Ech
 
 | File | What | Result |
 |---|---|---|
-| `baseline-es.json`, `baseline-en.json` | origin/main 83cce51, 10 runs each | 0 of 10, 0 of 10 |
+| `baseline-es.json`, `baseline-en.json` | origin/main 0a424a0, 10 runs each | 0 of 10, 0 of 10 |
 | `tuned-es.json`, `tuned-en.json` | after the fixes, 10 runs each | 10 of 10, 10 of 10 |
 | `probes-es.json`, `probes-en.json` | 7 variations, 2 runs each | see below |
 | `already-his-es.json`, `already-his-en.json` | the night is already Gonza's on the rota, 3 runs each | 3 of 3, 3 of 3 |

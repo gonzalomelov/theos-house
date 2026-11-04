@@ -1,7 +1,7 @@
 """The house findings of red-team pass 4 (Oct 29 2026), as tests.
 
 Each test replays the red-team harness input (redteam-r4: live.py, h_demo.py, h_floor2.py, h_brain.py) with a scripted
-brain or a fake Muse, no network. Each one fails on 8fccb95 and passes after the fix.
+brain or a fake Muse, no network. Each one fails on 5f7935a and passes after the fix.
 1. A bare "yes" with nothing waiting re-ran dim_lights, asked call_partner five times in one turn and brought back a
    call cancelled 8 turns earlier.
 2. A stale "Out with the baby" note opened the floor clean gate with him on the play mat.

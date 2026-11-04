@@ -60,7 +60,7 @@ Can the voice be understood? `scripts/voice_roundtrip.py` speaks each of the 20 
 
 ## On the Vostro (Oct 29, 00:04 to 00:10)
 
-Deployed: `pa-voice-family` and `pa-voice-families` (`sh deploy/voice.sh deploy`, commit ad05f04), then the family agent and the families bot (commit 1cd6b36). The voice check passed in both containers: both languages spoken and converted, weights offline, no proxy, `1.1.1.1:443`, `huggingface.co:443` and the host unreachable. The agent and families wall checks passed after the deploy.
+Deployed: `pa-voice-family` and `pa-voice-families` (`sh deploy/voice.sh deploy`, commit 730d051), then the family agent and the families bot (commit 496ec7f). The voice check passed in both containers: both languages spoken and converted, weights offline, no proxy, `1.1.1.1:443`, `huggingface.co:443` and the host unreachable. The agent and families wall checks passed after the deploy.
 
 The full handler, with a recorded note instead of a Telegram download (`deploy/voice/handler_check.py`):
 
@@ -101,7 +101,7 @@ So the Vostro does the 182 GFLOP with 2 cores at about 760 MHz, against Apple si
 
 ### Before and after, the same 10 replies
 
-10 two sentence replies (`speed/replies10.json`): es08 and en08 from run 2, and 8 more made of two one-sentence replies from run 2 joined, 5 Spanish and 5 English. Each goes through `POST /speak`, the path the agent uses, timed from request to OGG bytes. Before is the old image (ad05f04) in a temporary container with the same limits. After is the deployed `pa-voice-families` (845463d). They ran one after the other for each reply, so both saw the same load on the Vostro (load average 2.5 to 3.7 from other services) (`speed/ab.jsonl`, `speed/ab.py`, `speed/one.py`).
+10 two sentence replies (`speed/replies10.json`): es08 and en08 from run 2, and 8 more made of two one-sentence replies from run 2 joined, 5 Spanish and 5 English. Each goes through `POST /speak`, the path the agent uses, timed from request to OGG bytes. Before is the old image (730d051) in a temporary container with the same limits. After is the deployed `pa-voice-families` (845463d). They ran one after the other for each reply, so both saw the same load on the Vostro (load average 2.5 to 3.7 from other services) (`speed/ab.jsonl`, `speed/ab.py`, `speed/one.py`).
 
 | | Before (torch) | After (ONNX int8) |
 |---|---|---|

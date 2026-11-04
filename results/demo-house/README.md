@@ -1,6 +1,6 @@
 # Tonight's house on baby.bygmv.com (issue #132)
 
-Live check on Oct 30 2026 at 00:14 Montevideo, after deploying cb1c9c4 (PRs #133 and #134). A headless browser at 375 x 812, marked internal first, so its rows count as internal. A fresh visitor, the simulated week as the demo builds it.
+Live check on Oct 30 2026 at 00:14 Montevideo, after deploying ebbab9b (PRs #133 and #134). A headless browser at 375 x 812, marked internal first, so its rows count as internal. A fresh visitor, the simulated week as the demo builds it.
 
 | File | What it shows |
 |---|---|
@@ -12,12 +12,12 @@ Live check on Oct 30 2026 at 00:14 Montevideo, after deploying cb1c9c4 (PRs #133
 What was checked:
 - Both plans came from Muse Spark Open (`meta-models/muse-spark-open-1026` on Baseten) through `HouseBrain.ask`. Two plan calls in this run.
 - The page is 375 px wide with no sideways scroll (scrollWidth 375). The chat thread keeps 150 px and the page scrolls to the input.
-- The session rows on the Vostro for both live visitors have internal 1: this run wrote two rows, one per plan call, and the first visitor on 32fe5d1 wrote three (two plan calls and one chat message).
-- "What will the house do tonight?" in the chat answered with the cached plan, tagged "Muse Spark Open, house plan", with no new call (checked on the first deploy, 32fe5d1).
+- The session rows on the Vostro for both live visitors have internal 1: this run wrote two rows, one per plan call, and the first visitor on 569c930 wrote three (two plan calls and one chat message).
+- "What will the house do tonight?" in the chat answered with the cached plan, tagged "Muse Spark Open, house plan", with no new call (checked on the first deploy, 569c930).
 - Deploy: `sh deploy/public.sh demo deploy` from a clean worktree, both times "env ok", "wall holds".
 
 Not checked live: the fixed-rules fallback (Muse did not fail tonight, the tests cover it), the Spanish card (the tests cover it), a real phone.
 
-Earlier on the same night, on the first deploy (32fe5d1), the panel still said Parent B after the re-plan and the chat answered with the first plan. PR #134 fixed both, and this run is after that fix. The first screenshots were lost when their worktree was removed, so these are from a second fresh visitor.
+Earlier on the same night, on the first deploy (569c930), the panel still said Parent B after the re-plan and the chat answered with the first plan. PR #134 fixed both, and this run is after that fix. The first screenshots were lost when their worktree was removed, so these are from a second fresh visitor.
 
 Nothing moves: the demo's house brain has no day engine, night feed or device to arm, and the demo image has no device module (`tests/test_demo_house.py`).

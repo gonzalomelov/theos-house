@@ -7,7 +7,7 @@
 | **Muse Spark Open** (`meta-models/muse-spark-open-1026`, Baseten) | Oct 28 night, 4 runs (`three-day-muse.md` is the last) | **29 of 29** in each run | 0 | 0 | 0 | $0.21 to $0.23 a run |
 | Claude Haiku 5.5 | Oct 28 earlier, 3 runs (`three-day-after.md`, `-2`, `-3`) | 29, 28 and 27 of 29 | 0 | 0 (counted tonight on `three-day-after-3.json`) | not tracked then | $0.022 (run 3) |
 
-Rerun on main at `5af5300` (after #78 to #86, Oct 29): **29 of 29**, 0 bookkeeping talk, 0 tuteo, 0.227 USD (`three-day-main.md`). It ran in parallel with three never-wrong runs, so 5 brain turns fell back to Claude Haiku after Baseten rate limits (HTTP 429).
+Rerun on main at `779e4d0` (after #78 to #86, Oct 29): **29 of 29**, 0 bookkeeping talk, 0 tuteo, 0.227 USD (`three-day-main.md`). It ran in parallel with three never-wrong runs, so 5 brain turns fell back to Claude Haiku after Baseten rate limits (HTTP 429).
 
 After the first-entry and language fix (#77, Oct 29): **29 of 29**, 0 fallbacks, 0.246 USD (`three-day-first-entry.md`).
 

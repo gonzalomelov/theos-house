@@ -289,7 +289,7 @@ class GlassesHub(Latest):
             self.started = now
         self.frames_in += 1
         stream_s = now - self.started
-        with self.lock:
+        with self._guard:
             self.arrivals[round(stream_s, 3)] = round(time.time(), 3)
             while len(self.arrivals) > ARRIVALS_KEPT:
                 self.arrivals.popitem(last=False)
@@ -298,7 +298,7 @@ class GlassesHub(Latest):
 
     def arrival(self, stream_s):
         """The Unix time the frame with this stream time reached the endpoint, or None once it is forgotten."""
-        with self.lock:
+        with self._guard:
             return self.arrivals.get(round(stream_s, 3))
 
     def _stream(self, handler, person=None):

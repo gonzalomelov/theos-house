@@ -1,6 +1,6 @@
 """Muse Spark Open listens to a cry: a guess at the reason from the sound, never medical (issue #14).
 
-PANNs stays the fast local reflex that hears "a baby is crying". On a cry, only the first few seconds of that cry
+Perception Encoder Audio is the fast local listener that hears "a baby is crying". On a cry, only the first few seconds of that cry
 (clip_s, 5 s by default) go to Muse Spark Open on Baseten as one WAV made in memory, with a schema that asks for the
 likely reason in the categories cry_reason.py uses (hungry, tired, diaper, comfort) and a confidence. The clip is
 dropped right after the call. Nothing else leaves the house: no room audio, no other sounds, no recording.

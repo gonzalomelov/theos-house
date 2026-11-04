@@ -2,7 +2,7 @@
 
 On Oct 28 2026 red-team pass 1 sent 38 messages to the live demo and read the code. It landed 8 attacks and three code-only findings. Each one is now a test in `tests/test_redteam_r1.py` that replays the attack with a scripted brain making the same calls the real brain made live.
 
-**Before** is the test run on origin/main at 115dc2e (Oct 28 22:40), the code the red-team pass attacked plus the Muse brain switch. **After** is the same file on this branch. Run on Oct 28 2026: 29 of 29 tests fail before and pass after. The full suite, 454 tests, passes.
+**Before** is the test run on origin/main at 9d6f6c1 (Oct 28 22:40), the code the red-team pass attacked plus the Muse brain switch. **After** is the same file on this branch. Run on Oct 28 2026: 29 of 29 tests fail before and pass after. The full suite, 454 tests, passes.
 
 ```bash
 python -m unittest discover -s tests -p test_redteam_r1.py -v
@@ -53,7 +53,7 @@ Rotating IPv6 addresses inside one /64 is covered in `CookieCap.test_a_new_cooki
 
 ## Live on the Vostro, Oct 28 2026 23:04
 
-Deployed with `sh deploy/public.sh demo deploy` and `sh deploy/public.sh families deploy` at ed6c488. The demo now runs f650139, which holds these fixes. Wall checks after the deploy:
+Deployed with `sh deploy/public.sh demo deploy` and `sh deploy/public.sh families deploy` at b0d85da. The demo now runs 6defd3d, which holds these fixes. Wall checks after the deploy:
 
 | Service | Probes blocked or refused | Allowed, as expected | Reachable by mistake |
 |---|---|---|---|
@@ -94,7 +94,7 @@ The same attacks were then sent to https://baby.bygmv.com from a curl jar marked
 
 On Oct 29 2026 red-team pass 2 found every round 1 attack closed live, then landed 7 new attacks on the agent loop and the new surfaces, plus 4 code-only findings. The demo's invented milk type and duration (attack 8) belong to the demo and are fixed there, not here. Each other one is now a test in `tests/test_redteam_r2.py`, built from the red-team harnesses (`h_family.py`, `h_demo.py`, `h_voice.py`, `h_glasses.py`) with a scripted brain and no network, on a fixed clock.
 
-**Before** is the test file run on origin/main at 742cf35 (Oct 29 01:20). **After** is this branch. Run on Oct 29 2026 at 01:25: 27 of 38 tests fail before and all 38 pass after. The 11 that pass before are the guards against blocking too much (a plain note still echoed, the insurance card still goes in the hospital bag, a real due date still kept). The full suite, 584 tests, passes.
+**Before** is the test file run on origin/main at eb33406 (Oct 29 01:20). **After** is this branch. Run on Oct 29 2026 at 01:25: 27 of 38 tests fail before and all 38 pass after. The 11 that pass before are the guards against blocking too much (a plain note still echoed, the insurance card still goes in the hospital bag, a real due date still kept). The full suite, 584 tests, passes.
 
 ```bash
 python -m unittest discover -s tests -p test_redteam_r2.py -v
