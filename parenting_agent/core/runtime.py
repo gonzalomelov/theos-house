@@ -328,8 +328,16 @@ class Core:
         until = moment + datetime.timedelta(hours=HAND_HOLD_H)
         await self.store.aput((*tools_mod.FACTS, self.settings.home), self.hand_key(name),
                               {"value": f"A person switched {name} {payload['state']} by hand at {moment:%H:%M}, held until {until.isoformat()}"})
+        ends = ""
+        if name in STARTS and payload["state"] == "on":  # a plug a person started still ends by itself, and someone hears it
+            key, _, minutes = STARTS[name]
+            end = moment + datetime.timedelta(minutes=minutes)
+            await self.store.aput((*tools_mod.FACTS, self.settings.home), key, {"value": end.isoformat()})
+            if key == "warmer_off_at":
+                self.warm_until = end
+            ends = f" It turns itself off at {end:%H:%M}."
         event["hand"] = name
-        event["note"] = (f"A person switched {name} {payload['state']} by hand just now. It stays that way for {HAND_HOLD_H} hours unless a parent asks. "
+        event["note"] = (f"A person switched {name} {payload['state']} by hand just now.{ends} It stays that way for {HAND_HOLD_H} hours unless a parent asks. "
                          "Tell the parent on duty in one short line, or ask them. At night, set quiet.")
 
     async def held_by_hand(self, short, arguments):

@@ -9,7 +9,7 @@ from tests.test_langgraph_core import READY, NoScreen, call, scripted
 
 if READY:
     from langchain_core.messages import AIMessage
-    from parenting_agent.core import runtime, safety, tools as tools_mod
+    from parenting_agent.core import runtime, safety, sources, tools as tools_mod
     from parenting_agent.core.mock_home import MockHome
 
 AT = datetime.datetime.fromisoformat("2026-11-04T15:00:00-03:00")
@@ -135,6 +135,19 @@ class Round2(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(core.mock.state(PLUG), "off")
         await self.event(core, "message", {"from": "gonza", "channel": "telegram", "text": "Prendelo de nuevo"}, (AT + datetime.timedelta(minutes=5)).isoformat())
         self.assertEqual(core.mock.state(PLUG), "on")
+
+    async def test_a_warmer_a_person_started_still_ends_and_its_end_is_no_person(self):
+        core = await self.run_core(scripted(call("notify", parent="gonza", text="Alguien prendió el calentador", quiet=True), AIMessage("ok")))
+        await self.event(core, "state_changed", {"entity_id": WARMER, "state": "on"}, AT.isoformat())
+        facts = await tools_mod.facts(core.store, core.settings.home)
+        self.assertIn("warmer_off_at", facts)
+        core.now = lambda: AT + datetime.timedelta(minutes=30)
+        self.assertFalse(core.by_hand(WARMER, "off"))
+
+    def test_the_first_plug_change_after_a_start_is_a_change(self):
+        last, watch = {}, {WARMER: 0.0}
+        sources.remember_plug(WARMER, {"old_state": {"state": "off"}, "new_state": {"state": "on"}}, last)
+        self.assertTrue(sources.worth_waking(WARMER, "on", last, watch))
 
     async def test_the_agents_own_move_is_not_a_person(self):
         core = await self.run_core(scripted(call("HassTurnOn", name="Tapo P110 - Dehumidifier"), AIMessage("ok")))
