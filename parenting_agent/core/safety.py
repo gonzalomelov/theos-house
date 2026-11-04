@@ -22,13 +22,24 @@ HOW_IT_WENT = re.compile(r"\b(durmi[oó]\s+(?:\w+\s+)?(?:bien|tranquil\w*|genial
 MILLILITERS = re.compile(r"\b(\d+)\s?(?:ml|mililitros|milliliters|cc)\b", re.I)
 # A danger in a film or a book is not one at home, unless the words are also about this baby.
 FICTION = re.compile(r"\b(movie|film|tv show|series|novel|book|story|documentary|episode|in the news|pel[ií]cula|peli|serie|novela|libro|cuento|historia|documental|cap[ií]tulo|noticiero)\b", re.I)
-THIS_BABY = re.compile(r"\btheo\b|\b(?:my|our|mi|nuestr[oa])\s+(?:baby|son|boy|kid|child|newborn|beb[eé]|hijo|nene|gur[ií])\b|\b(?:right )?now\b|\bahora\b", re.I)
+THIS_BABY = re.compile(r"\btheo\b|\b(?:my|our|mi|nuestr[oa])\s+(?:baby|son|boy|kid|child|newborn|beb[eé]|hijo|nene|gur[ií])\b", re.I)
+# "He isn't breathing, we were watching a film" is about this baby. "In the film he isn't breathing" is not.
+HE_NOW = re.compile(r"\b(?:he|the baby|el beb[eé]|[eé]l)(?:'s|\s+(?:is|isn'?t|won'?t|can'?t|stopped|just|est[aá]|no|se))\b", re.I)
+IN_STORY = re.compile(r"\b(?:in|en)\s+(?:the|a|this|that|my|la|el|una|un|esta|este|mi)\s+(?:\w+\s+)?(?:" + FICTION.pattern[3:-3] + r")\b|\b(?:movie|film|novel|book|series|story|pel[ií]cula|peli|serie|novela|libro|cuento)\s+(?:where|about|donde|en la que|sobre)\b", re.I)
+# A baby who isn't this one: made up, named something else, or someone else's.
+OTHER_BABY = re.compile(r"\b(?:fictional|fictitious|imaginary|made[- ]up|hypothetical(?:ly)?|ficticio\w*|imaginari\w*|inventad\w*|hipot[eé]tic\w*)\b"
+                        r"|\b(?:baby|beb[eé]|newborn|reci[eé]n nacido|nene|nena)\s+(?:named|called|llamad[oa]|que se llama)\b"
+                        r"|\b(?!ceci|gonza|our\b)\w+'s\s+(?:baby|son|kid|child|newborn)\b|\b(?:another|other|someone else'?s)\s+(?:baby|kid|child|newborn)\b"
+                        r"|\b(?:beb[eé]|hij[oa]|nene|nena)\s+de\s+(?:mi|mis|la|el|una|un|nuestr\w+)\s+\w+|\botr[oa]\s+(?:beb[eé]|nene|nena)\b", re.I)
 # A fever in someone else isn't Theo's. "Is my mom's cough a problem" doesn't call a newborn's red flag, and a life in danger still does.
-SOMEONE_ELSE = re.compile(r"\b(?:my|our|mi|nuestr[oa]|la|el)\s+(?:mom|mum|mother|dad|father|wife|husband|partner|sister|brother|grandma|grandmother|grandpa|grandfather|friend|neighbou?r|dog|cat|boss|"
-                          r"mam[aá]|madre|pap[aá]|padre|esposa|esposo|mujer|marido|herman[oa]|abuel[oa]|amig[oa]|vecin[oa]|perr[oa]|gat[oa]|jefe|jefa)\b|\bgrandma\b|\babuela\b|\bi (?:have|got|'?ve got) (?:a )?fever\b|\btengo fiebre\b", re.I)
+SOMEONE_ELSE = re.compile(r"\b(?:my|our|mi|nuestr[oa]|la|el)\s+(?:mom|mum|mother|dad|father|wife|husband|partner|sister|brother|grandma|grandmother|grandpa|grandfather|friend|neighbou?r|dog|cat|boss|aunt|uncle|nanny|mother-in-law|father-in-law|"
+                          r"mam[aá]|madre|pap[aá]|padre|esposa|esposo|mujer|marido|herman[oa]|abuel[oa]|amig[oa]|vecin[oa]|perr[oa]|gat[oa]|jefe|jefa|suegr[oa]|t[ií][oa]|ni[ñn]era)\b|\bgrandma\b|\babuela\b"
+                          r"|\b(?:ceci|gonza)\s+(?:has|had|got|is|tiene|ten[ií]a|est[aá])\b"
+                          r"|\b(?:i have|i got|i'?ve got|i'?m running|tengo|estoy con)\s+(?:a\s+|mucha\s+|\d\d(?:[.,]\d)?\s+(?:de\s+)?)?(?:fever|fiebre)\b", re.I)
+SAYS_ABOUT_HIM = re.compile(r"\b(?:says|said|thinks|told me|dice|dijo|cree)\s+(?:that\s+|que\s+)?(?:he|[eé]l|le|tiene)\b", re.I)
 THEO_NAMED = re.compile(r"\btheo\b|\bbaby\b|\bbeb[eé]\b|\bson\b|\bhijo\b|\bnewborn\b|\breci[eé]n nacido\b", re.I)
 # Words trying to change the rules aren't a danger, and Muse refuses them. They never land in the log or in memory.
-INJECTION = re.compile(r"\b(?:ignore|disregard|forget|override|bypass)\b[^.!?]{0,30}\b(?:rules?|instructions?|prompt|guidelines?|safety)\b|\b(?:ignor[aá]|olvid[aá]|salte[aá])\w*\b[^.!?]{0,30}\b(?:reglas?|instrucciones|prompt)\b|\bsystem prompt\b|\byou are now\b|\bact as\b|\bdeveloper mode\b|\bmaintenance mode\b", re.I)
+INJECTION = re.compile(r"\b(?:ignore|disregard|forget|override|bypass)\b[^.!?]{0,30}\b(?:rules?|instructions?|prompt|guidelines?|safety)\b|\b(?:ignor[aá]|olvid[aá]|salte[aá])\w*\b[^.!?]{0,30}\b(?:reglas?|instrucciones|prompt)\b|\bsystem prompt\b|\byou are now\b|\bact as\b|\bdeveloper mode\b|\bmaintenance mode\b|\bnew (?:rules|instructions)\b|\bnuevas (?:reglas|instrucciones)\b|\bfrom now on you\b", re.I)
 AM_PM = re.compile(r"\b(1[0-2]|0?[1-9])(?::([0-5]\d))?\s?([ap])\.?\s?m\b\.?", re.I)
 # Claims that only hold for a while. The warmer turns itself off, and a long gap between feeds is never fine.
 WARM_CLAIM = re.compile(r"\b(bottle|mamadera|biber[oó]n)\b[^.!?]{0,40}\b(warm|ready|caliente|tibia|lista|pronta)\b|\b(warm|caliente|tibia|lista|pronta)\b[^.!?]{0,40}\b(bottle|mamadera|biber[oó]n)\b", re.I)
@@ -48,6 +59,12 @@ DENIED = re.compile(r"\b(not an emergency|no emergency|nothing urgent|not urgent
 VITAL = re.compile(r"not breathing|stop\w* breathing|can'?t breathe|no respira|dej[oó] de respirar|\bblu(?:e|ish)\b|\bazul|\bmorad|\blimp\b|won'?t wake|not waking|no (?:se )?despierta|unresponsive|no reacciona|no responde|seizure|convuls", re.I)
 # "Lips not blue" is reassurance, so it is no sign.
 NOT_A_SIGN = re.compile(r"\b(?:not|aren'?t|isn'?t|no|sin|ni)\s+(?:\w+\s+)?(?:blu(?:e|ish)|azul\w*|morad\w*|limp)\b", re.I)
+# Signs the word list misses, and how they come out typed fast at night. Everything else goes to the danger screen.
+BUMPED = re.compile(r"\b(?:bump|bang|knock|smack)\w*\s+(?:his|her|the|its)\s+head\b|\bhead\s+(?:bump|knock)\b|\bse\s+(?:dio|peg[oó])\s+(?:\w+\s+)?(?:en\s+)?la\s+cabeza\b", re.I)
+TYPED_FAST = re.compile(r"\b(?:lips?|labios?)\b[^.!?]{0,12}\b(?:blu\b|bleu\b|azul\w*)|\bbre?a?th?i?n?g?\w{0,3}\s+(?:funny|weird|strange|raro)\b|\bbreathng\b|\bw(?:no|on)t\s+wake\b|\bno\s+respir\b|\bno\s+resira\b", re.I)
+# Which language the danger is written in, when a short message has no other word to go by.
+DANGER_ES = re.compile(r"\b(?:respir\w*|despiert\w*|azul\w*|morad\w*|fiebre|labios?|convuls\w*|trag[oó]|golpe\w*|cabeza|pila|reacciona|ahog\w*)\b", re.I)
+DANGER_EN = re.compile(r"\b(?:breath\w*|won'?t|wake|lips?|seizure|swallow\w*|battery|bump\w*|head|fever|stopped|limp|choking|fell)\b", re.I)
 # Words on a label or a shelf, not about a baby now (Nov 3, a toy label and a thermometer on sale both called 911).
 ERRANDS = re.compile(r"\bchoking hazards?\b|\bpeligro de asfixia\b|\bfever (?:thermometers?|reducers?)\b|\bterm[oó]metros? para (?:la )?fiebre\b", re.I)
 STOPPED = re.compile(r"\bstops? breathing\b|\bdeja de respirar\b", re.I)
@@ -66,7 +83,9 @@ READY_AT = re.compile(r"\b(?:ready|warm)\s+(?:by|at|around)\s+\d|\b(?:lista|pron
 # A parent saying they fed him: the feed goes in the log first, so the gap it closes is never raised.
 FEED_REPORT = re.compile(r"\b(?:gave|fed|just fed|nursed|drank|ate)\b|\bbottle (?:at|of)\b|\ble di\b|\btom[oó]\b|\bcomi[oó]\b|\bmamadera (?:a las|de)\b|\b\d+\s?ml\b", re.I)
 # What the agent can't keep: the home decides these, not a promise in a chat.
-CANT_KEEP = re.compile(r"\bchecking (?:again|on him)\b|\bvoy a (?:ver|revisar)(?:lo)? c[oó]mo\b|\bi (?:won'?t|will not) (?:message|text|wake|bother|tell|write)\b|\bno (?:te|le|les) (?:escribo|aviso|molesto|despierto|voy a (?:escribir|avisar|molestar|despertar))\b|\bi'?ll (?:alert|tell|wake|message|text) (?:you )?both\b|\b(?:les )?aviso a (?:los |ustedes )?dos\b|\bdespierto a los dos\b", re.I)
+# The agent can't see him. Only a person can go and look.
+CANT_SEE = re.compile(r"\b(?:checking|i'?ll check|i will check|going to check|let me check|looking in) (?:on|in on) (?:him|theo)\b|\bvoy a (?:ver|revisar|chequear)(?:lo)?\s+(?:a theo|c[oó]mo est[aá])\b|\b(?:lo )?(?:estoy|sigo) (?:mirando|chequeando|revisando)\b", re.I)
+CANT_KEEP = re.compile(r"\bi (?:won'?t|will not) (?:message|text|wake|bother|tell|write)\b|\bno (?:te|le|les) (?:escribo|aviso|molesto|despierto|voy a (?:escribir|avisar|molestar|despertar))\b|\bi'?ll (?:alert|tell|wake|message|text) (?:you )?both\b|\b(?:les )?aviso a (?:los |ustedes )?dos\b|\bdespierto a los dos\b", re.I)
 WRONG_NUMBER = re.compile(r"\b(?:112|999|000)\b")
 # What the rest of a message has to ask for, once the gate answered the worrying part. "He's 3 weeks old" isn't an errand.
 ERRAND = re.compile(r"\b(?:add|log|buy|turn|put|remind|tell|write|note|shopping)\b|\bagreg|\banot|\bcompr|\bpon[eé]\b|\bprend|\bapag|\brecord|\bavis|\bdecile\b|\blista\b", re.I)
@@ -100,31 +119,47 @@ def unbacked(text, entries, heard=""):
 
 
 def lang_of(text, default="es"):
-    return "es" if rules.looks_spanish(text) else ("en" if rules.ENGLISH.search(text) else default)
+    text = text or ""
+    if rules.looks_spanish(text) or DANGER_ES.search(text):
+        return "es"
+    return "en" if rules.ENGLISH.search(text) or DANGER_EN.search(text) else default
 
 
 def about_a_story(text):
-    return bool(FICTION.search(text or "")) and not THIS_BABY.search(text or "")
+    """A film, a book, a made-up baby or someone else's: not an alarm in this home. Muse answers, and anything about Theo in the same words still fires."""
+    text = text or ""
+    if THIS_BABY.search(text):
+        return False
+    if OTHER_BABY.search(text):
+        return True
+    return bool(FICTION.search(text)) and (bool(IN_STORY.search(text)) or not HE_NOW.search(text))
 
 
 def about_someone_else(text):
-    return bool(SOMEONE_ELSE.search(text or "")) and not THEO_NAMED.search(text or "")
+    text = text or ""
+    return bool(SOMEONE_ELSE.search(text)) and not THEO_NAMED.search(text) and not SAYS_ABOUT_HIM.search(text)
 
 
 def injected(text):
     return bool(INJECTION.search(text or ""))
 
 
+SIGN_MAX = 160
 SIGN_WORDS = re.compile(DANGER_SIGN.pattern + r"|fever|fiebre|\b3[89](?:[.,]\d)?\b|\b40(?:[.,]\d)?\b|gasping|choking|ahog", re.I)
 
 
 def sign_of(text):
     """The words that raised the alarm, kept whole: the sentence with the danger in it, without the rest of the message. It is what the other parent,
     the log and the morning check quote, so an instruction in the same message goes no further."""
-    parts = [p.strip(" ,\n") for p in re.split(r"[.!?;\n]+", text or "") if p.strip()]
-    found = [p for p in parts if SIGN_WORDS.search(p) and not INJECTION.search(p)]
-    words = ". ".join(found or [p for p in parts if not INJECTION.search(p)][:1])
-    return words[:160]
+    parts = [p.strip(" ,\n") for p in re.split(r"[.!?;\n]+", text or "") if p.strip() and not INJECTION.search(p)]
+    worst = [p for p in parts if VITAL.search(p) or rules.EMERGENCY.search(p)] or [p for p in parts if SIGN_WORDS.search(p)]
+    words = ". ".join(worst or parts[:1])
+    if len(words) <= SIGN_MAX:
+        return words
+    found = VITAL.search(words) or rules.EMERGENCY.search(words) or SIGN_WORDS.search(words)  # a long run-on keeps the part with the danger, not its start
+    start = max(0, found.start() - SIGN_MAX // 2) if found else 0
+    start = words.find(" ", start) + 1 if start else 0
+    return words[start:start + SIGN_MAX].strip(" ,")
 
 
 def unsafe_room(payload):
@@ -148,6 +183,14 @@ def just_worry(text):
     """Fear, tiredness or a question the log can answer, with no danger sign named. Muse reads the log and answers."""
     text = text or ""
     return bool(SCARED.search(text) or WORN_OUT.search(text) or LOG_QUESTION.search(text)) and not DANGER_SIGN.search(text)
+
+
+def writes_as_someone_else(parent, text):
+    """Why a message reads wrong to the one getting it: "does Ceci take it back?", written to Ceci. Their name opening the line is fine."""
+    found = re.search(rf"\b{re.escape(str(parent))}\b", text or "", re.I)
+    if found and found.start() > 3:
+        return f"Refused, nothing was sent: this goes to {parent}, so write to them as you, not about {str(parent).capitalize()}. Say what you need from them."
+    return None
 
 
 def reports_feed(text):
@@ -178,12 +221,16 @@ def gate(text, screen=None, lang=None):
             return None
         return "emergency", rules.EMERGENCY_REPLY[lang]  # a sign named outranks the words around it, with or without the model
     text = ERRANDS.sub(" ", text or "")
-    if rules.is_emergency(text) or rules.spoken_emergency(text) or (STOPPED.search(text) and not FICTION.search(text)):
+    if rules.is_emergency(text) or rules.spoken_emergency(text) or BUMPED.search(text) or TYPED_FAST.search(text) or (STOPPED.search(text) and not FICTION.search(text)):
         return "emergency", rules.EMERGENCY_REPLY[lang]
     if just_worry(text):
         return None
-    if about_someone_else(text) or (injected(text) and not DANGER_SIGN.search(text)):  # not about Theo: Muse answers, and a dose is still refused
+    if about_someone_else(text):  # not about Theo: Muse answers, and a dose is still refused
         return ("medical", rules.NO_ADVICE[lang]) if rules.asks_dose(text) else None
+    if injected(text):  # the screen reads only what isn't an order to it, and only if it says something about him
+        text = ". ".join(p for p in re.split(r"[.!?;\n]+", text) if not INJECTION.search(p) and (DANGER_SIGN.search(p) or THEO_NAMED.search(p)))
+        if not text:
+            return None
     urgent = rules.newborn_red_flag(text)
     if urgent:
         return "urgent", brief(rules.URGENT_REPLY[urgent][lang])

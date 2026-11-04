@@ -236,7 +236,8 @@ function drawTrace() {
     li.append(el("pre", JSON.stringify(run.raw), "raw only-deep"));
     const steps = el("ul", undefined, "steps");
     run.steps.forEach(s => {
-      const item = el("li", undefined, s.refused ? "only-deep" : undefined), det = el("details"), sum = el("summary");
+      const unsent = s.refused || (run.done && s.tool === "notify" && s.result === undefined);  // the trace shows what the phones show
+      const item = el("li", undefined, unsent ? "only-deep" : undefined), det = el("details"), sum = el("summary");
       det.open = !!s.open; det.addEventListener("toggle", () => { s.open = det.open; });
       item.append(el("span", stepWords(s), `plain only-plain${s.refused ? " refused" : ""}`));
       if (s.tool === "start_car_seat_coach") item.append(el("span", w.coachBy, "model only-plain"));
@@ -306,8 +307,9 @@ function listen() {
   });
   on("tool_call", (e, live) => { if (live && e.tool === "start_car_seat_coach") openRecording(); const r = runs.get(e.event_id); if (r) r.steps.push({tool: e.tool, arguments: e.arguments, target: (e.tool === "notify" ? WHO[e.arguments.parent] : (e.tool.startsWith("HassTurn") ? e.arguments.name : "")) || ""}); });
   on("tool_result", (e, live) => {
-    const r = runs.get(e.event_id), step = r && [...r.steps].reverse().find(s => s.tool === e.tool && s.result === undefined);
-    if (step) { step.result = e.result; step.refused = /^(refused|not sent)/i.test(String(e.result)); }
+    // Two messages can leave in one turn: each result belongs to its own call, and it holds the words that really went out.
+    const r = runs.get(e.event_id), step = r && r.steps.find(s => s.tool === e.tool && s.result === undefined && (e.tool !== "notify" || s.arguments.parent === e.arguments.parent));
+    if (step) { step.result = e.result; step.arguments = e.arguments; step.refused = /^(refused|not sent|failed|error)/i.test(String(e.result)); }
     else if (r && e.tool === "notify") r.steps.push({tool: "fixed", fixed: true, to: [e.arguments.parent], arguments: e.arguments});
     if (live) refresh(true);
   });
@@ -372,7 +374,7 @@ function play(id) { stopNight(); return playScene(id); }
 function playScene(id) { const scene = SCENES.find(s => s[0] === id); pressed = {title: scene[3][lang], at: isoOf(scene)}; return dispatch("/api/scene", {id}); }
 function sendEvent(type, payload) { stopNight(); return dispatch("/api/events", {type, payload}); }
 
-// Play one night: the same scene events a judge can press, one at a time, each only after Muse finished the last.
+// Play the story: the same scene events a judge can press, one at a time, each only after Muse finished the last.
 function stopNight() { clearTimeout(nightTimer); if (night) { night = null; $("play").textContent = playLabel(); $("play").classList.remove("on"); } }
 function nextOfNight() {
   clearTimeout(nightTimer);
@@ -390,7 +392,7 @@ $("play").addEventListener("click", async () => {
   if (night) { stopNight(); say(""); drawRail(); return; }
   if (busy || !state) return;
   const left = () => ORDER.filter(id => !state.played.includes(id) && isoOf(SCENES.find(s => s[0] === id)) > state.clock);
-  if (!state.played.every((id, i) => id === ORDER[i]) || !left().length) { if (!(await startOver())) return; }
+  if (!left().length) { if (!(await startOver())) return; }
   night = {list: ORDER, left: left(), started: false};
   drawRail(); jumpToResult(); nextOfNight();
 });

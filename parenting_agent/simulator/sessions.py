@@ -22,8 +22,10 @@ MAX_SESSIONS = int(os.environ.get("PA_SIM_MAX_SESSIONS", "12"))
 MAX_PER_CLIENT = int(os.environ.get("PA_SIM_MAX_PER_CLIENT", "3"))
 MAX_EVENTS = int(os.environ.get("PA_SIM_MAX_EVENTS", "40"))
 MAX_TEXT = 280
-# One address, across all its sessions, so Start over can't spend Muse without end.
+# One visitor, across their homes, so Start over can't spend Muse without end. A panel can share one address, so what a visitor sees is their own, and the address only has a far higher ceiling.
 HOUR_S = 3600
+VISITOR_EVENTS = int(os.environ.get("PA_SIM_VISITOR_EVENTS", "120"))
+VISITOR_SESSIONS = int(os.environ.get("PA_SIM_VISITOR_SESSIONS", "12"))
 ADDRESS_EVENTS = int(os.environ.get("PA_SIM_ADDRESS_EVENTS", "400"))
 ADDRESS_SESSIONS = int(os.environ.get("PA_SIM_ADDRESS_SESSIONS", "60"))
 HIDDEN_FACTS = ("language", "warmer_off_at", "vacuum_off_at", "feed_gap_told")
@@ -58,6 +60,21 @@ class Allowance:
     def left(self, address):
         now = self.clock()
         return max(0, self.limit - sum(1 for at in self.used.get(address, ()) if now - at < HOUR_S))
+
+
+class Shared:
+    """A visitor's own allowance, under a ceiling for the address behind them. One judge's use never shows up as another's."""
+    def __init__(self, own, ceiling):
+        self.visitors, self.addresses = Allowance(own), Allowance(ceiling)
+
+    def take(self, visitor, address):
+        if not self.left(visitor, address):
+            raise Full("address")
+        self.visitors.take(visitor)
+        self.addresses.take(address)
+
+    def left(self, visitor, address):
+        return min(self.visitors.left(visitor), self.addresses.left(address))
 
 
 class SimLog(LocalBabyLog):
@@ -97,7 +114,8 @@ class SimChannel(tools_mod.MockChannel):
 
 
 class Session:
-    def __init__(self, client, model=None, lang="en", allowance=None, opened=None):
+    def __init__(self, client, model=None, lang="en", allowance=None, opened=None, visitor=None):
+        self.visitor = visitor or client
         self.allowance = allowance
         self.opened = opened
         self.token = secrets.token_urlsafe(24)
@@ -221,7 +239,7 @@ class Session:
             return None
 
     async def play(self, scene_id):
-        """A shortcut: it sends its event at its time, or just after the clock if that time has passed. It can be pressed again."""
+        """A moment from the story: it sends its event at its time, or just after the clock if that time has passed."""
         scene = BY_ID.get(scene_id)
         if scene is None:
             return None
@@ -272,13 +290,13 @@ class Session:
         if self.events_used >= MAX_EVENTS:
             raise Full("events")
         if self.allowance:
-            self.allowance.take(self.client)
+            self.allowance.take(self.visitor, self.client)
         self.events_used += 1
 
     async def state(self):
         facts = await tools_mod.facts(self.core.store, self.settings.home)
         return {"clock": self.moment.isoformat(), "lang": self.lang, "played": self.played, "events_left": MAX_EVENTS - self.events_used,
-                "starts_left": self.opened.left(self.client) if self.opened else None, "feeds_on": self.feeds_on,
+                "starts_left": self.opened.left(self.visitor, self.client) if self.opened else None, "feeds_on": self.feeds_on,
                 "home": self.core.mock.snapshot(), "sent": list(self.channel.sent), "said": self.said,
                 "facts": {k: v for k, v in facts.items() if k not in HIDDEN_FACTS},
                 "log": self.log.entries(limit=8), "seq": self.core.seq}
@@ -289,8 +307,8 @@ class Sessions:
         self.model = model
         self.live = {}
         self.lock = asyncio.Lock()
-        self.events = Allowance(ADDRESS_EVENTS)
-        self.opened = Allowance(ADDRESS_SESSIONS)
+        self.events = Shared(VISITOR_EVENTS, ADDRESS_EVENTS)
+        self.opened = Shared(VISITOR_SESSIONS, ADDRESS_SESSIONS)
 
     def get(self, token):
         session = self.live.get(token)
@@ -298,8 +316,11 @@ class Sessions:
             session.last_seen = time.monotonic()
         return session
 
-    async def create(self, client, lang="en"):
+    async def create(self, client, lang="en", visitor=None):
+        visitor = visitor or client
         async with self.lock:  # one at a time: PostgreSQL's setup statements must not race
+            if not self.opened.left(visitor, client):  # checked first: a refused start ends nobody's home
+                raise Full("address")
             # A panel of judges shares one address, so one visitor's start never ends another's home in use.
             mine = sorted((s for s in self.live.values() if s.client == client and s.stale(EVICT_IDLE_S)), key=lambda s: s.last_seen)
             if mine and sum(1 for s in self.live.values() if s.client == client) >= MAX_PER_CLIENT:
@@ -309,8 +330,8 @@ class Sessions:
                 if not idle:
                     raise Full("sessions")
                 await self.drop(idle[0].token)
-            self.opened.take(client)
-            session = await Session(client, self.model, lang, self.events, self.opened).start()
+            self.opened.take(visitor, client)
+            session = await Session(client, self.model, lang, self.events, self.opened, visitor).start()
             self.live[session.token] = session
             return session
 

@@ -5,6 +5,7 @@ import datetime
 import hashlib
 import json
 import os
+import secrets
 from pathlib import Path
 
 from sse_starlette.sse import EventSourceResponse
@@ -20,13 +21,14 @@ from .sessions import MAX_TEXT, Full, Sessions
 
 STATIC = Path(__file__).parent / "static"
 COOKIE = "pa_sim"
+VISITOR = "pa_visitor"
 CLIENT_HEADER = os.environ.get("PA_SIM_CLIENT_HEADER", "")
 SECURE = os.environ.get("PA_SIM_SECURE_COOKIE") == "1"
 CSP = ("default-src 'none'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self'; "
        "media-src 'self'; connect-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'")
 FRESH = {"Cache-Control": "no-cache"}
-BUSY = "All the simulated homes are in use right now. One frees up within two minutes, and this page keeps trying."
-STARTS_USED = "This address started many homes this hour. Please try again in a while."
+BUSY = "All the simulated homes are in use right now. This page keeps trying, and nobody's home is ended to make room."
+STARTS_USED = "You started many homes this hour. Please try again in a while."
 USED = "This session reached its limit. Start over, or try again in an hour."
 ONE_AT_A_TIME = "Muse is still on the last one."
 STREAMED = {"event", "tool_call", "tool_result", "gate", "decision", "done", "error"}
@@ -76,6 +78,10 @@ def app(model=None, media=None):
     def client_of(request):
         return request.headers.get(CLIENT_HEADER, "") if CLIENT_HEADER else (request.client.host if request.client else "")
 
+    def visitor_of(request):
+        """Who this browser is, so a judge's starts and events are their own even on an address shared with a panel."""
+        return request.cookies.get(VISITOR) or secrets.token_urlsafe(16)
+
     def current(request):
         return sessions.get(request.cookies.get(COOKIE, ""))
 
@@ -88,6 +94,7 @@ def app(model=None, media=None):
 
     def with_cookie(response, session):
         response.set_cookie(COOKIE, session.token, httponly=True, samesite="strict", secure=SECURE, path="/", max_age=7200)
+        response.set_cookie(VISITOR, session.visitor, httponly=True, samesite="strict", secure=SECURE, path="/", max_age=7200)
         return response
 
     async def page(request):
@@ -97,7 +104,7 @@ def app(model=None, media=None):
         session = current(request)
         if session is None:
             try:
-                session = await sessions.create(client_of(request), "es" if (await body_of(request)).get("lang") == "es" else "en")
+                session = await sessions.create(client_of(request), "es" if (await body_of(request)).get("lang") == "es" else "en", visitor_of(request))
             except Full as why:
                 return JSONResponse({"error": STARTS_USED if str(why) == "address" else BUSY}, 429 if str(why) == "address" else 503)
         return with_cookie(JSONResponse({**await session.state(), "scenes": [s["id"] for s in SCENES]}), session)
@@ -201,11 +208,11 @@ def app(model=None, media=None):
 
     async def reset(request, session):
         chosen = session.lang
-        if not sessions.opened.left(client_of(request)):  # checked first, so a refused start doesn't lose the home that's open
+        if not sessions.opened.left(session.visitor, client_of(request)):  # checked first, so a refused start doesn't lose the home that's open
             return JSONResponse({"error": STARTS_USED}, 429)
         await sessions.drop(session.token)
         try:
-            fresh = await sessions.create(client_of(request), chosen)
+            fresh = await sessions.create(client_of(request), chosen, session.visitor)
         except Full as why:
             return JSONResponse({"error": STARTS_USED if str(why) == "address" else BUSY}, 429 if str(why) == "address" else 503)
         return with_cookie(JSONResponse({**await fresh.state(), "scenes": [s["id"] for s in SCENES]}), fresh)
