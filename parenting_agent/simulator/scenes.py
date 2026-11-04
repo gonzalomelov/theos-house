@@ -94,8 +94,8 @@ def sense_event(sense_id, lang):
     for clip in SENSES["audio"]:
         if clip["id"] == sense_id and clip["heard"]:
             share = min(99.9, int(clip["scores"][clip["heard"]]["probability"] * 1000) / 10)
-            return "sound", {"kind": f"{HEARD[clip['heard']]}, heard by Perception Encoder Audio at {share}%, computed earlier on a recording", "room": CRY_ROOM[lang]}
+            return "sound", {"kind": f"{HEARD[clip['heard']]}, heard by Perception Encoder Audio at {share}%", "room": CRY_ROOM[lang], "computed": True}
     for frame in SENSES["frames"]:
         if frame["id"] == sense_id:
-            return "camera", {"camera": TABLE[lang], "model": "SAM 3.1", "saw": SAW[frame["verdict"]][lang], "verdict": frame["verdict"], "hand_masks": frame["hands"], "note": "computed earlier on a generated clip"}
+            return "camera", {"camera": TABLE[lang], "model": "SAM 3.1", "saw": SAW[frame["verdict"]][lang], "verdict": frame["verdict"], "hand_masks": frame["hands"], "computed": True}
     return None

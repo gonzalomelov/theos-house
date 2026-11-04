@@ -26,6 +26,9 @@ Run with `scripts/core_jobs_eval.py`, on the mock home, real Muse on Baseten, ea
 | Fifth review agents' fixes | 13 cases from round 5 of the review agents (`fifth-tuned.json`, the `fifth` group), plus offline tests in `tests/test_core_round5.py`. Tuned on, not quoted | First pass 35 of 39: "alarm closes" 2/3, Muse repeated a closed alarm in the evening, which led to a check in code, and "hot room" 0/3, which was the case's own check wanting 31 °C when the room had drifted to 30. After those two: 39 of 39 |
 | Held-out 9 | 15 new cases, committed before any run (`9ec554b`), run once (`held-out-9.json`). Not tuned on | **45 of 45** |
 | Regression after round 5 | Held-out 8's cases again (`round-5-regression.json`). Spent, so this says nothing went backwards and nothing more | 42 of 42 |
+| Sixth review agents' fixes | 25 cases from round 6 of the review agents (`sixth-tuned.json`, the `sixth` group), plus offline tests in `tests/test_core_round6.py`. Tuned on, not quoted | First pass, one run each, 21 of 23: "reply closes" and "hot room first", which led to a refusal naming the word it refuses and to Muse not setting its own re-check. Then 69 of 69, with two checks corrected and rerun ("s6 book" had an and/or slip, "s6 handover" counted too late). Two cases added after the held-out round: 6 of 6, 75 of 75 in the file |
+| Held-out 10 | 16 new cases, committed before any run (`6807070`), run once (`held-out-10.json`). Not tuned on | **44 of 48**: 14 cases 3/3, "coworker's toddler" 0/3 (the fixed emergency line fired: "nada que ver con Theo" and "hijo de 2 años de mi compañera" were both missed by the gate), "takeover small hours" 2/3 (Gonza heard "te cubrieron" in the morning, and not that it was Ceci). The gate miss was fixed after the round and checked only on a tuned variant, 3 of 3, so that fix has no held-out proof. The takeover line wasn't changed |
+| Regression after round 6 | Held-out 9's cases again (`round-6-regression.json`). Spent, so this says nothing went backwards and nothing more | 45 of 45 |
 
 ## Tuned on
 morning, voice note, Echo question, car seat, warmer cry due, warmer just fed, evening plans prewarm, wake prewarms, wake just fed.
@@ -34,7 +37,7 @@ morning, voice note, Echo question, car seat, warmer cry due, warmer just fed, e
 voice note from Ceci, Echo diaper count, quiet morning, dog by day, recipe in English, car seat from Ceci, red flag at the Echo, dose by voice. These were then run a second time, all 3/3, so they are spent: a new held-out round needs new cases.
 
 ## Spent, not to be reused as held-out
-Round 3 (fixed after it), rounds 4, 5, 6, 7, 8 and 9.
+Round 3 (fixed after it), rounds 4, 5, 6, 7, 8, 9 and 10.
 
 ## Seen in the texts and not counted by the checks
 - New parent's round: an exhausted parent once heard "Theo is cared for and safe", which nothing in the log shows.
@@ -44,5 +47,10 @@ Round 3 (fixed after it), rounds 4, 5, 6, 7, 8 and 9.
 - One car seat run sent "I'm here if you need anything else!" right after starting the coach.
 - Held-out 9: a long message forwarded to the other parent keeps the danger, but its quote can open mid sentence ("caso y cuando entré..."). A parent writing English in a Spanish home gets Muse's reply in Spanish, as the prompt asks. Only the fixed safety lines follow the writer's language. The real danger screen was used in these runs, and it is one model call, so a typo the word list misses depends on it.
 - "pañal seco" and "los 3 secos" come from how the eval seeds diapers, with a type the log doesn't read as wet. Not Muse's mistake.
+
+- Held-out 10 and tuned 6: the final guard's excuse, "no me salió bien la respuesta", reached the parent in all 3 carrot puree runs and 3 of the tuned ones, and the checks passed. Muse's line about the Muse app was what it dropped. Now such a message is refused and Muse writes it again, checked on tuned cases only: 0 excuses in 12 tuned runs after it.
+- The recipe's "can't send to Cookidoo" often comes from the fixed line, since Muse tends to write "no se envió a ningún lado" without naming Cookidoo. The check counts both.
+- The room messages tell someone what to look at ("ventilá un poco", "que esté abrigado"), and one said "Ceci va a chequear el cuarto", which nobody assigned.
+- Muse's reply to a plan can read as advice: "Seguí lo que te indicó la pediatra".
 
 Limits: 3 runs per case on a mock home and a mock channel. The car seat case proves the tool is called and no steps are written, not the coach itself, which runs on the Mac with the glasses.

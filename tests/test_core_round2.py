@@ -59,7 +59,8 @@ class Words(unittest.TestCase):
         self.assertIn("Suspect", safety.sensor_jump(HUMIDITY, 90, 52, 1))
         self.assertIsNone(safety.sensor_jump(HUMIDITY, 90, 52, 60))
         self.assertIsNone(safety.sensor_jump(HUMIDITY, 71, 52, 1))
-        self.assertIn("Suspect", safety.sensor_jump(TEMPERATURE, 35, 21.5, 1))
+        self.assertIn("treat it as real", safety.sensor_jump(TEMPERATURE, 35, 21.5, 1))
+        self.assertIn("Suspect", safety.sensor_jump(TEMPERATURE, 26, 15.5, 1))
 
     def test_the_room_answers_over_time(self):
         home = MockHome()

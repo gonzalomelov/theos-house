@@ -146,7 +146,7 @@ class Round5(unittest.IsolatedAsyncioTestCase):
         return await done
 
     async def test_an_alarm_is_said_once_and_someone_asks_how_theo_is(self):
-        model = scripted(call("notify", parent="gonza", text="Anoche a las 03:04 Ceci escribió que no respiraba."), AIMessage("told"), AIMessage("nothing"))
+        model = scripted(call("notify", parent="gonza", text="Anoche a las 03:04 Ceci escribió que no respiraba."), AIMessage("told"), AIMessage("nothing"), AIMessage("nothing"), AIMessage("nothing"), AIMessage("nothing"))
         core = await self.run_core(model)
         await self.event(core, "message", {"from": "ceci", "text": "Theo no respira"}, NIGHT)
         facts = await tools_mod.facts(core.store, core.settings.home)
@@ -163,7 +163,8 @@ class Round5(unittest.IsolatedAsyncioTestCase):
 
     async def test_the_follow_up_may_reach_whoever_wrote_at_night(self):
         core = await self.run_core(scripted(call("notify", parent="gonza", text="¿Cómo está Theo?"), call("notify", parent="ceci", text="¿Cómo está Theo?"), AIMessage("asked")))
-        await self.event(core, "wake", {"why": f"{runtime.FOLLOW_UP}: x"}, NIGHT)
+        writer = "ceci" if runtime.who_is_on(NIGHT, {}) == "gonza" else "gonza"
+        await self.event(core, "wake", {"why": f"{runtime.FOLLOW_UP}: at 03:00 {writer} wrote \"x\""}, NIGHT)
         self.assertEqual({m["to"] for m in core.channel.sent}, {"gonza", "ceci"})
 
     async def test_a_closed_alarm_is_refused_if_a_later_check_repeats_it(self):
@@ -179,16 +180,16 @@ class Round5(unittest.IsolatedAsyncioTestCase):
     async def test_a_later_message_means_the_follow_up_can_stay_quiet(self):
         core = await self.run_core(scripted(AIMessage("x"), AIMessage("x")))
         await self.event(core, "message", {"from": "ceci", "text": "Theo no respira"}, NIGHT)
-        self.assertFalse(core.answered_since_alarm)
+        self.assertTrue(any(w["why"].startswith(runtime.FOLLOW_UP) for w in await core.wakes()))
         await self.event(core, "message", {"from": "ceci", "text": "Ya está bien, habló la doctora"}, NIGHT.replace(minute=20))
-        self.assertTrue(core.answered_since_alarm)
+        self.assertFalse(any(w["why"].startswith(runtime.FOLLOW_UP) for w in await core.wakes()))
 
     async def test_a_recap_is_asked_again_for_the_words_it_left_out(self):
         model = scripted(call("notify", parent="gonza", text="Anoche hubo una alarma."), AIMessage("told"), AIMessage("told"), AIMessage("told"))
         core = await self.run_core(model)
         await self.event(core, "message", {"from": "ceci", "text": "Theo no respira"}, NIGHT)
         await self.event(core, "schedule", {"name": "morning"}, NIGHT.replace(hour=7, minute=30))
-        self.assertIn("quoting these words: Theo no respira", str(model.calls[-1][-1].content))
+        self.assertTrue(any("quoting these words: Theo no respira" in str(m[-1].content) for m in model.calls))
 
     async def test_a_reminder_wakes_once_at_its_time(self):
         core = await self.run_core(scripted(AIMessage("x")))
@@ -209,9 +210,9 @@ class Round5(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(sent, {m["to"]: m["text"] for m in core.channel.sent})
 
     async def test_a_line_from_code_shows_in_the_trace_too(self):
-        core = await self.run_core(scripted(AIMessage("nothing"), AIMessage("nothing")))
+        core = await self.run_core(scripted(AIMessage("nothing"), AIMessage("nothing"), AIMessage("nothing")))
         await self.event(core, "camera", {"camera": "the changing table camera", "model": "SAM 3.1", "saw": "no hand is on the baby", "verdict": "off"}, DAY)
-        self.assertEqual([i["arguments"]["parent"] for i in core.recent if i["kind"] == "tool_result"], [m["to"] for m in core.channel.sent])
+        self.assertEqual([i["arguments"].get("parent", "echo") for i in core.recent if i["kind"] == "tool_result"], [m["to"] for m in core.channel.sent])
 
     async def test_nobody_gets_a_night_without_hearing_it_even_if_muse_stays_silent(self):
         duty = runtime.on_duty(NIGHT)
@@ -250,9 +251,9 @@ class Round5(unittest.IsolatedAsyncioTestCase):
         self.assertIn(other, [m["to"] for m in core.channel.sent])
 
     async def test_hands_off_at_the_table_is_an_alert_even_if_muse_stays_silent(self):
-        core = await self.run_core(scripted(AIMessage("nothing"), AIMessage("nothing")))
+        core = await self.run_core(scripted(AIMessage("nothing"), AIMessage("nothing"), AIMessage("nothing")))
         await self.event(core, "camera", {"camera": "the changing table camera", "model": "SAM 3.1", "saw": "no hand is on the baby", "verdict": "off"}, DAY)
-        self.assertEqual([m["to"] for m in core.channel.sent], [runtime.who_is_on(DAY, {})])
+        self.assertEqual([m["to"] for m in core.channel.sent], [runtime.who_is_on(DAY, {}), "echo"])
         self.assertIn("mano", core.channel.sent[0]["text"].lower())
         self.assertEqual(scenes.sense_event("hands-off", "en")[1]["verdict"], "off")
 
@@ -274,7 +275,7 @@ class Round5(unittest.IsolatedAsyncioTestCase):
         model = scripted(AIMessage("x"), AIMessage("x"))
         core = await self.run_core(model)
         await self.event(core, "state_changed", {"entity_id": TEMPERATURE, "state": "35"}, DAY)
-        self.assertIn("Suspect the sensor", " ".join(str(m.content) for m in model.calls[0]))
+        self.assertIn("treat it as real", " ".join(str(m.content) for m in model.calls[0]))
 
     async def test_the_record_and_the_trace_say_what_really_went_out(self):
         core = await self.run_core(scripted(call("notify", parent=runtime.who_is_on(DAY, {}), text="Comió a las 11:00 PM \u2014 todo anotado"), AIMessage("told")))
