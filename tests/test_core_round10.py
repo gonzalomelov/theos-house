@@ -11,8 +11,8 @@ if READY:
     from parenting_agent.core import runtime, safety, tools as tools_mod
 
 NIGHT = datetime.datetime.fromisoformat("2026-12-16T03:12:00-03:00")
-OVER_ES = ("la fiebre ya paso", "La fiebre ya pasó.", "ya se le pasó la fiebre", "se le fue la fiebre", "la fiebre se fue", "la fiebre ya se fue, duerme", "ya le bajó la fiebre", "ya no tiene fiebre", "no tiene más fiebre", "la fiebre de ayer ya pasó")
-OVER_EN = ("the fever is gone", "The fever's gone.", "his fever broke", "the fever went away", "fever gone", "the fever is over", "no more fever", "he doesn't have a fever anymore", "the fever has passed", "fever's gone and he's asleep")
+OVER_ES = ("Se le cortó la fiebre hoy a la tarde, tomó 60 ml a las 17:45.", "la fiebre ya paso", "La fiebre ya pasó.", "ya se le pasó la fiebre", "se le fue la fiebre", "la fiebre se fue", "la fiebre ya se fue, duerme", "ya le bajó la fiebre", "ya no tiene fiebre", "no tiene más fiebre", "la fiebre de ayer ya pasó")
+OVER_EN = ("Good news, the fever's finally gone.", "the fever is gone", "The fever's gone.", "his fever broke", "the fever went away", "fever gone", "the fever is over", "no more fever", "he doesn't have a fever anymore", "the fever has passed", "fever's gone and he's asleep")
 # Whatever else these say, it can't be read as over.
 STILL_ES = ("la fiebre no pasó", "todavía no se le pasó la fiebre", "no se le fue la fiebre", "¿ya se le pasó la fiebre?", "¿la fiebre ya pasó", "si se le fue la fiebre le doy la mamadera", "la fiebre paso a 39", "la fiebre pasó de 38 a 39", "la fiebre se fue a 38,7",
             "la fiebre ya paso pero volvió", "se le fue la fiebre y volvió", "la fiebre ya pasó, ahora tiene 38,5", "la fiebre ya paso, 38,4", "la fiebre ya pasó pero sigue caliente", "la fiebre se fue, sigue caliente", "creo que la fiebre ya pasó", "parece que se le fue la fiebre",
@@ -219,3 +219,15 @@ class ReadAgain(unittest.IsolatedAsyncioTestCase):
         await self.event(core, "state_changed", {"entity_id": self.PLUG, "state": "off"}, at=self.AT.isoformat())
         await self.event(core, "state_changed", {"entity_id": self.HUM, "state": "75"}, at=(self.AT + datetime.timedelta(minutes=30)).isoformat())
         self.assertEqual([w["at"].astimezone(self.AT.tzinfo).strftime("%H:%M") for w in await core.wakes() if w["why"] == runtime.RECHECK_AIR], ["20:16"])
+
+
+@unittest.skipUnless(READY, "needs requirements-core.txt and PA_DB_URL")
+class RecipeShown(unittest.TestCase):
+    PREVIEW = {"ingredients": ["500 g sweet potato", "300 g stock"], "steps": [{"text": "Cook 18 min/100°C/speed 1"}, {"text": "Blend 30 sec/speed 8"}]}
+
+    def test_a_name_isnt_the_recipe(self):
+        self.assertFalse(runtime.recipe_shown(self.PREVIEW, "Your sweet potato soup with stock is ready."))
+
+    def test_ingredients_and_steps_are(self):
+        self.assertTrue(runtime.recipe_shown(self.PREVIEW, "Sweet potato, stock. Cook 18 min, blend 30 sec."))
+        self.assertTrue(runtime.recipe_shown({"ingredients": ["pumpkin"]}, "pumpkin"))

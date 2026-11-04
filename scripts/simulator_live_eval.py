@@ -31,8 +31,8 @@ class Visitor:
     def send(self, path, body):
         """Sends one thing and returns every step the stream showed for it, once it is done."""
         after = self.state()["seq"]
-        self.post(path, body)
-        steps, kind, open_runs = [], None, set()
+        own = self.post(path, body).get("id")
+        steps, kind, open_runs, finished = [], None, set(), set()
         with self.open(f"{self.url}/api/stream?after={after}", timeout=240) as stream:
             for raw in stream:  # a wake Muse asked for may run first, so it is done when every event that started is
                 line = raw.decode().strip()
@@ -45,7 +45,8 @@ class Visitor:
                         open_runs.add(step["event_id"])
                     elif kind == "done":
                         open_runs.discard(step["event_id"])
-                        if not open_runs:
+                        finished.add(step["event_id"])
+                        if not open_runs and (own is None or own in finished):  # a wake's end, replayed first, isn't this event's
                             return steps
         return steps
 

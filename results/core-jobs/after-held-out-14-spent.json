@@ -1,0 +1,293 @@
+{
+ "h14 said over Spanish": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "out": {
+     "status": "done",
+     "outcome": "Logged feeding. Told ceci."
+    },
+    "feeds": [
+     {
+      "id": 6,
+      "ts": "2026-11-05T17:45:00-03:00",
+      "kind": "feeding",
+      "details": {
+       "amount_ml": 60
+      }
+     }
+    ],
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Anotado lo de las 17:45. Hoy lleva 6 tomas, 460 ml en total. La última a las 17:45 de 60 ml, antes a las 16:12 de 80 ml. Qué bueno que se le cortó la fiebre.",
+      "at": 1793786881.190007
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "out": {
+     "status": "done",
+     "outcome": "Logged feeding. Told ceci."
+    },
+    "feeds": [
+     {
+      "id": 6,
+      "ts": "2026-11-05T17:45:00-03:00",
+      "kind": "feeding",
+      "details": {
+       "amount_ml": 60
+      }
+     }
+    ],
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Anotada la toma de las 17:45 de 60 ml.\n\nHoy lleva 6 tomas, 460 ml en total. La última a las 17:45.",
+      "at": 1793786886.600281
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "out": {
+     "status": "done",
+     "outcome": "Logged feeding. Logged note. Told ceci."
+    },
+    "feeds": [
+     {
+      "id": 6,
+      "ts": "2026-11-05T17:45:00-03:00",
+      "kind": "feeding",
+      "details": {
+       "amount_ml": 60,
+       "method": "bottle"
+      }
+     }
+    ],
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Anotado lo de las 17:45, 60 ml, y que se le cortó la fiebre a la tarde.\n\nHoy lleva 6 tomas, 460 ml en total. La última a las 17:45. Por cualquier duda de la fiebre, consultá con su pediatra.",
+      "at": 1793786894.854072
+     }
+    ]
+   }
+  ]
+ },
+ "h14 said over English": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "out": {
+     "status": "done",
+     "outcome": "Logged feeding. Told gonza."
+    },
+    "feeds": [
+     {
+      "id": 6,
+      "ts": "2026-11-05T16:00:00-03:00",
+      "kind": "feeding",
+      "details": {
+       "amount_ml": 75
+      }
+     }
+    ],
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Glad the fever's gone, noted 75 ml at 16:00. Today he's had 475 ml in 6 feeds, last one at 16:00.",
+      "at": 1793786900.61476
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "out": {
+     "status": "done",
+     "outcome": "Logged feeding. Told gonza."
+    },
+    "feeds": [
+     {
+      "id": 6,
+      "ts": "2026-11-05T16:00:00-03:00",
+      "kind": "feeding",
+      "details": {
+       "amount_ml": 75,
+       "method": "bottle"
+      }
+     }
+    ],
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Logged 75 ml at 16:00, glad the fever's gone.\n\nToday so far: 6 feeds, 475 ml total. Last was that 75 ml at 16:00.",
+      "at": 1793786910.461643
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "out": {
+     "status": "done",
+     "outcome": "Logged feeding. Told gonza."
+    },
+    "feeds": [
+     {
+      "id": 6,
+      "ts": "2026-11-05T16:00:00-03:00",
+      "kind": "feeding",
+      "details": {
+       "amount_ml": 75
+      }
+     }
+    ],
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Logged, 75 ml at 16:00. Great news about the fever being gone.\n\nToday so far: 6 feeds, 475 ml total. Last at 16:00.",
+      "at": 1793786915.995411
+     }
+    ]
+   }
+  ]
+ },
+ "h14 errand while open": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "shopping": [
+     "diapers"
+    ],
+    "back": "Added diapers to the shopping list., How is Theo doing now after his lips looked grey at 09:12?",
+    "facts": [
+     "alarm_202611050912"
+    ]
+   },
+   {
+    "passed": true,
+    "shopping": [
+     "diapers"
+    ],
+    "back": "Added diapers to the shopping list.\n\nAnd how is Theo doing after 09:12 when his lips looked grey, could you let me know how he is now?",
+    "facts": [
+     "alarm_202611050912"
+    ]
+   },
+   {
+    "passed": true,
+    "shopping": [
+     "diapers"
+    ],
+    "back": "Added diapers to the shopping list, how is Theo doing now?",
+    "facts": [
+     "alarm_202611050912"
+    ]
+   }
+  ]
+ },
+ "h14 Echo sleep unknown": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "said": [
+     "Hoy Theo no tiene sueño registrado, cero minutos hasta ahora."
+    ],
+    "sent": [
+     {
+      "to": "echo",
+      "text": "Hoy Theo no tiene sueño registrado, cero minutos hasta ahora.",
+      "at": 1793786948.326234
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "said": [
+     "Hoy Theo no tiene sueño registrado, cero minutos hasta ahora."
+    ],
+    "sent": [
+     {
+      "to": "echo",
+      "text": "Hoy Theo no tiene sueño registrado, cero minutos hasta ahora.",
+      "at": 1793786953.930331
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "said": [
+     "Hoy no hay sueño registrado para Theo, cero minutos hasta ahora."
+    ],
+    "sent": [
+     {
+      "to": "echo",
+      "text": "Hoy no hay sueño registrado para Theo, cero minutos hasta ahora.",
+      "at": 1793786961.756694
+     }
+    ]
+   }
+  ]
+ },
+ "h14 soup English": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "waited_s": 5.3,
+    "refused": 0,
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Here’s your neighbour’s recipe as a Thermomix preview, I can’t send it to Cookidoo from here, a real send is yours from Meta’s app:\n\nSweet Potato Soup (Spain) - for 2\n\nIngredients:\n500 g sweet potato\n300 g stock\n\nSteps:\nCook 18 min/100°C/speed 1\nBlend 30 sec/speed 8\n\nI’ve added the ingredients to your shopping list too.\n\nThis one is for you for now, or for Theo later on, his pediatrician can say when.\n",
+      "at": 1793786968.285738
+     },
+     {
+      "to": "ceci",
+      "text": "I can't send it to Cookidoo from here. That is done from Meta's Muse app.",
+      "at": 1793786969.674589
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "waited_s": 6.5,
+    "refused": 0,
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Got your neighbour's soup, I've made it a Thermomix recipe, check your messages for the preview.",
+      "at": 1793786976.289637
+     },
+     {
+      "to": "ceci",
+      "text": "Sweet potato soup\n\nIngredients:\n- 500 g sweet potato\n- 300 g stock\n\nSteps:\n1. Cook 500 g sweet potato with 300 g stock for 18 min at 100°C on speed 1\n2. Blend for 30 sec on speed 8\n\nTheo is a newborn, so this one is for you two for now, or for later on. His pediatrician can say when.\n\nI can't send it to Cookidoo from here. That is done from Meta's Muse app.",
+      "at": 1793786977.488739
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "waited_s": 6.3,
+    "refused": 0,
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Sweet potato soup\n\nIngredients:\n500 g sweet potato\n300 g stock\n\nSteps:\nAdd 500 g sweet potato and 300 g stock to bowl\nCook 18 min/100°C/speed 1\nBlend 30 sec/speed 8\n\nI can't send it to Cookidoo from here, a real send is yours from Meta's app. Ingredients added to your shopping list.\n\nThis one is for you for now, for Theo later on, his pediatrician can say when.",
+      "at": 1793786983.949725
+     }
+    ]
+   }
+  ]
+ }
+}

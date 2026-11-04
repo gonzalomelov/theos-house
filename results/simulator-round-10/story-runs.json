@@ -1,0 +1,309 @@
+[
+ {
+  "scenes": [
+   {
+    "scene": "evening",
+    "passed": true,
+    "seconds": 7.9,
+    "sent": {
+     "gonza": [
+      "Ceci is on tonight."
+     ],
+     "ceci": [
+      "You're on tonight."
+     ],
+     "echo": []
+    },
+    "tools": [
+     "GetLiveContext",
+     "next_feed",
+     "baby_summary",
+     "wake_me_at",
+     "notify",
+     "notify",
+     "notify",
+     "notify",
+     "notify",
+     "notify"
+    ],
+    "decision": "Set a wake for 2026-12-15T23:40:00-03:00. Refused or failed: Told ceci, Told gonza.",
+    "failed": false
+   },
+   {
+    "scene": "sleep",
+    "passed": true,
+    "seconds": 5.9,
+    "sent": {
+     "gonza": [
+      "Ceci passed you tonight, it's yours now, you can say no if needed."
+     ],
+     "ceci": [
+      "Noted, Gonza is on tonight, hope you get some sleep."
+     ],
+     "echo": []
+    },
+    "tools": [
+     "set_on_duty",
+     "notify",
+     "notify"
+    ],
+    "decision": "Changed duty to Gonza for tonight per Ceci's request and notified both.",
+    "failed": false
+   },
+   {
+    "scene": "cry",
+    "passed": true,
+    "seconds": 11.2,
+    "sent": {
+     "gonza": [
+      "Warming a bottle now for the feed around 23:55, warmer on, off by itself at 00:10.",
+      "The bottle warmer turned itself off at 00:10.",
+      "Theo's crying, your turn to check on him.",
+      "Warming a bottle too, warmer on, off by itself at 03:20."
+     ],
+     "ceci": [],
+     "echo": []
+    },
+    "tools": [
+     "GetLiveContext",
+     "next_feed",
+     "HassTurnOn",
+     "notify",
+     "notify",
+     "GetLiveContext",
+     "HassTurnOn",
+     "notify"
+    ],
+    "decision": "Started bottle warmer ahead of expected 23:55 feed, quiet notify to Gonza on duty.",
+    "failed": false
+   },
+   {
+    "scene": "feed",
+    "passed": true,
+    "seconds": 6.6,
+    "sent": {
+     "gonza": [
+      "The bottle warmer turned itself off at 03:20.",
+      "Got it, 90 ml at 03:00 logged."
+     ],
+     "ceci": [],
+     "echo": []
+    },
+    "tools": [
+     "log_baby_event",
+     "notify"
+    ],
+    "decision": "Logged 03:00 90ml bottle feed for Gonza.",
+    "failed": false
+   },
+   {
+    "scene": "morning",
+    "passed": true,
+    "seconds": 3.5,
+    "sent": {
+     "gonza": [
+      "Morning, Theo ate 3 times in the night, last at 06:20 (90 ml). You were on last night; you’re on tonight too, same plan tonight?"
+     ],
+     "ceci": [
+      "Morning, Theo ate 3 times in the night, last at 06:20. Gonza was on last night; he’s on tonight too, same plan tonight?"
+     ],
+     "echo": []
+    },
+    "tools": [
+     "baby_summary",
+     "notify",
+     "notify"
+    ],
+    "decision": "Morning check sent: 3 night feeds reported, asked to confirm Gonza remains on tonight.",
+    "failed": false
+   },
+   {
+    "scene": "grandma",
+    "passed": true,
+    "seconds": 5.1,
+    "sent": {
+     "gonza": [],
+     "ceci": [],
+     "echo": [
+      "Theo last ate at 9:30 this morning, 95 milliliters by bottle."
+     ]
+    },
+    "tools": [
+     "read_baby_log",
+     "say_on_echo"
+    ],
+    "decision": "Answer delivered: last feed 09:30 95ml. Responded via Echo to Grandma.",
+    "failed": false
+   },
+   {
+    "scene": "nap",
+    "passed": true,
+    "seconds": 6.4,
+    "sent": {
+     "gonza": [],
+     "ceci": [
+      "Noted, I'll keep the dehumidifier off until 16:00 and just tell you the reading if humidity rises."
+     ],
+     "echo": []
+    },
+    "tools": [
+     "remember",
+     "wake_me_at",
+     "notify"
+    ],
+    "decision": "Hold placed: dehumidifier off until 16:00 per Ceci, with wake scheduled.",
+    "failed": false
+   },
+   {
+    "scene": "humid",
+    "passed": true,
+    "seconds": 4.1,
+    "sent": {
+     "gonza": [],
+     "ceci": [
+      "Humidity in Theo's room is 71.2% at 15:10, keeping the dehumidifier off as you asked until 16:00."
+     ],
+     "echo": []
+    },
+    "tools": [
+     "GetLiveContext",
+     "notify"
+    ],
+    "decision": "Humidity 71.2% but hold active until 16:00, so informed Ceci only, no switch.",
+    "failed": false
+   },
+   {
+    "scene": "recipe",
+    "passed": true,
+    "seconds": 13.1,
+    "sent": {
+     "gonza": [
+      "Here is your family recipe preview, not sent, just a preview here:\n\nGrandma's pumpkin puree\n\nIngredients:\n300 g pumpkin\n100 g water\n\nSteps:\nCook pumpkin with water for 20 min at 100°C on speed 1\nBlend for 30 sec on speed 5\n\nI added the pumpkin to your shopping list (water is from the tap so I left it off).\n\nThis one is for you for now, Theo is a newborn, so his pediatrician can say when to start.",
+      "I can't send it to Cookidoo from here. That is done from Meta's Muse app."
+     ],
+     "ceci": [
+      "Hold until 16:00 is up, humidity is still 71.2% in Theo's room, so I've turned the dehumidifier on."
+     ],
+     "echo": []
+    },
+    "tools": [
+     "GetLiveContext",
+     "HassTurnOn",
+     "forget",
+     "wake_me_at",
+     "notify",
+     "preview_family_recipe",
+     "HassListAddItem",
+     "HassListAddItem",
+     "notify"
+    ],
+    "decision": "Hold expired at 16:00, humidity still 71.2% >60% so turned dehumidifier on and cleared hold.",
+    "failed": false
+   },
+   {
+    "scene": "carseat",
+    "passed": true,
+    "seconds": 12.9,
+    "sent": {
+     "gonza": [
+      "Humidity in Theo's room is still 63.2 %, the dehumidifier is on and working. I'll check again in an hour."
+     ],
+     "ceci": [],
+     "echo": []
+    },
+    "tools": [
+     "GetLiveContext",
+     "wake_me_at",
+     "notify",
+     "GetLiveContext",
+     "wake_me_at",
+     "start_car_seat_coach"
+    ],
+    "decision": "Checked dehumidifier: humidity 63.2% still above 60, dehumidifier on. Notified on-duty parent, attempted to schedule recheck but rejected due to chain limit.",
+    "failed": false
+   }
+  ],
+  "facts": {},
+  "log": [
+   {
+    "id": 4,
+    "ts": "2026-12-15T18:05:00-03:00",
+    "kind": "diaper",
+    "details": {
+     "wet": true,
+     "solid": true
+    }
+   },
+   {
+    "id": 5,
+    "ts": "2026-12-15T20:40:00-03:00",
+    "kind": "feeding",
+    "details": {
+     "amount_ml": 90,
+     "method": "bottle"
+    }
+   },
+   {
+    "id": 6,
+    "ts": "2026-12-16T00:12:00-03:00",
+    "kind": "feeding",
+    "details": {
+     "amount_ml": 80,
+     "method": "bottle",
+     "simulated": true
+    }
+   },
+   {
+    "id": 7,
+    "ts": "2026-12-16T03:00:00-03:00",
+    "kind": "feeding",
+    "details": {
+     "amount_ml": 90,
+     "method": "bottle"
+    }
+   },
+   {
+    "id": 8,
+    "ts": "2026-12-16T06:20:00-03:00",
+    "kind": "feeding",
+    "details": {
+     "amount_ml": 90,
+     "method": "bottle",
+     "simulated": true
+    }
+   },
+   {
+    "id": 9,
+    "ts": "2026-12-16T09:30:00-03:00",
+    "kind": "feeding",
+    "details": {
+     "amount_ml": 95,
+     "method": "bottle",
+     "simulated": true
+    }
+   },
+   {
+    "id": 10,
+    "ts": "2026-12-16T12:29:00-03:00",
+    "kind": "feeding",
+    "details": {
+     "amount_ml": 80,
+     "method": "bottle",
+     "simulated": true
+    }
+   },
+   {
+    "id": 11,
+    "ts": "2026-12-16T15:27:00-03:00",
+    "kind": "feeding",
+    "details": {
+     "amount_ml": 85,
+     "method": "bottle",
+     "simulated": true
+    }
+   }
+  ],
+  "passed": 10,
+  "of": 10
+ }
+]

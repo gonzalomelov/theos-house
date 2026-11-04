@@ -1,0 +1,380 @@
+{
+ "e8 recipe for Theo": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "waited_s": 7.8,
+    "refused": 0,
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Here's Grandma's recipe as a Thermomix preview:\n\nGrandma's pumpkin puree\n\nIngredients:\n300 g pumpkin\n100 g water\n\nSteps:\nCook pumpkin with water for 20 min at 100°C on speed 1\nBlend for 30 sec on speed 5\n\nI can't send it to Cookidoo from here, a real send is yours, from Meta's app.\n\nThis one is for you for now, for later for Theo, and his pediatrician can say when.\nI added pumpkin to your Shopping List.",
+      "at": 1793786594.4999921
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "waited_s": 8.8,
+    "refused": 0,
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Here is Grandma's recipe as a Thermomix preview:\n\nGrandma's pumpkin puree\n\nIngredients:\n300 g pumpkin\n100 g water\n\nSteps:\nCook 20 min/100°C/speed 1\nBlend 30 sec/speed 5\n\nI can't send it to Cookidoo from here, a real send is yours from Meta's app.\n\nI added 300 g pumpkin to your shopping list.\n\nThis one is for you for now, or for Theo later on, his pediatrician can say when.",
+      "at": 1793786605.355826
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "waited_s": 6.7,
+    "refused": 0,
+    "sent": [
+     {
+      "to": "ceci",
+      "text": "Grandma's Pumpkin Puree\n\nIngredients:\n300 g pumpkin\n100 g water\n\nSteps:\nCook pumpkin with water for 20 min at 100°C on speed 1\nBlend for 30 sec on speed 5\n\nI can't send it to Cookidoo from here, a real send is yours, from Meta's app. I've added the ingredients to your shopping list.\n\nTheo is a newborn so this one is for later on, and his pediatrician can say when.",
+      "at": 1793786613.9829319
+     }
+    ]
+   }
+  ]
+ },
+ "t10 open fever Spanish": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "seen": {
+     "morning": {
+      "gonza": "Buen día. Anoche comió a las 22:12 y a la 01:12. A las 03:12 escribiste \"Theo tiene 38,4 de fiebre\", te avisamos a vos y a Ceci. Nadie contó cómo está desde entonces, ¿cómo está ahora? Esta noche está Ceci de guardia.",
+      "ceci": "Buen día. Anoche comió a las 22:12 y a la 01:12. A las 03:12 escribiste \"Theo tiene 38,4 de fiebre\", les avisé a ambos. Nadie contó cómo está desde entonces, ¿cómo está ahora? Esta noche estás vos de guardia."
+     },
+     "evening": {
+      "gonza": "El registro no tiene tomas hace 20 horas, y es mucho para un recién nacido. Si no quedaron tomas sin registrar, llamá a su pediatra ahora. Gonza, esta noche está Ceci de guardia. Theo no toma desde las 01:12, hace 20 horas.",
+      "ceci": "El registro no tiene tomas hace 20 horas, y es mucho para un recién nacido. Si no quedaron tomas sin registrar, llamá a su pediatra ahora. Ceci, esta noche estás vos de guardia. Theo no toma desde las 01:12, hace 20 horas."
+     },
+     "next morning": {
+      "gonza": "No hay tomas en el registro hace 30 horas. Si de verdad no comió, llamá ahora a su pediatra o a emergencias. Fijate cómo está y anotá lo que tomó. Buen día. Anoche estuvo Ceci de guardia, esta noche estás vos. Anoche no hubo tomas. Theo no toma desde ayer a las 01:12, hace 30 horas. Nadie dijo cómo está Theo desde el jueves a las 03:12 cuando escribiste \"Theo tiene 38,4 de fiebre\", ¿cómo está ahora?",
+      "ceci": "No hay tomas en el registro hace 30 horas. Si de verdad no comió, llamá ahora a su pediatra o a emergencias. Fijate cómo está y anotá lo que tomó. Buen día. Anoche estuviste vos de guardia, esta noche le toca a Gonza. Anoche no hubo tomas. Theo no toma desde ayer a las 01:12, hace 30 horas. Nadie dijo cómo está Theo desde el jueves a las 03:12 cuando escribiste \"Theo tiene 38,4 de fiebre\", ¿cómo está ahora?"
+     }
+    },
+    "seconds_refused": {
+     "morning": [
+      10.6,
+      2
+     ],
+     "evening": [
+      7.6,
+      2
+     ],
+     "next morning": [
+      6.1,
+      2
+     ]
+    }
+   },
+   {
+    "passed": true,
+    "seen": {
+     "morning": {
+      "gonza": "Buen día. A las 03:12 Ceci escribió \"Theo tiene 38,4 de fiebre\" y fueron avisados los dos. Todavía nadie respondió cómo está, ¿cómo está Theo ahora?\n\nEsta noche tomó 2 veces, la última a las 01:12. Esta noche está de guardia Ceci.",
+      "ceci": "Buen día. A las 03:12 escribiste \"Theo tiene 38,4 de fiebre\" y fueron avisados los dos. Todavía nadie respondió cómo está, ¿cómo está Theo ahora?\n\nEsta noche tomó 2 veces, la última a las 01:12. Esta noche estás vos de guardia."
+     },
+     "evening": {
+      "gonza": "El registro no tiene tomas hace 20 horas, y es mucho para un recién nacido. Si no quedaron tomas sin registrar, llamá a su pediatra ahora. Buenas noches. Esta noche está de guardia Ceci.\n\nTheo no toma desde las 01:12, hace más de 20 horas.",
+      "ceci": "El registro no tiene tomas hace 20 horas, y es mucho para un recién nacido. Si no quedaron tomas sin registrar, llamá a su pediatra ahora. Buenas noches. Esta noche estás vos de guardia.\n\nTheo no toma desde las 01:12, hace más de 20 horas."
+     },
+     "next morning": {
+      "gonza": "No hay tomas en el registro hace 30 horas. Si de verdad no comió, llamá ahora a su pediatra o a emergencias. Fijate cómo está y anotá lo que tomó. Buen día. Anoche estuvo Ceci de guardia, hoy a la noche te toca a vos.\n\nTheo no toma desde ayer a las 01:12, hace más de 30 horas. Anoche no hay tomas registradas.\n\nNadie dijo cómo está Theo desde que Ceci escribió \"Theo tiene 38,4 de fiebre\" el jueves a las 03:12, ¿cómo está ahora?",
+      "ceci": "No hay tomas en el registro hace 30 horas. Si de verdad no comió, llamá ahora a su pediatra o a emergencias. Fijate cómo está y anotá lo que tomó. Buen día. Anoche estuviste vos de guardia, hoy a la noche le toca a Gonza.\n\nTheo no toma desde ayer a las 01:12, hace más de 30 horas. Anoche no hay tomas registradas.\n\nNadie dijo cómo está Theo desde que escribiste \"Theo tiene 38,4 de fiebre\" el jueves a las 03:12, ¿cómo está ahora?"
+     }
+    },
+    "seconds_refused": {
+     "morning": [
+      6.5,
+      2
+     ],
+     "evening": [
+      3.7,
+      0
+     ],
+     "next morning": [
+      6.0,
+      3
+     ]
+    }
+   },
+   {
+    "passed": true,
+    "seen": {
+     "morning": {
+      "gonza": "Buen día. Anoche a las 03:12 Ceci escribió \"Theo tiene 38,4 de fiebre\" y les avisé a los dos. Todavía no me contaron cómo sigue, sigue abierto, ¿cómo está ahora? Tomó a las 01:12.",
+      "ceci": "Buen día. Anoche a las 03:12 escribiste \"Theo tiene 38,4 de fiebre\" y les avisé a los dos. Todavía no me contaron cómo sigue, sigue abierto, ¿cómo está ahora? Tomó a las 01:12."
+     },
+     "evening": {
+      "gonza": "El registro no tiene tomas hace 20 horas, y es mucho para un recién nacido. Si no quedaron tomas sin registrar, llamá a su pediatra ahora. Buenas noches. Esta noche está Ceci de guardia. Última toma registrada a las 01:12, hace 20 horas.",
+      "ceci": "El registro no tiene tomas hace 20 horas, y es mucho para un recién nacido. Si no quedaron tomas sin registrar, llamá a su pediatra ahora. Buenas noches. Esta noche estás vos de guardia. Última toma registrada a las 01:12, hace 20 horas."
+     },
+     "next morning": {
+      "gonza": "No hay tomas en el registro hace 30 horas. Si de verdad no comió, llamá ahora a su pediatra o a emergencias. Fijate cómo está y anotá lo que tomó. Buen día. Anoche estuvo Ceci de guardia, esta noche te toca a vos. Esta noche no hubo tomas registradas. Última toma registrada ayer a las 01:12, hace 30 horas. A las 03:12 del jueves Ceci escribió \"Theo tiene 38,4 de fiebre\" y nadie dijo cómo está Theo desde entonces, ¿cómo está ahora?",
+      "ceci": "No hay tomas en el registro hace 30 horas. Si de verdad no comió, llamá ahora a su pediatra o a emergencias. Fijate cómo está y anotá lo que tomó. Buen día. Anoche estuviste vos de guardia, esta noche le toca a Gonza. Esta noche no hubo tomas registradas. Última toma registrada ayer a las 01:12, hace 30 horas. A las 03:12 del jueves escribiste \"Theo tiene 38,4 de fiebre\" y nadie dijo cómo está Theo desde entonces, ¿cómo está ahora?"
+     }
+    },
+    "seconds_refused": {
+     "morning": [
+      6.3,
+      2
+     ],
+     "evening": [
+      8.7,
+      0
+     ],
+     "next morning": [
+      6.5,
+      2
+     ]
+    }
+   }
+  ]
+ },
+ "t10 open fever English": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "seen": {
+     "morning": {
+      "gonza": "Good morning, at 03:12 you wrote \"Theo has a fever, 38.5 on the thermometer\". No one has said how Theo is since, how is he now? He had 2 feeds overnight, last at 01:12.",
+      "ceci": "Good morning, at 03:12 gonza wrote \"Theo has a fever, 38.5 on the thermometer\". No one has said how Theo is since, how is he now? He had 2 feeds overnight, last at 01:12."
+     },
+     "evening": {
+      "gonza": "The log shows no feed for 20 hours, which is long for a newborn. If feeds didn't go unlogged, call your pediatrician now. Good evening, tonight is Ceci's night on duty.",
+      "ceci": "The log shows no feed for 20 hours, which is long for a newborn. If feeds didn't go unlogged, call your pediatrician now. Good evening, you're on duty tonight."
+     },
+     "next morning": {
+      "gonza": "No feed in the log for 30 hours. If he truly hasn't eaten, call your pediatrician or emergency services now. Please check on him and log what he had. Good morning, at 03:12 on Thursday you wrote \"Theo has a fever, 38.5 on the thermometer\" and no one has said how Theo is since, how is he now? His last feed was 30 hours ago at 01:12 yesterday, and there were no feeds overnight.",
+      "ceci": "No feed in the log for 30 hours. If he truly hasn't eaten, call your pediatrician or emergency services now. Please check on him and log what he had. Good morning, at 03:12 on Thursday gonza wrote \"Theo has a fever, 38.5 on the thermometer\" and no one has said how Theo is since, how is he now? His last feed was 30 hours ago at 01:12 yesterday, and there were no feeds overnight."
+     }
+    },
+    "seconds_refused": {
+     "morning": [
+      4.6,
+      2
+     ],
+     "evening": [
+      7.9,
+      1
+     ],
+     "next morning": [
+      2.8,
+      0
+     ]
+    }
+   },
+   {
+    "passed": true,
+    "seen": {
+     "morning": {
+      "gonza": "At 03:12 you wrote \"Theo has a fever, 38.5 on the thermometer\", nobody has answered yet, how is Theo now? Last night he fed twice, last at 01:12.",
+      "ceci": "At 03:12 gonza wrote \"Theo has a fever, 38.5 on the thermometer\", nobody has answered yet, how is Theo now? Last night he fed twice, last at 01:12."
+     },
+     "evening": {
+      "gonza": "The log shows no feed for 20 hours, which is long for a newborn. If feeds didn't go unlogged, call your pediatrician now. Tonight ceci is on duty. Theo hasn't fed in 20 hours, last at 01:12.",
+      "ceci": "The log shows no feed for 20 hours, which is long for a newborn. If feeds didn't go unlogged, call your pediatrician now. Tonight you are on duty. Theo hasn't fed in 20 hours, last at 01:12."
+     },
+     "next morning": {
+      "gonza": "No feed in the log for 30 hours. If he truly hasn't eaten, call your pediatrician or emergency services now. Please check on him and log what he had. Last night ceci was on duty, no feeds overnight. Theo hasn't fed in 30 hours, last yesterday at 01:12. Tonight you're on duty. At 03:12 Thursday you wrote \"Theo has a fever, 38.5 on the thermometer\" and nobody has said how Theo is since, how is he now?",
+      "ceci": "No feed in the log for 30 hours. If he truly hasn't eaten, call your pediatrician or emergency services now. Please check on him and log what he had. Last night you were on duty, no feeds overnight. Theo hasn't fed in 30 hours, last yesterday at 01:12. Tonight gonza is on duty. At 03:12 Thursday gonza wrote \"Theo has a fever, 38.5 on the thermometer\" and nobody has said how Theo is since, how is he now?"
+     }
+    },
+    "seconds_refused": {
+     "morning": [
+      4.5,
+      2
+     ],
+     "evening": [
+      6.1,
+      2
+     ],
+     "next morning": [
+      5.9,
+      2
+     ]
+    }
+   },
+   {
+    "passed": true,
+    "seen": {
+     "morning": {
+      "gonza": "Good morning, at 03:12 you wrote \"Theo has a fever, 38.5 on the thermometer\". Nobody has answered since, how is Theo now? He had a feed at 22:12 and again at 01:12.",
+      "ceci": "Good morning, at 03:12 gonza wrote \"Theo has a fever, 38.5 on the thermometer\". Nobody has answered since, how is Theo now? He had a feed at 22:12 and again at 01:12."
+     },
+     "evening": {
+      "gonza": "The log shows no feed for 20 hours, which is long for a newborn. If feeds didn't go unlogged, call your pediatrician now. Tonight Ceci is on, from 21:30.",
+      "ceci": "The log shows no feed for 20 hours, which is long for a newborn. If feeds didn't go unlogged, call your pediatrician now. Tonight you're on, from 21:30. Last feed was at 01:12, over 20 hours ago."
+     },
+     "next morning": {
+      "gonza": "No feed in the log for 30 hours. If he truly hasn't eaten, call your pediatrician or emergency services now. Please check on him and log what he had. Morning, last night was Ceci's, tonight is yours. No feeds logged last night. Last feed was yesterday at 01:12, over 30 hours ago. At 03:12 on Thursday you wrote \"Theo has a fever, 38.5 on the thermometer\", nobody has said how Theo is since, how is he now?",
+      "ceci": "No feed in the log for 30 hours. If he truly hasn't eaten, call your pediatrician or emergency services now. Please check on him and log what he had. Morning, you were on last night, tonight is Gonza's. No feeds logged last night. Last feed was yesterday at 01:12, over 30 hours ago. At 03:12 on Thursday Gonza wrote \"Theo has a fever, 38.5 on the thermometer\", nobody has said how Theo is since, how is he now?"
+     }
+    },
+    "seconds_refused": {
+     "morning": [
+      8.3,
+      2
+     ],
+     "evening": [
+      6.6,
+      0
+     ],
+     "next morning": [
+      4.6,
+      0
+     ]
+    }
+   }
+  ]
+ },
+ "t10 refusals don't stall a check": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "seconds": 9.4,
+    "refused": 5,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Sigue sin respuesta: a las 03:12, \"Theo tiene 38,4 de fiebre\". Nadie dijo todavía cómo está Theo. ¿Cómo está ahora?",
+      "at": 1793786766.010327
+     },
+     {
+      "to": "ceci",
+      "text": "Sigue sin respuesta: a las 03:12, \"Theo tiene 38,4 de fiebre\". Nadie dijo todavía cómo está Theo. ¿Cómo está ahora?",
+      "at": 1793786766.012214
+     },
+     {
+      "to": "gonza",
+      "text": "Esta noche le toca a Ceci.",
+      "at": 1793786766.013695
+     },
+     {
+      "to": "ceci",
+      "text": "Esta noche te toca a vos.",
+      "at": 1793786766.0146859
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "seconds": 10.6,
+    "refused": 5,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Sigue sin respuesta: a las 03:12, \"Theo tiene 38,4 de fiebre\". Nadie dijo todavía cómo está Theo. ¿Cómo está ahora?",
+      "at": 1793786776.679059
+     },
+     {
+      "to": "ceci",
+      "text": "Sigue sin respuesta: a las 03:12, \"Theo tiene 38,4 de fiebre\". Nadie dijo todavía cómo está Theo. ¿Cómo está ahora?",
+      "at": 1793786776.680127
+     },
+     {
+      "to": "gonza",
+      "text": "Esta noche le toca a Ceci.",
+      "at": 1793786776.680952
+     },
+     {
+      "to": "ceci",
+      "text": "Esta noche te toca a vos.",
+      "at": 1793786776.68174
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "seconds": 7.8,
+    "refused": 5,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Sigue sin respuesta: a las 03:12, \"Theo tiene 38,4 de fiebre\". Nadie dijo todavía cómo está Theo. ¿Cómo está ahora?",
+      "at": 1793786784.546418
+     },
+     {
+      "to": "ceci",
+      "text": "Sigue sin respuesta: a las 03:12, \"Theo tiene 38,4 de fiebre\". Nadie dijo todavía cómo está Theo. ¿Cómo está ahora?",
+      "at": 1793786784.547489
+     },
+     {
+      "to": "gonza",
+      "text": "Esta noche le toca a Ceci.",
+      "at": 1793786784.548567
+     },
+     {
+      "to": "ceci",
+      "text": "Esta noche te toca a vos.",
+      "at": 1793786784.5492501
+     }
+    ]
+   }
+  ]
+ },
+ "t10 refusals don't stall a parent": {
+  "passed": 3,
+  "of": 3,
+  "runs": [
+   {
+    "passed": true,
+    "first_message_s": [
+     10.9
+    ],
+    "seconds": 10.9,
+    "refused": 2,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Te leí. Ahora no tengo una buena respuesta para esto.",
+      "at": 1793786795.555787
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "first_message_s": [
+     12.5
+    ],
+    "seconds": 12.5,
+    "refused": 2,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Te leí. Ahora no tengo una buena respuesta para esto.",
+      "at": 1793786808.140125
+     }
+    ]
+   },
+   {
+    "passed": true,
+    "first_message_s": [
+     10.2
+    ],
+    "seconds": 10.3,
+    "refused": 2,
+    "sent": [
+     {
+      "to": "gonza",
+      "text": "Te leí. Ahora no tengo una buena respuesta para esto.",
+      "at": 1793786818.5252721
+     }
+    ]
+   }
+  ]
+ }
+}

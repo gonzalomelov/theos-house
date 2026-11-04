@@ -73,12 +73,12 @@ GETS_READY = re.compile(r"warmer|prewarm|pre-warm|warm the|bottle|mamadera|calen
 HOT_ROOM, COLD_ROOM = 28.0, 14.0
 FEED_GAP_H, STALE_LOG_H = 8, 48
 # A fever a parent names as over. Only these exact shapes, closed off by a stop or an "and": "the fever is over 39" and "la fiebre pasó a 39" aren't one.
-FEVER_OVER = re.compile(r"\b(?:(?:yesterday'?s |last night'?s )?(?:the |his |that )?fever(?:(?:'s|\s+is|\s+has)(?:\s+already)?\s+(?:gone(?:\s+away)?|over|passed|broken)|\s+gone|\s+(?:already\s+)?(?:broke|passed|went away))"
+FEVER_OVER = re.compile(r"\b(?:(?:yesterday'?s |last night'?s )?(?:the |his |that )?fever(?:(?:'s|\s+is|\s+has)(?:\s+(?:already|finally|now|completely))?\s+(?:gone(?:\s+away)?|over|passed|broken)|\s+gone|\s+(?:already\s+)?(?:broke|passed|went away))"
                         r"|no more fever|no longer has (?:a )?fever|no (?:longer a )?fever (?:anymore|any more)|(?:doesn'?t|does not) have (?:a )?fever (?:anymore|any more)"
                         r"|(?:(?:la|su|esa) )?fiebre(?: de (?:ayer|anoche))?(?: ya)?(?: se)?(?: le)?(?: ya)? (?:pas[oó]|fue|termin[oó]|cort[oó]|cedi[oó])|(?:(?:la|su|esa) )?fiebre(?: de (?:ayer|anoche))? ya(?: le)? baj[oó]"
                         r"|(?:ya )?(?:se )?(?:le )?(?:pas[oó]|fue|termin[oó]|cort[oó]) (?:la|su|esa) fiebre|ya(?: le)? baj[oó] (?:la|su) fiebre"
                         r"|ya no (?:tiene|hay|tuvo)(?: m[aá]s)? fiebre|no (?:tiene|hay) m[aá]s fiebre)"
-                        r"(?:\s+(?:ya|hoy|anoche|ahora|now|today|already|yesterday|last night|this morning|esta ma[ñn]ana|ayer))*(?=\s*(?:$|[,.;:!\n]|(?:y|and)\b))", re.I)
+                        r"(?:\s+(?:ya|hoy|anoche|ahora|now|today|already|yesterday|last night|this morning|this afternoon|esta ma[ñn]ana|esta tarde|a la tarde|a la ma[ñn]ana|ayer))*(?=\s*(?:$|[,.;:!\n]|(?:y|and)\b))", re.I)
 # Words that put it in doubt, anywhere in the message: then the fever line fires as ever.
 FEVER_DOUBT = re.compile(r"\b(?:pero|but|though|although|aunque|however|sin embargo|volvi\w*|vuelve|vuelta|de nuevo|otra vez|again|came back|comes? back|coming back|back up|returned|sub\w+|going up|gone up|rising"
                          r"|creo|parece|capaz|quiz[aá]s?|tal vez|supongo|ojal[aá]|espero|i think|i guess|i hope|i wish|seems?|maybe|probably|hopefully|looks like|no s[eé]|not sure|dunno"

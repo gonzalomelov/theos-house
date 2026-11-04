@@ -1,0 +1,30 @@
+[
+ {
+  "plug_off": {
+   "plug": "on",
+   "moves": [
+    "HassTurnOn"
+   ],
+   "tools": [
+    "GetLiveContext",
+    "HassTurnOn",
+    "wake_me_at"
+   ]
+  },
+  "plug_already_on": {
+   "plug": "on",
+   "moves": [],
+   "tools": [
+    "GetLiveContext"
+   ]
+  },
+  "low_humidity": {
+   "plug": "off",
+   "moves": [],
+   "tools": [
+    "GetLiveContext"
+   ]
+  },
+  "passed": true
+ }
+]

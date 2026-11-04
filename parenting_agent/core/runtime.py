@@ -316,10 +316,14 @@ def preview_of(calls):
 
 
 def recipe_shown(arguments, words):
-    """The phone has the recipe when most of its ingredients are in what went out."""
-    items = [re.findall(r"[^\W\d_]{4,}", str(item).lower()) for item in arguments.get("ingredients") or []]
+    """The phone has the recipe when most of its ingredients and most of its steps are in what went out. "Your sweet potato soup is ready" names an ingredient and shows nothing (Nov 4)."""
     words = words.lower()
-    return sum(any(w in words for w in item) for item in items) * 2 >= len(items)
+
+    def most(parts):
+        found = [re.findall(r"[^\W\d_]{4,}", str(part).lower()) for part in parts]
+        return sum(any(w in words for w in part) for part in found) * 2 >= len(found)
+    steps = [step.get("text", step) if isinstance(step, dict) else step for step in arguments.get("steps") or []]
+    return most(arguments.get("ingredients") or []) and most(steps)
 
 
 def recipe_card(arguments, lang):
