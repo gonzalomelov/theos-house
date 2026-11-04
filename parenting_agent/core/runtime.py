@@ -79,6 +79,8 @@ REMINDED = {"es": "Recordatorio que me pediste: {why}", "en": "The reminder you 
 NO_COOKIDOO = {"es": "No puedo enviarla a Cookidoo desde acá. Eso se hace desde la app Muse de Meta.", "en": "I can't send it to Cookidoo from here. That is done from Meta's Muse app."}
 CLOSED_LINE = {"es": '{who} escribió: "{words}"', "en": '{who} wrote: "{words}"'}
 HANDED_OVER = {"es": "{who} me dijo que esta noche te toca a vos. Si no es así, avisame.", "en": "{who} told me you're on tonight. If that's not right, tell me."}
+ECHO_ON = {"es": "En el Echo de la cocina dijeron que esta noche te toca a vos. Si no es así, avisame.", "en": "Someone at the kitchen Echo said you're on tonight. If that's not right, tell me."}
+ECHO_OFF = {"es": "En el Echo de la cocina dijeron que esta noche se encarga {who}. Si no es así, avisame.", "en": "Someone at the kitchen Echo said {who} is on tonight. If that's not right, tell me."}
 DEHUMIDIFIER = "Tapo P110 - Dehumidifier"
 RECHECK_AIR_MIN = 30
 RECHECK_AIR = "read the humidity again with GetLiveContext: a reading jumped, and you said you would wait for another one. If it still reads high it is real: treat it like any high reading, and tell the parent on duty the reading"
@@ -552,7 +554,7 @@ class Core:
         """Why this message can't wake this parent, or None. At night only the parent on duty, whoever wrote to the agent, or an emergency."""
         moment = self.now()
         real = emergency and self.real_danger
-        if real or not is_night(moment) or parent == self.sender or parent in (self.duty_told, self.alarm_writer, self.reminder_for):
+        if real or not is_night(moment) or parent == self.sender or parent in (self.duty_told, self.duty_off, self.alarm_writer, self.reminder_for):
             return None
         duty = who_is_on(moment, await tools_mod.facts(self.store, self.settings.home))
         if parent == duty:
@@ -569,7 +571,11 @@ class Core:
         other = next(p for p in tools_mod.PARENTS if p != self.sender) if self.sender in tools_mod.PARENTS else None
         if not self.sender:
             return ""
-        if parent == other or not other:  # not a parent's word at all: still only a claim
+        if not other:  # at the Echo nobody can tell who spoke: a claim both parents hear, and either can say no
+            self.duty_told, self.duty_off = parent, next(p for p in tools_mod.PARENTS if p != parent)
+            return (f" The Echo can't tell who spoke, so this is a claim. Tell {parent} and {self.duty_off} now, each in one line, what was said at the Echo, so either can say no."
+                    + (f" {self.duty_off} is off tonight, so set quiet for them." if is_night(moment) else ""))
+        if parent == other:
             self.duty_told = parent
             return f" {parent} doesn't know yet and the next cry reaches them. Tell {parent} now, in one line, that {self.sender} passed them this night, so they can say no."
         if is_night(moment):
@@ -907,7 +913,7 @@ class Core:
         self.reminder_for = why[len(REMINDER) + 1:].split(":", 1)[0] if why.startswith(f"{REMINDER}:") else None
         self.real_danger = a_real_danger(event, self.heard)
         self.a_cry = a_cry(event)
-        self.duty_told = None
+        self.duty_told = self.duty_off = None
         self.room_reading = safety.unsafe_room(event["payload"]) if event["type"] == "state_changed" else None
         self.about_recipe = event["type"] == "recipe" or bool(safety.RECIPE_WORDS.search(self.heard))
         self.frightened = self.sender in tools_mod.PARENTS and safety.frightened(self.heard)
@@ -1427,7 +1433,9 @@ class Core:
             for key in [k for k, _ in plans_of(facts)] + [k for k in facts if k.startswith("duty_note_")]:
                 await self.store.adelete((*tools_mod.FACTS, self.settings.home), key)
         if self.duty_told and not any(tool == "notify" and arguments.get("parent") == self.duty_told and (result or "").startswith("Sent") for tool, arguments, result in calls):  # nobody gets a night without hearing it
-            await self.say_fixed(event, self.duty_told, HANDED_OVER[lang].format(who=str(self.sender).capitalize()))
+            await self.say_fixed(event, self.duty_told, ECHO_ON[lang] if self.duty_off else HANDED_OVER[lang].format(who=str(self.sender).capitalize()))
+        if self.duty_off and not any(tool == "notify" and arguments.get("parent") == self.duty_off and (result or "").startswith("Sent") for tool, arguments, result in calls):
+            await self.say_fixed(event, self.duty_off, ECHO_OFF[lang].format(who=self.duty_told.capitalize()), quiet=is_night(moment))
         if event["type"] == "schedule":
             await self.check_said(event, calls, facts, lang)
         if self.follow_up and not is_night(moment) and len(sent_to(calls)) == 1 and any(a_said_alarm(k) for k in facts):  # one question, and by day the other parent hears once if nobody answers. At night the morning check does it.
@@ -1592,7 +1600,11 @@ class Core:
             asks.append(f"A person switched {event['hand']} by hand and nobody has heard from you. Tell the parent on duty in one short line, or ask them. At night, set quiet.")
         said_to = sent_to(calls)
         if self.duty_told and self.duty_told not in said_to:
-            asks.append(f"{self.sender} changed who is on duty and {self.duty_told} doesn't know. Tell {self.duty_told} in one line, so they can say if it's wrong.")
+            asks.append(f"{'Someone at the kitchen Echo' if self.duty_off else self.sender} changed who is on duty and {self.duty_told} doesn't know. Tell {self.duty_told} in one line, so they can say if it's wrong.")
+        if self.duty_off and self.duty_off not in said_to:
+            asks.append(f"What was said at the kitchen Echo took {self.duty_off} off duty and {self.duty_off} doesn't know. Tell {self.duty_off} in one line, so they can say if it's wrong.")
+        if event["ask"] and not self.channel.hold:
+            asks.append("Someone is waiting at the kitchen Echo and has heard nothing from you. Answer them with say_on_echo, in one short spoken sentence.")
         if event["type"] == "camera" and event["payload"].get("verdict") == "off":
             if not told:
                 asks.append("No hand is on the baby at the changing table and nobody has heard from you. Tell the parent on duty lightly, in one short line, what the camera saw, and to put a hand on him.")

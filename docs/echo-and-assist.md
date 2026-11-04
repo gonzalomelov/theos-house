@@ -35,6 +35,13 @@ words since Oct 1 (its `voice_command` is empty). In the Alexa app, More, Alexa 
 to save voice recordings, then say "Alexa, agente del bebé, ¿cuándo comió Theo por última vez?" once. That the setting
 is the cause is not verified.
 
+## The Alexa skill on the persistent agent, Nov 4
+
+The skill reaches `echo_app` in `parenting_agent/core/server.py`, on port 8767 under the old agent's name. It names nobody, so the speaker is "someone in the kitchen". The words decide: "Soy Ceci, esta noche necesito dormir, ¿se puede encargar Gonza?" moves the night to Gonza, as a claim both parents hear on the phone, either of whom can say no. With no name the duty stays and the Echo asks who is speaking. Results: `results/echo-sleep/README.md`.
+
+- `core.sh` gives the agent Home Assistant's token. The skill's is separate (`voice-skill-token`), so the agent takes it only with `ECHO_SKILL=1` next to `CUTOVER=1` on deploy. Without it the skill's own token gets a 401 and the Echo says it couldn't reach the agent.
+- Alexa waits 8 seconds and the skill 6. `/ask` answers as soon as Muse says something on the Echo, and the phones can follow. Later, the skill's "de nuevo" with the same request id gets the first answer and runs nothing twice.
+
 ## The first design, Oct 29
 
 Built Oct 29 2026, inside the event. Today the agent can only announce on the kitchen Echo. This adds the way back: the parent says "baby agent, fed 90 ml" and the agent logs it and answers out loud.

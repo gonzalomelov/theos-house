@@ -10,6 +10,7 @@
 # PA_ALLOWED_DEVICES, PA_WATCH_DELTA and PA_HOME_ID in front of deploy are passed on. Secrets are never printed and never in git.
 # CUTOVER=1 in front of deploy makes Telegram, the Echo and the baby log real (deploy/core/compose.cutover.yml). It refuses while the
 # old agent runs, since only one process can poll the bot. Without it the core can't message anyone.
+# ECHO_SKILL=1 next to CUTOVER=1 lets the Alexa skill's own token in, through its existing door. Without it only Home Assistant's token is accepted.
 set -eu
 HOST="${VOSTRO_HOST:-vostro}"
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -26,7 +27,7 @@ deploy() {
   SHA="$(git rev-parse --short=12 HEAD)"
   git archive --format=tar HEAD .dockerignore deploy parenting_agent config requirements-core.txt | ssh "$HOST" \
     'set -eu; rm -rf ~/apps/parenting-core.incoming ~/apps/parenting-core; mkdir -p ~/apps/parenting-core.incoming; tar -xf - -C ~/apps/parenting-core.incoming; mv ~/apps/parenting-core.incoming ~/apps/parenting-core'
-  ssh "$HOST" "SHA=$SHA CUTOVER='${CUTOVER:-}' PA_ALLOWED_DEVICES='${PA_ALLOWED_DEVICES:-none}' PA_WATCH_DELTA='${PA_WATCH_DELTA:-}' PA_HOME_ID='${PA_HOME_ID:-alongside}' sh -s" <<REMOTE_END
+  ssh "$HOST" "SHA=$SHA CUTOVER='${CUTOVER:-}' ECHO_SKILL='${ECHO_SKILL:-}' PA_ALLOWED_DEVICES='${PA_ALLOWED_DEVICES:-none}' PA_WATCH_DELTA='${PA_WATCH_DELTA:-}' PA_HOME_ID='${PA_HOME_ID:-alongside}' sh -s" <<REMOTE_END
 $REMOTE
 umask 077
 [ -z "\$CUTOVER" ] || [ "\$(docker inspect parenting-agent --format '{{.State.Running}}' 2>/dev/null)" != true ] || { echo "the old agent is running: stop it first" >&2; exit 1; }
@@ -37,6 +38,7 @@ PASS="\$(grep -E '^POSTGRES_PASSWORD=' "\$ENV_FILE" 2>/dev/null || echo "POSTGRE
   if [ -n "\$CUTOVER" ]; then
     grep -E '^(BABYBUDDY_TOKEN|TELEGRAM_BOT_TOKEN|TELEGRAM_CHAT_ID|TELEGRAM_CECI_CHAT_ID|WHATSAPP_[A-Z_]+|TWILIO_[A-Z_]+)=' "\$OLD"
     echo "PARENTING_AGENT_VOICE_TOKEN=\$(cat "\$HOME/apps/parenting-agent-data/voice-bridge-token")"
+    [ -z "\$ECHO_SKILL" ] || echo "PARENTING_AGENT_SKILL_TOKEN=\$(cat "\$HOME/apps/parenting-agent-data/voice-skill-token")"
   fi; } > "\$ENV_FILE.tmp"
 mv "\$ENV_FILE.tmp" "\$ENV_FILE"
 export APP_TAG="\$SHA"

@@ -1,0 +1,267 @@
+{
+ "already his night": [
+  {
+   "name": "already his night",
+   "lang": "en",
+   "words": "this is ceci i need to sleep tonight can gonza take the night",
+   "moment": "2026-12-16T21:45:00-03:00",
+   "spoken": [
+    {
+     "said": "The baby agent is still thinking. Say again in a moment and I'll tell you.",
+     "seconds": 6.0
+    },
+    {
+     "said": "Got it, Gonza is on tonight.",
+     "seconds": 0.0
+    }
+   ],
+   "first_line_seconds": 6.0,
+   "holding_turns": 1,
+   "message_events": 1,
+   "status": [
+    "done"
+   ],
+   "outcome": [
+    "Put gonza on duty for the night of 2026-12-16. Told gonza. Told ceci. Spoke on the Echo."
+   ],
+   "duty": "gonza",
+   "sent": [
+    {
+     "to": "gonza",
+     "text": "No feed in the log for 25 hours. If he truly hasn't eaten, call your pediatrician or emergency services now. Please check on him and log what he had."
+    },
+    {
+     "to": "ceci",
+     "text": "No feed in the log for 25 hours. If he truly hasn't eaten, call your pediatrician or emergency services now. Please check on him and log what he had."
+    },
+    {
+     "to": "gonza",
+     "text": "Said at the kitchen Echo that Ceci needs to sleep tonight, you're on tonight, let us know if that's wrong."
+    },
+    {
+     "to": "ceci",
+     "text": "Heard at the kitchen Echo that you need to sleep tonight, Gonza is on tonight, tell us if that's not right."
+    },
+    {
+     "to": "echo",
+     "text": "Got it, Gonza is on tonight."
+    }
+   ],
+   "tools": [
+    [
+     "muse_note",
+     "Done because Echo request to swap duty: set Gonza on duty tonight and notified both + Echo."
+    ],
+    [
+     "say_on_echo",
+     "Said on the kitchen Echo."
+    ],
+    [
+     "notify",
+     "Sent to ceci."
+    ],
+    [
+     "notify",
+     "Sent to gonza."
+    ],
+    [
+     "set_on_duty",
+     "gonza is on duty the night of 2026-12-16. The Echo can't tell who spoke, so this is a claim. Tell gonza and ceci now, each in one line, what"
+    ],
+    [
+     "gap_message",
+     "No feed in the log for 25 hours. If he truly hasn't eaten, call your pediatrician or emergency services now. Please check on him and log wha"
+    ],
+    [
+     "gap_message",
+     "No feed in the log for 25 hours. If he truly hasn't eaten, call your pediatrician or emergency services now. Please check on him and log wha"
+    ]
+   ],
+   "told": [
+    "ceci",
+    "gonza"
+   ],
+   "speakable": true,
+   "duty_moved": true,
+   "both_told": true,
+   "once": true,
+   "no_holding": false,
+   "cry_reached_gonza_only": null,
+   "passed": true
+  },
+  {
+   "name": "already his night",
+   "lang": "en",
+   "words": "this is ceci i need to sleep tonight can gonza take the night",
+   "moment": "2026-12-16T21:45:00-03:00",
+   "spoken": [
+    {
+     "said": "Got it, Gonza is on tonight.",
+     "seconds": 5.3
+    }
+   ],
+   "first_line_seconds": 5.3,
+   "holding_turns": 0,
+   "message_events": 1,
+   "status": [
+    "done"
+   ],
+   "outcome": [
+    "Put gonza on duty for the night of 2026-12-16. Told gonza. Spoke on the Echo. Told ceci. Refused or failed: Told ceci."
+   ],
+   "duty": "gonza",
+   "sent": [
+    {
+     "to": "gonza",
+     "text": "No feed in the log for 25 hours. If he truly hasn't eaten, call your pediatrician or emergency services now. Please check on him and log what he had."
+    },
+    {
+     "to": "ceci",
+     "text": "No feed in the log for 25 hours. If he truly hasn't eaten, call your pediatrician or emergency services now. Please check on him and log what he had."
+    },
+    {
+     "to": "gonza",
+     "text": "At the kitchen Echo someone said it's Ceci asking you to take tonight, you're on tonight. Say if that's not right."
+    },
+    {
+     "to": "echo",
+     "text": "Got it, Gonza is on tonight."
+    },
+    {
+     "to": "ceci",
+     "text": "At the kitchen Echo you asked for Gonza to take tonight, you're off, he's on tonight. Say if that's not right."
+    }
+   ],
+   "tools": [
+    [
+     "muse_note",
+     "Duty change via Echo handled: set Gonza on duty tonight per claim, notified both and Echo."
+    ],
+    [
+     "notify",
+     "Sent to ceci."
+    ],
+    [
+     "say_on_echo",
+     "Said on the kitchen Echo."
+    ],
+    [
+     "notify",
+     "Sent to gonza."
+    ],
+    [
+     "notify",
+     "Refused, nothing was sent: this goes to ceci, so write to them as you, not about Ceci. Say what you need from them."
+    ],
+    [
+     "set_on_duty",
+     "gonza is on duty the night of 2026-12-16. The Echo can't tell who spoke, so this is a claim. Tell gonza and ceci now, each in one line, what"
+    ],
+    [
+     "gap_message",
+     "No feed in the log for 25 hours. If he truly hasn't eaten, call your pediatrician or emergency services now. Please check on him and log wha"
+    ],
+    [
+     "gap_message",
+     "No feed in the log for 25 hours. If he truly hasn't eaten, call your pediatrician or emergency services now. Please check on him and log wha"
+    ]
+   ],
+   "told": [
+    "ceci",
+    "gonza"
+   ],
+   "speakable": true,
+   "duty_moved": true,
+   "both_told": true,
+   "once": true,
+   "no_holding": true,
+   "cry_reached_gonza_only": null,
+   "passed": true
+  },
+  {
+   "name": "already his night",
+   "lang": "en",
+   "words": "this is ceci i need to sleep tonight can gonza take the night",
+   "moment": "2026-12-16T21:45:00-03:00",
+   "spoken": [
+    {
+     "said": "Gonza is on duty tonight.",
+     "seconds": 3.6
+    }
+   ],
+   "first_line_seconds": 3.6,
+   "holding_turns": 0,
+   "message_events": 1,
+   "status": [
+    "done"
+   ],
+   "outcome": [
+    "Told gonza. Told ceci. Spoke on the Echo. Put gonza on duty for the night of 2026-12-16."
+   ],
+   "duty": "gonza",
+   "sent": [
+    {
+     "to": "gonza",
+     "text": "No feed in the log for 25 hours. If he truly hasn't eaten, call your pediatrician or emergency services now. Please check on him and log what he had."
+    },
+    {
+     "to": "ceci",
+     "text": "No feed in the log for 25 hours. If he truly hasn't eaten, call your pediatrician or emergency services now. Please check on him and log what he had."
+    },
+    {
+     "to": "gonza",
+     "text": "Heard at the kitchen Echo that Ceci asked you to take tonight, you're on duty, you can say no if needed."
+    },
+    {
+     "to": "ceci",
+     "text": "Heard at the kitchen Echo that you asked Gonza to take tonight, he's on duty, either of you can say no if needed."
+    },
+    {
+     "to": "echo",
+     "text": "Gonza is on duty tonight."
+    }
+   ],
+   "tools": [
+    [
+     "muse_note",
+     "We set Gonza on duty for tonight from Echo request and notified both; no feed for 25 hours remains to state if messaging about Theo."
+    ],
+    [
+     "set_on_duty",
+     "gonza is on duty the night of 2026-12-16. The Echo can't tell who spoke, so this is a claim. Tell gonza and ceci now, each in one line, what"
+    ],
+    [
+     "say_on_echo",
+     "Said on the kitchen Echo."
+    ],
+    [
+     "notify",
+     "Sent to ceci."
+    ],
+    [
+     "notify",
+     "Sent to gonza."
+    ],
+    [
+     "gap_message",
+     "No feed in the log for 25 hours. If he truly hasn't eaten, call your pediatrician or emergency services now. Please check on him and log wha"
+    ],
+    [
+     "gap_message",
+     "No feed in the log for 25 hours. If he truly hasn't eaten, call your pediatrician or emergency services now. Please check on him and log wha"
+    ]
+   ],
+   "told": [
+    "ceci",
+    "gonza"
+   ],
+   "speakable": true,
+   "duty_moved": true,
+   "both_told": true,
+   "once": true,
+   "no_holding": true,
+   "cry_reached_gonza_only": null,
+   "passed": true
+  }
+ ]
+}

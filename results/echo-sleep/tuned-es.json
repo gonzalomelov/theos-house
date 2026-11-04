@@ -1,0 +1,774 @@
+{
+ "scene": [
+  {
+   "name": "scene",
+   "lang": "es",
+   "words": "soy ceci esta noche necesito dormir se puede encargar gonza",
+   "moment": "2026-12-15T21:45:00-03:00",
+   "spoken": [
+    {
+     "said": "Anotado, Gonza queda de guardia esta noche.",
+     "seconds": 3.3
+    }
+   ],
+   "first_line_seconds": 3.3,
+   "holding_turns": 0,
+   "message_events": 1,
+   "status": [
+    "done"
+   ],
+   "outcome": [
+    "Told gonza. Spoke on the Echo. Put gonza on duty for the night of 2026-12-15. Told ceci. Refused or failed: Told ceci."
+   ],
+   "duty": "gonza",
+   "sent": [
+    {
+     "to": "gonza",
+     "text": "Gonza, Ceci dijo por el Echo que esta noche te encargás vos. Ya te dejé de guardia, si no podés decime y lo vemos."
+    },
+    {
+     "to": "echo",
+     "text": "Anotado, Gonza queda de guardia esta noche."
+    },
+    {
+     "to": "ceci",
+     "text": "Anotado, me pediste por el Echo que Gonza se encargue esta noche. Ya lo dejé de guardia, si no es así avisame y lo cambio."
+    }
+   ],
+   "tools": [
+    [
+     "muse_note",
+     "Pasé la guardia de esta noche a Gonza porque Ceci lo pidió por el Echo y avisé a ambos."
+    ],
+    [
+     "notify",
+     "Sent to ceci."
+    ],
+    [
+     "set_on_duty",
+     "gonza is on duty the night of 2026-12-15. The Echo can't tell who spoke, so this is a claim. Tell gonza and ceci now, each in one line, what"
+    ],
+    [
+     "say_on_echo",
+     "Said on the kitchen Echo."
+    ],
+    [
+     "notify",
+     "Sent to gonza."
+    ],
+    [
+     "notify",
+     "Refused, nothing was sent: this goes to ceci, so write to them as you, not about Ceci. Say what you need from them."
+    ]
+   ],
+   "told": [
+    "ceci",
+    "gonza"
+   ],
+   "speakable": true,
+   "duty_moved": true,
+   "both_told": true,
+   "once": true,
+   "no_holding": true,
+   "cry": [
+    {
+     "to": "gonza",
+     "text": "Theo está llorando, última toma ayer a las 20:40. Ya prendí el calienta mamaderas, se apaga solo a las 03:20."
+    }
+   ],
+   "cry_reached_gonza_only": true,
+   "passed": true
+  },
+  {
+   "name": "scene",
+   "lang": "es",
+   "words": "soy ceci esta noche necesito dormir se puede encargar gonza",
+   "moment": "2026-12-15T21:45:00-03:00",
+   "spoken": [
+    {
+     "said": "Perfecto, esta noche queda Gonza de guardia.",
+     "seconds": 3.4
+    }
+   ],
+   "first_line_seconds": 3.4,
+   "holding_turns": 0,
+   "message_events": 1,
+   "status": [
+    "done"
+   ],
+   "outcome": [
+    "Told ceci. Told gonza. Spoke on the Echo. Put gonza on duty for the night of 2026-12-15."
+   ],
+   "duty": "gonza",
+   "sent": [
+    {
+     "to": "ceci",
+     "text": "Dicho en el Echo que esta noche te cubre Gonza para que puedas dormir, si no es así avisame y lo cambiamos."
+    },
+    {
+     "to": "gonza",
+     "text": "Ceci dijo en el Echo que esta noche te encargás vos así ella duerme, si no podés decime y lo vemos."
+    },
+    {
+     "to": "echo",
+     "text": "Perfecto, esta noche queda Gonza de guardia."
+    }
+   ],
+   "tools": [
+    [
+     "muse_note",
+     "Duty changed for tonight 2026-12-15 from ceci to gonza per Echo claim, notified both and confirmed on Echo."
+    ],
+    [
+     "set_on_duty",
+     "gonza is on duty the night of 2026-12-15. The Echo can't tell who spoke, so this is a claim. Tell gonza and ceci now, each in one line, what"
+    ],
+    [
+     "say_on_echo",
+     "Said on the kitchen Echo."
+    ],
+    [
+     "notify",
+     "Sent to gonza."
+    ],
+    [
+     "notify",
+     "Sent to ceci."
+    ]
+   ],
+   "told": [
+    "ceci",
+    "gonza"
+   ],
+   "speakable": true,
+   "duty_moved": true,
+   "both_told": true,
+   "once": true,
+   "no_holding": true,
+   "cry": [
+    {
+     "to": "gonza",
+     "text": "Theo está llorando. Última toma ayer a las 20:40."
+    }
+   ],
+   "cry_reached_gonza_only": true,
+   "passed": true
+  },
+  {
+   "name": "scene",
+   "lang": "es",
+   "words": "soy ceci esta noche necesito dormir se puede encargar gonza",
+   "moment": "2026-12-15T21:45:00-03:00",
+   "spoken": [
+    {
+     "said": "Listo, esta noche queda Gonza de guardia.",
+     "seconds": 3.1
+    }
+   ],
+   "first_line_seconds": 3.1,
+   "holding_turns": 0,
+   "message_events": 1,
+   "status": [
+    "done"
+   ],
+   "outcome": [
+    "Told ceci. Told gonza. Spoke on the Echo. Put gonza on duty for the night of 2026-12-15."
+   ],
+   "duty": "gonza",
+   "sent": [
+    {
+     "to": "ceci",
+     "text": "Dijiste en el Echo que esta noche la toma Gonza, queda él de guardia. Si no es así avisame y lo cambiamos."
+    },
+    {
+     "to": "gonza",
+     "text": "Ceci dijo en el Echo que esta noche te encargás vos, quedás vos de guardia esta noche. Si no podés decime y lo cambiamos."
+    },
+    {
+     "to": "echo",
+     "text": "Listo, esta noche queda Gonza de guardia."
+    }
+   ],
+   "tools": [
+    [
+     "muse_note",
+     "Duty change from Echo processed: set Gonza on for tonight and notified both plus Echo confirmation."
+    ],
+    [
+     "set_on_duty",
+     "gonza is on duty the night of 2026-12-15. The Echo can't tell who spoke, so this is a claim. Tell gonza and ceci now, each in one line, what"
+    ],
+    [
+     "say_on_echo",
+     "Said on the kitchen Echo."
+    ],
+    [
+     "notify",
+     "Sent to gonza."
+    ],
+    [
+     "notify",
+     "Sent to ceci."
+    ]
+   ],
+   "told": [
+    "ceci",
+    "gonza"
+   ],
+   "speakable": true,
+   "duty_moved": true,
+   "both_told": true,
+   "once": true,
+   "no_holding": true,
+   "cry": [
+    {
+     "to": "gonza",
+     "text": "Theo está llorando. Última toma ayer a las 20:40."
+    }
+   ],
+   "cry_reached_gonza_only": true,
+   "passed": true
+  },
+  {
+   "name": "scene",
+   "lang": "es",
+   "words": "soy ceci esta noche necesito dormir se puede encargar gonza",
+   "moment": "2026-12-15T21:45:00-03:00",
+   "spoken": [
+    {
+     "said": "Perfecto, esta noche queda Gonza de guardia.",
+     "seconds": 3.0
+    }
+   ],
+   "first_line_seconds": 3.0,
+   "holding_turns": 0,
+   "message_events": 1,
+   "status": [
+    "done"
+   ],
+   "outcome": [
+    "Told gonza. Spoke on the Echo. Put gonza on duty for the night of 2026-12-15. Told ceci. Refused or failed: Told ceci."
+   ],
+   "duty": "gonza",
+   "sent": [
+    {
+     "to": "gonza",
+     "text": "Ceci dijo en la cocina que necesita dormir esta noche y que te encargues vos, quedás de guardia hoy. Si no podés, avisá y lo cambiamos."
+    },
+    {
+     "to": "echo",
+     "text": "Perfecto, esta noche queda Gonza de guardia."
+    },
+    {
+     "to": "ceci",
+     "text": "Quedaste liberada esta noche, Gonza queda de guardia, lo escuché en la cocina. Si hay algún cambio avisame."
+    }
+   ],
+   "tools": [
+    [
+     "muse_note",
+     "Duty changed to Gonza for tonight as requested at Echo, notified both and confirmed aloud."
+    ],
+    [
+     "notify",
+     "Sent to ceci."
+    ],
+    [
+     "set_on_duty",
+     "gonza is on duty the night of 2026-12-15. The Echo can't tell who spoke, so this is a claim. Tell gonza and ceci now, each in one line, what"
+    ],
+    [
+     "say_on_echo",
+     "Said on the kitchen Echo."
+    ],
+    [
+     "notify",
+     "Sent to gonza."
+    ],
+    [
+     "notify",
+     "Refused, nothing was sent: this goes to ceci, so write to them as you, not about Ceci. Say what you need from them."
+    ]
+   ],
+   "told": [
+    "ceci",
+    "gonza"
+   ],
+   "speakable": true,
+   "duty_moved": true,
+   "both_told": true,
+   "once": true,
+   "no_holding": true,
+   "cry": [
+    {
+     "to": "gonza",
+     "text": "Theo está llorando, última toma ayer a las 20:40."
+    },
+    {
+     "to": "gonza",
+     "text": "Prendí el calienta mamaderas, se apaga solo a las 03:20."
+    }
+   ],
+   "cry_reached_gonza_only": true,
+   "passed": true
+  },
+  {
+   "name": "scene",
+   "lang": "es",
+   "words": "soy ceci esta noche necesito dormir se puede encargar gonza",
+   "moment": "2026-12-15T21:45:00-03:00",
+   "spoken": [
+    {
+     "said": "Perfecto, esta noche queda Gonza de guardia.",
+     "seconds": 4.4
+    }
+   ],
+   "first_line_seconds": 4.4,
+   "holding_turns": 0,
+   "message_events": 1,
+   "status": [
+    "done"
+   ],
+   "outcome": [
+    "Put gonza on duty for the night of 2026-12-15. Told gonza. Told ceci. Spoke on the Echo."
+   ],
+   "duty": "gonza",
+   "sent": [
+    {
+     "to": "gonza",
+     "text": "En el Echo se escuchó que Ceci necesita dormir esta noche y que vos te encargás, avisame si no podés y lo vemos."
+    },
+    {
+     "to": "ceci",
+     "text": "Escuché en el Echo que pediste que Gonza se encargue esta noche, ya quedó él de guardia, avisame si querés cambiar algo."
+    },
+    {
+     "to": "echo",
+     "text": "Perfecto, esta noche queda Gonza de guardia."
+    }
+   ],
+   "tools": [
+    [
+     "muse_note",
+     "Handled duty change from Echo claim to Gonza for tonight 2026-12-15, notified both parents and Echo."
+    ],
+    [
+     "say_on_echo",
+     "Said on the kitchen Echo."
+    ],
+    [
+     "notify",
+     "Sent to ceci."
+    ],
+    [
+     "notify",
+     "Sent to gonza."
+    ],
+    [
+     "set_on_duty",
+     "gonza is on duty the night of 2026-12-15. The Echo can't tell who spoke, so this is a claim. Tell gonza and ceci now, each in one line, what"
+    ]
+   ],
+   "told": [
+    "ceci",
+    "gonza"
+   ],
+   "speakable": true,
+   "duty_moved": true,
+   "both_told": true,
+   "once": true,
+   "no_holding": true,
+   "cry": [
+    {
+     "to": "gonza",
+     "text": "Theo está llorando, última toma fue ayer a las 20:40."
+    }
+   ],
+   "cry_reached_gonza_only": true,
+   "passed": true
+  },
+  {
+   "name": "scene",
+   "lang": "es",
+   "words": "soy ceci esta noche necesito dormir se puede encargar gonza",
+   "moment": "2026-12-15T21:45:00-03:00",
+   "spoken": [
+    {
+     "said": "Perfecto Ceci, esta noche queda Gonza de guardia.",
+     "seconds": 2.9
+    }
+   ],
+   "first_line_seconds": 2.9,
+   "holding_turns": 0,
+   "message_events": 1,
+   "status": [
+    "done"
+   ],
+   "outcome": [
+    "Told gonza. Told ceci. Spoke on the Echo. Put gonza on duty for the night of 2026-12-15."
+   ],
+   "duty": "gonza",
+   "sent": [
+    {
+     "to": "gonza",
+     "text": "Ceci dijo en la Echo que esta noche necesita dormir y te toca a vos. Si no podés, decime y lo cambiamos. Quedás de guardia esta noche."
+    },
+    {
+     "to": "ceci",
+     "text": "Escuché en la Echo que pedís que Gonza tome la noche de hoy. Lo dejé a él de guardia, si él no puede me avisan y lo vemos."
+    },
+    {
+     "to": "echo",
+     "text": "Perfecto Ceci, esta noche queda Gonza de guardia."
+    }
+   ],
+   "tools": [
+    [
+     "muse_note",
+     "Hecho: cambio de guardia pedido por Ceci en la Echo, pase a Gonza para esta noche y avisos a ambos."
+    ],
+    [
+     "set_on_duty",
+     "gonza is on duty the night of 2026-12-15. The Echo can't tell who spoke, so this is a claim. Tell gonza and ceci now, each in one line, what"
+    ],
+    [
+     "say_on_echo",
+     "Said on the kitchen Echo."
+    ],
+    [
+     "notify",
+     "Sent to ceci."
+    ],
+    [
+     "notify",
+     "Sent to gonza."
+    ]
+   ],
+   "told": [
+    "ceci",
+    "gonza"
+   ],
+   "speakable": true,
+   "duty_moved": true,
+   "both_told": true,
+   "once": true,
+   "no_holding": true,
+   "cry": [
+    {
+     "to": "gonza",
+     "text": "Theo está llorando. Última toma ayer a las 20:40. Fijate cómo está cuando puedas."
+    },
+    {
+     "to": "gonza",
+     "text": "Prendí el calienta mamadera, se apaga solo a las 03:20."
+    }
+   ],
+   "cry_reached_gonza_only": true,
+   "passed": true
+  },
+  {
+   "name": "scene",
+   "lang": "es",
+   "words": "soy ceci esta noche necesito dormir se puede encargar gonza",
+   "moment": "2026-12-15T21:45:00-03:00",
+   "spoken": [
+    {
+     "said": "El agente del bebé todavía lo está pensando. Decí de nuevo en un momento y te cuento.",
+     "seconds": 6.0
+    },
+    {
+     "said": "Gonza queda a cargo esta noche.",
+     "seconds": 0.0
+    }
+   ],
+   "first_line_seconds": 6.0,
+   "holding_turns": 1,
+   "message_events": 1,
+   "status": [
+    "done"
+   ],
+   "outcome": [
+    "Put gonza on duty for the night of 2026-12-15. Told gonza. Told ceci. Spoke on the Echo."
+   ],
+   "duty": "gonza",
+   "sent": [
+    {
+     "to": "gonza",
+     "text": "En el Echo se dijo que Ceci necesita dormir esta noche y que vos te encargás, quedaste de guardia esta noche, si no podés decilo y lo cambiamos."
+    },
+    {
+     "to": "ceci",
+     "text": "En el Echo se dijo que necesitás dormir y que Gonza se encarga esta noche, él quedó de guardia, si algo no está bien avisame."
+    },
+    {
+     "to": "echo",
+     "text": "Gonza queda a cargo esta noche."
+    }
+   ],
+   "tools": [
+    [
+     "muse_note",
+     "Changed duty to Gonza for tonight per Echo claim and notified both parents plus Echo announcement."
+    ],
+    [
+     "say_on_echo",
+     "Said on the kitchen Echo."
+    ],
+    [
+     "notify",
+     "Sent to ceci."
+    ],
+    [
+     "notify",
+     "Sent to gonza."
+    ],
+    [
+     "set_on_duty",
+     "gonza is on duty the night of 2026-12-15. The Echo can't tell who spoke, so this is a claim. Tell gonza and ceci now, each in one line, what"
+    ]
+   ],
+   "told": [
+    "ceci",
+    "gonza"
+   ],
+   "speakable": true,
+   "duty_moved": true,
+   "both_told": true,
+   "once": true,
+   "no_holding": false,
+   "cry": [
+    {
+     "to": "gonza",
+     "text": "Theo está llorando. Última toma ayer a las 20:40."
+    }
+   ],
+   "cry_reached_gonza_only": true,
+   "passed": true
+  },
+  {
+   "name": "scene",
+   "lang": "es",
+   "words": "soy ceci esta noche necesito dormir se puede encargar gonza",
+   "moment": "2026-12-15T21:45:00-03:00",
+   "spoken": [
+    {
+     "said": "Perfecto Ceci, esta noche queda Gonza de guardia.",
+     "seconds": 3.0
+    }
+   ],
+   "first_line_seconds": 3.0,
+   "holding_turns": 0,
+   "message_events": 1,
+   "status": [
+    "done"
+   ],
+   "outcome": [
+    "Told gonza. Told ceci. Spoke on the Echo. Put gonza on duty for the night of 2026-12-15."
+   ],
+   "duty": "gonza",
+   "sent": [
+    {
+     "to": "gonza",
+     "text": "Ceci dijo en la cocina del Echo que necesita dormir y que si podés te encargues vos esta noche (15/12). Si no podés, decime y lo cambiamos."
+    },
+    {
+     "to": "ceci",
+     "text": "Anoté en la cocina que Gonza se encarga esta noche (15/12) para que descanses. Si algo cambia avisame."
+    },
+    {
+     "to": "echo",
+     "text": "Perfecto Ceci, esta noche queda Gonza de guardia."
+    }
+   ],
+   "tools": [
+    [
+     "muse_note",
+     "Set duty to Gonza for tonight per Echo request, notified both parents and confirmed on Echo."
+    ],
+    [
+     "set_on_duty",
+     "gonza is on duty the night of 2026-12-15. The Echo can't tell who spoke, so this is a claim. Tell gonza and ceci now, each in one line, what"
+    ],
+    [
+     "say_on_echo",
+     "Said on the kitchen Echo."
+    ],
+    [
+     "notify",
+     "Sent to ceci."
+    ],
+    [
+     "notify",
+     "Sent to gonza."
+    ]
+   ],
+   "told": [
+    "ceci",
+    "gonza"
+   ],
+   "speakable": true,
+   "duty_moved": true,
+   "both_told": true,
+   "once": true,
+   "no_holding": true,
+   "cry": [
+    {
+     "to": "gonza",
+     "text": "Theo está llorando. Última toma ayer a las 20:40, hace 6 horas."
+    }
+   ],
+   "cry_reached_gonza_only": true,
+   "passed": true
+  },
+  {
+   "name": "scene",
+   "lang": "es",
+   "words": "soy ceci esta noche necesito dormir se puede encargar gonza",
+   "moment": "2026-12-15T21:45:00-03:00",
+   "spoken": [
+    {
+     "said": "Gonza queda de guardia esta noche.",
+     "seconds": 3.1
+    }
+   ],
+   "first_line_seconds": 3.1,
+   "holding_turns": 0,
+   "message_events": 1,
+   "status": [
+    "done"
+   ],
+   "outcome": [
+    "Told gonza. Told ceci. Spoke on the Echo. Put gonza on duty for the night of 2026-12-15."
+   ],
+   "duty": "gonza",
+   "sent": [
+    {
+     "to": "gonza",
+     "text": "Se dijo en el Echo que vos te encargás esta noche (15/12) porque Ceci necesita dormir, si no podés avisame y lo cambiamos."
+    },
+    {
+     "to": "ceci",
+     "text": "Quedó Gonza de guardia esta noche (15/12) por lo que se dijo en el Echo, si querés cambiarlo decime."
+    },
+    {
+     "to": "echo",
+     "text": "Gonza queda de guardia esta noche."
+    }
+   ],
+   "tools": [
+    [
+     "muse_note",
+     "Changed duty to gonza for tonight because Echo claim said Ceci needs to sleep."
+    ],
+    [
+     "set_on_duty",
+     "gonza is on duty the night of 2026-12-15. The Echo can't tell who spoke, so this is a claim. Tell gonza and ceci now, each in one line, what"
+    ],
+    [
+     "say_on_echo",
+     "Said on the kitchen Echo."
+    ],
+    [
+     "notify",
+     "Sent to ceci."
+    ],
+    [
+     "notify",
+     "Sent to gonza."
+    ]
+   ],
+   "told": [
+    "ceci",
+    "gonza"
+   ],
+   "speakable": true,
+   "duty_moved": true,
+   "both_told": true,
+   "once": true,
+   "no_holding": true,
+   "cry": [
+    {
+     "to": "gonza",
+     "text": "Theo llora - última toma ayer a las 20:40."
+    }
+   ],
+   "cry_reached_gonza_only": true,
+   "passed": true
+  },
+  {
+   "name": "scene",
+   "lang": "es",
+   "words": "soy ceci esta noche necesito dormir se puede encargar gonza",
+   "moment": "2026-12-15T21:45:00-03:00",
+   "spoken": [
+    {
+     "said": "Perfecto Ceci, esta noche queda Gonza de guardia.",
+     "seconds": 3.0
+    }
+   ],
+   "first_line_seconds": 3.0,
+   "holding_turns": 0,
+   "message_events": 1,
+   "status": [
+    "done"
+   ],
+   "outcome": [
+    "Told ceci. Told gonza. Spoke on the Echo. Put gonza on duty for the night of 2026-12-15."
+   ],
+   "duty": "gonza",
+   "sent": [
+    {
+     "to": "ceci",
+     "text": "Ceci, escuché en la cocina que querés dormir esta noche, queda Gonza de guardia. Si querés cambiarlo decilo."
+    },
+    {
+     "to": "gonza",
+     "text": "Gonza, Ceci dijo en el Echo que necesita dormir esta noche así que quedás vos de guardia. Si no podés decilo."
+    },
+    {
+     "to": "echo",
+     "text": "Perfecto Ceci, esta noche queda Gonza de guardia."
+    }
+   ],
+   "tools": [
+    [
+     "muse_note",
+     "Cambié la guardia a Gonza porque Ceci lo pidió en el Echo y avisé a ambos.\n"
+    ],
+    [
+     "set_on_duty",
+     "gonza is on duty the night of 2026-12-15. The Echo can't tell who spoke, so this is a claim. Tell gonza and ceci now, each in one line, what"
+    ],
+    [
+     "say_on_echo",
+     "Said on the kitchen Echo."
+    ],
+    [
+     "notify",
+     "Sent to gonza."
+    ],
+    [
+     "notify",
+     "Sent to ceci."
+    ]
+   ],
+   "told": [
+    "ceci",
+    "gonza"
+   ],
+   "speakable": true,
+   "duty_moved": true,
+   "both_told": true,
+   "once": true,
+   "no_holding": true,
+   "cry": [
+    {
+     "to": "gonza",
+     "text": "Theo está llorando, comió por última vez ayer a las 20:40. Le toca a usted mirarlo."
+    }
+   ],
+   "cry_reached_gonza_only": true,
+   "passed": true
+  }
+ ]
+}

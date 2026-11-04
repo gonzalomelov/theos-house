@@ -28,6 +28,7 @@ from ..channels.twilio_whatsapp import signature as twilio_signature, takes_voic
 from ..voice_bridge import spoken, strip_wake
 from . import sources
 
+NOTHING_TO_SAY = {"es": "No tengo nada para decirte por acá.", "en": "I have nothing to say here."}  # an empty answer would leave the Echo silent, which reads as broken
 HEAR_NOTE_S = 120  # the ear retries by itself, so this is only for a voice service or a Muse that never answers
 
 
@@ -36,21 +37,39 @@ def clean(row):
 
 
 def echo_app(core):
-    """POST /ask {"text", "source", "person"} -> {"reply", "replies"}: what the old voice bridge answers, so Home Assistant's
-    automations stay as they are. It waits for Muse, and what Muse says with say_on_echo comes back for Home Assistant to speak."""
-    token = os.environ.get("PARENTING_AGENT_VOICE_TOKEN", "")
+    """POST /ask {"text", "source", "person", "request_id"} -> {"reply", "replies"}: what the old voice bridge answers, so Home Assistant's
+    automations and the Alexa skill stay as they are. What Muse says with say_on_echo comes back for them to speak, as soon as it is said: Alexa waits 8 seconds, and the phones
+    can come after. The skill asks again with the same request_id after its holding line, which gets the first answer and never runs the words twice."""
+    tokens = [t for t in (os.environ.get("PARENTING_AGENT_VOICE_TOKEN", ""), os.environ.get("PARENTING_AGENT_SKILL_TOKEN", "")) if t]
+    answers = {}
+
+    async def first_words(words, who, source):
+        event_id, done = await core.dispatch("message", {"from": who, "channel": "the kitchen Echo", "text": words}, source=source, ask=True)
+        while not done.done():
+            if core.current == event_id and core.channel.hold:
+                return list(core.channel.hold)
+            await asyncio.sleep(0.1)
+        return (await done).get("said", [])
 
     async def ask(request):
-        if not token or not hmac.compare_digest(request.headers.get("authorization", ""), f"Bearer {token}"):
+        given = request.headers.get("authorization", "")
+        if not any(hmac.compare_digest(given, f"Bearer {token}") for token in tokens):
             return JSONResponse({"error": "unauthorized"}, 401)
         body = await request.json()
         words = strip_wake(body.get("text", ""))[:500]
         if not words:
             return JSONResponse({"reply": "Decí agente, y después lo que querés saber.", "replies": []})
-        who = str(body.get("person") or "someone in the kitchen, you can't tell who")[:32]
-        _, done = await core.dispatch("message", {"from": who, "channel": "the kitchen Echo", "text": words}, source=str(body.get("source", "echo"))[:16], ask=True)
-        said = (await done).get("said", [])
-        return JSONResponse({"reply": spoken(" ".join(said)), "replies": said})
+        who = str(body["person"])[:32] if body.get("person") else "someone in the kitchen, you can't tell who"
+        request_id = str(body.get("request_id") or "")[:80]
+        answer = answers.get(request_id) if request_id else None
+        if answer is None:
+            answer = asyncio.ensure_future(first_words(words, who, str(body.get("source", "echo"))[:16]))
+            if request_id:
+                answers[request_id] = answer
+                while len(answers) > 32:
+                    answers.pop(next(iter(answers)))
+        said = await asyncio.shield(answer)  # the skill hanging up at its limit doesn't stop what it asked for
+        return JSONResponse({"reply": spoken(" ".join(said)) or NOTHING_TO_SAY["en" if core.settings.lang == "en" else "es"], "replies": said})
 
     async def health(request):
         return JSONResponse({"ok": True})

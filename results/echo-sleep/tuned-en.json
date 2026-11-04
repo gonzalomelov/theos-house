@@ -1,0 +1,766 @@
+{
+ "scene": [
+  {
+   "name": "scene",
+   "lang": "en",
+   "words": "this is ceci i need to sleep tonight can gonza take the night",
+   "moment": "2026-12-15T21:45:00-03:00",
+   "spoken": [
+    {
+     "said": "Tonight Gonza is on duty.",
+     "seconds": 4.6
+    }
+   ],
+   "first_line_seconds": 4.6,
+   "holding_turns": 0,
+   "message_events": 1,
+   "status": [
+    "done"
+   ],
+   "outcome": [
+    "Told ceci. Told gonza. Spoke on the Echo. Put gonza on duty for the night of 2026-12-15."
+   ],
+   "duty": "gonza",
+   "sent": [
+    {
+     "to": "ceci",
+     "text": "Noted, you asked at the Echo for Gonza to take tonight, so tonight is now his. He can say no if needed."
+    },
+    {
+     "to": "gonza",
+     "text": "Heads up, Ceci said at the Echo she'd like you to take tonight. It's now yours unless you say no."
+    },
+    {
+     "to": "echo",
+     "text": "Tonight Gonza is on duty."
+    }
+   ],
+   "tools": [
+    [
+     "muse_note",
+     "Did the Echo duty change to Gonza for tonight (2026-12-15) and notified both parents and the kitchen."
+    ],
+    [
+     "set_on_duty",
+     "gonza is on duty the night of 2026-12-15. The Echo can't tell who spoke, so this is a claim. Tell gonza and ceci now, each in one line, what"
+    ],
+    [
+     "say_on_echo",
+     "Said on the kitchen Echo."
+    ],
+    [
+     "notify",
+     "Sent to gonza."
+    ],
+    [
+     "notify",
+     "Sent to ceci."
+    ]
+   ],
+   "told": [
+    "ceci",
+    "gonza"
+   ],
+   "speakable": true,
+   "duty_moved": true,
+   "both_told": true,
+   "once": true,
+   "no_holding": true,
+   "cry": [
+    {
+     "to": "gonza",
+     "text": "Theo is crying, last feed was yesterday at 20:40. Could you check on him when you can?"
+    }
+   ],
+   "cry_reached_gonza_only": true,
+   "passed": true
+  },
+  {
+   "name": "scene",
+   "lang": "en",
+   "words": "this is ceci i need to sleep tonight can gonza take the night",
+   "moment": "2026-12-15T21:45:00-03:00",
+   "spoken": [
+    {
+     "said": "Got it, Gonza is on duty tonight.",
+     "seconds": 5.2
+    }
+   ],
+   "first_line_seconds": 5.2,
+   "holding_turns": 0,
+   "message_events": 1,
+   "status": [
+    "done"
+   ],
+   "outcome": [
+    "Put gonza on duty for the night of 2026-12-15. Told ceci. Spoke on the Echo. Told gonza. Refused or failed: Told gonza."
+   ],
+   "duty": "gonza",
+   "sent": [
+    {
+     "to": "ceci",
+     "text": "At the kitchen Echo you said Gonza can take the night, I've set Gonza on duty tonight. If that's wrong, let me know."
+    },
+    {
+     "to": "echo",
+     "text": "Got it, Gonza is on duty tonight."
+    },
+    {
+     "to": "gonza",
+     "text": "At the kitchen Echo someone said this is Ceci and asked you to take the night, I've set you on duty tonight. You can say no if that wasn't agreed."
+    }
+   ],
+   "tools": [
+    [
+     "muse_note",
+     "Fixed duty change to Gonza tonight and notified both parents plus Echo confirmation, because the kitchen Echo request changed rota."
+    ],
+    [
+     "notify",
+     "Sent to gonza."
+    ],
+    [
+     "say_on_echo",
+     "Said on the kitchen Echo."
+    ],
+    [
+     "notify",
+     "Sent to ceci."
+    ],
+    [
+     "notify",
+     "Refused, nothing was sent: this goes to gonza, so write to them as you, not about Gonza. Say what you need from them."
+    ],
+    [
+     "set_on_duty",
+     "gonza is on duty the night of 2026-12-15. The Echo can't tell who spoke, so this is a claim. Tell gonza and ceci now, each in one line, what"
+    ]
+   ],
+   "told": [
+    "ceci",
+    "gonza"
+   ],
+   "speakable": true,
+   "duty_moved": true,
+   "both_told": true,
+   "once": true,
+   "no_holding": true,
+   "cry": [
+    {
+     "to": "gonza",
+     "text": "Theo is crying, last feed was yesterday at 20:40. Could you check on him when you can?"
+    },
+    {
+     "to": "gonza",
+     "text": "Starting the bottle warmer for you, it will be on until 03:20 and turns off by itself."
+    }
+   ],
+   "cry_reached_gonza_only": true,
+   "passed": true
+  },
+  {
+   "name": "scene",
+   "lang": "en",
+   "words": "this is ceci i need to sleep tonight can gonza take the night",
+   "moment": "2026-12-15T21:45:00-03:00",
+   "spoken": [
+    {
+     "said": "Got it, Gonza is on duty tonight.",
+     "seconds": 3.8
+    }
+   ],
+   "first_line_seconds": 3.8,
+   "holding_turns": 0,
+   "message_events": 1,
+   "status": [
+    "done"
+   ],
+   "outcome": [
+    "Told ceci. Told gonza. Spoke on the Echo. Put gonza on duty for the night of 2026-12-15."
+   ],
+   "duty": "gonza",
+   "sent": [
+    {
+     "to": "ceci",
+     "text": "Noted at the Echo that you asked Gonza to take tonight, Gonza is now on duty. You can say no if that's wrong."
+    },
+    {
+     "to": "gonza",
+     "text": "Heard at the Echo that Ceci asked you to take tonight, you're now on duty. Say no if that's not right."
+    },
+    {
+     "to": "echo",
+     "text": "Got it, Gonza is on duty tonight."
+    }
+   ],
+   "tools": [
+    [
+     "muse_note",
+     "Done: changed duty to Gonza for tonight per Echo request, notified both and confirmed on Echo."
+    ],
+    [
+     "set_on_duty",
+     "gonza is on duty the night of 2026-12-15. The Echo can't tell who spoke, so this is a claim. Tell gonza and ceci now, each in one line, what"
+    ],
+    [
+     "say_on_echo",
+     "Said on the kitchen Echo."
+    ],
+    [
+     "notify",
+     "Sent to gonza."
+    ],
+    [
+     "notify",
+     "Sent to ceci."
+    ]
+   ],
+   "told": [
+    "ceci",
+    "gonza"
+   ],
+   "speakable": true,
+   "duty_moved": true,
+   "both_told": true,
+   "once": true,
+   "no_holding": true,
+   "cry": [
+    {
+     "to": "gonza",
+     "text": "Theo is crying, last feed was yesterday at 20:40 (6 hours ago)."
+    }
+   ],
+   "cry_reached_gonza_only": true,
+   "passed": true
+  },
+  {
+   "name": "scene",
+   "lang": "en",
+   "words": "this is ceci i need to sleep tonight can gonza take the night",
+   "moment": "2026-12-15T21:45:00-03:00",
+   "spoken": [
+    {
+     "said": "Got it, Gonza is on duty tonight.",
+     "seconds": 5.4
+    }
+   ],
+   "first_line_seconds": 5.4,
+   "holding_turns": 0,
+   "message_events": 1,
+   "status": [
+    "done"
+   ],
+   "outcome": [
+    "Put gonza on duty for the night of 2026-12-15. Told gonza. Told ceci. Spoke on the Echo."
+   ],
+   "duty": "gonza",
+   "sent": [
+    {
+     "to": "gonza",
+     "text": "Heard at the Echo that Ceci asked you to take tonight, you're on, say no if not right."
+    },
+    {
+     "to": "ceci",
+     "text": "Heard at the Echo you asked Gonza to take tonight, he's on now, say no if not right."
+    },
+    {
+     "to": "echo",
+     "text": "Got it, Gonza is on duty tonight."
+    }
+   ],
+   "tools": [
+    [
+     "muse_note",
+     "Done, changed tonight to Gonza per Echo request and notified both."
+    ],
+    [
+     "say_on_echo",
+     "Said on the kitchen Echo."
+    ],
+    [
+     "notify",
+     "Sent to ceci."
+    ],
+    [
+     "notify",
+     "Sent to gonza."
+    ],
+    [
+     "set_on_duty",
+     "gonza is on duty the night of 2026-12-15. The Echo can't tell who spoke, so this is a claim. Tell gonza and ceci now, each in one line, what"
+    ]
+   ],
+   "told": [
+    "ceci",
+    "gonza"
+   ],
+   "speakable": true,
+   "duty_moved": true,
+   "both_told": true,
+   "once": true,
+   "no_holding": true,
+   "cry": [
+    {
+     "to": "gonza",
+     "text": "Theo is crying, last feed was yesterday at 20:40."
+    }
+   ],
+   "cry_reached_gonza_only": true,
+   "passed": true
+  },
+  {
+   "name": "scene",
+   "lang": "en",
+   "words": "this is ceci i need to sleep tonight can gonza take the night",
+   "moment": "2026-12-15T21:45:00-03:00",
+   "spoken": [
+    {
+     "said": "Gonza is on duty tonight.",
+     "seconds": 3.8
+    }
+   ],
+   "first_line_seconds": 3.8,
+   "holding_turns": 0,
+   "message_events": 1,
+   "status": [
+    "done"
+   ],
+   "outcome": [
+    "Told gonza. Told ceci. Spoke on the Echo. Put gonza on duty for the night of 2026-12-15."
+   ],
+   "duty": "gonza",
+   "sent": [
+    {
+     "to": "gonza",
+     "text": "Heard at the Echo at 21:45 that Ceci asked you to take tonight, you're on duty tonight, let me know if that's not right."
+    },
+    {
+     "to": "ceci",
+     "text": "Heard at the Echo at 21:45 that you asked Gonza to take tonight, he's on duty tonight, let me know if that's not right."
+    },
+    {
+     "to": "echo",
+     "text": "Gonza is on duty tonight."
+    }
+   ],
+   "tools": [
+    [
+     "muse_note",
+     "Gonza on duty per Echo request from Ceci."
+    ],
+    [
+     "set_on_duty",
+     "gonza is on duty the night of 2026-12-15. The Echo can't tell who spoke, so this is a claim. Tell gonza and ceci now, each in one line, what"
+    ],
+    [
+     "say_on_echo",
+     "Said on the kitchen Echo."
+    ],
+    [
+     "notify",
+     "Sent to ceci."
+    ],
+    [
+     "notify",
+     "Sent to gonza."
+    ]
+   ],
+   "told": [
+    "ceci",
+    "gonza"
+   ],
+   "speakable": true,
+   "duty_moved": true,
+   "both_told": true,
+   "once": true,
+   "no_holding": true,
+   "cry": [
+    {
+     "to": "gonza",
+     "text": "Theo is crying, last feed was yesterday at 20:40, 6 hours ago. Could you check on him?"
+    }
+   ],
+   "cry_reached_gonza_only": true,
+   "passed": true
+  },
+  {
+   "name": "scene",
+   "lang": "en",
+   "words": "this is ceci i need to sleep tonight can gonza take the night",
+   "moment": "2026-12-15T21:45:00-03:00",
+   "spoken": [
+    {
+     "said": "Gonza is on duty tonight.",
+     "seconds": 5.4
+    }
+   ],
+   "first_line_seconds": 5.4,
+   "holding_turns": 0,
+   "message_events": 1,
+   "status": [
+    "done"
+   ],
+   "outcome": [
+    "Put gonza on duty for the night of 2026-12-15. Told gonza. Told ceci. Spoke on the Echo."
+   ],
+   "duty": "gonza",
+   "sent": [
+    {
+     "to": "gonza",
+     "text": "At the kitchen Echo someone said they were Ceci and asked if you can take tonight, you're on duty tonight, you can say no if needed."
+    },
+    {
+     "to": "ceci",
+     "text": "At the kitchen Echo you asked for Gonza to take tonight, he's on duty tonight, he can say no if needed."
+    },
+    {
+     "to": "echo",
+     "text": "Gonza is on duty tonight."
+    }
+   ],
+   "tools": [
+    [
+     "muse_note",
+     "Changed duty to Gonza for tonight per Echo request, notified both parents and announced on Echo."
+    ],
+    [
+     "say_on_echo",
+     "Said on the kitchen Echo."
+    ],
+    [
+     "notify",
+     "Sent to ceci."
+    ],
+    [
+     "notify",
+     "Sent to gonza."
+    ],
+    [
+     "set_on_duty",
+     "gonza is on duty the night of 2026-12-15. The Echo can't tell who spoke, so this is a claim. Tell gonza and ceci now, each in one line, what"
+    ]
+   ],
+   "told": [
+    "ceci",
+    "gonza"
+   ],
+   "speakable": true,
+   "duty_moved": true,
+   "both_told": true,
+   "once": true,
+   "no_holding": true,
+   "cry": [
+    {
+     "to": "gonza",
+     "text": "Theo is crying, last feed was yesterday at 20:40, please check on him."
+    },
+    {
+     "to": "gonza",
+     "text": "Started the bottle warmer for you, it's on until 03:20 and turns off by itself."
+    }
+   ],
+   "cry_reached_gonza_only": true,
+   "passed": true
+  },
+  {
+   "name": "scene",
+   "lang": "en",
+   "words": "this is ceci i need to sleep tonight can gonza take the night",
+   "moment": "2026-12-15T21:45:00-03:00",
+   "spoken": [
+    {
+     "said": "Got it Ceci, Gonza is on tonight.",
+     "seconds": 5.0
+    }
+   ],
+   "first_line_seconds": 5.0,
+   "holding_turns": 0,
+   "message_events": 1,
+   "status": [
+    "done"
+   ],
+   "outcome": [
+    "Told ceci. Told gonza. Spoke on the Echo. Put gonza on duty for the night of 2026-12-15."
+   ],
+   "duty": "gonza",
+   "sent": [
+    {
+     "to": "ceci",
+     "text": "Heard at the kitchen Echo you asked Gonza to take tonight, done, Gonza is on. Say no if not right."
+    },
+    {
+     "to": "gonza",
+     "text": "Heard at the kitchen Echo Ceci asked you to take tonight, you're on. Say no if not right."
+    },
+    {
+     "to": "echo",
+     "text": "Got it Ceci, Gonza is on tonight."
+    }
+   ],
+   "tools": [
+    [
+     "muse_note",
+     "Duty change via Echo handled: set Gonza on tonight and notified both."
+    ],
+    [
+     "set_on_duty",
+     "gonza is on duty the night of 2026-12-15. The Echo can't tell who spoke, so this is a claim. Tell gonza and ceci now, each in one line, what"
+    ],
+    [
+     "say_on_echo",
+     "Said on the kitchen Echo."
+    ],
+    [
+     "notify",
+     "Sent to gonza."
+    ],
+    [
+     "notify",
+     "Sent to ceci."
+    ]
+   ],
+   "told": [
+    "ceci",
+    "gonza"
+   ],
+   "speakable": true,
+   "duty_moved": true,
+   "both_told": true,
+   "once": true,
+   "no_holding": true,
+   "cry": [
+    {
+     "to": "gonza",
+     "text": "Theo is crying, last feed was yesterday at 20:40. Could you check on him?"
+    }
+   ],
+   "cry_reached_gonza_only": true,
+   "passed": true
+  },
+  {
+   "name": "scene",
+   "lang": "en",
+   "words": "this is ceci i need to sleep tonight can gonza take the night",
+   "moment": "2026-12-15T21:45:00-03:00",
+   "spoken": [
+    {
+     "said": "Got it Ceci, Gonza is on duty tonight.",
+     "seconds": 5.0
+    }
+   ],
+   "first_line_seconds": 5.0,
+   "holding_turns": 0,
+   "message_events": 1,
+   "status": [
+    "done"
+   ],
+   "outcome": [
+    "Told gonza. Told ceci. Spoke on the Echo. Put gonza on duty for the night of 2026-12-15."
+   ],
+   "duty": "gonza",
+   "sent": [
+    {
+     "to": "gonza",
+     "text": "Ceci said at the kitchen Echo she needs to sleep tonight, you're on duty tonight, you can say no if needed."
+    },
+    {
+     "to": "ceci",
+     "text": "You said at the kitchen Echo you need Gonza to take tonight, I've put Gonza on duty, he can say no if needed."
+    },
+    {
+     "to": "echo",
+     "text": "Got it Ceci, Gonza is on duty tonight."
+    }
+   ],
+   "tools": [
+    [
+     "muse_note",
+     "Duty switched to Gonza for tonight from Echo claim, both notified."
+    ],
+    [
+     "set_on_duty",
+     "gonza is on duty the night of 2026-12-15. The Echo can't tell who spoke, so this is a claim. Tell gonza and ceci now, each in one line, what"
+    ],
+    [
+     "say_on_echo",
+     "Said on the kitchen Echo."
+    ],
+    [
+     "notify",
+     "Sent to ceci."
+    ],
+    [
+     "notify",
+     "Sent to gonza."
+    ]
+   ],
+   "told": [
+    "ceci",
+    "gonza"
+   ],
+   "speakable": true,
+   "duty_moved": true,
+   "both_told": true,
+   "once": true,
+   "no_holding": true,
+   "cry": [
+    {
+     "to": "gonza",
+     "text": "Theo's crying, last feed was yesterday at 20:40."
+    }
+   ],
+   "cry_reached_gonza_only": true,
+   "passed": true
+  },
+  {
+   "name": "scene",
+   "lang": "en",
+   "words": "this is ceci i need to sleep tonight can gonza take the night",
+   "moment": "2026-12-15T21:45:00-03:00",
+   "spoken": [
+    {
+     "said": "Got it Ceci, Gonza is on duty tonight.",
+     "seconds": 3.9
+    }
+   ],
+   "first_line_seconds": 3.9,
+   "holding_turns": 0,
+   "message_events": 1,
+   "status": [
+    "done"
+   ],
+   "outcome": [
+    "Told ceci. Told gonza. Spoke on the Echo. Put gonza on duty for the night of 2026-12-15."
+   ],
+   "duty": "gonza",
+   "sent": [
+    {
+     "to": "ceci",
+     "text": "Got it, you said at the kitchen Echo that Gonza takes tonight. Tell me if that's wrong and I can switch back."
+    },
+    {
+     "to": "gonza",
+     "text": "Heads up, Ceci said at the kitchen Echo you're on tonight. Say no if that's not right."
+    },
+    {
+     "to": "echo",
+     "text": "Got it Ceci, Gonza is on duty tonight."
+    }
+   ],
+   "tools": [
+    [
+     "muse_note",
+     "Duty switched to Gonza tonight via Echo claim, both notified with opt-out."
+    ],
+    [
+     "set_on_duty",
+     "gonza is on duty the night of 2026-12-15. The Echo can't tell who spoke, so this is a claim. Tell gonza and ceci now, each in one line, what"
+    ],
+    [
+     "say_on_echo",
+     "Said on the kitchen Echo."
+    ],
+    [
+     "notify",
+     "Sent to gonza."
+    ],
+    [
+     "notify",
+     "Sent to ceci."
+    ]
+   ],
+   "told": [
+    "ceci",
+    "gonza"
+   ],
+   "speakable": true,
+   "duty_moved": true,
+   "both_told": true,
+   "once": true,
+   "no_holding": true,
+   "cry": [
+    {
+     "to": "gonza",
+     "text": "Theo is crying, last feed was yesterday at 20:40."
+    }
+   ],
+   "cry_reached_gonza_only": true,
+   "passed": true
+  },
+  {
+   "name": "scene",
+   "lang": "en",
+   "words": "this is ceci i need to sleep tonight can gonza take the night",
+   "moment": "2026-12-15T21:45:00-03:00",
+   "spoken": [
+    {
+     "said": "Gonza is on duty tonight.",
+     "seconds": 3.9
+    }
+   ],
+   "first_line_seconds": 3.9,
+   "holding_turns": 0,
+   "message_events": 1,
+   "status": [
+    "done"
+   ],
+   "outcome": [
+    "Told ceci. Told gonza. Spoke on the Echo. Put gonza on duty for the night of 2026-12-15."
+   ],
+   "duty": "gonza",
+   "sent": [
+    {
+     "to": "ceci",
+     "text": "You asked at the Echo for Gonza to take tonight, reply if that's not right and I'll switch it back."
+    },
+    {
+     "to": "gonza",
+     "text": "Ceci said at the Echo she needs to sleep tonight and asked you to take the night, reply if you can't."
+    },
+    {
+     "to": "echo",
+     "text": "Gonza is on duty tonight."
+    }
+   ],
+   "tools": [
+    [
+     "muse_note",
+     "Switched tonight to Gonza per Echo request from Ceci, notified both and Echo."
+    ],
+    [
+     "set_on_duty",
+     "gonza is on duty the night of 2026-12-15. The Echo can't tell who spoke, so this is a claim. Tell gonza and ceci now, each in one line, what"
+    ],
+    [
+     "say_on_echo",
+     "Said on the kitchen Echo."
+    ],
+    [
+     "notify",
+     "Sent to gonza."
+    ],
+    [
+     "notify",
+     "Sent to ceci."
+    ]
+   ],
+   "told": [
+    "ceci",
+    "gonza"
+   ],
+   "speakable": true,
+   "duty_moved": true,
+   "both_told": true,
+   "once": true,
+   "no_holding": true,
+   "cry": [
+    {
+     "to": "gonza",
+     "text": "Theo's crying, last feed was yesterday at 20:40. Could you check on him?"
+    }
+   ],
+   "cry_reached_gonza_only": true,
+   "passed": true
+  }
+ ]
+}
