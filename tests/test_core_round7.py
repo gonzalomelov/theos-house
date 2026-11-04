@@ -290,6 +290,10 @@ class ThePage(unittest.TestCase):
         self.assertNotIn("day.textContent = item.day", self.BOOK)
         self.assertIn("datesIn(v)", self.JS)
 
+    def test_a_new_clip_isnt_served_from_an_old_cache(self):
+        self.assertIn('/media/carseat.mp4?v=', self.HTML)
+        self.assertIn('Mount("/media", Revalidated(', (STATIC.parent / "gateway.py").read_text())
+
     def test_the_clip_names_its_one_exception(self):
         self.assertIn('recLang: "Spoken in Spanish, as recorded. In English:"', self.JS)
         self.assertIn('recLang: ""', self.JS)
