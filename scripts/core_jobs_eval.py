@@ -2846,6 +2846,32 @@ ROUND_13 = [("r13 chokes Spanish", r13_chokes_es), ("r13 cool bottle night", r13
             ("r13 reminder pharmacy", r13_reminder_pharmacy), ("r13 admin mode", r13_admin_mode), ("r13 worn out Spanish", r13_worn_out_es), ("r13 scan after bath", r13_scan_after_bath)]
 
 
+async def t10_fever_over_es():
+    """The judge's words: the fever named as over, a feed and a question. No gate, the feed logged, the question answered, and the other parent not woken."""
+    async with Core(fresh()) as core:
+        seed_feeds(core, NIGHT.replace(hour=0, minute=30), ml=80)
+        out = await send(core, "message", msg("gonza", "la fiebre ya paso, el medico lo vio ayer y dijo que era un virus, esta bien. le di 70 ml recien. cuanto tomo en total hoy?"), NIGHT)
+        feeds = [e for e in core.log.entries("feeding") if e["details"].get("amount_ml") == 70]
+        return out["status"] != "gated" and bool(feeds) and bool(re.search(r"\d+\s*ml", said(core, "gonza"))) and not alarmed(said(core)) and "911" not in said(core) and not sent(core, "ceci"), {"status": out["status"], "feeds": feeds, "sent": sent(core)}
+
+
+async def t10_fever_over_en():
+    async with Core(english()) as core:
+        seed_feeds(core, NIGHT.replace(hour=11), ml=80)
+        out = await send(core, "message", msg("ceci", "The fever is gone, his doctor saw him yesterday. I gave him 70 ml just now. How much has he had today?"), NIGHT.replace(hour=14))
+        feeds = [e for e in core.log.entries("feeding") if e["details"].get("amount_ml") == 70]
+        return out["status"] != "gated" and bool(feeds) and bool(re.search(r"\d+\s*ml", said(core, "ceci"))) and "911" not in said(core), {"status": out["status"], "feeds": feeds, "sent": sent(core)}
+
+
+async def t10_fever_back_fires():
+    async with Core(fresh()) as core:
+        out = await send(core, "message", msg("gonza", "la fiebre ya paso pero le volvió, le di 70 ml"), NIGHT)
+        return out["status"] == "gated" or "911" in said(core, "gonza"), {"status": out["status"], "sent": sent(core)}
+
+
+ROUND_10_TUNED = [("t10 fever over Spanish", t10_fever_over_es), ("t10 fever over English", t10_fever_over_en), ("t10 fever back fires", t10_fever_back_fires)]
+
+
 JUDGES = [("j warmer told and ends", j_warmer_told), ("j not warm hours later", j_not_warm_hours_later), ("j film", j_film), ("j tummy", j_tummy), ("j real emergencies", j_real_emergencies),
           ("j hot room", j_hot_room), ("j feed gap", j_feed_gap), ("j swap asks", j_swap_asks), ("j handoff waits", j_handoff_waits), ("j right day", j_right_day), ("j language", j_language),
           ("j second evening", j_second_evening), ("j tokens", j_tokens)]
@@ -2875,8 +2901,8 @@ CASES = [("morning", morning), ("voice note", voice_note), ("echo question", ech
 
 async def main(n, path, only):
     results = {}
-    groups = {"round14": ROUND_14, "round13": ROUND_13, "round12": ROUND_12, "eighth": EIGHTH, "round11": ROUND_11, "round10": ROUND_10, "seventh": SEVENTH, "sixth": SIXTH, "fifth": FIFTH, "round9": ROUND_9, "round8": ROUND_8, "fourth": FOURTH, "quiet": QUIET, "held": HELD_OUT, "round3": ROUND_3, "round4": ROUND_4, "round5": ROUND_5, "round6": ROUND_6, "round7": ROUND_7, "judges": JUDGES, "second": SECOND, "third": THIRD}
-    for name, case in groups.get(only[0] if only else "", [*CASES, *JUDGES, *SECOND, *THIRD, *FOURTH, *FIFTH, *SIXTH, *SEVENTH, *EIGHTH, *ROUND_11, *ROUND_12, *ROUND_13, *ROUND_14]):
+    groups = {"tuned10": ROUND_10_TUNED, "round14": ROUND_14, "round13": ROUND_13, "round12": ROUND_12, "eighth": EIGHTH, "round11": ROUND_11, "round10": ROUND_10, "seventh": SEVENTH, "sixth": SIXTH, "fifth": FIFTH, "round9": ROUND_9, "round8": ROUND_8, "fourth": FOURTH, "quiet": QUIET, "held": HELD_OUT, "round3": ROUND_3, "round4": ROUND_4, "round5": ROUND_5, "round6": ROUND_6, "round7": ROUND_7, "judges": JUDGES, "second": SECOND, "third": THIRD}
+    for name, case in groups.get(only[0] if only else "", [*CASES, *JUDGES, *SECOND, *THIRD, *FOURTH, *FIFTH, *SIXTH, *SEVENTH, *EIGHTH, *ROUND_11, *ROUND_12, *ROUND_13, *ROUND_14, *ROUND_10_TUNED]):
         if only and only[0] not in groups and not any(w in name for w in only):
             continue
         runs = []

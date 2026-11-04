@@ -334,7 +334,8 @@ FEVER_WORD = re.compile(r"\b(fever\w*|febrile|high temp\w*|fiebre|febril|calentu
 HOT_WORD = re.compile(r"\b(burning up|feels? (so |very |really |too )?hot|is (so |very |really )?hot|(he|she)'?s (so |very |really )?hot|"
                       r"hirviendo|ardiendo|est[aá] (muy |re |bien )?caliente|se siente (muy |re |bien )?caliente|lo siento caliente|la siento caliente|"
                       r"volando)\b", re.I)
-NO_FEVER = re.compile(r"\b(no|not|without|sin|ni|never|nunca|doesn'?t have( a)?|does not have( a)?)\s+(\w+\s+){0,2}"
+# "Not sure the fever is gone" and "no baja la fiebre" aren't a no.
+NO_FEVER = re.compile(r"\b(no|not|without|sin|ni|never|nunca|doesn'?t have( a)?|does not have( a)?)\s+(?!sure\b|certain\b|s[eé]\b|baj\w*\b|ced\w*\b|pas\w*\b|va\b)(\w+\s+){0,2}"
                       r"(fever\w*|fiebre|febril|calentura|high temp\w*)", re.I)
 # A body temperature: 38 to 42 °C, or 100.4 to 107 °F, and never a millilitre, an ounce, a minute or a weight.
 TEMP_NUMBER = re.compile(r"(?<![\d.,])(3[89]|4[0-2]|100[.,][4-9]|10[1-7])([.,]\d{1,2})?(?![\d.,]*\d)"

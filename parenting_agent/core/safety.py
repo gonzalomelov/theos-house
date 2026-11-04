@@ -66,6 +66,20 @@ ABOUT_THE_ROOM = re.compile(r"\broom\b|temperatur|\bcuarto\b", re.I)
 GETS_READY = re.compile(r"warmer|prewarm|pre-warm|warm the|bottle|mamadera|calentador|calentar", re.I)
 HOT_ROOM, COLD_ROOM = 28.0, 14.0
 FEED_GAP_H, STALE_LOG_H = 8, 48
+# A fever a parent names as over. Only these exact shapes, closed off by a stop or an "and": "the fever is over 39" and "la fiebre pasó a 39" aren't one.
+FEVER_OVER = re.compile(r"\b(?:(?:yesterday'?s |last night'?s )?(?:the |his |that )?fever(?:(?:'s|\s+is|\s+has)(?:\s+already)?\s+(?:gone(?:\s+away)?|over|passed|broken)|\s+gone|\s+(?:already\s+)?(?:broke|passed|went away))"
+                        r"|no more fever|no longer has (?:a )?fever|no (?:longer a )?fever (?:anymore|any more)|(?:doesn'?t|does not) have (?:a )?fever (?:anymore|any more)"
+                        r"|(?:(?:la|su|esa) )?fiebre(?: de (?:ayer|anoche))?(?: ya)?(?: se)?(?: le)?(?: ya)? (?:pas[oó]|fue|termin[oó]|cort[oó]|cedi[oó])|(?:(?:la|su|esa) )?fiebre(?: de (?:ayer|anoche))? ya(?: le)? baj[oó]"
+                        r"|(?:ya )?(?:se )?(?:le )?(?:pas[oó]|fue|termin[oó]|cort[oó]) (?:la|su|esa) fiebre|ya(?: le)? baj[oó] (?:la|su) fiebre"
+                        r"|ya no (?:tiene|hay|tuvo)(?: m[aá]s)? fiebre|no (?:tiene|hay) m[aá]s fiebre)"
+                        r"(?:\s+(?:ya|hoy|anoche|ahora|now|today|already|yesterday|last night|this morning|esta ma[ñn]ana|ayer))*(?=\s*(?:$|[,.;:!\n]|(?:y|and)\b))", re.I)
+# Words that put it in doubt, anywhere in the message: then the fever line fires as ever.
+FEVER_DOUBT = re.compile(r"\b(?:pero|but|though|although|aunque|however|sin embargo|volvi\w*|vuelve|vuelta|de nuevo|otra vez|again|came back|comes? back|coming back|back up|returned|sub\w+|going up|gone up|rising"
+                         r"|creo|parece|capaz|quiz[aá]s?|tal vez|supongo|ojal[aá]|espero|i think|i guess|i hope|i wish|seems?|maybe|probably|hopefully|looks like|no s[eé]|not sure|dunno"
+                         r"|should|can (?:i|we|he)|is it (?:ok|okay|safe|normal)|puedo|podemos|debo|debemos|es normal|hay que|tengo que|qu[eé] (?:hago|le doy)|what (?:do|should) (?:i|we))\b"
+                         r"|\b(?:sigue|still|todav[ií]a|a[uú]n)\b[^.!?\n]{0,30}\b(?:caliente|hot|warm|calor|ardiendo|burning|mal|raro|weird|off)\b", re.I)
+# In its clause, before the words: "no se le fue la fiebre", "if the fever is gone", "is the fever gone".
+FEVER_NOT_OVER_YET = re.compile(r"\b(?:no|not|never|nunca|ni|si|if|when|cuando|once|until|hasta|whether|antes|before|after|despu[eé]s|apenas|is|did|has|was)\b", re.I)
 # The ladder: each step is said once, from code, and from BOTH_FROM up it reaches both parents, day or night.
 GAP_STEPS, BOTH_FROM = (8, 12, 18, 24, 36), 18
 GAP_LINES = {"en": ("The log shows no feed for {h} hours. Did feeds go unlogged? If he truly hasn't eaten, call your pediatrician.",
@@ -295,9 +309,23 @@ def just_worry(text):
     return bool(SCARED.search(text) or WORN_OUT.search(text) or LOG_QUESTION.search(text)) and not DANGER_SIGN.search(text)
 
 
+def without_fever_over(text):
+    """A message with the words naming a fever as over taken out, so whatever else it says is read as ever. Any number that could be a fever, a question about it, a doubt, or a sign of it coming back leaves it whole, and it fires."""
+    text = text or ""
+    if not FEVER_OVER.search(text) or FEVER_DOUBT.search(text) or rules.TEMP_NUMBER.search(text):
+        return text
+    for found in FEVER_OVER.finditer(text):
+        clause = re.split(r"[,;:.!?\n]", text[:found.start()])[-1]
+        sentence_end = re.search(r"[.!?\n]", text[found.end():])
+        sentence = re.split(r"[.!?\n]", text[:found.start()])[-1] + text[found.start():found.end() + (sentence_end.end() if sentence_end else len(text))]
+        if FEVER_NOT_OVER_YET.search(clause) or "?" in sentence or "¿" in sentence:
+            return text
+    return FEVER_OVER.sub(" ", text)
+
+
 def worth_waking(text):
     """Whether a parent's words name anything that could justify waking the other at night: a sign, a fear, a danger in the house. Muse setting emergency isn't enough."""
-    text = HOT_THING.sub(" ", text or "")
+    text = without_fever_over(HOT_THING.sub(" ", text or ""))
     return bool(WORTH_WAKING.search(text) or rules.is_emergency(text) or rules.spoken_emergency(text) or BUMPED.search(text) or HARD_TO_WAKE.search(text) or TYPED_FAST.search(text))
 
 
@@ -379,7 +407,7 @@ def without_pets(text):
 def gate(text, screen=None, lang=None):
     """(kind, line) for a message that must not reach Muse, or None. kind is emergency, urgent or medical."""
     lang = lang_of(text, lang or "es")
-    text = without_pets(UNRELATED.sub(" ", text or ""))
+    text = without_fever_over(without_pets(UNRELATED.sub(" ", text or "")))
     if about_a_story(text):  # a dose Muse might write is still refused on the way out
         return None
     signs = NOT_A_SIGN.sub(" ", text or "")
