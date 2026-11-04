@@ -257,6 +257,6 @@ def app(model=None, media=None):
         Route("/api/sense", session_only(one_at_a_time(sense)), methods=["POST"]), Route("/api/write", session_only(one_at_a_time(write)), methods=["POST"]), Route("/api/events", session_only(one_at_a_time(event)), methods=["POST"]),
         Route("/api/home", session_only(set_home), methods=["POST"]), Route("/api/clock", session_only(clock), methods=["POST"]), Route("/api/lang", session_only(lang), methods=["POST"]), Route("/api/feeds", session_only(feeds), methods=["POST"]),
         Route("/api/book", session_only(book), methods=["POST"]), Route("/api/reset", session_only(reset), methods=["POST"]), Route("/api/stream", session_only(stream)),
-        Mount("/media", StaticFiles(directory=media, check_dir=False)), Mount("/static", Revalidated(directory=STATIC))])
+        Mount("/media", Revalidated(directory=media, check_dir=False)), Mount("/static", Revalidated(directory=STATIC))])
     built.state.sessions = sessions
     return built
